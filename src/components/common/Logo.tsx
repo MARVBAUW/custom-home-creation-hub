@@ -24,7 +24,7 @@ const Logo: React.FC<LogoProps> = ({
         <svg viewBox="0 0 200 200" className={getSizeClasses()}>
           <path d="M0 150 L200 150 M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
                 fill="none" 
-                stroke={variant === 'white' ? "#FFFFFF" : "#996515"} 
+                stroke="#996515" 
                 strokeWidth="8" />
         </svg>
       );
