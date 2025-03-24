@@ -16,20 +16,41 @@ const Logo: React.FC<LogoProps> = ({
   className,
   withTagline = false
 }) => {
-  // Déterminer quelle image afficher selon la variante
-  const getLogoSrc = () => {
+  // Fonction pour rendre le logo en SVG
+  const renderSvgLogo = () => {
     if (variant === 'icon') {
-      return 'https://placehold.co/200x200/F5F5DC/996515?text=P';
+      return (
+        <svg viewBox="0 0 200 200" className={getSizeClasses()}>
+          <rect width="200" height="200" fill="#996515" />
+          <path d="M70 40 L70 160 L130 160 L130 120 L100 120 L100 100 L130 100 L130 60 L100 60 L100 40 Z" fill="#F5F5DC" />
+        </svg>
+      );
     }
     
+    // Couleurs selon la variante
+    let bgColor, textColor;
     switch (variant) {
       case 'white':
-        return 'https://placehold.co/300x100/222222/FFFFFF?text=PROGINEER';
+        bgColor = "transparent";
+        textColor = "#FFFFFF";
+        break;
       case 'gold':
-        return 'https://placehold.co/300x100/F5F5DC/996515?text=PROGINEER';
+        bgColor = "transparent";
+        textColor = "#996515";
+        break;
       default:
-        return 'https://placehold.co/300x100/FFFFFF/222222?text=PROGINEER';
+        bgColor = "transparent";
+        textColor = "#222222";
     }
+
+    return (
+      <svg viewBox="0 0 300 100" className={getSizeClasses()}>
+        <rect width="300" height="100" fill={bgColor} fillOpacity="0" />
+        <text x="10" y="60" fontSize="40" fontWeight="bold" letterSpacing="1" fill={textColor}>
+          PROGINEER
+        </text>
+      </svg>
+    );
   };
 
   // Déterminer les classes CSS en fonction de la taille
@@ -46,15 +67,13 @@ const Logo: React.FC<LogoProps> = ({
 
   return (
     <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
-      <img 
-        src={getLogoSrc()} 
-        alt="Progineer - Maîtrise d'oeuvre" 
-        className={cn(
-          getSizeClasses(), 
-          variant === 'icon' ? 'logo-icon' : 'logo',
-          'object-contain'
-        )}
-      />
+      <div className={cn(
+        getSizeClasses(), 
+        variant === 'icon' ? 'logo-icon' : 'logo',
+        'object-contain'
+      )}>
+        {renderSvgLogo()}
+      </div>
       {withTagline && (
         <span className={cn(
           "text-xs mt-1 font-medium tracking-wider",
