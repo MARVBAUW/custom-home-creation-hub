@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -901,4 +902,670 @@ const EstimationCalculator = () => {
         break;
     }
 
-    // Add extra costs for
+    // Calculate final price
+    const totalMultiplier = terrainMultiplier * wallMultiplier * roofMultiplier * insulationMultiplier * electricalMultiplier;
+    const finalPrice = Math.round(basePrice * surface * totalMultiplier);
+    
+    // Set estimation result and show dialog
+    setEstimationResult(finalPrice);
+    setShowResultDialog(true);
+    
+    // Send data to server (mock)
+    console.log("Sending estimation data to server:", formData);
+    
+    // Show success toast
+    toast({
+      title: "Estimation terminée",
+      description: "Votre estimation a été calculée avec succès.",
+      duration: 5000,
+    });
+  };
+
+  // Render current step
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <Form {...clientTypeForm}>
+            <form onSubmit={clientTypeForm.handleSubmit(onClientTypeSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold text-center mb-6">Qui êtes-vous ?</h2>
+                
+                <FormField
+                  control={clientTypeForm.control}
+                  name="clientType"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-3"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                            <FormControl>
+                              <RadioGroupItem value="professional" />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer flex-1">
+                              <div className="font-medium">Professionnel</div>
+                              <p className="text-sm text-muted-foreground">
+                                Entreprise, commerce, bureau, industrie
+                              </p>
+                            </FormLabel>
+                          </FormItem>
+                          
+                          <FormItem className="flex items-center space-x-3 space-y-0 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                            <FormControl>
+                              <RadioGroupItem value="individual" />
+                            </FormControl>
+                            <FormLabel className="font-normal cursor-pointer flex-1">
+                              <div className="font-medium">Particulier</div>
+                              <p className="text-sm text-muted-foreground">
+                                Maison, appartement, extension
+                              </p>
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <Button type="submit" className="w-full">
+                Continuer <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </Form>
+        );
+        
+      case 2:
+        return (
+          <Form {...professionalProjectForm}>
+            <form onSubmit={professionalProjectForm.handleSubmit(onProfessionalProjectSubmit)} className="space-y-6">
+              <h2 className="text-2xl font-semibold text-center mb-6">Votre projet professionnel</h2>
+              
+              <FormField
+                control={professionalProjectForm.control}
+                name="activity"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Type d'activité</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="offices" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Bureaux</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="commerce" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Commerce</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="hotel" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Hôtel</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="restaurant" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Restaurant</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="industry" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Industrie</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="realEstate" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Immobilier</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={professionalProjectForm.control}
+                name="projectType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Type de projet</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="construction" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Construction</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="renovation" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Rénovation</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="extension" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Extension</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="optimization" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Optimisation</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="division" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Division</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="design" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Conception</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={professionalProjectForm.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date de début souhaitée</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={professionalProjectForm.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Date de fin souhaitée</FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(1)}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 3:
+        return (
+          <Form {...individualProjectForm}>
+            <form onSubmit={individualProjectForm.handleSubmit(onIndividualProjectSubmit)} className="space-y-6">
+              <h2 className="text-2xl font-semibold text-center mb-6">Votre projet particulier</h2>
+              
+              <FormField
+                control={individualProjectForm.control}
+                name="projectType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Type de projet</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="grid grid-cols-2 gap-3"
+                      >
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="construction" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Construction</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="renovation" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Rénovation</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="extension" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Extension</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="optimization" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Optimisation</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="division" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Division</FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-2 space-y-0 border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="design" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer">Conception</FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(1)}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 4:
+        return (
+          <Form {...estimationTypeForm}>
+            <form onSubmit={estimationTypeForm.handleSubmit(onEstimationTypeSubmit)} className="space-y-6">
+              <h2 className="text-2xl font-semibold text-center mb-6">Type d'estimation</h2>
+              
+              <FormField
+                control={estimationTypeForm.control}
+                name="estimationType"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Choisissez le niveau de précision</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-3"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="quick" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer flex-1">
+                            <div className="font-medium">Estimation rapide</div>
+                            <p className="text-sm text-muted-foreground">
+                              Une estimation approximative en quelques minutes
+                            </p>
+                          </FormLabel>
+                        </FormItem>
+                        
+                        <FormItem className="flex items-center space-x-3 space-y-0 border rounded-lg p-4 cursor-pointer hover:bg-muted/50">
+                          <FormControl>
+                            <RadioGroupItem value="precise" />
+                          </FormControl>
+                          <FormLabel className="font-normal cursor-pointer flex-1">
+                            <div className="font-medium">Estimation précise</div>
+                            <p className="text-sm text-muted-foreground">
+                              Une estimation détaillée avec plus de questions
+                            </p>
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={estimationTypeForm.control}
+                name="termsAccepted"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 p-4 border rounded-md">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel className="text-sm font-normal cursor-pointer">
+                        J'accepte que mes informations soient utilisées pour me recontacter
+                      </FormLabel>
+                      <FormDescription className="text-xs">
+                        Vos données restent confidentielles et ne seront jamais revendues.
+                      </FormDescription>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => formData.clientType === "professional" ? setStep(2) : setStep(3)}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 5:
+        return (
+          <Form {...constructionDetailsForm}>
+            <form onSubmit={constructionDetailsForm.handleSubmit(onConstructionDetailsSubmit)} className="space-y-6">
+              <h2 className="text-2xl font-semibold text-center mb-6">Détails de construction</h2>
+              
+              <FormField
+                control={constructionDetailsForm.control}
+                name="surface"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Surface totale en m²</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="0" placeholder="100" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      La surface totale du projet en mètres carrés
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={constructionDetailsForm.control}
+                name="levels"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre de niveaux</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="1" placeholder="1" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Inclure le rez-de-chaussée, les étages et le sous-sol si applicable
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={constructionDetailsForm.control}
+                name="units"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre de logements</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="1" placeholder="1" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Pour les projets avec plusieurs unités
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="flex items-center justify-between pt-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(4)}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+      
+      // Contact details step (final step)
+      case 24:
+        return (
+          <Form {...contactForm}>
+            <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-6">
+              <h2 className="text-2xl font-semibold text-center mb-6">Vos coordonnées</h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={contactForm.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prénom</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Jean" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={contactForm.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nom</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Dupont" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={contactForm.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Téléphone</FormLabel>
+                      <FormControl>
+                        <Input type="tel" placeholder="06 12 34 56 78" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={contactForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="jean.dupont@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="pt-4 space-y-4">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep(step - 1)}
+                  className="w-full md:w-auto"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Étape précédente
+                </Button>
+                
+                <Button type="submit" className="w-full">
+                  Finaliser et obtenir l'estimation <Calculator className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+      
+      // For other steps 6-23, show a placeholder for now
+      default:
+        return (
+          <div className="text-center space-y-4">
+            <h2 className="text-2xl font-semibold">{visibleSteps[step - 1]?.title || "Étape suivante"}</h2>
+            <p className="text-muted-foreground">{visibleSteps[step - 1]?.description || ""}</p>
+            
+            <div className="py-8">
+              <p>Cette section est en cours de développement</p>
+            </div>
+            
+            <div className="flex items-center justify-between pt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setStep(step - 1)}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Étape précédente
+              </Button>
+              
+              <Button onClick={() => step < totalSteps ? setStep(step + 1) : null}>
+                {step < totalSteps ? (
+                  <>Continuer <ArrowRight className="ml-2 h-4 w-4" /></>
+                ) : (
+                  <>Finaliser <Check className="ml-2 h-4 w-4" /></>
+                )}
+              </Button>
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto">
+      {/* Progress indicator */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium">Étape {step} sur {totalSteps}</span>
+          <span className="text-sm font-medium">{Math.round((step / totalSteps) * 100)}%</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div 
+            className="bg-progineer-gold h-2.5 rounded-full transition-all duration-300" 
+            style={{ width: `${(step / totalSteps) * 100}%` }}
+          ></div>
+        </div>
+      </div>
+
+      {/* Step content */}
+      <div className="bg-white shadow-sm border rounded-lg p-6">
+        {renderStep()}
+      </div>
+      
+      {/* Estimation result dialog */}
+      <AlertDialog open={showResultDialog} onOpenChange={setShowResultDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Estimation de votre projet</AlertDialogTitle>
+            <AlertDialogDescription>
+              Selon les informations que vous avez fournies, le coût estimé de votre projet est de:
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <div className="py-6 text-center">
+            <p className="text-4xl font-bold text-progineer-gold">
+              {estimationResult?.toLocaleString('fr-FR')} €
+            </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Cette estimation est indicative et peut varier en fonction des spécificités de votre projet.
+            </p>
+          </div>
+          
+          <AlertDialogFooter>
+            <AlertDialogAction className="bg-progineer-gold hover:bg-progineer-gold/90">
+              J'ai compris
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
+
+export default EstimationCalculator;
