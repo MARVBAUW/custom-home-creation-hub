@@ -3,6 +3,10 @@ import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import ProgressBar from './ProgressBar';
 import ClientTypeForm from './FormSteps/ClientTypeForm';
+import ProfessionalProjectForm from './FormSteps/ProfessionalProjectForm';
+import IndividualProjectForm from './FormSteps/IndividualProjectForm';
+import EstimationTypeForm from './FormSteps/EstimationTypeForm';
+import ConstructionDetailsForm from './FormSteps/ConstructionDetailsForm';
 import ContactForm from './FormSteps/ContactForm';
 import DefaultStepContent from './DefaultStepContent';
 import EstimationResult from './EstimationResult';
@@ -23,7 +27,11 @@ const EstimationCalculator: React.FC = () => {
     goToNextStep,
     goToPreviousStep,
     onClientTypeSubmit,
+    onProfessionalProjectSubmit,
+    onIndividualProjectSubmit,
+    onEstimationTypeSubmit,
     onContactSubmit,
+    updateFormData,
   } = useEstimationCalculator();
 
   // Rendu de l'étape actuelle avec animations
@@ -34,6 +42,67 @@ const EstimationCalculator: React.FC = () => {
           <ClientTypeForm
             defaultValues={{ clientType: formData.clientType }}
             onSubmit={onClientTypeSubmit}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 2:
+        // Étape projet professionnel
+        return (
+          <ProfessionalProjectForm
+            defaultValues={{
+              activity: formData.activity,
+              projectType: formData.projectType,
+              startDate: formData.startDate,
+              endDate: formData.endDate,
+            }}
+            onSubmit={onProfessionalProjectSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 3:
+        // Étape projet particulier
+        return (
+          <IndividualProjectForm
+            defaultValues={{
+              projectType: formData.projectType,
+            }}
+            onSubmit={onIndividualProjectSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 4:
+        // Étape type d'estimation
+        return (
+          <EstimationTypeForm
+            defaultValues={{
+              estimationType: formData.estimationType,
+              termsAccepted: formData.termsAccepted,
+            }}
+            onSubmit={onEstimationTypeSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 5:
+        // Étape détails de construction
+        return (
+          <ConstructionDetailsForm
+            defaultValues={{
+              surface: formData.surface,
+              levels: formData.levels,
+              units: formData.units,
+            }}
+            onSubmit={(data) => {
+              updateFormData(data);
+              goToNextStep();
+            }}
+            goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );
