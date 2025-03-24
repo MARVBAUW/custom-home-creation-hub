@@ -10,7 +10,7 @@ type BuildingAnimationProps = {
 
 const BuildingAnimation: React.FC<BuildingAnimationProps> = ({ 
   step, 
-  totalSteps = 36 
+  totalSteps = 24 // Changed to match the actual total steps
 }) => {
   return (
     <div className="absolute bottom-0 left-0 right-0 mx-auto w-40 h-32">
