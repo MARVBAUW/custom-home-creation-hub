@@ -1403,7 +1403,12 @@ const EstimationCalculator = () => {
                       <FormLabel>Surface du projet (m²)</FormLabel>
                       <FormControl>
                         <div className="flex items-center">
-                          <Input type="number" min="1" {...field} />
+                          <Input 
+                            type="number" 
+                            min="1" 
+                            {...field} 
+                            onChange={(e) => field.onChange(e.target.value)}
+                          />
                           <span className="ml-2">m²</span>
                         </div>
                       </FormControl>
@@ -1422,7 +1427,12 @@ const EstimationCalculator = () => {
                     <FormItem>
                       <FormLabel>Nombre de niveaux</FormLabel>
                       <FormControl>
-                        <Input type="number" min="1" {...field} />
+                        <Input 
+                          type="number" 
+                          min="1" 
+                          {...field} 
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1436,7 +1446,12 @@ const EstimationCalculator = () => {
                     <FormItem>
                       <FormLabel>Nombre de logements</FormLabel>
                       <FormControl>
-                        <Input type="number" min="1" {...field} />
+                        <Input 
+                          type="number" 
+                          min="1" 
+                          {...field} 
+                          onChange={(e) => field.onChange(e.target.value)}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -1456,8 +1471,126 @@ const EstimationCalculator = () => {
           </Form>
         );
         
-      // Add more cases for additional steps...
-      // For brevity, I'll show a default case that handles steps not specifically implemented yet
+      // For the remaining steps, let's implement a similar pattern for each one
+      case 6: // Terrain type
+        return (
+          <Form {...terrainForm}>
+            <form onSubmit={terrainForm.handleSubmit(onTerrainSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[step-1].title}</h2>
+                {visibleSteps[step-1].description && <p className="text-sm text-gray-500">{visibleSteps[step-1].description}</p>}
+                
+                <FormField
+                  control={terrainForm.control}
+                  name="terrainType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Caractéristiques du terrain</FormLabel>
+                      <FormControl>
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('rocky')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'rocky'] 
+                                  : field.value?.filter(value => value !== 'rocky');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Rocheux</FormLabel>
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('clayey')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'clayey'] 
+                                  : field.value?.filter(value => value !== 'clayey');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Argileux</FormLabel>
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('flat')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'flat'] 
+                                  : field.value?.filter(value => value !== 'flat');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Plat</FormLabel>
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('rough')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'rough'] 
+                                  : field.value?.filter(value => value !== 'rough');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Accidenté</FormLabel>
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('sloped')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'sloped'] 
+                                  : field.value?.filter(value => value !== 'sloped');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Pentu</FormLabel>
+                            </div>
+                          </div>
+                          <div className="flex items-start space-x-2">
+                            <Checkbox
+                              checked={field.value?.includes('serviced')}
+                              onCheckedChange={(checked) => {
+                                const newValue = checked 
+                                  ? [...field.value, 'serviced'] 
+                                  : field.value?.filter(value => value !== 'serviced');
+                                field.onChange(newValue);
+                              }}
+                            />
+                            <div className="space-y-1 leading-none pt-0.5">
+                              <FormLabel>Viabilisé</FormLabel>
+                            </div>
+                          </div>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="outline" onClick={() => setStep(step-1)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
         
       default:
         // Temporary for steps not yet implemented in detail

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Button from '@/components/common/Button';
@@ -19,6 +19,10 @@ const EstimationForm = () => {
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[800px] h-[90vh] overflow-y-auto">
+          <DialogTitle className="sr-only">Estimation de votre projet</DialogTitle>
+          <DialogDescription className="sr-only">
+            Estimez le coût de votre projet de construction ou rénovation.
+          </DialogDescription>
           <EstimationCalculator />
         </DialogContent>
       </Dialog>
