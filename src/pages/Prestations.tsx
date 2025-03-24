@@ -1,111 +1,107 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { 
-  HomeIcon, 
-  Paintbrush, 
-  Gauge, 
-  Maximize, 
-  Ruler,
-  FileText
-} from 'lucide-react';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building, Construction, Wrench, Settings, Plus, Info } from 'lucide-react';
 
+// Define service categories
 const services = [
   {
-    id: "construction",
-    icon: HomeIcon,
+    id: 'construction',
+    icon: <Building className="h-10 w-10 text-khaki-600" />,
     title: 'Construction sur mesure',
-    description: 'Nous concevons et réalisons des maisons individuelles et petits collectifs adaptés à vos besoins, votre budget et votre terrain. Notre approche personnalisée garantit un projet qui vous ressemble parfaitement.',
+    description: 'Construction de maisons individuelles et petits collectifs parfaitement adaptés à vos besoins et à votre terrain.',
     features: [
       'Étude de faisabilité complète',
-      'Conception architecturale adaptée à vos besoins',
-      'Suivi de chantier rigoureux',
-      'Respect des normes RT2020',
-      'Matériaux de qualité supérieure'
+      'Conception architecturale personnalisée',
+      'Optimisation des coûts et des délais',
+      'Coordination des artisans et suivi de chantier',
+      'Gestion administrative (permis de construire, déclarations)',
+      'Garantie de livraison dans les délais convenus'
     ],
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop'
   },
   {
-    id: "renovation",
-    icon: Gauge,
+    id: 'renovation',
+    icon: <Wrench className="h-10 w-10 text-khaki-600" />,
     title: 'Rénovation énergétique',
-    description: 'Optimisez votre habitat selon les normes RE2020 avec nos services d\'audit énergétique et de travaux d\'amélioration. Réduisez votre consommation et augmentez le confort de votre logement.',
+    description: 'Améliorez la performance énergétique de votre logement tout en valorisant votre patrimoine immobilier.',
     features: [
       'Audit énergétique complet',
-      'DPE (Diagnostic de Performance Énergétique)',
-      'Isolation thermique optimisée',
-      'Installation de systèmes écoénergétiques',
-      'Accompagnement pour les aides financières'
+      'Diagnostic de Performance Énergétique (DPE)',
+      'Solutions adaptées aux normes RE2020',
+      'Accompagnement aux aides financières (MaPrimeRénov, CEE)',
+      'Isolation thermique et phonique',
+      'Installation de systèmes de chauffage écologiques'
     ],
-    image: 'https://images.unsplash.com/photo-1607400201515-c2c41c07d307?q=80&w=2070&auto=format&fit=crop'
   },
   {
-    id: "extension",
-    icon: Maximize,
+    id: 'extension',
+    icon: <Plus className="h-10 w-10 text-khaki-600" />,
     title: 'Extension & agrandissement',
-    description: 'Créez de nouveaux espaces de vie avec une extension parfaitement intégrée à votre habitation existante. Nous gérons toutes les démarches administratives et techniques.',
+    description: 'Agrandissez votre espace de vie avec une extension harmonieuse et parfaitement intégrée à votre habitat existant.',
     features: [
-      'Étude de faisabilité et contraintes urbanistiques',
-      'Conception harmonieuse avec l\'existant',
-      'Gestion des autorisations administratives',
-      'Coordination des corps de métier',
-      'Suivi budgétaire précis'
+      'Étude d\'intégration architecturale',
+      'Optimisation de la liaison avec l\'existant',
+      'Conception sur mesure (véranda, surélévation, extension latérale)',
+      'Gestion des contraintes techniques et réglementaires',
+      'Choix de matériaux durables et écologiques',
+      'Optimisation de l\'apport lumineux naturel'
     ],
-    image: 'https://images.unsplash.com/photo-1561061046-7f214e269c4a?q=80&w=2070&auto=format&fit=crop'
   },
   {
-    id: "optimisation",
-    icon: Ruler,
+    id: 'optimisation',
+    icon: <Settings className="h-10 w-10 text-khaki-600" />,
     title: 'Optimisation d\'espace',
-    description: 'Réaménagement intelligent pour valoriser chaque mètre carré de votre bien immobilier. Nous repensons vos espaces pour les rendre plus fonctionnels et adaptés à votre mode de vie.',
+    description: 'Maximisez le potentiel de votre surface habitable grâce à des solutions d\'aménagement intelligentes et fonctionnelles.',
     features: [
-      'Analyse des besoins et usages',
-      'Création de plans optimisés',
-      'Solutions de rangement sur mesure',
-      'Aménagements multifonctionnels',
-      'Mise en valeur de l\'espace existant'
+      'Analyse fonctionnelle des espaces',
+      'Réagencement optimal des pièces',
+      'Solutions de rangement intégrées',
+      'Création de mezzanines ou d\'espaces modulables',
+      'Optimisation des circulations',
+      'Amélioration de l\'ergonomie du logement'
     ],
-    image: 'https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=2070&auto=format&fit=crop'
   },
   {
-    id: "design",
-    icon: Paintbrush,
+    id: 'design',
+    icon: <Construction className="h-10 w-10 text-khaki-600" />,
     title: 'Design d\'espace',
-    description: 'Conception d\'intérieurs fonctionnels et esthétiques pour particuliers et professionnels. Nous créons des espaces qui reflètent votre personnalité et répondent à vos besoins.',
+    description: 'Créez des intérieurs esthétiques et fonctionnels qui reflètent votre personnalité et votre mode de vie.',
     features: [
-      'Étude des espaces et circulation',
-      'Sélection des matériaux et finitions',
-      'Conception d\'aménagements sur mesure',
+      'Conception d\'intérieur personnalisée',
+      'Choix des matériaux et des finitions',
+      'Plans d\'aménagement détaillés',
       'Conseils en décoration et mobilier',
-      'Plans et rendus 3D détaillés'
+      'Moodboards et visualisations 3D',
+      'Suivi de la mise en œuvre'
     ],
-    image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=2074&auto=format&fit=crop'
   },
   {
-    id: "administratif",
-    icon: FileText,
-    title: 'Montage administratif & réglementaire',
-    description: 'Nous prenons en charge toutes les démarches administratives liées à votre projet : permis de construire, déclarations de travaux, et coordination avec les différentes administrations.',
+    id: 'administratif',
+    icon: <Info className="h-10 w-10 text-khaki-600" />,
+    title: 'Montage administratif',
+    description: 'Simplifiez vos démarches administratives grâce à notre accompagnement expert pour tous vos projets de construction.',
     features: [
-      'Constitution des dossiers de permis de construire',
+      'Élaboration des dossiers de permis de construire',
       'Déclarations préalables de travaux',
-      'Relations avec les services d\'urbanisme',
-      'Suivi des autorisations',
-      'Conformité aux réglementations locales'
+      'Accompagnement aux autorisations d\'urbanisme',
+      'Suivi des délais d\'instruction',
+      'Assistance aux recours éventuels',
+      'Relations avec les services d\'urbanisme'
     ],
-    image: 'https://images.unsplash.com/photo-1590402494610-2c378a9114c6?q=80&w=2070&auto=format&fit=crop'
-  }
+  },
 ];
 
 const Prestations = () => {
   return (
     <>
       <Helmet>
-        <title>Nos prestations | Maître d'œuvre & Architecte en PACA - Progineer</title>
-        <meta name="description" content="Construction sur mesure, rénovation énergétique, extension, design d'espace - découvrez toutes les prestations de Progineer en région PACA." />
-        <meta name="keywords" content="construction maison sur mesure, rénovation énergétique PACA, extension maison Marseille, design d'espace, maître d'œuvre" />
+        <title>Nos prestations | Architecte et Maître d'œuvre PACA - Progineer</title>
+        <meta name="description" content="Découvrez nos prestations de maîtrise d'œuvre à Marseille et en PACA : construction sur mesure, rénovation énergétique, extension et design d'espace." />
+        <meta name="keywords" content="maître d'œuvre PACA, architecte Marseille, construction maison sur mesure, rénovation énergétique, extension maison, optimisation espace" />
       </Helmet>
 
       {/* Hero section */}
@@ -116,81 +112,231 @@ const Prestations = () => {
               Nos prestations
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Des services complets pour votre projet
+              Services de maîtrise d'œuvre
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Progineer vous accompagne de A à Z dans tous vos projets de construction, 
+              De la conception à la réalisation, Progineer vous accompagne dans tous vos projets de construction, 
               rénovation et aménagement en région PACA.
             </p>
           </div>
         </Container>
       </section>
 
-      {/* Services sections */}
-      {services.map((service, index) => (
-        <section 
-          key={service.id}
-          id={service.id}
-          className={`py-20 ${index % 2 === 1 ? 'bg-stone-50' : 'bg-white'}`}
-        >
-          <Container>
-            <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-              <div className="order-2 lg:order-none">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-khaki-100 text-khaki-700 mb-6">
-                  <service.icon className="h-6 w-6" />
+      {/* Services Overview */}
+      <section className="py-16">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {services.map((service) => (
+              <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300">
+                <CardHeader>
+                  <div className="mb-4">{service.icon}</div>
+                  <CardTitle className="text-xl">{service.title}</CardTitle>
+                  <CardDescription className="text-gray-600">
+                    {service.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {service.features.map((feature, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="mr-2 mt-1 text-khaki-600">•</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button href="/contact" variant="outline" className="w-full justify-center">
+                    En savoir plus
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-16 bg-stone-50 border-y border-stone-100">
+        <Container>
+          <div className="text-center mb-16 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-semibold mb-6">Notre processus d'accompagnement</h2>
+            <p className="text-gray-600">
+              Une méthodologie éprouvée pour mener à bien votre projet, de la première idée à la livraison finale.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Step 1 */}
+            <div className="relative p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">1</div>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Consultation initiale</h3>
+              <p className="text-gray-600">
+                Nous écoutons vos besoins, analysons votre projet et définissons ensemble les grandes lignes de votre projet.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="relative p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">2</div>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Étude et conception</h3>
+              <p className="text-gray-600">
+                Nous élaborons les plans, estimons les coûts et proposons des solutions techniques adaptées à votre budget.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="relative p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">3</div>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Réalisation</h3>
+              <p className="text-gray-600">
+                Nous coordonnons les différents corps de métier et veillons au respect du calendrier et de la qualité d'exécution.
+              </p>
+            </div>
+
+            {/* Step 4 */}
+            <div className="relative p-6 bg-white rounded-xl shadow-sm border border-gray-100">
+              <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">4</div>
+              <h3 className="text-xl font-semibold mb-3 mt-2">Livraison et suivi</h3>
+              <p className="text-gray-600">
+                Nous effectuons la réception des travaux et assurons un suivi post-livraison pour garantir votre entière satisfaction.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-16">
+        <Container>
+          <div className="flex flex-col md:flex-row gap-12">
+            <div className="md:w-1/2">
+              <h2 className="text-3xl font-semibold mb-6">Pourquoi choisir Progineer ?</h2>
+              <div className="space-y-6">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
+                    <span className="text-khaki-800 font-semibold">01</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium mb-2">Expertise technique</h3>
+                    <p className="text-gray-600">
+                      Notre équipe combine des compétences en architecture, ingénierie et gestion de projet pour une approche complète et efficace.
+                    </p>
+                  </div>
                 </div>
-                <h2 className="text-3xl font-semibold mb-4">{service.title}</h2>
-                <p className="text-gray-600 mb-6">{service.description}</p>
-                
-                <ul className="space-y-3 mb-8">
-                  {service.features.map((feature, i) => (
-                    <li key={i} className="flex items-start">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-khaki-100 flex items-center justify-center mt-1 mr-3">
-                        <svg className="h-3 w-3 text-khaki-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button href="/estimation">Estimer mon projet</Button>
-                  <Button href="/contact" variant="outline">Prendre rendez-vous</Button>
+
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
+                    <span className="text-khaki-800 font-semibold">02</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium mb-2">Communication transparente</h3>
+                    <p className="text-gray-600">
+                      Nous vous tenons informés à chaque étape de l'avancement de votre projet et restons disponibles pour répondre à vos questions.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
+                    <span className="text-khaki-800 font-semibold">03</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-medium mb-2">Maîtrise des coûts</h3>
+                    <p className="text-gray-600">
+                      Nos méthodes de travail optimisées nous permettent de respecter scrupuleusement les budgets établis, sans mauvaises surprises.
+                    </p>
+                  </div>
                 </div>
               </div>
-              
-              <div className="rounded-xl overflow-hidden shadow-md">
+            </div>
+            
+            <div className="md:w-1/2">
+              <div className="h-full rounded-2xl overflow-hidden">
                 <img 
-                  src={service.image} 
-                  alt={service.title} 
-                  className="w-full h-[300px] md:h-[400px] object-cover"
+                  src="https://images.unsplash.com/photo-1460574283810-2aab119d8511?q=80&w=3512&auto=format&fit=crop" 
+                  alt="Architecture moderne" 
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
-          </Container>
-        </section>
-      ))}
+          </div>
+        </Container>
+      </section>
 
       {/* CTA section */}
       <section className="py-16 bg-khaki-600 text-white">
         <Container>
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl font-semibold mb-6">
-              Vous avez un projet ?
+              Prêt à concrétiser votre projet ?
             </h2>
-            <p className="text-white/90 mb-8">
-              Contactez-nous dès aujourd'hui pour discuter de votre projet et obtenir un devis personnalisé.
+            <p className="text-xl opacity-90 mb-8">
+              Contactez notre équipe pour discuter de vos besoins et obtenir un devis personnalisé.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/contact" className="bg-white text-khaki-800 hover:bg-white/90">
+              <Button 
+                href="/estimation" 
+                className="bg-white text-khaki-800 hover:bg-white/90"
+              >
+                Estimer mon projet
+              </Button>
+              <Button 
+                href="/contact" 
+                variant="outline" 
+                className="border-white/30 bg-transparent hover:bg-white/10"
+              >
                 Nous contacter
               </Button>
-              <Button href="/realisations-architecte-maison" variant="outline" className="border-white/30 bg-transparent hover:bg-white/10">
-                Voir nos réalisations
-              </Button>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16">
+        <Container>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-semibold mb-4">Questions fréquentes</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Vous avez des questions sur nos services ? Consultez nos réponses ci-dessous ou contactez-nous directement.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <h3 className="text-xl font-semibold mb-3">Quelle est la différence entre un maître d'œuvre et un architecte ?</h3>
+              <p className="text-gray-600">
+                Le maître d'œuvre, comme Progineer, coordonne et supervise l'ensemble du projet de construction, tandis que l'architecte se concentre davantage sur la conception. Nous travaillons en collaboration avec des architectes lorsque nécessaire pour certains projets.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <h3 className="text-xl font-semibold mb-3">Quel est le délai moyen pour un projet de construction ?</h3>
+              <p className="text-gray-600">
+                Les délais varient selon la nature et l'ampleur du projet. Pour une maison individuelle, comptez environ 8 à 12 mois entre la conception et la livraison. Une extension prend généralement 4 à 6 mois, et une rénovation 2 à 6 mois selon sa complexité.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <h3 className="text-xl font-semibold mb-3">Quelles garanties offrez-vous sur vos prestations ?</h3>
+              <p className="text-gray-600">
+                Nous sommes couverts par une assurance décennale et une responsabilité civile professionnelle. De plus, nous garantissons la conformité des travaux avec les plans et le respect des normes en vigueur, notamment la RE2020.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <h3 className="text-xl font-semibold mb-3">Intervenez-vous sur toute la région PACA ?</h3>
+              <p className="text-gray-600">
+                Oui, nous intervenons dans toute la région Provence-Alpes-Côte d'Azur, notamment à Marseille, Toulon, Nice, Cannes, Saint-Tropez, Fréjus et leurs environs. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre zone.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center mt-10">
+            <Link to="/faq" className="text-khaki-600 hover:text-khaki-800 font-medium">
+              Voir toutes les questions fréquentes →
+            </Link>
           </div>
         </Container>
       </section>
@@ -200,7 +346,7 @@ const Prestations = () => {
         <Container>
           <div className="text-sm text-stone-500">
             <p>
-              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z pour tous vos projets dans la région Provence-Alpes-Côte d'Azur.
+              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation énergétique et extension. Nos architectes et ingénieurs assurent la maîtrise d'ouvrage complète de votre projet. Optimisation des espaces, design d'intérieur et montage administratif pour particuliers et professionnels dans toute la région Provence-Alpes-Côte d'Azur.
             </p>
           </div>
         </Container>
