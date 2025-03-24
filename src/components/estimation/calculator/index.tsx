@@ -7,12 +7,16 @@ import ProfessionalProjectForm from './FormSteps/ProfessionalProjectForm';
 import IndividualProjectForm from './FormSteps/IndividualProjectForm';
 import EstimationTypeForm from './FormSteps/EstimationTypeForm';
 import ConstructionDetailsForm from './FormSteps/ConstructionDetailsForm';
+import TerrainForm from './FormSteps/TerrainForm';
+import GrosOeuvreForm from './FormSteps/GrosOeuvreForm';
+import CharpenteForm from './FormSteps/CharpenteForm';
+import CombleForm from './FormSteps/CombleForm';
 import ContactForm from './FormSteps/ContactForm';
 import DefaultStepContent from './DefaultStepContent';
 import EstimationResult from './EstimationResult';
 import StepContext from './StepContext';
 import { useEstimationCalculator } from './useEstimationCalculator';
-import { getStepIcon, getStepTitle } from './steps';
+import { getStepIcon, getStepTitle } from '../visualizer/visualizerUtils';
 
 const EstimationCalculator: React.FC = () => {
   const {
@@ -30,6 +34,11 @@ const EstimationCalculator: React.FC = () => {
     onProfessionalProjectSubmit,
     onIndividualProjectSubmit,
     onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
+    onTerrainSubmit,
+    onGrosOeuvreSubmit,
+    onCharpenteSubmit,
+    onComblesSubmit,
     onContactSubmit,
     updateFormData,
   } = useEstimationCalculator();
@@ -98,10 +107,59 @@ const EstimationCalculator: React.FC = () => {
               levels: formData.levels,
               units: formData.units,
             }}
-            onSubmit={(data) => {
-              updateFormData(data);
-              goToNextStep();
+            onSubmit={onConstructionDetailsSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 6:
+        // Étape terrain
+        return (
+          <TerrainForm
+            defaultValues={{
+              terrainType: formData.terrainType,
             }}
+            onSubmit={onTerrainSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 7:
+        // Étape gros oeuvre
+        return (
+          <GrosOeuvreForm
+            defaultValues={{
+              wallType: formData.wallType,
+            }}
+            onSubmit={onGrosOeuvreSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 8:
+        // Étape charpente
+        return (
+          <CharpenteForm
+            defaultValues={{
+              roofType: formData.roofType,
+            }}
+            onSubmit={onCharpenteSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 9:
+        // Étape combles
+        return (
+          <CombleForm
+            defaultValues={{
+              atticType: formData.atticType,
+            }}
+            onSubmit={onComblesSubmit}
             goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />

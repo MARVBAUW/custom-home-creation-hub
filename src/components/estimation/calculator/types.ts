@@ -49,31 +49,31 @@ export const TerrainSchema = z.object({
 });
 
 export const BuildingTypeSchema = z.object({
-  wallType: z.enum(["brick", "concrete", "stone", "cinder", "porotherm", "cellularConcrete"], {
+  wallType: z.enum(["brique", "parpaing", "porotherme", "pierre", "beton", "betonCellulaire", "sansAvis"], {
     required_error: "Veuillez sélectionner un type de mur",
   }),
 });
 
 export const RoofSchema = z.object({
-  roofType: z.enum(["accessibleTerrace", "inaccessibleTerrace", "industrialFrame", "traditionalFrame"], {
+  roofType: z.enum(["toitureAccessible", "toitureInaccessible", "charpenteIndustrielle", "charpenteTraditionnelle"], {
     required_error: "Veuillez sélectionner un type de toiture",
   }),
 });
 
 export const AtticSchema = z.object({
-  atticType: z.enum(["convertible", "lost"], {
+  atticType: z.enum(["amenageable", "perdu"], {
     required_error: "Veuillez sélectionner un type de comble",
   }),
 });
 
 export const RoofingSchema = z.object({
-  roofingType: z.enum(["flatTile", "roundTile", "slate", "zinc", "thatch", "metalSheet", "bitumen", "vegetated", "gravel"], {
+  roofingType: z.enum(["tuilePlate", "tuileRonde", "ardoise", "zinc", "chaume", "bacAcier", "bitume", "vegetalisee", "gravillonnee"], {
     required_error: "Veuillez sélectionner un type de couverture",
   }),
 });
 
 export const InsulationSchema = z.object({
-  insulationType: z.enum(["basic", "performance", "ultraPerformance"], {
+  insulationType: z.enum(["base", "performance", "ultraPerformance", "sansAvis"], {
     required_error: "Veuillez sélectionner un type d'isolation",
   }),
 });
@@ -88,61 +88,61 @@ export const FacadeSchema = z.object({
 });
 
 export const WindowsSchema = z.object({
-  windowType: z.enum(["wood", "pvc", "aluminum", "mixedWoodAlu", "coloredPvc"], {
+  windowType: z.enum(["bois", "pvc", "alu", "mixte", "pvcColore", "sansAvis"], {
     required_error: "Veuillez sélectionner un type de menuiserie",
   }),
 });
 
 export const ElectricalSchema = z.object({
-  electricalType: z.enum(["basic", "advanced", "highEnd", "highEndWithDomotics"], {
+  electricalType: z.enum(["base", "avancee", "hautDeGamme", "domotique"], {
     required_error: "Veuillez sélectionner un type d'installation électrique",
   }),
 });
 
 export const PlumbingSchema = z.object({
-  plumbingType: z.enum(["basic", "advanced", "highEnd"], {
+  plumbingType: z.enum(["base", "avancee", "hautDeGamme"], {
     required_error: "Veuillez sélectionner un type de plomberie",
   }),
 });
 
 export const HeatingSchema = z.object({
-  heatingType: z.enum(["bestValue", "mostEcological", "mostEconomical"], {
+  heatingType: z.enum(["qualitePrix", "ecologique", "economique", "sansAvis"], {
     required_error: "Veuillez sélectionner un type de chauffage",
   }),
-  hasAirConditioning: z.enum(["yes", "no"], {
+  hasAirConditioning: z.enum(["yes", "no", "sansAvis"], {
     required_error: "Veuillez préciser si vous souhaitez une climatisation",
   }),
 });
 
 export const PlasteringSchema = z.object({
-  plasteringType: z.enum(["basic", "specific", "advanced"], {
+  plasteringType: z.enum(["base", "specifique", "avancee"], {
     required_error: "Veuillez sélectionner un type de plâtrerie",
   }),
 });
 
 export const InteriorDoorsSchema = z.object({
-  doorType: z.enum(["basic", "standard", "highEnd"], {
+  doorType: z.enum(["base", "standard", "hautDeGamme"], {
     required_error: "Veuillez sélectionner un type de portes intérieures",
   }),
   interiorFittings: z.array(z.string()).default([]),
 });
 
 export const TilingSchema = z.object({
-  floorTileType: z.enum(["basic", "midRange", "highEnd", "none"], {
+  floorTileType: z.enum(["base", "milieuDeGamme", "hautDeGamme", "none"], {
     required_error: "Veuillez sélectionner un type de carrelage",
   }),
-  wallTileType: z.enum(["basic", "midRange", "highEnd", "none"], {
+  wallTileType: z.enum(["base", "milieuDeGamme", "hautDeGamme", "none"], {
     required_error: "Veuillez sélectionner un type de faïence",
   }),
   floorTilePercentage: z.string().default("0"),
 });
 
 export const ParquetSchema = z.object({
-  parquetType: z.enum(["basic", "midRange", "highEnd", "none"], {
+  parquetType: z.enum(["base", "milieuDeGamme", "hautDeGamme", "none"], {
     required_error: "Veuillez sélectionner un type de parquet",
   }),
   parquetPercentage: z.string().default("0"),
-  softFloorType: z.enum(["basic", "midRange", "highEnd", "none"], {
+  softFloorType: z.enum(["base", "milieuDeGamme", "hautDeGamme", "none"], {
     required_error: "Veuillez sélectionner un type de sol souple",
   }),
   softFloorPercentage: z.string().default("0"),
@@ -156,45 +156,14 @@ export const PaintingSchema = z.object({
   stoneCladPercentage: z.string().default("0"),
 });
 
-export const RenewableEnergySchema = z.object({
-  energyType: z.enum(["regulatory", "optimized", "semiAutonomous", "autonomous", "none"], {
-    required_error: "Veuillez sélectionner un type d'énergie renouvelable",
-  }),
-});
-
-export const EnvironmentalSolutionsSchema = z.object({
-  solutionType: z.enum(["possibleInBudget", "mediumPriority", "highPriority", "none"], {
-    required_error: "Veuillez sélectionner un type de solution environnementale",
-  }),
-});
-
-export const LandscapingSchema = z.object({
-  landscapeLevel: z.enum(["little", "much", "passionately", "none"], {
-    required_error: "Veuillez sélectionner un niveau d'aménagement paysager",
-  }),
-  fencingLength: z.string().default("0"),
-  gateLength: z.string().default("0"),
-  terraceArea: z.string().default("0"),
-  landscapeArea: z.string().default("0"),
-});
-
-export const OptionsSchema = z.object({
-  carport: z.enum(["none", "single", "double"]).default("none"),
-  pool: z.enum(["none", "polyester", "concrete", "lagoon"]).default("none"),
-  poolArea: z.string().default("0"),
-  poolHeating: z.enum(["yes", "no"]).default("no"),
-  jacuzzi: z.enum(["none", "basic", "plus", "premium"]).default("none"),
-  jacuzziArea: z.string().default("0"),
-});
-
 export const KitchenSchema = z.object({
-  kitchenType: z.enum(["none", "kitchenette", "basic", "plus", "premium"], {
+  kitchenType: z.enum(["none", "kitchenette", "base", "plus", "premium"], {
     required_error: "Veuillez sélectionner un type de cuisine",
   }),
 });
 
 export const BathroomSchema = z.object({
-  bathroomType: z.enum(["none", "basic", "midRange", "premium"], {
+  bathroomType: z.enum(["none", "base", "milieuDeGamme", "premium"], {
     required_error: "Veuillez sélectionner un type de salle de bain",
   }),
   bathroomCount: z.string().min(1, "Veuillez indiquer le nombre de salles de bain"),
@@ -206,13 +175,6 @@ export const ContactSchema = z.object({
   phone: z.string().min(10, "Veuillez indiquer un numéro de téléphone valide"),
   email: z.string().email("Veuillez indiquer un email valide"),
 });
-
-export type EstimationStep = {
-  title: string;
-  description?: string;
-  icon: React.ReactNode;
-  skipCondition?: (formData: any) => boolean;
-};
 
 export type FormData = {
   clientType: string;
