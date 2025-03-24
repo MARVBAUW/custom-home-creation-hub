@@ -37,6 +37,21 @@ const EstimationCalculator: React.FC = () => {
 
   // Rendu de l'étape actuelle avec animations
   const renderStep = () => {
+    // Si l'étape est supérieure à 6 et inférieure au total, afficher le contenu par défaut
+    if (step > 6 && step < totalSteps) {
+      return (
+        <DefaultStepContent
+          step={step}
+          visibleSteps={visibleSteps}
+          goToPreviousStep={goToPreviousStep}
+          goToNextStep={goToNextStep}
+          totalSteps={totalSteps}
+          animationDirection={animationDirection}
+        />
+      );
+    }
+
+    // Sinon, afficher les formulaires spécifiques pour chaque étape
     switch (step) {
       case 1:
         return (
@@ -105,8 +120,8 @@ const EstimationCalculator: React.FC = () => {
           />
         );
         
-      case 6:
-        // Étape contact
+      case totalSteps:
+        // Étape contact - dernière étape
         return (
           <ContactForm
             defaultValues={{

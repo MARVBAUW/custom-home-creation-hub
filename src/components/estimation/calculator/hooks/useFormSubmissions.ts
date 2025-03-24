@@ -68,7 +68,8 @@ export const useFormSubmissions = (
       levels: data.levels,
       units: data.units,
     });
-    setStep(6); // Coordonnées
+    // Au lieu de passer directement à l'étape des coordonnées, passer à l'étape 6
+    goToNextStep();
   };
 
   // Soumission du formulaire de coordonnées et calcul de l'estimation
