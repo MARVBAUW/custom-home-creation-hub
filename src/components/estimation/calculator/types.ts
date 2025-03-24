@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 // Schémas Zod pour la validation des formulaires
@@ -176,6 +175,94 @@ export const ContactSchema = z.object({
   email: z.string().email("Veuillez indiquer un email valide"),
 });
 
+export const DemolitionSchema = z.object({
+  demolitionItems: z.array(z.string()).default([]),
+  facadePercentage: z.string().optional(),
+  plasteringPercentage: z.string().optional(),
+  flooringPercentage: z.string().optional(),
+  interiorDoorsPercentage: z.string().optional(),
+  windowsPercentage: z.string().optional(),
+  plumbingPercentage: z.string().optional(),
+  sanitaryPercentage: z.string().optional(),
+  electricalPercentage: z.string().optional(),
+  acPercentage: z.string().optional(),
+  ventilationPercentage: z.string().optional(),
+  heatingPercentage: z.string().optional(),
+  entireNonStructuralPercentage: z.string().optional(),
+  demolitionArea: z.string().optional(),
+});
+
+export const RenovationGrosOeuvreSchema = z.object({
+  createWalls: z.enum(["oui", "non"]).default("non"),
+  wallsArea: z.string().optional(),
+  createFloors: z.enum(["oui", "non"]).default("non"),
+  floorType: z.enum(["bois", "beton"]).optional(),
+  floorArea: z.string().optional(),
+  specificItems: z.array(z.string()).default([]),
+  plumbingLength: z.string().optional(),
+  structuralWallArea: z.string().optional(),
+  ipnLength: z.string().optional(),
+  wallOpeningArea: z.string().optional(),
+  stairOpeningArea: z.string().optional(),
+  foundationLength: z.string().optional(),
+  foundationBlocks: z.string().optional(),
+  screedArea: z.string().optional(),
+  sewerConnectionLength: z.string().optional(),
+});
+
+export const RenovationCharpenteSchema = z.object({
+  roofStructureType: z.string(),
+  renovationArea: z.string(),
+});
+
+export const RenovationCouvertureSchema = z.object({
+  roofCoveringType: z.string(),
+  renovationArea: z.string(),
+});
+
+export const RenovationFacadeSchema = z.object({
+  facadeTypes: z.array(z.string()).default([]),
+  stonePercentage: z.string().optional(),
+  plasterPercentage: z.string().optional(),
+  brickPercentage: z.string().optional(),
+  metalCladdingPercentage: z.string().optional(),
+  woodCladdingPercentage: z.string().optional(),
+  stoneCladdingPercentage: z.string().optional(),
+});
+
+export const MenuiseriesExtSchema = z.object({
+  replacementType: z.string().optional(),
+  replacementArea: z.string().optional(),
+  additionType: z.string().optional(),
+  additionArea: z.string().optional(),
+});
+
+export const AmenagementPaysagerSchema = z.object({
+  landscapingType: z.array(z.string()).default([]),
+  landscapingArea: z.string().optional(),
+  fencingLength: z.string().optional(),
+  gateLength: z.string().optional(),
+  terraceArea: z.string().optional(),
+  
+});
+
+export const OptionsSchema = z.object({
+  carportType: z.string().optional(),
+  poolType: z.string().optional(),
+  poolArea: z.string().optional(),
+  poolHeating: z.string().optional(),
+  jacuzziType: z.string().optional(),
+  jacuzziArea: z.string().optional(),
+});
+
+export const EnergiesRenouvelablesSchema = z.object({
+  energyType: z.string(),
+});
+
+export const SolutionsEnvironSchema = z.object({
+  solutionType: z.string(),
+});
+
 export type FormData = {
   clientType: string;
   activity: string;
@@ -187,19 +274,29 @@ export type FormData = {
   surface: string;
   levels: string;
   units: string;
+  
+  // Terrain
   terrainType: string[];
+  
+  // Construction details
   wallType: string;
   roofType: string;
   atticType: string;
   roofingType: string;
   insulationType: string;
+  
+  // Facade
   stonePercentage: string;
   plasterPercentage: string;
   brickPercentage: string;
   metalCladdingPercentage: string;
   woodCladdingPercentage: string;
   stoneCladdingPercentage: string;
+  
+  // Windows and other elements
   windowType: string;
+  windowRenovationArea?: string;
+  windowNewArea?: string;
   electricalType: string;
   plumbingType: string;
   heatingType: string;
@@ -207,6 +304,8 @@ export type FormData = {
   plasteringType: string;
   doorType: string;
   interiorFittings: string[];
+  
+  // Flooring
   floorTileType: string;
   wallTileType: string;
   floorTilePercentage: string;
@@ -214,11 +313,15 @@ export type FormData = {
   parquetPercentage: string;
   softFloorType: string;
   softFloorPercentage: string;
+  
+  // Wall coverings
   basicPaintPercentage: string;
   decorativePaintPercentage: string;
   wallpaperPercentage: string;
   woodCladPercentage: string;
   stoneCladPercentage: string;
+  
+  // Optional features
   energyType: string;
   solutionType: string;
   landscapeLevel: string;
@@ -232,11 +335,39 @@ export type FormData = {
   poolHeating: string;
   jacuzzi: string;
   jacuzziArea: string;
+  
+  // Kitchen and bathroom
   kitchenType: string;
   bathroomType: string;
   bathroomCount: string;
+  
+  // Renovation-specific fields
+  demolitionItems?: string[];
+  facadePercentage?: string;
+  plasteringPercentage?: string;
+  flooringPercentage?: string;
+  interiorDoorsPercentage?: string;
+  windowsPercentage?: string;
+  plumbingPercentage?: string;
+  sanitaryPercentage?: string;
+  electricalPercentage?: string;
+  acPercentage?: string;
+  ventilationPercentage?: string;
+  heatingPercentage?: string;
+  entireNonStructuralPercentage?: string;
+  demolitionArea?: string;
+  
+  // Feature flags to control form flow
+  includeCuisine?: boolean;
+  includeBathroom?: boolean;
+  includeOptions?: boolean;
+  includeLandscaping?: boolean;
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  
+  // Contact info
   firstName: string;
   lastName: string;
   phone: string;
   email: string;
-};
+}

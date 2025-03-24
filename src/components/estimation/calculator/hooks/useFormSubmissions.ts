@@ -154,9 +154,13 @@ export const useFormSubmissions = (
   // Soumission du formulaire de menuiseries extérieures
   const onMenuiseriesExtSubmit = (data: {
     windowType: string;
+    windowRenovationArea?: string;
+    windowNewArea?: string;
   }) => {
     updateFormData({
       windowType: data.windowType,
+      windowRenovationArea: data.windowRenovationArea,
+      windowNewArea: data.windowNewArea,
     });
     goToNextStep(); // Passer à l'étape électricité (14)
   };
@@ -260,7 +264,104 @@ export const useFormSubmissions = (
       woodCladPercentage: data.woodCladPercentage,
       stoneCladPercentage: data.stoneCladPercentage,
     });
-    goToNextStep(); // Passer à l'étape cuisine (22)
+    goToNextStep(); // Passer à l'étape cuisines (22)
+  };
+
+  // Soumission du formulaire d'énergies renouvelables
+  const onEnergiesRenouvelablesSubmit = (data: {
+    energyType: string;
+  }) => {
+    updateFormData({
+      energyType: data.energyType,
+    });
+    
+    // Déterminer l'étape suivante en fonction du projet
+    // Si cuisine équipée est sélectionnée
+    if (formData.includeCuisine) {
+      setStep(27); // Aller à l'étape cuisine
+    } 
+    // Si salle de bain est sélectionnée
+    else if (formData.includeBathroom) {
+      setStep(28); // Aller à l'étape salle de bain
+    }
+    // Sinon, on finalise
+    else {
+      setStep(36); // Aller à la dernière étape (contact)
+    }
+  };
+
+  // Soumission du formulaire de solutions environnementales
+  const onSolutionsEnvironSubmit = (data: {
+    solutionType: string;
+  }) => {
+    updateFormData({
+      solutionType: data.solutionType,
+    });
+    
+    // Logique similaire pour déterminer l'étape suivante
+    if (formData.includeCuisine) {
+      setStep(27);
+    } else if (formData.includeBathroom) {
+      setStep(28);
+    } else {
+      setStep(36);
+    }
+  };
+
+  // Soumission du formulaire d'aménagements paysagers
+  const onAmenagementPaysagerSubmit = (data: {
+    landscapeLevel: string;
+    fencingLength: string;
+    gateLength: string;
+    terraceArea: string;
+    landscapeArea: string;
+  }) => {
+    updateFormData({
+      landscapeLevel: data.landscapeLevel,
+      fencingLength: data.fencingLength,
+      gateLength: data.gateLength,
+      terraceArea: data.terraceArea,
+      landscapeArea: data.landscapeArea,
+    });
+    
+    // Déterminer l'étape suivante
+    if (formData.includeOptions) {
+      setStep(26); // Aller à l'étape options (piscine, jacuzzi, carport)
+    } else if (formData.includeCuisine) {
+      setStep(27);
+    } else if (formData.includeBathroom) {
+      setStep(28);
+    } else {
+      setStep(36);
+    }
+  };
+
+  // Soumission du formulaire d'options
+  const onOptionsSubmit = (data: {
+    carport: string;
+    pool: string;
+    poolArea: string;
+    poolHeating: string;
+    jacuzzi: string;
+    jacuzziArea: string;
+  }) => {
+    updateFormData({
+      carport: data.carport,
+      pool: data.pool,
+      poolArea: data.poolArea,
+      poolHeating: data.poolHeating,
+      jacuzzi: data.jacuzzi,
+      jacuzziArea: data.jacuzziArea,
+    });
+    
+    // Déterminer l'étape suivante
+    if (formData.includeCuisine) {
+      setStep(27);
+    } else if (formData.includeBathroom) {
+      setStep(28);
+    } else {
+      setStep(36);
+    }
   };
 
   // Soumission du formulaire de cuisine
@@ -270,7 +371,13 @@ export const useFormSubmissions = (
     updateFormData({
       kitchenType: data.kitchenType,
     });
-    goToNextStep(); // Passer à l'étape salle de bain (23)
+    
+    // Déterminer l'étape suivante
+    if (formData.includeBathroom) {
+      setStep(28);
+    } else {
+      setStep(36);
+    }
   };
 
   // Soumission du formulaire de salle de bain
@@ -282,7 +389,37 @@ export const useFormSubmissions = (
       bathroomType: data.bathroomType,
       bathroomCount: data.bathroomCount,
     });
-    goToNextStep(); // Passer à l'étape contact (24)
+    setStep(36); // Aller à la dernière étape (contact)
+  };
+
+  // Pour la rénovation - Soumission demolition
+  const onDemolitionSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  // Soumission gros oeuvre renovation
+  const onGrosOeuvreRenovSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  // Soumission charpente renovation
+  const onCharpenteRenovSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  // Soumission couverture renovation
+  const onCouvertureRenovSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  // Soumission façade renovation
+  const onFacadeRenovSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
   };
 
   // Soumission du formulaire de coordonnées et calcul de l'estimation
@@ -325,8 +462,17 @@ export const useFormSubmissions = (
     onCarrelageSubmit,
     onParquetSubmit,
     onPeintureSubmit,
+    onEnergiesRenouvelablesSubmit,
+    onSolutionsEnvironSubmit,
+    onAmenagementPaysagerSubmit,
+    onOptionsSubmit,
     onCuisineSubmit,
     onSalleDeBainSubmit,
+    onDemolitionSubmit,
+    onGrosOeuvreRenovSubmit,
+    onCharpenteRenovSubmit,
+    onCouvertureRenovSubmit,
+    onFacadeRenovSubmit,
     onContactSubmit
   };
 };
