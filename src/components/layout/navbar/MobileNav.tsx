@@ -18,7 +18,7 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 z-40 bg-white mt-16">
+    <div className="fixed inset-0 z-40 bg-white mt-16 overflow-auto">
       <Container className="flex flex-col h-full pt-4 pb-20">
         <ul className="space-y-4">
           {navLinks.map((item) => (
@@ -26,7 +26,7 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
               {item.subLinks ? (
                 <>
                   <button
-                    onClick={() => toggleDropdown(item.name)}
+                    onClick={() => toggleDropdown(item.name === openDropdown ? null : item.name)}
                     className="flex items-center justify-between w-full py-2 text-gray-700"
                   >
                     {item.name}

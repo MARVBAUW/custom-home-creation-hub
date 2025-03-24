@@ -15,12 +15,19 @@ interface DesktopNavProps {
 const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps) => {
   const location = useLocation();
 
-  const isActive = (item: NavLink) => 
-    location.pathname === item.path ||
-    (item.subLinks && item.subLinks.some(subLink => 
-      location.pathname + location.hash === subLink.path || 
-      location.pathname === item.path
-    ));
+  const isActive = (item: NavLink) => {
+    if (location.pathname === item.path) return true;
+    
+    if (item.subLinks) {
+      // For items with sublinks, check if any sublink path matches current location
+      return item.subLinks.some(subLink => {
+        const [path, hash] = subLink.path.split('#');
+        return location.pathname === path && (!hash || location.hash === `#${hash}`);
+      });
+    }
+    
+    return false;
+  };
 
   return (
     <div className="hidden md:flex items-center justify-between w-full">

@@ -38,7 +38,6 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
                     <Link
                       to={subLink.path}
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-khaki-50"
-                      onClick={() => toggleDropdown(null)}
                     >
                       {subLink.name}
                     </Link>

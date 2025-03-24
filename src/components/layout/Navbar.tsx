@@ -29,7 +29,7 @@ const Navbar = () => {
     setOpenDropdown(null);
   }, [location]);
 
-  const toggleDropdown = (name: string) => {
+  const toggleDropdown = (name: string | null) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 
@@ -68,7 +68,7 @@ const Navbar = () => {
         isOpen={isOpen} 
         navLinks={navLinks} 
         openDropdown={openDropdown} 
-        toggleDropdown={setOpenDropdown} 
+        toggleDropdown={toggleDropdown} 
       />
     </header>
   );
