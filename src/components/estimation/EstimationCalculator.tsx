@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,6 +64,179 @@ const TerrainSchema = z.object({
   terrainType: z.array(z.string()).min(1, "Veuillez sélectionner au moins un type de terrain"),
 });
 
+// Building type schema
+const BuildingTypeSchema = z.object({
+  wallType: z.enum(["brick", "concrete", "stone", "cinder", "porotherm", "cellularConcrete"], {
+    required_error: "Veuillez sélectionner un type de mur",
+  }),
+});
+
+// Roof schema
+const RoofSchema = z.object({
+  roofType: z.enum(["accessibleTerrace", "inaccessibleTerrace", "industrialFrame", "traditionalFrame"], {
+    required_error: "Veuillez sélectionner un type de toiture",
+  }),
+});
+
+// Attic schema
+const AtticSchema = z.object({
+  atticType: z.enum(["convertible", "lost"], {
+    required_error: "Veuillez sélectionner un type de comble",
+  }),
+});
+
+// Roofing schema
+const RoofingSchema = z.object({
+  roofingType: z.enum(["flatTile", "roundTile", "slate", "zinc", "thatch", "metalSheet", "bitumen", "vegetated", "gravel"], {
+    required_error: "Veuillez sélectionner un type de couverture",
+  }),
+});
+
+// Insulation schema
+const InsulationSchema = z.object({
+  insulationType: z.enum(["basic", "performance", "ultraPerformance"], {
+    required_error: "Veuillez sélectionner un type d'isolation",
+  }),
+});
+
+// Facade schema
+const FacadeSchema = z.object({
+  stonePercentage: z.string().default("0"),
+  plasterPercentage: z.string().default("0"),
+  brickPercentage: z.string().default("0"),
+  metalCladdingPercentage: z.string().default("0"),
+  woodCladdingPercentage: z.string().default("0"),
+  stoneCladdingPercentage: z.string().default("0"),
+});
+
+// Windows schema
+const WindowsSchema = z.object({
+  windowType: z.enum(["wood", "pvc", "aluminum", "mixedWoodAlu", "coloredPvc"], {
+    required_error: "Veuillez sélectionner un type de menuiserie",
+  }),
+});
+
+// Electrical schema
+const ElectricalSchema = z.object({
+  electricalType: z.enum(["basic", "advanced", "highEnd", "highEndWithDomotics"], {
+    required_error: "Veuillez sélectionner un type d'installation électrique",
+  }),
+});
+
+// Plumbing schema
+const PlumbingSchema = z.object({
+  plumbingType: z.enum(["basic", "advanced", "highEnd"], {
+    required_error: "Veuillez sélectionner un type de plomberie",
+  }),
+});
+
+// Heating schema
+const HeatingSchema = z.object({
+  heatingType: z.enum(["bestValue", "mostEcological", "mostEconomical"], {
+    required_error: "Veuillez sélectionner un type de chauffage",
+  }),
+  hasAirConditioning: z.enum(["yes", "no"], {
+    required_error: "Veuillez préciser si vous souhaitez une climatisation",
+  }),
+});
+
+// Plastering schema
+const PlasteringSchema = z.object({
+  plasteringType: z.enum(["basic", "specific", "advanced"], {
+    required_error: "Veuillez sélectionner un type de plâtrerie",
+  }),
+});
+
+// Interior doors schema
+const InteriorDoorsSchema = z.object({
+  doorType: z.enum(["basic", "standard", "highEnd"], {
+    required_error: "Veuillez sélectionner un type de portes intérieures",
+  }),
+  interiorFittings: z.array(z.string()).default([]),
+});
+
+// Tiling schema
+const TilingSchema = z.object({
+  floorTileType: z.enum(["basic", "midRange", "highEnd", "none"], {
+    required_error: "Veuillez sélectionner un type de carrelage",
+  }),
+  wallTileType: z.enum(["basic", "midRange", "highEnd", "none"], {
+    required_error: "Veuillez sélectionner un type de faïence",
+  }),
+  floorTilePercentage: z.string().default("0"),
+});
+
+// Parquet schema
+const ParquetSchema = z.object({
+  parquetType: z.enum(["basic", "midRange", "highEnd", "none"], {
+    required_error: "Veuillez sélectionner un type de parquet",
+  }),
+  parquetPercentage: z.string().default("0"),
+  softFloorType: z.enum(["basic", "midRange", "highEnd", "none"], {
+    required_error: "Veuillez sélectionner un type de sol souple",
+  }),
+  softFloorPercentage: z.string().default("0"),
+});
+
+// Painting schema
+const PaintingSchema = z.object({
+  basicPaintPercentage: z.string().default("0"),
+  decorativePaintPercentage: z.string().default("0"),
+  wallpaperPercentage: z.string().default("0"),
+  woodCladPercentage: z.string().default("0"),
+  stoneCladPercentage: z.string().default("0"),
+});
+
+// Renewable energy schema
+const RenewableEnergySchema = z.object({
+  energyType: z.enum(["regulatory", "optimized", "semiAutonomous", "autonomous", "none"], {
+    required_error: "Veuillez sélectionner un type d'énergie renouvelable",
+  }),
+});
+
+// Environmental solutions schema
+const EnvironmentalSolutionsSchema = z.object({
+  solutionType: z.enum(["possibleInBudget", "mediumPriority", "highPriority", "none"], {
+    required_error: "Veuillez sélectionner un type de solution environnementale",
+  }),
+});
+
+// Landscaping schema
+const LandscapingSchema = z.object({
+  landscapeLevel: z.enum(["little", "much", "passionately", "none"], {
+    required_error: "Veuillez sélectionner un niveau d'aménagement paysager",
+  }),
+  fencingLength: z.string().default("0"),
+  gateLength: z.string().default("0"),
+  terraceArea: z.string().default("0"),
+  landscapeArea: z.string().default("0"),
+});
+
+// Options schema
+const OptionsSchema = z.object({
+  carport: z.enum(["none", "single", "double"]).default("none"),
+  pool: z.enum(["none", "polyester", "concrete", "lagoon"]).default("none"),
+  poolArea: z.string().default("0"),
+  poolHeating: z.enum(["yes", "no"]).default("no"),
+  jacuzzi: z.enum(["none", "basic", "plus", "premium"]).default("none"),
+  jacuzziArea: z.string().default("0"),
+});
+
+// Kitchen schema
+const KitchenSchema = z.object({
+  kitchenType: z.enum(["none", "kitchenette", "basic", "plus", "premium"], {
+    required_error: "Veuillez sélectionner un type de cuisine",
+  }),
+});
+
+// Bathroom schema
+const BathroomSchema = z.object({
+  bathroomType: z.enum(["none", "basic", "midRange", "premium"], {
+    required_error: "Veuillez sélectionner un type de salle de bain",
+  }),
+  bathroomCount: z.string().min(1, "Veuillez indiquer le nombre de salles de bain"),
+});
+
 // Contact schema
 const ContactSchema = z.object({
   firstName: z.string().min(1, "Veuillez indiquer votre prénom"),
@@ -76,12 +248,13 @@ const ContactSchema = z.object({
 type EstimationStep = {
   title: string;
   description?: string;
+  skipCondition?: (formData: any) => boolean;
 }
 
 const EstimationCalculator = () => {
   const { toast } = useToast();
   const [step, setStep] = useState(1);
-  const [totalSteps, setTotalSteps] = useState(7); // This will change based on user choices
+  const [totalSteps, setTotalSteps] = useState(23); // Ajusté pour inclure toutes les étapes
   const [estimationResult, setEstimationResult] = useState<number | null>(null);
   const [showResultDialog, setShowResultDialog] = useState(false);
   
@@ -98,6 +271,53 @@ const EstimationCalculator = () => {
     levels: "",
     units: "",
     terrainType: [] as string[],
+    wallType: "",
+    roofType: "",
+    atticType: "",
+    roofingType: "",
+    insulationType: "",
+    stonePercentage: "0",
+    plasterPercentage: "0",
+    brickPercentage: "0",
+    metalCladdingPercentage: "0",
+    woodCladdingPercentage: "0",
+    stoneCladdingPercentage: "0",
+    windowType: "",
+    electricalType: "",
+    plumbingType: "",
+    heatingType: "",
+    hasAirConditioning: "",
+    plasteringType: "",
+    doorType: "",
+    interiorFittings: [] as string[],
+    floorTileType: "",
+    wallTileType: "",
+    floorTilePercentage: "0",
+    parquetType: "",
+    parquetPercentage: "0",
+    softFloorType: "",
+    softFloorPercentage: "0",
+    basicPaintPercentage: "0",
+    decorativePaintPercentage: "0",
+    wallpaperPercentage: "0",
+    woodCladPercentage: "0",
+    stoneCladPercentage: "0",
+    energyType: "",
+    solutionType: "",
+    landscapeLevel: "",
+    fencingLength: "0",
+    gateLength: "0",
+    terraceArea: "0",
+    landscapeArea: "0",
+    carport: "none",
+    pool: "none",
+    poolArea: "0",
+    poolHeating: "no",
+    jacuzzi: "none",
+    jacuzziArea: "0",
+    kitchenType: "",
+    bathroomType: "",
+    bathroomCount: "0",
     firstName: "",
     lastName: "",
     phone: "",
@@ -107,13 +327,38 @@ const EstimationCalculator = () => {
   // Define all possible steps
   const steps: EstimationStep[] = [
     { title: "Votre profil" },
-    { title: "Informations sur votre projet (Professionnel)" },
-    { title: "Informations sur votre projet (Particulier)" },
+    { title: "Informations sur votre projet (Professionnel)", skipCondition: (data) => data.clientType !== "professional" },
+    { title: "Informations sur votre projet (Particulier)", skipCondition: (data) => data.clientType !== "individual" },
     { title: "Type d'estimation", description: "Choisissez le niveau de précision souhaité pour votre estimation" },
     { title: "Détails de construction", description: "Informations de base sur votre projet" },
     { title: "Type de terrain", description: "Caractéristiques de votre terrain" },
+    { title: "Type de bâtiment", description: "Structure et matériaux principaux" },
+    { title: "Toiture", description: "Type de toiture envisagée" },
+    { title: "Combles", description: "Aménagement des combles" },
+    { title: "Couverture / Étanchéité", description: "Matériaux de couverture" },
+    { title: "Isolation", description: "Niveau d'isolation thermique" },
+    { title: "Façade", description: "Revêtements extérieurs" },
+    { title: "Menuiseries ext.", description: "Fenêtres et portes extérieures" },
+    { title: "Électricité", description: "Installation électrique" },
+    { title: "Plomberie", description: "Installation sanitaire" },
+    { title: "Chauffage / Climatisation", description: "Système de chauffage et climatisation" },
+    { title: "Plâtrerie", description: "Cloisons et aménagements" },
+    { title: "Menuiseries int.", description: "Portes et aménagements intérieurs" },
+    { title: "Carrelage / Faïence", description: "Revêtements de sol et murs" },
+    { title: "Parquet / Sol souple", description: "Revêtements de sol" },
+    { title: "Peinture / Revêtements muraux", description: "Finitions murales" },
+    { title: "Cuisine", description: "Aménagement de cuisine" },
+    { title: "Salle de bain", description: "Aménagement de salle de bain" },
     { title: "Vos coordonnées", description: "Pour recevoir votre estimation par email" },
   ];
+
+  // Filter steps based on form data
+  const visibleSteps = steps.filter(s => !s.skipCondition || !s.skipCondition(formData));
+  
+  // Update total steps when form data changes
+  useEffect(() => {
+    setTotalSteps(visibleSteps.length);
+  }, [formData.clientType, formData.projectType, formData.estimationType]);
 
   // Client type form
   const clientTypeForm = useForm<z.infer<typeof ClientTypeSchema>>({
@@ -166,6 +411,159 @@ const EstimationCalculator = () => {
     resolver: zodResolver(TerrainSchema),
     defaultValues: {
       terrainType: formData.terrainType || [],
+    },
+  });
+
+  // Building type form
+  const buildingTypeForm = useForm<z.infer<typeof BuildingTypeSchema>>({
+    resolver: zodResolver(BuildingTypeSchema),
+    defaultValues: {
+      wallType: formData.wallType as any || undefined,
+    },
+  });
+
+  // Roof form
+  const roofForm = useForm<z.infer<typeof RoofSchema>>({
+    resolver: zodResolver(RoofSchema),
+    defaultValues: {
+      roofType: formData.roofType as any || undefined,
+    },
+  });
+
+  // Attic form
+  const atticForm = useForm<z.infer<typeof AtticSchema>>({
+    resolver: zodResolver(AtticSchema),
+    defaultValues: {
+      atticType: formData.atticType as any || undefined,
+    },
+  });
+
+  // Roofing form
+  const roofingForm = useForm<z.infer<typeof RoofingSchema>>({
+    resolver: zodResolver(RoofingSchema),
+    defaultValues: {
+      roofingType: formData.roofingType as any || undefined,
+    },
+  });
+
+  // Insulation form
+  const insulationForm = useForm<z.infer<typeof InsulationSchema>>({
+    resolver: zodResolver(InsulationSchema),
+    defaultValues: {
+      insulationType: formData.insulationType as any || undefined,
+    },
+  });
+
+  // Facade form
+  const facadeForm = useForm<z.infer<typeof FacadeSchema>>({
+    resolver: zodResolver(FacadeSchema),
+    defaultValues: {
+      stonePercentage: formData.stonePercentage || "0",
+      plasterPercentage: formData.plasterPercentage || "0",
+      brickPercentage: formData.brickPercentage || "0",
+      metalCladdingPercentage: formData.metalCladdingPercentage || "0",
+      woodCladdingPercentage: formData.woodCladdingPercentage || "0",
+      stoneCladdingPercentage: formData.stoneCladdingPercentage || "0",
+    },
+  });
+
+  // Windows form
+  const windowsForm = useForm<z.infer<typeof WindowsSchema>>({
+    resolver: zodResolver(WindowsSchema),
+    defaultValues: {
+      windowType: formData.windowType as any || undefined,
+    },
+  });
+
+  // Electrical form
+  const electricalForm = useForm<z.infer<typeof ElectricalSchema>>({
+    resolver: zodResolver(ElectricalSchema),
+    defaultValues: {
+      electricalType: formData.electricalType as any || undefined,
+    },
+  });
+
+  // Plumbing form
+  const plumbingForm = useForm<z.infer<typeof PlumbingSchema>>({
+    resolver: zodResolver(PlumbingSchema),
+    defaultValues: {
+      plumbingType: formData.plumbingType as any || undefined,
+    },
+  });
+
+  // Heating form
+  const heatingForm = useForm<z.infer<typeof HeatingSchema>>({
+    resolver: zodResolver(HeatingSchema),
+    defaultValues: {
+      heatingType: formData.heatingType as any || undefined,
+      hasAirConditioning: formData.hasAirConditioning as any || undefined,
+    },
+  });
+
+  // Plastering form
+  const plasteringForm = useForm<z.infer<typeof PlasteringSchema>>({
+    resolver: zodResolver(PlasteringSchema),
+    defaultValues: {
+      plasteringType: formData.plasteringType as any || undefined,
+    },
+  });
+
+  // Interior doors form
+  const interiorDoorsForm = useForm<z.infer<typeof InteriorDoorsSchema>>({
+    resolver: zodResolver(InteriorDoorsSchema),
+    defaultValues: {
+      doorType: formData.doorType as any || undefined,
+      interiorFittings: formData.interiorFittings || [],
+    },
+  });
+
+  // Tiling form
+  const tilingForm = useForm<z.infer<typeof TilingSchema>>({
+    resolver: zodResolver(TilingSchema),
+    defaultValues: {
+      floorTileType: formData.floorTileType as any || undefined,
+      wallTileType: formData.wallTileType as any || undefined,
+      floorTilePercentage: formData.floorTilePercentage || "0",
+    },
+  });
+
+  // Parquet form
+  const parquetForm = useForm<z.infer<typeof ParquetSchema>>({
+    resolver: zodResolver(ParquetSchema),
+    defaultValues: {
+      parquetType: formData.parquetType as any || undefined,
+      parquetPercentage: formData.parquetPercentage || "0",
+      softFloorType: formData.softFloorType as any || undefined,
+      softFloorPercentage: formData.softFloorPercentage || "0",
+    },
+  });
+
+  // Painting form
+  const paintingForm = useForm<z.infer<typeof PaintingSchema>>({
+    resolver: zodResolver(PaintingSchema),
+    defaultValues: {
+      basicPaintPercentage: formData.basicPaintPercentage || "0",
+      decorativePaintPercentage: formData.decorativePaintPercentage || "0",
+      wallpaperPercentage: formData.wallpaperPercentage || "0",
+      woodCladPercentage: formData.woodCladPercentage || "0",
+      stoneCladPercentage: formData.stoneCladPercentage || "0",
+    },
+  });
+
+  // Kitchen form
+  const kitchenForm = useForm<z.infer<typeof KitchenSchema>>({
+    resolver: zodResolver(KitchenSchema),
+    defaultValues: {
+      kitchenType: formData.kitchenType as any || undefined,
+    },
+  });
+
+  // Bathroom form
+  const bathroomForm = useForm<z.infer<typeof BathroomSchema>>({
+    resolver: zodResolver(BathroomSchema),
+    defaultValues: {
+      bathroomType: formData.bathroomType as any || undefined,
+      bathroomCount: formData.bathroomCount || "0",
     },
   });
 
@@ -245,7 +643,147 @@ const EstimationCalculator = () => {
   // Handle terrain submission
   const onTerrainSubmit = (data: z.infer<typeof TerrainSchema>) => {
     setFormData({ ...formData, terrainType: data.terrainType });
-    setStep(7); // Contact info
+    setStep(7); // Building type
+  };
+
+  // Handle building type submission
+  const onBuildingTypeSubmit = (data: z.infer<typeof BuildingTypeSchema>) => {
+    setFormData({ ...formData, wallType: data.wallType });
+    setStep(8); // Roof type
+  };
+
+  // Handle roof submission
+  const onRoofSubmit = (data: z.infer<typeof RoofSchema>) => {
+    setFormData({ ...formData, roofType: data.roofType });
+    setStep(9); // Attic type
+  };
+
+  // Handle attic submission
+  const onAtticSubmit = (data: z.infer<typeof AtticSchema>) => {
+    setFormData({ ...formData, atticType: data.atticType });
+    setStep(10); // Roofing type
+  };
+
+  // Handle roofing submission
+  const onRoofingSubmit = (data: z.infer<typeof RoofingSchema>) => {
+    setFormData({ ...formData, roofingType: data.roofingType });
+    setStep(11); // Insulation
+  };
+
+  // Handle insulation submission
+  const onInsulationSubmit = (data: z.infer<typeof InsulationSchema>) => {
+    setFormData({ ...formData, insulationType: data.insulationType });
+    setStep(12); // Facade
+  };
+
+  // Handle facade submission
+  const onFacadeSubmit = (data: z.infer<typeof FacadeSchema>) => {
+    setFormData({ 
+      ...formData, 
+      stonePercentage: data.stonePercentage,
+      plasterPercentage: data.plasterPercentage,
+      brickPercentage: data.brickPercentage,
+      metalCladdingPercentage: data.metalCladdingPercentage,
+      woodCladdingPercentage: data.woodCladdingPercentage,
+      stoneCladdingPercentage: data.stoneCladdingPercentage,
+    });
+    setStep(13); // Windows
+  };
+
+  // Handle windows submission
+  const onWindowsSubmit = (data: z.infer<typeof WindowsSchema>) => {
+    setFormData({ ...formData, windowType: data.windowType });
+    setStep(14); // Electrical
+  };
+
+  // Handle electrical submission
+  const onElectricalSubmit = (data: z.infer<typeof ElectricalSchema>) => {
+    setFormData({ ...formData, electricalType: data.electricalType });
+    setStep(15); // Plumbing
+  };
+
+  // Handle plumbing submission
+  const onPlumbingSubmit = (data: z.infer<typeof PlumbingSchema>) => {
+    setFormData({ ...formData, plumbingType: data.plumbingType });
+    setStep(16); // Heating
+  };
+
+  // Handle heating submission
+  const onHeatingSubmit = (data: z.infer<typeof HeatingSchema>) => {
+    setFormData({ 
+      ...formData, 
+      heatingType: data.heatingType,
+      hasAirConditioning: data.hasAirConditioning,
+    });
+    setStep(17); // Plastering
+  };
+
+  // Handle plastering submission
+  const onPlasteringSubmit = (data: z.infer<typeof PlasteringSchema>) => {
+    setFormData({ ...formData, plasteringType: data.plasteringType });
+    setStep(18); // Interior doors
+  };
+
+  // Handle interior doors submission
+  const onInteriorDoorsSubmit = (data: z.infer<typeof InteriorDoorsSchema>) => {
+    setFormData({ 
+      ...formData, 
+      doorType: data.doorType,
+      interiorFittings: data.interiorFittings,
+    });
+    setStep(19); // Tiling
+  };
+
+  // Handle tiling submission
+  const onTilingSubmit = (data: z.infer<typeof TilingSchema>) => {
+    setFormData({ 
+      ...formData, 
+      floorTileType: data.floorTileType,
+      wallTileType: data.wallTileType,
+      floorTilePercentage: data.floorTilePercentage,
+    });
+    setStep(20); // Parquet
+  };
+
+  // Handle parquet submission
+  const onParquetSubmit = (data: z.infer<typeof ParquetSchema>) => {
+    setFormData({ 
+      ...formData, 
+      parquetType: data.parquetType,
+      parquetPercentage: data.parquetPercentage,
+      softFloorType: data.softFloorType,
+      softFloorPercentage: data.softFloorPercentage,
+    });
+    setStep(21); // Painting
+  };
+
+  // Handle painting submission
+  const onPaintingSubmit = (data: z.infer<typeof PaintingSchema>) => {
+    setFormData({ 
+      ...formData, 
+      basicPaintPercentage: data.basicPaintPercentage,
+      decorativePaintPercentage: data.decorativePaintPercentage,
+      wallpaperPercentage: data.wallpaperPercentage,
+      woodCladPercentage: data.woodCladPercentage,
+      stoneCladPercentage: data.stoneCladPercentage,
+    });
+    setStep(22); // Kitchen
+  };
+
+  // Handle kitchen submission
+  const onKitchenSubmit = (data: z.infer<typeof KitchenSchema>) => {
+    setFormData({ ...formData, kitchenType: data.kitchenType });
+    setStep(23); // Bathroom
+  };
+
+  // Handle bathroom submission
+  const onBathroomSubmit = (data: z.infer<typeof BathroomSchema>) => {
+    setFormData({ 
+      ...formData, 
+      bathroomType: data.bathroomType,
+      bathroomCount: data.bathroomCount,
+    });
+    setStep(24); // Contact
   };
 
   // Handle contact submission and complete estimation
@@ -258,13 +796,13 @@ const EstimationCalculator = () => {
       email: data.email,
     });
     
-    // Calculate estimation based on form data
+    // Calculate estimation based on all form data
     calculateEstimation();
   };
 
   // Calculate the cost estimation
   const calculateEstimation = () => {
-    // Basic calculation formula - this would be much more complex in reality
+    // Basic calculation formula
     let basePrice = 0;
     const surface = parseInt(formData.surface) || 0;
     
@@ -291,803 +829,76 @@ const EstimationCalculator = () => {
     if (formData.terrainType.includes("rocky")) terrainMultiplier *= 1.2;
     if (formData.terrainType.includes("clayey")) terrainMultiplier *= 1.1;
     if (formData.terrainType.includes("sloped")) terrainMultiplier *= 1.15;
-    
-    // Calculate final estimation
-    const estimatedCost = Math.round(basePrice * surface * terrainMultiplier);
-    
-    setEstimationResult(estimatedCost);
-    setShowResultDialog(true);
-    
-    // Send the data to backend (would be implemented in a real scenario)
-    console.log("Sending estimation data:", formData);
-    console.log("Estimated cost:", estimatedCost);
-  };
 
-  // Go back to previous step
-  const handlePrevious = () => {
-    if (step > 1) {
-      let prevStep = step - 1;
-      
-      // Skip professional step if user is individual
-      if (prevStep === 2 && formData.clientType === "individual") {
-        prevStep = 1;
-      }
-      
-      // Skip individual step if user is professional
-      if (prevStep === 3 && formData.clientType === "professional") {
-        prevStep = 2;
-      }
-      
-      setStep(prevStep);
+    // Apply multipliers based on wall type
+    let wallMultiplier = 1;
+    switch (formData.wallType) {
+      case "brick":
+        wallMultiplier = 1.1;
+        break;
+      case "concrete":
+        wallMultiplier = 1.05;
+        break;
+      case "stone":
+        wallMultiplier = 1.3;
+        break;
+      case "cinder":
+        wallMultiplier = 1;
+        break;
+      case "porotherm":
+        wallMultiplier = 1.2;
+        break;
+      case "cellularConcrete":
+        wallMultiplier = 1.15;
+        break;
     }
-  };
 
-  // Render the current step
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <Form {...clientTypeForm}>
-            <form onSubmit={clientTypeForm.handleSubmit(onClientTypeSubmit)} className="space-y-6">
-              <FormField
-                control={clientTypeForm.control}
-                name="clientType"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-base">Vous êtes ?</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-3"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="professional" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Professionnel
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="individual" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Particulier
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="pt-4 flex justify-end">
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 2: // Professional project info
-        return (
-          <Form {...professionalProjectForm}>
-            <form onSubmit={professionalProjectForm.handleSubmit(onProfessionalProjectSubmit)} className="space-y-6">
-              <FormField
-                control={professionalProjectForm.control}
-                name="activity"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-base">Quel est votre activité ?</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="offices" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Bureaux
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="commerce" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Commerce
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="hotel" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Hotellerie
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="restaurant" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Restauration
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="industry" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Industrie
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="realEstate" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Investisseur immobilier
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={professionalProjectForm.control}
-                name="projectType"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-base">Quel type de projet ?</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="construction" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Construction
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="renovation" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Rénovation
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="extension" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Extension
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="optimization" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Optimisation
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="division" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Division
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="design" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Design d'espace / décoration
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={professionalProjectForm.control}
-                  name="startDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quand souhaitez-vous réaliser le projet ?</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={professionalProjectForm.control}
-                  name="endDate"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Date de fin souhaitée ?</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 3: // Individual project info
-        return (
-          <Form {...individualProjectForm}>
-            <form onSubmit={individualProjectForm.handleSubmit(onIndividualProjectSubmit)} className="space-y-6">
-              <div className="bg-amber-50 border border-amber-200 p-4 rounded-md mb-6">
-                <p className="text-amber-800 text-sm">
-                  Cet estimatif de travaux est fourni à titre indicatif pour vous aider dans votre prise de décision. 
-                  Il ne remplace pas un devis complet, qui nécessite un rendez-vous avec un maître d'œuvre ou des artisans 
-                  pour étudier votre projet en détail et adapter le chiffrage à vos besoins spécifiques.
-                </p>
-              </div>
-              
-              <FormField
-                control={individualProjectForm.control}
-                name="projectType"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-base">Quel type de projet ?</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                      >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="construction" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Construction
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="renovation" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Rénovation
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="extension" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Extension
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="optimization" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Optimisation
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="division" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Division
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
-                          <FormControl>
-                            <RadioGroupItem value="design" />
-                          </FormControl>
-                          <FormLabel className="font-normal cursor-pointer">
-                            Design d'espace / décoration
-                          </FormLabel>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 4: // Estimation type
-        return (
-          <Form {...estimationTypeForm}>
-            <form onSubmit={estimationTypeForm.handleSubmit(onEstimationTypeSubmit)} className="space-y-6">
-              <FormField
-                control={estimationTypeForm.control}
-                name="estimationType"
-                render={({ field }) => (
-                  <FormItem className="space-y-3">
-                    <FormLabel className="text-base">TYPE D'ESTIMATION</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="flex flex-col space-y-6"
-                      >
-                        <FormItem className="flex flex-col space-y-2 border border-gray-200 p-4 rounded-md hover:border-khaki-600 transition-all">
-                          <div className="flex items-start space-x-3">
-                            <FormControl>
-                              <RadioGroupItem value="quick" />
-                            </FormControl>
-                            <div>
-                              <FormLabel className="font-medium cursor-pointer">
-                                Rapide 5 mins (Précision à + ou - 10%)
-                              </FormLabel>
-                              <p className="text-sm text-gray-500">L'estimation rapide demande peu ou pas de connaissances</p>
-                            </div>
-                          </div>
-                        </FormItem>
-                        
-                        <FormItem className="flex flex-col space-y-2 border border-gray-200 p-4 rounded-md hover:border-khaki-600 transition-all">
-                          <div className="flex items-start space-x-3">
-                            <FormControl>
-                              <RadioGroupItem value="precise" />
-                            </FormControl>
-                            <div>
-                              <FormLabel className="font-medium cursor-pointer">
-                                Précise 15 mins (précision à + ou- 5%)
-                              </FormLabel>
-                              <p className="text-sm text-gray-500">L'estimation précise demande quelques connaissances dans le domaine</p>
-                            </div>
-                          </div>
-                        </FormItem>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="bg-gray-50 border border-gray-200 p-4 rounded-md space-y-4">
-                <p className="text-sm text-gray-600">
-                  <strong>NOTA :</strong> Pour les questions nécessitant des quantités (m², ml, nombre, %), il n'est pas nécessaire d'indiquer des valeurs avec une précision absolue. L'important est de donner une estimation selon votre propre appréciation, afin que nous puissions vous fournir une estimation indicative adaptée.
-                </p>
-                <p className="text-sm text-gray-600">
-                  <strong>NOTA :</strong> Pour les questions nécessitant un niveau de gamme (Base, milieu de gamme, haut de gamme, premium), ces précisions ont une vocation économique : standards étant le plus économique $ , haut de gamme ou prémium étant le moins économique $$$.
-                </p>
-              </div>
-              
-              <FormField
-                control={estimationTypeForm.control}
-                name="termsAccepted"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="cursor-pointer">
-                        J'ai pris connaissance des NOTA.
-                      </FormLabel>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 5: // Construction details
-        return (
-          <Form {...constructionDetailsForm}>
-            <form onSubmit={constructionDetailsForm.handleSubmit(onConstructionDetailsSubmit)} className="space-y-6">
-              <div className="space-y-4">
-                <FormField
-                  control={constructionDetailsForm.control}
-                  name="surface"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Quelle est la surface de votre projet ?</FormLabel>
-                      <div className="flex items-center space-x-2">
-                        <FormControl>
-                          <Input type="number" placeholder="0" {...field} />
-                        </FormControl>
-                        <span className="text-gray-500">m²</span>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={constructionDetailsForm.control}
-                  name="levels"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Combien de niveaux comporte votre projet ?</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="1" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={constructionDetailsForm.control}
-                  name="units"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Combien de logements comporte le projet futur ?</FormLabel>
-                      <FormControl>
-                        <Input type="number" placeholder="1" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 6: // Terrain type
-        return (
-          <Form {...terrainForm}>
-            <form onSubmit={terrainForm.handleSubmit(onTerrainSubmit)} className="space-y-6">
-              <FormField
-                control={terrainForm.control}
-                name="terrainType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base">CARACTÉRISTIQUE DU TERRAIN</FormLabel>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
-                      {[
-                        { id: "rocky", label: "ROCHEUX", image: "https://storage.tally.so/ca35d469-4aca-4551-b106-d82eb6685aad/DALL-E-2024-10-23-11.00.10---A-beautiful-illustration-of-a-rocky-terrain-showing-a-rugged-landscape-with-scattered-rocks-and-boulders.-The-ground-is-uneven-with-stone-formations-.webp" },
-                        { id: "clayey", label: "ARGILEUX", image: "https://storage.tally.so/19204de1-2be8-40c9-82fa-ee1469480b67/DALL-E-2024-10-23-11.00.08---A-beautiful-illustration-of-a-clayey-terrain-showing-a-landscape-with-slightly-cracked-earth-and-a-smooth-surface.-The-ground-looks-soft-and-dense-w.webp" },
-                        { id: "flat", label: "PLAT", image: "https://storage.tally.so/02f06ce3-8138-4760-881a-3caaebe90099/DALL-E-2024-10-23-11.00.12---A-beautiful-illustration-of-a-flat-terrain-showing-a-wide-open-plain-with-even-ground.-The-landscape-is-serene-and-peaceful-with-short-green-grass-.webp" },
-                        { id: "rough", label: "ACCIDENTÉ", image: "https://storage.tally.so/1c1404ae-601d-4378-a2ff-d235bd924c65/DALL-E-2024-10-23-10.56.00---An-illustration-of-rugged-accidented-terrain-with-uneven-and-irregular-ground-levels-showing-a-variety-of-small-hills-dips-and-mounds.-The-landsca.webp" },
-                        { id: "sloped", label: "PENTU", image: "https://storage.tally.so/e0576168-a151-4776-b05e-640c8aa7f610/DALL-E-2024-10-23-11.01.11---A-beautiful-illustration-of-a-steep-terrain-showing-a-sloped-landscape-with-a-noticeable-incline.-The-ground-features-scattered-rocks-and-patches-of-.webp" },
-                        { id: "serviced", label: "VIABILISÉ", image: "https://storage.tally.so/cc16539f-40fa-4acf-8503-1ab1ae322053/DALL-E-2024-10-23-11.09.38---A-detailed-illustration-of-a-serviced-viabilise-terrain-showing-a-flat-plot-of-land-with-essential-infrastructure-in-place.-The-landscape-is-clean-.webp" },
-                      ].map((item) => (
-                        <FormItem
-                          key={item.id}
-                          className={`relative border rounded-lg overflow-hidden transition-all ${
-                            field.value?.includes(item.id) 
-                              ? "border-khaki-600 ring-2 ring-khaki-600" 
-                              : "border-gray-200 hover:border-khaki-400"
-                          }`}
-                        >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.id
-                                      )
-                                    )
-                              }}
-                              className="sr-only"
-                            />
-                          </FormControl>
-                          <div 
-                            className="cursor-pointer"
-                            onClick={() => {
-                              const checked = field.value?.includes(item.id);
-                              return checked
-                                ? field.onChange(field.value?.filter((value) => value !== item.id))
-                                : field.onChange([...field.value || [], item.id]);
-                            }}
-                          >
-                            <img src={item.image} alt={item.label} className="w-full h-36 object-cover" />
-                            <div className="p-3">
-                              <FormLabel className="text-sm font-medium cursor-pointer">{item.label}</FormLabel>
-                            </div>
-                            {field.value?.includes(item.id) && (
-                              <div className="absolute top-2 right-2 bg-khaki-600 text-white p-1 rounded-full">
-                                <Check className="h-4 w-4" />
-                              </div>
-                            )}
-                          </div>
-                        </FormItem>
-                      ))}
-                      
-                      <FormItem
-                        className={`relative border rounded-lg overflow-hidden transition-all ${
-                          field.value?.includes("none") 
-                            ? "border-khaki-600 ring-2 ring-khaki-600" 
-                            : "border-gray-200 hover:border-khaki-400"
-                        }`}
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes("none")}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange(["none"])
-                                : field.onChange([])
-                            }}
-                            className="sr-only"
-                          />
-                        </FormControl>
-                        <div 
-                          className="cursor-pointer h-full flex items-center justify-center p-10"
-                          onClick={() => {
-                            const checked = field.value?.includes("none");
-                            return checked
-                              ? field.onChange([])
-                              : field.onChange(["none"]);
-                          }}
-                        >
-                          <FormLabel className="text-lg font-medium cursor-pointer text-center">SANS OBJET</FormLabel>
-                          {field.value?.includes("none") && (
-                            <div className="absolute top-2 right-2 bg-khaki-600 text-white p-1 rounded-full">
-                              <Check className="h-4 w-4" />
-                            </div>
-                          )}
-                        </div>
-                      </FormItem>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  Poursuivre
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      case 7: // Contact info
-        return (
-          <Form {...contactForm}>
-            <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-6">
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={contactForm.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prénom</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Votre prénom" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={contactForm.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Votre nom" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                
-                <FormField
-                  control={contactForm.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>N° téléphone</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Votre numéro de téléphone" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={contactForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="Votre adresse email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              
-              <div className="pt-4 flex justify-between">
-                <Button type="button" variant="outline" onClick={handlePrevious}>
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  Retour
-                </Button>
-                <Button type="submit">
-                  <Calculator className="mr-2 h-4 w-4" />
-                  Obtenir mon estimation
-                </Button>
-              </div>
-            </form>
-          </Form>
-        );
-        
-      default:
-        return null;
+    // Apply multipliers based on roof type
+    let roofMultiplier = 1;
+    switch (formData.roofType) {
+      case "accessibleTerrace":
+        roofMultiplier = 1.2;
+        break;
+      case "inaccessibleTerrace":
+        roofMultiplier = 1.1;
+        break;
+      case "industrialFrame":
+        roofMultiplier = 1;
+        break;
+      case "traditionalFrame":
+        roofMultiplier = 1.15;
+        break;
     }
-  };
-  
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
-  };
 
-  return (
-    <div className="bg-white rounded-lg shadow-lg border border-gray-200">
-      <div className="px-8 py-6 border-b border-gray-200">
-        <h2 className="text-2xl font-semibold text-khaki-800">Estimer votre projet</h2>
-        <div className="flex items-center mt-6">
-          <div className="relative flex items-center justify-center w-full">
-            {steps.slice(0, totalSteps).map((_, index) => (
-              <React.Fragment key={index}>
-                <div 
-                  className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium ${
-                    index + 1 === step 
-                      ? "bg-khaki-600 text-white" 
-                      : index + 1 < step 
-                        ? "bg-khaki-200 text-khaki-800" 
-                        : "bg-gray-200 text-gray-600"
-                  }`}
-                >
-                  {index + 1 < step ? <Check className="h-4 w-4" /> : index + 1}
-                </div>
-                {index < totalSteps - 1 && (
-                  <div 
-                    className={`h-[2px] flex-1 ${
-                      index + 1 < step ? "bg-khaki-600" : "bg-gray-200"
-                    }`}
-                  />
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
+    // Apply multipliers based on insulation type
+    let insulationMultiplier = 1;
+    switch (formData.insulationType) {
+      case "basic":
+        insulationMultiplier = 1;
+        break;
+      case "performance":
+        insulationMultiplier = 1.1;
+        break;
+      case "ultraPerformance":
+        insulationMultiplier = 1.2;
+        break;
+    }
 
-      <div className="p-8">
-        <div className="mb-6">
-          <h3 className="text-xl font-medium text-gray-800">{steps[step - 1]?.title}</h3>
-          {steps[step - 1]?.description && (
-            <p className="text-gray-500 mt-1">{steps[step - 1]?.description}</p>
-          )}
-        </div>
+    // Apply multipliers based on electrical type
+    let electricalMultiplier = 1;
+    switch (formData.electricalType) {
+      case "basic":
+        electricalMultiplier = 1;
+        break;
+      case "advanced":
+        electricalMultiplier = 1.1;
+        break;
+      case "highEnd":
+        electricalMultiplier = 1.2;
+        break;
+      case "highEndWithDomotics":
+        electricalMultiplier = 1.3;
+        break;
+    }
 
-        <div>{renderStep()}</div>
-      </div>
-
-      {/* Result Dialog */}
-      <AlertDialog open={showResultDialog} onOpenChange={setShowResultDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Estimation de votre projet</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-4">
-              <div className="text-center my-6">
-                <p className="text-lg text-gray-600">L'estimation de votre projet est de :</p>
-                <p className="text-3xl font-bold text-khaki-800 my-4">
-                  {estimationResult ? formatCurrency(estimationResult) : "0 €"} HT*
-                </p>
-                <p className="text-xs text-gray-500">
-                  *hors terrain, frais de notaire, étude géotechnique, honoraires de maitrise d'oeuvre, 
-                  taxe d'aménagement, taxe archéologique, assurance dommage ouvrage
-                </p>
-              </div>
-              <p>
-                Merci de nous avoir contacté pour votre projet. Nous prendrons contact avec vous 
-                rapidement pour pouvoir répondre au mieux à vos attentes pour votre projet 🚀
-              </p>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setShowResultDialog(false)}>
-              Fermer
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
-  );
-};
-
-export default EstimationCalculator;
+    // Add extra costs for
