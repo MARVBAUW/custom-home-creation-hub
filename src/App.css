@@ -1,4 +1,3 @@
-
 #root {
   margin: 0 auto;
   text-align: center;
@@ -53,6 +52,46 @@
 .estimation-input:focus {
   border-color: #787346;
   box-shadow: 0 0 0 2px rgba(120, 115, 70, 0.2);
+}
+
+/* Animations pour les composants de la page d'estimation */
+.estimation-animate-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: estimationFadeIn 0.8s forwards;
+}
+
+.estimation-animate-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: estimationSlideLeft 0.8s forwards;
+}
+
+.estimation-animate-right {
+  opacity: 0;
+  transform: translateX(30px);
+  animation: estimationSlideRight 0.8s forwards;
+}
+
+@keyframes estimationFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes estimationSlideLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes estimationSlideRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Animation pour le logo */
