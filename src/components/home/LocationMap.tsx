@@ -33,7 +33,7 @@ const LocationMap = () => {
             {/* Map image with relative positioning */}
             <div className="relative w-full h-full">
               <img 
-                src="https://images.unsplash.com/photo-1648461293702-44fd78c31fad?q=80&w=2030&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1602521879205-9c6be3068079?q=80&w=2030&auto=format&fit=crop" 
                 alt="Carte de la région PACA" 
                 className="w-full h-full object-cover opacity-40"
               />
