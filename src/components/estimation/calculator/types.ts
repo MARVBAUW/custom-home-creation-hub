@@ -231,10 +231,11 @@ export const RenovationFacadeSchema = z.object({
 });
 
 export const MenuiseriesExtSchema = z.object({
-  replacementType: z.string().optional(),
-  replacementArea: z.string().optional(),
-  additionType: z.string().optional(),
-  additionArea: z.string().optional(),
+  windowType: z.enum(["bois", "pvc", "alu", "mixte", "pvcColore", "sansAvis"], {
+    required_error: "Veuillez sélectionner un type de menuiserie",
+  }),
+  windowRenovationArea: z.string().optional(),
+  windowNewArea: z.string().optional(),
 });
 
 export const AmenagementPaysagerSchema = z.object({

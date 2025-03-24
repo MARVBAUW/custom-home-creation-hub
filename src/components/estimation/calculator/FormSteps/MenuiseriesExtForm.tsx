@@ -46,6 +46,11 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
     { id: "sansAvis", label: "Sans avis", description: "Pas de préférence spécifique" }
   ];
 
+  const handleSubmit = (data: z.infer<typeof MenuiseriesExtSchema>) => {
+    // Call the onSubmit prop with the data from the form
+    onSubmit(data);
+  };
+
   return (
     <motion.div
       key="step-menuiseries-ext"
@@ -56,7 +61,7 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
       variants={slideVariants}
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <h2 className="text-2xl font-semibold text-center mb-6">Menuiseries Extérieures</h2>
           
           <FormField
