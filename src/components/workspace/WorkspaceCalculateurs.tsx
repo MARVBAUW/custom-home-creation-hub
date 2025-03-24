@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { FileSpreadsheet, Calculator, ChartBar, LineChart, Wallet, ArrowRightLeft, Check, Home } from 'lucide-react';
 import Button from '@/components/common/Button';
 import { useToast } from "@/components/ui/use-toast";
-import WorkspaceFileViewer from './WorkspaceFileViewer';
+import WorkspaceFileViewer from './fileViewer/WorkspaceFileViewer';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
