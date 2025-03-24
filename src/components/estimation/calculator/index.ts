@@ -1,3 +1,6 @@
 
-export { default } from './index';
+// Exporter le composant principal
+export { default } from './EstimationCalculator';
+
+// Exporter les hooks et utilitaires
 export * from './useEstimationCalculator';

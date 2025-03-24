@@ -2,7 +2,7 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Check, Download, FileDownload, Share, Mail } from "lucide-react";
+import { Check, Download, Share, Mail } from "lucide-react";
 import { motion } from 'framer-motion';
 
 type EstimationResultProps = {
