@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/common/SEO';
 import Hero from '@/components/home/Hero';
 import Services from '@/components/home/Services';
 import CTASection from '@/components/home/CTASection';
@@ -10,6 +10,44 @@ import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 
 const Index = () => {
+  // Structured data for LocalBusiness
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Progineer",
+    "description": "Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA.",
+    "url": "https://progineer.fr",
+    "telephone": "+33783762156",
+    "email": "progineer.moe@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Marseille",
+      "addressRegion": "PACA",
+      "addressCountry": "FR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "43.296482",
+      "longitude": "5.369780"
+    },
+    "areaServed": ["Marseille", "Nice", "Toulon", "Cannes", "Fréjus", "PACA"],
+    "sameAs": [
+      "https://facebook.com/progineer",
+      "https://instagram.com/progineer",
+      "https://linkedin.com/company/progineer"
+    ],
+    "priceRange": "€€€",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }
+    ],
+    "image": "https://progineer.fr/og-image.jpg"
+  };
+
   // Reveal animation for scrolling elements
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -30,11 +68,13 @@ const Index = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Progineer | Architecte & Maître d'oeuvre en PACA - Marseille, Nice, Toulon</title>
-        <meta name="description" content="Progineer, entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA." />
-        <meta name="keywords" content="architecte Marseille, maître d'œuvre PACA, constructeur maison sur mesure, entreprise de travaux, rénovation, extension, optimisation énergétique, maîtrise d'ouvrage, accompagnement travaux" />
-      </Helmet>
+      <SEO 
+        title="Progineer | Architecte & Maître d'oeuvre en PACA - Marseille, Nice, Toulon"
+        description="Progineer, entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA."
+        keywords="architecte Marseille, maître d'œuvre PACA, constructeur maison sur mesure, entreprise de travaux, rénovation, extension, optimisation énergétique, maîtrise d'ouvrage, accompagnement travaux"
+        canonicalUrl="https://progineer.fr/"
+        structuredData={structuredData}
+      />
 
       <Hero />
       
@@ -63,7 +103,7 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10"></div>
               <img 
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop" 
-                alt="Villa en bord de mer" 
+                alt="Villa en bord de mer à Martignas sur Jalles" 
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 p-6 z-20">
@@ -78,7 +118,7 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10"></div>
               <img 
                 src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" 
-                alt="Restructuration d'une friche" 
+                alt="Restructuration d'une friche industrielle à Lomme / Lille" 
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 p-6 z-20">
@@ -93,7 +133,7 @@ const Index = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent z-10"></div>
               <img 
                 src="https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop" 
-                alt="Logements collectifs" 
+                alt="Logements collectifs à Clermont-Ferrand" 
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute bottom-0 left-0 p-6 z-20">
@@ -142,11 +182,12 @@ const Index = () => {
       <section className="py-8 bg-stone-50 border-t border-stone-200">
         <Container>
           <div className="text-sm text-stone-500">
+            <h2 className="text-base font-medium mb-2 text-stone-700">Entreprise d'architecture et de maîtrise d'œuvre en PACA</h2>
             <p className="mb-2">
-              <strong>Progineer</strong> - Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z.
+              <strong>Progineer</strong> - Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z dans tous vos projets de construction et rénovation.
             </p>
             <p>
-              Nos zones d'intervention : Marseille, Saint-Tropez, Toulon, Nice, Cannes, Fréjus, toute la région Provence-Alpes-Côte d'Azur.
+              Nos zones d'intervention : <strong>Marseille</strong>, <strong>Saint-Tropez</strong>, <strong>Toulon</strong>, <strong>Nice</strong>, <strong>Cannes</strong>, <strong>Fréjus</strong>, toute la région <strong>Provence-Alpes-Côte d'Azur</strong>.
             </p>
           </div>
         </Container>

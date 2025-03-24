@@ -1,7 +1,19 @@
+
+# Allow all bots to index the site
+User-agent: *
+Allow: /
+
+# Main sitemap
+Sitemap: https://progineer.fr/sitemap.xml
+
+# Specific bot directives
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
+Allow: /
+
+User-agent: Yandexbot
 Allow: /
 
 User-agent: Twitterbot
@@ -10,5 +22,5 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Prevent bots from crawling certain pages (if needed)
+# Disallow: /workspace

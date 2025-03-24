@@ -1,15 +1,35 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 
 const Legal = () => {
+  // Structured data for WebPage
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Mentions légales",
+    "description": "Mentions légales de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Progineer",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://progineer.fr/logo.png"
+      }
+    },
+    "url": "https://progineer.fr/mentions-legales"
+  };
+
   return (
     <>
-      <Helmet>
-        <title>Mentions légales | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Mentions légales de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA." />
-      </Helmet>
+      <SEO 
+        title="Mentions légales | Progineer - Architecte & Maître d'œuvre en PACA"
+        description="Mentions légales de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA. Informations légales sur notre société."
+        keywords="mentions légales Progineer, informations légales architecte, données juridiques maître d'œuvre PACA"
+        canonicalUrl="https://progineer.fr/mentions-legales"
+        structuredData={structuredData}
+      />
 
       <section className="pt-32 pb-16">
         <Container size="md">

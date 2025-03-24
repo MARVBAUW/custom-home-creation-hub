@@ -1,15 +1,40 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 
 const CGV = () => {
+  // Structured data for WebPage
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Conditions Générales de Vente",
+    "description": "Conditions Générales de Vente de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Progineer",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://progineer.fr/logo.png"
+      }
+    },
+    "url": "https://progineer.fr/cgv",
+    "mainEntity": {
+      "@type": "WebPageElement",
+      "name": "Conditions Générales de Vente",
+      "text": "Les présentes Conditions Générales de Vente (CGV) constituent le socle de la relation commerciale entre la société Progineer (ci-après \"le Prestataire\") et ses clients professionnels ou particuliers (ci-après \"le Client\")."
+    }
+  };
+
   return (
     <>
-      <Helmet>
-        <title>Conditions Générales de Vente | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Conditions Générales de Vente de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA." />
-      </Helmet>
+      <SEO 
+        title="Conditions Générales de Vente | Progineer - Architecte & Maître d'œuvre en PACA"
+        description="Conditions Générales de Vente de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA. Découvrez les modalités de nos prestations."
+        keywords="CGV Progineer, conditions générales vente architecte, CGV maître d'œuvre PACA, contrat architecture, conditions prestation construction"
+        canonicalUrl="https://progineer.fr/cgv"
+        structuredData={structuredData}
+      />
 
       <section className="pt-32 pb-16">
         <Container size="md">
