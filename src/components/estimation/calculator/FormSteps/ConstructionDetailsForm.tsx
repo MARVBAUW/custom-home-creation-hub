@@ -58,7 +58,7 @@ const ConstructionDetailsForm: React.FC<ConstructionDetailsFormProps> = ({
               name="surface"
               render={({ field }) => (
                 <FormItem className="estimation-animate-fade" style={{animationDelay: '0.1s'}}>
-                  <FormLabel>Surface (m²)</FormLabel>
+                  <FormLabel>Surface approximative (m²)</FormLabel>
                   <FormControl>
                     <Input 
                       type="number" 

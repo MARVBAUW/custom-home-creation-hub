@@ -30,6 +30,7 @@ const EstimationCalculator: React.FC = () => {
     onProfessionalProjectSubmit,
     onIndividualProjectSubmit,
     onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
     onContactSubmit,
     updateFormData,
   } = useEstimationCalculator();
@@ -98,16 +99,14 @@ const EstimationCalculator: React.FC = () => {
               levels: formData.levels,
               units: formData.units,
             }}
-            onSubmit={(data) => {
-              updateFormData(data);
-              goToNextStep();
-            }}
+            onSubmit={onConstructionDetailsSubmit}
             goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );
         
-      case totalSteps:
+      case 6:
+        // Étape contact
         return (
           <ContactForm
             defaultValues={{

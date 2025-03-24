@@ -9,8 +9,14 @@ export const useEstimationCalculator = () => {
   const { formData, updateFormData } = useEstimationForm();
   const { step, setStep, totalSteps, animationDirection, visibleSteps, goToNextStep, goToPreviousStep } = useEstimationSteps(formData);
   const { estimationResult, showResultDialog, setShowResultDialog, finalizeEstimation } = useEstimationResult(formData);
-  const { onClientTypeSubmit, onProfessionalProjectSubmit, onIndividualProjectSubmit, onEstimationTypeSubmit, onContactSubmit } = 
-    useFormSubmissions(formData, updateFormData, setStep, goToNextStep, finalizeEstimation);
+  const { 
+    onClientTypeSubmit, 
+    onProfessionalProjectSubmit, 
+    onIndividualProjectSubmit, 
+    onEstimationTypeSubmit, 
+    onConstructionDetailsSubmit,
+    onContactSubmit 
+  } = useFormSubmissions(formData, updateFormData, setStep, goToNextStep, finalizeEstimation);
 
   return {
     step,
@@ -28,6 +34,7 @@ export const useEstimationCalculator = () => {
     onProfessionalProjectSubmit,
     onIndividualProjectSubmit,
     onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
     onContactSubmit,
     updateFormData,
   };

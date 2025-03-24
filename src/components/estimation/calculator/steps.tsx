@@ -8,7 +8,7 @@ export const stepDefinitions = [
   {
     title: "Type de client",
     icon: <User />,
-    skipCondition: () => false, // Jamais sauté
+    skipCondition: (formData: FormData) => false, // Jamais sauté
   },
   {
     title: "Projet professionnel",
@@ -23,17 +23,17 @@ export const stepDefinitions = [
   {
     title: "Type d'estimation",
     icon: <Calculator />,
-    skipCondition: () => false, // Jamais sauté
+    skipCondition: (formData: FormData) => false, // Jamais sauté
   },
   {
     title: "Détails de construction",
     icon: <Construction />,
-    skipCondition: () => false, // Jamais sauté
+    skipCondition: (formData: FormData) => false, // Jamais sauté
   },
   {
     title: "Informations personnelles",
     icon: <FileText />,
-    skipCondition: () => false, // Dernière étape, jamais sautée
+    skipCondition: (formData: FormData) => false, // Dernière étape, jamais sautée
   },
 ];
 

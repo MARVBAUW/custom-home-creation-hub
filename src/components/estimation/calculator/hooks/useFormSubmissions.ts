@@ -42,18 +42,7 @@ export const useFormSubmissions = (
   // Soumission du formulaire de projet particulier
   const onIndividualProjectSubmit = (data: { projectType: string }) => {
     updateFormData({ projectType: data.projectType });
-    
-    // Sauter certaines étapes pour les projets d'optimisation ou de design
-    if (data.projectType === "optimization" || data.projectType === "design") {
-      setStep(1); // Revenir à la sélection du profil
-      toast({
-        title: "Type de projet non disponible",
-        description: "L'estimation pour ce type de projet nécessite un contact direct avec nos équipes.",
-        duration: 5000,
-      });
-    } else {
-      setStep(4); // Type d'estimation
-    }
+    setStep(4); // Type d'estimation
   };
 
   // Soumission du formulaire de type d'estimation
@@ -66,6 +55,20 @@ export const useFormSubmissions = (
       termsAccepted: data.termsAccepted,
     });
     setStep(5); // Détails de construction
+  };
+
+  // Soumission du formulaire de détails de construction
+  const onConstructionDetailsSubmit = (data: {
+    surface: string;
+    levels: string;
+    units: string;
+  }) => {
+    updateFormData({
+      surface: data.surface,
+      levels: data.levels,
+      units: data.units,
+    });
+    setStep(6); // Coordonnées
   };
 
   // Soumission du formulaire de coordonnées et calcul de l'estimation
@@ -91,6 +94,7 @@ export const useFormSubmissions = (
     onProfessionalProjectSubmit,
     onIndividualProjectSubmit,
     onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
     onContactSubmit
   };
 };
