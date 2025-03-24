@@ -34,15 +34,15 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
     // Generate different types of data based on the file title
     if (file.title.includes('surface')) {
       return [
-        ['Pièce', 'Longueur (m)', 'Largeur (m)', 'Surface (m²)', 'Commentaire'],
-        ['Salon', '5.2', '4.8', '24.96', 'Parquet'],
-        ['Cuisine', '3.8', '3.5', '13.3', 'Carrelage'],
-        ['Chambre 1', '4.2', '3.6', '15.12', 'Parquet'],
-        ['Chambre 2', '3.9', '3.2', '12.48', 'Parquet'],
-        ['Salle de bain', '2.8', '2.2', '6.16', 'Carrelage'],
-        ['WC', '1.5', '1.2', '1.8', 'Carrelage'],
-        ['Entrée', '2.5', '1.8', '4.5', 'Carrelage'],
-        ['TOTAL', '', '', '78.32', '']
+        ['Pièce', 'Longueur (m)', 'Largeur (m)', 'Surface (m²)', 'Commentaire', 'Status'],
+        ['Salon', '5.2', '4.8', '24.96', 'Parquet', 'Validé'],
+        ['Cuisine', '3.8', '3.5', '13.3', 'Carrelage', 'Validé'],
+        ['Chambre 1', '4.2', '3.6', '15.12', 'Parquet', 'Validé'],
+        ['Chambre 2', '3.9', '3.2', '12.48', 'Parquet', 'Validé'],
+        ['Salle de bain', '2.8', '2.2', '6.16', 'Carrelage', 'Validé'],
+        ['WC', '1.5', '1.2', '1.8', 'Carrelage', 'Validé'],
+        ['Entrée', '2.5', '1.8', '4.5', 'Carrelage', 'Validé'],
+        ['TOTAL', '', '', '78.32', '', '']
       ];
     } else if (file.title.includes('locative')) {
       return [
@@ -50,7 +50,8 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
         ['Studio 25m²', '120 000 €', '9 600 €', '15 000 €', '650 €', '50 €', '4.92%'],
         ['T2 45m²', '185 000 €', '14 800 €', '22 000 €', '850 €', '80 €', '4.24%'],
         ['T3 65m²', '265 000 €', '21 200 €', '35 000 €', '1 100 €', '120 €', '3.68%'],
-        ['T4 85m²', '340 000 €', '27 200 €', '45 000 €', '1 350 €', '150 €', '3.47%']
+        ['T4 85m²', '340 000 €', '27 200 €', '45 000 €', '1 350 €', '150 €', '3.47%'],
+        ['Moyenne', '227 500 €', '18 200 €', '29 250 €', '987.5 €', '100 €', '4.08%']
       ];
     } else if (file.title.includes('budget')) {
       return [
@@ -64,6 +65,16 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
         ['Revêtements', '22 500 €', '19 900 €', '21 400 €', '19 900 €', 'Entreprise Déco Plus'],
         ['TOTAL', '144 700 €', '155 500 €', '151 900 €', '146 300 €', '']
       ];
+    } else if (file.title.includes('emprunt')) {
+      return [
+        ['Capital emprunté', 'Taux', 'Durée', 'Mensualité', 'Coût total', 'Taux d\'endettement'],
+        ['200 000 €', '3.5%', '20 ans', '1 160 €', '78 400 €', '35%'],
+        ['200 000 €', '3.5%', '25 ans', '1 002 €', '100 600 €', '30%'],
+        ['250 000 €', '3.5%', '20 ans', '1 450 €', '98 000 €', '43%'],
+        ['250 000 €', '3.5%', '25 ans', '1 252 €', '125 600 €', '38%'],
+        ['300 000 €', '3.5%', '20 ans', '1 740 €', '117 600 €', '52%'],
+        ['300 000 €', '3.5%', '25 ans', '1 503 €', '150 900 €', '45%']
+      ];
     } else {
       // Default data for other file types
       return [
@@ -75,19 +86,30 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
         ['TOTAL', '650', '1300', '1950', '3900', '']
       ];
     }
-    
-    return rows;
   };
 
   const sampleData = generateSampleData();
 
+  // Macro-related note for the Excel files
+  const getMacroNote = () => {
+    if (file.title.includes('surface')) {
+      return "Ce fichier contient des macros qui calculent automatiquement les surfaces selon la loi Carrez et génèrent un rapport PDF.";
+    } else if (file.title.includes('locative')) {
+      return "Ce fichier contient des macros qui simulent différents scénarios de rentabilité et créent des graphiques comparatifs.";
+    } else if (file.title.includes('budget')) {
+      return "Ce fichier contient des macros qui permettent l'analyse comparative automatique des devis et l'export au format PDF.";
+    } else if (file.title.includes('emprunt')) {
+      return "Ce fichier contient des macros qui simulent différents scénarios d'emprunt et créent des tableaux d'amortissement.";
+    } else {
+      return "Ce fichier contient des macros avancées pour optimiser votre travail. Téléchargez-le pour accéder à toutes les fonctionnalités.";
+    }
+  };
+
+  const macroNote = getMacroNote();
+
   return (
-    <Dialog 
-      open={isOpen} 
-      onOpenChange={onClose}
-      className={isFullscreen ? 'fixed inset-0 z-50' : ''}
-    >
-      <DialogContent className={`${isFullscreen ? 'max-w-full h-screen m-0 rounded-none' : 'max-w-4xl'} p-0`}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className={isFullscreen ? "max-w-full h-screen m-0 rounded-none" : "max-w-4xl p-0"}>
         <div className="bg-gray-100 px-4 py-3 flex items-center justify-between border-b">
           <div className="flex items-center gap-2">
             <FileSpreadsheet className="h-5 w-5 text-khaki-600" />
@@ -157,7 +179,18 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
                   </table>
                 </div>
                 
-                <div className="px-4 py-3 bg-gray-50 border-t border-gray-200 text-right">
+                <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                  <div className="bg-yellow-50 border border-yellow-100 p-3 rounded-md mb-2">
+                    <p className="text-sm text-yellow-800 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="font-medium">Fichier Excel avec macros</span>
+                    </p>
+                    <p className="text-xs text-yellow-700 ml-5.5 mt-1">
+                      {macroNote}
+                    </p>
+                  </div>
                   <p className="text-xs text-gray-500">
                     Le contenu affiché est un aperçu générique. Téléchargez le fichier Excel complet pour accéder à toutes les fonctionnalités.
                   </p>
@@ -182,15 +215,19 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
                 </div>
                 <div className="grid grid-cols-3 gap-4 border-b border-gray-100 pb-3">
                   <div className="text-sm font-medium text-gray-500">Type de fichier</div>
-                  <div className="col-span-2 text-sm text-gray-900">Microsoft Excel (.xlsx)</div>
+                  <div className="col-span-2 text-sm text-gray-900">Microsoft Excel avec macros (.xlsm)</div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 border-b border-gray-100 pb-3">
                   <div className="text-sm font-medium text-gray-500">Créé par</div>
                   <div className="col-span-2 text-sm text-gray-900">Progineer</div>
                 </div>
-                <div className="grid grid-cols-3 gap-4 pb-3">
+                <div className="grid grid-cols-3 gap-4 border-b border-gray-100 pb-3">
                   <div className="text-sm font-medium text-gray-500">Compatibilité</div>
                   <div className="col-span-2 text-sm text-gray-900">Excel 2016 et versions ultérieures</div>
+                </div>
+                <div className="grid grid-cols-3 gap-4 pb-3">
+                  <div className="text-sm font-medium text-gray-500">Macros</div>
+                  <div className="col-span-2 text-sm text-gray-900">Activées (Niveau de sécurité recommandé : Moyen)</div>
                 </div>
               </div>
             </div>

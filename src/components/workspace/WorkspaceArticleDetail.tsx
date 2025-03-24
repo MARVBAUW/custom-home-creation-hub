@@ -3,6 +3,7 @@ import React from 'react';
 import { ArrowLeft, Calendar, FileText, Link2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Button from '@/components/common/Button';
+import { useToast } from "@/components/ui/use-toast";
 
 interface ArticleDetailProps {
   article: {
@@ -21,6 +22,8 @@ interface ArticleDetailProps {
 }
 
 const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps) => {
+  const { toast } = useToast();
+  
   if (!article) return null;
 
   // Format the date for display
@@ -35,6 +38,15 @@ const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps
   // Generate a random number of views for the article
   const getRandomViews = () => {
     return Math.floor(Math.random() * 400) + 100;
+  };
+  
+  // Handle clicks on resource links
+  const handleResourceClick = (resourceName: string) => {
+    toast({
+      title: "Ressource disponible prochainement",
+      description: `La ressource "${resourceName}" sera disponible dans une prochaine mise à jour.`,
+      duration: 3000,
+    });
   };
 
   return (
@@ -93,15 +105,30 @@ const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps
           <ul className="space-y-2">
             <li className="flex items-center gap-2">
               <Link2 className="h-4 w-4 text-khaki-600" />
-              <a href="#" className="text-khaki-600 hover:underline">Guide complet sur la réglementation</a>
+              <button 
+                onClick={() => handleResourceClick("Guide complet sur la réglementation")}
+                className="text-khaki-600 hover:underline cursor-pointer"
+              >
+                Guide complet sur la réglementation
+              </button>
             </li>
             <li className="flex items-center gap-2">
               <Link2 className="h-4 w-4 text-khaki-600" />
-              <a href="#" className="text-khaki-600 hover:underline">Webinaire explicatif (replay)</a>
+              <button 
+                onClick={() => handleResourceClick("Webinaire explicatif (replay)")}
+                className="text-khaki-600 hover:underline cursor-pointer"
+              >
+                Webinaire explicatif (replay)
+              </button>
             </li>
             <li className="flex items-center gap-2">
               <Link2 className="h-4 w-4 text-khaki-600" />
-              <a href="#" className="text-khaki-600 hover:underline">Texte intégral de la réglementation</a>
+              <button 
+                onClick={() => handleResourceClick("Texte intégral de la réglementation")}
+                className="text-khaki-600 hover:underline cursor-pointer"
+              >
+                Texte intégral de la réglementation
+              </button>
             </li>
           </ul>
         </div>
