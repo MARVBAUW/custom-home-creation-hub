@@ -3,7 +3,7 @@ import React from 'react';
 import { 
   Building, Home, Eye, Paintbrush, Ruler, Building2, Landmark, 
   Construction, LayoutGrid, HardHat, User, Users, Compass, 
-  Sun, Calculator, Check 
+  Sun, Calculator, Check, Bath, ChefHat, LampCeiling, Plug, Map
 } from 'lucide-react';
 
 type EstimationVisualizerProps = {
@@ -21,7 +21,7 @@ const EstimationVisualizer: React.FC<EstimationVisualizerProps> = ({ step, formD
       case 3: return <Compass className="text-progineer-gold" size={24} />;
       case 4: return <Eye className="text-progineer-gold" size={24} />;
       case 5: return <Building className="text-progineer-gold" size={24} />;
-      case 6: return <LayoutGrid className="text-progineer-gold" size={24} />;
+      case 6: return <Map className="text-progineer-gold" size={24} />;
       case 7: return <Building2 className="text-progineer-gold" size={24} />;
       case 8:
       case 9:
@@ -37,8 +37,8 @@ const EstimationVisualizer: React.FC<EstimationVisualizerProps> = ({ step, formD
       case 19:
       case 20:
       case 21: return <Paintbrush className="text-progineer-gold" size={24} />;
-      case 22:
-      case 23: return <Ruler className="text-progineer-gold" size={24} />;
+      case 22: return <ChefHat className="text-progineer-gold" size={24} />;
+      case 23: return <Bath className="text-progineer-gold" size={24} />;
       case 24: return <Users className="text-progineer-gold" size={24} />;
       default: return <Calculator className="text-progineer-gold" size={24} />;
     }
