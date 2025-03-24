@@ -19,16 +19,16 @@ const Logo: React.FC<LogoProps> = ({
   // Déterminer quelle image afficher selon la variante
   const getLogoSrc = () => {
     if (variant === 'icon') {
-      return '/images/progineer-icon.png';
+      return 'https://placehold.co/200x200/F5F5DC/996515?text=P';
     }
     
     switch (variant) {
       case 'white':
-        return '/images/progineer-logo-white.png';
+        return 'https://placehold.co/300x100/222222/FFFFFF?text=PROGINEER';
       case 'gold':
-        return '/images/progineer-logo-gold.png';
+        return 'https://placehold.co/300x100/F5F5DC/996515?text=PROGINEER';
       default:
-        return '/images/progineer-logo.png';
+        return 'https://placehold.co/300x100/FFFFFF/222222?text=PROGINEER';
     }
   };
 
