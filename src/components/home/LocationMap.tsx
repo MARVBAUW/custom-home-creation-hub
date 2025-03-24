@@ -33,9 +33,9 @@ const LocationMap = () => {
             {/* Map image with relative positioning */}
             <div className="relative w-full h-full">
               <img 
-                src="https://images.unsplash.com/photo-1602521879205-9c6be3068079?q=80&w=2030&auto=format&fit=crop" 
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Provence-Alpes-C%C3%B4te_d%27Azur_region_relief_location_map.jpg/1200px-Provence-Alpes-C%C3%B4te_d%27Azur_region_relief_location_map.jpg" 
                 alt="Carte de la région PACA" 
-                className="w-full h-full object-cover opacity-40"
+                className="w-full h-full object-cover opacity-70"
               />
               
               {/* Map pins */}
