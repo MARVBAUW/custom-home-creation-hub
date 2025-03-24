@@ -22,56 +22,66 @@ const Logo: React.FC<LogoProps> = ({
       // Logo icon (just the building symbol)
       return (
         <svg viewBox="0 0 200 200" className={getSizeClasses()}>
-          <path d="M0 150 L200 150 M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
+          <defs>
+            <linearGradient id="goldIcon" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor={variant === 'white' ? "#FFFFFF" : "#c8a86d"}/>
+              <stop offset="100%" stopColor={variant === 'white' ? "#CCCCCC" : "#4b4b3b"}/>
+            </linearGradient>
+          </defs>
+          <path d="M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
             fill="none" 
-            stroke="#996515" 
+            stroke="url(#goldIcon)" 
             strokeWidth="8" 
           />
         </svg>
       );
     }
 
+    // Define gradient ID with a unique identifier to avoid conflicts
+    const gradientId = `goldToDark-${Math.random().toString(36).substring(2, 9)}`;
+    
     // Logo color based on variant
-    const strokeColor = variant === 'white' ? "#FFFFFF" : "#996515";
+    const primaryColor = variant === 'white' ? "#FFFFFF" : "#c8a86d";
+    const secondaryColor = variant === 'white' ? "#CCCCCC" : "#4b4b3b";
 
     // Full logo with modern building design
     return (
       <svg viewBox="0 0 941 512" xmlns="http://www.w3.org/2000/svg" className={getSizeClasses()}>
         <defs>
-          <linearGradient id="goldToDark" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={variant === 'white' ? "#FFFFFF" : "#c8a86d"}/>
-            <stop offset="100%" stopColor={variant === 'white' ? "#CCCCCC" : "#4b4b3b"}/>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={primaryColor}/>
+            <stop offset="100%" stopColor={secondaryColor}/>
           </linearGradient>
         </defs>
 
         {/* Triangle gauche */}
         <polygon 
           points="0,196 364,94 361,465 234,465 234,305 357,267 0,510"
-          fill="url(#goldToDark)" 
+          fill={`url(#${gradientId})`} 
         />
 
         {/* Triangle haut centre */}
         <polygon 
           points="707,0 500,59 500,228 707,0"
-          fill="url(#goldToDark)" 
+          fill={`url(#${gradientId})`} 
         />
 
         {/* Ligne médiane vers droite */}
         <polygon 
           points="361,267 707,33 707,0 361,267"
-          fill="url(#goldToDark)" 
+          fill={`url(#${gradientId})`} 
         />
 
         {/* Volume central (milieu corrigé) */}
         <polygon 
           points="500,228 605,312 604,465 500,465 500,228"
-          fill="url(#goldToDark)" 
+          fill={`url(#${gradientId})`} 
         />
 
         {/* Bâtiment droit avec toit incliné */}
         <polygon 
           points="707,0 773,76 770,237 940,292 940,465 704,465"
-          fill="url(#goldToDark)" 
+          fill={`url(#${gradientId})`} 
         />
 
         {/* Sol */}
