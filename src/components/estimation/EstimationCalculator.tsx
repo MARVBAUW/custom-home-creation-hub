@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -901,4 +902,715 @@ const EstimationCalculator = () => {
         break;
     }
 
-    // Add extra costs for
+    // Add extra costs for plumbing
+    let plumbingMultiplier = 1;
+    switch (formData.plumbingType) {
+      case "basic":
+        plumbingMultiplier = 1;
+        break;
+      case "advanced":
+        plumbingMultiplier = 1.15;
+        break;
+      case "highEnd":
+        plumbingMultiplier = 1.25;
+        break;
+    }
+    
+    // Add costs for heating and air conditioning
+    let heatingMultiplier = 1;
+    switch (formData.heatingType) {
+      case "bestValue":
+        heatingMultiplier = 1.1;
+        break;
+      case "mostEcological":
+        heatingMultiplier = 1.25;
+        break;
+      case "mostEconomical":
+        heatingMultiplier = 1;
+        break;
+    }
+    
+    // Add air conditioning costs if needed
+    let acMultiplier = formData.hasAirConditioning === "yes" ? 1.15 : 1;
+    
+    // Interior finishes multipliers
+    let tileMultiplier = 1;
+    if (formData.floorTileType === "basic") tileMultiplier = 1;
+    else if (formData.floorTileType === "midRange") tileMultiplier = 1.1;
+    else if (formData.floorTileType === "highEnd") tileMultiplier = 1.2;
+    
+    let parquetMultiplier = 1;
+    if (formData.parquetType === "basic") parquetMultiplier = 1;
+    else if (formData.parquetType === "midRange") parquetMultiplier = 1.15;
+    else if (formData.parquetType === "highEnd") parquetMultiplier = 1.3;
+    
+    // Kitchen costs
+    let kitchenCost = 0;
+    switch (formData.kitchenType) {
+      case "none":
+        kitchenCost = 0;
+        break;
+      case "kitchenette":
+        kitchenCost = 3000;
+        break;
+      case "basic":
+        kitchenCost = 8000;
+        break;
+      case "plus":
+        kitchenCost = 15000;
+        break;
+      case "premium":
+        kitchenCost = 25000;
+        break;
+    }
+    
+    // Bathroom costs
+    let bathroomUnitCost = 0;
+    switch (formData.bathroomType) {
+      case "none":
+        bathroomUnitCost = 0;
+        break;
+      case "basic":
+        bathroomUnitCost = 3500;
+        break;
+      case "midRange":
+        bathroomUnitCost = 5500;
+        break;
+      case "premium":
+        bathroomUnitCost = 8500;
+        break;
+    }
+    
+    const bathroomCount = parseInt(formData.bathroomCount) || 0;
+    const bathroomTotalCost = bathroomUnitCost * bathroomCount;
+    
+    // Calculate final estimation
+    let totalCost = basePrice * surface * terrainMultiplier * wallMultiplier * 
+                    roofMultiplier * insulationMultiplier * electricalMultiplier * 
+                    plumbingMultiplier * heatingMultiplier * acMultiplier *
+                    (tileMultiplier * 0.3 + parquetMultiplier * 0.3 + 0.4); // flooring weighted by typical area percentage
+    
+    // Add fixed costs
+    totalCost += kitchenCost + bathroomTotalCost;
+    
+    // Round to nearest thousand
+    totalCost = Math.round(totalCost / 1000) * 1000;
+    
+    setEstimationResult(totalCost);
+    setShowResultDialog(true);
+  };
+
+  // Render current step based on step number
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <Form {...clientTypeForm}>
+            <form onSubmit={clientTypeForm.handleSubmit(onClientTypeSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[0].title}</h2>
+                {visibleSteps[0].description && <p className="text-sm text-gray-500">{visibleSteps[0].description}</p>}
+                
+                <FormField
+                  control={clientTypeForm.control}
+                  name="clientType"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-1"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="professional" />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              Professionnel
+                            </FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="individual" />
+                            </FormControl>
+                            <FormLabel className="font-normal">
+                              Particulier
+                            </FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <div></div>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+      
+      case 2:
+        return (
+          <Form {...professionalProjectForm}>
+            <form onSubmit={professionalProjectForm.handleSubmit(onProfessionalProjectSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[1].title}</h2>
+                {visibleSteps[1].description && <p className="text-sm text-gray-500">{visibleSteps[1].description}</p>}
+                
+                <FormField
+                  control={professionalProjectForm.control}
+                  name="activity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Activité</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid grid-cols-2 gap-2"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="offices" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Bureaux</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="commerce" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Commerce</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="hotel" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Hôtellerie</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="restaurant" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Restauration</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="industry" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Industrie</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="realEstate" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Investisseur immobilier</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={professionalProjectForm.control}
+                  name="projectType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type de projet</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid grid-cols-2 gap-2"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="construction" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Construction</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="renovation" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Rénovation</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="extension" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Extension</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="optimization" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Optimisation</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="division" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Division</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="design" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Design d'espace</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={professionalProjectForm.control}
+                    name="startDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date de début souhaitée</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={professionalProjectForm.control}
+                    name="endDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Date de fin souhaitée</FormLabel>
+                        <FormControl>
+                          <Input type="date" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="outline" onClick={() => setStep(1)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 3:
+        return (
+          <Form {...individualProjectForm}>
+            <form onSubmit={individualProjectForm.handleSubmit(onIndividualProjectSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[step-1].title}</h2>
+                {visibleSteps[step-1].description && <p className="text-sm text-gray-500">{visibleSteps[step-1].description}</p>}
+                
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-md text-sm text-yellow-800">
+                  Cet estimatif de travaux est fourni à titre indicatif pour vous aider dans votre prise de décision. Il ne remplace pas un devis complet, qui nécessite un rendez-vous avec un maître d'œuvre ou des artisans pour étudier votre projet en détail et adapter le chiffrage à vos besoins spécifiques.
+                </div>
+                
+                <FormField
+                  control={individualProjectForm.control}
+                  name="projectType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type de projet</FormLabel>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="grid grid-cols-2 gap-2"
+                        >
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="construction" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Construction</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="renovation" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Rénovation</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="extension" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Extension</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="optimization" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Optimisation</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="division" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Division</FormLabel>
+                          </FormItem>
+                          <FormItem className="flex items-center space-x-3 space-y-0">
+                            <FormControl>
+                              <RadioGroupItem value="design" />
+                            </FormControl>
+                            <FormLabel className="font-normal">Design d'espace</FormLabel>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="outline" onClick={() => setStep(1)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 4:
+        return (
+          <Form {...estimationTypeForm}>
+            <form onSubmit={estimationTypeForm.handleSubmit(onEstimationTypeSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[step-1].title}</h2>
+                {visibleSteps[step-1].description && <p className="text-sm text-gray-500">{visibleSteps[step-1].description}</p>}
+                
+                <FormField
+                  control={estimationTypeForm.control}
+                  name="estimationType"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="flex flex-col space-y-4"
+                        >
+                          <FormItem className="p-4 border rounded-lg hover:border-gray-400 transition-all">
+                            <div className="flex items-start space-x-3">
+                              <FormControl>
+                                <RadioGroupItem value="quick" />
+                              </FormControl>
+                              <div>
+                                <FormLabel className="font-medium text-lg">Rapide (5 mins)</FormLabel>
+                                <p className="text-sm text-gray-500">Précision à +/- 10%. L'estimation rapide demande peu ou pas de connaissances techniques.</p>
+                              </div>
+                            </div>
+                          </FormItem>
+                          <FormItem className="p-4 border rounded-lg hover:border-gray-400 transition-all">
+                            <div className="flex items-start space-x-3">
+                              <FormControl>
+                                <RadioGroupItem value="precise" />
+                              </FormControl>
+                              <div>
+                                <FormLabel className="font-medium text-lg">Précise (15 mins)</FormLabel>
+                                <p className="text-sm text-gray-500">Précision à +/- 5%. L'estimation précise demande quelques connaissances dans le domaine.</p>
+                              </div>
+                            </div>
+                          </FormItem>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="p-4 bg-gray-50 border rounded-md text-sm">
+                  <p className="mb-2 font-medium">NOTA :</p>
+                  <ul className="space-y-2 list-disc pl-4">
+                    <li>Pour les questions nécessitant des quantités (m², ml, nombre, %), il n'est pas nécessaire d'indiquer des valeurs avec une précision absolue. L'important est de donner une estimation selon votre propre appréciation.</li>
+                    <li>Pour les questions nécessitant un niveau de gamme (Base, milieu de gamme, haut de gamme, premium), ces précisions ont une vocation économique : standard étant le plus économique ($), haut de gamme ou premium étant le moins économique ($$$).</li>
+                  </ul>
+                </div>
+                
+                <FormField
+                  control={estimationTypeForm.control}
+                  name="termsAccepted"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 mt-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          J'ai pris connaissance des informations ci-dessus
+                        </FormLabel>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="outline" onClick={() => setStep(step-1)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      case 5:
+        return (
+          <Form {...constructionDetailsForm}>
+            <form onSubmit={constructionDetailsForm.handleSubmit(onConstructionDetailsSubmit)} className="space-y-6">
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold">{visibleSteps[step-1].title}</h2>
+                {visibleSteps[step-1].description && <p className="text-sm text-gray-500">{visibleSteps[step-1].description}</p>}
+                
+                <FormField
+                  control={constructionDetailsForm.control}
+                  name="surface"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Surface du projet (m²)</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center">
+                          <Input type="number" min="1" {...field} />
+                          <span className="ml-2">m²</span>
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Surface concernée par le projet
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={constructionDetailsForm.control}
+                  name="levels"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre de niveaux</FormLabel>
+                      <FormControl>
+                        <Input type="number" min="1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={constructionDetailsForm.control}
+                  name="units"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nombre de logements</FormLabel>
+                      <FormControl>
+                        <Input type="number" min="1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="outline" onClick={() => setStep(step-1)}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                </Button>
+                <Button type="submit">
+                  Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
+          </Form>
+        );
+        
+      // Add more cases for additional steps...
+      // For brevity, I'll show a default case that handles steps not specifically implemented yet
+        
+      default:
+        // Temporary for steps not yet implemented in detail
+        return (
+          <div className="space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">
+                {step <= visibleSteps.length ? visibleSteps[step-1].title : "Étape " + step}
+              </h2>
+              <p className="text-gray-600">
+                Cette étape est en cours d'implémentation.
+              </p>
+              
+              {step === 24 && (
+                <Form {...contactForm}>
+                  <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-6">
+                    <div className="space-y-4">
+                      <FormField
+                        control={contactForm.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Prénom</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={contactForm.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nom</FormLabel>
+                            <FormControl>
+                              <Input {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={contactForm.control}
+                        name="phone"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Téléphone</FormLabel>
+                            <FormControl>
+                              <Input type="tel" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={contactForm.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input type="email" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    
+                    <div className="flex justify-between pt-4">
+                      <Button type="button" variant="outline" onClick={() => setStep(step-1)}>
+                        <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                      </Button>
+                      <Button type="submit">
+                        Recevoir mon estimation <Send className="ml-2 h-4 w-4" />
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              )}
+              
+              {step !== 24 && (
+                <div className="flex justify-between pt-4">
+                  <Button type="button" variant="outline" onClick={() => setStep(step-1)}>
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+                  </Button>
+                  <Button type="button" onClick={() => setStep(step+1)}>
+                    Continuer <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Estimation de votre projet</h1>
+        <div className="bg-gray-100 px-4 py-2 rounded-full text-sm font-medium">
+          Étape {step} sur {totalSteps}
+        </div>
+      </div>
+      
+      {/* Progress bar */}
+      <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div
+          className="bg-progineer-gold h-2.5 rounded-full transition-all duration-300"
+          style={{ width: `${(step / totalSteps) * 100}%` }}
+        ></div>
+      </div>
+      
+      {/* Current step form */}
+      <div className="bg-white rounded-lg p-6 shadow-sm border">
+        {renderStep()}
+      </div>
+      
+      {/* Result dialog */}
+      <AlertDialog open={showResultDialog} onOpenChange={setShowResultDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Estimation de votre projet</AlertDialogTitle>
+            <AlertDialogDescription>
+              <div className="py-6 text-center">
+                <Calculator className="w-12 h-12 mx-auto mb-4 text-progineer-gold" />
+                <p className="text-lg text-gray-600 mb-2">Coût estimé de votre projet:</p>
+                <p className="text-3xl font-bold text-progineer-gold mb-4">
+                  {estimationResult?.toLocaleString('fr-FR')} €
+                </p>
+                <p className="text-xs text-gray-500 italic max-w-md mx-auto">
+                  Prix HT hors terrain, frais de notaire, études techniques, honoraires de maîtrise d'œuvre et taxes.
+                </p>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction asChild>
+              <Button className="w-full bg-progineer-gold hover:bg-progineer-gold/90">
+                Prendre rendez-vous avec un maître d'œuvre
+              </Button>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
+
+export default EstimationCalculator;
