@@ -177,6 +177,7 @@ const EstimationCalculator: React.FC = () => {
         showResultDialog={showResultDialog}
         setShowResultDialog={setShowResultDialog}
         estimationResult={estimationResult}
+        formData={formData}
       />
     </div>
   );
