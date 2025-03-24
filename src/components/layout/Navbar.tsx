@@ -37,12 +37,12 @@ const Navbar = () => {
     <header 
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
-        isScrolled ? "bg-white/90 shadow-sm py-1.5" : "bg-transparent py-3"
+        isScrolled ? "bg-white/90 shadow-sm py-1" : "bg-transparent py-2"
       )}
     >
       <Container>
         <nav className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex-shrink-0 flex items-center mr-2">
             <span className="text-lg font-serif font-bold text-khaki-800">PROGINEER</span>
           </Link>
 

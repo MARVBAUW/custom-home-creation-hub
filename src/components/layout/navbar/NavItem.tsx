@@ -20,7 +20,7 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
           <button
             onClick={() => toggleDropdown(item.name)}
             className={cn(
-              "flex items-center px-1.5 py-0.5 text-xs font-medium rounded hover:text-khaki-800 transition-colors",
+              "flex items-center px-1 py-0.5 text-xs font-medium rounded hover:text-khaki-800 transition-colors whitespace-nowrap",
               isActive ? "text-khaki-800" : "text-gray-700",
             )}
           >
@@ -51,7 +51,7 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
         <Link
           to={item.path}
           className={cn(
-            "block px-1.5 py-0.5 text-xs font-medium rounded hover:text-khaki-800 transition-colors",
+            "block px-1 py-0.5 text-xs font-medium rounded hover:text-khaki-800 transition-colors whitespace-nowrap",
             isActive ? "text-khaki-800" : "text-gray-700",
           )}
         >
