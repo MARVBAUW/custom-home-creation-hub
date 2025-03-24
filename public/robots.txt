@@ -3,24 +3,32 @@
 User-agent: *
 Allow: /
 
+# Prioritize estimation page
+Allow: /estimation
+
 # Main sitemap
 Sitemap: https://progineer.fr/sitemap.xml
 
 # Specific bot directives
 User-agent: Googlebot
 Allow: /
+Allow: /estimation
 
 User-agent: Bingbot
 Allow: /
+Allow: /estimation
 
 User-agent: Yandexbot
 Allow: /
+Allow: /estimation
 
 User-agent: Twitterbot
 Allow: /
+Allow: /estimation
 
 User-agent: facebookexternalhit
 Allow: /
+Allow: /estimation
 
 # Prevent bots from crawling certain pages (if needed)
 # Disallow: /workspace
