@@ -37,24 +37,22 @@ const App = () => (
         <div className="flex flex-col min-h-screen">
           <Navbar />
           <main className="flex-grow">
-            <PageTransition>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/estimation" element={<Estimation />} />
-                <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
-                <Route path="/realisations-architecte-maison" element={<Realisations />} />
-                <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-                <Route path="/workspace" element={<Workspace />} />
-                <Route path="/devenir-partenaire" element={<Partenaires />} />
-                <Route path="/parrainage-travaux" element={<Parrainage />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/mentions-legales" element={<Legal />} />
-                <Route path="/cgv" element={<CGV />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/a-propos" element={<About />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </PageTransition>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/estimation" element={<Estimation />} />
+              <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
+              <Route path="/realisations-architecte-maison" element={<Realisations />} />
+              <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
+              <Route path="/workspace" element={<Workspace />} />
+              <Route path="/devenir-partenaire" element={<Partenaires />} />
+              <Route path="/parrainage-travaux" element={<Parrainage />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/mentions-legales" element={<Legal />} />
+              <Route path="/cgv" element={<CGV />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/a-propos" element={<About />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </main>
           <Footer />
         </div>

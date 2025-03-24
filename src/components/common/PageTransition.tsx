@@ -19,19 +19,21 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
     }
   }, [location, displayLocation]);
 
-  const handleAnimationEnd = () => {
+  useEffect(() => {
     if (transitionStage === 'fadeOut') {
-      setTransitionStage('fadeIn');
-      setDisplayLocation(location);
+      const timeout = setTimeout(() => {
+        setTransitionStage('fadeIn');
+        setDisplayLocation(location);
+      }, 300);
+      return () => clearTimeout(timeout);
     }
-  };
+  }, [transitionStage, location]);
 
   return (
     <div
       className={`transition-opacity duration-300 ${
         transitionStage === 'fadeIn' ? 'opacity-100' : 'opacity-0'
       }`}
-      onAnimationEnd={handleAnimationEnd}
     >
       {children}
     </div>
