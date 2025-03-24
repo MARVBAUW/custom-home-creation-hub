@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +7,7 @@ import { FileCheck, Clock, Calendar, ArrowUpRight, Bell, FileText, Bookmark, Bui
 import Button from '@/components/common/Button';
 import SEO from '@/components/common/SEO';
 import SEOFooter from '@/components/common/SEOFooter';
+import WorkspaceArticleDetail from './WorkspaceArticleDetail';
 
 // Articles d'actualité générés - Enrichis avec davantage de contenu
 const actualites = [
@@ -220,6 +220,8 @@ const WorkspaceReglementation = () => {
   const [categoryFilter, setCategoryFilter] = useState("tous");
   const [lastUpdate, setLastUpdate] = useState<string>("");
   const [nextScheduledUpdate, setNextScheduledUpdate] = useState<string>("");
+  const [selectedArticle, setSelectedArticle] = useState<typeof actualites[0] | null>(null);
+  const [isArticleOpen, setIsArticleOpen] = useState(false);
   const itemsPerPage = 5;
   
   useEffect(() => {
@@ -334,6 +336,17 @@ const WorkspaceReglementation = () => {
     return translations[category] || category;
   };
   
+  // New function to handle article click
+  const handleArticleClick = (article) => {
+    setSelectedArticle(article);
+    setIsArticleOpen(true);
+  };
+
+  // Close the article detail view
+  const handleCloseArticle = () => {
+    setIsArticleOpen(false);
+  };
+
   return (
     <div className="space-y-6">
       {/* SEO Enhancement - Invisible for users, visible for search engines */}
@@ -462,7 +475,12 @@ const WorkspaceReglementation = () => {
                   <span className="mx-2">•</span>
                   <span className="italic">{article.source}</span>
                 </div>
-                <Button variant="outline" size="sm" className="text-khaki-600 border-khaki-200">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-khaki-600 border-khaki-200"
+                  onClick={() => handleArticleClick(article)}
+                >
                   Lire l'article
                   <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
                 </Button>
@@ -471,117 +489,3 @@ const WorkspaceReglementation = () => {
           ))}
         </div>
       )}
-      
-      {totalPages > 1 && (
-        <Pagination className="mt-8">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-                className={page === 1 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-            
-            {[...Array(totalPages)].map((_, i) => (
-              <PaginationItem key={i}>
-                <PaginationLink 
-                  onClick={() => setPage(i + 1)}
-                  isActive={page === i + 1}
-                >
-                  {i + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
-                className={page === totalPages ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
-
-      <div className="bg-khaki-50 p-6 rounded-lg mt-8">
-        <h3 className="text-lg font-medium mb-3 text-khaki-800">Documents réglementaires essentiels</h3>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Document</TableHead>
-              <TableHead>Mise à jour</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">RE2020 - Guide d'application complet</TableCell>
-              <TableCell>Mars 2024</TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">Télécharger</Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">DTU 20.1 - Ouvrages en maçonnerie</TableCell>
-              <TableCell>Janvier 2024</TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">Télécharger</Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Loi Climat et Résilience - Texte intégral</TableCell>
-              <TableCell>Décembre 2023</TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">Télécharger</Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Guide MaPrimeRénov' 2024</TableCell>
-              <TableCell>Février 2024</TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">Télécharger</Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Réglementation Zéro Artificialisation Nette</TableCell>
-              <TableCell>Avril 2024</TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">Télécharger</Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
-      
-      {/* Articles liés SEO (caché visuellement) pour le référencement */}
-      <div className="sr-only">
-        <h2>Articles récents sur la réglementation immobilière et construction</h2>
-        <ul>
-          {actualites.slice(0, 5).map(article => (
-            <li key={article.id}>
-              <h3>{article.title}</h3>
-              <p>{article.content}</p>
-              <p>Mots-clés: {article.keywords.join(", ")}</p>
-            </li>
-          ))}
-        </ul>
-        
-        <h2>Ressources réglementaires pour les professionnels de la construction en PACA</h2>
-        <p>
-          Retrouvez toutes les actualités réglementaires essentielles pour les architectes, 
-          maîtres d'œuvre et professionnels du bâtiment exerçant à Marseille, Nice, Toulon 
-          et dans toute la région Provence-Alpes-Côte d'Azur. Notre veille juridique couvre 
-          les nouvelles normes de construction, les évolutions des aides à la rénovation, 
-          et les changements législatifs impactant vos projets.
-        </p>
-      </div>
-      
-      {/* SEO Footer Text */}
-      <SEOFooter 
-        text="Veille réglementaire construction et immobilier – Architecte et maître d'œuvre en PACA, Marseille, Nice, Toulon – Suivez l'actualité des normes, lois et réglementations de la construction avec Progineer, votre expert en maîtrise d'œuvre. Restez informé sur la RE2020, les évolutions du DPE, MaPrimeRénov', la loi Climat et Résilience, et toutes les actualités impactant vos projets de construction et rénovation en région Provence-Alpes-Côte d'Azur."
-      />
-    </div>
-  );
-};
-
-export default WorkspaceReglementation;

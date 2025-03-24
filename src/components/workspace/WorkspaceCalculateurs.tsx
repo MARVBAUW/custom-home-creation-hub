@@ -4,10 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { FileSpreadsheet, Calculator, ChartBar, LineChart, Wallet, ArrowRightLeft, Check, Home } from 'lucide-react';
 import Button from '@/components/common/Button';
 import { useToast } from "@/components/ui/use-toast";
+import WorkspaceFileViewer from './WorkspaceFileViewer';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
   const [downloadedFiles, setDownloadedFiles] = useState<string[]>([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isFileViewerOpen, setIsFileViewerOpen] = useState(false);
 
   const calculators = [
     {
@@ -66,11 +69,9 @@ const WorkspaceCalculateurs = () => {
     
     // Vérifiez si le fichier a déjà été téléchargé
     if (downloadedFiles.includes(calculator.filename)) {
-      toast({
-        title: "Fichier déjà téléchargé",
-        description: `${calculator.title} est déjà dans vos téléchargements.`,
-        duration: 3000,
-      });
+      // Si déjà téléchargé, nous ouvrons le visualiseur de fichier
+      setSelectedFile(calculator);
+      setIsFileViewerOpen(true);
     } else {
       // Simuler un délai de téléchargement
       setTimeout(() => {
@@ -82,8 +83,16 @@ const WorkspaceCalculateurs = () => {
           description: `${calculator.title} a été téléchargé avec succès.`,
           duration: 3000,
         });
+        
+        // Ouvre automatiquement le visualiseur après le premier téléchargement
+        setSelectedFile(calculator);
+        setIsFileViewerOpen(true);
       }, 1000);
     }
+  };
+
+  const handleCloseFileViewer = () => {
+    setIsFileViewerOpen(false);
   };
 
   return (
@@ -119,7 +128,7 @@ const WorkspaceCalculateurs = () => {
                 {downloadedFiles.includes(calculator.filename) ? (
                   <>
                     <Check className="h-4 w-4 mr-2" />
-                    Téléchargé
+                    Ouvrir le fichier
                   </>
                 ) : (
                   <>
@@ -132,6 +141,13 @@ const WorkspaceCalculateurs = () => {
           </Card>
         ))}
       </div>
+
+      {/* File Viewer Dialog */}
+      <WorkspaceFileViewer 
+        file={selectedFile}
+        isOpen={isFileViewerOpen}
+        onClose={handleCloseFileViewer}
+      />
     </div>
   );
 };
