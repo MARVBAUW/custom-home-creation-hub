@@ -2,8 +2,27 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
+import { useToast } from "@/components/ui/use-toast";
 
 const CTACTA = () => {
+  const { toast } = useToast();
+
+  const handleEstimationClick = () => {
+    toast({
+      title: "Redirection vers la page d'estimation",
+      description: "Vous êtes redirigé vers notre formulaire d'estimation.",
+      duration: 3000,
+    });
+  };
+
+  const handleContactClick = () => {
+    toast({
+      title: "Redirection vers la page de contact",
+      description: "Vous êtes redirigé vers notre formulaire de contact.",
+      duration: 3000,
+    });
+  };
+
   return (
     <section className="py-16 bg-khaki-600 text-white">
       <Container>
@@ -16,10 +35,19 @@ const CTACTA = () => {
             notre expertise peut vous aider à la réaliser.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button href="/estimation" className="bg-white text-khaki-800 hover:bg-white/90">
+            <Button 
+              href="/estimation" 
+              onClick={handleEstimationClick}
+              className="bg-white text-khaki-800 hover:bg-white/90"
+            >
               Estimer mon projet
             </Button>
-            <Button href="/contact" variant="outline" className="border-white/30 bg-transparent hover:bg-white/10">
+            <Button 
+              href="/contact" 
+              onClick={handleContactClick}
+              variant="outline" 
+              className="border-white/30 bg-transparent hover:bg-white/10"
+            >
               Nous contacter
             </Button>
           </div>
