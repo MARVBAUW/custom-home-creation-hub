@@ -3,8 +3,12 @@
 User-agent: *
 Allow: /
 
-# Prioritize estimation page
+# Prioritize main pages
+Allow: /
 Allow: /estimation
+Allow: /contact
+Allow: /prestations-maitre-oeuvre
+Allow: /realisations-architecte-maison
 
 # Main sitemap
 Sitemap: https://progineer.fr/sitemap.xml
@@ -13,22 +17,27 @@ Sitemap: https://progineer.fr/sitemap.xml
 User-agent: Googlebot
 Allow: /
 Allow: /estimation
+Allow: /contact
 
 User-agent: Bingbot
 Allow: /
 Allow: /estimation
+Allow: /contact
 
 User-agent: Yandexbot
 Allow: /
 Allow: /estimation
+Allow: /contact
 
 User-agent: Twitterbot
 Allow: /
 Allow: /estimation
+Allow: /contact
 
 User-agent: facebookexternalhit
 Allow: /
 Allow: /estimation
+Allow: /contact
 
 # Prevent bots from crawling certain pages (if needed)
 # Disallow: /workspace
