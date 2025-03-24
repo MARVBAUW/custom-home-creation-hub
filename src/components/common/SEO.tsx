@@ -19,7 +19,7 @@ const SEO: React.FC<SEOProps> = ({
   keywords,
   canonicalUrl = 'https://progineer.fr',
   ogType = 'website',
-  ogImage = 'https://progineer.fr/og-image.jpg',
+  ogImage = 'https://progineer.fr/images/progineer-social-card.jpg', // Image par défaut mise à jour
   structuredData,
   children,
 }) => {
@@ -28,6 +28,45 @@ const SEO: React.FC<SEOProps> = ({
   
   // Make sure description is not too long (Google typically displays ~155-160 characters)
   const formattedDescription = description.length > 160 ? description.substring(0, 160) + '...' : description;
+
+  // Si aucun structured data n'est fourni, utiliser les données par défaut de l'entreprise
+  const defaultStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Progineer",
+    "description": "Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA.",
+    "url": "https://progineer.fr",
+    "logo": "https://progineer.fr/images/progineer-logo.png",
+    "image": "https://progineer.fr/images/progineer-social-card.jpg",
+    "telephone": "+33783762156",
+    "email": "progineer.moe@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Marseille",
+      "addressRegion": "PACA",
+      "addressCountry": "FR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "43.296482",
+      "longitude": "5.369780"
+    },
+    "areaServed": ["Marseille", "Nice", "Toulon", "Cannes", "Fréjus", "PACA"],
+    "sameAs": [
+      "https://facebook.com/progineer",
+      "https://instagram.com/progineer",
+      "https://linkedin.com/company/progineer"
+    ],
+    "priceRange": "€€€",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }
+    ]
+  };
 
   return (
     <Helmet>
@@ -56,12 +95,18 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:description" content={formattedDescription} />
       <meta name="twitter:image" content={ogImage} />
 
+      {/* Favicon - nouvelles versions correspondant à la charte graphique */}
+      <link rel="icon" href="/favicon.ico" />
+      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+      <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+      <link rel="manifest" href="/site.webmanifest" />
+      <meta name="theme-color" content="#787346" />
+
       {/* Structured Data (JSON-LD) for Rich Results */}
-      {structuredData && (
-        <script type="application/ld+json">
-          {JSON.stringify(structuredData)}
-        </script>
-      )}
+      <script type="application/ld+json">
+        {JSON.stringify(structuredData || defaultStructuredData)}
+      </script>
 
       {/* Additional meta tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />

@@ -2,11 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import Container from '@/components/common/Container';
 import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
 import { navLinks } from './navbar/types';
+import Logo from '@/components/common/Logo';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,9 +43,12 @@ const Navbar = () => {
     >
       <Container>
         <nav className="flex items-center justify-between">
-          <Link to="/" className="flex-shrink-0 flex items-center mr-2">
-            <span className="text-lg font-serif font-bold text-khaki-800">PROGINEER</span>
-          </Link>
+          {/* Logo */}
+          <Logo 
+            variant={isScrolled || location.pathname !== '/' ? 'default' : 'white'} 
+            size="md" 
+            className="flex-shrink-0 mr-2"
+          />
 
           {/* Desktop Navigation */}
           <DesktopNav 

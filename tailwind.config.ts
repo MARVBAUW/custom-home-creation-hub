@@ -19,6 +19,11 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: ['Inter', 'sans-serif'],
+				serif: ['Playfair Display', 'serif'],
+				'rare': ['Rare', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -63,6 +68,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				// Nouvelles couleurs basées sur la charte graphique
+				progineer: {
+					gold: '#787346',   // Vert-doré principal
+					beige: '#B8A994',  // Beige clair
+					sand: '#C1A16A',   // Sable doré
+					dark: '#2E2E2E',   // Presque noir
+					light: '#F5F2E7',  // Blanc cassé/crème
+				},
 				khaki: {
 					50: '#f6f8f2',
 					100: '#e9efe1',
@@ -102,10 +115,6 @@ export default {
 					900: '#56514b',
 					950: '#2d2a26',
 				}
-			},
-			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
-				serif: ['Playfair Display', 'serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

@@ -1,21 +1,32 @@
+
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  height: 3em;
   will-change: filter;
-  transition: filter 300ms;
+  transition: all 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 0.5em rgba(120, 115, 70, 0.6));
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+.logo-icon {
+  height: 2.5em;
+  transition: all 300ms;
+}
+
+.logo-icon:hover {
+  filter: drop-shadow(0 0 0.5em rgba(120, 115, 70, 0.6));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spin {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 
 @keyframes logo-spin {
@@ -27,16 +38,60 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+/* Styles spécifiques pour les éléments de la page d'estimation */
+.estimation-form-container {
+  background-color: #F5F2E7;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.estimation-input {
+  border: 1px solid #C1A16A;
+  transition: all 0.2s ease;
+}
+
+.estimation-input:focus {
+  border-color: #787346;
+  box-shadow: 0 0 0 2px rgba(120, 115, 70, 0.2);
+}
+
+/* Animation pour le logo */
+.logo-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.card {
-  padding: 2em;
+/* Nouvelles animations pour les sections */
+.slide-in-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: slideInLeft 0.8s forwards;
 }
 
-.read-the-docs {
-  color: #888;
+.slide-in-right {
+  opacity: 0;
+  transform: translateX(30px);
+  animation: slideInRight 0.8s forwards;
+}
+
+@keyframes slideInLeft {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

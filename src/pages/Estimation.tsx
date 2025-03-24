@@ -4,9 +4,9 @@ import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useMediaQuery } from '@/hooks/use-media-query';
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { useMediaQuery } from '@/hooks/use-media-query';
+import Logo from '@/components/common/Logo';
 
 const Estimation = () => {
   const [open, setOpen] = useState(false);
@@ -26,6 +26,8 @@ const Estimation = () => {
       "provider": {
         "@type": "ProfessionalService",
         "name": "Progineer",
+        "logo": "https://progineer.fr/images/progineer-logo.png",
+        "image": "https://progineer.fr/images/progineer-building.jpg",
         "telephone": "+33783762156",
         "email": "progineer.moe@gmail.com",
         "address": {
@@ -82,7 +84,9 @@ const Estimation = () => {
       return (
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button>Estimer gratuitement mon projet</Button>
+            <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white">
+              Estimer gratuitement mon projet
+            </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] h-[80vh]">
             <iframe
@@ -103,7 +107,9 @@ const Estimation = () => {
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>Estimer gratuitement mon projet</Button>
+          <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white">
+            Estimer gratuitement mon projet
+          </Button>
         </DrawerTrigger>
         <DrawerContent className="h-[80vh]">
           <iframe
@@ -130,7 +136,7 @@ const Estimation = () => {
         canonicalUrl="https://progineer.fr/estimation"
         structuredData={structuredData}
         ogType="website"
-        ogImage="https://progineer.fr/estimation-projet-construction.jpg"
+        ogImage="https://progineer.fr/images/progineer-estimation.jpg"
       >
         {/* Additional meta tags for better indexing */}
         <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -140,45 +146,51 @@ const Estimation = () => {
       </SEO>
 
       {/* Enhanced Hero section with more SEO-friendly content */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-progineer-light to-white">
         <Container size="md">
           <div className="text-center">
-            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
+            <Logo variant="gold" size="lg" className="mx-auto mb-6" withTagline />
+            
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/10 text-progineer-gold text-sm font-medium">
               Estimation Gratuite
             </div>
-            <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Estimez gratuitement votre projet de construction en PACA
+            
+            <h1 className="text-4xl md:text-5xl font-rare tracking-wide mb-6 text-progineer-dark">
+              Estimez gratuitement votre projet<br className="hidden md:block" /> 
+              <span className="text-progineer-gold">de construction en PACA</span>
             </h1>
+            
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable">
               Notre outil d'estimation vous donne une idée précise du budget nécessaire pour votre projet 
               de construction, rénovation ou extension en région PACA. Recevez un devis détaillé en 24h.
             </p>
+            
             <FormModal />
           </div>
         </Container>
       </section>
 
-      {/* Key benefits section - helps with SEO and conversions */}
+      {/* Key benefits section - updated with new visual identity */}
       <section className="py-16 bg-white">
         <Container size="md">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center">
+          <h2 className="text-2xl md:text-3xl font-rare tracking-wide mb-10 text-center text-progineer-gold">
             Pourquoi demander une estimation à Progineer ?
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-stone-50 p-6 rounded-lg">
-              <h3 className="text-xl font-medium mb-3">Estimation précise</h3>
-              <p>Nos experts analysent en détail votre projet pour vous fournir un chiffrage réaliste et transparent.</p>
+            <div className="bg-progineer-light/50 p-6 rounded-lg border border-progineer-gold/20 hover:border-progineer-gold/50 transition-all">
+              <h3 className="text-xl font-medium mb-3 text-progineer-dark">Estimation précise</h3>
+              <p className="text-progineer-dark/80">Nos experts analysent en détail votre projet pour vous fournir un chiffrage réaliste et transparent.</p>
             </div>
             
-            <div className="bg-stone-50 p-6 rounded-lg">
-              <h3 className="text-xl font-medium mb-3">Réponse rapide</h3>
-              <p>Recevez votre estimation détaillée sous 24h pour avancer rapidement dans la réalisation de votre projet.</p>
+            <div className="bg-progineer-light/50 p-6 rounded-lg border border-progineer-gold/20 hover:border-progineer-gold/50 transition-all">
+              <h3 className="text-xl font-medium mb-3 text-progineer-dark">Réponse rapide</h3>
+              <p className="text-progineer-dark/80">Recevez votre estimation détaillée sous 24h pour avancer rapidement dans la réalisation de votre projet.</p>
             </div>
             
-            <div className="bg-stone-50 p-6 rounded-lg">
-              <h3 className="text-xl font-medium mb-3">Sans engagement</h3>
-              <p>Notre service d'estimation est totalement gratuit et ne vous engage à rien. Vous restez libre de votre décision.</p>
+            <div className="bg-progineer-light/50 p-6 rounded-lg border border-progineer-gold/20 hover:border-progineer-gold/50 transition-all">
+              <h3 className="text-xl font-medium mb-3 text-progineer-dark">Sans engagement</h3>
+              <p className="text-progineer-dark/80">Notre service d'estimation est totalement gratuit et ne vous engage à rien. Vous restez libre de votre décision.</p>
             </div>
           </div>
           
@@ -189,36 +201,36 @@ const Estimation = () => {
       </section>
 
       {/* Trust signals section */}
-      <section className="py-16 bg-stone-50">
+      <section className="py-16 bg-progineer-light/70">
         <Container size="md">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-center">
+          <h2 className="text-2xl md:text-3xl font-rare tracking-wide mb-6 text-center text-progineer-gold">
             Notre expertise en chiffres
           </h2>
           
           <div className="grid md:grid-cols-4 gap-6 mb-10">
             <div className="text-center p-4">
-              <p className="text-4xl font-bold text-khaki-700 mb-2">+300</p>
-              <p className="text-gray-600">Projets réalisés</p>
+              <p className="text-4xl font-bold text-progineer-gold mb-2">+300</p>
+              <p className="text-progineer-dark/80">Projets réalisés</p>
             </div>
             
             <div className="text-center p-4">
-              <p className="text-4xl font-bold text-khaki-700 mb-2">98%</p>
-              <p className="text-gray-600">Clients satisfaits</p>
+              <p className="text-4xl font-bold text-progineer-gold mb-2">98%</p>
+              <p className="text-progineer-dark/80">Clients satisfaits</p>
             </div>
             
             <div className="text-center p-4">
-              <p className="text-4xl font-bold text-khaki-700 mb-2">15+</p>
-              <p className="text-gray-600">Années d'expérience</p>
+              <p className="text-4xl font-bold text-progineer-gold mb-2">15+</p>
+              <p className="text-progineer-dark/80">Années d'expérience</p>
             </div>
             
             <div className="text-center p-4">
-              <p className="text-4xl font-bold text-khaki-700 mb-2">+20</p>
-              <p className="text-gray-600">Villes couvertes</p>
+              <p className="text-4xl font-bold text-progineer-gold mb-2">+20</p>
+              <p className="text-progineer-dark/80">Villes couvertes</p>
             </div>
           </div>
           
           <div className="text-center">
-            <p className="mb-6 text-gray-600 max-w-2xl mx-auto">
+            <p className="mb-6 text-progineer-dark/80 max-w-2xl mx-auto">
               Faites confiance à notre équipe d'experts pour vous accompagner dans votre projet de construction ou de rénovation en région PACA.
             </p>
             <FormModal />
@@ -226,32 +238,32 @@ const Estimation = () => {
         </Container>
       </section>
 
-      {/* FAQ Section for SEO */}
+      {/* FAQ Section */}
       <section className="py-16 bg-white">
         <Container size="md">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-10 text-center">
+          <h2 className="text-2xl md:text-3xl font-rare tracking-wide mb-10 text-center text-progineer-gold">
             Questions fréquentes sur nos estimations
           </h2>
           
           <div className="space-y-6 max-w-3xl mx-auto">
-            <div className="border-b border-gray-200 pb-4">
-              <h3 className="text-xl font-medium mb-2">Comment est calculée l'estimation de mon projet ?</h3>
-              <p className="text-gray-600">Notre équipe utilise des données précises du marché immobilier en PACA et prend en compte tous les aspects de votre projet : surface, matériaux, complexité, localisation, etc. pour vous fournir une estimation réaliste.</p>
+            <div className="border-b border-progineer-gold/20 pb-4">
+              <h3 className="text-xl font-medium mb-2 text-progineer-dark">Comment est calculée l'estimation de mon projet ?</h3>
+              <p className="text-progineer-dark/80">Notre équipe utilise des données précises du marché immobilier en PACA et prend en compte tous les aspects de votre projet : surface, matériaux, complexité, localisation, etc. pour vous fournir une estimation réaliste.</p>
             </div>
             
-            <div className="border-b border-gray-200 pb-4">
-              <h3 className="text-xl font-medium mb-2">Combien de temps faut-il pour recevoir mon estimation ?</h3>
-              <p className="text-gray-600">Vous recevrez votre estimation détaillée sous 24h ouvrées après réception de votre demande complète.</p>
+            <div className="border-b border-progineer-gold/20 pb-4">
+              <h3 className="text-xl font-medium mb-2 text-progineer-dark">Combien de temps faut-il pour recevoir mon estimation ?</h3>
+              <p className="text-progineer-dark/80">Vous recevrez votre estimation détaillée sous 24h ouvrées après réception de votre demande complète.</p>
             </div>
             
-            <div className="border-b border-gray-200 pb-4">
-              <h3 className="text-xl font-medium mb-2">L'estimation est-elle vraiment gratuite ?</h3>
-              <p className="text-gray-600">Oui, notre service d'estimation est 100% gratuit et sans engagement. C'est notre façon de vous aider à mieux planifier votre projet.</p>
+            <div className="border-b border-progineer-gold/20 pb-4">
+              <h3 className="text-xl font-medium mb-2 text-progineer-dark">L'estimation est-elle vraiment gratuite ?</h3>
+              <p className="text-progineer-dark/80">Oui, notre service d'estimation est 100% gratuit et sans engagement. C'est notre façon de vous aider à mieux planifier votre projet.</p>
             </div>
             
-            <div className="border-b border-gray-200 pb-4">
-              <h3 className="text-xl font-medium mb-2">Dans quelles villes intervenez-vous en PACA ?</h3>
-              <p className="text-gray-600">Nous intervenons dans toutes les principales villes de la région PACA : Marseille, Nice, Toulon, Aix-en-Provence, Cannes, Antibes, Fréjus, Saint-Raphaël, et bien d'autres.</p>
+            <div className="border-b border-progineer-gold/20 pb-4">
+              <h3 className="text-xl font-medium mb-2 text-progineer-dark">Dans quelles villes intervenez-vous en PACA ?</h3>
+              <p className="text-progineer-dark/80">Nous intervenons dans toutes les principales villes de la région PACA : Marseille, Nice, Toulon, Aix-en-Provence, Cannes, Antibes, Fréjus, Saint-Raphaël, et bien d'autres.</p>
             </div>
           </div>
           
@@ -262,13 +274,13 @@ const Estimation = () => {
       </section>
 
       {/* Local cities section for SEO */}
-      <section className="py-12 bg-stone-50">
+      <section className="py-12 bg-progineer-light/50">
         <Container>
-          <h2 className="text-xl font-medium mb-6 text-center text-gray-700">
+          <h2 className="text-xl font-medium mb-6 text-center text-progineer-dark">
             Zones d'intervention pour vos projets de construction et rénovation
           </h2>
           
-          <div className="text-sm text-gray-600 text-center max-w-4xl mx-auto columns-2 md:columns-4 gap-8">
+          <div className="text-sm text-progineer-dark/70 text-center max-w-4xl mx-auto columns-2 md:columns-4 gap-8">
             <p className="mb-2">Marseille</p>
             <p className="mb-2">Nice</p>
             <p className="mb-2">Toulon</p>
@@ -290,10 +302,10 @@ const Estimation = () => {
       </section>
 
       {/* SEO Footer */}
-      <section className="py-8 bg-stone-50 border-t border-stone-200">
+      <section className="py-8 bg-progineer-light/30 border-t border-progineer-gold/10">
         <Container>
-          <div className="text-sm text-stone-500">
-            <h2 className="text-base font-medium mb-2 text-stone-700">Estimation de projets de construction en PACA</h2>
+          <div className="text-sm text-progineer-dark/60">
+            <h2 className="text-base font-medium mb-2 text-progineer-dark">Estimation de projets de construction en PACA</h2>
             <p>
               Progineer, ingénieur et maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Estimation précise de vos projets par nos architectes et ingénieurs. Nous intervenons à Marseille, Nice, Toulon, Cannes, Saint-Tropez et dans toute la région PACA pour vous proposer un devis détaillé et personnalisé. Confiez-nous votre projet de construction neuve, d'extension ou de rénovation pour bénéficier d'un accompagnement sur-mesure par des professionnels expérimentés.
             </p>
