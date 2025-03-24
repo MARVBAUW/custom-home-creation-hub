@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Building, Home, Eye, Paintbrush, Ruler, Building2, Landmark, 
-  Construction, LayoutGrid, HardHat, User, Users, Compass, 
+  Construction, User, Users, Compass, 
   Sun, Calculator, Check, Bath, ChefHat, LampCeiling, Plug, Map
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -135,7 +135,7 @@ const EstimationVisualizer: React.FC<EstimationVisualizerProps> = ({ step, formD
                 transition={{ delay: 0.2, duration: 0.5 }}
                 className="absolute bottom-6 left-1/4 transform"
               >
-                <HardHat className="text-progineer-gold animate-bounce" size={20} />
+                <User className="text-progineer-gold animate-bounce" size={20} />
               </motion.div>
               
               <motion.div 
