@@ -1,30 +1,62 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Gift, Users, PiggyBank, Medal } from 'lucide-react';
+import SEO from '@/components/common/SEO';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const Parrainage = () => {
+  // Structured data for better SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Programme de parrainage | Progineer - Architecte & Maître d'œuvre en PACA",
+    "description": "Programme d'apporteurs d'affaires Progineer. Recommandez-nous et recevez une commission pour chaque nouveau client. Architecte et maître d'œuvre en région PACA.",
+    "url": "https://progineer.fr/parrainage-travaux",
+    "mainEntity": {
+      "@type": "ProfessionalService",
+      "name": "Progineer",
+      "description": "Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA.",
+      "image": "https://progineer.fr/images/progineer-social-card.jpg",
+      "offers": {
+        "@type": "Offer",
+        "name": "Programme de parrainage",
+        "description": "Recommandez-nous à votre entourage et soyez récompensé pour chaque nouveau client qui nous fait confiance."
+      }
+    },
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["h1", "h2", ".speakable"]
+    }
+  };
+
   return (
     <>
-      <Helmet>
-        <title>Programme de parrainage | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Programme d'apporteurs d'affaires Progineer. Recommandez-nous et recevez une commission pour chaque nouveau client. Architecte et maître d'œuvre en région PACA." />
-        <meta name="keywords" content="parrainage travaux, apporteur d'affaires architecte, recommandation maître d'œuvre, commission travaux PACA" />
-      </Helmet>
+      <SEO
+        title="Programme de parrainage | Progineer - Architecte & Maître d'œuvre en PACA"
+        description="Programme d'apporteurs d'affaires Progineer. Recommandez-nous et recevez une commission pour chaque nouveau client. Architecte et maître d'œuvre en région PACA."
+        keywords="parrainage travaux, apporteur d'affaires architecte, recommandation maître d'œuvre, commission travaux PACA"
+        canonicalUrl="https://progineer.fr/parrainage-travaux"
+        structuredData={structuredData}
+        ogImage="https://progineer.fr/images/progineer-social-card.jpg"
+      >
+        <meta name="robots" content="index, follow" />
+        <meta name="geo.region" content="FR-PAC" />
+        <meta name="geo.placename" content="Provence-Alpes-Côte d'Azur" />
+      </SEO>
 
       {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-progineer-light to-white">
         <Container size="md">
           <div className="text-center">
-            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/10 text-progineer-gold text-sm font-medium">
               Parrainage
             </div>
-            <h1 className="text-4xl md:text-5xl font-semibold mb-6">
+            <h1 className="text-4xl md:text-5xl font-rare tracking-wide mb-6 text-progineer-dark">
               Programme d'apporteurs d'affaires
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable">
               Recommandez-nous à votre entourage et soyez récompensé pour chaque 
               nouveau client qui nous fait confiance.
             </p>
@@ -368,16 +400,10 @@ const Parrainage = () => {
         </Container>
       </section>
 
-      {/* SEO Footer */}
-      <section className="py-8 bg-stone-50 border-t border-stone-200">
-        <Container>
-          <div className="text-sm text-stone-500">
-            <p>
-              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Participez à notre programme de parrainage et recevez une commission pour chaque nouveau client que vous nous recommandez en région Provence-Alpes-Côte d'Azur.
-            </p>
-          </div>
-        </Container>
-      </section>
+      {/* SEO Footer with updated text */}
+      <SEOFooter 
+        text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Participez à notre programme de parrainage et recevez une commission pour chaque nouveau client que vous nous recommandez en région Provence-Alpes-Côte d'Azur. Notre équipe intervient à Marseille, Nice, Toulon, Cannes et dans toute la région PACA."
+      />
     </>
   );
 };
