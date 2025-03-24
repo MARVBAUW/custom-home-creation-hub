@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Button from '@/components/common/Button';
+import EstimationCalculator from './EstimationCalculator';
 
 const EstimationForm = () => {
   const [open, setOpen] = useState(false);
@@ -17,17 +18,8 @@ const EstimationForm = () => {
             Estimer gratuitement mon projet
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[600px] h-[80vh]">
-          <iframe
-            title="Formulaire d'estimation de projet"
-            src="https://tally.so/r/nGB6KO"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            marginHeight={0}
-            marginWidth={0}
-            style={{ height: "calc(80vh - 80px)" }}
-          ></iframe>
+        <DialogContent className="sm:max-w-[800px] h-[90vh] overflow-y-auto">
+          <EstimationCalculator />
         </DialogContent>
       </Dialog>
     );
@@ -40,17 +32,10 @@ const EstimationForm = () => {
           Estimer gratuitement mon projet
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[80vh]">
-        <iframe
-          title="Formulaire d'estimation de projet mobile"
-          src="https://tally.so/r/nGB6KO"
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          marginHeight={0}
-          marginWidth={0}
-          style={{ height: "calc(80vh - 80px)" }}
-        ></iframe>
+      <DrawerContent className="h-[90vh] overflow-y-auto">
+        <div className="px-4 py-6">
+          <EstimationCalculator />
+        </div>
       </DrawerContent>
     </Drawer>
   );
