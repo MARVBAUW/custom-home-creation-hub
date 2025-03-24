@@ -37,13 +37,13 @@ const Navbar = () => {
     <header 
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
-        isScrolled ? "bg-white/90 shadow-sm py-2" : "bg-transparent py-4"
+        isScrolled ? "bg-white/90 shadow-sm py-1.5" : "bg-transparent py-3"
       )}
     >
       <Container>
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-xl font-serif font-bold text-khaki-800">PROGINEER</span>
+            <span className="text-lg font-serif font-bold text-khaki-800">PROGINEER</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -56,9 +56,9 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            className="md:hidden p-1.5 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
           >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </nav>
       </Container>
