@@ -86,10 +86,12 @@ export const FacadeSchema = z.object({
   stoneCladdingPercentage: z.string().default("0"),
 });
 
-export const WindowsSchema = z.object({
-  windowType: z.enum(["bois", "pvc", "alu", "mixte", "pvcColore", "sansAvis"], {
+export const MenuiseriesExtSchema = z.object({
+  windowType: z.string({
     required_error: "Veuillez sélectionner un type de menuiserie",
   }),
+  windowRenovationArea: z.string().optional(),
+  windowNewArea: z.string().optional(),
 });
 
 export const ElectricalSchema = z.object({
@@ -228,14 +230,6 @@ export const RenovationFacadeSchema = z.object({
   metalCladdingPercentage: z.string().optional(),
   woodCladdingPercentage: z.string().optional(),
   stoneCladdingPercentage: z.string().optional(),
-});
-
-export const MenuiseriesExtSchema = z.object({
-  windowType: z.enum(["bois", "pvc", "alu", "mixte", "pvcColore", "sansAvis"], {
-    required_error: "Veuillez sélectionner un type de menuiserie",
-  }),
-  windowRenovationArea: z.string().optional(),
-  windowNewArea: z.string().optional(),
 });
 
 export const AmenagementPaysagerSchema = z.object({
