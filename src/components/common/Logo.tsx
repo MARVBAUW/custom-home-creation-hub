@@ -19,13 +19,14 @@ const Logo: React.FC<LogoProps> = ({
   // Function to render the SVG logo
   const renderSvgLogo = () => {
     if (variant === 'icon') {
+      // For icon variant, we need to use a separate color logic
       // Logo icon (just the building symbol)
       return (
         <svg viewBox="0 0 200 200" className={getSizeClasses()}>
           <defs>
             <linearGradient id="goldIcon" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={variant === 'white' ? "#FFFFFF" : "#c8a86d"}/>
-              <stop offset="100%" stopColor={variant === 'white' ? "#CCCCCC" : "#4b4b3b"}/>
+              <stop offset="0%" stopColor="#c8a86d"/>
+              <stop offset="100%" stopColor="#4b4b3b"/>
             </linearGradient>
           </defs>
           <path d="M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
