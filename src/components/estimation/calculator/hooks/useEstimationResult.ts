@@ -11,6 +11,17 @@ export const useEstimationResult = (formData: FormData) => {
 
   const finalizeEstimation = async () => {
     try {
+      // Vérifier si l'email est renseigné
+      if (!formData.email) {
+        toast({
+          title: "Email manquant",
+          description: "Veuillez fournir une adresse email pour recevoir votre estimation.",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
+      }
+
       // Calculer l'estimation sur la base des données du formulaire
       const estimation = calculateEstimation(formData);
       setEstimationResult(estimation);
@@ -24,10 +35,17 @@ export const useEstimationResult = (formData: FormData) => {
       // Notifier l'utilisateur
       toast({
         title: "Estimation complétée",
-        description: "Votre estimation a été calculée avec succès.",
+        description: "Votre estimation a été calculée avec succès. Vous allez recevoir un récapitulatif détaillé.",
         duration: 5000,
       });
 
+      // Simulation d'envoi des données au backend
+      console.log("Montant estimé:", estimation, "€");
+      console.log("Prénom:", formData.firstName);
+      console.log("Nom:", formData.lastName);
+      console.log("Email:", formData.email);
+      console.log("Téléphone:", formData.phone);
+      
       // TODO: Envoyer les données au backend réel
       // Cette partie devrait être implémentée avec un appel API réel
       

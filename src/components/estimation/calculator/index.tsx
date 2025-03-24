@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import ProgressBar from './ProgressBar';
@@ -88,7 +87,6 @@ const EstimationCalculator: React.FC = () => {
     onContactSubmit,
   } = useEstimationCalculator();
 
-  // Rendu de l'étape actuelle avec animations
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -593,11 +591,12 @@ const EstimationCalculator: React.FC = () => {
         />
       </div>
       
-      {/* Résultat de l'estimation avec animation */}
+      {/* Résultat de l'estimation avec animation et données du formulaire */}
       <EstimationResult
         showResultDialog={showResultDialog}
         setShowResultDialog={setShowResultDialog}
         estimationResult={estimationResult}
+        formData={formData}
       />
     </div>
   );
