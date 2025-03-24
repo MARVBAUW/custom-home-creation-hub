@@ -7,6 +7,8 @@ import EstimationBenefits from '@/components/estimation/EstimationBenefits';
 import EstimationTrustMetrics from '@/components/estimation/EstimationTrustMetrics';
 import EstimationFAQ from '@/components/estimation/EstimationFAQ';
 import EstimationLocationCities from '@/components/estimation/EstimationLocationCities';
+import EstimationCalculator from '@/components/estimation/EstimationCalculator';
+import { motion } from 'framer-motion';
 
 const Estimation = () => {
   const structuredData = getEstimationStructuredData();
@@ -29,11 +31,25 @@ const Estimation = () => {
         <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/estimation" />
       </SEO>
 
-      <EstimationHero />
-      <EstimationBenefits />
-      <EstimationTrustMetrics />
-      <EstimationFAQ />
-      <EstimationLocationCities />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <EstimationHero />
+        
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-10">Estimez votre projet en quelques étapes</h2>
+            <EstimationCalculator />
+          </div>
+        </section>
+        
+        <EstimationBenefits />
+        <EstimationTrustMetrics />
+        <EstimationFAQ />
+        <EstimationLocationCities />
+      </motion.div>
     </>
   );
 };
