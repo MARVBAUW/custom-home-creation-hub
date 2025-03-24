@@ -18,7 +18,7 @@ import {
   Lightbulb, 
   Flower, 
   Bath,
-  CookingPot, // Changed Kitchen to CookingPot which is available in lucide-react
+  CookingPot,
   Check 
 } from 'lucide-react';
 import { FormData } from './types';
@@ -91,116 +91,6 @@ export const stepDefinitions = [
     skipCondition: (formData: FormData) => false,
   },
   {
-    title: "Électricité",
-    icon: <CircuitBoard />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Plomberie",
-    icon: <CircuitBoard />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Chauffage",
-    icon: <Thermometer />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Climatisation",
-    icon: <Sun />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Plâtrerie",
-    icon: <Layers />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Type de portes",
-    icon: <Grid />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Aménagements intérieurs",
-    icon: <Home />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Carrelage sols",
-    icon: <Grid />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Carrelage murs",
-    icon: <Grid />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Parquet",
-    icon: <Layers />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Revêtements souples",
-    icon: <Layers />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Peintures et revêtements muraux",
-    icon: <Palette />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Solutions énergétiques",
-    icon: <Lightbulb />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Aménagement extérieur",
-    icon: <Flower />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Clôtures et portails",
-    icon: <Grid />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Terrasse",
-    icon: <Grid />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Paysagisme",
-    icon: <Flower />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Abri de voiture",
-    icon: <Home />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Piscine",
-    icon: <Bath />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Spa / Jacuzzi",
-    icon: <Bath />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Cuisine",
-    icon: <CookingPot />, // Changed Kitchen to CookingPot
-    skipCondition: (formData: FormData) => false,
-  },
-  {
-    title: "Salle de bain",
-    icon: <Bath />,
-    skipCondition: (formData: FormData) => false,
-  },
-  {
     title: "Informations personnelles",
     icon: <FileText />,
     skipCondition: (formData: FormData) => false, // Dernière étape, jamais sautée
@@ -213,7 +103,7 @@ export const getVisibleSteps = (formData: FormData) => {
 };
 
 // Obtient le titre de l'étape actuelle
-export const getStepTitle = (stepNumber: number) => {
+export const getStepTitle = (stepNumber: number): string => {
   const steps = stepDefinitions;
   // Ajustement de l'index pour correspondre au numéro d'étape (les étapes commencent à 1)
   const step = steps[stepNumber - 1];
@@ -221,7 +111,7 @@ export const getStepTitle = (stepNumber: number) => {
 };
 
 // Obtient l'icône de l'étape actuelle
-export const getStepIcon = (stepNumber: number) => {
+export const getStepIcon = (stepNumber: number): React.ReactNode => {
   const steps = stepDefinitions;
   // Ajustement de l'index pour correspondre au numéro d'étape (les étapes commencent à 1)
   const step = steps[stepNumber - 1];
