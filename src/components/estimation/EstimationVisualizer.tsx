@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { 
   Building, Home, Eye, Paintbrush, Ruler, Building2, Landmark, 
   Construction, User, Users, Compass, 
-  Sun, Calculator, Check, Bath, ChefHat, LampCeiling, Plug, Map
+  Sun, Calculator, Check, Bath, CookingPot, LampCeiling, Plug, Map
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -58,7 +57,7 @@ const EstimationVisualizer: React.FC<EstimationVisualizerProps> = ({ step, formD
       case 19:
       case 20:
       case 21: return <Paintbrush className="text-progineer-gold" size={24} />;
-      case 22: return <ChefHat className="text-progineer-gold" size={24} />;
+      case 22: return <CookingPot className="text-progineer-gold" size={24} />; // Changed from ChefHat to CookingPot
       case 23: return <Bath className="text-progineer-gold" size={24} />;
       case 24: return <Users className="text-progineer-gold" size={24} />;
       default: return <Calculator className="text-progineer-gold" size={24} />;
@@ -282,7 +281,7 @@ const EstimationVisualizer: React.FC<EstimationVisualizerProps> = ({ step, formD
             animate={{ opacity: 1 }}
             className="absolute top-1/2 left-1/3 text-progineer-gold/70"
           >
-            <ChefHat size={14} className="animate-pulse" />
+            <CookingPot size={14} className="animate-pulse" /> {/* Changed from ChefHat to CookingPot */}
           </motion.div>
         )}
         

@@ -18,7 +18,7 @@ import {
   Lightbulb, 
   Flower, 
   Bath,
-  Kitchen,
+  CookingPot, // Changed Kitchen to CookingPot which is available in lucide-react
   Check 
 } from 'lucide-react';
 import { FormData } from './types';
@@ -192,7 +192,7 @@ export const stepDefinitions = [
   },
   {
     title: "Cuisine",
-    icon: <Kitchen />,
+    icon: <CookingPot />, // Changed Kitchen to CookingPot
     skipCondition: (formData: FormData) => false,
   },
   {
