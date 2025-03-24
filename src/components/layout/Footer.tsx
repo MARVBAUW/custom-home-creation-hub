@@ -39,6 +39,8 @@ const Footer = () => {
               <li><Link to="/realisations-architecte-maison" className="text-stone-600 hover:text-khaki-600 transition-colors">Nos réalisations</Link></li>
               <li><Link to="/equipe-maitrise-oeuvre" className="text-stone-600 hover:text-khaki-600 transition-colors">Notre équipe</Link></li>
               <li><Link to="/contact" className="text-stone-600 hover:text-khaki-600 transition-colors">Contact</Link></li>
+              <li><Link to="/parrainage-travaux" className="text-stone-600 hover:text-khaki-600 transition-colors">Parrainage</Link></li>
+              <li><Link to="/workspace" className="text-stone-600 hover:text-khaki-600 transition-colors">Workspace</Link></li>
             </ul>
           </div>
 

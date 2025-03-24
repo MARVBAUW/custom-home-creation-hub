@@ -42,6 +42,7 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
                           <Link
                             to={subLink.path}
                             className="block py-2 text-sm text-gray-600 hover:text-khaki-800"
+                            onClick={() => toggleDropdown(null)}
                           >
                             {subLink.name}
                           </Link>
