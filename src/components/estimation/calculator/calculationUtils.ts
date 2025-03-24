@@ -1,108 +1,58 @@
 
-// Fonction pour calculer l'estimation
-export const calculateEstimation = (formData: any): number => {
-  // Prix de base par mètre carré selon le type de projet
-  let basePrice = 0;
-  const surface = parseInt(formData.surface) || 0;
+import { FormData } from './types';
+
+// Coefficients de base pour les estimations
+const BASE_PRICES = {
+  construction: 1500, // Prix au m² pour la construction
+  renovation: 950,    // Prix au m² pour la rénovation
+  extension: 1200,    // Prix au m² pour l'extension
+};
+
+// Multiplicateurs par type de client
+const CLIENT_MULTIPLIERS = {
+  professional: 1.2,   // Plus complexe pour les professionnels
+  individual: 1.0,     // Base pour les particuliers
+};
+
+// Multiplicateurs par niveau
+const LEVEL_MULTIPLIER = 0.9; // Diminution de 10% pour chaque niveau supplémentaire
+
+// Fonction de calcul de l'estimation
+export const calculateEstimation = (formData: FormData): number => {
+  // Extraction des valeurs nécessaires au calcul
+  const { 
+    clientType, 
+    projectType, 
+    surface, 
+    levels,
+    units 
+  } = formData;
+
+  // Valeurs par défaut si non renseignées
+  const surfaceValue = parseInt(surface) || 100;
+  const levelsValue = parseInt(levels) || 1;
+  const unitsValue = parseInt(units) || 1;
+
+  // Prix de base en fonction du type de projet
+  let basePrice = BASE_PRICES[projectType as keyof typeof BASE_PRICES] || BASE_PRICES.construction;
   
-  // Base price per square meter depending on project type
-  switch (formData.projectType) {
-    case "construction":
-      basePrice = 2000;
-      break;
-    case "renovation":
-      basePrice = 1200;
-      break;
-    case "extension":
-      basePrice = 1800;
-      break;
-    case "division":
-      basePrice = 1500;
-      break;
-    default:
-      basePrice = 1000;
+  // Multiplicateur client
+  const clientMultiplier = CLIENT_MULTIPLIERS[clientType as keyof typeof CLIENT_MULTIPLIERS] || 1;
+  
+  // Calcul pour les niveaux (économie d'échelle)
+  let levelMultiplier = 1;
+  for (let i = 1; i < levelsValue; i++) {
+    levelMultiplier += LEVEL_MULTIPLIER;
   }
   
-  // Multiplicateurs basés sur le type de terrain
-  let terrainMultiplier = 1;
-  if (formData.terrainType.includes("rocky")) terrainMultiplier *= 1.2;
-  if (formData.terrainType.includes("clayey")) terrainMultiplier *= 1.1;
-  if (formData.terrainType.includes("sloped")) terrainMultiplier *= 1.15;
-
-  // Multiplicateurs basés sur le type de mur
-  let wallMultiplier = 1;
-  switch (formData.wallType) {
-    case "brick":
-      wallMultiplier = 1.1;
-      break;
-    case "concrete":
-      wallMultiplier = 1.05;
-      break;
-    case "stone":
-      wallMultiplier = 1.3;
-      break;
-    case "cinder":
-      wallMultiplier = 1;
-      break;
-    case "porotherm":
-      wallMultiplier = 1.2;
-      break;
-    case "cellularConcrete":
-      wallMultiplier = 1.15;
-      break;
-  }
-
-  // Multiplicateurs basés sur le type de toit
-  let roofMultiplier = 1;
-  switch (formData.roofType) {
-    case "accessibleTerrace":
-      roofMultiplier = 1.2;
-      break;
-    case "inaccessibleTerrace":
-      roofMultiplier = 1.1;
-      break;
-    case "industrialFrame":
-      roofMultiplier = 1;
-      break;
-    case "traditionalFrame":
-      roofMultiplier = 1.15;
-      break;
-  }
-
-  // Multiplicateurs basés sur le type d'isolation
-  let insulationMultiplier = 1;
-  switch (formData.insulationType) {
-    case "basic":
-      insulationMultiplier = 1;
-      break;
-    case "performance":
-      insulationMultiplier = 1.1;
-      break;
-    case "ultraPerformance":
-      insulationMultiplier = 1.2;
-      break;
-  }
-
-  // Multiplicateurs basés sur le type d'installation électrique
-  let electricalMultiplier = 1;
-  switch (formData.electricalType) {
-    case "basic":
-      electricalMultiplier = 1;
-      break;
-    case "advanced":
-      electricalMultiplier = 1.1;
-      break;
-    case "highEnd":
-      electricalMultiplier = 1.2;
-      break;
-    case "highEndWithDomotics":
-      electricalMultiplier = 1.3;
-      break;
-  }
-
-  // Calcul du prix final
-  const totalMultiplier = terrainMultiplier * wallMultiplier * roofMultiplier * insulationMultiplier * electricalMultiplier;
-  const finalPrice = Math.round(basePrice * surface * totalMultiplier);
+  // Calcul du prix total
+  let totalPrice = basePrice * surfaceValue * clientMultiplier * levelMultiplier;
   
-  return finalPrice;
+  // Ajustement pour les unités multiples (appartements)
+  if (unitsValue > 1) {
+    totalPrice = totalPrice * (1 + (unitsValue - 1) * 0.7); // 30% d'économie d'échelle pour chaque unité supplémentaire
+  }
+  
+  // Arrondir à l'entier le plus proche
+  return Math.round(totalPrice);
 };
