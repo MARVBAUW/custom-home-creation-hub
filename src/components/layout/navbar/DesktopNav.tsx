@@ -1,0 +1,51 @@
+
+import React from 'react';
+import { Phone } from 'lucide-react';
+import Button from '@/components/common/Button';
+import NavItem from './NavItem';
+import { NavLink } from './types';
+import { useLocation } from 'react-router-dom';
+
+interface DesktopNavProps {
+  navLinks: NavLink[];
+  openDropdown: string | null;
+  toggleDropdown: (name: string) => void;
+}
+
+const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps) => {
+  const location = useLocation();
+
+  const isActive = (item: NavLink) => 
+    location.pathname === item.path ||
+    (item.subLinks && item.subLinks.some(subLink => 
+      location.pathname + location.hash === subLink.path || 
+      location.pathname === item.path
+    ));
+
+  return (
+    <div className="hidden md:flex items-center justify-between w-full">
+      <ul className="flex items-center space-x-6">
+        {navLinks.map((item) => (
+          <NavItem 
+            key={item.name} 
+            item={item}
+            isActive={isActive(item)}
+            openDropdown={openDropdown}
+            toggleDropdown={toggleDropdown}
+          />
+        ))}
+      </ul>
+
+      {/* Contact Info - Desktop */}
+      <div className="flex items-center space-x-4">
+        <a href="tel:+33783762156" className="flex items-center text-sm text-gray-600 hover:text-khaki-800">
+          <Phone className="h-4 w-4 mr-1" />
+          <span>+33 7 83 76 21 56</span>
+        </a>
+        <Button href="/estimation" size="sm">Estimer mon projet</Button>
+      </div>
+    </div>
+  );
+};
+
+export default DesktopNav;
