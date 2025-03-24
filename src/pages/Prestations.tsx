@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building, Construction, Wrench, Settings, Plus, Info } from 'lucide-react';
+import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 
 // Define service categories
 const services = [
@@ -96,6 +97,23 @@ const services = [
 ];
 
 const Prestations = () => {
+  const location = useLocation();
+  
+  // Scroll to hash on initial load and hash changes
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
+
   return (
     <>
       <Helmet>
@@ -105,7 +123,7 @@ const Prestations = () => {
       </Helmet>
 
       {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white" id="overview">
         <Container size="md">
           <div className="text-center">
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
@@ -122,12 +140,15 @@ const Prestations = () => {
         </Container>
       </section>
 
+      {/* Sub-navigation */}
+      <PrestationsSubNav />
+
       {/* Services Overview */}
       <section className="py-16">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {services.map((service) => (
-              <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300">
+              <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300 scroll-mt-32">
                 <CardHeader>
                   <div className="mb-4">{service.icon}</div>
                   <CardTitle className="text-xl">{service.title}</CardTitle>

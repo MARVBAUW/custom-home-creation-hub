@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -58,7 +57,10 @@ const Navbar = () => {
 
   const NavItem = ({ item }: { item: NavLink }) => {
     const isActive = location.pathname === item.path ||
-      (item.subLinks && item.subLinks.some(subLink => location.pathname === subLink.path));
+      (item.subLinks && item.subLinks.some(subLink => 
+        location.pathname + location.hash === subLink.path || 
+        location.pathname === item.path
+      ));
     
     return (
       <li className="relative">
@@ -85,6 +87,7 @@ const Navbar = () => {
                       <Link
                         to={subLink.path}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-khaki-50"
+                        onClick={() => setOpenDropdown(null)}
                       >
                         {subLink.name}
                       </Link>
