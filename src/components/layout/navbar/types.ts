@@ -7,7 +7,6 @@ export interface NavLink {
 
 export const navLinks: NavLink[] = [
   { name: 'Accueil', path: '/' },
-  { name: 'Estimer mon projet', path: '/estimation' },
   { 
     name: 'Nos prestations', 
     path: '/prestations-maitre-oeuvre',
