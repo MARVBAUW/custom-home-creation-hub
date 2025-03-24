@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -12,8 +13,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { 
   Check, ArrowRight, ArrowLeft, Calculator, Send, Building, 
-  Home, User, Briefcase, Calendar, Ruler, Map, Brick, 
-  Thermostat, Paintbrush, LampCeiling, Plug, ChefHat, Bath
+  Home, User, Briefcase, Calendar, Ruler, Map, Building2,
+  Sun, Paintbrush, LampCeiling, Plug, ChefHat, Bath
 } from "lucide-react";
 import { motion } from 'framer-motion';
 
@@ -339,16 +340,16 @@ const EstimationCalculator = () => {
     { title: "Type d'estimation", description: "Choisissez le niveau de précision souhaité pour votre estimation", icon: <Calculator size={20} /> },
     { title: "Détails de construction", description: "Informations de base sur votre projet", icon: <Building size={20} /> },
     { title: "Type de terrain", description: "Caractéristiques de votre terrain", icon: <Map size={20} /> },
-    { title: "Type de bâtiment", description: "Structure et matériaux principaux", icon: <Brick size={20} /> },
+    { title: "Type de bâtiment", description: "Structure et matériaux principaux", icon: <Building2 size={20} /> },
     { title: "Toiture", description: "Type de toiture envisagée", icon: <Home size={20} /> },
     { title: "Combles", description: "Aménagement des combles", icon: <Home size={20} /> },
     { title: "Couverture / Étanchéité", description: "Matériaux de couverture", icon: <Home size={20} /> },
-    { title: "Isolation", description: "Niveau d'isolation thermique", icon: <Thermostat size={20} /> },
+    { title: "Isolation", description: "Niveau d'isolation thermique", icon: <Sun size={20} /> },
     { title: "Façade", description: "Revêtements extérieurs", icon: <Building size={20} /> },
     { title: "Menuiseries ext.", description: "Fenêtres et portes extérieures", icon: <Building size={20} /> },
     { title: "Électricité", description: "Installation électrique", icon: <Plug size={20} /> },
     { title: "Plomberie", description: "Installation sanitaire", icon: <Plug size={20} /> },
-    { title: "Chauffage / Climatisation", description: "Système de chauffage et climatisation", icon: <Thermostat size={20} /> },
+    { title: "Chauffage / Climatisation", description: "Système de chauffage et climatisation", icon: <Sun size={20} /> },
     { title: "Plâtrerie", description: "Cloisons et aménagements", icon: <Paintbrush size={20} /> },
     { title: "Menuiseries int.", description: "Portes et aménagements intérieurs", icon: <Paintbrush size={20} /> },
     { title: "Carrelage / Faïence", description: "Revêtements de sol et murs", icon: <Paintbrush size={20} /> },
