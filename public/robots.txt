@@ -9,6 +9,7 @@ Allow: /estimation
 Allow: /contact
 Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
+Allow: /parrainage-travaux
 
 # Main sitemap
 Sitemap: https://progineer.fr/sitemap.xml
