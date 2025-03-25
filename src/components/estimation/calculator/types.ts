@@ -44,7 +44,7 @@ export const ConstructionDetailsSchema = z.object({
 });
 
 export const TerrainSchema = z.object({
-  terrainType: z.array(z.string()).min(1, "Veuillez sélectionner au moins un type de terrain"),
+  terrainType: z.string().min(1, "Veuillez sélectionner un type de terrain"),
 });
 
 export const BuildingTypeSchema = z.object({
@@ -271,7 +271,7 @@ export type FormData = {
   units: string;
   
   // Terrain
-  terrainType: string[];
+  terrainType: string;
   
   // Construction details
   wallType: string;

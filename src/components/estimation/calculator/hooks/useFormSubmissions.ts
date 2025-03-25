@@ -1,4 +1,3 @@
-
 import { useToast } from "@/components/ui/use-toast";
 import { FormData } from '../types';
 
@@ -73,7 +72,7 @@ export const useFormSubmissions = (
 
   // Soumission du formulaire de terrain
   const onTerrainSubmit = (data: {
-    terrainType: string[];
+    terrainType: string;
   }) => {
     updateFormData({
       terrainType: data.terrainType,

@@ -15,7 +15,7 @@ export const useEstimationForm = () => {
     surface: "",
     levels: "",
     units: "",
-    terrainType: [],
+    terrainType: "",
     wallType: "",
     roofType: "",
     atticType: "",
