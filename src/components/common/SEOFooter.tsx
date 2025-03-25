@@ -8,9 +8,9 @@ interface SEOFooterProps {
 
 const SEOFooter = ({ text }: SEOFooterProps) => {
   return (
-    <section className="py-8 bg-stone-50 border-t border-stone-200">
+    <section className="py-10 bg-stone-50 border-t border-stone-200">
       <Container>
-        <div className="text-sm text-stone-500">
+        <div className="max-w-4xl mx-auto text-sm text-stone-500 leading-relaxed">
           <p>{text}</p>
         </div>
       </Container>

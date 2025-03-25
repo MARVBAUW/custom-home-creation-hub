@@ -21,6 +21,5 @@ export const navLinks: NavLink[] = [
   { name: 'Nos réalisations', path: '/realisations-architecte-maison' },
   { name: 'Notre équipe', path: '/equipe-maitrise-oeuvre' },
   { name: 'Contact', path: '/contact' },
-  { name: 'Parrainage', path: '/parrainage-travaux' },
   { name: 'Workspace', path: '/workspace' },
 ];

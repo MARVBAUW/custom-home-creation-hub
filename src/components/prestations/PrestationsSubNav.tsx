@@ -41,17 +41,19 @@ const PrestationsSubNav = () => {
   };
 
   return (
-    <div className="sticky top-20 z-30 w-full bg-white/90 backdrop-blur-sm border-b border-gray-200 px-4">
-      <div className="overflow-x-auto py-2 max-w-screen-xl mx-auto">
+    <div className="sticky top-20 z-30 w-full bg-gradient-to-r from-stone-50 to-white shadow-sm border-b border-stone-200">
+      <div className="max-w-screen-xl mx-auto">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="inline-flex h-10 items-center justify-start w-full overflow-x-auto">
+          <TabsList className="h-14 p-0 bg-transparent w-full flex justify-start overflow-x-auto no-scrollbar">
             {subLinks.map((link) => (
               <TabsTrigger 
                 key={link.id} 
                 value={link.id}
                 className={cn(
-                  "flex items-center whitespace-nowrap px-4",
-                  activeTab === link.id ? "text-khaki-800" : "text-gray-600"
+                  "flex items-center whitespace-nowrap px-4 py-3 rounded-none border-b-2 data-[state=active]:border-progineer-gold data-[state=active]:text-progineer-dark border-transparent transition-all hover:bg-stone-100/50",
+                  activeTab === link.id 
+                    ? "text-progineer-dark font-medium" 
+                    : "text-stone-600 hover:text-progineer-dark"
                 )}
               >
                 {link.icon}
