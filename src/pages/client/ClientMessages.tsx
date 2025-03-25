@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useUser } from '@clerk/clerk-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
@@ -18,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from '@/hooks/use-toast';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 // Sample messages data
 const conversations = [
@@ -43,8 +42,7 @@ const conversations = [
 ];
 
 const ClientMessages = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const navigate = useNavigate();
+  const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
   const [activeConversation, setActiveConversation] = React.useState(conversations[0]);
   const [newMessage, setNewMessage] = React.useState('');
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -58,13 +56,7 @@ const ClientMessages = () => {
     scrollToBottom();
   }, [activeConversation]);
   
-  // Redirect if not authenticated
-  React.useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      navigate('/workspace/sign-in');
-    }
-  }, [isLoaded, isSignedIn, navigate]);
-
+  // Handle send message
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;

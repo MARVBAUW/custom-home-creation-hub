@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useUser, SignOutButton } from '@clerk/clerk-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { SignOutButton } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
@@ -12,24 +11,19 @@ import {
   LogOut 
 } from 'lucide-react';
 import Container from '@/components/common/Container';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ClientAreaWelcome from '@/components/client/ClientAreaWelcome';
 import ClientAreaNotifications from '@/components/client/ClientAreaNotifications';
 import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 const ClientArea = () => {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const navigate = useNavigate();
-  
-  // Redirect if not authenticated
-  React.useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      navigate('/workspace/sign-in');
-    }
-  }, [isLoaded, isSignedIn, navigate]);
+  // Use the custom auth hook with redirection if unauthenticated
+  const { isLoaded, isSignedIn, user } = useClientAuth({ 
+    redirectIfUnauthenticated: true 
+  });
 
   if (!isLoaded || !isSignedIn) {
     return <div className="flex justify-center items-center min-h-screen">

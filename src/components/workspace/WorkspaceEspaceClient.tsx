@@ -1,36 +1,16 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
+import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Check } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
 import ClientFeaturesOverview from './client/ClientFeaturesOverview';
 import ClientServiceCards from './client/ClientServiceCards';
 import ClientLoginCard from './client/ClientLoginCard';
 import SecurityAlert from './client/SecurityAlert';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 const WorkspaceEspaceClient = () => {
-  const { isLoaded, isSignedIn } = useUser();
-  const navigate = useNavigate();
-  
-  // Add debugging logs
-  useEffect(() => {
-    console.log('WorkspaceEspaceClient: Authentication State', { isSignedIn, isLoaded });
-  }, [isSignedIn, isLoaded]);
-  
-  // If user is already signed in, redirect to client area
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      console.log('User already signed in, redirecting to client area');
-      toast({
-        title: 'Session détectée',
-        description: 'Redirection vers votre espace client...',
-        variant: 'default',
-      });
-      navigate('/workspace/client-area');
-    }
-  }, [isLoaded, isSignedIn, navigate]);
+  // Use the custom auth hook with redirection if authenticated
+  useClientAuth({ redirectIfAuthenticated: true });
   
   return (
     <div className="space-y-6">

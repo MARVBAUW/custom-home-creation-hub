@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useUser } from '@clerk/clerk-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
@@ -20,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 // Sample document data
 const documents = [
@@ -80,8 +79,7 @@ const documents = [
 ];
 
 const ClientDocuments = () => {
-  const { isLoaded, isSignedIn } = useUser();
-  const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useClientAuth({ redirectIfUnauthenticated: true });
   const [searchTerm, setSearchTerm] = React.useState('');
   const [activeCategory, setActiveCategory] = React.useState('all');
   
@@ -93,13 +91,6 @@ const ClientDocuments = () => {
     return matchesSearch && matchesCategory;
   });
   
-  // Redirect if not authenticated
-  React.useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      navigate('/workspace/sign-in');
-    }
-  }, [isLoaded, isSignedIn, navigate]);
-
   if (!isLoaded || !isSignedIn) {
     return <div className="flex justify-center items-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>

@@ -1,33 +1,12 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
-import { toast } from '@/components/ui/use-toast';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 const SignIn = () => {
-  const navigate = useNavigate();
-  const { isSignedIn, isLoaded } = useUser();
-
-  // Add debugging logs
-  useEffect(() => {
-    console.log('SignIn Component: Authentication State', { isSignedIn, isLoaded });
-  }, [isSignedIn, isLoaded]);
-
-  // Redirect if already signed in
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      console.log('User already signed in, redirecting to client area');
-      toast({
-        title: 'Connexion réussie',
-        description: 'Redirection vers votre espace client...',
-        variant: 'default',
-      });
-      navigate('/workspace/client-area');
-    }
-  }, [isSignedIn, isLoaded, navigate]);
+  // Use the custom auth hook with redirection if authenticated
+  useClientAuth({ redirectIfAuthenticated: true });
 
   return (
     <>

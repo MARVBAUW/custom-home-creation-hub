@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { useUser } from '@clerk/clerk-react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
@@ -18,6 +16,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 // Sample project data
 const projectStages = [
@@ -38,21 +37,13 @@ const upcomingEvents = [
 ];
 
 const ClientProjects = () => {
-  const { isLoaded, isSignedIn } = useUser();
-  const navigate = useNavigate();
+  const { isLoaded, isSignedIn } = useClientAuth({ redirectIfUnauthenticated: true });
   
   // Calculate overall progress
   const completedStages = projectStages.filter(stage => stage.status === 'completed').length;
   const totalStages = projectStages.length;
   const overallProgress = Math.round((completedStages / totalStages) * 100);
   
-  // Redirect if not authenticated
-  React.useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      navigate('/workspace/sign-in');
-    }
-  }, [isLoaded, isSignedIn, navigate]);
-
   if (!isLoaded || !isSignedIn) {
     return <div className="flex justify-center items-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>

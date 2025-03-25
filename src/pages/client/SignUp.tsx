@@ -1,13 +1,15 @@
-
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignUp as ClerkSignUp } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
+import { useClientAuth } from '@/hooks/useClientAuth';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
 import { toast } from '@/components/ui/use-toast';
 
 const SignUp = () => {
+  // Use the custom auth hook with redirection if authenticated
+  useClientAuth({ redirectIfAuthenticated: true });
   const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useUser();
 
