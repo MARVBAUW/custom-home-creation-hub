@@ -1,18 +1,30 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { SignUp as ClerkSignUp } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
+import { toast } from '@/components/ui/use-toast';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useUser();
 
+  // Add debugging logs
+  useEffect(() => {
+    console.log('SignUp Component: Authentication State', { isSignedIn, isLoaded });
+  }, [isSignedIn, isLoaded]);
+
   // Redirect if already signed in
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoaded && isSignedIn) {
+      console.log('User already signed in, redirecting to client area');
+      toast({
+        title: 'Vous êtes déjà connecté',
+        description: 'Redirection vers votre espace client...',
+        variant: 'default',
+      });
       navigate('/workspace/client-area');
     }
   }, [isSignedIn, isLoaded, navigate]);
@@ -56,6 +68,8 @@ const SignUp = () => {
                   footerActionLink: 'text-khaki-600 hover:text-khaki-700'
                 }
               }}
+              signInUrl="/workspace/sign-in"
+              afterSignUpUrl="/workspace/client-area"
             />
           </div>
         </Container>

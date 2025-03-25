@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -8,14 +8,26 @@ import { useUser } from '@clerk/clerk-react';
 import Button from '@/components/common/Button';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import { toast } from '@/components/ui/use-toast';
 
 const WorkspaceEspaceClient = () => {
   const { isLoaded, isSignedIn } = useUser();
   const navigate = useNavigate();
   
+  // Add debugging logs
+  useEffect(() => {
+    console.log('WorkspaceEspaceClient: Authentication State', { isSignedIn, isLoaded });
+  }, [isSignedIn, isLoaded]);
+  
   // If user is already signed in, redirect to client area
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoaded && isSignedIn) {
+      console.log('User already signed in, redirecting to client area');
+      toast({
+        title: 'Session détectée',
+        description: 'Redirection vers votre espace client...',
+        variant: 'default',
+      });
       navigate('/workspace/client-area');
     }
   }, [isLoaded, isSignedIn, navigate]);
@@ -37,6 +49,16 @@ const WorkspaceEspaceClient = () => {
       icon: <Mail className="h-10 w-10 p-2 bg-khaki-100 text-khaki-700 rounded-lg" />
     }
   ];
+  
+  const handleLogin = () => {
+    console.log('Login button clicked, navigating to sign-in page');
+    navigate('/workspace/sign-in');
+  };
+  
+  const handleSignUp = () => {
+    console.log('Sign up button clicked, navigating to sign-up page');
+    navigate('/workspace/sign-up');
+  };
   
   return (
     <div className="space-y-6">
@@ -131,6 +153,7 @@ const WorkspaceEspaceClient = () => {
                 <Link to="/workspace/sign-up" className="w-full">
                   <Button 
                     className="w-full bg-khaki-600 hover:bg-khaki-700"
+                    onClick={handleSignUp}
                   >
                     Créer un compte
                   </Button>
@@ -140,6 +163,7 @@ const WorkspaceEspaceClient = () => {
                   <Button 
                     className="w-full" 
                     variant="outline"
+                    onClick={handleLogin}
                   >
                     Se connecter
                   </Button>
