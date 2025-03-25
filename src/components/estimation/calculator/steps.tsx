@@ -17,7 +17,7 @@ import {
   Leaf,
   PencilRuler,
   Bath,
-  Kitchen
+  UtensilsCrossed // Using UtensilsCrossed instead of Kitchen which doesn't exist
 } from 'lucide-react';
 import { FormData } from './types';
 
@@ -150,7 +150,7 @@ export const stepDefinitions = [
   },
   {
     title: "Cuisine",
-    icon: <Kitchen />,
+    icon: <UtensilsCrossed />, // Changed from Kitchen to UtensilsCrossed
     skipCondition: (formData: FormData) => !formData.includeCuisine,
   },
   {
