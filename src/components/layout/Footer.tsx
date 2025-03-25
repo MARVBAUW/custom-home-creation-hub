@@ -70,11 +70,6 @@ const Footer = () => {
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Contact
                   </Link>
                 </li>
-                <li>
-                  <Link to="/parrainage-travaux" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Parrainage
-                  </Link>
-                </li>
               </ul>
             </div>
 
@@ -159,6 +154,8 @@ const Footer = () => {
               <Link to="/cgv" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">CGV</Link>
               <Link to="/faq" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">FAQ</Link>
               <Link to="/a-propos" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">À propos</Link>
+              <Link to="/devenir-partenaire" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">Devenir partenaire</Link>
+              <Link to="/parrainage-travaux" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">Parrainage</Link>
             </div>
           </div>
 
