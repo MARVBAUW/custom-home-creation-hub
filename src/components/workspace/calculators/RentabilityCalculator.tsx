@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import { ChartBar, Download, Printer, Calculator, Wallet } from 'lucide-react';
 import { useToast } from "@/components/ui/use-toast";
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 
 // Add the jsPDF types
 declare module 'jspdf' {
@@ -558,11 +557,11 @@ const RentabilityCalculator = () => {
                       <YAxis />
                       <Tooltip formatter={(value) => formatPrice(Number(value))} />
                       <Legend />
-                      <Bar 
-                        dataKey="montant" 
-                        name="Montant" 
-                        fill={(data) => data.montant >= 0 ? "#4ade80" : "#f87171"}
-                      />
+                      <Bar dataKey="montant" name="Montant" fill="#ab9f76">
+                        {generateIncomeChartData().map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.montant >= 0 ? "#4ade80" : "#f87171"} />
+                        ))}
+                      </Bar>
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
