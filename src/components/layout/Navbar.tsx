@@ -48,7 +48,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 mr-6">
             <Logo 
-              variant={isScrolled || location.pathname !== '/' ? 'default' : 'white'} 
+              variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 
             />
           </Link>

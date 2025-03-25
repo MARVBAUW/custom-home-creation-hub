@@ -21,20 +21,22 @@ const Hero = () => {
       </div>
       
       <Container className="relative z-10 mt-16">
-        <div className="flex flex-col items-center animate-fade-in">
+        <div className="flex flex-col items-start animate-fade-in">
           {/* Centered metallic logo */}
-          <Logo variant="metallic" size="lg" className="mb-12 mx-auto" />
+          <div className="w-full flex justify-center mb-12">
+            <Logo variant="metallic-full" size="lg" className="mx-auto" />
+          </div>
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
             Architecte & Maître d'œuvre en PACA
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-center">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
             Design et construction <br className="hidden md:block" />
             <span className="text-progineer-gold">de maisons sur mesure</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-center">
+          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
             Progineer vous accompagne dans tous vos projets de construction, rénovation et extension à Marseille et dans toute la région PACA.
           </p>
           
