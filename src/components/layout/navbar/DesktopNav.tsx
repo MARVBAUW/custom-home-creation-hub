@@ -19,7 +19,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
     if (location.pathname === item.path) return true;
     
     if (item.subLinks) {
-      // For items with sublinks, check if any sublink path matches current location
+      // Pour les éléments avec sous-liens, vérifier si un sous-lien correspond à la location actuelle
       return item.subLinks.some(subLink => {
         const [path, hash] = subLink.path.split('#');
         return location.pathname === path && (!hash || location.hash === `#${hash}`);
@@ -45,8 +45,8 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
 
       {/* Contact Info & CTAs - Desktop */}
       <div className="flex items-center space-x-3">
-        <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800">
-          <Phone className="h-3 w-3 mr-1" />
+        <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800 whitespace-nowrap">
+          <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>
         </a>
         <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700">
