@@ -5,7 +5,6 @@ import EstimationVisualizer from '../visualizer';
 type StepContextProps = {
   step: number;
   title: string;
-  description?: string;
   icon: React.ReactNode;
   formData: any;
   totalSteps: number;
@@ -14,7 +13,6 @@ type StepContextProps = {
 const StepContext: React.FC<StepContextProps> = ({ 
   step,
   title,
-  description,
   icon,
   formData,
   totalSteps

@@ -7,18 +7,10 @@ import {
   User, 
   FileText, 
   Construction, 
-  Palette, 
   Ruler, 
-  Hammer, 
-  Thermometer, 
   Layers, 
+  Thermometer, 
   Grid, 
-  CircuitBoard, 
-  Sun, 
-  Lightbulb, 
-  Flower, 
-  Bath,
-  CookingPot,
   Check 
 } from 'lucide-react';
 import { FormData } from './types';
