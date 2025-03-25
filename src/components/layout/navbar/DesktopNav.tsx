@@ -31,7 +31,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
 
   return (
     <div className="hidden md:flex items-center justify-between w-full">
-      <ul className="flex items-center space-x-2">
+      <ul className="flex items-center space-x-1">
         {navLinks.map((item) => (
           <NavItem 
             key={item.name} 
