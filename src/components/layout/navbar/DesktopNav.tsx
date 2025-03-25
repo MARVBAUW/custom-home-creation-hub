@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Phone } from 'lucide-react';
 import Button from '@/components/common/Button';
@@ -49,7 +50,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
           <span>+33 7 83 76 21 56</span>
         </a>
         <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
-          Estimer
+          Estimer mon projet
         </Button>
         <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
           Contact
