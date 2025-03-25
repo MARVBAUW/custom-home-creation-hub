@@ -11,7 +11,13 @@ import {
   Layers, 
   Thermometer, 
   Grid, 
-  Check 
+  Check,
+  Hammer, 
+  Droplet,
+  Leaf,
+  PencilRuler,
+  Bath,
+  Kitchen
 } from 'lucide-react';
 import { FormData } from './types';
 
@@ -45,7 +51,7 @@ export const stepDefinitions = [
   {
     title: "Type de terrain",
     icon: <Ruler />,
-    skipCondition: (formData: FormData) => false,
+    skipCondition: (formData: FormData) => false, // Terrain toujours inclus
   },
   {
     title: "Structure des murs",
@@ -83,15 +89,108 @@ export const stepDefinitions = [
     skipCondition: (formData: FormData) => false,
   },
   {
+    title: "Électricité",
+    icon: <Layers />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Plomberie",
+    icon: <Droplet />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Chauffage & clim",
+    icon: <Thermometer />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Plâtrerie",
+    icon: <Construction />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Menuiseries intérieures",
+    icon: <Hammer />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Carrelage",
+    icon: <Grid />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Parquet & sol souple",
+    icon: <Grid />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Peinture & revêtements",
+    icon: <PencilRuler />,
+    skipCondition: (formData: FormData) => formData.projectType === "design",
+  },
+  {
+    title: "Solutions écologiques",
+    icon: <Leaf />,
+    skipCondition: (formData: FormData) => !formData.includeEcoSolutions,
+  },
+  {
+    title: "Énergies renouvelables",
+    icon: <Leaf />,
+    skipCondition: (formData: FormData) => !formData.includeRenewableEnergy,
+  },
+  {
+    title: "Aménagement paysager",
+    icon: <Leaf />,
+    skipCondition: (formData: FormData) => !formData.includeLandscaping,
+  },
+  {
+    title: "Options extérieures",
+    icon: <Home />,
+    skipCondition: (formData: FormData) => !formData.includeOptions,
+  },
+  {
+    title: "Cuisine",
+    icon: <Kitchen />,
+    skipCondition: (formData: FormData) => !formData.includeCuisine,
+  },
+  {
+    title: "Salle de bain",
+    icon: <Bath />,
+    skipCondition: (formData: FormData) => !formData.includeBathroom,
+  },
+  {
     title: "Informations personnelles",
     icon: <FileText />,
     skipCondition: (formData: FormData) => false, // Dernière étape, jamais sautée
   },
 ];
 
+// Options spécifiques pour la rénovation
+export const renovationSteps = [
+  {
+    title: "Démolition",
+    icon: <Hammer />,
+    skipCondition: (formData: FormData) => formData.projectType !== "renovation",
+  },
+  {
+    title: "Gros œuvre rénovation",
+    icon: <Construction />,
+    skipCondition: (formData: FormData) => formData.projectType !== "renovation",
+  },
+  // Autres étapes de rénovation spécifiques
+];
+
 // Obtient les étapes visibles en fonction des données du formulaire
 export const getVisibleSteps = (formData: FormData) => {
-  return stepDefinitions.filter(step => !step.skipCondition(formData));
+  let steps = [...stepDefinitions];
+  
+  // Ajouter les étapes de rénovation si c'est un projet de rénovation
+  if (formData.projectType === "renovation") {
+    steps = [...steps, ...renovationSteps.filter(step => !step.skipCondition(formData))];
+  }
+  
+  // Filtrer toutes les étapes selon leurs conditions
+  return steps.filter(step => !step.skipCondition(formData));
 };
 
 // Obtient le titre de l'étape actuelle

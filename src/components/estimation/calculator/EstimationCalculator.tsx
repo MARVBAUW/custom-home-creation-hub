@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import ProgressBar from './ProgressBar';
@@ -248,7 +249,7 @@ const EstimationCalculator: React.FC = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Barre de progression */}
+      {/* Barre de progression - maintenant dynamique selon le chemin */}
       <ProgressBar currentStep={step} totalSteps={totalSteps} />
 
       {/* Contenu de l'étape avec visualisateur */}

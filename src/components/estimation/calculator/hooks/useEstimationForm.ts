@@ -15,7 +15,7 @@ export const useEstimationForm = () => {
     surface: "",
     levels: "",
     units: "",
-    terrainType: "", // Ensure this is a string, not string[]
+    terrainType: "", // Type string comme défini dans l'interface FormData
     wallType: "",
     roofType: "",
     atticType: "",

@@ -40,22 +40,44 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
     {
       id: "plat",
       label: "Terrain plat",
-      description: "Terrain avec un relief plat, sans pente significative"
+      description: "Terrain avec un relief plat, sans pente significative",
+      image: "/images/terrain-plat.jpg"
     },
     {
       id: "legere_pente",
       label: "Légère pente",
-      description: "Terrain avec une pente légère"
+      description: "Terrain avec une pente légère",
+      image: "/images/terrain-pente-legere.jpg"
     },
     {
       id: "forte_pente",
       label: "Forte pente",
-      description: "Terrain avec une pente importante"
+      description: "Terrain avec une pente importante",
+      image: "/images/terrain-pente-forte.jpg"
+    },
+    {
+      id: "argileux",
+      label: "Terrain argileux",
+      description: "Terrain principalement composé d'argile",
+      image: "/images/terrain-argileux.jpg"
+    },
+    {
+      id: "sableux",
+      label: "Terrain sableux",
+      description: "Terrain principalement composé de sable",
+      image: "/images/terrain-sableux.jpg"
+    },
+    {
+      id: "rocheux",
+      label: "Terrain rocheux",
+      description: "Terrain avec beaucoup de roches",
+      image: "/images/terrain-rocheux.jpg"
     },
     {
       id: "sans_avis",
       label: "Sans avis",
-      description: "Je n'ai pas de préférence particulière"
+      description: "Je n'ai pas de préférence particulière",
+      image: "/images/terrain-indetermine.jpg"
     }
   ];
 
@@ -98,6 +120,15 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
                           htmlFor={option.id}
                           className="flex flex-col items-start border rounded-lg p-4 cursor-pointer transition-all peer-checked:border-progineer-gold peer-checked:bg-progineer-gold/10 peer-focus:ring-2 peer-focus:ring-progineer-gold/30 hover:border-gray-300"
                         >
+                          {option.image && (
+                            <div className="w-full h-32 mb-3 overflow-hidden rounded">
+                              <img 
+                                src={option.image} 
+                                alt={option.label} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
                           <div className="text-left">
                             <div className="text-base font-medium">
                               {option.label}
