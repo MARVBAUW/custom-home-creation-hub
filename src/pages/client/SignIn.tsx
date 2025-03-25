@@ -65,11 +65,14 @@ const SignIn = () => {
                   socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
                   formFieldLabel: 'text-gray-700',
                   formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
-                  footerActionLink: 'text-khaki-600 hover:text-khaki-700'
+                  footerActionLink: 'text-khaki-600 hover:text-khaki-700',
+                  rootBox: 'w-full',
+                  main: 'w-full'
                 }
               }}
-              signUpUrl="/workspace/sign-up"
-              afterSignInUrl="/workspace/client-area"
+              routing="path"
+              path="/workspace/sign-in"
+              redirectUrl="/workspace/client-area"
             />
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">
