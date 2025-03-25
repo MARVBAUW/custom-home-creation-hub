@@ -37,8 +37,10 @@ const Navbar = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm border-b",
-        isScrolled ? "bg-white/95 shadow-sm py-1.5" : "bg-white/90 border-transparent py-2"
+        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
+        isScrolled 
+          ? "bg-white/30 py-1.5 border-b border-stone-200/30" 
+          : "bg-transparent py-2"
       )}
     >
       <Container>
@@ -61,7 +63,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-1.5 rounded-md text-stone-600 hover:text-stone-800 hover:bg-stone-100"
+            className="md:hidden p-1.5 rounded-md text-stone-600 hover:text-stone-800 hover:bg-stone-100/50"
             aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

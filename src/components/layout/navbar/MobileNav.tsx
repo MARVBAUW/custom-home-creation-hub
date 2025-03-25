@@ -18,11 +18,11 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 z-40 bg-white mt-16 overflow-auto">
+    <div className="fixed inset-0 z-40 bg-white/90 backdrop-blur-md mt-16 overflow-auto">
       <Container className="flex flex-col h-full pt-3 pb-20">
         <ul className="space-y-0.5">
           {navLinks.map((item) => (
-            <li key={item.name} className="border-b border-stone-100 pb-1.5">
+            <li key={item.name} className="border-b border-stone-100/70 pb-1.5">
               {item.subLinks ? (
                 <>
                   <button

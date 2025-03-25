@@ -20,10 +20,10 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
           <button
             onClick={() => toggleDropdown(item.name)}
             className={cn(
-              "flex items-center px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
+              "flex items-center px-1.5 py-1 text-[0.8rem] font-medium rounded-md transition-colors whitespace-nowrap",
               isActive 
-                ? "text-khaki-800 bg-khaki-50" 
-                : "text-stone-700 hover:text-khaki-800 hover:bg-stone-50",
+                ? "text-khaki-800 bg-khaki-100/50" 
+                : "text-stone-700 hover:text-khaki-800 hover:bg-stone-50/50",
             )}
           >
             {item.name}
@@ -33,13 +33,13 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
             )} />
           </button>
           {openDropdown === item.name && (
-            <div className="absolute left-0 top-full mt-1 w-56 rounded-md border border-stone-200 bg-white shadow-lg z-50">
+            <div className="absolute left-0 top-full mt-1 w-56 rounded-md border border-stone-200/60 bg-white/80 backdrop-blur-sm shadow-lg z-50">
               <ul className="py-1">
                 {item.subLinks.map((subLink) => (
                   <li key={subLink.name}>
                     <Link
                       to={subLink.path}
-                      className="block px-3 py-1.5 text-xs text-stone-700 hover:bg-khaki-50 hover:text-khaki-800"
+                      className="block px-3 py-1.5 text-xs text-stone-700 hover:bg-khaki-50/70 hover:text-khaki-800"
                     >
                       {subLink.name}
                     </Link>
@@ -53,10 +53,10 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
         <Link
           to={item.path}
           className={cn(
-            "block px-2 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap",
+            "block px-1.5 py-1 text-[0.8rem] font-medium rounded-md transition-colors whitespace-nowrap",
             isActive 
-              ? "text-khaki-800 bg-khaki-50" 
-              : "text-stone-700 hover:text-khaki-800 hover:bg-stone-50",
+              ? "text-khaki-800 bg-khaki-100/50" 
+              : "text-stone-700 hover:text-khaki-800 hover:bg-stone-50/50",
           )}
         >
           {item.name}
