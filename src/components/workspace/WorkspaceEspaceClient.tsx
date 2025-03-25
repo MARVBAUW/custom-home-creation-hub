@@ -127,17 +127,22 @@ const WorkspaceEspaceClient = () => {
             </CardHeader>
             <CardContent className="space-y-4 pt-6">
               <div className="flex flex-col space-y-3">
-                <SignUpButton mode="modal">
-                  <Button className="w-full bg-khaki-600 hover:bg-khaki-700">
-                    Créer un compte
-                  </Button>
-                </SignUpButton>
+                {/* Fix the SignUpButton to work with direct links instead of modal */}
+                <Button 
+                  className="w-full bg-khaki-600 hover:bg-khaki-700"
+                  href="/workspace/sign-up"
+                >
+                  Créer un compte
+                </Button>
                 
-                <SignInButton mode="modal">
-                  <Button className="w-full" variant="outline">
-                    Se connecter
-                  </Button>
-                </SignInButton>
+                {/* Fix the SignInButton to work with direct links instead of modal */}
+                <Button 
+                  className="w-full" 
+                  variant="outline"
+                  href="/workspace/sign-in"
+                >
+                  Se connecter
+                </Button>
               </div>
               
               <div className="relative flex items-center py-5">
