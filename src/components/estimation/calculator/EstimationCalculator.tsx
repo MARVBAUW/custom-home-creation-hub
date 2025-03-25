@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import ProgressBar from './ProgressBar';
@@ -48,26 +47,9 @@ const EstimationCalculator: React.FC = () => {
     onFacadeSubmit,
     onMenuiseriesExtSubmit,
     onContactSubmit,
-    updateFormData,
   } = useEstimationCalculator();
 
-  // Rendu de l'étape actuelle avec animations
   const renderStep = () => {
-    // Si l'étape est supérieure à 13 et inférieure au total, afficher le contenu par défaut
-    if (step > 13 && step < totalSteps && !visibleSteps.includes(step)) {
-      return (
-        <DefaultStepContent
-          step={step}
-          visibleSteps={visibleSteps}
-          goToPreviousStep={goToPreviousStep}
-          goToNextStep={goToNextStep}
-          totalSteps={totalSteps}
-          animationDirection={animationDirection}
-        />
-      );
-    }
-
-    // Sinon, afficher les formulaires spécifiques pour chaque étape
     switch (step) {
       case 1:
         return (
@@ -136,7 +118,7 @@ const EstimationCalculator: React.FC = () => {
         return (
           <TerrainForm
             defaultValues={{
-              terrainType: formData.terrainType || [],
+              terrainType: formData.terrainType,
             }}
             onSubmit={onTerrainSubmit}
             goToPreviousStep={goToPreviousStep}
@@ -286,7 +268,7 @@ const EstimationCalculator: React.FC = () => {
         />
       </div>
       
-      {/* Résultat de l'estimation avec animation */}
+      {/* Résultat de l'estimation avec animation et données du formulaire */}
       <EstimationResult
         showResultDialog={showResultDialog}
         setShowResultDialog={setShowResultDialog}
