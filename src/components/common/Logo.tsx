@@ -1,13 +1,9 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-
-interface LogoProps {
-  variant?: 'default' | 'white' | 'gold' | 'icon' | 'metallic' | 'metallic-full';
-  size?: 'sm' | 'md' | 'lg';
-  className?: string;
-  withTagline?: boolean;
-}
+import { LogoProps, getSizeClasses } from './logos/LogoConstants';
+import LogoRenderer from './logos/LogoRenderer';
 
 const Logo: React.FC<LogoProps> = ({
   variant = 'default',
@@ -15,197 +11,21 @@ const Logo: React.FC<LogoProps> = ({
   className,
   withTagline = false
 }) => {
-  // Function to render the SVG logo
-  const renderSvgLogo = () => {
-    if (variant === 'metallic-full') {
-      // Updated metallic-full logo for the center of the page with fixed background
-      return (
-        <svg height="720" width="1280" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" className={getSizeClasses()}>
-          <defs>
-            <linearGradient id="metalGradientFull" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#f8f8f8"/>
-              <stop offset="25%" stopColor="#c6c6c6"/>
-              <stop offset="50%" stopColor="#999999"/>
-              <stop offset="75%" stopColor="#c6c6c6"/>
-              <stop offset="100%" stopColor="#f8f8f8"/>
-            </linearGradient>
-            <filter id="shineFull">
-              <feSpecularLighting in="SourceAlpha" surfaceScale="5" specularConstant="1" specularExponent="20" lightingColor="white" result="specOut">
-                <fePointLight x="-5000" y="-10000" z="20000"/>
-              </feSpecularLighting>
-              <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
-              <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
-            </filter>
-          </defs>
-
-          <g filter="url(#shineFull)">
-            {/* Background removed - only keep the lines and logo */}
-            
-            {/* Lignes décoratives */}
-            <path d="M0 0 251.387 0.0001" fill="none" stroke="#FFFFFF" strokeWidth="4" transform="matrix(1 0 0 -1 215 421)" />
-            <path d="M215 284 1065.55 284" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
-            <path d="M814 422 1065.39 422" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
-
-            {/* Textes en URL metalGradientFull pour la visibilité */}
-            <text x="197.67" y="373.684" fontSize="55.4" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">P R O G I N E E R</text>
-            <text x="498.569" y="427.582" fontSize="15.6" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">M A I T R I S E D</text>
-            <text x="664.187" y="420.648" fontSize="7.05" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">'</text>
-            <text x="675.689" y="427.608" fontSize="15.4" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">O E U V R E</text>
-          </g>
-        </svg>
-      );
-    }
-
-    if (variant === 'metallic') {
-      // Updated metallic logo without background
-      return (
-        <svg height="720" width="1280" viewBox="0 0 1280 720" className={getSizeClasses()}>
-          <defs>
-            <linearGradient id="metalGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-              <stop offset="0%" stopColor="#f8f8f8"/>
-              <stop offset="25%" stopColor="#c6c6c6"/>
-              <stop offset="50%" stopColor="#999999"/>
-              <stop offset="75%" stopColor="#c6c6c6"/>
-              <stop offset="100%" stopColor="#f8f8f8"/>
-            </linearGradient>
-
-            <filter id="shine">
-              <feSpecularLighting in="SourceAlpha" lightingColor="white" result="specOut"
-                specularConstant="1" specularExponent="20" surfaceScale="5">
-                <fePointLight x="-5000" y="-10000" z="20000"/>
-              </feSpecularLighting>
-              <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
-              <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic"
-                k1="0" k2="1" k3="1" k4="0"/>
-            </filter>
-          </defs>
-
-          <g filter="url(#shine)">
-            <path d="M354 478 956.727 478"
-                  fill="none" stroke="#2E2E2E"
-                  strokeWidth="4" strokeMiterlimit="8"
-                  filter="url(#shine)" />
-            
-            <path d="M323 501 323 295.156 568.626 226.275 566.825 477.172 
-                    479.216 477.172C479.483 441.93 480.35 404.886 480.616 369.645 
-                    L661.435 317.583 733.443 372.848C732.91 407.556 732.376 442.264 
-                    731.843 476.972L661.235 476.972C661.302 385.396 661.369 293.822 
-                    661.435 202.246L800.65 163C800.117 267.657 799.583 372.314 
-                    799.05 476.972L956.666 477.372C956.133 438.659 957.399 398.746 
-                    956.866 360.033L844.654 323.19C844.121 286.346 846.588 250.103 
-                    846.055 213.259L816.651 179.019"
-                  fill="url(#metalGradient)"
-                  fillRule="evenodd"
-                  filter="url(#shine)" />
-          </g>
-        </svg>
-      );
-    }
-
-    if (variant === 'icon') {
-      // For icon variant, we need to use a separate color logic
-      // Logo icon (just the building symbol)
-      return (
-        <svg viewBox="0 0 200 200" className={getSizeClasses()}>
-          <defs>
-            <linearGradient id="goldIcon" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#c8a86d"/>
-              <stop offset="100%" stopColor="#4b4b3b"/>
-            </linearGradient>
-          </defs>
-          <path d="M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
-            fill="none" 
-            stroke="url(#goldIcon)" 
-            strokeWidth="8" 
-          />
-        </svg>
-      );
-    }
-
-    // Define gradient ID with a unique identifier to avoid conflicts
-    const gradientId = `goldToDark-${Math.random().toString(36).substring(2, 9)}`;
-    
-    // Logo color based on variant
-    const primaryColor = variant === 'white' ? "#FFFFFF" : "#c8a86d";
-    const secondaryColor = variant === 'white' ? "#CCCCCC" : "#4b4b3b";
-
-    // Full logo with modern building design
-    return (
-      <svg viewBox="0 0 941 512" xmlns="http://www.w3.org/2000/svg" className={getSizeClasses()}>
-        <defs>
-          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={primaryColor}/>
-            <stop offset="100%" stopColor={secondaryColor}/>
-          </linearGradient>
-        </defs>
-
-        {/* Triangle gauche */}
-        <polygon 
-          points="0,196 364,94 361,465 234,465 234,305 357,267 0,510"
-          fill={`url(#${gradientId})`} 
-        />
-
-        {/* Triangle haut centre */}
-        <polygon 
-          points="707,0 500,59 500,228 707,0"
-          fill={`url(#${gradientId})`} 
-        />
-
-        {/* Ligne médiane vers droite */}
-        <polygon 
-          points="361,267 707,33 707,0 361,267"
-          fill={`url(#${gradientId})`} 
-        />
-
-        {/* Volume central (milieu corrigé) */}
-        <polygon 
-          points="500,228 605,312 604,465 500,465 500,228"
-          fill={`url(#${gradientId})`} 
-        />
-
-        {/* Bâtiment droit avec toit incliné */}
-        <polygon 
-          points="707,0 773,76 770,237 940,292 940,465 704,465"
-          fill={`url(#${gradientId})`} 
-        />
-
-        {/* Sol */}
-        <rect 
-          x="0" 
-          y="465" 
-          width="940" 
-          height="2" 
-          fill={variant === 'white' ? "#FFFFFF" : "#2a2a2a"} 
-        />
-      </svg>
-    );
-  };
-
-  // Determine CSS classes based on size
-  const getSizeClasses = () => {
-    switch (size) {
-      case 'sm':
-        return variant === 'icon' ? 'h-6 w-auto' : 'h-8 w-auto';
-      case 'lg':
-        return variant === 'icon' ? 'h-10 w-auto' : 
-               variant === 'metallic' ? 'h-36 w-auto' : 
-               variant === 'metallic-full' ? 'h-40 w-auto' : 'h-14 w-auto';
-      default:
-        // md
-        return variant === 'icon' ? 'h-8 w-auto' : 
-               variant === 'metallic' ? 'h-28 w-auto' : 
-               variant === 'metallic-full' ? 'h-32 w-auto' : 'h-10 w-auto';
-    }
-  };
-
   return (
     <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
-      <div className={cn("transition-all duration-300 hover:scale-105", getSizeClasses(), variant === 'icon' ? 'logo-icon' : 'logo', 'object-contain')}>
-        {renderSvgLogo()}
+      <div className={cn(
+        "transition-all duration-300 hover:scale-105", 
+        getSizeClasses(size, variant), 
+        variant === 'icon' ? 'logo-icon' : 'logo', 
+        'object-contain'
+      )}>
+        <LogoRenderer variant={variant} size={size} />
       </div>
       {withTagline && (
-        <span className={cn("text-xs mt-1 font-medium tracking-wider", 
-          variant === 'white' ? 'text-white/90' : 'text-progineer-gold')}>
+        <span className={cn(
+          "text-xs mt-1 font-medium tracking-wider", 
+          variant === 'white' ? 'text-white/90' : 'text-progineer-gold'
+        )}>
           MAITRISE D'OEUVRE
         </span>
       )}
