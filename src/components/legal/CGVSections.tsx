@@ -1,38 +1,36 @@
 
 import React from 'react';
-import GeneralConditionsSection from './sections/GeneralConditionsSection';
-import ServicesSection from './sections/ServicesSection';
-import ContractFormationSection from './sections/ContractFormationSection';
-import PriceSection from './sections/PriceSection';
-import PaymentTermsSection from './sections/PaymentTermsSection';
-import ExecutionTimeSection from './sections/ExecutionTimeSection';
-import ProviderObligationsSection from './sections/ProviderObligationsSection';
-import ClientObligationsSection from './sections/ClientObligationsSection';
-import WorkReceptionSection from './sections/WorkReceptionSection';
-import GuaranteesSection from './sections/GuaranteesSection';
-import TerminationSection from './sections/TerminationSection';
-import ForceMajeureSection from './sections/ForceMajeureSection';
-import ApplicableLawSection from './sections/ApplicableLawSection';
-import ClientAcceptanceSection from './sections/ClientAcceptanceSection';
+import LegalSectionHeading from './LegalSectionHeading';
+import LegalSection from './LegalSection';
 import LegalLastUpdate from './LegalLastUpdate';
+import cgvSections from '@/data/cgvSections';
 
 const CGVSections = () => {
   return (
     <div className="space-y-10">
-      <GeneralConditionsSection />
-      <ServicesSection />
-      <ContractFormationSection />
-      <PriceSection />
-      <PaymentTermsSection />
-      <ExecutionTimeSection />
-      <ProviderObligationsSection />
-      <ClientObligationsSection />
-      <WorkReceptionSection />
-      <GuaranteesSection />
-      <TerminationSection />
-      <ForceMajeureSection />
-      <ApplicableLawSection />
-      <ClientAcceptanceSection />
+      {cgvSections.map((section) => (
+        <LegalSection
+          key={section.id}
+          heading={
+            <LegalSectionHeading 
+              icon={<section.icon className="h-6 w-6" />} 
+              title={section.title} 
+            />
+          }
+        >
+          {section.content.map((paragraph, index) => (
+            <p key={`${section.id}-p-${index}`}>{paragraph}</p>
+          ))}
+          
+          {section.list && (
+            <ul className="list-disc pl-6 space-y-1">
+              {section.list.map((item, index) => (
+                <li key={`${section.id}-li-${index}`}>{item}</li>
+              ))}
+            </ul>
+          )}
+        </LegalSection>
+      ))}
       <LegalLastUpdate date="28 janvier 2025" />
     </div>
   );
