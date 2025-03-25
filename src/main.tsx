@@ -10,11 +10,11 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import App from './App';
 import './index.css';
 
-// Clerk publishable key
-const PUBLISHABLE_KEY = "pk_test_YWJsZS1zcGlkZXItNjUuY2xlcmsuYWNjb3VudHMuZGV2JA";
-
 // Create a client
 const queryClient = new QueryClient();
+
+// Clerk publishable key - Using a known working key
+const PUBLISHABLE_KEY = "pk_test_YWJsZS1zcGlkZXItNjUuY2xlcmsuYWNjb3VudHMuZGV2JA";
 
 if (!PUBLISHABLE_KEY) {
   console.error("Missing Clerk Publishable Key!");
@@ -24,10 +24,6 @@ if (!PUBLISHABLE_KEY) {
 if (import.meta.env.DEV) {
   console.log('Clerk authentication is set up with the following configuration:');
   console.log('- publishableKey:', PUBLISHABLE_KEY);
-  console.log('- signInUrl: /workspace/sign-in');
-  console.log('- signUpUrl: /workspace/sign-up');
-  console.log('- afterSignInUrl: /workspace/client-area');
-  console.log('- afterSignUpUrl: /workspace/client-area');
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -35,6 +31,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
       clerkJSVersion="5.56.0-snapshot.v20250312225817"
+      signInUrl="/workspace/sign-in"
+      signUpUrl="/workspace/sign-up"
+      afterSignInUrl="/workspace/client-area"
+      afterSignUpUrl="/workspace/client-area"
     >
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
