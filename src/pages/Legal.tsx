@@ -7,9 +7,10 @@ import { motion } from 'framer-motion';
 import { FileText, Info, Database, Server, Shield, Globe, Copyright, AlertTriangle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import SEOFooter from '@/components/common/SEOFooter';
+import { getBusinessStructuredData } from '@/utils/googleBusiness';
 
 const Legal = () => {
-  // Structured data for WebPage
+  // Structured data for WebPage using business data
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -28,7 +29,8 @@ const Legal = () => {
       "@type": "WebPageElement",
       "name": "Mentions légales",
       "text": "Informations légales de Progineer, SARL d'architecture et de maîtrise d'œuvre."
-    }
+    },
+    "isPartOf": getBusinessStructuredData()
   };
 
   return (
@@ -58,12 +60,12 @@ const Legal = () => {
               <Separator className="my-4" />
               <div className="space-y-3 text-stone-700">
                 <p>
-                  Le site web progineer.fr est édité par la société Progineer, SARL au capital de 10 000 euros, 
-                  immatriculée au Registre du Commerce et des Sociétés de Marseille sous le numéro 123 456 789, 
-                  dont le siège social est situé au 123 Avenue de la Liberté, 13001 Marseille.
+                  Le site web progineer.fr est édité par la société Progineer, SARL au capital de 1 000 euros, 
+                  immatriculée au Registre du Commerce et des Sociétés de Marseille sous le numéro SIRET 951 045 509 00015, 
+                  dont le siège social est situé à Marseille, France.
                 </p>
                 <p className="flex items-center gap-2">
-                  <span className="font-medium">N° TVA intracommunautaire :</span> FR 12 345 678 910
+                  <span className="font-medium">N° TVA intracommunautaire :</span> FR 24 951045509
                 </p>
                 <p className="flex items-center gap-2">
                   <span className="font-medium">Directeur de la publication :</span> Marvin Bauwens

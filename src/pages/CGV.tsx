@@ -7,9 +7,10 @@ import { motion } from 'framer-motion';
 import { ClipboardList, FileCheck, Calendar, CreditCard, Clock, CheckCircle, UserCheck, HardHat, FileWarning, Hammer, FileX, AlertTriangle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import SEOFooter from '@/components/common/SEOFooter';
+import { getBusinessStructuredData } from '@/utils/googleBusiness';
 
 const CGV = () => {
-  // Structured data for WebPage
+  // Structured data for WebPage with business data
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -28,7 +29,8 @@ const CGV = () => {
       "@type": "WebPageElement",
       "name": "Conditions Générales de Vente",
       "text": "Les présentes Conditions Générales de Vente (CGV) constituent le socle de la relation commerciale entre la société Progineer (ci-après \"le Prestataire\") et ses clients professionnels ou particuliers (ci-après \"le Client\")."
-    }
+    },
+    "isPartOf": getBusinessStructuredData()
   };
 
   return (
@@ -59,7 +61,9 @@ const CGV = () => {
               <div className="space-y-3 text-stone-700">
                 <p>
                   Les présentes Conditions Générales de Vente (CGV) constituent le socle de la relation commerciale entre 
-                  la société Progineer (ci-après "le Prestataire") et ses clients professionnels ou particuliers (ci-après "le Client").
+                  la société Progineer, SARL au capital de 1 000 euros, immatriculée au RCS de Marseille sous le numéro SIRET 951 045 509 00015,
+                  dont le siège social est situé à Marseille, France (ci-après "le Prestataire") et ses clients professionnels 
+                  ou particuliers (ci-après "le Client").
                 </p>
                 <p>
                   Elles s'appliquent à toutes les prestations de services conclues par le Prestataire auprès des Clients, 
