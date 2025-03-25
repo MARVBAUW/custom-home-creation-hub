@@ -42,6 +42,12 @@ const CarrelageForm: React.FC<CarrelageFormProps> = ({
 
   const floorTilePercentage = form.watch('floorTilePercentage');
 
+  // Gestion des erreurs d'image pour éviter le blocage du formulaire
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://storage.googleapis.com/progineer-public/placeholder-building.jpg";
+    e.currentTarget.onerror = null; // Prevent infinite error loop
+  };
+
   // Options de carrelage sol avec des URLs d'images fiables
   const floorTileOptions = [
     {
@@ -98,11 +104,6 @@ const CarrelageForm: React.FC<CarrelageFormProps> = ({
     }
   ];
 
-  // Gestion des erreurs d'image
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/placeholder-building.jpg";
-  };
-
   return (
     <AnimatedStepTransition direction={animationDirection}>
       <div className="mb-6">
@@ -130,22 +131,27 @@ const CarrelageForm: React.FC<CarrelageFormProps> = ({
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
                     {floorTileOptions.map(option => (
-                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold">
+                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold shadow-sm z-10">
                         <FormControl>
-                          <RadioGroupItem value={option.id} className="sr-only" />
+                          <RadioGroupItem value={option.id} className="sr-only" id={`floor-${option.id}`} />
                         </FormControl>
-                        <div className="w-full text-center">
-                          <img
-                            src={option.image}
-                            alt={option.label}
-                            className="w-full h-32 object-cover rounded-md mb-3"
-                            onError={handleImageError}
-                          />
-                          <div className="font-medium">{option.label}</div>
-                          <p className="text-sm text-muted-foreground">
-                            {option.description}
-                          </p>
-                        </div>
+                        <label htmlFor={`floor-${option.id}`} className="w-full cursor-pointer">
+                          <div className="w-full text-center">
+                            <div className="w-full h-32 rounded-md overflow-hidden mb-3 bg-gray-100">
+                              <img
+                                src={option.image}
+                                alt={option.label}
+                                className="w-full h-full object-cover"
+                                onError={handleImageError}
+                                loading="lazy"
+                              />
+                            </div>
+                            <div className="font-medium">{option.label}</div>
+                            <p className="text-sm text-muted-foreground">
+                              {option.description}
+                            </p>
+                          </div>
+                        </label>
                       </FormItem>
                     ))}
                   </RadioGroup>
@@ -168,22 +174,27 @@ const CarrelageForm: React.FC<CarrelageFormProps> = ({
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
                     {wallTileOptions.map(option => (
-                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold">
+                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold shadow-sm z-10">
                         <FormControl>
-                          <RadioGroupItem value={option.id} className="sr-only" />
+                          <RadioGroupItem value={option.id} className="sr-only" id={`wall-${option.id}`} />
                         </FormControl>
-                        <div className="w-full text-center">
-                          <img
-                            src={option.image}
-                            alt={option.label}
-                            className="w-full h-32 object-cover rounded-md mb-3"
-                            onError={handleImageError}
-                          />
-                          <div className="font-medium">{option.label}</div>
-                          <p className="text-sm text-muted-foreground">
-                            {option.description}
-                          </p>
-                        </div>
+                        <label htmlFor={`wall-${option.id}`} className="w-full cursor-pointer">
+                          <div className="w-full text-center">
+                            <div className="w-full h-32 rounded-md overflow-hidden mb-3 bg-gray-100">
+                              <img
+                                src={option.image}
+                                alt={option.label}
+                                className="w-full h-full object-cover"
+                                onError={handleImageError}
+                                loading="lazy"
+                              />
+                            </div>
+                            <div className="font-medium">{option.label}</div>
+                            <p className="text-sm text-muted-foreground">
+                              {option.description}
+                            </p>
+                          </div>
+                        </label>
                       </FormItem>
                     ))}
                   </RadioGroup>

@@ -36,6 +36,12 @@ const CharpenteForm: React.FC<CharpenteFormProps> = ({
     },
   });
 
+  // Gestion des erreurs d'image pour éviter le blocage du formulaire
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://storage.googleapis.com/progineer-public/placeholder-building.jpg";
+    e.currentTarget.onerror = null; // Prevent infinite error loop
+  };
+
   const roofOptions = [
     {
       id: "toitureAccessible",
@@ -100,14 +106,16 @@ const CharpenteForm: React.FC<CharpenteFormProps> = ({
                         />
                         <label
                           htmlFor={option.id}
-                          className="flex flex-col items-center border rounded-lg p-4 cursor-pointer transition-all peer-checked:border-progineer-gold peer-checked:bg-progineer-gold/10 peer-focus:ring-2 peer-focus:ring-progineer-gold/30 hover:border-gray-300"
+                          className="flex flex-col items-center border rounded-lg p-4 cursor-pointer transition-all peer-checked:border-progineer-gold peer-checked:bg-progineer-gold/10 peer-focus:ring-2 peer-focus:ring-progineer-gold/30 hover:border-gray-300 shadow-sm"
                         >
                           {option.image && (
-                            <div className="w-full h-32 rounded-md overflow-hidden mb-3">
+                            <div className="w-full h-32 rounded-md overflow-hidden mb-3 bg-gray-100">
                               <img 
                                 src={option.image} 
                                 alt={option.label} 
                                 className="w-full h-full object-cover"
+                                onError={handleImageError}
+                                loading="lazy"
                               />
                             </div>
                           )}

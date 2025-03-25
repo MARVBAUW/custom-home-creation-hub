@@ -41,7 +41,9 @@ const Estimation = () => {
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-10">Estimez votre projet en quelques étapes</h2>
-            <EstimationCalculator />
+            <div className="p-2 md:p-5 lg:p-8 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm relative z-10 max-w-5xl mx-auto">
+              <EstimationCalculator />
+            </div>
           </div>
         </section>
         
