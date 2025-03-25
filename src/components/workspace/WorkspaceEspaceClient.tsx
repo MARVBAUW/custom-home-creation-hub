@@ -3,9 +3,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileCode, Lock, Mail, ArrowRight, AlertCircle, User, Calendar, MessageSquare } from 'lucide-react';
+import { FileCode, Lock, Mail, ArrowRight, AlertCircle, User, Calendar, MessageSquare, Check } from 'lucide-react';
 import { SignInButton, SignUpButton, useUser } from '@clerk/clerk-react';
 import Button from '@/components/common/Button';
+import { Badge } from '@/components/ui/badge';
 
 const WorkspaceEspaceClient = () => {
   const { isLoaded, isSignedIn } = useUser();
@@ -39,7 +40,12 @@ const WorkspaceEspaceClient = () => {
   return (
     <div className="space-y-6">
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-2">Espace client</h2>
+        <h2 className="text-2xl font-semibold mb-2 flex items-center">
+          Espace client
+          <Badge variant="outline" className="ml-3 bg-green-50 text-green-700 border-green-200">
+            <Check className="h-3 w-3 mr-1" /> Disponible
+          </Badge>
+        </h2>
         <p className="text-gray-600">Accédez à votre espace personnel pour suivre votre projet et consulter vos documents.</p>
       </div>
       
@@ -112,14 +118,14 @@ const WorkspaceEspaceClient = () => {
         </div>
         
         <div>
-          <Card className="border-khaki-200">
-            <CardHeader className="pb-3">
+          <Card className="border-khaki-200 shadow-md hover:shadow-lg transition-shadow">
+            <CardHeader className="pb-3 bg-khaki-50 rounded-t-xl">
               <CardTitle className="text-xl">Accès à votre espace</CardTitle>
               <CardDescription>
                 Connectez-vous ou créez un compte pour accéder à votre espace personnel sécurisé
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pt-6">
               <div className="flex flex-col space-y-3">
                 <SignUpButton mode="modal">
                   <Button className="w-full bg-khaki-600 hover:bg-khaki-700">
@@ -140,11 +146,19 @@ const WorkspaceEspaceClient = () => {
                 <div className="flex-grow border-t border-gray-200"></div>
               </div>
               
-              <a href="/workspace/sign-in" rel="noopener">
-                <Button className="w-full" variant="outline">
-                  Accès page de connexion complète
-                </Button>
-              </a>
+              <div className="space-y-3">
+                <a href="/workspace/sign-in">
+                  <Button className="w-full" variant="outline">
+                    Accès page de connexion complète
+                  </Button>
+                </a>
+                
+                <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
+                  <p className="font-medium">Compte administrateur</p>
+                  <p className="mt-1">Email: progineer.moe@gmail.com</p>
+                  <p>Mot de passe: Baullanowens1112</p>
+                </div>
+              </div>
             </CardContent>
             <CardFooter className="flex flex-col items-start pt-0">
               <div className="text-sm text-gray-500 mt-4">

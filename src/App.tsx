@@ -2,10 +2,8 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { ClerkProvider } from '@clerk/clerk-react';
 
 // Layout Components
 import Navbar from "./components/layout/Navbar";
@@ -35,50 +33,46 @@ import ClientDocuments from "./pages/client/ClientDocuments";
 import ClientProjects from "./pages/client/ClientProjects";
 import ClientMessages from "./pages/client/ClientMessages";
 
-const queryClient = new QueryClient();
-
 const App = () => (
-  <QueryClientProvider client={queryClient}>
+  <BrowserRouter>
     <HelmetProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/estimation" element={<Estimation />} />
-                <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
-                <Route path="/realisations-architecte-maison" element={<Realisations />} />
-                <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-                <Route path="/workspace" element={<Workspace />} />
-                <Route path="/devenir-partenaire" element={<Partenaires />} />
-                <Route path="/parrainage-travaux" element={<Parrainage />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/mentions-legales" element={<Legal />} />
-                <Route path="/cgv" element={<CGV />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/a-propos" element={<About />} />
-                
-                {/* Client Area Routes */}
-                <Route path="/workspace/sign-in" element={<SignIn />} />
-                <Route path="/workspace/sign-up" element={<SignUp />} />
-                <Route path="/workspace/client-area" element={<ClientArea />} />
-                <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
-                <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
-                <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
-                
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </BrowserRouter>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/estimation" element={<Estimation />} />
+              <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
+              <Route path="/realisations-architecte-maison" element={<Realisations />} />
+              <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
+              <Route path="/workspace" element={<Workspace />} />
+              <Route path="/devenir-partenaire" element={<Partenaires />} />
+              <Route path="/parrainage-travaux" element={<Parrainage />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/mentions-legales" element={<Legal />} />
+              <Route path="/cgv" element={<CGV />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/a-propos" element={<About />} />
+              
+              {/* Client Area Routes */}
+              <Route path="/workspace/sign-in" element={<SignIn />} />
+              <Route path="/workspace/sign-up" element={<SignUp />} />
+              <Route path="/workspace/client-area" element={<ClientArea />} />
+              <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
+              <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
+              <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
       </TooltipProvider>
     </HelmetProvider>
-  </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;

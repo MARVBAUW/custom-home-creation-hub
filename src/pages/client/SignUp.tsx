@@ -3,8 +3,20 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { SignUp as ClerkSignUp } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { isSignedIn } = useUser();
+
+  // Redirect if already signed in
+  React.useEffect(() => {
+    if (isSignedIn) {
+      navigate('/workspace/client-area');
+    }
+  }, [isSignedIn, navigate]);
+
   return (
     <>
       <Helmet>

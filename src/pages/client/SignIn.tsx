@@ -3,8 +3,20 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const { isSignedIn } = useUser();
+
+  // Redirect if already signed in
+  React.useEffect(() => {
+    if (isSignedIn) {
+      navigate('/workspace/client-area');
+    }
+  }, [isSignedIn, navigate]);
+
   return (
     <>
       <Helmet>
@@ -47,6 +59,15 @@ const SignIn = () => {
               routing="path"
               path="/workspace/sign-in"
             />
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <p className="text-center text-sm text-gray-600">
+                Pour accéder au compte administrateur, utilisez :
+                <br />
+                <span className="font-medium">Email : progineer.moe@gmail.com</span>
+                <br />
+                <span className="font-medium">Mot de passe : Baullanowens1112</span>
+              </p>
+            </div>
           </div>
         </Container>
       </section>
