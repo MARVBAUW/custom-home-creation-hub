@@ -4,7 +4,7 @@ import { FormData } from '../../types';
 import { getVisibleSteps } from '../../steps';
 
 export const useStepCalculation = (formData: FormData, currentStep: number) => {
-  const [totalSteps, setTotalSteps] = useState(36); // Valeur par défaut plus élevée
+  const [totalSteps, setTotalSteps] = useState(28); // Valeur par défaut
   
   // Obtenir les étapes visibles en fonction des données du formulaire
   const visibleSteps = getVisibleSteps(formData);
@@ -14,34 +14,39 @@ export const useStepCalculation = (formData: FormData, currentStep: number) => {
     // Calcul basé sur les étapes visibles et le chemin du formulaire
     let calculatedTotalSteps = visibleSteps.length;
     
-    // Ajustements spécifiques au projet
-    if (formData.projectType === "renovation") {
-      if (!formData.includeEcoSolutions) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape des solutions écologiques
-      }
-      if (!formData.includeRenewableEnergy) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape des énergies renouvelables
-      }
-      if (!formData.includeLandscaping) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape d'aménagement paysager
-      }
-    } else if (formData.projectType === "construction") {
-      if (!formData.includeOptions) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape des options
-      }
-      if (!formData.includeCuisine) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape cuisine
-      }
-      if (!formData.includeBathroom) {
-        calculatedTotalSteps -= 1; // Supprimer l'étape salle de bain
-      }
+    // Vérification de base pour s'assurer que toutes les étapes obligatoires sont incluses
+    if (formData.clientType === "individual") {
+      calculatedTotalSteps = Math.max(calculatedTotalSteps, 22); // Au moins jusqu'à l'étape de peinture pour particuliers
+    } else if (formData.clientType === "professional") {
+      calculatedTotalSteps = Math.max(calculatedTotalSteps, 22); // Au moins jusqu'à l'étape de peinture pour pros
     }
     
-    // S'assurer que toutes les étapes techniques et d'intérieur sont incluses (14-21)
-    calculatedTotalSteps = Math.max(calculatedTotalSteps, 28);
+    // Ajustements spécifiques au type de projet
+    if (formData.projectType === "renovation") {
+      // Compter les étapes additionnelles activées
+      let additionalSteps = 0;
+      if (formData.includeEcoSolutions) additionalSteps++;
+      if (formData.includeRenewableEnergy) additionalSteps++;
+      if (formData.includeLandscaping) additionalSteps++;
+      
+      calculatedTotalSteps = 22 + additionalSteps; // Base + étapes supplémentaires
+    } else if (formData.projectType === "construction") {
+      // Compter les étapes additionnelles activées
+      let additionalSteps = 0;
+      if (formData.includeOptions) additionalSteps++;
+      if (formData.includeCuisine) additionalSteps++;
+      if (formData.includeBathroom) additionalSteps++;
+      
+      calculatedTotalSteps = 22 + additionalSteps; // Base + étapes supplémentaires
+    }
+    
+    // Toujours ajouter l'étape finale (contact)
+    calculatedTotalSteps = Math.min(Math.max(calculatedTotalSteps, 22) + 1, 28);
     
     setTotalSteps(calculatedTotalSteps);
-  }, [visibleSteps.length, formData]);
+    
+    console.log("Calculated total steps:", calculatedTotalSteps, "Current step:", currentStep);
+  }, [visibleSteps.length, formData, currentStep]);
   
   return {
     totalSteps,

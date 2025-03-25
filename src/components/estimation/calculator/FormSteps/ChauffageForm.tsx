@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Thermometer } from 'lucide-react';
 
 const formSchema = z.object({
   heatingType: z.string().min(1, { message: 'Veuillez sélectionner une option de chauffage' }),
@@ -37,10 +37,62 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
     },
   });
 
+  // Options de chauffage avec des URLs d'images fiables
+  const heatingOptions = [
+    {
+      id: "gaz",
+      label: "Gaz",
+      description: "Chaudière à condensation au gaz naturel",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/2b866fe2-beb4-4f5e-ac63-71f4ef4d3342.jpg"
+    },
+    {
+      id: "pompe-chaleur",
+      label: "Pompe à chaleur",
+      description: "Système air-eau performant et économique",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/ec29ecde-2a09-47aa-b16e-a2ade0a929d3.jpg"
+    },
+    {
+      id: "electrique",
+      label: "Électrique",
+      description: "Radiateurs électriques à inertie ou programmables",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/ca3db94c-a3d0-4d9b-822d-07ce7d3f5a2a.jpg"
+    },
+    {
+      id: "geothermie",
+      label: "Géothermie",
+      description: "Chauffage par le sol utilisant l'énergie géothermique",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/a2ebe4aa-4ea2-40a4-bfb7-bcb96e6feb9b.jpg"
+    }
+  ];
+
+  // Options de climatisation avec des URLs d'images fiables
+  const acOptions = [
+    {
+      id: "yes",
+      label: "Avec climatisation",
+      description: "Installation d'un système de climatisation",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/9fa3c8b6-e91a-4559-9f27-f2ceea50dc4e.jpg"
+    },
+    {
+      id: "no",
+      label: "Sans climatisation",
+      description: "Pas de système de climatisation",
+      image: "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/4b7fecef-7b11-42fe-9ee2-e8d9c3fc8e4c.jpg"
+    }
+  ];
+
+  // Gestion des erreurs d'image
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = "https://storage.tally.so/4dfbfa40-1d1d-4fb1-812e-0c5fa8fd28ed/placeholder-building.jpg";
+  };
+
   return (
     <AnimatedStepTransition direction={animationDirection}>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Chauffage & Climatisation</h2>
+        <h2 className="text-2xl font-bold mb-1 flex items-center">
+          <Thermometer className="mr-2 text-progineer-gold" />
+          Chauffage & Climatisation
+        </h2>
         <p className="text-muted-foreground text-sm">
           Choisissez votre système de chauffage et climatisation
         </p>
@@ -60,73 +112,25 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
                     defaultValue={field.value}
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="gaz" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/chauffage-gaz.jpg"
-                          alt="Chauffage au gaz"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Gaz</div>
-                        <p className="text-sm text-muted-foreground">
-                          Chaudière à condensation au gaz naturel
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="pompe-chaleur" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/chauffage-pompe-chaleur.jpg"
-                          alt="Pompe à chaleur"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Pompe à chaleur</div>
-                        <p className="text-sm text-muted-foreground">
-                          Système air-eau performant et économique
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="electrique" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/chauffage-electrique.jpg"
-                          alt="Chauffage électrique"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Électrique</div>
-                        <p className="text-sm text-muted-foreground">
-                          Radiateurs électriques à inertie ou programmables
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="geothermie" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/chauffage-geothermie.jpg"
-                          alt="Géothermie"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Géothermie</div>
-                        <p className="text-sm text-muted-foreground">
-                          Chauffage par le sol utilisant l'énergie géothermique
-                        </p>
-                      </div>
-                    </FormItem>
+                    {heatingOptions.map(option => (
+                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold">
+                        <FormControl>
+                          <RadioGroupItem value={option.id} className="sr-only" />
+                        </FormControl>
+                        <div className="w-full text-center">
+                          <img
+                            src={option.image}
+                            alt={option.label}
+                            className="w-full h-32 object-cover rounded-md mb-3"
+                            onError={handleImageError}
+                          />
+                          <div className="font-medium">{option.label}</div>
+                          <p className="text-sm text-muted-foreground">
+                            {option.description}
+                          </p>
+                        </div>
+                      </FormItem>
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -146,39 +150,25 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
                     defaultValue={field.value}
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="yes" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/climatisation-oui.jpg"
-                          alt="Avec climatisation"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Avec climatisation</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation d'un système de climatisation
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="no" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/climatisation-non.jpg"
-                          alt="Sans climatisation"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Sans climatisation</div>
-                        <p className="text-sm text-muted-foreground">
-                          Pas de système de climatisation
-                        </p>
-                      </div>
-                    </FormItem>
+                    {acOptions.map(option => (
+                      <FormItem key={option.id} className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-progineer-gold/10 [&:has([data-state=checked])]:border-progineer-gold">
+                        <FormControl>
+                          <RadioGroupItem value={option.id} className="sr-only" />
+                        </FormControl>
+                        <div className="w-full text-center">
+                          <img
+                            src={option.image}
+                            alt={option.label}
+                            className="w-full h-32 object-cover rounded-md mb-3"
+                            onError={handleImageError}
+                          />
+                          <div className="font-medium">{option.label}</div>
+                          <p className="text-sm text-muted-foreground">
+                            {option.description}
+                          </p>
+                        </div>
+                      </FormItem>
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
@@ -191,12 +181,18 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
               type="button"
               variant="outline"
               onClick={goToPreviousStep}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 group hover:border-progineer-gold/80"
             >
-              <ArrowLeft size={16} />
+              <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
               Précédent
             </Button>
-            <Button type="submit">Continuer</Button>
+            <Button 
+              type="submit" 
+              className="group hover:bg-progineer-gold/90 bg-progineer-gold"
+            >
+              Continuer
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
           </div>
         </form>
       </Form>

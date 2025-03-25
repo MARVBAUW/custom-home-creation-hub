@@ -24,12 +24,10 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
-    // Ne jamais sauter les étapes de 14 à 21 (électricité jusqu'à peinture)
-    if (nextStep >= 14 && nextStep <= 21) {
-      nextStep = currentStep + 1; // Progression normale
-    }
+    // Ne jamais sauter les étapes techniques (électricité, plomberie, chauffage)
+    // et d'intérieur (plâtrerie, menuiseries, carrelage, parquet, peinture)
     
-    // Gérer les sauts pour les autres étapes
+    // Gérer les sauts pour les étapes spécifiques en fonction des options choisies
     if (formData.projectType === "renovation") {
       // Sauter l'étape des solutions écologiques si non nécessaire
       if (nextStep === 22 && !formData.includeEcoSolutions) {
@@ -43,6 +41,10 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       if (nextStep === 24 && !formData.includeLandscaping) {
         nextStep = 25;
       }
+      // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
+      if (nextStep > 28) {
+        nextStep = 28; // Étape finale (contact)
+      }
     } else if (formData.projectType === "construction") {
       // Sauter l'étape des options pour la construction si non nécessaire
       if (nextStep === 25 && !formData.includeOptions) {
@@ -55,6 +57,10 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       // Sauter l'étape salle de bain si non nécessaire
       if (nextStep === 27 && !formData.includeBathroom) {
         nextStep = 28;
+      }
+      // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
+      if (nextStep > 28) {
+        nextStep = 28; // Étape finale (contact)
       }
     }
     
@@ -70,11 +76,6 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     
     // Logique similaire pour la navigation en arrière
     let prevStep = currentStep - 1;
-    
-    // Ne jamais sauter les étapes de 14 à 21 en arrière (électricité jusqu'à peinture)
-    if (prevStep >= 14 && prevStep <= 21) {
-      prevStep = currentStep - 1; // Progression normale en arrière
-    }
     
     // Gérer le saut d'étapes lors du retour en arrière
     if (formData.clientType === "individual") {

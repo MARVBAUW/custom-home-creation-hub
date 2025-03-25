@@ -14,17 +14,18 @@ import CouvertureForm from '../FormSteps/CouvertureForm';
 import IsolationForm from '../FormSteps/IsolationForm';
 import FacadeForm from '../FormSteps/FacadeForm';
 import MenuiseriesExtForm from '../FormSteps/MenuiseriesExtForm';
-import ElectriciteForm from '../FormSteps/ElectriciteForm'; // Ajout du composant manquant
-import PlomberieForm from '../FormSteps/PlomberieForm'; // Ajout du composant manquant
-import ChauffageForm from '../FormSteps/ChauffageForm'; // Ajout du composant manquant
-import PlatrerieForm from '../FormSteps/PlatrerieForm'; // Ajout du composant manquant
-import MenuiseriesIntForm from '../FormSteps/MenuiseriesIntForm'; // Ajout du composant manquant
-import CarrelageForm from '../FormSteps/CarrelageForm'; // Ajout du composant manquant
-import ParquetForm from '../FormSteps/ParquetForm'; // Ajout du composant manquant
-import PeintureForm from '../FormSteps/PeintureForm'; // Ajout du composant manquant
+import ElectriciteForm from '../FormSteps/ElectriciteForm';
+import PlomberieForm from '../FormSteps/PlomberieForm';
+import ChauffageForm from '../FormSteps/ChauffageForm';
+import PlatrerieForm from '../FormSteps/PlatrerieForm';
+import MenuiseriesIntForm from '../FormSteps/MenuiseriesIntForm';
+import CarrelageForm from '../FormSteps/CarrelageForm';
+import ParquetForm from '../FormSteps/ParquetForm';
+import PeintureForm from '../FormSteps/PeintureForm';
 import ContactForm from '../FormSteps/ContactForm';
 import DefaultStepContent from '../DefaultStepContent';
 import { FormData } from '../types';
+import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 
 type StepRendererProps = {
   step: number;
@@ -47,14 +48,14 @@ type StepRendererProps = {
   onIsolationSubmit: (data: { insulationType: string }) => void;
   onFacadeSubmit: (data: any) => void;
   onMenuiseriesExtSubmit: (data: any) => void;
-  onElectriciteSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onPlomberieSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onChauffageSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onPlatrerieSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onMenuiseriesIntSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onCarrelageSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onParquetSubmit: (data: any) => void; // Ajout de la fonction de soumission
-  onPeintureSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onElectriciteSubmit: (data: any) => void;
+  onPlomberieSubmit: (data: any) => void;
+  onChauffageSubmit: (data: any) => void;
+  onPlatrerieSubmit: (data: any) => void;
+  onMenuiseriesIntSubmit: (data: any) => void;
+  onCarrelageSubmit: (data: any) => void;
+  onParquetSubmit: (data: any) => void;
+  onPeintureSubmit: (data: any) => void;
   onContactSubmit: (data: any) => void;
 };
 
@@ -89,6 +90,11 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   onPeintureSubmit,
   onContactSubmit,
 }) => {
+  console.log("Current step:", step, "Total steps:", totalSteps);
+  
+  // Définir l'étape de contact comme la dernière étape
+  const isLastStep = step === totalSteps;
+  
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -257,7 +263,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
           />
         );
         
-      // Ajout des étapes techniques (14-16)
+      // Étapes techniques (14-16)
       case 14:
         return (
           <ElectriciteForm
@@ -295,7 +301,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
           />
         );
         
-      // Ajout des étapes d'intérieur (17-21)
+      // Étapes d'intérieur (17-21)
       case 17:
         return (
           <PlatrerieForm
@@ -366,22 +372,25 @@ const StepRenderer: React.FC<StepRendererProps> = ({
           />
         );
         
-      case totalSteps:
-        return (
-          <ContactForm
-            defaultValues={{
-              firstName: formData.firstName,
-              lastName: formData.lastName,
-              phone: formData.phone,
-              email: formData.email,
-            }}
-            onSubmit={onContactSubmit}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
-      
+      // Si c'est la dernière étape, affichez le formulaire de contact
       default:
+        if (isLastStep) {
+          return (
+            <ContactForm
+              defaultValues={{
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                phone: formData.phone,
+                email: formData.email,
+              }}
+              onSubmit={onContactSubmit}
+              goToPreviousStep={goToPreviousStep}
+              animationDirection={animationDirection}
+            />
+          );
+        }
+        
+        // Pour les autres étapes inconnues, utilisez le contenu par défaut
         return (
           <DefaultStepContent
             step={step}
