@@ -1,6 +1,7 @@
 
 import React from 'react';
 import EstimationVisualizer from '../visualizer';
+import { getStepIcon, getStepTitle } from './steps';
 
 type StepContextProps = {
   step: number;
