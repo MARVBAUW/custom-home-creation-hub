@@ -3,7 +3,7 @@ import React from 'react';
 import { 
   Building, Home, Eye, Paintbrush, Ruler, Building2, Landmark, 
   Construction, User, Users, Compass, 
-  Sun, Calculator, Check, Bath, CookingPot, Map
+  Sun, Calculator, Check, Bath, UtensilsCrossed, Map
 } from 'lucide-react';
 
 // Fonction pour sélectionner l'icône appropriée en fonction de l'étape
@@ -30,7 +30,7 @@ export const getStepIcon = (stepNumber: number) => {
     case 19:
     case 20:
     case 21: return <Paintbrush className="text-progineer-gold" size={24} />;
-    case 22: return <CookingPot className="text-progineer-gold" size={24} />;
+    case 22: return <UtensilsCrossed className="text-progineer-gold" size={24} />; // Changed from Kitchen to UtensilsCrossed
     case 23: return <Bath className="text-progineer-gold" size={24} />;
     case 24: return <Users className="text-progineer-gold" size={24} />;
     default: return <Calculator className="text-progineer-gold" size={24} />;
@@ -46,24 +46,24 @@ export const getStepTitle = (stepNumber: number) => {
     case 4: return "Type d'estimation";
     case 5: return "Détails construction";
     case 6: return "Terrain";
-    case 7: return "Gros œuvre";
-    case 8: return "Charpente";
-    case 9: return "Combles";
-    case 10: return "Couverture";
+    case 7: return "Structure des murs";
+    case 8: return "Type de toiture";
+    case 9: return "Type de combles";
+    case 10: return "Couverture toiture";
     case 11: return "Isolation";
-    case 12: return "Façade";
-    case 13: return "Menuiseries ext.";
+    case 12: return "Revêtements mur extérieur";
+    case 13: return "Type de menuiseries";
     case 14: return "Électricité";
     case 15: return "Plomberie";
     case 16: return "Chauffage/Clim";
     case 17: return "Plâtrerie";
     case 18: return "Menuiseries int.";
     case 19: return "Carrelage";
-    case 20: return "Parquet";
-    case 21: return "Peinture";
+    case 20: return "Parquet & sol souple";
+    case 21: return "Peinture & revêtements";
     case 22: return "Cuisine";
     case 23: return "Salle de bain";
-    case 24: return "Contact";
+    case 24: return "Informations personnelles";
     default: return "Étape";
   }
 };

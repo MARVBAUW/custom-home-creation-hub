@@ -210,3 +210,4 @@ export const getStepIcon = (stepNumber: number): React.ReactNode => {
   const step = stepIndex >= 0 && stepIndex < steps.length ? steps[stepIndex] : null;
   return step ? step.icon : <Check />;
 };
+

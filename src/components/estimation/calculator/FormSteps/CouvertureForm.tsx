@@ -106,7 +106,7 @@ const CouvertureForm: React.FC<CouvertureFormProps> = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center">
             <Home className="mr-2 text-progineer-gold" />
-            Type de couverture
+            Couverture toiture
           </h2>
           
           <FormField
