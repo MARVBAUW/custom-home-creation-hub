@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import { ClerkProvider } from '@clerk/clerk-react';
 
 // Layout Components
 import Navbar from "./components/layout/Navbar";
@@ -25,6 +26,14 @@ import CGV from "./pages/CGV";
 import FAQ from "./pages/FAQ";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+
+// Client Area Pages
+import SignIn from "./pages/client/SignIn";
+import SignUp from "./pages/client/SignUp";
+import ClientArea from "./pages/client/ClientArea";
+import ClientDocuments from "./pages/client/ClientDocuments";
+import ClientProjects from "./pages/client/ClientProjects";
+import ClientMessages from "./pages/client/ClientMessages";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +61,15 @@ const App = () => (
                 <Route path="/cgv" element={<CGV />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/a-propos" element={<About />} />
+                
+                {/* Client Area Routes */}
+                <Route path="/workspace/sign-in" element={<SignIn />} />
+                <Route path="/workspace/sign-up" element={<SignUp />} />
+                <Route path="/workspace/client-area" element={<ClientArea />} />
+                <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
+                <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
+                <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
+                
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>

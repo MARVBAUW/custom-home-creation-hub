@@ -1,21 +1,22 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { FileCode, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { FileCode, Lock, Mail, ArrowRight, AlertCircle, User, Calendar, MessageSquare } from 'lucide-react';
+import { SignInButton, SignUpButton, useUser } from '@clerk/clerk-react';
 import Button from '@/components/common/Button';
 
 const WorkspaceEspaceClient = () => {
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const { isLoaded, isSignedIn } = useUser();
+  const navigate = useNavigate();
   
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      // Simulation d'envoi d'email
-      setIsSubmitted(true);
+  // If user is already signed in, redirect to client area
+  React.useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      navigate('/workspace/client-area');
     }
-  };
+  }, [isLoaded, isSignedIn, navigate]);
   
   const features = [
     {
@@ -65,31 +66,45 @@ const WorkspaceEspaceClient = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Actualités du projet</CardTitle>
-                <CardDescription>Restez informé des dernières mises à jour</CardDescription>
+              <CardHeader className="space-y-1">
+                <div className="bg-blue-100 w-10 h-10 rounded-full flex items-center justify-center">
+                  <User className="h-5 w-5 text-blue-600" />
+                </div>
+                <CardTitle className="text-lg">Tableau de bord</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Dans votre espace client, vous recevez des notifications pour chaque 
-                  étape importante de votre projet : réunions de chantier, validations 
-                  d'étapes, modifications techniques, etc.
+                  Accédez à une vue d'ensemble de votre projet avec toutes les informations essentielles regroupées au même endroit.
                 </p>
               </CardContent>
             </Card>
             
             <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Documents contractuels</CardTitle>
-                <CardDescription>Tous vos documents importants centralisés</CardDescription>
+              <CardHeader className="space-y-1">
+                <div className="bg-green-100 w-10 h-10 rounded-full flex items-center justify-center">
+                  <Calendar className="h-5 w-5 text-green-600" />
+                </div>
+                <CardTitle className="text-lg">Plannings & Événements</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600">
-                  Retrouvez tous vos documents importants : contrats, plans, devis, 
-                  factures, attestations d'assurance et garanties dans un espace 
-                  sécurisé accessible 24h/24.
+                  Consultez le calendrier des prochaines étapes et recevez des rappels pour les événements importants de votre projet.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="space-y-1">
+                <div className="bg-purple-100 w-10 h-10 rounded-full flex items-center justify-center">
+                  <MessageSquare className="h-5 w-5 text-purple-600" />
+                </div>
+                <CardTitle className="text-lg">Messagerie dédiée</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Communiquez facilement avec tous les intervenants de votre projet via notre messagerie sécurisée intégrée.
                 </p>
               </CardContent>
             </Card>
@@ -101,54 +116,50 @@ const WorkspaceEspaceClient = () => {
             <CardHeader className="pb-3">
               <CardTitle className="text-xl">Accès à votre espace</CardTitle>
               <CardDescription>
-                Connectez-vous pour accéder à votre espace personnel sécurisé
+                Connectez-vous ou créez un compte pour accéder à votre espace personnel sécurisé
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              {isSubmitted ? (
-                <Alert className="bg-green-50 border-green-200">
-                  <AlertCircle className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-700">Email envoyé</AlertTitle>
-                  <AlertDescription className="text-green-600">
-                    Un lien de connexion a été envoyé à votre adresse email. Veuillez vérifier votre boîte de réception.
-                  </AlertDescription>
-                </Alert>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                      Votre adresse email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="votreemail@exemple.com"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-khaki-500"
-                      required
-                    />
-                  </div>
-                  <Button className="w-full" type="submit">
-                    Recevoir un lien de connexion
+            <CardContent className="space-y-4">
+              <div className="flex flex-col space-y-3">
+                <SignUpButton mode="modal">
+                  <Button className="w-full bg-khaki-600 hover:bg-khaki-700">
+                    Créer un compte
                   </Button>
-                </form>
-              )}
+                </SignUpButton>
+                
+                <SignInButton mode="modal">
+                  <Button className="w-full" variant="outline">
+                    Se connecter
+                  </Button>
+                </SignInButton>
+              </div>
+              
+              <div className="relative flex items-center py-5">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink mx-4 text-gray-400 text-sm">ou</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
+              
+              <a href="/workspace/sign-in" rel="noopener">
+                <Button className="w-full" variant="outline">
+                  Accès page de connexion complète
+                </Button>
+              </a>
             </CardContent>
             <CardFooter className="flex flex-col items-start pt-0">
               <div className="text-sm text-gray-500 mt-4">
-                <p>Pas encore de compte ?</p>
-                <p className="mt-1">Contactez votre chargé de projet pour obtenir vos identifiants.</p>
+                <p>Vous êtes un professionnel ?</p>
+                <p className="mt-1">Contactez-nous pour créer votre compte partenaire.</p>
               </div>
             </CardFooter>
           </Card>
           
           <Alert className="mt-4 bg-amber-50 border-amber-200">
             <AlertCircle className="h-4 w-4 text-amber-600" />
-            <AlertTitle className="text-amber-700">En développement</AlertTitle>
+            <AlertTitle className="text-amber-700">Accès sécurisé</AlertTitle>
             <AlertDescription className="text-amber-600">
-              De nouvelles fonctionnalités seront bientôt disponibles dans votre espace client. 
-              Restez informé en vous inscrivant à notre newsletter.
+              Vos données sont protégées et strictement confidentielles. 
+              Seules les personnes autorisées peuvent accéder à votre espace client.
             </AlertDescription>
           </Alert>
         </div>
