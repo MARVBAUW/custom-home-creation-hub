@@ -10,7 +10,7 @@ const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({
   getSizeClasses 
 }) => {
   return (
-    <svg height="720" width="1280" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" className={getSizeClasses()}>
+    <svg height="720" width="1280" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" className={`${getSizeClasses()} metallic-logo`}>
       <defs>
         <linearGradient id="metalGradientFull" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stopColor="#f8f8f8"/>
@@ -26,9 +26,19 @@ const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({
           <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
           <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
         </filter>
+        
+        <filter id="hoverGlowFull">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#c8a86d" flood-opacity="0.7" result="glowColor"/>
+          <feComposite in="glowColor" in2="blur" operator="in" result="softGlow"/>
+          <feMerge>
+            <feMergeNode in="softGlow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
 
-      <g filter="url(#shineFull)">
+      <g filter="url(#shineFull)" className="metallic-full-path">
         {/* Background removed - only keep the lines and logo */}
         
         {/* Lignes décoratives */}

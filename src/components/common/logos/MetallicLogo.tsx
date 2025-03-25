@@ -11,7 +11,7 @@ const MetallicLogo: React.FC<MetallicLogoProps> = ({
   getSizeClasses 
 }) => {
   return (
-    <svg height="720" width="1280" viewBox="0 0 1280 720" className={getSizeClasses()}>
+    <svg height="720" width="1280" viewBox="0 0 1280 720" className={`${getSizeClasses()} metallic-logo`}>
       <defs>
         <linearGradient id="metalGradient" x1="0%" x2="100%" y1="0%" y2="0%">
           <stop offset="0%" stopColor="#f8f8f8"/>
@@ -30,9 +30,19 @@ const MetallicLogo: React.FC<MetallicLogoProps> = ({
           <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic"
             k1="0" k2="1" k3="1" k4="0"/>
         </filter>
+        
+        <filter id="hoverGlow">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#c8a86d" flood-opacity="0.5" result="glowColor"/>
+          <feComposite in="glowColor" in2="blur" operator="in" result="softGlow"/>
+          <feMerge>
+            <feMergeNode in="softGlow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
 
-      <g filter="url(#shine)">
+      <g filter="url(#shine)" className="metallic-path">
         <path d="M354 478 956.727 478"
               fill="none" stroke="#2E2E2E"
               strokeWidth="4" strokeMiterlimit="8"

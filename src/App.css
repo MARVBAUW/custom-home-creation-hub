@@ -175,6 +175,7 @@
 
 .logo:hover {
   filter: drop-shadow(0 0 0.5em rgba(120, 115, 70, 0.6));
+  transform: scale(1.05);
 }
 
 .logo-icon {
@@ -184,6 +185,16 @@
 
 .logo-icon:hover {
   filter: drop-shadow(0 0 0.5em rgba(120, 115, 70, 0.6));
+  transform: scale(1.05);
+}
+
+.logo-path {
+  transition: all 300ms;
+}
+
+svg:hover .logo-path {
+  stroke-width: 9;
+  filter: url(#glow);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -444,4 +455,72 @@
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.logo-polygon, .logo-rect {
+  transition: all 300ms ease;
+}
+
+svg:hover .logo-polygon {
+  filter: url(#logoGlow);
+}
+
+/* Animation for the metallic logo variants */
+.logo-animation {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes goldPulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(200, 168, 109, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(200, 168, 109, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(200, 168, 109, 0.3));
+  }
+}
+
+.metallic-logo:hover {
+  animation: goldPulse 1.5s infinite;
+}
+
+.metallic-path, .metallic-full-path {
+  transition: all 0.5s ease;
+}
+
+svg:hover .metallic-path,
+svg:hover .metallic-full-path {
+  filter: url(#hoverGlow);
+}
+
+/* 3D transform effect on hover */
+.logo-3d-effect {
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.logo-3d-effect:hover {
+  transform: perspective(500px) rotateY(15deg);
+  filter: drop-shadow(2px 4px 6px rgba(200, 168, 109, 0.5));
+}
+
+/* Add the 3D effect class to the Logo component */
+.logo, .logo-icon {
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.logo:hover, .logo-icon:hover {
+  transform: perspective(500px) rotateY(5deg) scale(1.05);
 }

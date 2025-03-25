@@ -17,11 +17,19 @@ const IconLogo: React.FC<IconLogoProps> = ({
           <stop offset="0%" stopColor="#c8a86d"/>
           <stop offset="100%" stopColor="#4b4b3b"/>
         </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
       </defs>
       <path d="M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
         fill="none" 
         stroke="url(#goldIcon)" 
         strokeWidth="8" 
+        className="logo-path"
       />
     </svg>
   );
