@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -19,7 +18,7 @@ const Logo: React.FC<LogoProps> = ({
   // Function to render the SVG logo
   const renderSvgLogo = () => {
     if (variant === 'metallic') {
-      // New metallic logo
+      // New metallic logo without background
       return (
         <svg height="720" width="1280" viewBox="0 0 1280 720" className={getSizeClasses()}>
           <defs>
@@ -43,9 +42,6 @@ const Logo: React.FC<LogoProps> = ({
           </defs>
 
           <g filter="url(#shine)">
-            <rect fill="url(#metalGradient)" height="720" width="1280" x="0" y="0"/>
-            <rect height="720" width="1280" x="0" y="0"/>
-            
             <path d="M354 478 956.727 478"
                   fill="none" stroke="#2E2E2E"
                   strokeWidth="4" strokeMiterlimit="8"
