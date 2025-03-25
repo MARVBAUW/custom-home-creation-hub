@@ -5,24 +5,24 @@ import { FormData } from '../../types';
 export const useStepNavigation = (currentStep: number, formData: FormData) => {
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   
-  // Navigate to the next step
+  // Naviguer vers l'étape suivante
   const goToNextStep = () => {
     setAnimationDirection('forward');
-    // Find the next appropriate step based on the form path
+    // Trouver l'étape suivante appropriée en fonction du chemin du formulaire
     let nextStep = currentStep + 1;
     
-    // Handle step skipping based on project type and user choices
+    // Gérer le saut d'étapes en fonction du type de projet et des choix de l'utilisateur
     if (formData.projectType === "renovation") {
-      // Skip eco-solutions step if not needed
+      // Sauter l'étape des solutions écologiques si non nécessaire
       if (nextStep === 14 && !formData.includeEcoSolutions) {
         nextStep = 15;
       }
-      // Skip renewable energy step if not needed
+      // Sauter l'étape des énergies renouvelables si non nécessaire
       if (nextStep === 15 && !formData.includeRenewableEnergy) {
         nextStep = 16;
       }
     } else if (formData.projectType === "construction") {
-      // Skip options step for construction if not needed
+      // Sauter l'étape des options pour la construction si non nécessaire
       if (nextStep === 26 && !formData.includeOptions) {
         nextStep = 27;
       }
@@ -34,14 +34,14 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     };
   };
 
-  // Navigate to the previous step
+  // Naviguer vers l'étape précédente
   const goToPreviousStep = () => {
     setAnimationDirection('backward');
     
-    // Similar logic for backward navigation
+    // Logique similaire pour la navigation en arrière
     let prevStep = currentStep - 1;
     
-    // Handle skipping steps when going backward
+    // Gérer le saut d'étapes lors du retour en arrière
     if (formData.projectType === "renovation") {
       if (prevStep === 15 && !formData.includeRenewableEnergy) {
         prevStep = 14;
@@ -55,7 +55,7 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
-    // Ensure we don't go below step 1
+    // S'assurer qu'on ne descend pas en dessous de l'étape 1
     prevStep = Math.max(prevStep, 1);
     
     return {

@@ -4,28 +4,31 @@ import { FormData } from '../../types';
 import { getVisibleSteps } from '../../steps';
 
 export const useStepCalculation = (formData: FormData, currentStep: number) => {
-  const [totalSteps, setTotalSteps] = useState(36); // Default higher value
+  const [totalSteps, setTotalSteps] = useState(36); // Valeur par défaut plus élevée
   
-  // Get visible steps based on form data
+  // Obtenir les étapes visibles en fonction des données du formulaire
   const visibleSteps = getVisibleSteps(formData);
   
-  // Calculate total steps whenever form data changes
+  // Calculer le nombre total d'étapes lorsque les données du formulaire changent
   useEffect(() => {
-    // Calculate based on visible steps and form path
+    // Calcul basé sur les étapes visibles et le chemin du formulaire
     let calculatedTotalSteps = visibleSteps.length;
     
-    // Project-specific adjustments
+    // Ajustements spécifiques au projet
     if (formData.projectType === "renovation") {
-      if (!formData.includeEcoSolutions && !formData.includeRenewableEnergy) {
-        calculatedTotalSteps -= 2; // Remove non-applicable steps
+      if (!formData.includeEcoSolutions) {
+        calculatedTotalSteps -= 1; // Supprimer l'étape des solutions écologiques
+      }
+      if (!formData.includeRenewableEnergy) {
+        calculatedTotalSteps -= 1; // Supprimer l'étape des énergies renouvelables
       }
     } else if (formData.projectType === "construction") {
       if (!formData.includeOptions) {
-        calculatedTotalSteps -= 1;
+        calculatedTotalSteps -= 1; // Supprimer l'étape des options
       }
     }
     
-    // Ensure a minimum number of steps
+    // Assurer un nombre minimum d'étapes
     calculatedTotalSteps = Math.max(calculatedTotalSteps, 14);
     
     setTotalSteps(calculatedTotalSteps);

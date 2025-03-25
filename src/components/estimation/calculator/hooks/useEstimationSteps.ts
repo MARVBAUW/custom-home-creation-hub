@@ -9,14 +9,14 @@ export const useEstimationSteps = (formData: FormData) => {
   const { animationDirection, goToNextStep, goToPreviousStep } = useStepNavigation(step, formData);
   const { totalSteps, visibleSteps } = useStepCalculation(formData, step);
   
-  // Adjust current step if it exceeds the new total
+  // Ajuster l'étape actuelle si elle dépasse le nouveau total
   useEffect(() => {
     if (step > totalSteps) {
       setStep(totalSteps);
     }
   }, [totalSteps, step]);
 
-  // Enhanced navigation functions that update the step
+  // Fonctions de navigation améliorées qui mettent à jour l'étape
   const handleNextStep = () => {
     const { nextStep, animationDirection } = goToNextStep();
     setStep(nextStep);
