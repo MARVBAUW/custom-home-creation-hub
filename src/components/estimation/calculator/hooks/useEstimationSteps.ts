@@ -18,13 +18,13 @@ export const useEstimationSteps = (formData: FormData) => {
 
   // Fonctions de navigation améliorées qui mettent à jour l'étape
   const handleNextStep = () => {
-    const { nextStep, animationDirection } = goToNextStep();
+    const { nextStep, animationDirection: newDirection } = goToNextStep();
     setStep(nextStep);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handlePreviousStep = () => {
-    const { prevStep, animationDirection } = goToPreviousStep();
+    const { prevStep, animationDirection: newDirection } = goToPreviousStep();
     setStep(prevStep);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

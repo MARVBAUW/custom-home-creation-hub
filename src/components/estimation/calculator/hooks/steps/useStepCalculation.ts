@@ -22,9 +22,18 @@ export const useStepCalculation = (formData: FormData, currentStep: number) => {
       if (!formData.includeRenewableEnergy) {
         calculatedTotalSteps -= 1; // Supprimer l'étape des énergies renouvelables
       }
+      if (!formData.includeLandscaping) {
+        calculatedTotalSteps -= 1; // Supprimer l'étape d'aménagement paysager
+      }
     } else if (formData.projectType === "construction") {
       if (!formData.includeOptions) {
         calculatedTotalSteps -= 1; // Supprimer l'étape des options
+      }
+      if (!formData.includeCuisine) {
+        calculatedTotalSteps -= 1; // Supprimer l'étape cuisine
+      }
+      if (!formData.includeBathroom) {
+        calculatedTotalSteps -= 1; // Supprimer l'étape salle de bain
       }
     }
     

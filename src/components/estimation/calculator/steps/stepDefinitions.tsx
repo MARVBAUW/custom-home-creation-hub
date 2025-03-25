@@ -16,7 +16,8 @@ import {
   Leaf,
   PencilRuler,
   Bath,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Globe
 } from 'lucide-react';
 import { FormData } from '../types';
 
@@ -49,7 +50,7 @@ export const stepDefinitions = [
   },
   {
     title: "Type de terrain",
-    icon: <Ruler />,
+    icon: <Globe />, // Changé de Ruler à Globe pour cohérence
     skipCondition: (formData: FormData) => false, // Terrain toujours inclus
   },
   {

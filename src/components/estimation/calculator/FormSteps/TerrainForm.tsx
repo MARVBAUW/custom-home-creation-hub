@@ -46,37 +46,37 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
     {
       id: "legere_pente",
       label: "Légère pente",
-      description: "Terrain avec une pente légère",
+      description: "Terrain avec une pente légère nécessitant des aménagements spécifiques",
       image: "/images/terrain-pente-legere.jpg"
     },
     {
       id: "forte_pente",
       label: "Forte pente",
-      description: "Terrain avec une pente importante",
+      description: "Terrain avec une pente importante nécessitant des travaux conséquents",
       image: "/images/terrain-pente-forte.jpg"
     },
     {
       id: "argileux",
       label: "Terrain argileux",
-      description: "Terrain principalement composé d'argile",
+      description: "Sol principalement composé d'argile, nécessitant des fondations adaptées",
       image: "/images/terrain-argileux.jpg"
     },
     {
       id: "sableux",
       label: "Terrain sableux",
-      description: "Terrain principalement composé de sable",
+      description: "Sol principalement composé de sable, nécessitant un traitement spécifique",
       image: "/images/terrain-sableux.jpg"
     },
     {
       id: "rocheux",
       label: "Terrain rocheux",
-      description: "Terrain avec beaucoup de roches",
+      description: "Sol avec présence importante de roches, nécessitant des travaux particuliers",
       image: "/images/terrain-rocheux.jpg"
     },
     {
       id: "sans_avis",
       label: "Sans avis",
-      description: "Je n'ai pas de préférence particulière",
+      description: "Je n'ai pas de préférence ou je ne connais pas le type de terrain",
       image: "/images/terrain-indetermine.jpg"
     }
   ];
@@ -126,6 +126,10 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
                                 src={option.image} 
                                 alt={option.label} 
                                 className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  // Fallback pour les images qui ne se chargent pas
+                                  e.currentTarget.src = "/placeholder.svg";
+                                }}
                               />
                             </div>
                           )}

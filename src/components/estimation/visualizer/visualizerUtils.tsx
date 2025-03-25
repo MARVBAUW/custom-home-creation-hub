@@ -2,8 +2,8 @@
 import React from 'react';
 import { 
   Building, Home, Eye, Paintbrush, Ruler, Building2, Landmark, 
-  Construction, User, Users, Compass, 
-  Sun, Calculator, Check, Bath, UtensilsCrossed, Map
+  Construction, User, Users, Compass, Map, Globe,
+  Sun, Calculator, Check, Bath, UtensilsCrossed
 } from 'lucide-react';
 
 // Fonction pour sélectionner l'icône appropriée en fonction de l'étape
@@ -14,7 +14,7 @@ export const getStepIcon = (stepNumber: number) => {
     case 3: return <Compass className="text-progineer-gold" size={24} />;
     case 4: return <Eye className="text-progineer-gold" size={24} />;
     case 5: return <Building className="text-progineer-gold" size={24} />;
-    case 6: return <Map className="text-progineer-gold" size={24} />;
+    case 6: return <Globe className="text-progineer-gold" size={24} />; // Changement d'icône pour le terrain
     case 7: return <Building2 className="text-progineer-gold" size={24} />;
     case 8:
     case 9:
@@ -30,7 +30,7 @@ export const getStepIcon = (stepNumber: number) => {
     case 19:
     case 20:
     case 21: return <Paintbrush className="text-progineer-gold" size={24} />;
-    case 22: return <UtensilsCrossed className="text-progineer-gold" size={24} />; // Changed from Kitchen to UtensilsCrossed
+    case 22: return <UtensilsCrossed className="text-progineer-gold" size={24} />;
     case 23: return <Bath className="text-progineer-gold" size={24} />;
     case 24: return <Users className="text-progineer-gold" size={24} />;
     default: return <Calculator className="text-progineer-gold" size={24} />;
@@ -51,7 +51,7 @@ export const getStepTitle = (stepNumber: number) => {
     case 9: return "Type de combles";
     case 10: return "Couverture toiture";
     case 11: return "Isolation";
-    case 12: return "Revêtements mur extérieur";
+    case 12: return "Revêtements mur ext.";
     case 13: return "Type de menuiseries";
     case 14: return "Électricité";
     case 15: return "Plomberie";
