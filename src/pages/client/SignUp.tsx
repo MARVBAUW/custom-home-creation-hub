@@ -8,14 +8,14 @@ import { useUser } from '@clerk/clerk-react';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
 
   // Redirect if already signed in
   React.useEffect(() => {
-    if (isSignedIn) {
+    if (isLoaded && isSignedIn) {
       navigate('/workspace/client-area');
     }
-  }, [isSignedIn, navigate]);
+  }, [isSignedIn, isLoaded, navigate]);
 
   return (
     <>
@@ -56,8 +56,6 @@ const SignUp = () => {
                   footerActionLink: 'text-khaki-600 hover:text-khaki-700'
                 }
               }}
-              routing="path"
-              path="/workspace/sign-up"
             />
           </div>
         </Container>

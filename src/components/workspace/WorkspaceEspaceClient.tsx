@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { FileCode, Lock, Mail, ArrowRight, AlertCircle, User, Calendar, MessageSquare, Check } from 'lucide-react';
-import { SignInButton, SignUpButton, useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react';
 import Button from '@/components/common/Button';
 import { Badge } from '@/components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const WorkspaceEspaceClient = () => {
   const { isLoaded, isSignedIn } = useUser();
@@ -127,22 +128,22 @@ const WorkspaceEspaceClient = () => {
             </CardHeader>
             <CardContent className="space-y-4 pt-6">
               <div className="flex flex-col space-y-3">
-                {/* Fix the SignUpButton to work with direct links instead of modal */}
-                <Button 
-                  className="w-full bg-khaki-600 hover:bg-khaki-700"
-                  href="/workspace/sign-up"
-                >
-                  Créer un compte
-                </Button>
+                <Link to="/workspace/sign-up" className="w-full">
+                  <Button 
+                    className="w-full bg-khaki-600 hover:bg-khaki-700"
+                  >
+                    Créer un compte
+                  </Button>
+                </Link>
                 
-                {/* Fix the SignInButton to work with direct links instead of modal */}
-                <Button 
-                  className="w-full" 
-                  variant="outline"
-                  href="/workspace/sign-in"
-                >
-                  Se connecter
-                </Button>
+                <Link to="/workspace/sign-in" className="w-full">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                  >
+                    Se connecter
+                  </Button>
+                </Link>
               </div>
               
               <div className="relative flex items-center py-5">
@@ -152,11 +153,11 @@ const WorkspaceEspaceClient = () => {
               </div>
               
               <div className="space-y-3">
-                <a href="/workspace/sign-in">
+                <Link to="/workspace/sign-in" className="w-full block">
                   <Button className="w-full" variant="outline">
                     Accès page de connexion complète
                   </Button>
-                </a>
+                </Link>
                 
                 <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
                   <p className="font-medium">Compte administrateur</p>
