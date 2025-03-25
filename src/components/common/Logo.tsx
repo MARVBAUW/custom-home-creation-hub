@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -19,7 +18,7 @@ const Logo: React.FC<LogoProps> = ({
   // Function to render the SVG logo
   const renderSvgLogo = () => {
     if (variant === 'metallic-full') {
-      // New metallic-full logo for the center of the page
+      // Updated metallic-full logo for the center of the page with fixed background
       return (
         <svg height="720" width="1280" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" className={getSizeClasses()}>
           <defs>
@@ -40,12 +39,14 @@ const Logo: React.FC<LogoProps> = ({
           </defs>
 
           <g filter="url(#shineFull)">
+            {/* Background removed - only keep the lines and logo */}
+            
             {/* Lignes décoratives */}
             <path d="M0 0 251.387 0.0001" fill="none" stroke="#FFFFFF" strokeWidth="4" transform="matrix(1 0 0 -1 215 421)" />
             <path d="M215 284 1065.55 284" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
             <path d="M814 422 1065.39 422" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
 
-            {/* Textes */}
+            {/* Textes en URL metalGradientFull pour la visibilité */}
             <text x="197.67" y="373.684" fontSize="55.4" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">P R O G I N E E R</text>
             <text x="498.569" y="427.582" fontSize="15.6" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">M A I T R I S E D</text>
             <text x="664.187" y="420.648" fontSize="7.05" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">'</text>
