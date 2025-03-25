@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useNavigate } from 'react-router-dom';
@@ -70,9 +70,6 @@ const SignIn = () => {
                   main: 'w-full'
                 }
               }}
-              routing="path"
-              path="/workspace/sign-in"
-              redirectUrl="/workspace/client-area"
             />
             <div className="mt-6 pt-6 border-t border-gray-200">
               <p className="text-center text-sm text-gray-600">
