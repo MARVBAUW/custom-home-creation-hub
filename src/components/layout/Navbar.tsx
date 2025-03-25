@@ -43,10 +43,10 @@ const Navbar = () => {
           : "bg-transparent py-2"
       )}
     >
-      <Container>
-        <nav className="flex items-center justify-between">
+      <Container size="lg">
+        <nav className="flex items-center justify-between w-full">
           {/* Logo */}
-          <Link to="/" className="flex-shrink-0 mr-6">
+          <Link to="/" className="flex-shrink-0">
             <Logo 
               variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Phone } from 'lucide-react';
 import Button from '@/components/common/Button';
@@ -30,8 +29,8 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
   };
 
   return (
-    <div className="hidden md:flex items-center justify-between w-full">
-      <ul className="flex items-center space-x-1">
+    <div className="hidden md:flex items-center justify-between w-full px-1">
+      <ul className="flex items-center space-x-1 flex-shrink-0">
         {navLinks.map((item) => (
           <NavItem 
             key={item.name} 
@@ -44,15 +43,15 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
       </ul>
 
       {/* Contact Info & CTAs - Desktop */}
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 flex-shrink-0">
         <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800 whitespace-nowrap">
           <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>
         </a>
-        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700">
-          Estimer mon projet
+        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+          Estimer
         </Button>
-        <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50">
+        <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
           Contact
         </Button>
       </div>
