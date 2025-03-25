@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
+import PartnerContactForm from './PartnerContactForm'; // Add this import
 
 const PartnersSection = () => {
   return (
