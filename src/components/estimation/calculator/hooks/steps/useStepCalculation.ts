@@ -37,8 +37,8 @@ export const useStepCalculation = (formData: FormData, currentStep: number) => {
       }
     }
     
-    // Assurer un nombre minimum d'étapes
-    calculatedTotalSteps = Math.max(calculatedTotalSteps, 14);
+    // S'assurer que toutes les étapes techniques et d'intérieur sont incluses (14-21)
+    calculatedTotalSteps = Math.max(calculatedTotalSteps, 28);
     
     setTotalSteps(calculatedTotalSteps);
   }, [visibleSteps.length, formData]);

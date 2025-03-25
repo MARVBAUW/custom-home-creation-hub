@@ -24,6 +24,12 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
+    // Ne jamais sauter les étapes de 14 à 21 (électricité jusqu'à peinture)
+    if (nextStep >= 14 && nextStep <= 21) {
+      nextStep = currentStep + 1; // Progression normale
+    }
+    
+    // Gérer les sauts pour les autres étapes
     if (formData.projectType === "renovation") {
       // Sauter l'étape des solutions écologiques si non nécessaire
       if (nextStep === 22 && !formData.includeEcoSolutions) {
@@ -64,6 +70,11 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     
     // Logique similaire pour la navigation en arrière
     let prevStep = currentStep - 1;
+    
+    // Ne jamais sauter les étapes de 14 à 21 en arrière (électricité jusqu'à peinture)
+    if (prevStep >= 14 && prevStep <= 21) {
+      prevStep = currentStep - 1; // Progression normale en arrière
+    }
     
     // Gérer le saut d'étapes lors du retour en arrière
     if (formData.clientType === "individual") {

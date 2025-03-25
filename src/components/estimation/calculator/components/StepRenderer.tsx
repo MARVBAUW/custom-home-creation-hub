@@ -14,6 +14,14 @@ import CouvertureForm from '../FormSteps/CouvertureForm';
 import IsolationForm from '../FormSteps/IsolationForm';
 import FacadeForm from '../FormSteps/FacadeForm';
 import MenuiseriesExtForm from '../FormSteps/MenuiseriesExtForm';
+import ElectriciteForm from '../FormSteps/ElectriciteForm'; // Ajout du composant manquant
+import PlomberieForm from '../FormSteps/PlomberieForm'; // Ajout du composant manquant
+import ChauffageForm from '../FormSteps/ChauffageForm'; // Ajout du composant manquant
+import PlatrerieForm from '../FormSteps/PlatrerieForm'; // Ajout du composant manquant
+import MenuiseriesIntForm from '../FormSteps/MenuiseriesIntForm'; // Ajout du composant manquant
+import CarrelageForm from '../FormSteps/CarrelageForm'; // Ajout du composant manquant
+import ParquetForm from '../FormSteps/ParquetForm'; // Ajout du composant manquant
+import PeintureForm from '../FormSteps/PeintureForm'; // Ajout du composant manquant
 import ContactForm from '../FormSteps/ContactForm';
 import DefaultStepContent from '../DefaultStepContent';
 import { FormData } from '../types';
@@ -39,6 +47,14 @@ type StepRendererProps = {
   onIsolationSubmit: (data: { insulationType: string }) => void;
   onFacadeSubmit: (data: any) => void;
   onMenuiseriesExtSubmit: (data: any) => void;
+  onElectriciteSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onPlomberieSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onChauffageSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onPlatrerieSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onMenuiseriesIntSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onCarrelageSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onParquetSubmit: (data: any) => void; // Ajout de la fonction de soumission
+  onPeintureSubmit: (data: any) => void; // Ajout de la fonction de soumission
   onContactSubmit: (data: any) => void;
 };
 
@@ -63,6 +79,14 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   onIsolationSubmit,
   onFacadeSubmit,
   onMenuiseriesExtSubmit,
+  onElectriciteSubmit,
+  onPlomberieSubmit,
+  onChauffageSubmit,
+  onPlatrerieSubmit,
+  onMenuiseriesIntSubmit,
+  onCarrelageSubmit,
+  onParquetSubmit,
+  onPeintureSubmit,
   onContactSubmit,
 }) => {
   const renderStep = () => {
@@ -228,6 +252,115 @@ const StepRenderer: React.FC<StepRendererProps> = ({
               windowNewArea: formData.windowNewArea,
             }}
             onSubmit={onMenuiseriesExtSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      // Ajout des étapes techniques (14-16)
+      case 14:
+        return (
+          <ElectriciteForm
+            defaultValues={{
+              electricalType: formData.electricalType,
+            }}
+            onSubmit={onElectriciteSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 15:
+        return (
+          <PlomberieForm
+            defaultValues={{
+              plumbingType: formData.plumbingType,
+            }}
+            onSubmit={onPlomberieSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 16:
+        return (
+          <ChauffageForm
+            defaultValues={{
+              heatingType: formData.heatingType,
+              hasAirConditioning: formData.hasAirConditioning,
+            }}
+            onSubmit={onChauffageSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      // Ajout des étapes d'intérieur (17-21)
+      case 17:
+        return (
+          <PlatrerieForm
+            defaultValues={{
+              plasteringType: formData.plasteringType,
+            }}
+            onSubmit={onPlatrerieSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 18:
+        return (
+          <MenuiseriesIntForm
+            defaultValues={{
+              doorType: formData.doorType,
+              interiorFittings: formData.interiorFittings,
+            }}
+            onSubmit={onMenuiseriesIntSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 19:
+        return (
+          <CarrelageForm
+            defaultValues={{
+              floorTileType: formData.floorTileType,
+              wallTileType: formData.wallTileType,
+              floorTilePercentage: formData.floorTilePercentage,
+            }}
+            onSubmit={onCarrelageSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 20:
+        return (
+          <ParquetForm
+            defaultValues={{
+              parquetType: formData.parquetType,
+              parquetPercentage: formData.parquetPercentage,
+              softFloorType: formData.softFloorType,
+              softFloorPercentage: formData.softFloorPercentage,
+            }}
+            onSubmit={onParquetSubmit}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+        
+      case 21:
+        return (
+          <PeintureForm
+            defaultValues={{
+              basicPaintPercentage: formData.basicPaintPercentage,
+              decorativePaintPercentage: formData.decorativePaintPercentage,
+              wallpaperPercentage: formData.wallpaperPercentage,
+              woodCladPercentage: formData.woodCladPercentage,
+              stoneCladPercentage: formData.stoneCladPercentage,
+            }}
+            onSubmit={onPeintureSubmit}
             goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />

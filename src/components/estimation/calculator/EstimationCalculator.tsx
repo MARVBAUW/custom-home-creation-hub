@@ -29,6 +29,14 @@ const EstimationCalculator: React.FC = () => {
     onIsolationSubmit,
     onFacadeSubmit,
     onMenuiseriesExtSubmit,
+    onElectriciteSubmit,
+    onPlomberieSubmit,
+    onChauffageSubmit,
+    onPlatrerieSubmit,
+    onMenuiseriesIntSubmit,
+    onCarrelageSubmit,
+    onParquetSubmit,
+    onPeintureSubmit,
     onContactSubmit,
   } = useEstimationCalculator();
 
@@ -62,6 +70,14 @@ const EstimationCalculator: React.FC = () => {
         onIsolationSubmit={onIsolationSubmit}
         onFacadeSubmit={onFacadeSubmit}
         onMenuiseriesExtSubmit={onMenuiseriesExtSubmit}
+        onElectriciteSubmit={onElectriciteSubmit}
+        onPlomberieSubmit={onPlomberieSubmit}
+        onChauffageSubmit={onChauffageSubmit}
+        onPlatrerieSubmit={onPlatrerieSubmit}
+        onMenuiseriesIntSubmit={onMenuiseriesIntSubmit}
+        onCarrelageSubmit={onCarrelageSubmit}
+        onParquetSubmit={onParquetSubmit}
+        onPeintureSubmit={onPeintureSubmit}
         onContactSubmit={onContactSubmit}
       />
     </CalculatorLayout>
