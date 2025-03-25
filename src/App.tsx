@@ -32,6 +32,7 @@ import ClientArea from "./pages/client/ClientArea";
 import ClientDocuments from "./pages/client/ClientDocuments";
 import ClientProjects from "./pages/client/ClientProjects";
 import ClientMessages from "./pages/client/ClientMessages";
+import ClientDocumentation from "./pages/client/ClientDocumentation";
 
 const App = () => (
   <BrowserRouter>
@@ -64,6 +65,7 @@ const App = () => (
               <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
               <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
               <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
+              <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
