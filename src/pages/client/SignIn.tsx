@@ -56,6 +56,10 @@ const SignIn = () => {
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
             <ClerkSignIn 
+              path="/workspace/sign-in"
+              routing="path"
+              signUpUrl="/workspace/sign-up"
+              redirectUrl="/workspace/client-area"
               appearance={{
                 elements: {
                   formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',

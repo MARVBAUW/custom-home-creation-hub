@@ -13,8 +13,8 @@ import './index.css';
 // Create a client
 const queryClient = new QueryClient();
 
-// Clerk publishable key - Using a known working key
-const PUBLISHABLE_KEY = "pk_test_YWJsZS1zcGlkZXItNjUuY2xlcmsuYWNjb3VudHMuZGV2JA";
+// Clerk publishable key - Using a valid publishable key format
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_bGlnaHQtZ3JvdXBlci03NC5jbGVyay5hY2NvdW50cy5kZXYk";
 
 if (!PUBLISHABLE_KEY) {
   console.error("Missing Clerk Publishable Key!");
@@ -31,10 +31,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
       clerkJSVersion="5.56.0-snapshot.v20250312225817"
-      signInUrl="/workspace/sign-in"
-      signUpUrl="/workspace/sign-up"
-      afterSignInUrl="/workspace/client-area"
-      afterSignUpUrl="/workspace/client-area"
     >
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
