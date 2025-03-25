@@ -271,7 +271,7 @@ export type FormData = {
   units: string;
   
   // Terrain
-  terrainType: string;
+  terrainType: string; // Make sure this is a string, not string[]
   
   // Construction details
   wallType: string;
