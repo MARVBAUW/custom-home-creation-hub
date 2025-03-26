@@ -8,9 +8,10 @@ export const isClerkAvailable = (): boolean => {
   return typeof window !== 'undefined' && !(window as any).__DEMO_MODE__;
 };
 
-// Get demo mode status from window
+// Get demo mode status from window - always returns false to disable demo mode
 export const getDemoModeFromWindow = (): boolean => {
-  return typeof window !== 'undefined' && !!(window as any).__DEMO_MODE__;
+  // Always return false to disable demo mode
+  return false;
 };
 
 // Safe import of Clerk's useUser hook

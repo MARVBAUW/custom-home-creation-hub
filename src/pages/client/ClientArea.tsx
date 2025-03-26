@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { SignOutButton, useUser } from '@clerk/clerk-react';
-import { Link } from 'react-router-dom';
+import { SignOutButton } from '@clerk/clerk-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
   MessageSquare, 
   User, 
-  LogOut,
-  AlertTriangle
+  LogOut
 } from 'lucide-react';
 import Container from '@/components/common/Container';
 import { Button } from '@/components/ui/button';
@@ -21,11 +21,13 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ClientArea = () => {
-  // Use the custom auth hook with auto demo mode for authentication failures
-  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut, isDemoMode } = useClientAuth({ 
-    redirectIfUnauthenticated: false, // Disable redirect to handle demo mode
-    maxLoadingTime: 3000, // Faster timeout for better UX
-    allowDemoMode: true
+  const navigate = useNavigate();
+  
+  // Use the custom auth hook with demo mode disabled
+  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut } = useClientAuth({ 
+    redirectIfUnauthenticated: true, // Enable redirect to force authentication
+    maxLoadingTime: 3000,
+    allowDemoMode: false
   });
   
   // Add debugging for loading state
@@ -34,18 +36,18 @@ const ClientArea = () => {
       isLoaded, 
       clerkLoaded, 
       isSignedIn, 
-      loadingTimedOut,
-      isDemoMode
+      loadingTimedOut
     });
     
-    // Always show demo mode if authentication fails
-    if (isLoaded && !clerkLoaded) {
-      console.log('Authentication service unavailable, showing demo mode automatically');
+    // If auth fails, redirect to sign-in
+    if ((isLoaded && !isSignedIn) || loadingTimedOut) {
+      console.log('Authentication required, redirecting to sign-in');
+      navigate('/workspace/sign-in');
     }
-  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut, isDemoMode]);
+  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut, navigate]);
 
   // Show loading spinner with reduced timeout (max 2 seconds)
-  if (!isLoaded && !isDemoMode) {
+  if (!isLoaded) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
@@ -55,66 +57,7 @@ const ClientArea = () => {
     );
   }
 
-  // Show demo mode if authentication failed or timed out
-  if (isDemoMode || (loadingTimedOut && !isSignedIn) || (isLoaded && !clerkLoaded)) {
-    return (
-      <>
-        <Helmet>
-          <title>Espace Client (Mode Démo) | Progineer</title>
-        </Helmet>
-        
-        <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
-          <Container size="lg">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-              <div>
-                <div className="inline-block px-3 py-1 mb-6 rounded-full bg-amber-100 text-amber-800 text-sm font-medium">
-                  Mode Démonstration
-                </div>
-                <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                  Espace Client (Aperçu)
-                </h1>
-                <p className="text-lg text-gray-600 max-w-2xl mb-8">
-                  Ceci est une version de démonstration de l'espace client.
-                </p>
-              </div>
-              <div>
-                <Link to="/workspace/sign-in">
-                  <Button size="sm" className="flex items-center bg-khaki-600 hover:bg-khaki-700">
-                    <User className="h-4 w-4 mr-2" />
-                    Se connecter
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            
-            <Alert className="mt-4 border-amber-200 bg-amber-50">
-              <AlertTriangle className="h-4 w-4 text-amber-800" />
-              <AlertTitle className="text-amber-800">Mode démonstration activé</AlertTitle>
-              <AlertDescription className="text-amber-700">
-                Le service d'authentification n'a pas pu être chargé. Vous êtes en mode démonstration avec des données fictives.{' '}
-                <Link to="/workspace/sign-in" className="font-medium underline hover:text-amber-900">Essayer de se connecter</Link>
-              </AlertDescription>
-            </Alert>
-          </Container>
-        </section>
-        
-        <section className="py-16">
-          <Container size="lg">
-            <ClientAreaWelcome />
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ClientAreaNotifications />
-              <ClientAreaRecentDocuments />
-            </div>
-            <div className="mt-8">
-              <ClientAreaProjectProgress />
-            </div>
-          </Container>
-        </section>
-      </>
-    );
-  }
-
-  // Regular authenticated view (this code rarely runs if authentication isn't working)
+  // Show auth required message if not signed in
   if (!isSignedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">

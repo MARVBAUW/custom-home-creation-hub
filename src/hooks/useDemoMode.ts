@@ -6,39 +6,45 @@ import { getDemoModeFromWindow } from '@/utils/clerkUtils';
 
 /**
  * Hook for handling demo mode functionality
+ * Modified to always disable demo mode
  */
 export const useDemoMode = () => {
   const navigate = useNavigate();
-  const isDemoModeFromWindow = getDemoModeFromWindow();
-  const [isDemoMode, setIsDemoMode] = useState(isDemoModeFromWindow || false);
+  // Demo mode always disabled
+  const isDemoModeFromWindow = false;
+  const [isDemoMode, setIsDemoMode] = useState(false);
   
-  // Immediately set demo mode if window flag is set
+  // We don't enable demo mode automatically anymore
   useEffect(() => {
-    if (isDemoModeFromWindow) {
-      console.log('Demo mode detected from window configuration');
-      setIsDemoMode(true);
-    }
-  }, [isDemoModeFromWindow]);
+    // Demo mode is always disabled
+    console.log('Demo mode is disabled');
+  }, []);
   
-  // Function to enable demo mode manually
+  // Function to enable demo mode manually - now disabled
   const enableDemoMode = () => {
-    setIsDemoMode(true);
+    // Demo mode is disabled, redirect to sign-in instead
     toast({
-      title: 'Mode démonstration activé',
-      description: 'Vous accédez à l\'espace client en mode démonstration.',
-      variant: 'default',
+      title: 'Authentification requise',
+      description: 'Veuillez vous connecter pour accéder à l\'espace client.',
+      variant: 'destructive',
     });
+    navigate('/workspace/sign-in');
   };
 
-  // Function to access client area directly in demo mode
+  // Function to access client area - now requires auth
   const accessClientAreaInDemoMode = () => {
-    enableDemoMode();
-    navigate('/workspace/client-area');
+    // Instead of enabling demo mode, redirect to sign-in
+    toast({
+      title: 'Authentification requise',
+      description: 'Veuillez vous connecter pour accéder à l\'espace client.',
+      variant: 'destructive',
+    });
+    navigate('/workspace/sign-in');
   };
   
   return {
-    isDemoMode,
-    setIsDemoMode,
+    isDemoMode: false,
+    setIsDemoMode: () => {}, // No-op function
     enableDemoMode,
     accessClientAreaInDemoMode
   };

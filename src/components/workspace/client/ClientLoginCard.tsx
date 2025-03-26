@@ -10,112 +10,60 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 const ClientLoginCard = () => {
   const navigate = useNavigate();
   
-  // Use the custom auth hook with improved demo mode access
+  // Use the custom auth hook with demo mode disabled
   const { 
     isSignedIn, 
     isLoaded, 
-    loadingTimedOut,
-    isDemoMode,
-    accessClientAreaInDemoMode 
+    loadingTimedOut 
   } = useClientAuth({ 
-    allowDemoMode: true,
-    maxLoadingTime: 3000  // Reduced to 3 seconds for faster response
+    allowDemoMode: false,
+    maxLoadingTime: 3000
   });
   
   const [clerkTimeout, setClerkTimeout] = useState(false);
   
   // Set a timeout to handle Clerk not loading properly
   useEffect(() => {
-    // Skip if already in demo mode
-    if (isDemoMode) return;
-    
     const timer = setTimeout(() => {
       if (!isLoaded) {
         setClerkTimeout(true);
         console.log('Clerk loading timed out in ClientLoginCard');
       }
-    }, 3000); // 3 seconds timeout for faster experience
+    }, 3000);
     
     return () => clearTimeout(timer);
-  }, [isLoaded, isDemoMode]);
+  }, [isLoaded]);
   
   useEffect(() => {
     console.log('ClientLoginCard: Auth State', { 
       isSignedIn, 
       isLoaded, 
       clerkTimeout,
-      loadingTimedOut,
-      isDemoMode
+      loadingTimedOut
     });
     
     // If authentication fails to load, automatically use the timeout state
     if (loadingTimedOut && !isLoaded) {
       setClerkTimeout(true);
     }
-  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut, isDemoMode]);
+  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut]);
   
   const handleLogin = () => {
-    // If we're in demo mode and the user tries to log in,
-    // use the demo area access instead
-    if (isDemoMode) {
-      console.log('Demo mode active, redirecting to demo client area');
-      accessClientAreaInDemoMode();
-      return;
-    }
-    
     console.log('Login button clicked, navigating to sign-in page');
     navigate('/workspace/sign-in');
   };
   
   const handleSignUp = () => {
-    // If we're in demo mode and the user tries to sign up,
-    // use the demo area access instead
-    if (isDemoMode) {
-      console.log('Demo mode active, redirecting to demo client area');
-      accessClientAreaInDemoMode();
-      return;
-    }
-    
     console.log('Sign up button clicked, navigating to sign-up page');
     navigate('/workspace/sign-up');
   };
 
-  const handleClientArea = () => {
-    console.log('Client area button clicked, using accessClientAreaInDemoMode');
-    accessClientAreaInDemoMode();
-  };
-  
   const renderContent = () => {
-    // If we're in demo mode, show the demo access buttons immediately
-    if (isDemoMode) {
-      return (
-        <div className="space-y-4">
-          <div className="border border-amber-200 bg-amber-50 text-amber-700 p-3 rounded-md">
-            <p className="font-medium">Service d'authentification indisponible</p>
-            <p className="mt-1 text-sm">Vous pouvez accéder à l'espace client en mode démonstration</p>
-          </div>
-          
-          <Button 
-            className="w-full bg-khaki-600 hover:bg-khaki-700"
-            onClick={handleClientArea}
-          >
-            Accéder en mode démo
-          </Button>
-        </div>
-      );
-    }
-    
     if (!isLoaded && !clerkTimeout) {
       return (
         <div className="flex flex-col items-center justify-center py-8">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-khaki-600 mb-4"></div>
           <p className="text-gray-600">Vérification de l'authentification...</p>
-          <button 
-            onClick={handleClientArea}
-            className="mt-4 text-sm text-khaki-600 hover:underline"
-          >
-            Accéder directement sans attendre
-          </button>
         </div>
       );
     }
@@ -123,22 +71,9 @@ const ClientLoginCard = () => {
     if (clerkTimeout) {
       return (
         <div className="space-y-4">
-          <div className="border border-amber-200 bg-amber-50 text-amber-700 p-3 rounded-md">
+          <div className="border border-red-200 bg-red-50 text-red-700 p-3 rounded-md">
             <p className="font-medium">Service temporairement indisponible</p>
-            <p className="mt-1 text-sm">Vous pouvez accéder à l'espace client en mode démonstration</p>
-          </div>
-          
-          <Button 
-            className="w-full bg-khaki-600 hover:bg-khaki-700"
-            onClick={handleClientArea}
-          >
-            Accéder en mode démo
-          </Button>
-          
-          <div className="relative flex items-center py-4">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink mx-4 text-gray-400 text-sm">ou</span>
-            <div className="flex-grow border-t border-gray-200"></div>
+            <p className="mt-1 text-sm">Le service d'authentification n'a pas pu être chargé. Veuillez réessayer plus tard.</p>
           </div>
           
           <Button 
@@ -170,27 +105,6 @@ const ClientLoginCard = () => {
             Se connecter
           </Button>
         </div>
-        
-        <div className="relative flex items-center py-5">
-          <div className="flex-grow border-t border-gray-200"></div>
-          <span className="flex-shrink mx-4 text-gray-400 text-sm">ou</span>
-          <div className="flex-grow border-t border-gray-200"></div>
-        </div>
-        
-        <div className="space-y-3">
-          <Button 
-            className="w-full" 
-            variant="outline"
-            onClick={handleClientArea}
-          >
-            Accès espace client
-          </Button>
-          
-          <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
-            <p className="font-medium">Accès facilité</p>
-            <p className="mt-1">Accédez à l'aperçu de l'espace client en mode démonstration</p>
-          </div>
-        </div>
       </div>
     );
   };
@@ -200,7 +114,7 @@ const ClientLoginCard = () => {
       <CardHeader className="pb-3 bg-khaki-50 rounded-t-xl">
         <CardTitle className="text-xl">Accès à votre espace</CardTitle>
         <CardDescription>
-          Connectez-vous ou accédez directement à votre espace personnel
+          Connectez-vous pour accéder à votre espace personnel
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">

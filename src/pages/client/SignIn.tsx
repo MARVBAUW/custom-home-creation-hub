@@ -10,18 +10,17 @@ import { Button } from '@/components/ui/button';
 const SignIn = () => {
   const navigate = useNavigate();
   
-  // Use the custom auth hook with improved demo mode access
+  // Use the custom auth hook with demo mode disabled
   const { 
     clerkLoaded, 
     isSignedIn, 
     authChecked, 
     isLoaded, 
-    loadingTimedOut, 
-    accessClientAreaInDemoMode 
+    loadingTimedOut
   } = useClientAuth({ 
     redirectIfAuthenticated: true,
-    maxLoadingTime: 3000,  // Reduced to 3 seconds for faster response
-    allowDemoMode: true
+    maxLoadingTime: 3000,
+    allowDemoMode: false
   });
   
   // Add improved debugging logs
@@ -33,13 +32,7 @@ const SignIn = () => {
       isLoaded,
       loadingTimedOut
     });
-    
-    // If authentication fails to load, automatically redirect to client area
-    if (loadingTimedOut && !clerkLoaded) {
-      console.log('Auto-redirecting to client area due to auth service unavailability');
-      accessClientAreaInDemoMode();
-    }
-  }, [isSignedIn, clerkLoaded, authChecked, isLoaded, loadingTimedOut, accessClientAreaInDemoMode]);
+  }, [isSignedIn, clerkLoaded, authChecked, isLoaded, loadingTimedOut]);
 
   return (
     <>
@@ -71,41 +64,27 @@ const SignIn = () => {
               <div className="flex flex-col items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
                 <p className="text-gray-600">Chargement du formulaire de connexion...</p>
-                <Button
-                  onClick={accessClientAreaInDemoMode}
-                  className="mt-4 bg-khaki-600 hover:bg-khaki-700 text-white"
-                >
-                  Accéder directement en mode démo
-                </Button>
               </div>
             ) : loadingTimedOut && !clerkLoaded ? (
               <div className="space-y-6 py-4">
-                <div className="border border-amber-200 bg-amber-50 text-amber-700 p-4 rounded-md">
+                <div className="border border-red-200 bg-red-50 text-red-700 p-4 rounded-md">
                   <h3 className="font-medium text-lg mb-2">Service d'authentification indisponible</h3>
                   <p className="mb-3">
-                    Le service d'authentification n'a pas pu être chargé. Cliquez sur le bouton ci-dessous pour accéder directement à l'espace client en mode démonstration.
+                    Le service d'authentification n'a pas pu être chargé. Veuillez réessayer plus tard ou contacter notre support.
                   </p>
+                  
                   <Button 
-                    onClick={accessClientAreaInDemoMode}
-                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white mb-2"
+                    variant="outline" 
+                    className="w-full mb-2"
+                    onClick={() => window.location.reload()}
                   >
-                    Accéder en mode démonstration
+                    Réessayer
                   </Button>
-                  <p className="text-sm text-amber-600">
-                    Note: En mode démonstration, vous verrez des données fictives et certaines fonctionnalités peuvent être limitées.
-                  </p>
                 </div>
                 
                 <div className="text-center">
                   <p className="text-gray-600 mb-3">Vous pouvez également:</p>
                   <div className="space-y-2">
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      onClick={() => window.location.reload()}
-                    >
-                      Recharger la page
-                    </Button>
                     <Link to="/workspace" className="block">
                       <Button variant="ghost" className="w-full">
                         Retour à l'accueil
@@ -136,17 +115,6 @@ const SignIn = () => {
                     }
                   }}
                 />
-                <div className="mt-6 pt-6 border-t border-gray-200 text-center">
-                  <p className="text-sm text-gray-500">
-                    Si vous rencontrez des problèmes avec le service d'authentification, vous pouvez{" "}
-                    <button
-                      onClick={accessClientAreaInDemoMode}
-                      className="text-khaki-600 hover:underline"
-                    >
-                      accéder en mode démonstration
-                    </button>
-                  </p>
-                </div>
               </div>
             )}
           </div>

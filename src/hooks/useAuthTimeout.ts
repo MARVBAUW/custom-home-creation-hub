@@ -11,6 +11,7 @@ interface UseAuthTimeoutOptions {
 
 /**
  * Hook to handle authentication timeouts and fallbacks
+ * Modified to not trigger demo mode
  */
 export const useAuthTimeout = (options: UseAuthTimeoutOptions = {}) => {
   const { 
@@ -24,15 +25,8 @@ export const useAuthTimeout = (options: UseAuthTimeoutOptions = {}) => {
   
   // Set a timeout to handle cases where Clerk doesn't load properly
   useEffect(() => {
-    // Skip if we're already in demo mode
-    if (isDemoMode) return;
-    
-    // If Clerk isn't available at all, consider it timed out immediately
-    if (!isClerkAvailable()) {
-      setLoadingTimedOut(true);
-      if (onTimeout) onTimeout();
-      return;
-    }
+    // If Clerk is expected to load, we'll still set a timeout
+    // but now we won't trigger demo mode
     
     const timer = setTimeout(() => {
       if (!isClerkLoaded && !isDemoMode) {
@@ -47,15 +41,7 @@ export const useAuthTimeout = (options: UseAuthTimeoutOptions = {}) => {
   
   // Enhanced detection for Clerk initialization errors - using an even earlier check
   useEffect(() => {
-    // If we're already in demo mode, no need to check for Clerk errors
-    if (isDemoMode) return;
-    
-    // If Clerk isn't available at all, consider it timed out immediately
-    if (!isClerkAvailable()) {
-      setLoadingTimedOut(true);
-      if (onTimeout) onTimeout();
-      return;
-    }
+    // Early check for Clerk, but we no longer enable demo mode
     
     const earlyErrorTimer = setTimeout(() => {
       if (!isClerkLoaded && !isDemoMode) {

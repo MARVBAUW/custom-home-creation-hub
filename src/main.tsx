@@ -19,37 +19,37 @@ const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 // Configure development mode logging for authentication
 if (import.meta.env.DEV) {
   console.log('Clerk authentication is set up with the following configuration:');
-  console.log('- publishableKey:', PUBLISHABLE_KEY || 'Not configured - running in demo mode');
+  console.log('- publishableKey:', PUBLISHABLE_KEY || 'Not configured - authentication required');
 }
 
 // Render application with Clerk provider only if a valid key is available
 const renderApp = () => {
+  // Remove any existing demo mode flag
+  if (typeof window !== 'undefined') {
+    (window as any).__DEMO_MODE__ = false;
+  }
+  
   return (
     <React.StrictMode>
       {PUBLISHABLE_KEY ? (
         <ClerkProvider publishableKey={PUBLISHABLE_KEY} clerkJSVersion="5.56.0-snapshot.v20250312225817">
           <ClerkLoading>
-            <AppWithFallback demoMode={false} loading={true} />
+            <AppWithFallback loading={true} />
           </ClerkLoading>
           <ClerkLoaded>
-            <AppWithFallback demoMode={false} loading={false} />
+            <AppWithFallback loading={false} />
           </ClerkLoaded>
         </ClerkProvider>
       ) : (
-        // Run in demo mode if no valid key is available
-        <AppWithFallback demoMode={true} loading={false} />
+        // If no valid key is available, show application without Clerk but with auth required
+        <AppWithFallback loading={false} />
       )}
     </React.StrictMode>
   );
 };
 
-// Wrapper component to handle loading states and demo mode
-const AppWithFallback = ({ demoMode, loading }: { demoMode: boolean; loading: boolean }) => {
-  // Set a global window property to indicate demo mode for other components to detect
-  if (demoMode && typeof window !== 'undefined') {
-    (window as any).__DEMO_MODE__ = true;
-  }
-
+// Wrapper component to handle loading states
+const AppWithFallback = ({ loading }: { loading: boolean }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
