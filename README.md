@@ -1,69 +1,165 @@
-# Welcome to your Lovable project
 
-## Project info
+# Progineer - Documentation du Projet
 
-**URL**: https://lovable.dev/projects/91ebbb69-1cec-4b94-987f-8a34d9dae720
+## Organisation des Styles
 
-## How can I edit this code?
+Le système de styles de Progineer est basé sur Tailwind CSS avec une architecture modulaire pour faciliter la maintenance et les évolutions. Les styles sont organisés en fichiers thématiques pour une meilleure séparation des préoccupations.
 
-There are several ways of editing your application.
+### Structure des Fichiers CSS
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/91ebbb69-1cec-4b94-987f-8a34d9dae720) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── App.css              # Point d'entrée principal important tous les fichiers CSS
+├── index.css            # Imports Tailwind et autres fichiers CSS globaux
+└── styles/
+    ├── animations.css   # Animations et transitions
+    ├── base.css         # Styles de base, variables CSS, configuration de la racine
+    ├── buttons.css      # Styles des boutons et éléments interactifs
+    ├── cards.css        # Styles pour les cartes et conteneurs de contenu
+    ├── containers.css   # Layouts, sections et conteneurs
+    ├── estimation.css   # Styles spécifiques à la fonctionnalité d'estimation
+    ├── footer.css       # Styles spécifiques au footer
+    ├── gantt.css        # Styles pour les diagrammes de Gantt
+    ├── logo.css         # Styles et animations du logo
+    ├── theme.css        # Définition des thèmes clair/sombre
+    ├── typography.css   # Styles typographiques
+    └── ui-elements.css  # Composants d'interface utilisateur réutilisables
 ```
 
-**Edit a file directly in GitHub**
+### Utilisation des Classes Prédéfinies
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Notre système de design utilise des classes utilitaires prédéfinies pour maintenir la cohérence visuelle :
 
-**Use GitHub Codespaces**
+#### Conteneurs et Mise en Page
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```html
+<!-- Conteneurs -->
+<div className="container-lg">...</div>     <!-- Grand conteneur -->
+<div className="container-md">...</div>     <!-- Conteneur moyen -->
+<div className="container-sm">...</div>     <!-- Petit conteneur -->
 
-## What technologies are used for this project?
+<!-- Sections -->
+<section className="section">...</section>  <!-- Section standard avec padding -->
 
-This project is built with .
+<!-- Effets visuels -->
+<div className="glassmorphism">...</div>    <!-- Effet verre dépoli -->
+<div className="glass-card">...</div>       <!-- Carte avec effet verre -->
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+#### Typographie
 
-## How can I deploy this project?
+```html
+<!-- Titres spécifiques à Progineer -->
+<h1 className="progineer-title">Titre Principal</h1>
+<h2 className="progineer-subtitle">Sous-titre</h2>
 
-Simply open [Lovable](https://lovable.dev/projects/91ebbb69-1cec-4b94-987f-8a34d9dae720) and click on Share -> Publish.
+<!-- Mise en valeur de texte -->
+<span className="highlight-text">Texte important</span>
 
-## I want to use a custom domain - is that possible?
+<!-- Améliorations de lisibilité -->
+<p className="text-balance">Texte équilibré sur plusieurs lignes</p>
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+<!-- Séparateur décoratif -->
+<div className="progineer-divider"></div>
+```
+
+#### Boutons
+
+```html
+<!-- Boutons principaux -->
+<button className="btn-primary">Action Principale</button>
+<button className="btn-secondary">Action Secondaire</button>
+<button className="btn-outline">Action Tertiaire</button>
+```
+
+#### Animations
+
+```html
+<!-- Animation de construction progressive -->
+<div className="build-element">Élément qui apparaît graduellement</div>
+
+<!-- Animation d'apparition avec délai -->
+<div className="fade-in" style={{ animationDelay: '0.2s' }}>Apparaît après délai</div>
+
+<!-- Animations de direction -->
+<div className="slide-in-left">Arrive depuis la gauche</div>
+<div className="slide-in-right">Arrive depuis la droite</div>
+
+<!-- Animation de pulsation -->
+<div className="pulsate-element">Élément qui pulse</div>
+```
+
+#### Estimation et Calculateur
+
+```html
+<!-- Conteneur de formulaire d'estimation -->
+<div className="estimation-form-container">...</div>
+
+<!-- Champs de saisie stylisés -->
+<input className="estimation-input" />
+
+<!-- Animation de résultat -->
+<div className="result-appear">Résultat qui apparaît</div>
+```
+
+### Composant Logo
+
+Le logo Progineer dispose de plusieurs variantes qui peuvent être utilisées selon le contexte :
+
+```jsx
+import Logo from '@/components/common/Logo';
+
+// Variantes de logo
+<Logo variant="default" size="md" />       // Logo standard
+<Logo variant="metallic" size="lg" />      // Logo avec effet métallique
+<Logo variant="metallic-full" size="xl" /> // Logo métallique complet avec texte
+<Logo variant="white" size="md" />         // Logo en blanc pour fonds sombres
+<Logo variant="icon" size="sm" />          // Version iconique du logo
+
+// Avec slogan
+<Logo variant="default" size="md" withTagline={true} />
+
+// Sans lien (pour empêcher la navigation)
+<Logo variant="default" size="md" asLink={false} />
+```
+
+Tailles disponibles : `xs`, `sm`, `md`, `lg`, `xl`
+
+### Thème et Mode Sombre
+
+Le projet utilise les variables CSS pour définir les couleurs et prend en charge le mode sombre :
+
+```css
+/* Accès aux variables de couleur dans les styles personnalisés */
+.custom-element {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 1px solid hsl(var(--border));
+}
+```
+
+Les couleurs spécifiques à Progineer :
+- `progineer-gold` : Couleur or signature (#D4AF37)
+- `progineer-dark` : Couleur sombre signature (#222222)
+
+### Bonnes Pratiques
+
+1. **Privilégier Tailwind** : Utiliser les classes Tailwind en priorité pour maintenir la cohérence
+2. **Composants sur mesure** : Créer des composants réutilisables pour les patterns récurrents
+3. **Préfixe Progineer** : Préfixer les classes personnalisées avec `progineer-` pour éviter les conflits
+4. **Responsive** : Toujours concevoir en mobile-first avec les préfixes Tailwind (`sm:`, `md:`, `lg:`, etc.)
+5. **Accessibilité** : Assurer un contraste suffisant pour tous les textes (WCAG AA minimum)
+
+### Extension du Système
+
+Pour ajouter de nouveaux styles, suivez ces étapes :
+
+1. Identifiez la catégorie de style appropriée
+2. Ajoutez vos styles dans le fichier CSS thématique correspondant
+3. Utilisez `@layer components` pour les classes réutilisables
+4. Documentez vos ajouts dans ce README ou dans des commentaires de code
+5. Pour les nouvelles variables de couleur ou de taille, ajoutez-les dans `tailwind.config.ts`
+
+## Structure du Projet
+
+(Les autres sections de documentation du projet peuvent être ajoutées ici)
