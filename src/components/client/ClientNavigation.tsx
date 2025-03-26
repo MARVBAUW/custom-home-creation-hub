@@ -1,36 +1,55 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { User, FileText, Calendar, MessageSquare, Users, ChartGantt, Image, DollarSign } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  User, FileText, Calendar, MessageSquare, Users, ChartGantt, 
+  Image, DollarSign, ClipboardList, Building
+} from 'lucide-react';
 
 interface ClientNavigationProps {
   isAdminMode?: boolean;
 }
 
 const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
+  const location = useLocation();
+  
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+  
+  const linkClass = (path: string) => {
+    return isActive(path) 
+      ? "flex items-center p-3 rounded-md bg-khaki-50 text-khaki-800 font-medium" 
+      : "flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50";
+  };
+  
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
       <div className="p-4 border-b border-gray-200 bg-gray-50">
         <h2 className="font-medium">{isAdminMode ? 'Administration' : 'Navigation'}</h2>
       </div>
       <div className="p-2">
-        <Link to="/workspace/client-area" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+        <Link to="/workspace/client-area" className={linkClass("/workspace/client-area")}>
           <User className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Tableau de bord</span>
         </Link>
-        <Link to="/workspace/client-area/documents" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+        
+        <Link to="/workspace/client-area/documents" className={linkClass("/workspace/client-area/documents")}>
           <FileText className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Documents</span>
         </Link>
-        <Link to="/workspace/client-area/projects" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+        
+        <Link to="/workspace/client-area/projects" className={linkClass("/workspace/client-area/projects")}>
           <Calendar className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Suivi de projet</span>
         </Link>
-        <Link to="/workspace/client-area/messages" className="flex items-center p-3 rounded-md bg-khaki-50 text-khaki-800 font-medium">
+        
+        <Link to="/workspace/client-area/messages" className={linkClass("/workspace/client-area/messages")}>
           <MessageSquare className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Messages</span>
         </Link>
-        <Link to="/workspace/client-area/budget" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+        
+        <Link to="/workspace/client-area/budget" className={linkClass("/workspace/client-area/budget")}>
           <DollarSign className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Suivi budgétaire</span>
         </Link>
@@ -41,22 +60,32 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
             <div className="my-2 border-t border-gray-100"></div>
             <div className="px-3 py-1 text-xs font-semibold text-gray-500">Administration</div>
             
-            <Link to="/workspace/client-area/admin/clients" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+            <Link to="/workspace/client-area/admin/clients" className={linkClass("/workspace/client-area/admin/clients")}>
               <Users className="h-4 w-4 mr-3 flex-shrink-0" />
               <span>Gestion des clients</span>
             </Link>
             
-            <Link to="/workspace/client-area/admin/planning" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+            <Link to="/workspace/client-area/admin/projects" className={linkClass("/workspace/client-area/admin/projects")}>
+              <ClipboardList className="h-4 w-4 mr-3 flex-shrink-0" />
+              <span>Création de projet</span>
+            </Link>
+            
+            <Link to="/workspace/client-area/admin/planning" className={linkClass("/workspace/client-area/admin/planning")}>
               <ChartGantt className="h-4 w-4 mr-3 flex-shrink-0" />
               <span>Planification Gantt</span>
             </Link>
             
-            <Link to="/workspace/client-area/admin/gallery" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+            <Link to="/workspace/client-area/admin/gallery" className={linkClass("/workspace/client-area/admin/gallery")}>
               <Image className="h-4 w-4 mr-3 flex-shrink-0" />
               <span>Galerie photos</span>
             </Link>
             
-            <Link to="/workspace/client-area/admin/budget" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+            <Link to="/workspace/client-area/admin/contractors" className={linkClass("/workspace/client-area/admin/contractors")}>
+              <Building className="h-4 w-4 mr-3 flex-shrink-0" />
+              <span>Corps de métiers</span>
+            </Link>
+            
+            <Link to="/workspace/client-area/admin/budget" className={linkClass("/workspace/client-area/admin/budget")}>
               <DollarSign className="h-4 w-4 mr-3 flex-shrink-0" />
               <span>Gestion budgétaire</span>
             </Link>

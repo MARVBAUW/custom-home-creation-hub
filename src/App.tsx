@@ -34,6 +34,7 @@ import ClientProjects from "./pages/client/ClientProjects";
 import ClientMessages from "./pages/client/ClientMessages";
 import ClientBudget from "./pages/client/ClientBudget";
 import ClientDocumentation from "./pages/client/ClientDocumentation";
+import AdminProjectCreation from "./pages/client/AdminProjectCreation";
 
 // Auth Component
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -89,6 +90,19 @@ const App = () => (
                 <ClientBudget />
               </ProtectedRoute>
             } />
+            
+            {/* Admin Routes */}
+            <Route path="/workspace/client-area/admin/projects" element={
+              <ProtectedRoute>
+                <AdminProjectCreation />
+              </ProtectedRoute>
+            } />
+            <Route path="/workspace/client-area/admin/clients" element={
+              <ProtectedRoute>
+                <AdminProjectCreation />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
             
             <Route path="*" element={<NotFound />} />

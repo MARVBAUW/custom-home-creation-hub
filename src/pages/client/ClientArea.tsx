@@ -60,8 +60,10 @@ const ClientArea = () => {
               </p>
             </div>
             
-            {/* Admin Switch */}
-            <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
+            {/* Admin Switch always shown for testing */}
+            <div className="md:mt-0 mt-4">
+              <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
+            </div>
           </div>
         </Container>
       </section>
