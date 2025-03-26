@@ -5,29 +5,19 @@ import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
-import { toast } from '@/components/ui/use-toast';
 
 const SignIn = () => {
   // Use the custom auth hook with redirection if authenticated
-  const { isLoaded, isSignedIn } = useClientAuth({ redirectIfAuthenticated: true });
+  const { isLoaded, isSignedIn, authChecked } = useClientAuth({ 
+    redirectIfAuthenticated: true 
+  });
+  
   const navigate = useNavigate();
 
   // Add debugging logs
   useEffect(() => {
-    console.log('SignIn Component: Authentication State', { isSignedIn, isLoaded });
-    
-    // If user is already signed in, redirect to client area
-    if (isLoaded && isSignedIn) {
-      console.log('User already signed in, redirecting to client area');
-      toast({
-        title: 'Session détectée',
-        description: 'Redirection vers votre espace client...',
-        variant: 'default',
-      });
-      navigate('/workspace/client-area');
-    }
-  }, [isSignedIn, isLoaded, navigate]);
+    console.log('SignIn Component: Authentication State', { isSignedIn, isLoaded, authChecked });
+  }, [isSignedIn, isLoaded, authChecked]);
 
   return (
     <>
@@ -55,7 +45,7 @@ const SignIn = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            {isLoaded && (
+            {isLoaded ? (
               <ClerkSignIn 
                 path="/workspace/sign-in"
                 routing="path"
@@ -76,8 +66,7 @@ const SignIn = () => {
                   }
                 }}
               />
-            )}
-            {!isLoaded && (
+            ) : (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
               </div>

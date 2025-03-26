@@ -23,8 +23,10 @@ const ClientLoginCard = () => {
     console.log('Client area button clicked');
     
     if (isLoaded && isSignedIn) {
+      console.log('User is signed in, navigating to client area');
       navigate('/workspace/client-area');
     } else {
+      console.log('User is not signed in, navigating to sign-in page');
       navigate('/workspace/sign-in');
     }
   };

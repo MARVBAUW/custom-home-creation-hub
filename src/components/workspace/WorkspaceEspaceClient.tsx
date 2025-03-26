@@ -8,7 +8,6 @@ import ClientFeaturesOverview from './client/ClientFeaturesOverview';
 import ClientServiceCards from './client/ClientServiceCards';
 import ClientLoginCard from './client/ClientLoginCard';
 import SecurityAlert from './client/SecurityAlert';
-import { useClientAuth } from '@/hooks/useClientAuth';
 import { useUser } from '@clerk/clerk-react';
 
 const WorkspaceEspaceClient = () => {
@@ -60,25 +59,27 @@ const WorkspaceEspaceClient = () => {
         </div>
         
         <div>
-          {isLoaded && !isSignedIn ? (
-            <ClientLoginCard />
-          ) : isLoaded && isSignedIn ? (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="h-6 w-6 text-green-600" />
+          {isLoaded ? (
+            isSignedIn ? (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Check className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="font-semibold text-lg mb-2">Vous êtes connecté</h3>
+                  <p className="mb-4">
+                    Vous pouvez accéder à votre espace client pour consulter vos projets et documents.
+                  </p>
+                  <Link to="/workspace/client-area">
+                    <Button className="bg-green-600 hover:bg-green-700 text-white">
+                      Accéder à mon espace
+                    </Button>
+                  </Link>
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Vous êtes connecté</h3>
-                <p className="mb-4">
-                  Vous pouvez accéder à votre espace client pour consulter vos projets et documents.
-                </p>
-                <Link to="/workspace/client-area">
-                  <Button className="bg-green-600 hover:bg-green-700 text-white">
-                    Accéder à mon espace
-                  </Button>
-                </Link>
               </div>
-            </div>
+            ) : (
+              <ClientLoginCard />
+            )
           ) : (
             <div className="flex justify-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
