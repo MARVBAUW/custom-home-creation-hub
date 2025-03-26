@@ -28,7 +28,7 @@ const Equipe = () => {
               <div className="text-center md:text-left">
                 <div className="relative mb-6 inline-block">
                   <img 
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=774&auto=format&fit=crop" 
+                    src="/lovable-uploads/d674d37d-7176-457e-8dac-529981672eda.png" 
                     alt="Marvin Bauwens" 
                     className="w-64 h-64 object-cover rounded-full mx-auto md:mx-0"
                   />
@@ -67,7 +67,7 @@ const Equipe = () => {
               <div className="text-center md:text-left">
                 <div className="relative mb-6 inline-block">
                   <img 
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=774&auto=format&fit=crop" 
+                    src="/lovable-uploads/e861b499-9056-4f3d-9e51-ba393450c8ac.png" 
                     alt="Mael Allano" 
                     className="w-64 h-64 object-cover rounded-full mx-auto md:mx-0"
                   />

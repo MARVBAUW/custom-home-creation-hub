@@ -14,23 +14,15 @@ const Hero = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
-        {theme === 'light' ? (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ 
-              backgroundImage: `url('/lovable-uploads/301cd50b-4d12-403c-81c4-ef16c1deb588.png')`,
-              backgroundPosition: 'center',
-            }}
-          ></div>
-        ) : (
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ 
-              backgroundImage: `url('/lovable-uploads/54a0affa-2d4b-4a87-95da-bcf043f41c54.png')`,
-              backgroundPosition: 'center',
-            }}
-          ></div>
-        )}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: theme === 'dark' 
+              ? 'url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop")'
+              : 'url("https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop")',
+            backgroundPosition: 'center',
+          }}
+        ></div>
       </div>
       
       <Container className="relative z-10 mt-16">
