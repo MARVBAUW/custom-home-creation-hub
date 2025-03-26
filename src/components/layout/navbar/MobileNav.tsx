@@ -21,8 +21,8 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
   if (!isOpen) return null;
   
   return (
-    <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
-      <Container className="flex flex-col h-[calc(100vh-4rem)] py-2">
+    <div className="fixed top-14 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
+      <Container className="flex flex-col h-[calc(100vh-3.5rem)] py-2 px-4">
         <ul className="space-y-0.5 overflow-y-auto flex-1">
           {navLinks.map((item) => (
             <React.Fragment key={item.name}>
@@ -30,7 +30,7 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
               <li className="border-b border-stone-200">
                 <Link
                   to={item.path}
-                  className="block py-2.5 px-2 text-sm font-medium text-stone-800 hover:text-khaki-800"
+                  className="block py-2 px-2 text-sm font-medium text-stone-800 hover:text-khaki-800"
                 >
                   {item.name}
                 </Link>
@@ -70,10 +70,10 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
           </div>
           
           <div className="grid grid-cols-1 gap-2">
-            <Button href="/contact" className="w-full justify-center py-2 text-sm">
+            <Button href="/contact" className="w-full justify-center py-1.5 text-sm">
               Demander un devis
             </Button>
-            <Button href="/estimation" variant="outline" className="w-full justify-center py-2 text-sm">
+            <Button href="/estimation" variant="outline" className="w-full justify-center py-1.5 text-sm">
               Estimer mon projet
             </Button>
           </div>
