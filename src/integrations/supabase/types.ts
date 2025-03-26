@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      backlinks_logs: {
+        Row: {
+          backlinks_generated: number | null
+          created_at: string
+          id: string
+          message: string | null
+          new_backlinks: number | null
+          status: string
+          updated_backlinks: number | null
+        }
+        Insert: {
+          backlinks_generated?: number | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          new_backlinks?: number | null
+          status: string
+          updated_backlinks?: number | null
+        }
+        Update: {
+          backlinks_generated?: number | null
+          created_at?: string
+          id?: string
+          message?: string | null
+          new_backlinks?: number | null
+          status?: string
+          updated_backlinks?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

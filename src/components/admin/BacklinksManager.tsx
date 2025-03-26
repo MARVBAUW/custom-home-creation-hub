@@ -8,6 +8,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
 
+// Define types for the backlinks logs table
+interface BacklinksLog {
+  id: string;
+  created_at: string;
+  status: 'success' | 'error' | 'warning';
+  message: string;
+  backlinks_generated: number;
+  new_backlinks: number;
+  updated_backlinks: number;
+}
+
 const BacklinksManager = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -20,10 +31,16 @@ const BacklinksManager = () => {
   useEffect(() => {
     const fetchLastGenerationDate = async () => {
       try {
-        const { data } = await supabase.from('backlinks_logs')
+        const { data, error } = await supabase
+          .from('backlinks_logs')
           .select('created_at, status')
           .order('created_at', { ascending: false })
           .limit(1);
+        
+        if (error) {
+          console.error("Erreur lors de la récupération des logs de backlinks:", error);
+          return;
+        }
         
         if (data && data.length > 0 && data[0].status === 'success') {
           setLastGenerated(new Date(data[0].created_at).toLocaleString());
@@ -117,8 +134,8 @@ const BacklinksManager = () => {
           <Badge 
             variant={status === 'success' ? 'success' : status === 'error' ? 'destructive' : 'outline'} 
             className={status === 'success' ? "bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400" : 
-                       status === 'error' ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400" : 
-                       "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300"}
+                      status === 'error' ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400" : 
+                      "bg-gray-50 text-gray-700 dark:bg-gray-800 dark:text-gray-300"}
           >
             {status === 'success' ? 'Synchronisé' : status === 'error' ? 'Erreur' : 'En attente'}
           </Badge>
