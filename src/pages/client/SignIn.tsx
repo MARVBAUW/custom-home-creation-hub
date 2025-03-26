@@ -8,14 +8,15 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import { Loader2, UserPlus } from 'lucide-react';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { signIn, loading, error, user } = useAuth();
+  const { signIn, signUp, loading, error, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
 
   useEffect(() => {
     // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
@@ -40,7 +41,15 @@ const SignIn = () => {
     }
 
     console.log('Submitting login form with email:', email);
-    await signIn(email, password);
+    
+    if (isCreatingAccount) {
+      // Créer un nouveau compte
+      console.log('Creating new account with email:', email);
+      await signUp(email, password, { full_name: 'Nouvel Utilisateur' });
+    } else {
+      // Se connecter avec un compte existant
+      await signIn(email, password);
+    }
   };
 
   // Remplir automatiquement les champs pour faciliter le test
@@ -66,10 +75,12 @@ const SignIn = () => {
               Espace Client
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Connexion
+              {isCreatingAccount ? 'Créer un compte' : 'Connexion'}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Accédez à votre espace client pour suivre vos projets et consulter vos documents.
+              {isCreatingAccount 
+                ? 'Créez votre compte pour accéder à votre espace client personnel.' 
+                : 'Accédez à votre espace client pour suivre vos projets et consulter vos documents.'}
             </p>
           </div>
         </Container>
@@ -86,8 +97,14 @@ const SignIn = () => {
             ) : !user ? (
               <div className="space-y-6">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-800">Connectez-vous à votre compte</h2>
-                  <p className="text-gray-600 mt-2">Entrez vos identifiants pour accéder à votre espace client</p>
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    {isCreatingAccount ? 'Créez votre compte' : 'Connectez-vous à votre compte'}
+                  </h2>
+                  <p className="text-gray-600 mt-2">
+                    {isCreatingAccount 
+                      ? 'Remplissez le formulaire ci-dessous pour créer votre compte' 
+                      : 'Entrez vos identifiants pour accéder à votre espace client'}
+                  </p>
                 </div>
 
                 {(error || formError) && (
@@ -132,19 +149,29 @@ const SignIn = () => {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Connexion en cours...
+                        {isCreatingAccount ? 'Création en cours...' : 'Connexion en cours...'}
                       </>
-                    ) : 'Se connecter'}
+                    ) : (
+                      isCreatingAccount ? 'Créer mon compte' : 'Se connecter'
+                    )}
                   </Button>
                 </form>
 
                 <div className="mt-6 text-center">
-                  <p className="text-sm text-gray-600">
-                    Vous n'avez pas encore de compte ?{' '}
-                    <Link to="/workspace/sign-up" className="text-khaki-600 hover:text-khaki-700 font-medium">
-                      Créer un compte
-                    </Link>
-                  </p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={() => setIsCreatingAccount(!isCreatingAccount)}
+                  >
+                    {isCreatingAccount ? (
+                      'J\'ai déjà un compte'
+                    ) : (
+                      <>
+                        <UserPlus className="mr-2 h-4 w-4" />
+                        Créer un nouveau compte
+                      </>
+                    )}
+                  </Button>
                 </div>
               </div>
             ) : (

@@ -63,9 +63,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error('SignIn error:', error.message);
         let errorMessage = error.message;
         
-        // Rendre les messages d'erreur plus conviviaux
+        // Messages d'erreur plus détaillés pour aider au diagnostic
         if (errorMessage === 'Invalid login credentials') {
-          errorMessage = 'Email ou mot de passe incorrect';
+          console.log('Invalid credentials error details:', { email });
+          errorMessage = 'Email ou mot de passe incorrect. Vérifiez que votre compte existe.';
         }
         
         setError(errorMessage);
@@ -102,14 +103,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setError(null);
       
       console.log('Attempting to sign up with:', email);
-      // Modification pour supprimer la vérification d'e-mail
+      // Important: Désactivation complète de la vérification d'email
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: metadata || {},
-          // Suppression de la redirection par e-mail
-          emailRedirectTo: undefined
+          // Aucune redirection d'email ne sera utilisée
+          emailRedirectTo: undefined,
+          // IMPORTANTE: Désactiver explicitement la vérification d'email
+          emailConfirm: false
         }
       });
 
@@ -117,7 +120,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error('SignUp error:', error.message);
         let errorMessage = error.message;
         
-        // Rendre les messages d'erreur plus conviviaux
+        // Messages d'erreur plus détaillés
         if (errorMessage.includes('email') && errorMessage.includes('already')) {
           errorMessage = 'Cet email est déjà utilisé par un autre compte';
         }
@@ -131,8 +134,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         console.log('SignUp successful:', data);
         
-        // Si l'utilisateur est créé immédiatement (auto-confirm activé dans Supabase)
+        // Gérer le résultat de l'inscription
         if (data.session) {
+          // Connexion auto si la session est créée (la vérification d'email est désactivée)
+          console.log('User automatically signed in');
           setSession(data.session);
           setUser(data.user);
           toast({
@@ -142,7 +147,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           });
           navigate('/workspace/client-area');
         } else {
-          // Si la vérification d'e-mail est toujours requise
+          // Si la vérification d'email est toujours requise malgré nos paramètres
+          console.log('Email verification still required');
           toast({
             title: 'Inscription réussie',
             description: 'Vérifiez votre email pour confirmer votre compte',
