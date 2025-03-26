@@ -60,7 +60,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     toggleTheme
   };
 
-  // Return context provider with the value
   return (
     <ThemeContext.Provider value={contextValue}>
       {children}

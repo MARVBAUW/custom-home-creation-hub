@@ -27,8 +27,18 @@ const CTACTA = () => {
 
   return (
     <section className="py-16 bg-khaki-600 relative overflow-hidden">
+      {/* Arrière-plan avec image */}
+      <div className="absolute inset-0 opacity-15 z-0">
+        <img 
+          src="/lovable-uploads/54a0affa-2d4b-4a87-95da-bcf043f41c54.png" 
+          alt="" 
+          className="w-full h-full object-cover" 
+          aria-hidden="true"
+        />
+      </div>
+      
       <Container>
-        <div className="text-center max-w-3xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto relative z-10">
           <h2 className="text-3xl font-semibold mb-6 text-white">
             Prêt à concrétiser votre projet ?
           </h2>
@@ -40,7 +50,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className={theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}
+              className={theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-black text-khaki-600 hover:bg-black/90'}
             >
               Estimer mon projet
             </Button>
@@ -48,7 +58,7 @@ const CTACTA = () => {
               href="/contact" 
               onClick={handleContactClick}
               variant="outline" 
-              className={theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}
+              className="border-white/30 bg-transparent hover:bg-white/10 text-white"
             >
               Nous contacter
             </Button>
