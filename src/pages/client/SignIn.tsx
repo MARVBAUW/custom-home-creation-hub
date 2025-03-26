@@ -10,6 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, UserPlus } from 'lucide-react';
 
+// Liste des emails administrateurs pour l'affichage conditionnel
+const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
+
 const SignIn = () => {
   const navigate = useNavigate();
   const { signIn, signUp, loading, error, user } = useAuth();
@@ -17,6 +20,12 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [isAdminSignin, setIsAdminSignin] = useState(false);
+
+  // Vérifier si l'email entré est un email administrateur
+  useEffect(() => {
+    setIsAdminSignin(ADMIN_EMAILS.includes(email.toLowerCase()));
+  }, [email]);
 
   useEffect(() => {
     // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
@@ -45,21 +54,24 @@ const SignIn = () => {
     if (isCreatingAccount) {
       // Créer un nouveau compte
       console.log('Creating new account with email:', email);
-      await signUp(email, password, { full_name: 'Nouvel Utilisateur' });
+      await signUp(email, password, { full_name: isAdminSignin ? 'Administrateur' : 'Nouvel Utilisateur' });
     } else {
       // Se connecter avec un compte existant
+      console.log('Attempting to sign in with:', email);
       await signIn(email, password);
     }
   };
 
-  // Remplir automatiquement les champs pour faciliter le test
+  // Pré-remplir le champ email pour faciliter la connexion admin
   useEffect(() => {
-    // Préremplir les champs si vides
-    if (!email && !password) {
+    // Si l'URL contient un paramètre pour faciliter la connexion admin
+    const searchParams = new URLSearchParams(window.location.search);
+    const adminLogin = searchParams.get('admin');
+    if (adminLogin === 'true' && email === '') {
       setEmail('marvinbauwens@gmail.com');
       setPassword('Baullanowens1112.');
     }
-  }, [email, password]);
+  }, [email]);
 
   return (
     <>
@@ -107,6 +119,14 @@ const SignIn = () => {
                   </p>
                 </div>
 
+                {isAdminSignin && (
+                  <Alert className="mb-4 bg-amber-50 border-amber-200">
+                    <AlertDescription className="text-amber-700">
+                      <strong>Connexion administrateur</strong> - Accès privilégié pour {email}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
                 {(error || formError) && (
                   <Alert variant="destructive" className="mb-4">
                     <AlertDescription>
@@ -124,7 +144,9 @@ const SignIn = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="votre@email.com"
-                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      className={`border-gray-300 focus:ring-khaki-500 focus:border-khaki-500 ${
+                        isAdminSignin ? 'bg-amber-50 border-amber-200' : ''
+                      }`}
                       disabled={loading}
                     />
                   </div>
@@ -143,7 +165,11 @@ const SignIn = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white"
+                    className={`w-full text-white ${
+                      isAdminSignin 
+                        ? 'bg-amber-600 hover:bg-amber-700' 
+                        : 'bg-khaki-600 hover:bg-khaki-700'
+                    }`}
                     disabled={loading}
                   >
                     {loading ? (
@@ -152,7 +178,7 @@ const SignIn = () => {
                         {isCreatingAccount ? 'Création en cours...' : 'Connexion en cours...'}
                       </>
                     ) : (
-                      isCreatingAccount ? 'Créer mon compte' : 'Se connecter'
+                      isCreatingAccount ? 'Créer mon compte' : (isAdminSignin ? 'Connexion administrateur' : 'Se connecter')
                     )}
                   </Button>
                 </form>

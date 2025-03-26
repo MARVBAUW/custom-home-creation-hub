@@ -43,14 +43,49 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
         if (errorMessage === 'Invalid login credentials') {
           console.log('Invalid credentials error details:', { email });
           
-          // Si c'est un administrateur, vérifier si l'utilisateur existe
+          // Si c'est un administrateur, tenter de créer le compte si inexistant
           if (isAdminUser) {
-            // Vérifier si l'utilisateur existe mais que le mot de passe est incorrect
-            console.log('Checking if admin user exists...');
-            
-            // Note: On ne peut pas vérifier directement si un utilisateur existe via l'API publique
-            // Pour l'interface utilisateur, on donne simplement un message plus précis
-            errorMessage = 'Compte administrateur: Le mot de passe "Baullanowens1112." est peut-être incorrect. Vérifiez vos identifiants ou contactez le support.';
+            // Vérifier si l'administrateur tente de se connecter avec le mot de passe connu
+            if (password === 'Baullanowens1112.') {
+              console.log('Admin trying to sign in with known password, attempting signup');
+              
+              // Tentative de création du compte administrateur
+              const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                  data: {
+                    full_name: 'Administrateur',
+                    is_admin: true
+                  },
+                  emailRedirectTo: undefined,
+                }
+              });
+              
+              if (signUpError) {
+                console.error('Admin account creation failed:', signUpError);
+                errorMessage = `Échec de création du compte administrateur: ${signUpError.message}`;
+              } else if (signUpData.session) {
+                console.log('Admin account created and signed in successfully');
+                toast({
+                  title: 'Compte administrateur créé',
+                  description: 'Bienvenue, administrateur!',
+                  variant: 'default',
+                });
+                navigate('/workspace/client-area');
+                return; // Important: sortir de la fonction ici
+              } else {
+                console.log('Admin account created but verification might be required');
+                toast({
+                  title: 'Compte administrateur créé',
+                  description: 'Vérifiez votre email pour confirmer votre compte administrateur',
+                  variant: 'default',
+                });
+                return; // Important: sortir de la fonction ici
+              }
+            } else {
+              errorMessage = 'Compte administrateur: Le mot de passe "Baullanowens1112." est peut-être incorrect. Vérifiez vos identifiants ou contactez le support.';
+            }
           } else {
             errorMessage = 'Email ou mot de passe incorrect. Vérifiez vos identifiants.';
           }

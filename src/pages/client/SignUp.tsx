@@ -10,6 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 
+// Liste des emails administrateurs pour l'affichage conditionnel
+const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
+
 const SignUp = () => {
   const navigate = useNavigate();
   const { signUp, loading, error, user } = useAuth();
@@ -18,6 +21,12 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
+  const [isAdminSignup, setIsAdminSignup] = useState(false);
+
+  // Vérifier si l'email entré est un email administrateur
+  useEffect(() => {
+    setIsAdminSignup(ADMIN_EMAILS.includes(email.toLowerCase()));
+  }, [email]);
 
   useEffect(() => {
     // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
@@ -30,9 +39,17 @@ const SignUp = () => {
     e.preventDefault();
     setFormError(null);
 
-    if (!fullName.trim()) {
-      setFormError('Le nom complet est requis');
-      return;
+    // Pour les emails administrateurs, on supprime certaines validations
+    if (!isAdminSignup) {
+      if (!fullName.trim()) {
+        setFormError('Le nom complet est requis');
+        return;
+      }
+
+      if (password.length < 6) {
+        setFormError('Le mot de passe doit contenir au moins 6 caractères');
+        return;
+      }
     }
 
     if (!email.trim()) {
@@ -45,22 +62,24 @@ const SignUp = () => {
       return;
     }
 
-    if (password.length < 6) {
-      setFormError('Le mot de passe doit contenir au moins 6 caractères');
-      return;
-    }
-
     if (password !== confirmPassword) {
       setFormError('Les mots de passe ne correspondent pas');
       return;
     }
 
     try {
-      await signUp(email, password, { full_name: fullName });
+      await signUp(email, password, { full_name: fullName || (isAdminSignup ? 'Administrateur' : 'Nouvel Utilisateur') });
     } catch (err) {
       console.error('Error during signup:', err);
     }
   };
+
+  // Pré-remplir les champs pour l'administrateur
+  useEffect(() => {
+    if (isAdminSignup && !fullName) {
+      setFullName('Administrateur');
+    }
+  }, [isAdminSignup, fullName]);
 
   return (
     <>
@@ -76,10 +95,12 @@ const SignUp = () => {
               Espace Client
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Créer un compte
+              {isAdminSignup ? 'Créer un compte administrateur' : 'Créer un compte'}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Rejoignez Progineer et accédez à votre espace client personnalisé.
+              {isAdminSignup 
+                ? 'Création d\'un compte administrateur Progineer avec privilèges spéciaux.' 
+                : 'Rejoignez Progineer et accédez à votre espace client personnalisé.'}
             </p>
           </div>
         </Container>
@@ -101,7 +122,11 @@ const SignUp = () => {
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">Compte créé avec succès</h3>
-                <p className="text-gray-600 mb-6">Vérifiez votre email pour confirmer votre compte.</p>
+                <p className="text-gray-600 mb-6">
+                  {isAdminSignup 
+                    ? 'Votre compte administrateur est prêt. Vous pouvez maintenant vous connecter.'
+                    : 'Vérifiez votre email pour confirmer votre compte.'}
+                </p>
                 <Button 
                   onClick={() => navigate('/workspace/sign-in')} 
                   className="bg-khaki-600 hover:bg-khaki-700 text-white"
@@ -112,9 +137,20 @@ const SignUp = () => {
             ) : (
               <div className="space-y-6">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-semibold text-gray-800">Créez votre compte</h2>
+                  <h2 className="text-2xl font-semibold text-gray-800">
+                    {isAdminSignup ? 'Créer un compte administrateur' : 'Créez votre compte'}
+                  </h2>
                   <p className="text-gray-600 mt-2">Remplissez le formulaire ci-dessous pour vous inscrire</p>
                 </div>
+
+                {isAdminSignup && (
+                  <Alert className="mb-4 bg-amber-50 border-amber-200">
+                    <AlertDescription className="text-amber-700">
+                      Compte administrateur pour <strong>{email}</strong>.
+                      Le mot de passe spécifié sera utilisé pour ce compte avec des privilèges étendus.
+                    </AlertDescription>
+                  </Alert>
+                )}
 
                 {(error || formError) && (
                   <Alert variant="destructive" className="mb-4">
@@ -132,7 +168,7 @@ const SignUp = () => {
                       type="text" 
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      placeholder="Jean Dupont"
+                      placeholder={isAdminSignup ? "Administrateur" : "Jean Dupont"}
                       className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
                       disabled={loading}
                     />
@@ -146,7 +182,9 @@ const SignUp = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="votre@email.com"
-                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      className={`border-gray-300 focus:ring-khaki-500 focus:border-khaki-500 ${
+                        isAdminSignup ? 'bg-amber-50 border-amber-200' : ''
+                      }`}
                       disabled={loading}
                     />
                   </div>
@@ -177,7 +215,11 @@ const SignUp = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white"
+                    className={`w-full text-white ${
+                      isAdminSignup 
+                        ? 'bg-amber-600 hover:bg-amber-700' 
+                        : 'bg-khaki-600 hover:bg-khaki-700'
+                    }`}
                     disabled={loading}
                   >
                     {loading ? (
@@ -185,7 +227,7 @@ const SignUp = () => {
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Création en cours...
                       </>
-                    ) : 'Créer mon compte'}
+                    ) : isAdminSignup ? 'Créer le compte administrateur' : 'Créer mon compte'}
                   </Button>
                 </form>
 
