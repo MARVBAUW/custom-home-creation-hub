@@ -44,9 +44,9 @@ const Navbar = () => {
       )}
     >
       <Container size="lg">
-        <nav className="flex items-center w-full">
+        <nav className="flex items-center justify-between w-full">
           {/* Logo */}
-          <div className="flex-shrink-0 mr-4 relative z-50">
+          <div className="flex-shrink-0 relative z-50 mr-2">
             <Logo 
               variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 
@@ -54,27 +54,27 @@ const Navbar = () => {
             />
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="flex-grow">
+          {/* Desktop Navigation & Controls */}
+          <div className="flex-grow flex items-center justify-between">
             <DesktopNav 
               navLinks={navLinks} 
               openDropdown={openDropdown} 
               toggleDropdown={toggleDropdown} 
             />
-          </div>
-
-          {/* Theme Toggle and Mobile Menu Button */}
-          <div className="flex items-center gap-4 relative z-50 ml-2">
-            <ThemeToggle />
             
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
-              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {/* Theme Toggle and Mobile Menu Button */}
+            <div className="flex items-center gap-4 relative z-50 md:ml-2">
+              <ThemeToggle />
+              
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
+                aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              >
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </nav>
       </Container>

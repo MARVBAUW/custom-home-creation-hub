@@ -42,17 +42,17 @@ const PrestationsSubNav = () => {
 
   return (
     <div className="sticky top-20 z-30 w-full bg-gradient-to-r from-stone-50 to-white dark:from-stone-900 dark:to-stone-800 shadow-md border-b border-stone-200 dark:border-stone-700">
-      <div className="max-w-screen-xl mx-auto">
+      <div className="max-w-screen-xl mx-auto px-4">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="h-12 p-0 bg-transparent w-full flex justify-start overflow-x-auto no-scrollbar">
+          <TabsList className="h-12 p-1 rounded-md bg-stone-100/50 dark:bg-stone-800/50 w-full flex justify-center flex-wrap">
             {subLinks.map((link) => (
               <TabsTrigger 
                 key={link.id} 
                 value={link.id}
                 className={cn(
-                  "flex items-center whitespace-nowrap px-4 py-3 rounded-none border-b-2 data-[state=active]:border-progineer-gold data-[state=active]:text-progineer-dark dark:data-[state=active]:text-white border-transparent transition-all hover:bg-stone-100/50 dark:hover:bg-stone-700/50",
+                  "flex items-center whitespace-nowrap px-4 py-2 rounded-md data-[state=active]:bg-white dark:data-[state=active]:bg-stone-700 data-[state=active]:text-progineer-dark dark:data-[state=active]:text-white transition-all",
                   activeTab === link.id 
-                    ? "text-progineer-dark dark:text-white font-medium" 
+                    ? "text-progineer-dark dark:text-white font-medium shadow-sm" 
                     : "text-stone-600 dark:text-stone-300 hover:text-progineer-dark dark:hover:text-white"
                 )}
               >

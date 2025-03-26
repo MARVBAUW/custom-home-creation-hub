@@ -146,58 +146,61 @@ const Prestations = () => {
       {/* Services Overview */}
       <section className="py-16">
         <Container>
-          {/* Pour les particuliers */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-center">Pour les particuliers</h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-8">
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Construction de maisons individuelles sur mesure</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Rénovation et extension</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Aménagement et design d'espace</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Audit et diagnostic</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Accompagnement administratif et technique</span>
-              </li>
-            </ul>
-          </div>
+          {/* Pour les particuliers et professionnels - deux colonnes */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+            {/* Pour les particuliers */}
+            <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
+              <h2 className="text-2xl font-semibold mb-6 text-center text-khaki-800">Pour les particuliers</h2>
+              <ul className="space-y-3">
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Construction de maisons individuelles sur mesure</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Rénovation et extension</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Aménagement et design d'espace</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Audit et diagnostic</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Accompagnement administratif et technique</span>
+                </li>
+              </ul>
+            </div>
 
-          {/* Pour les professionnels */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-center">Pour les professionnels</h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-8">
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Construction ou aménagement de bureaux, commerces, hôtels</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Accompagnement des marchands de biens et investisseurs</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Solutions environnementales et énergétiques</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Diagnostics techniques</span>
-              </li>
-              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                <span className="mr-2 text-khaki-600">•</span>
-                <span>Dossiers de subvention</span>
-              </li>
-            </ul>
+            {/* Pour les professionnels */}
+            <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
+              <h2 className="text-2xl font-semibold mb-6 text-center text-khaki-800">Pour les professionnels</h2>
+              <ul className="space-y-3">
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Construction ou aménagement de bureaux, commerces, hôtels</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Accompagnement des marchands de biens et investisseurs</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Solutions environnementales et énergétiques</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Diagnostics techniques</span>
+                </li>
+                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                  <span className="mr-2 text-khaki-600 font-bold">•</span>
+                  <span>Dossiers de subvention</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Nos services détaillés */}
@@ -287,10 +290,10 @@ const Prestations = () => {
       <section className="py-16 bg-khaki-600 text-white">
         <Container>
           <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-3xl font-semibold mb-6">
+            <h2 className="text-3xl font-semibold mb-6 text-white">
               Prêt à concrétiser votre projet ?
             </h2>
-            <p className="text-xl opacity-90 mb-8">
+            <p className="text-xl opacity-90 mb-8 text-white">
               Contactez notre équipe pour discuter de vos besoins et obtenir un devis personnalisé.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -303,7 +306,7 @@ const Prestations = () => {
               <Button 
                 href="/contact" 
                 variant="outline" 
-                className="border-white/30 bg-transparent hover:bg-white/10"
+                className="border-white/30 bg-transparent hover:bg-white/10 text-white"
               >
                 Nous contacter
               </Button>
