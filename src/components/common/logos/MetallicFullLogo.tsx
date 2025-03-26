@@ -13,12 +13,32 @@ const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({ getSizeClasses }) =
   
   return (
     <div className={`${getSizeClasses()} w-full max-w-4xl mx-auto`}>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4096 2174" className="w-full h-auto">
-        <path 
-          d="M 0,0 L 0,843 L 1,844 L 0,845 L 0,2173 L 4095,2173 L 4095,0 L 3056,0 L 3055,1 L 3054,0 Z" 
-          fill={theme === 'dark' ? '#FFFFFF' : '#aaa05c'} 
-          className="transition-colors duration-300"
-        />
+      <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 2048 1087" className="w-full h-auto">
+        <defs>
+          <clipPath id="logoClipFull">
+            <rect x="0" y="0" width="2048" height="1087" />
+          </clipPath>
+          <linearGradient id="goldGradientFull" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={theme === 'dark' ? '#FFFFFF' : '#d4af37'}/>
+            <stop offset="100%" stopColor={theme === 'dark' ? '#CCCCCC' : '#90834b'}/>
+          </linearGradient>
+          <filter id="shineFull">
+            <feSpecularLighting in="SourceAlpha" surfaceScale="5" specularConstant="1" specularExponent="20" lightingColor="white" result="specOut">
+              <fePointLight x="-5000" y="-10000" z="20000"/>
+            </feSpecularLighting>
+            <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+            <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+          </filter>
+        </defs>
+
+        <g clipPath="url(#logoClipFull)">
+          <path 
+            d="M 0,0 L 0,421 L 1,422 L 0,423 L 0,1087 L 2048,1087 L 2048,0 L 1528,0 L 1527,1 L 1526,0 Z" 
+            fill="url(#goldGradientFull)" 
+            className="transition-colors duration-300"
+            filter="url(#shineFull)"
+          />
+        </g>
       </svg>
     </div>
   );
