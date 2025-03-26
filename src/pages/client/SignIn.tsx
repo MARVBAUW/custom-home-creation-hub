@@ -8,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { Loader2 } from 'lucide-react';
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ const SignIn = () => {
                   >
                     {loading ? (
                       <>
-                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Connexion en cours...
                       </>
                     ) : 'Se connecter'}

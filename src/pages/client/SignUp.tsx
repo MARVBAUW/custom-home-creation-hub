@@ -8,20 +8,20 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { Loader2 } from 'lucide-react';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const { signUp, loading, error, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
     if (user) {
-      console.log('User already signed in, redirecting to client area');
       navigate('/workspace/client-area');
     }
   }, [user, navigate]);
@@ -29,6 +29,11 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
+
+    if (!fullName.trim()) {
+      setFormError('Le nom complet est requis');
+      return;
+    }
 
     if (!email.trim()) {
       setFormError('L\'email est requis');
@@ -45,18 +50,23 @@ const SignUp = () => {
       return;
     }
 
-    const metadata = {
-      full_name: fullName.trim(),
-    };
+    if (password !== confirmPassword) {
+      setFormError('Les mots de passe ne correspondent pas');
+      return;
+    }
 
-    await signUp(email, password, metadata);
+    try {
+      await signUp(email, password, { full_name: fullName });
+    } catch (err) {
+      console.error('Error during signup:', err);
+    }
   };
 
   return (
     <>
       <Helmet>
-        <title>Inscription Espace Client | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Créez votre compte espace client Progineer pour suivre l'avancement de vos projets et accéder à vos documents." />
+        <title>Créer un compte | Progineer - Architecte & Maître d'œuvre en PACA</title>
+        <meta name="description" content="Créez votre compte Progineer pour accéder à votre espace client personnalisé." />
       </Helmet>
 
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
@@ -66,10 +76,10 @@ const SignUp = () => {
               Espace Client
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Inscription
+              Créer un compte
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Créez votre compte pour accéder à votre espace client et suivre l'avancement de vos projets.
+              Rejoignez Progineer et accédez à votre espace client personnalisé.
             </p>
           </div>
         </Container>
@@ -78,12 +88,28 @@ const SignUp = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            {loading && !user ? (
+            {loading ? (
               <div className="flex flex-col items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
-                <p className="text-gray-600">Vérification de l'authentification...</p>
+                <p className="text-gray-600">Création de votre compte...</p>
               </div>
-            ) : !user ? (
+            ) : user ? (
+              <div className="text-center py-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Compte créé avec succès</h3>
+                <p className="text-gray-600 mb-6">Vérifiez votre email pour confirmer votre compte.</p>
+                <Button 
+                  onClick={() => navigate('/workspace/sign-in')} 
+                  className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                >
+                  Se connecter
+                </Button>
+              </div>
+            ) : (
               <div className="space-y-6">
                 <div className="text-center mb-6">
                   <h2 className="text-2xl font-semibold text-gray-800">Créez votre compte</h2>
@@ -135,9 +161,18 @@ const SignUp = () => {
                       className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
                       disabled={loading}
                     />
-                    <p className="text-xs text-gray-500">
-                      Le mot de passe doit contenir au moins 6 caractères
-                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
+                    <Input 
+                      id="confirmPassword" 
+                      type="password" 
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
                   </div>
 
                   <Button 
@@ -147,10 +182,10 @@ const SignUp = () => {
                   >
                     {loading ? (
                       <>
-                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                        Inscription en cours...
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Création en cours...
                       </>
-                    ) : 'S\'inscrire'}
+                    ) : 'Créer mon compte'}
                   </Button>
                 </form>
 
@@ -162,16 +197,6 @@ const SignUp = () => {
                     </Link>
                   </p>
                 </div>
-              </div>
-            ) : (
-              <div className="text-center py-4">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">Vous êtes connecté</h3>
-                <p className="text-gray-600 mb-4">Redirection vers votre espace client...</p>
               </div>
             )}
           </div>
