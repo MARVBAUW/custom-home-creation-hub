@@ -3,7 +3,7 @@ import React from 'react';
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useFormContext } from "react-hook-form";
-import { ProjectDetails } from '@/types/project';
+import { ProjectDetails, TradeType } from '@/types/project';
 
 const technicalOffices = [
   { id: 'structure', label: 'BE STRUCTURE' },

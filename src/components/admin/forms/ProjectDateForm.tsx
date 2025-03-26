@@ -1,14 +1,14 @@
 
 import React, { useEffect } from 'react';
+import { useFormContext } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFormContext } from "react-hook-form";
+import { FormField, FormItem, FormControl } from "@/components/ui/form";
 import { calculatePhaseDates } from '@/utils/projectDateUtils';
 import { ProjectDetails, ProjectPhase } from '@/types/project';
-import { FormField, FormItem, FormControl } from '@/components/ui/form';
 
 const ProjectDateForm = () => {
-  const { watch, setValue, register, getValues } = useFormContext<ProjectDetails>();
+  const { watch, setValue, control } = useFormContext<ProjectDetails>();
   const selectedPhases = watch('phases');
   const automaticDates = watch('automaticDates');
   const workAmount = watch('workAmount');
@@ -29,6 +29,7 @@ const ProjectDateForm = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField
+          control={control}
           name="dates.global.startDate"
           render={({ field }) => (
             <FormItem>
@@ -44,6 +45,7 @@ const ProjectDateForm = () => {
           )}
         />
         <FormField
+          control={control}
           name="dates.global.endDate"
           render={({ field }) => (
             <FormItem>
@@ -69,6 +71,7 @@ const ProjectDateForm = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
+                control={control}
                 name={`dates.${phase}.startDate`}
                 render={({ field }) => (
                   <FormItem>
@@ -85,6 +88,7 @@ const ProjectDateForm = () => {
                 )}
               />
               <FormField
+                control={control}
                 name={`dates.${phase}.endDate`}
                 render={({ field }) => (
                   <FormItem>
