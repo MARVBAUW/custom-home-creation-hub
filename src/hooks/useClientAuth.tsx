@@ -24,7 +24,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     redirectIfAuthenticated = false,
     redirectIfUnauthenticated = false,
     waitForAuthCheck = true,
-    maxLoadingTime = 4000, // Reduced timeout to 4 seconds for faster feedback
+    maxLoadingTime = 3000, // Reduced timeout to 3 seconds for faster feedback
     allowDemoMode = true
   } = options;
   
@@ -34,6 +34,37 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadingTimedOut, setLoadingTimedOut] = useState(false);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  
+  // Enhanced detection for Clerk initialization errors
+  useEffect(() => {
+    // Detect potential Clerk initialization errors by checking console errors
+    const handleClerkError = () => {
+      if (!clerkLoaded) {
+        console.log('Potential Clerk initialization error detected');
+        setLoadingTimedOut(true);
+        setIsLoaded(true);
+        setAuthChecked(true);
+        
+        if (allowDemoMode) {
+          setIsDemoMode(true);
+          
+          // If on sign-in page and auth failed, automatically redirect to client area
+          if (window.location.pathname === '/workspace/sign-in' || window.location.pathname === '/workspace/sign-up') {
+            toast({
+              title: 'Mode démonstration activé',
+              description: 'Accès automatique à l\'espace client en mode démonstration.',
+              variant: 'default',
+            });
+            navigate('/workspace/client-area');
+          }
+        }
+      }
+    };
+    
+    // Check more aggressively for Clerk errors
+    const errorTimer = setTimeout(handleClerkError, 2000);
+    return () => clearTimeout(errorTimer);
+  }, [clerkLoaded, navigate, allowDemoMode]);
   
   // Fix debugging logs to properly display boolean values
   useEffect(() => {

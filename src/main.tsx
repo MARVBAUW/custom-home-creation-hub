@@ -22,9 +22,8 @@ if (import.meta.env.DEV) {
   console.log('- publishableKey:', PUBLISHABLE_KEY);
 }
 
-// Handle invalid clerk keys by providing a fallback mechanism
-const handleInvalidClerkKey = (err: Error) => {
-  console.warn('Clerk authentication error:', err.message);
+// Define a fallback mechanism for demo mode when Clerk authentication fails
+const enableDemoMode = () => {
   console.warn('Proceeding with demo mode (no authentication)');
   return null;
 };
@@ -34,7 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
       clerkJSVersion="5.56.0-snapshot.v20250312225817"
-      onInitializationError={handleInvalidClerkKey}
     >
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
