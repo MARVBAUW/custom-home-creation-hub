@@ -1,36 +1,27 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 import { ArrowRight } from 'lucide-react';
 import Logo from '@/components/common/Logo';
 import { useTheme } from '@/hooks/use-theme';
-
 const Hero = () => {
-  const { theme } = useTheme();
-  
-  return (
-    <section className="relative min-h-screen flex items-center py-24 overflow-hidden">
+  const {
+    theme
+  } = useTheme();
+  return <section className="relative min-h-screen flex items-center py-24 overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ 
-            backgroundImage: theme === 'dark' 
-              ? 'url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop")'
-              : 'url("https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop")',
-            backgroundPosition: 'center',
-          }}
-        ></div>
+        <div className="absolute inset-0 bg-cover bg-center" style={{
+        backgroundImage: theme === 'dark' ? 'url("https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop")' : 'url("https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop")',
+        backgroundPosition: 'center'
+      }}></div>
       </div>
       
       <Container className="relative z-10 mt-16">
         <div className="flex flex-col items-center animate-fade-in">
           {/* Centered metallic logo - LARGER */}
-          <div className="w-full flex justify-center mb-16">
-            <Logo variant="metallic-full" size="xl" className="mx-auto scale-150 transform" withTagline={true} />
-          </div>
+          
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
             Architecte & Maître d'œuvre en PACA
@@ -56,8 +47,6 @@ const Hero = () => {
           </div>
         </div>
       </Container>
-    </section>
-  );
+    </section>;
 };
-
 export default Hero;
