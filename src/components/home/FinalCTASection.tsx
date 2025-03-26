@@ -32,7 +32,7 @@ const FinalCTASection = () => {
               variant="outline" 
               className="border-white/40 bg-white/10 hover:bg-white/20 shadow-lg text-lg py-3"
             >
-              Nous contacter
+              Demander un devis
             </Button>
           </div>
         </div>

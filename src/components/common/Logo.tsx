@@ -12,9 +12,6 @@ const Logo: React.FC<LogoProps> = ({
   withTagline = false,
   asLink = true
 }) => {
-  // Afficher les propriétés pour débogage
-  console.log(`Logo rendering: variant=${variant}, size=${size}, withTagline=${withTagline}`);
-  
   const LogoContent = (
     <div className="flex flex-col items-center">
       <div className={cn(
@@ -25,14 +22,6 @@ const Logo: React.FC<LogoProps> = ({
       )}>
         <LogoRenderer variant={variant} size={size} />
       </div>
-      {withTagline && (
-        <span className={cn(
-          "text-xs mt-1 font-medium tracking-wider", 
-          variant === 'white' ? 'text-white/90' : 'text-progineer-gold'
-        )}>
-          MAÎTRISE D'ŒUVRE
-        </span>
-      )}
     </div>
   );
   

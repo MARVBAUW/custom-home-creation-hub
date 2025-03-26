@@ -10,7 +10,7 @@ const projects = [
     title: 'Villa en bord de mer',
     location: 'Martignas sur Jalles',
     category: 'Construction neuve',
-    description: 'Villa contemporaine avec piscine à débordement et vue sur la mer. Une architecture minimaliste qui s\'intègre parfaitement dans son environnement.',
+    description: 'Villa contemporaine avec piscine à débordement et vue sur la mer.',
     image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop'
   },
   {
@@ -18,7 +18,7 @@ const projects = [
     title: 'Restructuration d\'une friche',
     location: 'Lomme / Lille',
     category: 'Réhabilitation',
-    description: 'Transformation d\'un site industriel en espace de vie moderne et fonctionnel. Conservation des éléments architecturaux d\'origine.',
+    description: 'Transformation d\'un site industriel en espace de vie moderne et fonctionnel.',
     image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop'
   },
   {
@@ -26,33 +26,49 @@ const projects = [
     title: 'Logements collectifs',
     location: 'Clermont-Ferrand',
     category: 'Petit collectif',
-    description: 'Ensemble de logements collectifs alliant confort, esthétique et durabilité. Espaces communs végétalisés et matériaux biosourcés.',
+    description: 'Ensemble de logements collectifs alliant confort, esthétique et durabilité.',
     image: 'https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop'
   },
   {
     id: 4,
-    title: 'Rénovation appartement haussmannien',
-    location: 'Marseille',
-    category: 'Rénovation',
-    description: 'Rénovation complète d\'un appartement haussmannien alliant éléments d\'époque et design contemporain.',
+    title: 'Villa enclavée',
+    location: 'Laon',
+    category: 'Construction',
+    description: 'Villa moderne parfaitement intégrée dans son environnement naturel.',
     image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=2074&auto=format&fit=crop'
   },
   {
     id: 5,
-    title: 'Extension contemporaine',
-    location: 'Aix-en-Provence',
-    category: 'Extension',
-    description: 'Extension en ossature bois créant un espace de vie lumineux ouvert sur le jardin. Baies vitrées XXL et toiture végétalisée.',
+    title: 'Villa Golf du Sart',
+    location: 'Wasquehal',
+    category: 'Construction',
+    description: 'Résidence de luxe avec vue panoramique sur le golf.',
     image: 'https://images.unsplash.com/photo-1619542402915-dcaf30e4e2a1?q=80&w=2070&auto=format&fit=crop'
   },
   {
     id: 6,
-    title: 'Maison passive',
-    location: 'Toulon',
-    category: 'Construction écologique',
-    description: 'Maison à énergie positive utilisant des matériaux biosourcés et des technologies innovantes pour un impact environnemental minimal.',
+    title: 'Galerie Centre Commercial',
+    location: 'Roye',
+    category: 'Commercial',
+    description: 'Espace commercial moderne avec circulation fluide et design contemporain.',
     image: 'https://images.unsplash.com/photo-1606744858291-9763e4e785fa?q=80&w=2074&auto=format&fit=crop'
   },
+  {
+    id: 7,
+    title: 'Rénovation Énergétique',
+    location: 'St Quentin',
+    category: 'Rénovation',
+    description: 'Optimisation énergétique complète d\'un bâtiment existant.',
+    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop'
+  },
+  {
+    id: 8,
+    title: 'Villa Mougins',
+    location: 'Mougins (13)',
+    category: 'Construction',
+    description: 'Villa contemporaine avec jardin paysager.',
+    image: '/images/villa-mougins.jpg'
+  }
 ];
 
 const Realisations = () => {
@@ -132,18 +148,18 @@ const Realisations = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button href="/estimation">Estimer mon projet</Button>
-              <Button href="/contact" variant="outline">Prendre rendez-vous</Button>
+              <Button href="/contact" variant="outline">Demander un devis</Button>
             </div>
           </div>
         </Container>
       </section>
 
-      {/* SEO Footer */}
+      {/* Footer with company info */}
       <section className="py-8 bg-white">
         <Container>
           <div className="text-sm text-stone-500">
             <p>
-              Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Ingénieur, maître d'œuvre spécialisé en construction de maisons sur mesure, rénovation et extension dans toute la région Provence-Alpes-Côte d'Azur.
+              SAS PROGINEER - SIREN XXXXX - 24 Travers Chante Perdrix, 13010 Marseilles - PROGINEER 2024 © Tous droits réservés
             </p>
           </div>
         </Container>

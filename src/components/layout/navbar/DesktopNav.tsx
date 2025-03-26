@@ -53,7 +53,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
           Estimer mon projet
         </Button>
         <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
-          Contact
+          Demander un devis
         </Button>
       </div>
     </div>

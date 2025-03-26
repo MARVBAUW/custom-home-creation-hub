@@ -71,10 +71,10 @@ const MobileNav = ({ isOpen, navLinks }: MobileNavProps) => {
           
           <div className="grid grid-cols-2 gap-2">
             <Button href="/contact" className="w-full justify-center py-1 text-xs">
-              Contact
+              Demander un devis
             </Button>
-            <Button href="/workspace" variant="outline" className="w-full justify-center py-1 text-xs">
-              Espace
+            <Button href="/estimation" variant="outline" className="w-full justify-center py-1 text-xs">
+              Estimer mon projet
             </Button>
           </div>
         </div>
