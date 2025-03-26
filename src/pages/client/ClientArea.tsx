@@ -7,6 +7,7 @@ import ClientAreaWelcome from '@/components/client/ClientAreaWelcome';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
 import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaNotifications from '@/components/client/ClientAreaNotifications';
+import ClientAreaBudget from '@/components/client/ClientAreaBudget';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import AdminSwitch from '@/components/client/AdminSwitch';
 import { toast } from '@/hooks/use-toast';
@@ -25,6 +26,9 @@ const ClientArea = () => {
         : "Vous voyez maintenant l'interface client standard.",
     });
   };
+
+  console.log("ClientArea - User:", user);
+  console.log("ClientArea - Admin Mode:", isAdminMode);
 
   if (!isLoaded || !isSignedIn) {
     return <div className="flex justify-center items-center min-h-screen">
@@ -100,6 +104,10 @@ const ClientArea = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     <ClientAreaProjectProgress />
                     <ClientAreaRecentDocuments />
+                  </div>
+                  
+                  <div className="mt-6">
+                    <ClientAreaBudget />
                   </div>
                   
                   <div className="mt-6">

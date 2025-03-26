@@ -30,6 +30,10 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
           <MessageSquare className="h-4 w-4 mr-3 flex-shrink-0" />
           <span>Messages</span>
         </Link>
+        <Link to="/workspace/client-area/budget" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
+          <DollarSign className="h-4 w-4 mr-3 flex-shrink-0" />
+          <span>Suivi budgétaire</span>
+        </Link>
         
         {/* Options supplémentaires en mode admin */}
         {isAdminMode && (

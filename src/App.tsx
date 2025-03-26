@@ -32,6 +32,7 @@ import ClientArea from "./pages/client/ClientArea";
 import ClientDocuments from "./pages/client/ClientDocuments";
 import ClientProjects from "./pages/client/ClientProjects";
 import ClientMessages from "./pages/client/ClientMessages";
+import ClientBudget from "./pages/client/ClientBudget";
 import ClientDocumentation from "./pages/client/ClientDocumentation";
 
 // Auth Component
@@ -81,6 +82,11 @@ const App = () => (
             <Route path="/workspace/client-area/messages" element={
               <ProtectedRoute>
                 <ClientMessages />
+              </ProtectedRoute>
+            } />
+            <Route path="/workspace/client-area/budget" element={
+              <ProtectedRoute>
+                <ClientBudget />
               </ProtectedRoute>
             } />
             <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
