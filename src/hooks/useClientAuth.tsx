@@ -35,6 +35,22 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   const [loadingTimedOut, setLoadingTimedOut] = useState(false);
   const [isDemoMode, setIsDemoMode] = useState(false);
   
+  // Enhanced detection for Clerk initialization errors - using an even earlier check (2 seconds)
+  useEffect(() => {
+    const earlyErrorTimer = setTimeout(() => {
+      if (!clerkLoaded) {
+        console.log('Early Clerk initialization error check - potential issue detected');
+        
+        if (allowDemoMode) {
+          console.log('Preparing demo mode as fallback due to potential auth issues');
+          // Just prepare demo mode but don't activate immediately - wait for the full timeout
+        }
+      }
+    }, 2000); // Earlier check at 2 seconds
+    
+    return () => clearTimeout(earlyErrorTimer);
+  }, [clerkLoaded, allowDemoMode]);
+  
   // Enhanced detection for Clerk initialization errors
   useEffect(() => {
     // Detect potential Clerk initialization errors by checking console errors
