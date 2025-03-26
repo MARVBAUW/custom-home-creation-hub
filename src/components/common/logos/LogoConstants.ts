@@ -1,10 +1,15 @@
+
 export interface LogoProps {
-  variant?: 'default' | 'metallic' | 'white' | 'icon';
+  variant?: 'default' | 'metallic' | 'metallic-full' | 'white' | 'icon';
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   withTagline?: boolean;
-  asLink?: boolean; // Ajout de la propriété asLink
+  asLink?: boolean;
 }
+
+// TypeScript types for component props
+export type LogoVariant = 'default' | 'metallic' | 'metallic-full' | 'white' | 'icon';
+export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export const getSizeClasses = (size: string, variant: string) => {
   switch (size) {

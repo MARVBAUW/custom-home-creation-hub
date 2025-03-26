@@ -10,7 +10,7 @@ const Logo: React.FC<LogoProps> = ({
   size = 'md',
   className,
   withTagline = false,
-  asLink = true // New prop to control whether to render as a link
+  asLink = true
 }) => {
   // Afficher les propriétés pour débogage
   console.log(`Logo rendering: variant=${variant}, size=${size}, withTagline=${withTagline}`);
