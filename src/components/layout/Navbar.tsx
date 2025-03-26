@@ -25,7 +25,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsOpen(false);
     setOpenDropdown(null);
@@ -38,7 +37,7 @@ const Navbar = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm shadow-md",
+        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
         isScrolled || isOpen
           ? "bg-white/95 dark:bg-gray-900/95 py-2 border-b border-stone-200/80 dark:border-gray-700/50" 
           : "bg-white/80 py-3 border-b border-stone-200/50"
@@ -46,27 +45,23 @@ const Navbar = () => {
     >
       <Container size="lg">
         <nav className="flex items-center justify-between w-full">
-          {/* Logo */}
-          <div className="flex-shrink-0 relative z-50">
-            <Logo 
-              variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
-              size="md" 
-              asLink={true}
+          <div className="flex items-center gap-8">
+            <div className="flex-shrink-0 relative z-50">
+              <Logo 
+                variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
+                size="md" 
+                asLink={true}
+              />
+            </div>
+            <DesktopNav 
+              navLinks={navLinks} 
+              openDropdown={openDropdown} 
+              toggleDropdown={toggleDropdown} 
             />
           </div>
 
-          {/* Desktop Navigation */}
-          <DesktopNav 
-            navLinks={navLinks} 
-            openDropdown={openDropdown} 
-            toggleDropdown={toggleDropdown} 
-          />
-
-          {/* Theme Toggle and Mobile Menu Button */}
           <div className="flex items-center gap-4 relative z-50">
             <ThemeToggle />
-            
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
@@ -78,7 +73,6 @@ const Navbar = () => {
         </nav>
       </Container>
 
-      {/* Mobile Navigation */}
       <MobileNav 
         isOpen={isOpen} 
         navLinks={navLinks} 
