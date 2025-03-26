@@ -44,9 +44,9 @@ const Navbar = () => {
       )}
     >
       <Container size="lg">
-        <nav className="flex items-center justify-between w-full">
+        <nav className="flex items-center w-full">
           {/* Logo */}
-          <div className="flex-shrink-0 relative z-50">
+          <div className="flex-shrink-0 mr-4 relative z-50">
             <Logo 
               variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 
@@ -55,14 +55,16 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <DesktopNav 
-            navLinks={navLinks} 
-            openDropdown={openDropdown} 
-            toggleDropdown={toggleDropdown} 
-          />
+          <div className="flex-grow">
+            <DesktopNav 
+              navLinks={navLinks} 
+              openDropdown={openDropdown} 
+              toggleDropdown={toggleDropdown} 
+            />
+          </div>
 
           {/* Theme Toggle and Mobile Menu Button */}
-          <div className="flex items-center gap-4 relative z-50">
+          <div className="flex items-center gap-4 relative z-50 ml-2">
             <ThemeToggle />
             
             {/* Mobile Menu Button */}
