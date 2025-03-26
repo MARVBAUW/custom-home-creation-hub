@@ -17,9 +17,9 @@ const ClientLoginCard = () => {
     const timer = setTimeout(() => {
       if (!isLoaded) {
         setClerkTimeout(true);
-        console.log('Clerk loading timed out');
+        console.log('Clerk loading timed out in ClientLoginCard');
       }
-    }, 5000); // 5 seconds timeout
+    }, 4000); // 4 seconds timeout
     
     return () => clearTimeout(timer);
   }, [isLoaded]);
@@ -44,17 +44,14 @@ const ClientLoginCard = () => {
     if (isLoaded && isSignedIn) {
       console.log('User is signed in, navigating to client area');
       navigate('/workspace/client-area');
-    } else if (clerkTimeout) {
-      console.log('Clerk timed out, navigating to demo mode');
+    } else {
+      console.log('Navigating to client area in demo mode');
       toast({
         title: 'Mode démonstration activé',
         description: 'Vous accédez à la version de démonstration de l\'espace client.',
         variant: 'default',
       });
       navigate('/workspace/client-area');
-    } else {
-      console.log('User is not signed in, navigating to sign-in page');
-      navigate('/workspace/sign-in');
     }
   };
   
@@ -64,6 +61,12 @@ const ClientLoginCard = () => {
         <div className="flex flex-col items-center justify-center py-8">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-khaki-600 mb-4"></div>
           <p className="text-gray-600">Vérification de l'authentification...</p>
+          <button 
+            onClick={handleClientArea}
+            className="mt-4 text-sm text-khaki-600 hover:underline"
+          >
+            Accéder directement sans attendre
+          </button>
         </div>
       );
     }
@@ -135,8 +138,8 @@ const ClientLoginCard = () => {
           </Button>
           
           <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
-            <p className="font-medium">Accès sécurisé</p>
-            <p className="mt-1">L'authentification est requise pour accéder à votre espace client</p>
+            <p className="font-medium">Accès facilité</p>
+            <p className="mt-1">Accédez à l'aperçu de l'espace client en mode démonstration</p>
           </div>
         </div>
       </div>
@@ -148,7 +151,7 @@ const ClientLoginCard = () => {
       <CardHeader className="pb-3 bg-khaki-50 rounded-t-xl">
         <CardTitle className="text-xl">Accès à votre espace</CardTitle>
         <CardDescription>
-          Connectez-vous ou créez un compte pour accéder à votre espace personnel sécurisé
+          Connectez-vous ou accédez directement à votre espace personnel
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4 pt-6">

@@ -9,6 +9,7 @@ interface UseClientAuthOptions {
   redirectIfAuthenticated?: boolean;
   redirectIfUnauthenticated?: boolean;
   waitForAuthCheck?: boolean;
+  maxLoadingTime?: number;
 }
 
 /**
@@ -21,13 +22,15 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     redirectTo = '/workspace/sign-in',
     redirectIfAuthenticated = false,
     redirectIfUnauthenticated = false,
-    waitForAuthCheck = true
+    waitForAuthCheck = true,
+    maxLoadingTime = 6000 // Increased timeout to 6 seconds
   } = options;
   
   const { isLoaded: clerkLoaded, isSignedIn, user } = useUser();
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
   
   // Fix debugging logs to properly display boolean values
   useEffect(() => {
@@ -35,27 +38,36 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       isSignedIn, 
       clerkLoaded, 
       authChecked,
+      loadingTimedOut,
       redirectIfAuthenticated,
       redirectIfUnauthenticated
     });
-  }, [isSignedIn, clerkLoaded, authChecked, redirectIfAuthenticated, redirectIfUnauthenticated]);
+  }, [isSignedIn, clerkLoaded, authChecked, loadingTimedOut, redirectIfAuthenticated, redirectIfUnauthenticated]);
+  
+  // Set a timeout to handle cases where Clerk doesn't load properly
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!clerkLoaded) {
+        console.log('Clerk loading timed out after', maxLoadingTime, 'ms');
+        setLoadingTimedOut(true);
+        setIsLoaded(true); // Mark as loaded even though Clerk failed
+        setAuthChecked(true);
+      }
+    }, maxLoadingTime);
+    
+    return () => clearTimeout(timer);
+  }, [clerkLoaded, maxLoadingTime]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
-    // Do nothing if Clerk is still loading
-    if (!clerkLoaded) {
-      console.log('Clerk still loading, waiting...');
-      return;
-    }
-    
-    console.log('Clerk loaded, auth state:', isSignedIn);
-    
-    // Set timeout to mark auth as checked to prevent immediate redirects causing loops
-    setTimeout(() => {
+    // If clerk is loaded, use its authentication state
+    if (clerkLoaded) {
+      console.log('Clerk loaded, auth state:', isSignedIn);
+      
       setAuthChecked(true);
       setIsLoaded(true);
       
-      // Only redirect after a small delay to prevent redirection loops
+      // Handle redirects based on authentication state
       if (isSignedIn === true && redirectIfAuthenticated) {
         console.log('User authenticated, redirecting to client area');
         toast({
@@ -75,15 +87,31 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
         });
         navigate(redirectTo);
       }
-    }, 300); // Small delay to prevent immediate redirects
+      return;
+    }
     
-  }, [clerkLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
+    // If clerk loading timed out and we need to redirect unauthenticated users
+    if (loadingTimedOut && redirectIfUnauthenticated) {
+      console.log('Auth service timed out and redirectIfUnauthenticated is true');
+      // We'll now allow access to client area even with loading timeout
+      // instead of redirecting away, so users can see the demo mode
+    }
+  }, [
+    clerkLoaded, 
+    isSignedIn, 
+    navigate, 
+    redirectTo, 
+    redirectIfAuthenticated, 
+    redirectIfUnauthenticated, 
+    loadingTimedOut
+  ]);
   
   return { 
-    isLoaded, 
+    isLoaded: isLoaded || clerkLoaded, 
     clerkLoaded, 
     isSignedIn: isSignedIn === undefined ? false : isSignedIn, 
     user, 
-    authChecked 
+    authChecked,
+    loadingTimedOut
   };
 };

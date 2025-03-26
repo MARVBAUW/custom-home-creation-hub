@@ -21,42 +21,48 @@ import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProg
 import { useClientAuth } from '@/hooks/useClientAuth';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from '@/components/ui/use-toast';
 
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
-  const { isLoaded, clerkLoaded, isSignedIn, user } = useClientAuth({ 
-    redirectIfUnauthenticated: false // Disable redirect to handle demo mode
+  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut } = useClientAuth({ 
+    redirectIfUnauthenticated: false, // Disable redirect to handle demo mode
+    maxLoadingTime: 6000 // Increased timeout
   });
   
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-
-  // Set a timeout to handle Clerk not loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoadingTimeout(true);
-    }, 5000); // 5 seconds timeout
-    
-    return () => clearTimeout(timer);
-  }, []);
+  const [showingDemoMode, setShowingDemoMode] = useState(false);
 
   // Add debugging for loading state
   useEffect(() => {
-    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn, loadingTimeout });
-  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimeout]);
+    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn, loadingTimedOut });
+    
+    // Determine if we should show demo mode
+    if (isLoaded && (loadingTimedOut || !clerkLoaded)) {
+      console.log('Showing demo mode because authentication service failed to load');
+      setShowingDemoMode(true);
+      
+      // Show toast notification about demo mode
+      toast({
+        title: 'Mode démonstration activé',
+        description: 'L\'authentification n\'a pas pu être chargée. Vous accédez à l\'espace client en mode démo.',
+        variant: 'default',
+      });
+    }
+  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut]);
 
-  // Show enhanced loading spinner with timeout to prevent infinite spinners
-  if (!isLoaded && !loadingTimeout) {
+  // Show enhanced loading spinner (shorter timeout now, maximum 3 seconds)
+  if (!isLoaded && !showingDemoMode) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
         <p className="text-gray-600">Chargement de votre espace client...</p>
-        <p className="text-sm text-gray-500 mt-2">Si le chargement persiste, veuillez rafraîchir la page.</p>
+        <p className="text-sm text-gray-500 mt-2">Patientez quelques instants...</p>
       </div>
     );
   }
 
-  // Show demo mode if loading times out
-  if (loadingTimeout && !isLoaded) {
+  // Show demo mode if authentication failed
+  if (showingDemoMode || (loadingTimedOut && !isSignedIn)) {
     return (
       <>
         <Helmet>

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Check, BookOpen, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,18 +10,21 @@ import ClientLoginCard from './client/ClientLoginCard';
 import SecurityAlert from './client/SecurityAlert';
 import { useUser } from '@clerk/clerk-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { toast } from '@/components/ui/use-toast';
 
 const WorkspaceEspaceClient = () => {
+  const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useUser();
   const [clerkTimeout, setClerkTimeout] = useState(false);
   
-  // Set a timeout to handle Clerk not loading properly
+  // Set a timeout to handle Clerk not loading properly (reduced to 4 seconds)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!isLoaded) {
         setClerkTimeout(true);
+        console.log('Clerk loading timed out in WorkspaceEspaceClient');
       }
-    }, 5000); // 5 seconds timeout
+    }, 4000); // 4 seconds timeout
     
     return () => clearTimeout(timer);
   }, [isLoaded]);
@@ -34,6 +37,15 @@ const WorkspaceEspaceClient = () => {
       clerkTimeout 
     });
   }, [isSignedIn, isLoaded, clerkTimeout]);
+  
+  const handleDemoAccess = () => {
+    toast({
+      title: 'Mode démonstration activé',
+      description: 'Vous accédez à l\'espace client en mode démonstration.',
+      variant: 'default',
+    });
+    navigate('/workspace/client-area');
+  };
   
   return (
     <div className="space-y-6">
@@ -56,27 +68,34 @@ const WorkspaceEspaceClient = () => {
           </div>
         )}
         
-        {clerkTimeout && !isLoaded && (
+        {/* Enhanced direct access section */}
+        {(!isLoaded || clerkTimeout) && (
           <div className="mt-4">
-            <Alert className="border-amber-200 bg-amber-50">
-              <AlertTriangle className="h-4 w-4 text-amber-800" />
-              <AlertTitle className="text-amber-800">Problème de connexion détecté</AlertTitle>
-              <AlertDescription className="text-amber-700">
-                Le service d'authentification ne répond pas correctement. Vous pouvez accéder à la version de démonstration de l'espace client.
-              </AlertDescription>
-            </Alert>
+            {clerkTimeout && (
+              <Alert className="border-amber-200 bg-amber-50 mb-4">
+                <AlertTriangle className="h-4 w-4 text-amber-800" />
+                <AlertTitle className="text-amber-800">Service d'authentification indisponible</AlertTitle>
+                <AlertDescription className="text-amber-700">
+                  Vous pouvez accéder à l'espace client en mode démonstration sans authentification.
+                </AlertDescription>
+              </Alert>
+            )}
             
-            <div className="mt-4 space-x-4">
-              <Link to="/workspace/client-area">
-                <Button className="bg-khaki-600 hover:bg-khaki-700 text-white">
-                  Accéder en mode démo
-                </Button>
-              </Link>
-              <Link to="/workspace/sign-in">
-                <Button variant="outline">
-                  Essayer de se connecter
-                </Button>
-              </Link>
+            <div className="space-x-4">
+              <Button 
+                className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                onClick={handleDemoAccess}
+              >
+                Accéder à l'espace client
+              </Button>
+              
+              {clerkTimeout && (
+                <Link to="/workspace/sign-in">
+                  <Button variant="outline">
+                    Essayer de se connecter
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         )}
@@ -111,6 +130,14 @@ const WorkspaceEspaceClient = () => {
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600 mb-3"></div>
               <p className="text-gray-600">Vérification de l'authentification...</p>
               <p className="text-xs text-gray-500 mt-2">Patientez un instant...</p>
+              
+              {/* Add an early access option */}
+              <button 
+                onClick={handleDemoAccess}
+                className="mt-6 text-sm text-khaki-600 hover:underline"
+              >
+                Accéder directement sans attendre
+              </button>
             </div>
           ) : clerkTimeout ? (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -118,16 +145,17 @@ const WorkspaceEspaceClient = () => {
                 <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <AlertTriangle className="h-6 w-6 text-amber-600" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Accès temporaire</h3>
+                <h3 className="font-semibold text-lg mb-2">Accès en mode démonstration</h3>
                 <p className="text-gray-600 mb-4">
-                  Accédez à la démonstration de l'espace client sans authentification.
+                  Le service d'authentification n'est pas disponible actuellement.
                 </p>
                 <div className="space-y-3">
-                  <Link to="/workspace/client-area">
-                    <Button className="w-full bg-khaki-600 hover:bg-khaki-700 text-white">
-                      Mode démo
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white"
+                    onClick={handleDemoAccess}
+                  >
+                    Accéder en mode démonstration
+                  </Button>
                   <Link to="/workspace/sign-in">
                     <Button variant="outline" className="w-full">
                       Essayer de se connecter
