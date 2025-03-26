@@ -1,62 +1,65 @@
 
-import { ProjectPhase } from '@/types/project';
+import { ProjectDetails } from '@/types/project';
+import { addMonths, addDays, parseISO, formatISO } from 'date-fns';
 
-export const phaseColors: Record<ProjectPhase, string> = {
-  feasibility: "bg-blue-400",
-  dce: "bg-green-400",
-  act: "bg-yellow-400",
-  exe: "bg-purple-400",
-  reception: "bg-pink-400",
-  delivery: "bg-red-400"
+// Étiquettes pour les phases du projet
+export const phaseLabels: Record<string, string> = {
+  feasibility: 'Faisabilité',
+  dce: 'DCE',
+  act: 'ACT',
+  exe: 'Exécution',
+  reception: 'Réception',
+  delivery: 'Livraison',
 };
 
-export const phaseLabels: Record<ProjectPhase, string> = {
-  feasibility: "Faisabilité",
-  dce: "DCE",
-  act: "ACT",
-  exe: "EXE",
-  reception: "Réception",
-  delivery: "Livraison"
+// Couleurs pour les phases du projet
+export const phaseColors: Record<string, string> = {
+  feasibility: 'bg-blue-500 hover:bg-blue-600',
+  dce: 'bg-indigo-500 hover:bg-indigo-600',
+  act: 'bg-khaki-500 hover:bg-khaki-600',
+  exe: 'bg-amber-500 hover:bg-amber-600',
+  reception: 'bg-emerald-500 hover:bg-emerald-600',
+  delivery: 'bg-green-500 hover:bg-green-600',
 };
 
-// Mock data for demonstration
-export const mockProjects = [
+// Projets de démonstration pour l'affichage initial
+export const mockProjects: ProjectDetails[] = [
   {
-    projectName: "Centre commercial Marseille",
-    fileNumber: "PRG-2023-001",
-    workAmount: "1200000",
-    projectOwner: "SCI Méditerranée",
-    projectType: "commercial",
+    projectName: "Maison Dupont",
+    fileNumber: "P2023001",
+    workAmount: "320 000 €",
+    projectOwner: "M. et Mme Dupont",
+    projectType: "residential",
     adminAuthorization: "building_permit",
     automaticDates: true,
     dates: {
       global: {
-        startDate: "2023-10-01",
-        endDate: "2024-07-15"
+        startDate: formatISO(new Date()),
+        endDate: formatISO(addMonths(new Date(), 12))
       },
       feasibility: {
-        startDate: "2023-10-01",
-        endDate: "2023-10-30"
+        startDate: formatISO(new Date()),
+        endDate: formatISO(addDays(new Date(), 30))
       },
       dce: {
-        startDate: "2023-11-01",
-        endDate: "2023-12-15"
+        startDate: formatISO(addDays(new Date(), 31)),
+        endDate: formatISO(addDays(new Date(), 90))
       },
       act: {
-        startDate: "2023-12-16",
-        endDate: "2024-01-20"
+        startDate: formatISO(addDays(new Date(), 91)),
+        endDate: formatISO(addDays(new Date(), 120))
       },
       exe: {
-        startDate: "2024-01-21",
-        endDate: "2024-06-30"
+        startDate: formatISO(addDays(new Date(), 121)),
+        endDate: formatISO(addDays(new Date(), 300))
       },
       reception: {
-        startDate: "2024-07-01",
-        endDate: "2024-07-10"
+        startDate: formatISO(addDays(new Date(), 301)),
+        endDate: formatISO(addDays(new Date(), 330))
       },
       delivery: {
-        startDate: "2024-07-11",
-        endDate: "2024-07-15"
+        startDate: formatISO(addDays(new Date(), 331)),
+        endDate: formatISO(addDays(new Date(), 365))
       }
     },
     phases: {
@@ -73,41 +76,33 @@ export const mockProjects = [
     trades: {}
   },
   {
-    projectName: "Immeuble résidentiel Lyon",
-    fileNumber: "PRG-2023-002",
-    workAmount: "850000",
-    projectOwner: "Groupe Immobilier Rhône",
-    projectType: "residential",
+    projectName: "Immeuble Martin",
+    fileNumber: "P2023002",
+    workAmount: "750 000 €",
+    projectOwner: "SCI Martin",
+    projectType: "commercial",
     adminAuthorization: "building_permit",
     automaticDates: true,
     dates: {
       global: {
-        startDate: "2023-11-15",
-        endDate: "2024-08-30"
+        startDate: formatISO(addDays(new Date(), 15)),
+        endDate: formatISO(addMonths(addDays(new Date(), 15), 14))
       },
       feasibility: {
-        startDate: "2023-11-15",
-        endDate: "2023-12-15"
+        startDate: formatISO(addDays(new Date(), 15)),
+        endDate: formatISO(addDays(new Date(), 60))
       },
       dce: {
-        startDate: "2023-12-16",
-        endDate: "2024-01-31"
+        startDate: formatISO(addDays(new Date(), 61)),
+        endDate: formatISO(addDays(new Date(), 120))
       },
       act: {
-        startDate: "2024-02-01",
-        endDate: "2024-02-29"
+        startDate: formatISO(addDays(new Date(), 121)),
+        endDate: formatISO(addDays(new Date(), 180))
       },
       exe: {
-        startDate: "2024-03-01",
-        endDate: "2024-08-15"
-      },
-      reception: {
-        startDate: "2024-08-16",
-        endDate: "2024-08-25"
-      },
-      delivery: {
-        startDate: "2024-08-26",
-        endDate: "2024-08-30"
+        startDate: formatISO(addDays(new Date(), 181)),
+        endDate: formatISO(addDays(new Date(), 380))
       }
     },
     phases: {
@@ -115,8 +110,47 @@ export const mockProjects = [
       dce: true,
       act: true,
       exe: true,
-      reception: true,
-      delivery: true
+      reception: false,
+      delivery: false
+    },
+    team: {},
+    execution: {},
+    technicalOffices: {},
+    trades: {}
+  },
+  {
+    projectName: "Rénovation Dubois",
+    fileNumber: "P2023003",
+    workAmount: "180 000 €",
+    projectOwner: "M. Dubois",
+    projectType: "renovation",
+    adminAuthorization: "declaration",
+    automaticDates: true,
+    dates: {
+      global: {
+        startDate: formatISO(addDays(new Date(), -30)),
+        endDate: formatISO(addMonths(addDays(new Date(), -30), 8))
+      },
+      feasibility: {
+        startDate: formatISO(addDays(new Date(), -30)),
+        endDate: formatISO(addDays(new Date(), 0))
+      },
+      dce: {
+        startDate: formatISO(addDays(new Date(), 1)),
+        endDate: formatISO(addDays(new Date(), 45))
+      },
+      exe: {
+        startDate: formatISO(addDays(new Date(), 46)),
+        endDate: formatISO(addDays(new Date(), 200))
+      }
+    },
+    phases: {
+      feasibility: true,
+      dce: true,
+      act: false,
+      exe: true,
+      reception: false,
+      delivery: false
     },
     team: {},
     execution: {},

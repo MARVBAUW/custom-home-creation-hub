@@ -12,6 +12,7 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 import AdminSwitch from '@/components/client/AdminSwitch';
 import { useToast } from '@/hooks/use-toast';
 import AdminDashboard from '@/components/admin/AdminDashboard';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 const ClientArea = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
@@ -61,7 +62,7 @@ const ClientArea = () => {
               <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 dark:bg-khaki-900 dark:text-khaki-100 text-sm font-medium">
                 {isAdminMode ? 'Administration' : 'Espace Client'}
               </div>
-              <h1 className="text-3xl md:text-4xl font-semibold mb-2">
+              <h1 className="text-3xl md:text-4xl font-semibold mb-2 text-gray-900 dark:text-white">
                 {isAdminMode ? 'Tableau de bord administrateur' : 'Bienvenue dans votre espace client'}
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
@@ -72,14 +73,15 @@ const ClientArea = () => {
             </div>
             
             {/* Admin Switch always shown for testing */}
-            <div className="md:mt-0 mt-4">
+            <div className="md:mt-0 mt-4 flex items-center gap-3">
               <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
+              <ThemeToggle />
             </div>
           </div>
         </Container>
       </section>
 
-      <section className="py-16">
+      <section className="py-16 bg-white dark:bg-gray-950">
         <Container size="lg">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
