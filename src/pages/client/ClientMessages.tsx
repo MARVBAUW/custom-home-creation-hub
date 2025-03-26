@@ -8,6 +8,7 @@ import ClientNavigation from '@/components/client/ClientNavigation';
 import ConversationsList from '@/components/client/messages/ConversationsList';
 import MessageDisplay from '@/components/client/messages/MessageDisplay';
 import { ConversationType, MessageType } from '@/types/messaging';
+import AdminSwitch from '@/components/client/AdminSwitch';
 
 // Sample messages data
 const conversations: ConversationType[] = [
@@ -46,6 +47,18 @@ const ClientMessages = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
   const [activeConversation, setActiveConversation] = useState(conversations[0]);
   const [newMessage, setNewMessage] = useState('');
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  
+  // Handle admin mode toggle
+  const handleAdminModeToggle = (checked: boolean) => {
+    setIsAdminMode(checked);
+    toast({
+      title: checked ? "Mode administrateur activé" : "Mode client activé",
+      description: checked 
+        ? "Vous pouvez maintenant gérer les dossiers et les clients." 
+        : "Vous voyez maintenant l'interface client standard.",
+    });
+  };
   
   // Handle send message
   const handleSendMessage = (e: React.FormEvent) => {
@@ -119,15 +132,20 @@ const ClientMessages = () => {
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
               <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-                Espace Client
+                {isAdminMode ? 'Administration' : 'Espace Client'}
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                Messages
+                {isAdminMode ? 'Gestion des messages' : 'Messages'}
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mb-8">
-                Échangez avec vos interlocuteurs projet.
+                {isAdminMode 
+                  ? 'Gérez les conversations avec vos clients et collaborateurs.' 
+                  : 'Échangez avec vos interlocuteurs projet.'}
               </p>
             </div>
+            
+            {/* Admin Switch */}
+            <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
           </div>
         </Container>
       </section>
@@ -137,28 +155,42 @@ const ClientMessages = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
             <div className="lg:col-span-1">
-              <ClientNavigation />
+              <ClientNavigation isAdminMode={isAdminMode} />
             </div>
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
-                {/* Conversations List */}
-                <ConversationsList 
-                  conversations={conversations} 
-                  activeConversationId={activeConversation.id}
-                  onSelectConversation={setActiveConversation}
-                />
-                
-                {/* Messages */}
-                <MessageDisplay 
-                  conversation={activeConversation}
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  onSendMessage={handleSendMessage}
-                  user={user}
-                />
-              </div>
+              {isAdminMode ? (
+                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                  <h2 className="text-xl font-semibold mb-4">Panneau d'administration</h2>
+                  <p className="text-gray-600 mb-4">
+                    Cette interface vous permet de gérer les dossiers clients, les planifications, et les communications.
+                  </p>
+                  <div className="p-6 bg-red-50 border border-red-100 rounded-lg">
+                    <p className="text-sm text-red-700">
+                      Le mode administrateur est activé. Vous voyez maintenant l'interface de gestion complète.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
+                  {/* Conversations List */}
+                  <ConversationsList 
+                    conversations={conversations} 
+                    activeConversationId={activeConversation.id}
+                    onSelectConversation={setActiveConversation}
+                  />
+                  
+                  {/* Messages */}
+                  <MessageDisplay 
+                    conversation={activeConversation}
+                    newMessage={newMessage}
+                    setNewMessage={setNewMessage}
+                    onSendMessage={handleSendMessage}
+                    user={user}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </Container>
