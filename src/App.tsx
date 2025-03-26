@@ -1,7 +1,9 @@
 
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
 import Index from './pages/Index';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -28,38 +30,42 @@ import ProjectDetails from './pages/client/ProjectDetails';
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/a-propos" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/realisations-architecte-maison" element={<Realisations />} />
-        <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
-        <Route path="/estimation" element={<Estimation />} />
-        <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-        <Route path="/mentions-legales" element={<Legal />} />
-        <Route path="/cgv" element={<CGV />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/devenir-partenaire" element={<Partenaires />} />
-        <Route path="/parrainage-travaux" element={<Parrainage />} />
-        
-        {/* Workspace routes */}
-        <Route path="/workspace" element={<Workspace />} />
-        
-        {/* Client Area routes */}
-        <Route path="/workspace/client-area" element={<ClientArea />} />
-        <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
-        <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
-        <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
-        <Route path="/gallery" element={<ClientGallery />} />
-        
-        {/* Admin routes */}
-        <Route path="/workspace/client-area/admin/projects-overview" element={<AdminProjectsOverview />} />
-        <Route path="/workspace/client-area/admin/quotes" element={<AdminQuotes />} />
-        <Route path="/workspace/client-area/projects/:projectId" element={<ProjectDetails />} />
-        
-        {/* Client Documentation route */}
-        <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
-      </Routes>
+      <Navbar />
+      <main>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/a-propos" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/realisations-architecte-maison" element={<Realisations />} />
+          <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
+          <Route path="/estimation" element={<Estimation />} />
+          <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
+          <Route path="/mentions-legales" element={<Legal />} />
+          <Route path="/cgv" element={<CGV />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/devenir-partenaire" element={<Partenaires />} />
+          <Route path="/parrainage-travaux" element={<Parrainage />} />
+          
+          {/* Workspace routes */}
+          <Route path="/workspace" element={<Workspace />} />
+          
+          {/* Client Area routes */}
+          <Route path="/workspace/client-area" element={<ClientArea />} />
+          <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
+          <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
+          <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
+          <Route path="/gallery" element={<ClientGallery />} />
+          
+          {/* Admin routes */}
+          <Route path="/workspace/client-area/admin/projects-overview" element={<AdminProjectsOverview />} />
+          <Route path="/workspace/client-area/admin/quotes" element={<AdminQuotes />} />
+          <Route path="/workspace/client-area/projects/:projectId" element={<ProjectDetails />} />
+          
+          {/* Client Documentation route */}
+          <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
+        </Routes>
+      </main>
+      <Footer />
       <Toaster />
     </>
   );
