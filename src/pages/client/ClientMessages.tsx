@@ -13,7 +13,12 @@ import { ConversationType } from '@/types/messaging';
 const conversations: ConversationType[] = [
   {
     id: 1,
-    contact: { name: 'Marie Dupont', role: 'Chef de projet', avatar: '' },
+    contact: { 
+      name: 'Marie Dupont', 
+      role: 'Chef de projet', 
+      avatar: '',
+      status: 'online'
+    },
     messages: [
       { id: 1, text: 'Bonjour, je suis votre chef de projet attitré pour la construction de votre maison. N\'hésitez pas à me poser vos questions !', sender: 'them', date: '10/06/2023 09:32' },
       { id: 2, text: 'Bonjour Marie, merci pour votre message. Pouvez-vous me dire quand est prévue la prochaine réunion de chantier ?', sender: 'me', date: '10/06/2023 10:15' },
@@ -24,7 +29,12 @@ const conversations: ConversationType[] = [
   },
   {
     id: 2,
-    contact: { name: 'Alexandre Martin', role: 'Architecte', avatar: '' },
+    contact: { 
+      name: 'Alexandre Martin', 
+      role: 'Architecte', 
+      avatar: '',
+      status: 'offline'
+    },
     messages: [
       { id: 1, text: 'Bonjour, j\'ai terminé les plans modifiés suite à notre dernière discussion.', sender: 'them', date: '05/06/2023 14:22' },
       { id: 2, text: 'Ils sont disponibles dans votre espace documents. Merci de me faire part de vos retours.', sender: 'them', date: '05/06/2023 14:23' },
@@ -53,7 +63,7 @@ const ClientMessages = () => {
             {
               id: conv.messages.length + 1,
               text: newMessage,
-              sender: 'me',
+              sender: 'me' as const,
               date: new Date().toLocaleString('fr-FR', { 
                 day: '2-digit', 
                 month: '2-digit', 

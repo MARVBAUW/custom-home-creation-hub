@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Plus, Search } from 'lucide-react';
+import { Plus, Search, WifiOff, CircleDot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ConversationType } from '@/types/messaging';
@@ -58,15 +58,36 @@ const ConversationsList = ({
               onClick={() => onSelectConversation(conv)}
             >
               <div className="flex items-center">
-                <Avatar className="h-10 w-10">
-                  <AvatarImage src={conv.contact.avatar} />
-                  <AvatarFallback className="bg-khaki-200 text-khaki-700">
-                    {conv.contact.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={conv.contact.avatar} />
+                    <AvatarFallback className="bg-khaki-200 text-khaki-700">
+                      {conv.contact.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  {/* Indicateur de statut */}
+                  <div className={`absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full border-2 border-white ${
+                    conv.contact.status === 'online' ? 'bg-green-500' : 'bg-gray-300'
+                  }`}>
+                    {conv.contact.status === 'online' && 
+                      <CircleDot className="h-3.5 w-3.5 text-green-500" />
+                    }
+                    {conv.contact.status === 'offline' && 
+                      <WifiOff className="h-3.5 w-3.5 text-gray-300" />
+                    }
+                  </div>
+                </div>
                 <div className="ml-3">
                   <div className="font-medium">{conv.contact.name}</div>
-                  <div className="text-xs text-gray-500">{conv.contact.role}</div>
+                  <div className="text-xs text-gray-500 flex items-center">
+                    {conv.contact.role}
+                    <span className={`ml-2 inline-block h-2 w-2 rounded-full ${
+                      conv.contact.status === 'online' ? 'bg-green-500' : 'bg-gray-300'
+                    }`}></span>
+                    <span className="ml-1 text-xs">
+                      {conv.contact.status === 'online' ? 'En ligne' : 'Hors ligne'}
+                    </span>
+                  </div>
                 </div>
               </div>
               <div className="mt-2 text-sm text-gray-600 truncate">

@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, WifiOff, CircleDot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -42,15 +42,36 @@ const MessageDisplay = ({
     <div className="md:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm flex flex-col">
       <div className="p-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={conversation.contact.avatar} />
-            <AvatarFallback className="bg-khaki-200 text-khaki-700">
-              {conversation.contact.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={conversation.contact.avatar} />
+              <AvatarFallback className="bg-khaki-200 text-khaki-700">
+                {conversation.contact.name.split(' ').map(n => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            {/* Indicateur de statut */}
+            <div className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border-2 border-white ${
+              conversation.contact.status === 'online' ? 'bg-green-500' : 'bg-gray-300'
+            }`}></div>
+          </div>
           <div className="ml-3">
             <div className="font-medium">{conversation.contact.name}</div>
-            <div className="text-xs text-gray-500">{conversation.contact.role}</div>
+            <div className="text-xs text-gray-500 flex items-center">
+              {conversation.contact.role}
+              <span className="ml-2 flex items-center">
+                {conversation.contact.status === 'online' ? (
+                  <>
+                    <CircleDot className="h-3 w-3 text-green-500 mr-1" />
+                    <span className="text-green-600">En ligne</span>
+                  </>
+                ) : (
+                  <>
+                    <WifiOff className="h-3 w-3 text-gray-400 mr-1" />
+                    <span className="text-gray-500">Hors ligne</span>
+                  </>
+                )}
+              </span>
+            </div>
           </div>
         </div>
       </div>

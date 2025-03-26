@@ -3,6 +3,7 @@ export interface ContactType {
   name: string;
   role: string;
   avatar: string;
+  status: 'online' | 'offline';
 }
 
 export interface MessageType {
