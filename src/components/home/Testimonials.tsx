@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Container from '@/components/common/Container';
 import { Star, Quote, ExternalLink } from 'lucide-react';
@@ -97,7 +98,7 @@ const Testimonials = () => {
                 </div>
                 
                 <div className="flex mb-4">
-                  {Array(review.rating || 5)).fill(0).map((_, i) => (
+                  {Array(review.rating || 5).fill(0).map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
