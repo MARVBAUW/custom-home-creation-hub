@@ -27,8 +27,8 @@ const Hero = () => {
       
       <Container className="relative z-10 mt-16">
         <div className="flex flex-col items-center animate-fade-in">
-          {/* Logo centré en haut */}
-          <div className="mb-8">
+          {/* Logo centré en haut avec une taille ajustée */}
+          <div className="mb-8 w-64 md:w-72 lg:w-80">
             <Logo 
               variant="metallic" 
               size="xl" 

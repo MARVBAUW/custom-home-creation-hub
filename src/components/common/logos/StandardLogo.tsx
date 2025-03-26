@@ -15,18 +15,22 @@ const StandardLogo: React.FC<StandardLogoProps> = ({
 }) => {
   const { theme } = useTheme();
   
-  // Utiliser les nouveaux logos pour toutes les variantes
-  const logoSrc = theme === 'dark' || variant === 'white'
-    ? '/lovable-uploads/4d0c85b2-2421-42d1-aded-0c5d8f8cd32c.png'
-    : '/lovable-uploads/60ffa026-5b1b-4779-b1b3-274f12df16ac.png';
+  // Determine fill color based on theme and variant
+  const getFillColor = () => {
+    if (variant === 'white') return '#FFFFFF';
+    if (variant === 'gold') return '#aaa05c';
+    return theme === 'dark' ? '#FFFFFF' : '#aaa05c';
+  };
   
   return (
     <div className={getSizeClasses()}>
-      <img 
-        src={logoSrc} 
-        alt="Progineer Logo" 
-        className="w-full h-auto object-contain transition-all duration-300 hover:filter hover:drop-shadow-lg"
-      />
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4096 2174" className="w-full h-auto">
+        <path 
+          d="M 0,0 L 0,843 L 1,844 L 0,845 L 0,2173 L 4095,2173 L 4095,0 L 3056,0 L 3055,1 L 3054,0 Z" 
+          fill={getFillColor()} 
+          className="transition-colors duration-300"
+        />
+      </svg>
     </div>
   );
 };
