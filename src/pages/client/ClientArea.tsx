@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignOutButton } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
@@ -27,19 +27,32 @@ const ClientArea = () => {
     redirectTo: '/workspace/sign-in'
   });
 
-  // Show improved loading spinner if still loading authentication
+  // Add debugging for loading state
+  useEffect(() => {
+    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn });
+  }, [isLoaded, clerkLoaded, isSignedIn]);
+
+  // Show enhanced loading spinner with timeout to prevent infinite spinners
   if (!clerkLoaded || !isLoaded) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
         <p className="text-gray-600">Chargement de votre espace client...</p>
+        <p className="text-sm text-gray-500 mt-2">Si le chargement persiste, veuillez rafraîchir la page.</p>
       </div>
     );
   }
 
-  // At this point, user should be authenticated due to redirectIfUnauthenticated
+  // Safety check - if for some reason we're still not authenticated after loading
   if (!isSignedIn) {
-    return null;
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <p className="text-gray-600 mb-4">Vous devez être connecté pour accéder à cette page.</p>
+        <Link to="/workspace/sign-in">
+          <Button className="bg-khaki-600 hover:bg-khaki-700">Se connecter</Button>
+        </Link>
+      </div>
+    );
   }
 
   return (

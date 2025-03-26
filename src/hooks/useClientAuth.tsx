@@ -29,23 +29,32 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   
-  // Add debugging logs
+  // Fix debugging logs to properly display boolean values
   useEffect(() => {
-    console.log('useClientAuth: Authentication State', { isSignedIn, clerkLoaded, authChecked });
+    console.log('useClientAuth: Authentication State', { 
+      isSignedIn: isSignedIn, 
+      clerkLoaded, 
+      authChecked 
+    });
   }, [isSignedIn, clerkLoaded, authChecked]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
-    if (!clerkLoaded) return;
+    // Do nothing if Clerk is still loading
+    if (!clerkLoaded) {
+      console.log('Clerk still loading, waiting...');
+      return;
+    }
     
-    // Mark auth check as complete regardless of outcome
+    console.log('Clerk loaded, auth state:', isSignedIn);
+    
+    // Mark auth check as complete and set isLoaded to true
     setAuthChecked(true);
-    
-    // Mark fully loaded immediately for faster UI response
     setIsLoaded(true);
     
+    // Handle authenticated user redirection
     if (isSignedIn === true && redirectIfAuthenticated) {
-      console.log('User already signed in, redirecting to client area');
+      console.log('User authenticated, redirecting to client area');
       toast({
         title: 'Session détectée',
         description: 'Redirection vers votre espace client...',
@@ -54,8 +63,9 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       navigate('/workspace/client-area');
     }
     
+    // Handle unauthenticated user redirection
     if (isSignedIn === false && redirectIfUnauthenticated) {
-      console.log('User not signed in, redirecting to sign in page');
+      console.log('User not authenticated, redirecting to sign in page');
       toast({
         title: 'Authentification requise',
         description: 'Veuillez vous connecter pour accéder à cette page.',

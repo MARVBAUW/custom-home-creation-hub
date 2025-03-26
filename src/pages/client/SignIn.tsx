@@ -4,17 +4,24 @@ import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useClientAuth } from '@/hooks/useClientAuth';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const SignIn = () => {
   // Use the custom auth hook with redirection if authenticated
-  const { clerkLoaded, isSignedIn, authChecked } = useClientAuth({ 
+  const { clerkLoaded, isSignedIn, authChecked, isLoaded } = useClientAuth({ 
     redirectIfAuthenticated: true 
   });
   
-  // Add debugging logs
+  // Add improved debugging logs
   useEffect(() => {
-    console.log('SignIn Component: Authentication State', { isSignedIn, clerkLoaded, authChecked });
-  }, [isSignedIn, clerkLoaded, authChecked]);
+    console.log('SignIn Component: Authentication State', { 
+      isSignedIn, 
+      clerkLoaded, 
+      authChecked,
+      isLoaded
+    });
+  }, [isSignedIn, clerkLoaded, authChecked, isLoaded]);
 
   return (
     <>
@@ -43,8 +50,9 @@ const SignIn = () => {
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
             {!clerkLoaded ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
+                <p className="text-gray-600">Chargement du formulaire de connexion...</p>
               </div>
             ) : (
               <ClerkSignIn 

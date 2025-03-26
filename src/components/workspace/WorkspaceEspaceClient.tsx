@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Check, BookOpen } from 'lucide-react';
@@ -12,6 +12,11 @@ import { useUser } from '@clerk/clerk-react';
 
 const WorkspaceEspaceClient = () => {
   const { isSignedIn, isLoaded } = useUser();
+  
+  // Add debugging for loading and authentication state
+  useEffect(() => {
+    console.log('WorkspaceEspaceClient: Auth State', { isSignedIn, isLoaded });
+  }, [isSignedIn, isLoaded]);
   
   return (
     <div className="space-y-6">
@@ -60,8 +65,9 @@ const WorkspaceEspaceClient = () => {
         
         <div>
           {!isLoaded ? (
-            <div className="flex justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600"></div>
+            <div className="flex flex-col justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600 mb-3"></div>
+              <p className="text-gray-600">Vérification de l'authentification...</p>
             </div>
           ) : isSignedIn ? (
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
