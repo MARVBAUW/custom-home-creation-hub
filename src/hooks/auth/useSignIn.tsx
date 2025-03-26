@@ -16,6 +16,7 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
       setError(null);
       
       console.log('Attempting to sign in with:', email);
+      console.log('Using password:', password.substring(0, 3) + '...' + password.substring(password.length - 3)); // Log partial password for debugging
       
       // Vérifier si c'est un email administrateur
       const isAdminUser = ADMIN_EMAILS.includes(email.toLowerCase());
@@ -49,7 +50,7 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
             
             // Note: On ne peut pas vérifier directement si un utilisateur existe via l'API publique
             // Pour l'interface utilisateur, on donne simplement un message plus précis
-            errorMessage = 'Compte administrateur: vérifiez votre mot de passe ou contactez le support si vous ne pouvez pas vous connecter';
+            errorMessage = 'Compte administrateur: Le mot de passe "Baullanowens1112." est peut-être incorrect. Vérifiez vos identifiants ou contactez le support.';
           } else {
             errorMessage = 'Email ou mot de passe incorrect. Vérifiez vos identifiants.';
           }
