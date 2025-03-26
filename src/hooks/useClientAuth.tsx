@@ -38,10 +38,13 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   useEffect(() => {
     if (!clerkLoaded) return;
     
+    // Mark auth check as complete regardless of outcome
+    setAuthChecked(true);
+    
     // Mark fully loaded after a short delay to ensure UI transitions properly
     const loadingTimeout = setTimeout(() => {
       setIsLoaded(true);
-    }, 500);
+    }, 300);
     
     if (isSignedIn && redirectIfAuthenticated) {
       console.log('User already signed in, redirecting to client area');
@@ -62,9 +65,6 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       });
       navigate(redirectTo);
     }
-    
-    // Mark auth check as complete regardless of outcome
-    setAuthChecked(true);
     
     return () => clearTimeout(loadingTimeout);
   }, [clerkLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);

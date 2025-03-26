@@ -42,7 +42,11 @@ const SignIn = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            {clerkLoaded ? (
+            {!clerkLoaded ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+              </div>
+            ) : (
               <ClerkSignIn 
                 path="/workspace/sign-in"
                 routing="path"
@@ -63,10 +67,6 @@ const SignIn = () => {
                   }
                 }}
               />
-            ) : (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
-              </div>
             )}
           </div>
         </Container>

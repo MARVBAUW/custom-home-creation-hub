@@ -59,31 +59,29 @@ const WorkspaceEspaceClient = () => {
         </div>
         
         <div>
-          {isLoaded ? (
-            isSignedIn ? (
-              <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Check className="h-6 w-6 text-green-600" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-2">Vous êtes connecté</h3>
-                  <p className="mb-4">
-                    Vous pouvez accéder à votre espace client pour consulter vos projets et documents.
-                  </p>
-                  <Link to="/workspace/client-area">
-                    <Button className="bg-green-600 hover:bg-green-700 text-white">
-                      Accéder à mon espace
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              <ClientLoginCard />
-            )
-          ) : (
+          {!isLoaded ? (
             <div className="flex justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600"></div>
             </div>
+          ) : isSignedIn ? (
+            <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="h-6 w-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Vous êtes connecté</h3>
+                <p className="mb-4">
+                  Vous pouvez accéder à votre espace client pour consulter vos projets et documents.
+                </p>
+                <Link to="/workspace/client-area">
+                  <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    Accéder à mon espace
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <ClientLoginCard />
           )}
           <SecurityAlert />
         </div>

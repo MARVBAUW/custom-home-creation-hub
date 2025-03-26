@@ -21,15 +21,13 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
-  const { isLoaded, clerkLoaded, isSignedIn, user, authChecked } = useClientAuth({ 
+  const { clerkLoaded, isSignedIn, user } = useClientAuth({ 
     redirectIfUnauthenticated: true,
     redirectTo: '/workspace/sign-in'
   });
 
-  // Show loading spinner if authentication is still being verified
-  const isLoading = !clerkLoaded || (!isSignedIn && !authChecked);
-
-  if (isLoading) {
+  // Show loading spinner if still loading authentication
+  if (!clerkLoaded) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
