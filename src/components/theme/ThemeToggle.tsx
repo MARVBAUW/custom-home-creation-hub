@@ -4,10 +4,11 @@ import { Moon, Sun } from "lucide-react";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 type ThemeType = "light" | "dark";
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const [theme, setTheme] = useState<ThemeType>("light");
   const { toast } = useToast();
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
@@ -44,7 +45,12 @@ export function ThemeToggle() {
       variant="outline" 
       size="icon" 
       onClick={toggleTheme}
-      className="rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 relative z-50"
+      className={cn(
+        "rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 relative z-50 btn-enhanced",
+        "shadow-md border-2",
+        "dark:border-gray-700 light:border-gray-300",
+        className
+      )}
       aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
     >
       {theme === "light" ? (

@@ -42,32 +42,32 @@ const Footer = () => {
               <ul className="space-y-3 text-center md:text-left">
                 <li>
                   <Link to="/" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Accueil
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Accueil
                   </Link>
                 </li>
                 <li>
                   <Link to="/estimation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Estimer mon projet
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Estimer mon projet
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations-maitre-oeuvre" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos prestations
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Nos prestations
                   </Link>
                 </li>
                 <li>
                   <Link to="/realisations-architecte-maison" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos réalisations
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Nos réalisations
                   </Link>
                 </li>
                 <li>
                   <Link to="/equipe-maitrise-oeuvre" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Notre équipe
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Notre équipe
                   </Link>
                 </li>
                 <li>
                   <Link to="/contact" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Contact
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Contact
                   </Link>
                 </li>
               </ul>
@@ -79,27 +79,27 @@ const Footer = () => {
               <ul className="space-y-3 text-center md:text-left">
                 <li>
                   <Link to="/prestations-maitre-oeuvre#construction" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Construction sur mesure
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Construction sur mesure
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations-maitre-oeuvre#renovation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Rénovation énergétique
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Rénovation énergétique
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations-maitre-oeuvre#extension" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Extension & agrandissement
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Extension & agrandissement
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations-maitre-oeuvre#optimisation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Optimisation d'espace
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Optimisation d'espace
                   </Link>
                 </li>
                 <li>
                   <Link to="/prestations-maitre-oeuvre#design" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Design d'espace
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Design d'espace
                   </Link>
                 </li>
               </ul>
