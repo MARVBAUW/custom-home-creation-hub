@@ -18,19 +18,21 @@ import ClientAreaNotifications from '@/components/client/ClientAreaNotifications
 import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
 import { useClientAuth } from '@/hooks/useClientAuth';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
-  const { clerkLoaded, isSignedIn, user } = useClientAuth({ 
+  const { isLoaded, clerkLoaded, isSignedIn, user } = useClientAuth({ 
     redirectIfUnauthenticated: true,
     redirectTo: '/workspace/sign-in'
   });
 
-  // Show loading spinner if still loading authentication
-  if (!clerkLoaded) {
+  // Show improved loading spinner if still loading authentication
+  if (!clerkLoaded || !isLoaded) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+      <div className="flex flex-col justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
+        <p className="text-gray-600">Chargement de votre espace client...</p>
       </div>
     );
   }

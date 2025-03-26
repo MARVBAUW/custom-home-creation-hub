@@ -41,12 +41,10 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     // Mark auth check as complete regardless of outcome
     setAuthChecked(true);
     
-    // Mark fully loaded after a short delay to ensure UI transitions properly
-    const loadingTimeout = setTimeout(() => {
-      setIsLoaded(true);
-    }, 300);
+    // Mark fully loaded immediately for faster UI response
+    setIsLoaded(true);
     
-    if (isSignedIn && redirectIfAuthenticated) {
+    if (isSignedIn === true && redirectIfAuthenticated) {
       console.log('User already signed in, redirecting to client area');
       toast({
         title: 'Session détectée',
@@ -56,7 +54,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       navigate('/workspace/client-area');
     }
     
-    if (!isSignedIn && redirectIfUnauthenticated) {
+    if (isSignedIn === false && redirectIfUnauthenticated) {
       console.log('User not signed in, redirecting to sign in page');
       toast({
         title: 'Authentification requise',
@@ -65,8 +63,6 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       });
       navigate(redirectTo);
     }
-    
-    return () => clearTimeout(loadingTimeout);
   }, [clerkLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
   
   return { isLoaded, clerkLoaded, isSignedIn, user, authChecked };
