@@ -14,7 +14,7 @@ const Hero = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundImage: `url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=2071&auto=format&fit=crop')`,
             backgroundPosition: 'center',
           }}
         ></div>
@@ -24,7 +24,7 @@ const Hero = () => {
         <div className="flex flex-col items-start animate-fade-in">
           {/* Centered metallic logo */}
           <div className="w-full flex justify-center mb-12">
-            <Logo variant="metallic-full" size="lg" className="mx-auto" />
+            <Logo variant="metallic-full" size="lg" className="mx-auto" withTagline={true} />
           </div>
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">

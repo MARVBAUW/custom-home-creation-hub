@@ -1,33 +1,31 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@/components/common/Container';
 import { Star, Quote } from 'lucide-react';
-
-const testimonials = [
-  {
-    quote: "Progineer a su transformer notre vision en réalité. Leur équipe a été à l'écoute de nos besoins et a créé une maison qui correspond parfaitement à notre style de vie.",
-    author: "Marie et Pierre",
-    location: "Marseille",
-    project: "Construction maison 180m²",
-    rating: 5
-  },
-  {
-    quote: "Un accompagnement sans faille de la conception à la livraison. Les équipes de Progineer ont su gérer les imprévus avec professionnalisme.",
-    author: "Laurent M.",
-    location: "Toulon",
-    project: "Rénovation complète",
-    rating: 5
-  },
-  {
-    quote: "Excellente communication tout au long du projet. Le résultat final a dépassé nos attentes et le budget a été respecté à la lettre.",
-    author: "Sophie D.",
-    location: "Saint-Tropez",
-    project: "Extension 45m²",
-    rating: 5
-  }
-];
+import { fetchGoogleBusinessData } from '@/utils/googleBusiness';
 
 const Testimonials = () => {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        setLoading(true);
+        const businessData = await fetchGoogleBusinessData();
+        if (businessData && businessData.reviews) {
+          setReviews(businessData.reviews);
+        }
+      } catch (error) {
+        console.error('Error loading Google reviews:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadReviews();
+  }, []);
+
   return (
     <section className="py-20 bg-stone-50">
       <Container>
@@ -44,29 +42,45 @@ const Testimonials = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div 
-              key={index}
-              className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 relative"
-            >
-              <div className="absolute top-6 right-6 text-khaki-200 opacity-30">
-                <Quote className="h-12 w-12" />
+          {loading ? (
+            // Placeholder loaders while fetching reviews
+            Array(3).fill(0).map((_, index) => (
+              <div key={index} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 animate-pulse">
+                <div className="flex mb-4">
+                  {Array(5).fill(0).map((_, i) => (
+                    <div key={i} className="h-5 w-5 mr-1 bg-gray-200 rounded-full" />
+                  ))}
+                </div>
+                <div className="h-20 bg-gray-200 rounded mb-6"></div>
+                <div className="h-5 w-40 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 w-32 bg-gray-200 rounded"></div>
               </div>
-              
-              <div className="flex mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                ))}
+            ))
+          ) : (
+            reviews.slice(0, 3).map((review, index) => (
+              <div 
+                key={index}
+                className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 relative"
+              >
+                <div className="absolute top-6 right-6 text-khaki-200 opacity-30">
+                  <Quote className="h-12 w-12" />
+                </div>
+                
+                <div className="flex mb-4">
+                  {Array(review.rating || 5).fill(0).map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                  ))}
+                </div>
+                
+                <p className="text-gray-700 mb-6 relative z-10">"{review.text}"</p>
+                
+                <div>
+                  <div className="font-semibold">{review.author_name}</div>
+                  <div className="text-sm text-gray-500">{review.relative_time_description || "Client satisfait"}</div>
+                </div>
               </div>
-              
-              <p className="text-gray-700 mb-6 relative z-10">"{testimonial.quote}"</p>
-              
-              <div>
-                <div className="font-semibold">{testimonial.author}</div>
-                <div className="text-sm text-gray-500">{testimonial.location} - {testimonial.project}</div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </Container>
     </section>

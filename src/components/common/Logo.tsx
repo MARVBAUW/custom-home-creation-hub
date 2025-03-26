@@ -11,13 +11,16 @@ const Logo: React.FC<LogoProps> = ({
   className,
   withTagline = false
 }) => {
+  // Afficher les propriétés pour débogage
+  console.log(`Logo rendering: variant=${variant}, size=${size}, withTagline=${withTagline}`);
+  
   return (
     <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
       <div className={cn(
         "transition-all duration-300 hover:scale-105", 
         getSizeClasses(size, variant), 
         variant === 'icon' ? 'logo-icon' : 'logo', 
-        'object-contain'
+        'object-contain flex justify-center items-center'
       )}>
         <LogoRenderer variant={variant} size={size} />
       </div>
