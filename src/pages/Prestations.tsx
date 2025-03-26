@@ -118,7 +118,7 @@ const Prestations = () => {
     <>
       <Helmet>
         <title>Nos prestations | Architecte et Maître d'œuvre PACA - Progineer</title>
-        <meta name="description" content="Découvrez nos prestations de maîtrise d'œuvre à Marseille et en PACA : construction sur mesure, rénovation énergétique, extension et design d'espace." />
+        <meta name="description" content="Progineer propose des services de maîtrise d'œuvre pour particuliers et professionnels : construction, rénovation, aménagement et optimisation énergétique." />
         <meta name="keywords" content="maître d'œuvre PACA, architecte Marseille, construction maison sur mesure, rénovation énergétique, extension maison, optimisation espace" />
       </Helmet>
 
@@ -133,8 +133,8 @@ const Prestations = () => {
               Services de maîtrise d'œuvre
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              De la conception à la réalisation, Progineer vous accompagne dans tous vos projets de construction, 
-              rénovation et aménagement en région PACA.
+              Progineer propose un accompagnement global pour vos projets de construction, de rénovation, 
+              d'aménagement et d'optimisation énergétique, que vous soyez particulier ou professionnel.
             </p>
           </div>
         </Container>
@@ -146,6 +146,61 @@ const Prestations = () => {
       {/* Services Overview */}
       <section className="py-16">
         <Container>
+          {/* Pour les particuliers */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6 text-center">Pour les particuliers</h2>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-8">
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Construction de maisons individuelles sur mesure</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Rénovation et extension</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Aménagement et design d'espace</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Audit et diagnostic</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Accompagnement administratif et technique</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Pour les professionnels */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6 text-center">Pour les professionnels</h2>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto mb-8">
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Construction ou aménagement de bureaux, commerces, hôtels</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Accompagnement des marchands de biens et investisseurs</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Solutions environnementales et énergétiques</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Diagnostics techniques</span>
+              </li>
+              <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                <span className="mr-2 text-khaki-600">•</span>
+                <span>Dossiers de subvention</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Nos services détaillés */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {services.map((service) => (
               <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300 scroll-mt-32">
@@ -181,9 +236,10 @@ const Prestations = () => {
       <section className="py-16 bg-stone-50 border-y border-stone-100">
         <Container>
           <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl font-semibold mb-6">Notre processus d'accompagnement</h2>
+            <h2 className="text-3xl font-semibold mb-6">Processus Projet</h2>
             <p className="text-gray-600">
-              Une méthodologie éprouvée pour mener à bien votre projet, de la première idée à la livraison finale.
+              Nous suivons une méthodologie rigoureuse : analyse du besoin, étude de faisabilité, conception, 
+              choix des entreprises, pilotage du chantier, suivi administratif et remise des clés.
             </p>
           </div>
 
@@ -227,64 +283,6 @@ const Prestations = () => {
         </Container>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-16">
-        <Container>
-          <div className="flex flex-col md:flex-row gap-12">
-            <div className="md:w-1/2">
-              <h2 className="text-3xl font-semibold mb-6">Pourquoi choisir Progineer ?</h2>
-              <div className="space-y-6">
-                <div className="flex items-start">
-                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
-                    <span className="text-khaki-800 font-semibold">01</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Expertise technique</h3>
-                    <p className="text-gray-600">
-                      Notre équipe combine des compétences en architecture, ingénierie et gestion de projet pour une approche complète et efficace.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
-                    <span className="text-khaki-800 font-semibold">02</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Communication transparente</h3>
-                    <p className="text-gray-600">
-                      Nous vous tenons informés à chaque étape de l'avancement de votre projet et restons disponibles pour répondre à vos questions.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="w-12 h-12 rounded-full bg-khaki-100 flex items-center justify-center mr-4 shrink-0">
-                    <span className="text-khaki-800 font-semibold">03</span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Maîtrise des coûts</h3>
-                    <p className="text-gray-600">
-                      Nos méthodes de travail optimisées nous permettent de respecter scrupuleusement les budgets établis, sans mauvaises surprises.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="md:w-1/2">
-              <div className="h-full rounded-2xl overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1460574283810-2aab119d8511?q=80&w=3512&auto=format&fit=crop" 
-                  alt="Architecture moderne" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </Container>
-      </section>
-
       {/* CTA section */}
       <section className="py-16 bg-khaki-600 text-white">
         <Container>
@@ -314,60 +312,15 @@ const Prestations = () => {
         </Container>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-16">
-        <Container>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold mb-4">Questions fréquentes</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Vous avez des questions sur nos services ? Consultez nos réponses ci-dessous ou contactez-nous directement.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold mb-3">Quelle est la différence entre un maître d'œuvre et un architecte ?</h3>
-              <p className="text-gray-600">
-                Le maître d'œuvre, comme Progineer, coordonne et supervise l'ensemble du projet de construction, tandis que l'architecte se concentre davantage sur la conception. Nous travaillons en collaboration avec des architectes lorsque nécessaire pour certains projets.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold mb-3">Quel est le délai moyen pour un projet de construction ?</h3>
-              <p className="text-gray-600">
-                Les délais varient selon la nature et l'ampleur du projet. Pour une maison individuelle, comptez environ 8 à 12 mois entre la conception et la livraison. Une extension prend généralement 4 à 6 mois, et une rénovation 2 à 6 mois selon sa complexité.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold mb-3">Quelles garanties offrez-vous sur vos prestations ?</h3>
-              <p className="text-gray-600">
-                Nous sommes couverts par une assurance décennale et une responsabilité civile professionnelle. De plus, nous garantissons la conformité des travaux avec les plans et le respect des normes en vigueur, notamment la RE2020.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <h3 className="text-xl font-semibold mb-3">Intervenez-vous sur toute la région PACA ?</h3>
-              <p className="text-gray-600">
-                Oui, nous intervenons dans toute la région Provence-Alpes-Côte d'Azur, notamment à Marseille, Toulon, Nice, Cannes, Saint-Tropez, Fréjus et leurs environs. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre zone.
-              </p>
-            </div>
-          </div>
-
-          <div className="text-center mt-10">
-            <Link to="/faq" className="text-khaki-600 hover:text-khaki-800 font-medium">
-              Voir toutes les questions fréquentes →
-            </Link>
-          </div>
-        </Container>
-      </section>
-
       {/* SEO Footer */}
       <section className="py-8 bg-stone-50 border-t border-stone-200">
         <Container>
           <div className="text-sm text-stone-500">
             <p>
-              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation énergétique et extension. Nos architectes et ingénieurs assurent la maîtrise d'ouvrage complète de votre projet. Optimisation des espaces, design d'intérieur et montage administratif pour particuliers et professionnels dans toute la région Provence-Alpes-Côte d'Azur.
+              Progineer propose un accompagnement global pour vos projets de construction, de rénovation, d'aménagement et 
+              d'optimisation énergétique, que vous soyez particulier ou professionnel. Nos services incluent la construction 
+              de maisons individuelles sur mesure, la rénovation et l'extension, l'aménagement et le design d'espace, ainsi 
+              que l'audit, le diagnostic et l'accompagnement administratif et technique dans toute la région PACA.
             </p>
           </div>
         </Container>

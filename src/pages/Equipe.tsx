@@ -13,7 +13,7 @@ const Equipe = () => {
   return (
     <>
       <Helmet>
-        <title>Notre équipe | Progineer - Architectes & Maîtres d'œuvre en PACA</title>
+        <title>Rencontrez Notre Équipe d'Experts en Maîtrise d'œuvre</title>
         <meta name="description" content="Découvrez l'équipe de Progineer, des professionnels expérimentés en architecture et maîtrise d'œuvre pour vos projets de construction et rénovation à Marseille et en PACA." />
         <meta name="keywords" content="équipe architecture, professionnels maîtrise d'œuvre, experts construction PACA, architectes Marseille" />
       </Helmet>

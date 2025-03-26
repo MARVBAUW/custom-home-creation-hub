@@ -46,12 +46,12 @@ const Navbar = () => {
     >
       <Container size="lg">
         <nav className="flex items-center justify-between w-full">
-          {/* Logo - using Link directly instead of wrapping Logo with Link */}
+          {/* Logo */}
           <div className="flex-shrink-0 relative z-50">
             <Logo 
               variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 
-              asLink={true} // Explicitly set to render as a link
+              asLink={true}
             />
           </div>
 
@@ -62,7 +62,7 @@ const Navbar = () => {
             toggleDropdown={toggleDropdown} 
           />
 
-          {/* Theme Toggle */}
+          {/* Theme Toggle and Mobile Menu Button */}
           <div className="flex items-center gap-4 relative z-50">
             <ThemeToggle />
             

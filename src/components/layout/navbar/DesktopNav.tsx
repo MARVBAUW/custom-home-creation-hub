@@ -19,7 +19,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
     if (location.pathname === item.path) return true;
     
     if (item.subLinks) {
-      // Pour les éléments avec sous-liens, vérifier si un sous-lien correspond à la location actuelle
+      // Check if any sublink matches the current location
       return item.subLinks.some(subLink => {
         const [path, hash] = subLink.path.split('#');
         return location.pathname === path && (!hash || location.hash === `#${hash}`);
