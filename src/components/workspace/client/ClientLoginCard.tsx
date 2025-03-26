@@ -15,6 +15,7 @@ const ClientLoginCard = () => {
     isSignedIn, 
     isLoaded, 
     loadingTimedOut,
+    isDemoMode,
     accessClientAreaInDemoMode 
   } = useClientAuth({ 
     allowDemoMode: true,
@@ -25,6 +26,9 @@ const ClientLoginCard = () => {
   
   // Set a timeout to handle Clerk not loading properly
   useEffect(() => {
+    // Skip if already in demo mode
+    if (isDemoMode) return;
+    
     const timer = setTimeout(() => {
       if (!isLoaded) {
         setClerkTimeout(true);
@@ -33,28 +37,45 @@ const ClientLoginCard = () => {
     }, 3000); // 3 seconds timeout for faster experience
     
     return () => clearTimeout(timer);
-  }, [isLoaded]);
+  }, [isLoaded, isDemoMode]);
   
   useEffect(() => {
     console.log('ClientLoginCard: Auth State', { 
       isSignedIn, 
       isLoaded, 
       clerkTimeout,
-      loadingTimedOut
+      loadingTimedOut,
+      isDemoMode
     });
     
     // If authentication fails to load, automatically use the timeout state
     if (loadingTimedOut && !isLoaded) {
       setClerkTimeout(true);
     }
-  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut]);
+  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut, isDemoMode]);
   
   const handleLogin = () => {
+    // If we're in demo mode and the user tries to log in,
+    // use the demo area access instead
+    if (isDemoMode) {
+      console.log('Demo mode active, redirecting to demo client area');
+      accessClientAreaInDemoMode();
+      return;
+    }
+    
     console.log('Login button clicked, navigating to sign-in page');
     navigate('/workspace/sign-in');
   };
   
   const handleSignUp = () => {
+    // If we're in demo mode and the user tries to sign up,
+    // use the demo area access instead
+    if (isDemoMode) {
+      console.log('Demo mode active, redirecting to demo client area');
+      accessClientAreaInDemoMode();
+      return;
+    }
+    
     console.log('Sign up button clicked, navigating to sign-up page');
     navigate('/workspace/sign-up');
   };
@@ -65,6 +86,25 @@ const ClientLoginCard = () => {
   };
   
   const renderContent = () => {
+    // If we're in demo mode, show the demo access buttons immediately
+    if (isDemoMode) {
+      return (
+        <div className="space-y-4">
+          <div className="border border-amber-200 bg-amber-50 text-amber-700 p-3 rounded-md">
+            <p className="font-medium">Service d'authentification indisponible</p>
+            <p className="mt-1 text-sm">Vous pouvez accéder à l'espace client en mode démonstration</p>
+          </div>
+          
+          <Button 
+            className="w-full bg-khaki-600 hover:bg-khaki-700"
+            onClick={handleClientArea}
+          >
+            Accéder en mode démo
+          </Button>
+        </div>
+      );
+    }
+    
     if (!isLoaded && !clerkTimeout) {
       return (
         <div className="flex flex-col items-center justify-center py-8">
