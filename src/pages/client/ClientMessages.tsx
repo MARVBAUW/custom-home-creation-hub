@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -115,6 +116,11 @@ const ClientMessages = () => {
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
     </div>;
   }
+
+  // Récupérer l'email ou le nom d'utilisateur pour l'affichage de l'avatar
+  const userInitial = user?.email ? user.email[0].toUpperCase() : 'C';
+  // Récupérer l'URL de l'avatar s'il existe dans les métadonnées de l'utilisateur
+  const avatarUrl = user?.user_metadata?.avatar_url || null;
 
   return (
     <>
@@ -259,9 +265,9 @@ const ClientMessages = () => {
                         </div>
                         {message.sender === 'me' && (
                           <Avatar className="h-8 w-8 mt-1 ml-2">
-                            <AvatarImage src={user?.imageUrl} />
+                            <AvatarImage src={avatarUrl} />
                             <AvatarFallback className="bg-blue-200 text-blue-700">
-                              {user?.firstName?.[0] || 'C'}
+                              {userInitial}
                             </AvatarFallback>
                           </Avatar>
                         )}
