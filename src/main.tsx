@@ -13,8 +13,8 @@ import './index.css';
 // Create a client
 const queryClient = new QueryClient();
 
-// Clerk publishable key - Using a valid publishable key format
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_bGlnaHQtZ3JvdXBlci03NC5jbGVyay5hY2NvdW50cy5kZXYk";
+// Clerk publishable key format (utilisez votre propre clé Clerk)
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_cHJvamVjdC1sYXJrLTM2LmNsZXJrLmFjY291bnRzLmRldiQ";
 
 if (!PUBLISHABLE_KEY) {
   console.error("Missing Clerk Publishable Key!");

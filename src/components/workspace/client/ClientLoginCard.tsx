@@ -27,24 +27,20 @@ const ClientLoginCard = () => {
       </CardHeader>
       <CardContent className="space-y-4 pt-6">
         <div className="flex flex-col space-y-3">
-          <Link to="/workspace/sign-up" className="w-full">
-            <Button 
-              className="w-full bg-khaki-600 hover:bg-khaki-700"
-              onClick={handleSignUp}
-            >
-              Créer un compte
-            </Button>
-          </Link>
+          <Button 
+            className="w-full bg-khaki-600 hover:bg-khaki-700"
+            onClick={handleSignUp}
+          >
+            Créer un compte
+          </Button>
           
-          <Link to="/workspace/sign-in" className="w-full">
-            <Button 
-              className="w-full" 
-              variant="outline"
-              onClick={handleLogin}
-            >
-              Se connecter
-            </Button>
-          </Link>
+          <Button 
+            className="w-full" 
+            variant="outline"
+            onClick={handleLogin}
+          >
+            Se connecter
+          </Button>
         </div>
         
         <div className="relative flex items-center py-5">
@@ -61,9 +57,8 @@ const ClientLoginCard = () => {
           </Link>
           
           <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
-            <p className="font-medium">Compte administrateur</p>
-            <p className="mt-1">Email: progineer.moe@gmail.com</p>
-            <p>Mot de passe: Baullanowens1112</p>
+            <p className="font-medium">Accès démo</p>
+            <p className="mt-1">Utilisez le bouton ci-dessus pour accéder à la page de connexion</p>
           </div>
         </div>
       </CardContent>

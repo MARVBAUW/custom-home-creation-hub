@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
@@ -54,15 +55,6 @@ const SignIn = () => {
                 }
               }}
             />
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <p className="text-center text-sm text-gray-600">
-                Pour accéder au compte administrateur, utilisez :
-                <br />
-                <span className="font-medium">Email : progineer.moe@gmail.com</span>
-                <br />
-                <span className="font-medium">Mot de passe : Baullanowens1112</span>
-              </p>
-            </div>
           </div>
         </Container>
       </section>

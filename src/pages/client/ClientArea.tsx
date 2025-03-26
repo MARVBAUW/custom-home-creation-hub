@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { SignOutButton } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { 
@@ -46,7 +47,7 @@ const ClientArea = () => {
                 Espace Client
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                Bienvenue, {user.firstName || 'Client'}
+                Bienvenue, {user?.firstName || 'Client'}
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mb-8">
                 Retrouvez ici tous les éléments relatifs à votre projet.
@@ -58,7 +59,7 @@ const ClientArea = () => {
                   <User className="h-5 w-5 text-khaki-600" />
                 </div>
                 <div className="ml-3">
-                  <div className="text-sm font-medium">{user.fullName || user.primaryEmailAddress?.emailAddress}</div>
+                  <div className="text-sm font-medium">{user?.fullName || user?.primaryEmailAddress?.emailAddress}</div>
                   <div className="text-xs text-gray-500">Client</div>
                 </div>
               </div>
