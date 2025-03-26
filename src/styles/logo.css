@@ -53,15 +53,6 @@ svg:hover .logo-polygon {
   filter: url(#logoGlow);
 }
 
-.metallic-path, .metallic-full-path {
-  transition: all 0.5s ease;
-}
-
-svg:hover .metallic-path,
-svg:hover .metallic-full-path {
-  filter: url(#hoverGlow);
-}
-
 /* 3D transform effect on hover */
 .logo-3d-effect {
   transition: all 0.3s ease;
@@ -98,4 +89,40 @@ svg:hover .metallic-full-path {
 
 .metallic-logo:hover {
   animation: goldPulse 1.5s infinite;
+}
+
+/* Dark mode specific effects */
+.dark .metallic-logo:hover {
+  animation: whitePulse 1.5s infinite;
+}
+
+@keyframes whitePulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.3));
+  }
+}
+
+/* Enhance the visual experience with smooth transitions */
+svg path {
+  transition: fill 0.3s ease-in-out;
+}
+
+/* Additional logo animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.logo-float {
+  animation: float 3s ease-in-out infinite;
 }
