@@ -2,17 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Phone, Mail } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 import { NavLink } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -21,7 +15,7 @@ interface MobileNavProps {
   toggleDropdown: (name: string | null) => void;
 }
 
-const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNavProps) => {
+const MobileNav = ({ isOpen, navLinks }: MobileNavProps) => {
   const isMobile = useIsMobile();
   
   if (!isOpen) return null;
@@ -31,42 +25,35 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
       <Container className="flex flex-col h-[calc(100vh-4rem)] py-2">
         <ul className="space-y-0.5 overflow-y-auto">
           {navLinks.map((item) => (
-            <li key={item.name} className="border-b border-stone-200">
-              {item.subLinks ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="flex items-center justify-between w-full py-1.5 text-stone-800 text-xs font-medium">
-                      {item.name}
-                      <ChevronDown className="h-3 w-3 transition-transform text-stone-500" />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent 
-                    align="start" 
-                    className="w-56 bg-white shadow-md z-50" 
-                    sideOffset={0}
-                    alignOffset={-8}
-                  >
-                    {item.subLinks.map((subLink) => (
-                      <DropdownMenuItem key={subLink.name} asChild>
-                        <Link
-                          to={subLink.path}
-                          className="w-full cursor-pointer text-xs"
-                        >
-                          {subLink.name}
-                        </Link>
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
+            <React.Fragment key={item.name}>
+              {/* Main menu item */}
+              <li className="border-b border-stone-200">
                 <Link
                   to={item.path}
                   className="block py-1.5 text-xs font-medium text-stone-800 hover:text-khaki-800"
                 >
                   {item.name}
                 </Link>
+              </li>
+              
+              {/* Sub-links if they exist */}
+              {item.subLinks && (
+                <li className="pl-3 mb-1">
+                  <ul className="space-y-0.5 border-l border-stone-200 pl-2">
+                    {item.subLinks.map((subLink) => (
+                      <li key={subLink.name}>
+                        <Link
+                          to={subLink.path}
+                          className="block py-1 text-xs text-stone-600 hover:text-khaki-800"
+                        >
+                          {subLink.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
               )}
-            </li>
+            </React.Fragment>
           ))}
         </ul>
         
