@@ -1,36 +1,17 @@
 
-import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
-import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-
-type ThemeType = "light" | "dark";
+import { useTheme } from "@/hooks/use-theme";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const [theme, setTheme] = useState<ThemeType>("light");
+  const { theme, setTheme } = useTheme();
   const { toast } = useToast();
-  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
-
-  useEffect(() => {
-    // Check for theme in localStorage or use system preference
-    const storedTheme = localStorage.getItem("theme") as ThemeType | null;
-    
-    if (storedTheme) {
-      setTheme(storedTheme);
-      document.documentElement.classList.toggle("dark", storedTheme === "dark");
-    } else if (prefersDark) {
-      setTheme("dark");
-      document.documentElement.classList.add("dark");
-    }
-  }, [prefersDark]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
     
     // Notify user about theme change
     toast({
