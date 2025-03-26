@@ -22,29 +22,29 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
   
   return (
     <div className="fixed inset-0 z-40 bg-white/98 backdrop-blur-md mt-16 overflow-auto">
-      <Container className="flex flex-col h-[90vh] pt-4 pb-6">
-        <ul className="space-y-3 overflow-y-auto max-h-[70vh]">
+      <Container className="flex flex-col h-[95vh] pt-2 pb-4">
+        <ul className="space-y-1 overflow-y-auto max-h-[80vh]">
           {navLinks.map((item) => (
-            <li key={item.name} className="border-b border-stone-200 pb-3">
+            <li key={item.name} className="border-b border-stone-200 pb-1">
               {item.subLinks ? (
                 <div className="w-full">
                   <button
                     onClick={() => toggleDropdown(item.name === openDropdown ? null : item.name)}
-                    className="flex items-center justify-between w-full py-4 text-stone-800 text-sm font-medium"
+                    className="flex items-center justify-between w-full py-2 text-stone-800 text-xs font-medium"
                   >
                     {item.name}
                     <ChevronDown className={cn(
-                      "h-4 w-4 transition-transform text-stone-500",
+                      "h-3 w-3 transition-transform text-stone-500",
                       openDropdown === item.name ? "rotate-180" : ""
                     )} />
                   </button>
                   {openDropdown === item.name && (
-                    <ul className="ml-3 my-2 space-y-2 bg-khaki-50/80 rounded-md p-3">
+                    <ul className="ml-2 mt-0 mb-1 space-y-0.5 bg-khaki-50/80 rounded-md p-1.5">
                       {item.subLinks.map((subLink) => (
                         <li key={subLink.name}>
                           <Link
                             to={subLink.path}
-                            className="block py-3 px-3 text-xs text-stone-700 hover:text-khaki-800 hover:bg-khaki-50 rounded"
+                            className="block py-2 px-2 text-xs text-stone-700 hover:text-khaki-800 hover:bg-khaki-50 rounded"
                             onClick={() => toggleDropdown(null)}
                           >
                             {subLink.name}
@@ -57,7 +57,7 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
               ) : (
                 <Link
                   to={item.path}
-                  className="block py-4 text-sm font-medium text-stone-800 hover:text-khaki-800"
+                  className="block py-2 text-xs font-medium text-stone-800 hover:text-khaki-800"
                 >
                   {item.name}
                 </Link>
@@ -66,23 +66,23 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
           ))}
         </ul>
         
-        <div className="mt-4 space-y-4 pt-3">
-          <div className="flex flex-col space-y-3">
-            <a href="tel:+33783762156" className="flex items-center py-3 text-stone-700">
-              <Phone className="h-4 w-4 mr-2 text-khaki-600" />
-              <span className="text-sm">+33 7 83 76 21 56</span>
+        <div className="mt-2 space-y-2 pt-1">
+          <div className="flex flex-col space-y-1">
+            <a href="tel:+33783762156" className="flex items-center py-1.5 text-stone-700">
+              <Phone className="h-3 w-3 mr-1.5 text-khaki-600" />
+              <span className="text-xs">+33 7 83 76 21 56</span>
             </a>
-            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-3 text-stone-700">
-              <Mail className="h-4 w-4 mr-2 text-khaki-600" />
-              <span className="text-sm">progineer.moe@gmail.com</span>
+            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-1.5 text-stone-700">
+              <Mail className="h-3 w-3 mr-1.5 text-khaki-600" />
+              <span className="text-xs">progineer.moe@gmail.com</span>
             </a>
           </div>
           
-          <div className="grid grid-cols-2 gap-3">
-            <Button href="/contact" className="w-full justify-center py-3 text-sm">
+          <div className="grid grid-cols-2 gap-2">
+            <Button href="/contact" className="w-full justify-center py-1.5 text-xs">
               Contact
             </Button>
-            <Button href="/workspace" variant="outline" className="w-full justify-center py-3 text-sm">
+            <Button href="/workspace" variant="outline" className="w-full justify-center py-1.5 text-xs">
               Espace
             </Button>
           </div>
