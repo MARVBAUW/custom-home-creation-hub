@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
-import { createClient } from '@/lib/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 
 const FormSchema = z.object({
   fullName: z.string().min(2, {
@@ -38,14 +39,14 @@ const ClientOnboardingForm = () => {
   })
 
   async function onSubmit(values: z.infer<typeof FormSchema>) {
-    const supabase = createClient()
     const { data, error } = await supabase.auth.signUp({
       email: values.email,
       password: "password123", // temporary password
       options: {
         data: {
           full_name: values.fullName || '',
-          project_details: values,
+          // Remove the project_details field as it's not in the expected type
+          // Store only the essential user metadata that matches the profiles table
         }
       }
     })
