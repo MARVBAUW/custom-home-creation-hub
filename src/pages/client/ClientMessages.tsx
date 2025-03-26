@@ -7,7 +7,7 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 import ClientNavigation from '@/components/client/ClientNavigation';
 import ConversationsList from '@/components/client/messages/ConversationsList';
 import MessageDisplay from '@/components/client/messages/MessageDisplay';
-import { ConversationType } from '@/types/messaging';
+import { ConversationType, MessageType } from '@/types/messaging';
 
 // Sample messages data
 const conversations: ConversationType[] = [
@@ -63,7 +63,7 @@ const ClientMessages = () => {
             {
               id: conv.messages.length + 1,
               text: newMessage,
-              sender: 'me' as const,
+              sender: 'me' as const, // Explicitly type as 'me'
               date: new Date().toLocaleString('fr-FR', { 
                 day: '2-digit', 
                 month: '2-digit', 
@@ -79,7 +79,7 @@ const ClientMessages = () => {
     });
     
     // Set the active conversation to the updated one
-    const updatedActiveConv = updatedConversations.find(c => c.id === activeConversation.id);
+    const updatedActiveConv = updatedConversations.find(c => c.id === activeConversation.id) as ConversationType;
     if (updatedActiveConv) {
       setActiveConversation(updatedActiveConv);
     }
@@ -96,7 +96,7 @@ const ClientMessages = () => {
     // Update the global conversations array (in a real app, this would be handled by a state management system)
     conversations.forEach((conv, idx) => {
       if (conv.id === activeConversation.id) {
-        conversations[idx] = updatedActiveConv!;
+        conversations[idx] = updatedActiveConv;
       }
     });
   };
