@@ -1,133 +1,75 @@
 
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
 import ClientNavigation from '@/components/client/ClientNavigation';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import AdminSwitch from '@/components/client/AdminSwitch';
 import { toast } from '@/hooks/use-toast';
-import { 
-  Form, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormControl, 
-  FormDescription 
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { 
-  Popover, 
-  PopoverContent, 
-  PopoverTrigger 
-} from '@/components/ui/popover';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
-import { CalendarIcon } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
 
 const AdminProjectCreation = () => {
   const { isLoaded, isSignedIn } = useClientAuth({ redirectIfUnauthenticated: true });
   const [isAdminMode, setIsAdminMode] = useState(true);
-  const [automaticDates, setAutomaticDates] = useState(false);
-  
-  // Initialize form
-  const form = useForm({
-    defaultValues: {
-      projectName: '',
-      fileNumber: '',
-      workAmount: '',
-      client: '',
-      projectType: '',
-      administrativeAuth: '',
-      projectPhases: {
-        faisabilite: false,
-        dce: false,
-        act: false,
-        exe: false,
-        reception: false,
-        livraison: false
-      },
-      dates: {
-        global: { start: null, end: null },
-        faisabilite: { start: null, end: null },
-        dce: { start: null, end: null },
-        act: { start: null, end: null },
-        exe: { start: null, end: null },
-        reception: { start: null, end: null },
-        livraison: { start: null, end: null }
-      },
-      team: {
-        projectManager: '',
-        technicalDirector: '',
-        designer: '',
-        worksManager: '',
-        adminAssistant: '',
-        poleDirector: ''
-      },
-      execution: {
-        weeklyVisits: '',
-        projectDistance: '',
-        meetingDay: '',
-        securityCommission: '',
-        controlOffice: '',
-        spsCoordinator: ''
-      },
-      technicalOffices: {
-        structure: false,
-        vrd: false,
-        elect: false,
-        froid: false,
-        cvc: false,
-        thermique: false,
-        geotech: false,
-        hydro: false,
-        desenfumage: false,
-        methode: false
-      },
-      tradeTypes: {
-        go: false,
-        vrd: false,
-        charpente: false,
-        bardage: false,
-        couverture: false,
-        menuiserie: false,
-        serrurerie: false,
-        dallage: false,
-        isotherme: false,
-        platrerie: false,
-        peinture: false,
-        demolition: false,
-        plomberie: false,
-        froidAlimentaire: false,
-        cvc: false,
-        amenagement: false,
-        sprinklage: false,
-        ria: false,
-        ssi: false,
-        electricite: false,
-        menuiserieInterieur: false,
-        porteSectionnelle: false,
-        quaiNiveleur: false,
-        porteRapide: false,
-        fondationSpeciales: false,
-        porteAutomatique: false,
-        solSouple: false,
-        carrelage: false
-      }
-    }
+  const [selectedPhases, setSelectedPhases] = useState({
+    feasibility: false,
+    dce: false,
+    act: false,
+    exe: false,
+    reception: false,
+    delivery: false
   });
-  
+  const [selectedTechnicalOffices, setSelectedTechnicalOffices] = useState({
+    structure: false,
+    vrd: false,
+    elect: false,
+    cold: false,
+    cvc: false,
+    thermal: false,
+    geotech: false,
+    hydro: false,
+    smokeExtraction: false,
+    method: false
+  });
+  const [selectedTrades, setSelectedTrades] = useState({
+    go: false,
+    vrd: false,
+    framework: false,
+    cladding: false,
+    roofing: false,
+    joinery: false,
+    locksmithing: false,
+    flooring: false,
+    isothermal: false,
+    plastering: false,
+    painting: false,
+    demolition: false,
+    plumbing: false,
+    foodCold: false,
+    cvc: false,
+    arrangement: false,
+    sprinklage: false,
+    ria: false,
+    ssi: false,
+    electricity: false,
+    interiorJoinery: false,
+    sectionalDoor: false,
+    levelingDock: false,
+    fastDoor: false,
+    specialFoundations: false,
+    automaticDoor: false,
+    flexibleFloor: false,
+    tiling: false
+  });
+
   // Handle admin mode toggle
   const handleAdminModeToggle = (checked: boolean) => {
     setIsAdminMode(checked);
@@ -139,11 +81,53 @@ const AdminProjectCreation = () => {
     });
   };
 
-  const onSubmit = (data) => {
-    console.log("Project Data:", data);
+  // Handle phase checkbox change
+  const handlePhaseChange = (phase: keyof typeof selectedPhases, checked: boolean) => {
+    setSelectedPhases(prev => ({
+      ...prev,
+      [phase]: checked
+    }));
+  };
+
+  // Handle technical office checkbox change
+  const handleTechnicalOfficeChange = (office: keyof typeof selectedTechnicalOffices, checked: boolean) => {
+    setSelectedTechnicalOffices(prev => ({
+      ...prev,
+      [office]: checked
+    }));
+  };
+
+  // Handle trade checkbox change
+  const handleTradeChange = (trade: keyof typeof selectedTrades, checked: boolean) => {
+    setSelectedTrades(prev => ({
+      ...prev,
+      [trade]: checked
+    }));
+  };
+
+  const form = useForm({
+    defaultValues: {
+      projectName: "",
+      fileNumber: "",
+      workAmount: "",
+      projectOwner: "",
+      projectType: "residential",
+      adminAuthorization: "building_permit",
+      automaticDates: false
+    }
+  });
+
+  const onSubmit = (data: any) => {
+    console.log("Form submitted", {
+      ...data,
+      phases: selectedPhases,
+      technicalOffices: selectedTechnicalOffices,
+      trades: selectedTrades
+    });
+    
     toast({
       title: "Projet créé avec succès",
-      description: `Le projet "${data.projectName}" a été créé et assigné au client "${data.client}".`,
+      description: `Le projet ${data.projectName} a été créé.`,
     });
   };
 
@@ -156,8 +140,8 @@ const AdminProjectCreation = () => {
   return (
     <>
       <Helmet>
-        <title>Création de projet | Progineer</title>
-        <meta name="description" content="Créez de nouveaux projets clients dans le système Progineer." />
+        <title>Création de Projet | Progineer</title>
+        <meta name="description" content="Créez un nouveau projet client dans le système Progineer." />
       </Helmet>
 
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
@@ -168,10 +152,10 @@ const AdminProjectCreation = () => {
                 Administration
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                Création de projet
+                Création de Projet
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mb-8">
-                Créez et configurez un nouveau projet dans le système.
+                Créez un nouveau projet client et définissez ses caractéristiques principales.
               </p>
             </div>
             
@@ -193,889 +177,590 @@ const AdminProjectCreation = () => {
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    {/* INFORMATIONS GENERALES */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">INFORMATIONS GÉNÉRALES</h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="projectName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nom du projet</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Saisissez le nom du projet" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="fileNumber"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Numéro de dossier</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: PROG-2023-001" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="workAmount"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Montant de travaux</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: 150000" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="client"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Maître d'ouvrage</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du client" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="projectType"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Typologie de projet</FormLabel>
-                              <Select 
-                                onValueChange={field.onChange} 
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Sélectionnez une typologie" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="neuf_extension">Neuf / Extension</SelectItem>
-                                  <SelectItem value="renovation">Rénovation</SelectItem>
-                                  <SelectItem value="amenagement">Aménagement</SelectItem>
-                                  <SelectItem value="industriel">Bâtiment industriel</SelectItem>
-                                  <SelectItem value="commercial">Commercial</SelectItem>
-                                  <SelectItem value="maison">Maison individuelle</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="administrativeAuth"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Autorisation administrative</FormLabel>
-                              <Select 
-                                onValueChange={field.onChange} 
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Sélectionnez une autorisation" />
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  <SelectItem value="pc">Permis de construire</SelectItem>
-                                  <SelectItem value="dp">Déclaration préalable</SelectItem>
-                                  <SelectItem value="pa">Permis d'aménager</SelectItem>
-                                  <SelectItem value="none">Aucune autorisation</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      {/* Project phases */}
-                      <div className="space-y-4">
-                        <div className="text-center bg-khaki-50 py-2 rounded-md">
-                          <h3 className="text-base text-khaki-800 font-medium">SÉLECTIONNEZ LES PHASES CONCERNÉES PAR LE PROJET</h3>
-                        </div>
-
-                        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.faisabilite"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>FAISABILITÉ</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.dce"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>DCE</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.act"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>ACT</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.exe"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>EXE</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.reception"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>RÉCEPTION</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                          
-                          <FormField
-                            control={form.control}
-                            name="projectPhases.livraison"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col items-center space-y-2">
-                                <FormLabel>LIVRAISON</FormLabel>
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-[state=checked]:bg-khaki-600"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+              <Card className="border-gray-200">
+                <CardContent className="p-6">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <Tabs defaultValue="general" className="w-full">
+                        <TabsList className="mb-6 grid grid-cols-3 lg:grid-cols-6">
+                          <TabsTrigger value="general">Générales</TabsTrigger>
+                          <TabsTrigger value="phases">Phases</TabsTrigger>
+                          <TabsTrigger value="dates">Dates</TabsTrigger>
+                          <TabsTrigger value="team">Équipe</TabsTrigger>
+                          <TabsTrigger value="execution">Exécution</TabsTrigger>
+                          <TabsTrigger value="technical">Technique</TabsTrigger>
+                        </TabsList>
                         
-                        <div className="text-center bg-khaki-50 py-2 rounded-md">
-                          <div className="flex items-center justify-center space-x-3">
-                            <h3 className="text-base text-khaki-800 font-medium">DÉFINIR LES DATES DES DIFFÉRENTES PHASES DE PROJET DE MANIÈRE AUTOMATIQUE?</h3>
-                            <Checkbox 
-                              checked={automaticDates} 
-                              onCheckedChange={setAutomaticDates}
-                              className="data-[state=checked]:bg-khaki-600"
-                            />
+                        {/* GENERAL INFORMATION */}
+                        <TabsContent value="general" className="space-y-4">
+                          <h2 className="text-xl font-medium mb-4">Informations Générales</h2>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="projectName"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Nom du projet</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="Nouvelle résidence Marseille" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="fileNumber"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Numéro de dossier</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="PRG-2023-001" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="workAmount"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Montant de travaux</FormLabel>
+                                    <FormControl>
+                                      <Input type="number" placeholder="150000" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="projectOwner"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Maître d'ouvrage</FormLabel>
+                                    <FormControl>
+                                      <Input placeholder="Dupont Immobilier" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="projectType"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Typologie de projet</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Sélectionnez le type de projet" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        <SelectItem value="residential">Résidentiel</SelectItem>
+                                        <SelectItem value="commercial">Commercial</SelectItem>
+                                        <SelectItem value="industrial">Industriel</SelectItem>
+                                        <SelectItem value="public">Établissement public</SelectItem>
+                                        <SelectItem value="mixed">Mixte</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <FormField
+                                control={form.control}
+                                name="adminAuthorization"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Autorisation administrative</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Sélectionnez l'autorisation" />
+                                        </SelectTrigger>
+                                      </FormControl>
+                                      <SelectContent>
+                                        <SelectItem value="building_permit">Permis de construire</SelectItem>
+                                        <SelectItem value="prior_declaration">Déclaration préalable</SelectItem>
+                                        <SelectItem value="demolition_permit">Permis de démolir</SelectItem>
+                                        <SelectItem value="development_permit">Permis d'aménager</SelectItem>
+                                        <SelectItem value="none">Aucune</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* SAISIE DES DATES */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">SAISIE DES DATES</h2>
-                      </div>
-
-                      {/* Global project dates */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="dates.global.start"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                              <FormLabel>Date de début</FormLabel>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <FormControl>
-                                    <Button
-                                      variant={"outline"}
-                                      className={cn(
-                                        "w-full pl-3 text-left font-normal",
-                                        !field.value && "text-muted-foreground"
-                                      )}
-                                    >
-                                      {field.value ? (
-                                        format(field.value, "PPP", { locale: fr })
-                                      ) : (
-                                        <span>Sélectionnez une date</span>
-                                      )}
-                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                    </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    initialFocus
-                                    locale={fr}
-                                    className="pointer-events-auto"
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="dates.global.end"
-                          render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                              <FormLabel>Date de fin</FormLabel>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <FormControl>
-                                    <Button
-                                      variant={"outline"}
-                                      className={cn(
-                                        "w-full pl-3 text-left font-normal",
-                                        !field.value && "text-muted-foreground"
-                                      )}
-                                    >
-                                      {field.value ? (
-                                        format(field.value, "PPP", { locale: fr })
-                                      ) : (
-                                        <span>Sélectionnez une date</span>
-                                      )}
-                                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                    </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-auto p-0" align="start">
-                                  <Calendar
-                                    mode="single"
-                                    selected={field.value}
-                                    onSelect={field.onChange}
-                                    initialFocus
-                                    locale={fr}
-                                    className="pointer-events-auto"
-                                  />
-                                </PopoverContent>
-                              </Popover>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      {/* Phase dates - only showing FAISABILITE as example, others would be similar */}
-                      <div className="space-y-4">
-                        <div className="text-center bg-khaki-50 py-2 rounded-md">
-                          <h3 className="text-base text-khaki-800 font-medium">FAISABILITÉ</h3>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <FormField
-                            control={form.control}
-                            name="dates.faisabilite.start"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col">
-                                <FormLabel>Date de début</FormLabel>
-                                <Popover>
-                                  <PopoverTrigger asChild>
+                        </TabsContent>
+                        
+                        {/* PROJECT PHASES */}
+                        <TabsContent value="phases" className="space-y-4">
+                          <h2 className="text-xl font-medium mb-4">Phases du Projet</h2>
+                          <div className="bg-gray-50 p-4 rounded-md mb-6">
+                            <h3 className="text-sm font-medium text-gray-600 mb-3">SÉLECTIONNEZ LES PHASES CONCERNÉES PAR LE PROJET</h3>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-feasibility" 
+                                  checked={selectedPhases.feasibility}
+                                  onCheckedChange={(checked) => handlePhaseChange('feasibility', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-feasibility" className="text-sm">FAISABILITÉ</Label>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-dce" 
+                                  checked={selectedPhases.dce}
+                                  onCheckedChange={(checked) => handlePhaseChange('dce', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-dce" className="text-sm">DCE</Label>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-act" 
+                                  checked={selectedPhases.act}
+                                  onCheckedChange={(checked) => handlePhaseChange('act', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-act" className="text-sm">ACT</Label>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-exe" 
+                                  checked={selectedPhases.exe}
+                                  onCheckedChange={(checked) => handlePhaseChange('exe', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-exe" className="text-sm">EXE</Label>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-reception" 
+                                  checked={selectedPhases.reception}
+                                  onCheckedChange={(checked) => handlePhaseChange('reception', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-reception" className="text-sm">RÉCEPTION</Label>
+                              </div>
+                              <div className="flex items-start space-x-2">
+                                <Checkbox 
+                                  id="phase-delivery" 
+                                  checked={selectedPhases.delivery}
+                                  onCheckedChange={(checked) => handlePhaseChange('delivery', Boolean(checked))}
+                                />
+                                <Label htmlFor="phase-delivery" className="text-sm">LIVRAISON</Label>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-gray-50 p-4 rounded-md">
+                            <div className="flex items-start space-x-2 mb-4">
+                              <FormField
+                                control={form.control}
+                                name="automaticDates"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                                     <FormControl>
-                                      <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                          "w-full pl-3 text-left font-normal",
-                                          !field.value && "text-muted-foreground"
-                                        )}
-                                        disabled={automaticDates}
-                                      >
-                                        {field.value ? (
-                                          format(field.value, "PPP", { locale: fr })
-                                        ) : (
-                                          <span>{automaticDates ? "Date automatique" : "Sélectionnez une date"}</span>
-                                        )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                      </Button>
+                                      <Checkbox 
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                      />
                                     </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={field.onChange}
-                                      initialFocus
-                                      locale={fr}
-                                      className="pointer-events-auto"
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                              </FormItem>
+                                    <div className="space-y-1 leading-none">
+                                      <FormLabel>
+                                        DÉFINIR LES DATES DES DIFFÉRENTES PHASES DE PROJET DE MANIÈRE AUTOMATIQUE ?
+                                      </FormLabel>
+                                    </div>
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                          </div>
+                        </TabsContent>
+                        
+                        {/* DATES */}
+                        <TabsContent value="dates" className="space-y-4">
+                          <h2 className="text-xl font-medium mb-4">Dates des Phases</h2>
+                          
+                          <div className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                <Label htmlFor="global-start-date">Date de début globale</Label>
+                                <Input type="date" id="global-start-date" />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor="global-end-date">Date de fin globale</Label>
+                                <Input type="date" id="global-end-date" />
+                              </div>
+                            </div>
+                            
+                            {selectedPhases.feasibility && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">FAISABILITÉ</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="feasibility-start-date">Date de début</Label>
+                                    <Input type="date" id="feasibility-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="feasibility-end-date">Date de fin</Label>
+                                    <Input type="date" id="feasibility-end-date" />
+                                  </div>
+                                </div>
+                              </div>
                             )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="dates.faisabilite.end"
-                            render={({ field }) => (
-                              <FormItem className="flex flex-col">
-                                <FormLabel>Date de fin</FormLabel>
-                                <Popover>
-                                  <PopoverTrigger asChild>
-                                    <FormControl>
-                                      <Button
-                                        variant={"outline"}
-                                        className={cn(
-                                          "w-full pl-3 text-left font-normal",
-                                          !field.value && "text-muted-foreground"
-                                        )}
-                                        disabled={automaticDates}
-                                      >
-                                        {field.value ? (
-                                          format(field.value, "PPP", { locale: fr })
-                                        ) : (
-                                          <span>{automaticDates ? "Date automatique" : "Sélectionnez une date"}</span>
-                                        )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-0" align="start">
-                                    <Calendar
-                                      mode="single"
-                                      selected={field.value}
-                                      onSelect={field.onChange}
-                                      initialFocus
-                                      locale={fr}
-                                      className="pointer-events-auto"
-                                    />
-                                  </PopoverContent>
-                                </Popover>
-                              </FormItem>
+                            
+                            {selectedPhases.dce && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">DCE</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="dce-start-date">Date de début</Label>
+                                    <Input type="date" id="dce-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="dce-end-date">Date de fin</Label>
+                                    <Input type="date" id="dce-end-date" />
+                                  </div>
+                                </div>
+                              </div>
                             )}
-                          />
-                        </div>
-                      </div>
-
-                      {/* For brevity, we'll skip displaying all the other phase date fields
-                         In a real implementation, you'd add similar blocks for DCE, ACT, EXE, etc. */}
-                    </div>
-
-                    {/* PERSONNES ALLOUEES AU PROJET */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">PERSONNES ALLOUÉES AU PROJET</h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="team.projectManager"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Chef de projet</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du chef de projet" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="team.technicalDirector"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Directeur technique</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du directeur technique" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="team.designer"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Dessinateur</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du dessinateur" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="team.worksManager"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Conducteur de travaux</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du conducteur" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="team.adminAssistant"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Assistant admin</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom de l'assistant" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="team.poleDirector"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Directeur de pôle</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du directeur de pôle" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-
-                    {/* INFORMATIONS LIÉES À L'EXÉCUTION */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">INFORMATIONS LIÉES À L'EXÉCUTION</h2>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="execution.weeklyVisits"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nb visite hebdo du conduc</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Ex: 2" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="execution.projectDistance"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Distance du projet</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Distance en km" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="execution.meetingDay"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Jour de réunion</FormLabel>
-                              <Select 
-                                onValueChange={field.onChange} 
-                                defaultValue={field.value}
-                              >
-                                <FormControl>
-                                  <SelectTrigger>
-                                    <SelectValue placeholder="Sélectionnez un jour" />
-                                  </SelectTrigger>
-                                </FormControl>
+                            
+                            {selectedPhases.act && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">ACT</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="act-start-date">Date de début</Label>
+                                    <Input type="date" id="act-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="act-end-date">Date de fin</Label>
+                                    <Input type="date" id="act-end-date" />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {selectedPhases.exe && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">EXE</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="exe-start-date">Date de début</Label>
+                                    <Input type="date" id="exe-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="exe-end-date">Date de fin</Label>
+                                    <Input type="date" id="exe-end-date" />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {selectedPhases.reception && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">RÉCEPTION</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="reception-start-date">Date de début</Label>
+                                    <Input type="date" id="reception-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="reception-end-date">Date de fin</Label>
+                                    <Input type="date" id="reception-end-date" />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                            
+                            {selectedPhases.delivery && (
+                              <div>
+                                <h3 className="text-sm font-medium text-gray-600 mb-3 text-center bg-gray-100 py-1">LIVRAISON</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label htmlFor="delivery-start-date">Date de début</Label>
+                                    <Input type="date" id="delivery-start-date" />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor="delivery-end-date">Date de fin</Label>
+                                    <Input type="date" id="delivery-end-date" />
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
+                        
+                        {/* TEAM */}
+                        <TabsContent value="team" className="space-y-4">
+                          <h2 className="text-xl font-medium mb-4">Personnes Allouées au Projet</h2>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="project-manager">Chef de projet</Label>
+                              <Input id="project-manager" placeholder="Nom du chef de projet" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="technical-director">Directeur technique</Label>
+                              <Input id="technical-director" placeholder="Nom du directeur technique" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="draftsman">Dessinateur</Label>
+                              <Input id="draftsman" placeholder="Nom du dessinateur" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="work-supervisor">Conducteur de travaux</Label>
+                              <Input id="work-supervisor" placeholder="Nom du conducteur de travaux" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="admin-assistant">Assistant admin</Label>
+                              <Input id="admin-assistant" placeholder="Nom de l'assistant administratif" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="division-director">Directeur de pôle</Label>
+                              <Input id="division-director" placeholder="Nom du directeur de pôle" />
+                            </div>
+                          </div>
+                        </TabsContent>
+                        
+                        {/* EXECUTION */}
+                        <TabsContent value="execution" className="space-y-4">
+                          <h2 className="text-xl font-medium mb-4">Informations Liées à l'Exécution</h2>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="weekly-visits">Nb visite hebdo du conduc</Label>
+                              <Input id="weekly-visits" type="number" placeholder="2" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="project-distance">Distance du projet</Label>
+                              <Input id="project-distance" type="number" placeholder="25" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="meeting-day">Jour de réunion</Label>
+                              <Select>
+                                <SelectTrigger id="meeting-day">
+                                  <SelectValue placeholder="Sélectionnez un jour" />
+                                </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="lundi">Lundi</SelectItem>
-                                  <SelectItem value="mardi">Mardi</SelectItem>
-                                  <SelectItem value="mercredi">Mercredi</SelectItem>
-                                  <SelectItem value="jeudi">Jeudi</SelectItem>
-                                  <SelectItem value="vendredi">Vendredi</SelectItem>
+                                  <SelectItem value="monday">Lundi</SelectItem>
+                                  <SelectItem value="tuesday">Mardi</SelectItem>
+                                  <SelectItem value="wednesday">Mercredi</SelectItem>
+                                  <SelectItem value="thursday">Jeudi</SelectItem>
+                                  <SelectItem value="friday">Vendredi</SelectItem>
                                 </SelectContent>
                               </Select>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="execution.securityCommission"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Commission de sécurité</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Détails commission" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="execution.controlOffice"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Bureau de contrôle</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du bureau" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={form.control}
-                          name="execution.spsCoordinator"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Coordinateur SPS</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Nom du coordinateur" {...field} />
-                              </FormControl>
-                            </FormItem>
-                          )}
-                        />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="security-commission">Commission de sécurité</Label>
+                              <Input id="security-commission" placeholder="Détails de la commission" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="control-office">Bureau de contrôle</Label>
+                              <Input id="control-office" placeholder="Nom du bureau de contrôle" />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="sps-coordinator">Coordinateur SPS</Label>
+                              <Input id="sps-coordinator" placeholder="Nom du coordinateur SPS" />
+                            </div>
+                          </div>
+                        </TabsContent>
+                        
+                        {/* TECHNICAL */}
+                        <TabsContent value="technical" className="space-y-6">
+                          <h2 className="text-xl font-medium mb-4">Informations Techniques</h2>
+                          
+                          <div className="space-y-6">
+                            {/* TECHNICAL OFFICES */}
+                            <div className="bg-gray-50 p-4 rounded-md">
+                              <h3 className="text-sm font-medium text-gray-600 mb-3">SÉLECTIONNEZ LES BET ENGAGÉS SUR LE DOSSIER</h3>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-structure" 
+                                    checked={selectedTechnicalOffices.structure}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('structure', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-structure" className="text-sm">BE STRUCTURE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-vrd" 
+                                    checked={selectedTechnicalOffices.vrd}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('vrd', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-vrd" className="text-sm">BE VRD</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-elect" 
+                                    checked={selectedTechnicalOffices.elect}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('elect', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-elect" className="text-sm">BE ELECT</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-cold" 
+                                    checked={selectedTechnicalOffices.cold}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('cold', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-cold" className="text-sm">BE FROID</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-cvc" 
+                                    checked={selectedTechnicalOffices.cvc}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('cvc', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-cvc" className="text-sm">BE CVC</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-thermal" 
+                                    checked={selectedTechnicalOffices.thermal}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('thermal', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-thermal" className="text-sm">BE THERMIQUE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-geotech" 
+                                    checked={selectedTechnicalOffices.geotech}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('geotech', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-geotech" className="text-sm">BE GEOTECH</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-hydro" 
+                                    checked={selectedTechnicalOffices.hydro}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('hydro', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-hydro" className="text-sm">BE HYDRO</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-smoke" 
+                                    checked={selectedTechnicalOffices.smokeExtraction}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('smokeExtraction', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-smoke" className="text-sm">BE DESENFUMAGE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="be-method" 
+                                    checked={selectedTechnicalOffices.method}
+                                    onCheckedChange={(checked) => handleTechnicalOfficeChange('method', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="be-method" className="text-sm">BE METHODE</Label>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* TRADES */}
+                            <div className="bg-gray-50 p-4 rounded-md">
+                              <h3 className="text-sm font-medium text-gray-600 mb-3">SÉLECTIONNEZ LES CORPS D'ÉTAT CONCERNÉS PAR LE DOSSIER</h3>
+                              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-go" 
+                                    checked={selectedTrades.go}
+                                    onCheckedChange={(checked) => handleTradeChange('go', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-go" className="text-sm">GO</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-vrd" 
+                                    checked={selectedTrades.vrd}
+                                    onCheckedChange={(checked) => handleTradeChange('vrd', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-vrd" className="text-sm">VRD</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-framework" 
+                                    checked={selectedTrades.framework}
+                                    onCheckedChange={(checked) => handleTradeChange('framework', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-framework" className="text-sm">CHARPENTE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-cladding" 
+                                    checked={selectedTrades.cladding}
+                                    onCheckedChange={(checked) => handleTradeChange('cladding', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-cladding" className="text-sm">BARDAGE</Label>
+                                </div>
+                                
+                                {/* Add more trades here ... */}
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-roofing" 
+                                    checked={selectedTrades.roofing}
+                                    onCheckedChange={(checked) => handleTradeChange('roofing', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-roofing" className="text-sm">COUVERTURE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-joinery" 
+                                    checked={selectedTrades.joinery}
+                                    onCheckedChange={(checked) => handleTradeChange('joinery', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-joinery" className="text-sm">MENUISERIE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-locksmithing" 
+                                    checked={selectedTrades.locksmithing}
+                                    onCheckedChange={(checked) => handleTradeChange('locksmithing', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-locksmithing" className="text-sm">SERRURERIE</Label>
+                                </div>
+                                <div className="flex items-start space-x-2">
+                                  <Checkbox 
+                                    id="trade-flooring" 
+                                    checked={selectedTrades.flooring}
+                                    onCheckedChange={(checked) => handleTradeChange('flooring', Boolean(checked))}
+                                  />
+                                  <Label htmlFor="trade-flooring" className="text-sm">DALLAGE</Label>
+                                </div>
+                                
+                                {/* And many more trades... Only showing a subset for brevity */}
+                              </div>
+                            </div>
+                          </div>
+                        </TabsContent>
+                      </Tabs>
+                      
+                      <div className="flex justify-end pt-6">
+                        <Button 
+                          type="submit" 
+                          className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                        >
+                          Valider la saisie et enregistrer
+                        </Button>
                       </div>
-                    </div>
-
-                    {/* SÉLECTIONNEZ LES BET ENGAGÉS SUR LE DOSSIER */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">SÉLECTIONNEZ LES BET ENGAGÉS SUR LE DOSSIER</h2>
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.structure"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE STRUCTURE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.vrd"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE VRD</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.elect"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE ELECT</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.froid"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE FROID</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.cvc"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE CVC</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.thermique"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE THERMIQUE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.geotech"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE GEOTECH</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.hydro"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE HYDRO</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.desenfumage"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE DESENFUMAGE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="technicalOffices.methode"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BE METHODE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
-
-                    {/* SÉLECTIONNEZ LES CORPS D'ÉTAT CONCERNÉS PAR LE DOSSIER */}
-                    <div className="space-y-6">
-                      <div className="text-center bg-khaki-100 py-3 rounded-md">
-                        <h2 className="text-xl text-khaki-800 font-medium">SÉLECTIONNEZ LES CORPS D'ÉTAT CONCERNÉS PAR LE DOSSIER</h2>
-                      </div>
-
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {/* Just showing a few examples for brevity */}
-                        <FormField
-                          control={form.control}
-                          name="tradeTypes.go"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">GO</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="tradeTypes.vrd"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">VRD</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="tradeTypes.charpente"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">CHARPENTE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="tradeTypes.bardage"
-                          render={({ field }) => (
-                            <FormItem className="flex items-center space-x-3 space-y-0">
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value}
-                                  onCheckedChange={field.onChange}
-                                  className="data-[state=checked]:bg-khaki-600"
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">BARDAGE</FormLabel>
-                            </FormItem>
-                          )}
-                        />
-                        
-                        {/* In a real implementation, you'd add similar blocks for all trade types */}
-                      </div>
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="pt-6 text-center">
-                      <Button 
-                        type="submit" 
-                        className="bg-khaki-600 hover:bg-khaki-700 text-white px-10 py-6 text-lg font-medium"
-                      >
-                        VALIDER LA SAISIE ET ENREGISTRER
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </div>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </Container>

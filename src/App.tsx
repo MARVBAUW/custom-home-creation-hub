@@ -34,6 +34,7 @@ import ClientProjects from "./pages/client/ClientProjects";
 import ClientMessages from "./pages/client/ClientMessages";
 import ClientBudget from "./pages/client/ClientBudget";
 import ClientDocumentation from "./pages/client/ClientDocumentation";
+import ClientOnboarding from "./pages/client/ClientOnboarding";
 import AdminProjectCreation from "./pages/client/AdminProjectCreation";
 
 // Auth Component
@@ -65,6 +66,11 @@ const App = () => (
             {/* Client Area Routes */}
             <Route path="/workspace/sign-in" element={<SignIn />} />
             <Route path="/workspace/sign-up" element={<SignUp />} />
+            <Route path="/workspace/client-onboarding" element={
+              <ProtectedRoute>
+                <ClientOnboarding />
+              </ProtectedRoute>
+            } />
             <Route path="/workspace/client-area" element={
               <ProtectedRoute>
                 <ClientArea />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -69,6 +68,10 @@ const SignUp = () => {
 
     try {
       await signUp(email, password, { full_name: fullName || (isAdminSignup ? 'Administrateur' : 'Nouvel Utilisateur') });
+      // If not an admin signup, redirect to onboarding form after successful signup
+      if (!isAdminSignup && user) {
+        navigate('/workspace/client-onboarding');
+      }
     } catch (err) {
       console.error('Error during signup:', err);
     }
@@ -80,6 +83,17 @@ const SignUp = () => {
       setFullName('Administrateur');
     }
   }, [isAdminSignup, fullName]);
+
+  // Redirect to onboarding for normal users, admin goes straight to dashboard
+  useEffect(() => {
+    if (user) {
+      if (isAdminSignup) {
+        navigate('/workspace/client-area');
+      } else {
+        navigate('/workspace/client-onboarding');
+      }
+    }
+  }, [user, navigate, isAdminSignup]);
 
   return (
     <>
