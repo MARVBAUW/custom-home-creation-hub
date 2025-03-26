@@ -1,21 +1,10 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Check } from 'lucide-react';
-
-const features = [
-  "Écoute attentive de vos besoins",
-  "Solutions innovantes et durables",
-  "Respect strict des délais",
-  "Communication fluide tout au long du projet",
-  "Maîtrise des coûts et transparence",
-  "Accompagnement administratif complet"
-];
-
+const features = ["Écoute attentive de vos besoins", "Solutions innovantes et durables", "Respect strict des délais", "Communication fluide tout au long du projet", "Maîtrise des coûts et transparence", "Accompagnement administratif complet"];
 const CTASection = () => {
-  return (
-    <section className="py-20 relative overflow-hidden">
+  return <section className="py-20 relative overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-progineer-light to-white"></div>
       
@@ -24,7 +13,7 @@ const CTASection = () => {
       <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-progineer-gold/20 rounded-full opacity-30 transform -translate-x-1/3 translate-y-1/3"></div>
       
       <Container className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center bg-zinc-100">
           <div>
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/10 text-progineer-gold text-sm font-medium">
               Notre approche
@@ -38,14 +27,12 @@ const CTASection = () => {
             
             <div className="mb-8">
               <ul className="space-y-3">
-                {features.map((feature, index) => (
-                  <li key={index} className="flex items-start">
+                {features.map((feature, index) => <li key={index} className="flex items-start">
                     <div className="flex-shrink-0 w-5 h-5 rounded-full bg-progineer-gold/20 flex items-center justify-center mt-1 mr-3">
                       <Check className="h-3 w-3 text-progineer-gold" />
                     </div>
                     <span className="text-gray-700">{feature}</span>
-                  </li>
-                ))}
+                  </li>)}
               </ul>
             </div>
             
@@ -61,13 +48,9 @@ const CTASection = () => {
           
           <div className="relative">
             <div className="rounded-2xl overflow-hidden shadow-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1600566753376-12c8ab8e17a5?q=80&w=2070&auto=format&fit=crop" 
-                alt="Maison contemporaine avec grande baie vitrée" 
-                className="w-full h-auto object-cover"
-              />
+              <img src="https://images.unsplash.com/photo-1600566753376-12c8ab8e17a5?q=80&w=2070&auto=format&fit=crop" alt="Maison contemporaine avec grande baie vitrée" className="w-full h-auto object-cover" />
             </div>
-            <div className="absolute -bottom-6 -left-6 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
+            <div className="absolute -bottom-6 -riight-20 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
               <div className="flex items-center justify-between mb-2">
                 <div className="text-sm font-medium text-gray-500">Projet livré</div>
                 <div className="px-2 py-1 text-xs bg-progineer-gold/10 text-progineer-gold rounded-full">Marseille</div>
@@ -78,8 +61,6 @@ const CTASection = () => {
           </div>
         </div>
       </Container>
-    </section>
-  );
+    </section>;
 };
-
 export default CTASection;

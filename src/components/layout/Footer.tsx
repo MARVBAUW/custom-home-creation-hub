@@ -1,15 +1,13 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ChevronRight } from 'lucide-react';
 import Logo from '@/components/common/Logo';
-
 const Footer = () => {
   return <footer className="bg-progineer-dark dark:bg-gray-950">
       {/* Top Section with Border */}
       <div className="border-b border-white/10">
-        <Container size="lg" className="py-14 bg-gray-600 dark:bg-gray-900">
+        <Container size="lg" className="py-14 bg-[#202014]/[0.94]">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Company Info */}
             <div className="md:col-span-4">
@@ -142,7 +140,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom section */}
-      <div className="py-6 bg-gray-600 dark:bg-gray-900">
+      <div className="py-6 bg-[0#202014f0] bg-[#202014]/[0.94]">
         <Container size="lg">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
@@ -170,5 +168,4 @@ const Footer = () => {
       </div>
     </footer>;
 };
-
 export default Footer;
