@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
       
+      console.log('Attempting to sign in with:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -60,10 +61,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (error) {
         console.error('SignIn error:', error.message);
-        setError(error.message);
+        let errorMessage = error.message;
+        
+        // Rendre les messages d'erreur plus conviviaux
+        if (errorMessage === 'Invalid login credentials') {
+          errorMessage = 'Email ou mot de passe incorrect';
+        }
+        
+        setError(errorMessage);
         toast({
           title: 'Échec de connexion',
-          description: error.message,
+          description: errorMessage,
           variant: 'destructive',
         });
       } else if (data.session) {
@@ -93,33 +101,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(true);
       setError(null);
       
+      console.log('Attempting to sign up with:', email);
+      // Modification pour supprimer la vérification d'e-mail
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: metadata || {},
-          emailRedirectTo: window.location.origin + '/workspace/client-area'
+          // Suppression de la redirection par e-mail
+          emailRedirectTo: undefined
         }
       });
 
       if (error) {
         console.error('SignUp error:', error.message);
-        setError(error.message);
+        let errorMessage = error.message;
+        
+        // Rendre les messages d'erreur plus conviviaux
+        if (errorMessage.includes('email') && errorMessage.includes('already')) {
+          errorMessage = 'Cet email est déjà utilisé par un autre compte';
+        }
+        
+        setError(errorMessage);
         toast({
           title: 'Échec d\'inscription',
-          description: error.message,
+          description: errorMessage,
           variant: 'destructive',
         });
       } else {
         console.log('SignUp successful:', data);
-        toast({
-          title: 'Inscription réussie',
-          description: 'Vérifiez votre email pour confirmer votre compte',
-          variant: 'default',
-        });
-        // For development, we can automatically sign in the user
-        // In production, they would need to verify their email
-        navigate('/workspace/sign-in');
+        
+        // Si l'utilisateur est créé immédiatement (auto-confirm activé dans Supabase)
+        if (data.session) {
+          setSession(data.session);
+          setUser(data.user);
+          toast({
+            title: 'Inscription réussie',
+            description: 'Vous êtes maintenant connecté',
+            variant: 'default',
+          });
+          navigate('/workspace/client-area');
+        } else {
+          // Si la vérification d'e-mail est toujours requise
+          toast({
+            title: 'Inscription réussie',
+            description: 'Vérifiez votre email pour confirmer votre compte',
+            variant: 'default',
+          });
+          navigate('/workspace/sign-in');
+        }
       }
     } catch (err) {
       console.error('Unexpected error during sign up:', err);

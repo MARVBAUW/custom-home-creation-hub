@@ -39,8 +39,18 @@ const SignIn = () => {
       return;
     }
 
+    console.log('Submitting login form with email:', email);
     await signIn(email, password);
   };
+
+  // Remplir automatiquement les champs pour faciliter le test
+  useEffect(() => {
+    // Préremplir les champs si vides
+    if (!email && !password) {
+      setEmail('marvinbauwens@gmail.com');
+      setPassword('Baullanowens1112.');
+    }
+  }, [email, password]);
 
   return (
     <>
