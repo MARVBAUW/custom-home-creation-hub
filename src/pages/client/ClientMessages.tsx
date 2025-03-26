@@ -1,26 +1,16 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
-import { 
-  FileText, 
-  Calendar, 
-  MessageSquare, 
-  User, 
-  Send,
-  Plus
-} from 'lucide-react';
 import Container from '@/components/common/Container';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from '@/hooks/use-toast';
 import { useClientAuth } from '@/hooks/useClientAuth';
+import ClientNavigation from '@/components/client/ClientNavigation';
+import ConversationsList from '@/components/client/messages/ConversationsList';
+import MessageDisplay from '@/components/client/messages/MessageDisplay';
+import { ConversationType } from '@/types/messaging';
 
 // Sample messages data
-const conversations = [
+const conversations: ConversationType[] = [
   {
     id: 1,
     contact: { name: 'Marie Dupont', role: 'Chef de projet', avatar: '' },
@@ -44,18 +34,8 @@ const conversations = [
 
 const ClientMessages = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
-  const [activeConversation, setActiveConversation] = React.useState(conversations[0]);
-  const [newMessage, setNewMessage] = React.useState('');
-  const messagesEndRef = React.useRef<HTMLDivElement>(null);
-  
-  // Scroll to bottom of messages
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-  
-  React.useEffect(() => {
-    scrollToBottom();
-  }, [activeConversation]);
+  const [activeConversation, setActiveConversation] = useState(conversations[0]);
+  const [newMessage, setNewMessage] = useState('');
   
   // Handle send message
   const handleSendMessage = (e: React.FormEvent) => {
@@ -117,11 +97,6 @@ const ClientMessages = () => {
     </div>;
   }
 
-  // Récupérer l'email ou le nom d'utilisateur pour l'affichage de l'avatar
-  const userInitial = user?.email ? user.email[0].toUpperCase() : 'C';
-  // Récupérer l'URL de l'avatar s'il existe dans les métadonnées de l'utilisateur
-  const avatarUrl = user?.user_metadata?.avatar_url || null;
-
   return (
     <>
       <Helmet>
@@ -152,144 +127,27 @@ const ClientMessages = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="font-medium">Navigation</h2>
-                </div>
-                <div className="p-2">
-                  <Link to="/workspace/client-area" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <User className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Tableau de bord</span>
-                  </Link>
-                  <Link to="/workspace/client-area/documents" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <FileText className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Documents</span>
-                  </Link>
-                  <Link to="/workspace/client-area/projects" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <Calendar className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Suivi de projet</span>
-                  </Link>
-                  <Link to="/workspace/client-area/messages" className="flex items-center p-3 rounded-md bg-khaki-50 text-khaki-800 font-medium">
-                    <MessageSquare className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Messages</span>
-                  </Link>
-                </div>
-              </div>
+              <ClientNavigation />
             </div>
             
             {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
                 {/* Conversations List */}
-                <div className="md:col-span-1 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-                  <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-                    <h2 className="font-medium">Conversations</h2>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="overflow-y-auto h-[calc(600px-60px)]">
-                    {conversations.map((conv) => (
-                      <div 
-                        key={conv.id}
-                        className={`p-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                          activeConversation.id === conv.id ? 'bg-khaki-50' : ''
-                        }`}
-                        onClick={() => setActiveConversation(conv)}
-                      >
-                        <div className="flex items-center">
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage src={conv.contact.avatar} />
-                            <AvatarFallback className="bg-khaki-200 text-khaki-700">
-                              {conv.contact.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="ml-3">
-                            <div className="font-medium">{conv.contact.name}</div>
-                            <div className="text-xs text-gray-500">{conv.contact.role}</div>
-                          </div>
-                        </div>
-                        <div className="mt-2 text-sm text-gray-600 truncate">
-                          {conv.messages[conv.messages.length - 1].text}
-                        </div>
-                        <div className="mt-1 text-xs text-gray-500">
-                          {conv.messages[conv.messages.length - 1].date}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ConversationsList 
+                  conversations={conversations} 
+                  activeConversationId={activeConversation.id}
+                  onSelectConversation={setActiveConversation}
+                />
                 
                 {/* Messages */}
-                <div className="md:col-span-2 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm flex flex-col">
-                  <div className="p-4 border-b border-gray-200 bg-gray-50">
-                    <div className="flex items-center">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={activeConversation.contact.avatar} />
-                        <AvatarFallback className="bg-khaki-200 text-khaki-700">
-                          {activeConversation.contact.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="ml-3">
-                        <div className="font-medium">{activeConversation.contact.name}</div>
-                        <div className="text-xs text-gray-500">{activeConversation.contact.role}</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex-grow p-4 overflow-y-auto bg-gray-50">
-                    {activeConversation.messages.map((message) => (
-                      <div 
-                        key={message.id} 
-                        className={`mb-4 flex ${message.sender === 'me' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        {message.sender !== 'me' && (
-                          <Avatar className="h-8 w-8 mt-1 mr-2">
-                            <AvatarImage src={activeConversation.contact.avatar} />
-                            <AvatarFallback className="bg-khaki-200 text-khaki-700">
-                              {activeConversation.contact.name.split(' ').map(n => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                        <div className={`max-w-xs sm:max-w-md px-4 py-2 rounded-lg ${
-                          message.sender === 'me' 
-                            ? 'bg-khaki-600 text-white' 
-                            : 'bg-white border border-gray-200'
-                        }`}>
-                          <div className="text-sm">{message.text}</div>
-                          <div className={`text-xs mt-1 ${
-                            message.sender === 'me' ? 'text-khaki-100' : 'text-gray-500'
-                          }`}>
-                            {message.date}
-                          </div>
-                        </div>
-                        {message.sender === 'me' && (
-                          <Avatar className="h-8 w-8 mt-1 ml-2">
-                            <AvatarImage src={avatarUrl} />
-                            <AvatarFallback className="bg-blue-200 text-blue-700">
-                              {userInitial}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                      </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                  </div>
-                  
-                  <div className="p-4 border-t border-gray-200">
-                    <form onSubmit={handleSendMessage} className="flex space-x-2">
-                      <Textarea 
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Tapez votre message..."
-                        className="resize-none h-10 py-2"
-                      />
-                      <Button type="submit" className="h-10 px-3 bg-khaki-600 hover:bg-khaki-700">
-                        <Send className="h-4 w-4" />
-                      </Button>
-                    </form>
-                  </div>
-                </div>
+                <MessageDisplay 
+                  conversation={activeConversation}
+                  newMessage={newMessage}
+                  setNewMessage={setNewMessage}
+                  onSendMessage={handleSendMessage}
+                  user={user}
+                />
               </div>
             </div>
           </div>
