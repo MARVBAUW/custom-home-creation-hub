@@ -1,13 +1,15 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ChevronRight } from 'lucide-react';
 import Logo from '@/components/common/Logo';
+
 const Footer = () => {
   return <footer className="bg-progineer-dark dark:bg-gray-950">
       {/* Top Section with Border */}
       <div className="border-b border-white/10">
-        <Container size="lg" className="py-14 bg-gray-600">
+        <Container size="lg" className="py-14 bg-gray-600 dark:bg-gray-900">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Company Info */}
             <div className="md:col-span-4">
@@ -105,9 +107,14 @@ const Footer = () => {
               <ul className="space-y-4 text-center md:text-left">
                 <li className="flex items-start justify-center md:justify-start">
                   <Phone className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
-                  <a href="tel:+33783762156" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm">
-                    +33 7 83 76 21 56
-                  </a>
+                  <div className="flex flex-col">
+                    <a href="tel:+33783762156" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm">
+                      +33 7 83 76 21 56 (Marvin)
+                    </a>
+                    <a href="tel:+33611498716" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm">
+                      +33 6 11 49 87 16 (Mael)
+                    </a>
+                  </div>
                 </li>
                 <li className="flex items-start justify-center md:justify-start">
                   <Mail className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
@@ -135,7 +142,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom section */}
-      <div className="py-6 bg-gray-600">
+      <div className="py-6 bg-gray-600 dark:bg-gray-900">
         <Container size="lg">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
@@ -163,4 +170,5 @@ const Footer = () => {
       </div>
     </footer>;
 };
+
 export default Footer;

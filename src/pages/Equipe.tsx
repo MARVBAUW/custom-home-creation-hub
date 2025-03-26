@@ -3,7 +3,7 @@ import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { Briefcase, Building, GraduationCap, Mail, Phone, Linkedin } from 'lucide-react';
+import { Briefcase, Building, GraduationCap, Mail, Phone, Linkedin, FileText, Gauge, Wrench, Users, HardHat, Calculator, LineChart, HomeLine, Paintbrush, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Equipe = () => {
@@ -37,12 +37,12 @@ const Equipe = () => {
       <section className="py-16 dark:bg-gray-950">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Team Member - Marvin Bauwens */}
+            {/* Team Member - Marvin Bauwens - Now using Mael's photo */}
             <div className="flex flex-col gap-8 items-start bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow dark:bg-gray-900 dark:border-gray-800">
               <div className="w-full">
                 <div className="rounded-xl overflow-hidden mb-6 aspect-square max-w-[240px] mx-auto">
                   <img 
-                    src="/lovable-uploads/23fe2b30-1f84-472d-a3c8-d4c413ffbbc4.png" 
+                    src="/lovable-uploads/3f77f084-4061-4e36-9f32-85cb08372b51.png" 
                     alt="Marvin Bauwens - PDG Progineer" 
                     className="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-500"
                     loading="lazy"
@@ -57,8 +57,8 @@ const Equipe = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-center">
                     <Mail className="h-5 w-5 text-khaki-700 mr-2 dark:text-khaki-400" />
-                    <a href="mailto:m.bauwens@progineer.fr" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
-                      m.bauwens@progineer.fr
+                    <a href="mailto:progineer.moe@gmail.com" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
+                      progineer.moe@gmail.com
                     </a>
                   </div>
                   
@@ -110,12 +110,12 @@ const Equipe = () => {
               </div>
             </div>
 
-            {/* Team Member - Mael Allano */}
+            {/* Team Member - Mael Allano - Now using Marvin's photo */}
             <div className="flex flex-col gap-8 items-start bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow dark:bg-gray-900 dark:border-gray-800">
               <div className="w-full">
                 <div className="rounded-xl overflow-hidden mb-6 aspect-square max-w-[240px] mx-auto">
                   <img 
-                    src="/lovable-uploads/3f77f084-4061-4e36-9f32-85cb08372b51.png" 
+                    src="/lovable-uploads/23fe2b30-1f84-472d-a3c8-d4c413ffbbc4.png" 
                     alt="Mael Allano - Directeur Général Progineer" 
                     className="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-500"
                     loading="lazy"
@@ -130,15 +130,15 @@ const Equipe = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-center">
                     <Mail className="h-5 w-5 text-khaki-700 mr-2 dark:text-khaki-400" />
-                    <a href="mailto:m.allano@progineer.fr" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
-                      m.allano@progineer.fr
+                    <a href="mailto:progineer.moe@gmail.com" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
+                      progineer.moe@gmail.com
                     </a>
                   </div>
                   
                   <div className="flex items-center justify-center">
                     <Phone className="h-5 w-5 text-khaki-700 mr-2 dark:text-khaki-400" />
-                    <a href="tel:+33783762156" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
-                      +33 7 83 76 21 56
+                    <a href="tel:+33611498716" className="text-gray-600 hover:text-khaki-700 dark:text-gray-400 dark:hover:text-khaki-400">
+                      +33 6 11 49 87 16
                     </a>
                   </div>
                   
@@ -186,7 +186,7 @@ const Equipe = () => {
         </Container>
       </section>
 
-      {/* Skills section */}
+      {/* Skills section - Enhanced with icons */}
       <section className="py-16 bg-stone-50 border-t border-stone-200 dark:bg-gray-900 dark:border-gray-800">
         <Container>
           <div className="text-center mb-12">
@@ -197,28 +197,46 @@ const Equipe = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {[
-              "Réglementation et démarches administratives",
-              "Optimisation énergétique et environnementale",
-              "Pilotage d'appels d'offres",
-              "Conseil en aménagement urbain et territorial",
-              "Assistance à la réception et livraison des travaux",
-              "Planification et gestion budgétaire",
-              "Études de marché et valorisation immobilière",
-              "Expertise en rénovation et réhabilitation",
-              "Accompagnement en design d'espace",
-              "Conseil en montage financier et subventions"
-            ].map((skill, index) => (
-              <div 
-                key={index} 
-                className={cn(
-                  "bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex items-center justify-center text-center h-full",
-                  "dark:bg-gray-800 dark:border-gray-700"
-                )}
-              >
-                <p className="text-gray-700 font-medium dark:text-gray-200">{skill}</p>
-              </div>
-            ))}
+            <SkillCard 
+              icon={FileText} 
+              text="Réglementation et démarches administratives" 
+            />
+            <SkillCard 
+              icon={Gauge} 
+              text="Optimisation énergétique et environnementale" 
+            />
+            <SkillCard 
+              icon={Wrench} 
+              text="Pilotage d'appels d'offres" 
+            />
+            <SkillCard 
+              icon={Users} 
+              text="Conseil en aménagement urbain et territorial" 
+            />
+            <SkillCard 
+              icon={HardHat} 
+              text="Assistance à la réception et livraison des travaux" 
+            />
+            <SkillCard 
+              icon={Calculator} 
+              text="Planification et gestion budgétaire" 
+            />
+            <SkillCard 
+              icon={LineChart} 
+              text="Études de marché et valorisation immobilière" 
+            />
+            <SkillCard 
+              icon={HomeLine} 
+              text="Expertise en rénovation et réhabilitation" 
+            />
+            <SkillCard 
+              icon={Paintbrush} 
+              text="Accompagnement en design d'espace" 
+            />
+            <SkillCard 
+              icon={Coins} 
+              text="Conseil en montage financier et subventions" 
+            />
           </div>
         </Container>
       </section>
@@ -288,6 +306,18 @@ const Equipe = () => {
         </Container>
       </section>
     </>
+  );
+};
+
+// Skill card component to display a skill with an icon
+const SkillCard = ({ icon: Icon, text }: { icon: React.ElementType, text: string }) => {
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow flex flex-col items-center justify-center text-center h-full dark:bg-gray-800 dark:border-gray-700 hover:translate-y-[-4px] transition-all duration-300">
+      <div className="bg-khaki-100 w-12 h-12 rounded-full flex items-center justify-center mb-4 text-khaki-800 dark:bg-khaki-800/30 dark:text-khaki-400">
+        <Icon size={22} />
+      </div>
+      <p className="text-gray-700 font-medium dark:text-gray-200">{text}</p>
+    </div>
   );
 };
 

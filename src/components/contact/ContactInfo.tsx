@@ -15,8 +15,11 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-medium mb-1">Téléphone</h3>
-            <p className="text-gray-600">
-              <a href="tel:+33783762156" className="hover:text-progineer-gold">+33 7 83 76 21 56</a>
+            <p className="text-gray-600 dark:text-gray-300">
+              <a href="tel:+33783762156" className="hover:text-progineer-gold">+33 7 83 76 21 56 (Marvin)</a>
+            </p>
+            <p className="text-gray-600 dark:text-gray-300">
+              <a href="tel:+33611498716" className="hover:text-progineer-gold">+33 6 11 49 87 16 (Mael)</a>
             </p>
           </div>
         </div>
@@ -27,7 +30,7 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-medium mb-1">Email</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               <a href="mailto:progineer.moe@gmail.com" className="hover:text-progineer-gold">progineer.moe@gmail.com</a>
             </p>
           </div>
@@ -39,7 +42,7 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-medium mb-1">Zones d'intervention</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Marseille, Saint-Tropez, Toulon, Nice, Cannes, Fréjus<br />
               Toute la région Provence-Alpes-Côte d'Azur
             </p>
@@ -52,7 +55,7 @@ const ContactInfo = () => {
           </div>
           <div>
             <h3 className="text-lg font-medium mb-1">Horaires</h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-300">
               Lundi - Vendredi : 9h00 - 18h00<br />
               Samedi : Sur rendez-vous
             </p>
@@ -62,7 +65,7 @@ const ContactInfo = () => {
       
       <div className="mt-10">
         <h2 className="text-2xl font-semibold mb-6">Nos services</h2>
-        <ul className="space-y-2 text-gray-600">
+        <ul className="space-y-2 text-gray-600 dark:text-gray-300">
           <li>• Construction sur mesure</li>
           <li>• Rénovation énergétique</li>
           <li>• Extension & agrandissement</li>
