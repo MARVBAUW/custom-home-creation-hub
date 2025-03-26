@@ -33,7 +33,7 @@ const NavItem = ({ item, isActive, openDropdown, toggleDropdown }: NavItemProps)
             )} />
           </button>
           {openDropdown === item.name && (
-            <div className="absolute left-0 top-full mt-1 w-56 rounded-md border border-stone-200/60 bg-white/80 backdrop-blur-sm shadow-lg z-50">
+            <div className="absolute left-0 top-full mt-1 w-56 rounded-md border border-stone-200/60 bg-white shadow-lg z-50">
               <ul className="py-1">
                 {item.subLinks.map((subLink) => (
                   <li key={subLink.name}>

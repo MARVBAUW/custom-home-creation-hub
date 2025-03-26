@@ -18,16 +18,16 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 z-40 bg-white/90 backdrop-blur-md mt-16 overflow-auto">
+    <div className="fixed inset-0 z-40 bg-white/95 backdrop-blur-md mt-16 overflow-auto">
       <Container className="flex flex-col h-full pt-3 pb-20">
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {navLinks.map((item) => (
-            <li key={item.name} className="border-b border-stone-100/70 pb-1.5">
+            <li key={item.name} className="border-b border-stone-100/70 pb-2">
               {item.subLinks ? (
-                <>
+                <div className="w-full">
                   <button
                     onClick={() => toggleDropdown(item.name === openDropdown ? null : item.name)}
-                    className="flex items-center justify-between w-full py-1.5 text-stone-800 text-sm"
+                    className="flex items-center justify-between w-full py-2 text-stone-800 text-sm font-medium"
                   >
                     {item.name}
                     <ChevronDown className={cn(
@@ -36,12 +36,12 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
                     )} />
                   </button>
                   {openDropdown === item.name && (
-                    <ul className="ml-3 mt-1 space-y-1 mb-1.5">
+                    <ul className="ml-3 mt-1 space-y-1 mb-2 bg-khaki-50/50 rounded-md p-2">
                       {item.subLinks.map((subLink) => (
                         <li key={subLink.name}>
                           <Link
                             to={subLink.path}
-                            className="block py-1.5 text-xs text-stone-700 hover:text-khaki-800"
+                            className="block py-2 text-xs text-stone-700 hover:text-khaki-800"
                             onClick={() => toggleDropdown(null)}
                           >
                             {subLink.name}
@@ -50,11 +50,11 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
                       ))}
                     </ul>
                   )}
-                </>
+                </div>
               ) : (
                 <Link
                   to={item.path}
-                  className="block py-1.5 text-sm text-stone-800 hover:text-khaki-800"
+                  className="block py-2 text-sm font-medium text-stone-800 hover:text-khaki-800"
                 >
                   {item.name}
                 </Link>
@@ -79,8 +79,8 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
             <Button href="/contact" className="w-full justify-center">
               Contact
             </Button>
-            <Button href="/estimation" variant="outline" className="w-full justify-center">
-              Estimer mon projet
+            <Button href="/workspace" variant="outline" className="w-full justify-center">
+              Espace ressources
             </Button>
           </div>
         </div>
