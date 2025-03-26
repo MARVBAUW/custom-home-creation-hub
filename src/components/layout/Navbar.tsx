@@ -7,7 +7,6 @@ import Container from '@/components/common/Container';
 import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
 import { navLinks } from './navbar/types';
-import Logo from '@/components/common/Logo';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 
 const Navbar = () => {
@@ -45,15 +44,6 @@ const Navbar = () => {
     >
       <Container size="lg" className="px-4">
         <nav className="flex items-center justify-between w-full">
-          {/* Logo */}
-          <div className="flex-shrink-0 relative z-50 mr-2">
-            <Logo 
-              variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
-              size="sm" 
-              asLink={true}
-            />
-          </div>
-
           {/* Desktop Navigation & Controls */}
           <div className="flex-grow flex items-center justify-between">
             <DesktopNav 
