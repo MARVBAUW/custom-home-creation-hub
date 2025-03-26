@@ -69,10 +69,10 @@ global.console = {
 };
 
 // Create a mock jest object if it doesn't exist
-if (!global.jest) {
-  global.jest = {
+if (typeof jest === 'undefined') {
+  (window as any).jest = {
     fn: () => jest.fn(),
-    spyOn: (object, method) => jest.spyOn(object, method),
+    spyOn: (object: any, method: string) => jest.spyOn(object, method),
     clearAllMocks: () => {},
     restoreAllMocks: () => {},
   };
@@ -104,5 +104,7 @@ if (typeof expect !== 'function') {
 }
 
 afterEach(() => {
-  jest.clearAllMocks();
+  if (typeof jest !== 'undefined') {
+    jest.clearAllMocks();
+  }
 });
