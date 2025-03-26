@@ -25,11 +25,11 @@ const Footer = () => {
                   className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
+                <a href="https://www.instagram.com/progineer_moe/profilecard/?igsh=NjAwa3pkaWtlMTZ0" target="_blank" rel="noopener noreferrer" 
                   className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+                <a href="https://fr.linkedin.com/company/progineer-maitrise-d-oeuvre" target="_blank" rel="noopener noreferrer" 
                   className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
                   <Linkedin className="h-4 w-4" />
                 </a>

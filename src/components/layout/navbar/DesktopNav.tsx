@@ -49,7 +49,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
           <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>
         </a>
-        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white whitespace-nowrap">
           Estimer mon projet
         </Button>
         <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
