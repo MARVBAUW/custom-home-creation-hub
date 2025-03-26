@@ -36,6 +36,7 @@ import ClientBudget from "./pages/client/ClientBudget";
 import ClientDocumentation from "./pages/client/ClientDocumentation";
 import ClientOnboarding from "./pages/client/ClientOnboarding";
 import AdminProjectCreation from "./pages/client/AdminProjectCreation";
+import AdminProjectsOverview from "./pages/client/AdminProjectsOverview";
 
 // Auth Component
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -105,7 +106,7 @@ const App = () => (
             } />
             <Route path="/workspace/client-area/admin/clients" element={
               <ProtectedRoute>
-                <AdminProjectCreation />
+                <AdminProjectsOverview />
               </ProtectedRoute>
             } />
             
