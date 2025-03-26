@@ -3,7 +3,7 @@ import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { Briefcase, Building, GraduationCap, Mail, Phone, Linkedin, FileText, Gauge, Wrench, Users, HardHat, Calculator, LineChart, HomeLine, Paintbrush, Coins } from 'lucide-react';
+import { Briefcase, Building, GraduationCap, Mail, Phone, Linkedin, FileText, Gauge, Wrench, Users, HardHat, Calculator, LineChart, Home, Paintbrush, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Equipe = () => {
@@ -226,7 +226,7 @@ const Equipe = () => {
               text="Études de marché et valorisation immobilière" 
             />
             <SkillCard 
-              icon={HomeLine} 
+              icon={Home} 
               text="Expertise en rénovation et réhabilitation" 
             />
             <SkillCard 
