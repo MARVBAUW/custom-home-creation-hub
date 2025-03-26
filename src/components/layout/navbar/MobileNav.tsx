@@ -7,6 +7,12 @@ import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 import { NavLink } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -27,33 +33,26 @@ const MobileNav = ({ isOpen, navLinks, openDropdown, toggleDropdown }: MobileNav
           {navLinks.map((item) => (
             <li key={item.name} className="border-b border-stone-200 pb-1">
               {item.subLinks ? (
-                <div className="w-full">
-                  <button
-                    onClick={() => toggleDropdown(item.name === openDropdown ? null : item.name)}
-                    className="flex items-center justify-between w-full py-2 text-stone-800 text-xs font-medium"
-                  >
-                    {item.name}
-                    <ChevronDown className={cn(
-                      "h-3 w-3 transition-transform text-stone-500",
-                      openDropdown === item.name ? "rotate-180" : ""
-                    )} />
-                  </button>
-                  {openDropdown === item.name && (
-                    <ul className="ml-2 mt-0 mb-1 space-y-0.5 bg-khaki-50/80 rounded-md p-1.5">
-                      {item.subLinks.map((subLink) => (
-                        <li key={subLink.name}>
-                          <Link
-                            to={subLink.path}
-                            className="block py-2 px-2 text-xs text-stone-700 hover:text-khaki-800 hover:bg-khaki-50 rounded"
-                            onClick={() => toggleDropdown(null)}
-                          >
-                            {subLink.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center justify-between w-full py-2 text-stone-800 text-xs font-medium">
+                      {item.name}
+                      <ChevronDown className="h-3 w-3 transition-transform text-stone-500" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56 bg-white">
+                    {item.subLinks.map((subLink) => (
+                      <DropdownMenuItem key={subLink.name} asChild>
+                        <Link
+                          to={subLink.path}
+                          className="w-full cursor-pointer text-xs"
+                        >
+                          {subLink.name}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <Link
                   to={item.path}
