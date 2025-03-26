@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
@@ -26,7 +27,6 @@ import ClientGallery from './pages/client/ClientGallery';
 import AdminProjectsOverview from './pages/client/AdminProjectsOverview';
 import AdminQuotes from './pages/client/AdminQuotes';
 import ProjectDetails from './pages/client/ProjectDetails';
-import { ThemeProvider } from './hooks/use-theme';
 
 // Composant de chargement pendant le chargement asynchrone des pages
 const LoadingFallback = () => (
@@ -37,26 +37,25 @@ const LoadingFallback = () => (
 
 function App() {
   return (
-    <ThemeProvider>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/a-propos" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/realisations-architecte-maison" element={<Realisations />} />
-              <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
-              <Route path="/estimation" element={<Estimation />} />
-              <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-              <Route path="/mentions-legales" element={<MentionsLegales />} />
-              <Route path="/cgv" element={<CGV />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/devenir-partenaire" element={<Partenaires />} />
-              <Route path="/parrainage-travaux" element={<Parrainage />} />
-              
-              {/* Workspace routes */}
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/a-propos" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/realisations-architecte-maison" element={<Realisations />} />
+            <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
+            <Route path="/estimation" element={<Estimation />} />
+            <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/cgv" element={<CGV />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/devenir-partenaire" element={<Partenaires />} />
+            <Route path="/parrainage-travaux" element={<Parrainage />} />
+            
+            {/* Workspace routes */}
             <Route path="/workspace" element={<Workspace />} />
             
             {/* Client Area routes */}
@@ -82,13 +81,12 @@ function App() {
                 <a href="/" className="btn-primary">Retour à l'accueil</a>
               </div>
             } />
-            </Routes>
-          </Suspense>
-        </main>
-        <Footer />
-        <Toaster />
-      </div>
-    </ThemeProvider>
+          </Routes>
+        </Suspense>
+      </main>
+      <Footer />
+      <Toaster />
+    </div>
   );
 }
 

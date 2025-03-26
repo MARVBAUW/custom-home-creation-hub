@@ -54,13 +54,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  // Retourner un placeholder pendant le chargement pour éviter le flash
-  if (!mounted) {
-    return <>{children}</>;
-  }
+  const contextValue = {
+    theme,
+    setTheme,
+    toggleTheme
+  };
 
+  // Return context provider with the value
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
