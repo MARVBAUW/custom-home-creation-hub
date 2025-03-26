@@ -1,125 +1,63 @@
 
-import React, { useEffect } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  FileText, 
-  Calendar, 
-  MessageSquare, 
-  User, 
-  LogOut
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ClientNavigation from '@/components/client/ClientNavigation';
 import ClientAreaWelcome from '@/components/client/ClientAreaWelcome';
-import ClientAreaNotifications from '@/components/client/ClientAreaNotifications';
-import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
-import { useAuth } from '@/hooks/useAuth';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
+import ClientAreaNotifications from '@/components/client/ClientAreaNotifications';
+import { useClientAuth } from '@/hooks/useClientAuth';
+import AdminSwitch from '@/components/client/AdminSwitch';
+import { toast } from '@/hooks/use-toast';
 
 const ClientArea = () => {
-  const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
+  const [isAdminMode, setIsAdminMode] = useState(false);
   
-  // Log des informations d'authentification pour faciliter le débogage
-  useEffect(() => {
-    console.log('ClientArea: Auth State', { 
-      user,
-      loading,
-      isAuthenticated: !!user
+  // Handle admin mode toggle
+  const handleAdminModeToggle = (checked: boolean) => {
+    setIsAdminMode(checked);
+    toast({
+      title: checked ? "Mode administrateur activé" : "Mode client activé",
+      description: checked 
+        ? "Vous pouvez maintenant gérer les dossiers et les clients." 
+        : "Vous voyez maintenant l'interface client standard.",
     });
-    
-    if (!loading && !user) {
-      console.log('Authentication required, redirecting to sign-in');
-      navigate('/workspace/sign-in');
-    }
-  }, [user, loading, navigate]);
+  };
 
-  // Show loading spinner with reduced timeout (max 2 seconds)
-  if (loading) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
-        <p className="text-gray-600">Chargement de votre espace client...</p>
-        <p className="text-sm text-gray-500 mt-2">Patientez quelques instants...</p>
-      </div>
-    );
+  if (!isLoaded || !isSignedIn) {
+    return <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+    </div>;
   }
 
-  // Show auth required message if not signed in
-  if (!user) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <div className="text-center max-w-md p-8 bg-white rounded-xl shadow-md border border-gray-200">
-          <h2 className="text-2xl font-semibold mb-4">Accès restreint</h2>
-          <p className="text-gray-600 mb-6">Vous devez être connecté pour accéder à votre espace client personnel.</p>
-          <div className="space-y-3">
-            <Link to="/workspace/sign-in" className="block">
-              <Button className="w-full bg-khaki-600 hover:bg-khaki-700">Se connecter</Button>
-            </Link>
-            <Link to="/workspace/sign-up" className="block">
-              <Button variant="outline" className="w-full">Créer un compte</Button>
-            </Link>
-            <Link to="/workspace" className="block">
-              <Button variant="ghost" className="w-full">Retour à l'accueil</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Extract user information
-  const fullName = user.user_metadata?.full_name || user.email?.split('@')[0];
-  const userEmail = user.email;
-
-  // Normal authenticated view
   return (
     <>
       <Helmet>
-        <title>Espace Client | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Accédez à votre espace client personnalisé Progineer pour suivre l'avancement de vos projets et consulter vos documents." />
+        <title>Espace Client | Progineer</title>
+        <meta name="description" content="Accédez à votre espace client Progineer pour suivre l'avancement de vos projets de construction et rénovation." />
       </Helmet>
 
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
         <Container size="lg">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
               <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-                Espace Client
+                {isAdminMode ? 'Administration' : 'Espace Client'}
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                Bienvenue, {fullName || 'Client'}
+                {isAdminMode ? 'Tableau de bord administrateur' : 'Bienvenue dans votre espace client'}
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mb-8">
-                Retrouvez ici tous les éléments relatifs à votre projet.
+                {isAdminMode 
+                  ? 'Gérez les dossiers clients, les projets et les communications.' 
+                  : 'Retrouvez ici toutes les informations concernant votre projet de construction.'}
               </p>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-khaki-100 rounded-full flex items-center justify-center">
-                  <User className="h-5 w-5 text-khaki-600" />
-                </div>
-                <div className="ml-3">
-                  <div className="text-sm font-medium">{fullName || userEmail}</div>
-                  <div className="text-xs text-gray-500">Client</div>
-                </div>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center"
-                onClick={() => {
-                  signOut();
-                  navigate('/workspace');
-                }}
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Déconnexion
-              </Button>
-            </div>
+            
+            {/* Admin Switch */}
+            <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
           </div>
         </Container>
       </section>
@@ -129,53 +67,46 @@ const ClientArea = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-                <div className="p-4 border-b border-gray-200 bg-gray-50">
-                  <h2 className="font-medium">Navigation</h2>
-                </div>
-                <div className="p-2">
-                  <Link to="/workspace/client-area" className="flex items-center p-3 rounded-md bg-khaki-50 text-khaki-800 font-medium">
-                    <User className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Tableau de bord</span>
-                  </Link>
-                  <Link to="/workspace/client-area/documents" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <FileText className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Documents</span>
-                  </Link>
-                  <Link to="/workspace/client-area/projects" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <Calendar className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Suivi de projet</span>
-                  </Link>
-                  <Link to="/workspace/client-area/messages" className="flex items-center p-3 rounded-md text-gray-700 hover:bg-gray-50">
-                    <MessageSquare className="h-4 w-4 mr-3 flex-shrink-0" />
-                    <span>Messages</span>
-                  </Link>
-                </div>
-              </div>
+              <ClientNavigation isAdminMode={isAdminMode} />
             </div>
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <Tabs defaultValue="overview" className="space-y-6">
-                <TabsList className="bg-white border border-gray-200 p-1">
-                  <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-                  <TabsTrigger value="notifications">Notifications</TabsTrigger>
-                  <TabsTrigger value="documents">Documents récents</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="overview" className="space-y-6">
-                  <ClientAreaWelcome />
-                  <ClientAreaProjectProgress />
-                </TabsContent>
-                
-                <TabsContent value="notifications" className="space-y-6">
-                  <ClientAreaNotifications />
-                </TabsContent>
-                
-                <TabsContent value="documents" className="space-y-6">
-                  <ClientAreaRecentDocuments />
-                </TabsContent>
-              </Tabs>
+              {isAdminMode ? (
+                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                  <h2 className="text-xl font-semibold mb-4">Panneau d'administration</h2>
+                  <p className="text-gray-600 mb-4">
+                    Cette interface vous permet de gérer les dossiers clients, les planifications, et les communications.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div className="p-4 bg-red-50 border border-red-100 rounded-lg">
+                      <h3 className="font-medium text-red-800">Mode administrateur</h3>
+                      <p className="text-sm text-red-700 mt-1">
+                        Vous avez accès à toutes les fonctionnalités d'administration.
+                      </p>
+                    </div>
+                    <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                      <h3 className="font-medium text-blue-800">Gestion des clients</h3>
+                      <p className="text-sm text-blue-700 mt-1">
+                        Accédez à la liste des clients et gérez leurs dossiers.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <ClientAreaWelcome user={user} />
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <ClientAreaProjectProgress />
+                    <ClientAreaRecentDocuments />
+                  </div>
+                  
+                  <div className="mt-6">
+                    <ClientAreaNotifications />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </Container>
