@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Container from '@/components/common/Container';
 import { Star, Quote, ExternalLink } from 'lucide-react';
@@ -122,8 +121,7 @@ const Testimonials = () => {
         <div className="text-center mt-12">
           <Button 
             href="https://g.page/r/CQrPRwGqQEJs/review" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+            isExternal={true}
             variant="outline" 
             className="bg-white shadow-md hover:shadow-lg transition-all duration-300"
           >

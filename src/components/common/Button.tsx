@@ -9,6 +9,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
   href?: string;
   isExternal?: boolean;
+  target?: string;
+  rel?: string;
 }
 
 const Button = ({
@@ -18,6 +20,8 @@ const Button = ({
   size = 'md',
   href,
   isExternal = false,
+  target,
+  rel,
   ...props
 }: ButtonProps) => {
   const baseStyles = cn(
@@ -39,8 +43,8 @@ const Button = ({
         <a 
           href={href} 
           className={baseStyles}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={target || "_blank"}
+          rel={rel || "noopener noreferrer"}
         >
           {children}
         </a>
