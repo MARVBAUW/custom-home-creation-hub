@@ -1,14 +1,15 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { SignOutButton } from '@clerk/clerk-react';
+import { SignOutButton, useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { 
   FileText, 
   Calendar, 
   MessageSquare, 
   User, 
-  LogOut 
+  LogOut,
+  AlertTriangle
 } from 'lucide-react';
 import Container from '@/components/common/Container';
 import { Button } from '@/components/ui/button';
@@ -19,21 +20,32 @@ import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocum
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
   const { isLoaded, clerkLoaded, isSignedIn, user } = useClientAuth({ 
-    redirectIfUnauthenticated: true,
-    redirectTo: '/workspace/sign-in'
+    redirectIfUnauthenticated: false // Disable redirect to handle demo mode
   });
+  
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  // Set a timeout to handle Clerk not loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoadingTimeout(true);
+    }, 5000); // 5 seconds timeout
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Add debugging for loading state
   useEffect(() => {
-    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn });
-  }, [isLoaded, clerkLoaded, isSignedIn]);
+    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn, loadingTimeout });
+  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimeout]);
 
   // Show enhanced loading spinner with timeout to prevent infinite spinners
-  if (!clerkLoaded || !isLoaded) {
+  if (!isLoaded && !loadingTimeout) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
@@ -43,18 +55,89 @@ const ClientArea = () => {
     );
   }
 
-  // Safety check - if for some reason we're still not authenticated after loading
+  // Show demo mode if loading times out
+  if (loadingTimeout && !isLoaded) {
+    return (
+      <>
+        <Helmet>
+          <title>Espace Client (Mode Démo) | Progineer</title>
+        </Helmet>
+        
+        <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+          <Container size="lg">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div>
+                <div className="inline-block px-3 py-1 mb-6 rounded-full bg-amber-100 text-amber-800 text-sm font-medium">
+                  Mode Démonstration
+                </div>
+                <h1 className="text-3xl md:text-4xl font-semibold mb-2">
+                  Espace Client (Aperçu)
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl mb-8">
+                  Ceci est une version de démonstration de l'espace client.
+                </p>
+              </div>
+              <div>
+                <Link to="/workspace/sign-in">
+                  <Button size="sm" className="flex items-center bg-khaki-600 hover:bg-khaki-700">
+                    <User className="h-4 w-4 mr-2" />
+                    Se connecter
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            <Alert className="mt-4 border-amber-200 bg-amber-50">
+              <AlertTriangle className="h-4 w-4 text-amber-800" />
+              <AlertTitle className="text-amber-800">Mode démonstration activé</AlertTitle>
+              <AlertDescription className="text-amber-700">
+                Le service d'authentification n'a pas pu être chargé. Vous êtes en mode démonstration avec des données fictives.{' '}
+                <Link to="/workspace/sign-in" className="font-medium underline hover:text-amber-900">Essayer de se connecter</Link>
+              </AlertDescription>
+            </Alert>
+          </Container>
+        </section>
+        
+        <section className="py-16">
+          <Container size="lg">
+            <ClientAreaWelcome />
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ClientAreaNotifications />
+              <ClientAreaRecentDocuments />
+            </div>
+            <div className="mt-8">
+              <ClientAreaProjectProgress />
+            </div>
+          </Container>
+        </section>
+      </>
+    );
+  }
+
+  // If user is not authenticated, show login prompt
   if (!isSignedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
-        <p className="text-gray-600 mb-4">Vous devez être connecté pour accéder à cette page.</p>
-        <Link to="/workspace/sign-in">
-          <Button className="bg-khaki-600 hover:bg-khaki-700">Se connecter</Button>
-        </Link>
+        <div className="text-center max-w-md p-8 bg-white rounded-xl shadow-md border border-gray-200">
+          <h2 className="text-2xl font-semibold mb-4">Accès restreint</h2>
+          <p className="text-gray-600 mb-6">Vous devez être connecté pour accéder à votre espace client personnel.</p>
+          <div className="space-y-3">
+            <Link to="/workspace/sign-in" className="block">
+              <Button className="w-full bg-khaki-600 hover:bg-khaki-700">Se connecter</Button>
+            </Link>
+            <Link to="/workspace/sign-up" className="block">
+              <Button variant="outline" className="w-full">Créer un compte</Button>
+            </Link>
+            <Link to="/workspace" className="block">
+              <Button variant="ghost" className="w-full">Retour à l'accueil</Button>
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
+  // Normal authenticated view
   return (
     <>
       <Helmet>

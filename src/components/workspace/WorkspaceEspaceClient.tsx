@@ -1,22 +1,39 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
-import { Check, BookOpen } from 'lucide-react';
+import { Check, BookOpen, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ClientFeaturesOverview from './client/ClientFeaturesOverview';
 import ClientServiceCards from './client/ClientServiceCards';
 import ClientLoginCard from './client/ClientLoginCard';
 import SecurityAlert from './client/SecurityAlert';
 import { useUser } from '@clerk/clerk-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const WorkspaceEspaceClient = () => {
   const { isSignedIn, isLoaded } = useUser();
+  const [clerkTimeout, setClerkTimeout] = useState(false);
+  
+  // Set a timeout to handle Clerk not loading properly
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoaded) {
+        setClerkTimeout(true);
+      }
+    }, 5000); // 5 seconds timeout
+    
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
   
   // Add debugging for loading and authentication state
   useEffect(() => {
-    console.log('WorkspaceEspaceClient: Auth State', { isSignedIn, isLoaded });
-  }, [isSignedIn, isLoaded]);
+    console.log('WorkspaceEspaceClient: Auth State', { 
+      isSignedIn, 
+      isLoaded, 
+      clerkTimeout 
+    });
+  }, [isSignedIn, isLoaded, clerkTimeout]);
   
   return (
     <div className="space-y-6">
@@ -36,6 +53,31 @@ const WorkspaceEspaceClient = () => {
                 Accéder à mon espace client
               </Button>
             </Link>
+          </div>
+        )}
+        
+        {clerkTimeout && !isLoaded && (
+          <div className="mt-4">
+            <Alert className="border-amber-200 bg-amber-50">
+              <AlertTriangle className="h-4 w-4 text-amber-800" />
+              <AlertTitle className="text-amber-800">Problème de connexion détecté</AlertTitle>
+              <AlertDescription className="text-amber-700">
+                Le service d'authentification ne répond pas correctement. Vous pouvez accéder à la version de démonstration de l'espace client.
+              </AlertDescription>
+            </Alert>
+            
+            <div className="mt-4 space-x-4">
+              <Link to="/workspace/client-area">
+                <Button className="bg-khaki-600 hover:bg-khaki-700 text-white">
+                  Accéder en mode démo
+                </Button>
+              </Link>
+              <Link to="/workspace/sign-in">
+                <Button variant="outline">
+                  Essayer de se connecter
+                </Button>
+              </Link>
+            </div>
           </div>
         )}
       </div>
@@ -64,10 +106,35 @@ const WorkspaceEspaceClient = () => {
         </div>
         
         <div>
-          {!isLoaded ? (
+          {!isLoaded && !clerkTimeout ? (
             <div className="flex flex-col justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600 mb-3"></div>
               <p className="text-gray-600">Vérification de l'authentification...</p>
+              <p className="text-xs text-gray-500 mt-2">Patientez un instant...</p>
+            </div>
+          ) : clerkTimeout ? (
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertTriangle className="h-6 w-6 text-amber-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Accès temporaire</h3>
+                <p className="text-gray-600 mb-4">
+                  Accédez à la démonstration de l'espace client sans authentification.
+                </p>
+                <div className="space-y-3">
+                  <Link to="/workspace/client-area">
+                    <Button className="w-full bg-khaki-600 hover:bg-khaki-700 text-white">
+                      Mode démo
+                    </Button>
+                  </Link>
+                  <Link to="/workspace/sign-in">
+                    <Button variant="outline" className="w-full">
+                      Essayer de se connecter
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
           ) : isSignedIn ? (
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">

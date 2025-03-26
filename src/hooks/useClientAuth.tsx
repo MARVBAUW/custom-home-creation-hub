@@ -32,11 +32,13 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   // Fix debugging logs to properly display boolean values
   useEffect(() => {
     console.log('useClientAuth: Authentication State', { 
-      isSignedIn: isSignedIn, 
+      isSignedIn, 
       clerkLoaded, 
-      authChecked 
+      authChecked,
+      redirectIfAuthenticated,
+      redirectIfUnauthenticated
     });
-  }, [isSignedIn, clerkLoaded, authChecked]);
+  }, [isSignedIn, clerkLoaded, authChecked, redirectIfAuthenticated, redirectIfUnauthenticated]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
@@ -48,32 +50,40 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     
     console.log('Clerk loaded, auth state:', isSignedIn);
     
-    // Mark auth check as complete and set isLoaded to true
-    setAuthChecked(true);
-    setIsLoaded(true);
+    // Set timeout to mark auth as checked to prevent immediate redirects causing loops
+    setTimeout(() => {
+      setAuthChecked(true);
+      setIsLoaded(true);
+      
+      // Only redirect after a small delay to prevent redirection loops
+      if (isSignedIn === true && redirectIfAuthenticated) {
+        console.log('User authenticated, redirecting to client area');
+        toast({
+          title: 'Session détectée',
+          description: 'Redirection vers votre espace client...',
+          variant: 'default',
+        });
+        navigate('/workspace/client-area');
+      }
+      
+      if (isSignedIn === false && redirectIfUnauthenticated) {
+        console.log('User not authenticated, redirecting to sign in page');
+        toast({
+          title: 'Authentification requise',
+          description: 'Veuillez vous connecter pour accéder à cette page.',
+          variant: 'destructive',
+        });
+        navigate(redirectTo);
+      }
+    }, 300); // Small delay to prevent immediate redirects
     
-    // Handle authenticated user redirection
-    if (isSignedIn === true && redirectIfAuthenticated) {
-      console.log('User authenticated, redirecting to client area');
-      toast({
-        title: 'Session détectée',
-        description: 'Redirection vers votre espace client...',
-        variant: 'default',
-      });
-      navigate('/workspace/client-area');
-    }
-    
-    // Handle unauthenticated user redirection
-    if (isSignedIn === false && redirectIfUnauthenticated) {
-      console.log('User not authenticated, redirecting to sign in page');
-      toast({
-        title: 'Authentification requise',
-        description: 'Veuillez vous connecter pour accéder à cette page.',
-        variant: 'destructive',
-      });
-      navigate(redirectTo);
-    }
   }, [clerkLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
   
-  return { isLoaded, clerkLoaded, isSignedIn, user, authChecked };
+  return { 
+    isLoaded, 
+    clerkLoaded, 
+    isSignedIn: isSignedIn === undefined ? false : isSignedIn, 
+    user, 
+    authChecked 
+  };
 };

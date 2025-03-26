@@ -53,28 +53,44 @@ const SignIn = () => {
               <div className="flex flex-col items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
                 <p className="text-gray-600">Chargement du formulaire de connexion...</p>
+                <p className="text-sm text-gray-500 mt-4">
+                  Si le chargement persiste, vous pouvez essayer de{" "}
+                  <Link to="/workspace/client-area" className="text-khaki-600 hover:underline">
+                    continuer sans connexion
+                  </Link>
+                </p>
               </div>
             ) : (
-              <ClerkSignIn 
-                path="/workspace/sign-in"
-                routing="path"
-                signUpUrl="/workspace/sign-up"
-                redirectUrl="/workspace/client-area"
-                appearance={{
-                  elements: {
-                    formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
-                    card: 'shadow-none border-none',
-                    headerTitle: 'text-2xl font-semibold text-gray-800',
-                    headerSubtitle: 'text-gray-600',
-                    socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
-                    formFieldLabel: 'text-gray-700',
-                    formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
-                    footerActionLink: 'text-khaki-600 hover:text-khaki-700',
-                    rootBox: 'w-full',
-                    main: 'w-full'
-                  }
-                }}
-              />
+              <div>
+                <ClerkSignIn 
+                  path="/workspace/sign-in"
+                  routing="path"
+                  signUpUrl="/workspace/sign-up"
+                  redirectUrl="/workspace/client-area"
+                  appearance={{
+                    elements: {
+                      formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
+                      card: 'shadow-none border-none',
+                      headerTitle: 'text-2xl font-semibold text-gray-800',
+                      headerSubtitle: 'text-gray-600',
+                      socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
+                      formFieldLabel: 'text-gray-700',
+                      formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
+                      footerActionLink: 'text-khaki-600 hover:text-khaki-700',
+                      rootBox: 'w-full',
+                      main: 'w-full'
+                    }
+                  }}
+                />
+                <div className="mt-6 pt-6 border-t border-gray-200 text-center">
+                  <p className="text-sm text-gray-500">
+                    Si vous rencontrez des problèmes avec le service d'authentification, vous pouvez{" "}
+                    <Link to="/workspace/client-documentation" className="text-khaki-600 hover:underline">
+                      consulter la documentation
+                    </Link>
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </Container>
