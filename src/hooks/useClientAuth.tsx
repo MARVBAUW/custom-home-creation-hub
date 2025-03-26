@@ -24,18 +24,24 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     waitForAuthCheck = true
   } = options;
   
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded: clerkLoaded, isSignedIn, user } = useUser();
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   // Add debugging logs
   useEffect(() => {
-    console.log('useClientAuth: Authentication State', { isSignedIn, isLoaded, authChecked });
-  }, [isSignedIn, isLoaded, authChecked]);
+    console.log('useClientAuth: Authentication State', { isSignedIn, clerkLoaded, authChecked });
+  }, [isSignedIn, clerkLoaded, authChecked]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!clerkLoaded) return;
+    
+    // Mark fully loaded after a short delay to ensure UI transitions properly
+    const loadingTimeout = setTimeout(() => {
+      setIsLoaded(true);
+    }, 500);
     
     if (isSignedIn && redirectIfAuthenticated) {
       console.log('User already signed in, redirecting to client area');
@@ -59,7 +65,9 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     
     // Mark auth check as complete regardless of outcome
     setAuthChecked(true);
-  }, [isLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
+    
+    return () => clearTimeout(loadingTimeout);
+  }, [clerkLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
   
-  return { isLoaded, isSignedIn, user, authChecked };
+  return { isLoaded, clerkLoaded, isSignedIn, user, authChecked };
 };

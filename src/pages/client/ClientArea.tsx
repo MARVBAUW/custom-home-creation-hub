@@ -7,7 +7,6 @@ import {
   FileText, 
   Calendar, 
   MessageSquare, 
-  Bell, 
   User, 
   LogOut 
 } from 'lucide-react';
@@ -22,13 +21,13 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
-  const { isLoaded, isSignedIn, user, authChecked } = useClientAuth({ 
+  const { isLoaded, clerkLoaded, isSignedIn, user, authChecked } = useClientAuth({ 
     redirectIfUnauthenticated: true,
     redirectTo: '/workspace/sign-in'
   });
 
-  // Show loading spinner only if either auth is still loading or we're waiting for redirect
-  const isLoading = !isLoaded || (!isSignedIn && !authChecked);
+  // Show loading spinner if authentication is still being verified
+  const isLoading = !clerkLoaded || (!isSignedIn && !authChecked);
 
   if (isLoading) {
     return (
@@ -39,7 +38,6 @@ const ClientArea = () => {
   }
 
   // At this point, user should be authenticated due to redirectIfUnauthenticated
-  // But add an extra safeguard
   if (!isSignedIn) {
     return null;
   }

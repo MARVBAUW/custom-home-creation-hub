@@ -81,8 +81,8 @@ const WorkspaceEspaceClient = () => {
               <ClientLoginCard />
             )
           ) : (
-            <div className="flex justify-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+            <div className="flex justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600"></div>
             </div>
           )}
           <SecurityAlert />

@@ -4,20 +4,17 @@ import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useClientAuth } from '@/hooks/useClientAuth';
-import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
   // Use the custom auth hook with redirection if authenticated
-  const { isLoaded, isSignedIn, authChecked } = useClientAuth({ 
+  const { clerkLoaded, isSignedIn, authChecked } = useClientAuth({ 
     redirectIfAuthenticated: true 
   });
   
-  const navigate = useNavigate();
-
   // Add debugging logs
   useEffect(() => {
-    console.log('SignIn Component: Authentication State', { isSignedIn, isLoaded, authChecked });
-  }, [isSignedIn, isLoaded, authChecked]);
+    console.log('SignIn Component: Authentication State', { isSignedIn, clerkLoaded, authChecked });
+  }, [isSignedIn, clerkLoaded, authChecked]);
 
   return (
     <>
@@ -45,7 +42,7 @@ const SignIn = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            {isLoaded ? (
+            {clerkLoaded ? (
               <ClerkSignIn 
                 path="/workspace/sign-in"
                 routing="path"
