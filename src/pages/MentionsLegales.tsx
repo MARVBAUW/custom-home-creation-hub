@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { useNavigate, useEffect } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Legal from './Legal';
 
 /**
