@@ -1,27 +1,10 @@
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
-
-// Using a type guard to safely check if Clerk is available
-const isClerkAvailable = (): boolean => {
-  return typeof window !== 'undefined' && !(window as any).__DEMO_MODE__;
-};
-
-// Safe import of Clerk's useUser hook
-let useUserSafe: any = () => ({ isLoaded: false, isSignedIn: false, user: null });
-
-// Only try to import Clerk if it should be available
-if (isClerkAvailable()) {
-  try {
-    // Dynamic import for Clerk
-    // This is a trick to avoid the error when Clerk isn't available
-    const clerk = require('@clerk/clerk-react');
-    useUserSafe = clerk.useUser;
-  } catch (error) {
-    console.error('Failed to import Clerk', error);
-  }
-}
+import { isClerkAvailable, useUserSafe } from '@/utils/clerkUtils';
+import { useDemoMode } from '@/hooks/useDemoMode';
+import { useAuthTimeout } from '@/hooks/useAuthTimeout';
 
 interface UseClientAuthOptions {
   redirectTo?: string;
@@ -43,12 +26,9 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     redirectIfAuthenticated = false,
     redirectIfUnauthenticated = false,
     waitForAuthCheck = true,
-    maxLoadingTime = 3000, // Reduced timeout to 3 seconds for faster feedback
+    maxLoadingTime = 3000,
     allowDemoMode = true
   } = options;
-  
-  // Check if we're in demo mode (set by main.tsx)
-  const isDemoModeFromWindow = typeof window !== 'undefined' && (window as any).__DEMO_MODE__;
   
   // Safe use of Clerk's useUser
   const { isLoaded: clerkLoaded, isSignedIn, user } = isClerkAvailable() ? useUserSafe() : { isLoaded: false, isSignedIn: false, user: null };
@@ -56,46 +36,52 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(isDemoModeFromWindow || false);
   
-  // Immediately set demo mode if window flag is set
+  // Use the demo mode hook
+  const { 
+    isDemoMode, 
+    setIsDemoMode, 
+    enableDemoMode, 
+    accessClientAreaInDemoMode 
+  } = useDemoMode();
+  
+  // Set auth as checked/loaded if in demo mode
   useEffect(() => {
-    if (isDemoModeFromWindow) {
-      console.log('Demo mode detected from window configuration');
-      setIsDemoMode(true);
+    if (isDemoMode) {
       setIsLoaded(true);
       setAuthChecked(true);
     }
-  }, [isDemoModeFromWindow]);
+  }, [isDemoMode]);
   
-  // Enhanced detection for Clerk initialization errors - using an even earlier check (2 seconds)
-  useEffect(() => {
-    // If we're already in demo mode, no need to check for Clerk errors
-    if (isDemoMode) return;
+  // Handle timeout for authentication loading
+  const handleTimeout = () => {
+    setIsLoaded(true);
+    setAuthChecked(true);
     
-    // If Clerk isn't available at all, switch to demo mode immediately
-    if (!isClerkAvailable()) {
-      console.log('Clerk is not available, enabling demo mode');
+    if (allowDemoMode) {
       setIsDemoMode(true);
-      setIsLoaded(true);
-      setAuthChecked(true);
-      return;
-    }
-    
-    const earlyErrorTimer = setTimeout(() => {
-      if (!clerkLoaded && !isDemoMode) {
-        console.log('Early Clerk initialization error check - potential issue detected');
-        
-        if (allowDemoMode) {
-          console.log('Preparing demo mode as fallback due to potential auth issues');
-          // Just prepare demo mode but don't activate immediately - wait for the full timeout
-        }
+      console.log('Enabling demo mode due to authentication timeout');
+      
+      // If on sign-in page and auth timed out, automatically redirect to client area
+      if (window.location.pathname === '/workspace/sign-in' || window.location.pathname === '/workspace/sign-up') {
+        console.log('Redirecting from sign-in page to client area in demo mode');
+        toast({
+          title: 'Mode démonstration activé',
+          description: 'Accès automatique à l\'espace client en mode démonstration.',
+          variant: 'default',
+        });
+        navigate('/workspace/client-area');
       }
-    }, 2000); // Earlier check at 2 seconds
-    
-    return () => clearTimeout(earlyErrorTimer);
-  }, [clerkLoaded, allowDemoMode, isDemoMode]);
+    }
+  };
+  
+  // Use the auth timeout hook
+  const { loadingTimedOut } = useAuthTimeout({
+    maxLoadingTime,
+    isClerkLoaded: clerkLoaded,
+    isDemoMode,
+    onTimeout: handleTimeout
+  });
   
   // Enhanced detection for Clerk initialization errors
   useEffect(() => {
@@ -106,9 +92,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     const handleClerkError = () => {
       if (!clerkLoaded && !isDemoMode) {
         console.log('Potential Clerk initialization error detected');
-        setLoadingTimedOut(true);
-        setIsLoaded(true);
-        setAuthChecked(true);
+        setLoadingTimeoutState();
         
         if (allowDemoMode) {
           setIsDemoMode(true);
@@ -124,6 +108,12 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
           }
         }
       }
+    };
+    
+    // Set common states for timeout
+    const setLoadingTimeoutState = () => {
+      setIsLoaded(true);
+      setAuthChecked(true);
     };
     
     // Check more aggressively for Clerk errors
@@ -143,39 +133,6 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
       redirectIfUnauthenticated
     });
   }, [isSignedIn, clerkLoaded, authChecked, loadingTimedOut, isDemoMode, redirectIfAuthenticated, redirectIfUnauthenticated]);
-  
-  // Set a timeout to handle cases where Clerk doesn't load properly
-  useEffect(() => {
-    // Skip if we're already in demo mode
-    if (isDemoMode) return;
-    
-    const timer = setTimeout(() => {
-      if (!clerkLoaded && !isDemoMode) {
-        console.log('Clerk loading timed out after', maxLoadingTime, 'ms');
-        setLoadingTimedOut(true);
-        setIsLoaded(true); // Mark as loaded even though Clerk failed
-        setAuthChecked(true);
-        
-        if (allowDemoMode) {
-          setIsDemoMode(true);
-          console.log('Enabling demo mode due to authentication timeout');
-          
-          // If on sign-in page and auth timed out, automatically redirect to client area
-          if (window.location.pathname === '/workspace/sign-in' || window.location.pathname === '/workspace/sign-up') {
-            console.log('Redirecting from sign-in page to client area in demo mode');
-            toast({
-              title: 'Mode démonstration activé',
-              description: 'Accès automatique à l\'espace client en mode démonstration.',
-              variant: 'default',
-            });
-            navigate('/workspace/client-area');
-          }
-        }
-      }
-    }, maxLoadingTime);
-    
-    return () => clearTimeout(timer);
-  }, [clerkLoaded, maxLoadingTime, navigate, allowDemoMode, isDemoMode]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
@@ -220,24 +177,6 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     redirectIfUnauthenticated,
     isDemoMode
   ]);
-  
-  // Function to enable demo mode manually
-  const enableDemoMode = () => {
-    setIsDemoMode(true);
-    setIsLoaded(true);
-    setAuthChecked(true);
-    toast({
-      title: 'Mode démonstration activé',
-      description: 'Vous accédez à l\'espace client en mode démonstration.',
-      variant: 'default',
-    });
-  };
-
-  // Function to access client area directly in demo mode
-  const accessClientAreaInDemoMode = () => {
-    enableDemoMode();
-    navigate('/workspace/client-area');
-  };
   
   return { 
     isLoaded: isLoaded || clerkLoaded || isDemoMode, 
