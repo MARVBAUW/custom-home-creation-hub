@@ -44,7 +44,7 @@ const PrestationsSubNav = () => {
     <div className="sticky top-20 z-30 w-full bg-gradient-to-r from-stone-50 to-white dark:from-stone-900 dark:to-stone-800 shadow-md border-b border-stone-200 dark:border-stone-700">
       <div className="max-w-screen-xl mx-auto px-4">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="h-12 p-1 rounded-md bg-stone-100/50 dark:bg-stone-800/50 w-full flex justify-center flex-wrap">
+          <TabsList className="h-12 p-1 rounded-md bg-stone-100/50 dark:bg-stone-800/50 w-full flex justify-start overflow-x-auto">
             {subLinks.map((link) => (
               <TabsTrigger 
                 key={link.id} 

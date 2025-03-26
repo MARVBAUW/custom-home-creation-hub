@@ -30,9 +30,9 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
   };
 
   return (
-    <div className="hidden md:flex items-center w-full">
+    <div className="hidden md:flex items-center justify-between w-full">
       {/* Navigation Links */}
-      <ul className="flex items-center gap-2 flex-wrap">
+      <ul className="flex items-center gap-2 flex-wrap max-w-xl">
         {navLinks.map((item) => (
           <NavItem 
             key={item.name} 
@@ -45,7 +45,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
       </ul>
 
       {/* Contact Info & CTAs - Desktop */}
-      <div className="flex items-center gap-2 ml-auto flex-shrink-0">
+      <div className="flex items-center gap-2 flex-shrink-0">
         <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800 whitespace-nowrap">
           <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>

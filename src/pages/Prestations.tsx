@@ -146,91 +146,97 @@ const Prestations = () => {
       {/* Services Overview */}
       <section className="py-16">
         <Container>
-          {/* Pour les particuliers et professionnels - deux colonnes */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-            {/* Pour les particuliers */}
-            <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-6 text-center text-khaki-800">Pour les particuliers</h2>
-              <ul className="space-y-3">
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Construction de maisons individuelles sur mesure</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Rénovation et extension</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Aménagement et design d'espace</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Audit et diagnostic</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Accompagnement administratif et technique</span>
-                </li>
-              </ul>
-            </div>
+          {/* Clientèle - particuliers et professionnels */}
+          <div className="mb-16">
+            <h2 className="text-2xl font-semibold mb-8 text-center text-khaki-800">Nos services par clientèle</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              {/* Pour les particuliers */}
+              <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
+                <h3 className="text-xl font-semibold mb-6 text-center text-khaki-800">Pour les particuliers</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Construction de maisons individuelles sur mesure</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Rénovation et extension</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Aménagement et design d'espace</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Audit et diagnostic</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Accompagnement administratif et technique</span>
+                  </li>
+                </ul>
+              </div>
 
-            {/* Pour les professionnels */}
-            <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
-              <h2 className="text-2xl font-semibold mb-6 text-center text-khaki-800">Pour les professionnels</h2>
-              <ul className="space-y-3">
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Construction ou aménagement de bureaux, commerces, hôtels</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Accompagnement des marchands de biens et investisseurs</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Solutions environnementales et énergétiques</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Diagnostics techniques</span>
-                </li>
-                <li className="flex items-start p-3 bg-khaki-50 rounded-md">
-                  <span className="mr-2 text-khaki-600 font-bold">•</span>
-                  <span>Dossiers de subvention</span>
-                </li>
-              </ul>
+              {/* Pour les professionnels */}
+              <div className="bg-white rounded-xl p-8 shadow-md border border-gray-100">
+                <h3 className="text-xl font-semibold mb-6 text-center text-khaki-800">Pour les professionnels</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Construction ou aménagement de bureaux, commerces, hôtels</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Accompagnement des marchands de biens et investisseurs</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Solutions environnementales et énergétiques</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Diagnostics techniques</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-khaki-50 rounded-md">
+                    <span className="mr-2 text-khaki-600 font-bold">•</span>
+                    <span className="text-gray-700">Dossiers de subvention</span>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          {/* Nos services détaillés */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {services.map((service) => (
-              <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300 scroll-mt-32">
-                <CardHeader>
-                  <div className="mb-4">{service.icon}</div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
-                  <CardDescription className="text-gray-600">
-                    {service.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <span className="mr-2 mt-1 text-khaki-600">•</span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button href="/contact" variant="outline" className="w-full justify-center">
-                    En savoir plus
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
+          {/* Services détaillés */}
+          <div>
+            <h2 className="text-2xl font-semibold mb-8 text-center text-khaki-800">Nos prestations détaillées</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+              {services.map((service) => (
+                <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300 scroll-mt-32">
+                  <CardHeader>
+                    <div className="mb-4">{service.icon}</div>
+                    <CardTitle className="text-xl">{service.title}</CardTitle>
+                    <CardDescription className="text-gray-600">
+                      {service.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {service.features.map((feature, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2 mt-1 text-khaki-600">•</span>
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardFooter>
+                    <Button href="/contact" variant="outline" className="w-full justify-center">
+                      En savoir plus
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
           </div>
         </Container>
       </section>
@@ -287,7 +293,7 @@ const Prestations = () => {
       </section>
 
       {/* CTA section */}
-      <section className="py-16 bg-khaki-600 text-white">
+      <section className="py-16 bg-khaki-600">
         <Container>
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl font-semibold mb-6 text-white">
