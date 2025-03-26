@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignOutButton, useUser } from '@clerk/clerk-react';
@@ -19,39 +18,34 @@ import ClientAreaNotifications from '@/components/client/ClientAreaNotifications
 import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
 import { useClientAuth } from '@/hooks/useClientAuth';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { toast } from '@/components/ui/use-toast';
 
 const ClientArea = () => {
-  // Use the custom auth hook with redirection if unauthenticated
-  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut } = useClientAuth({ 
+  // Use the custom auth hook with auto demo mode for authentication failures
+  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut, isDemoMode } = useClientAuth({ 
     redirectIfUnauthenticated: false, // Disable redirect to handle demo mode
-    maxLoadingTime: 6000 // Increased timeout
+    maxLoadingTime: 3000, // Faster timeout for better UX
+    allowDemoMode: true
   });
   
-  const [showingDemoMode, setShowingDemoMode] = useState(false);
-
   // Add debugging for loading state
   useEffect(() => {
-    console.log('ClientArea: Loading State', { isLoaded, clerkLoaded, isSignedIn, loadingTimedOut });
+    console.log('ClientArea: Loading State', { 
+      isLoaded, 
+      clerkLoaded, 
+      isSignedIn, 
+      loadingTimedOut,
+      isDemoMode
+    });
     
-    // Determine if we should show demo mode
-    if (isLoaded && (loadingTimedOut || !clerkLoaded)) {
-      console.log('Showing demo mode because authentication service failed to load');
-      setShowingDemoMode(true);
-      
-      // Show toast notification about demo mode
-      toast({
-        title: 'Mode démonstration activé',
-        description: 'L\'authentification n\'a pas pu être chargée. Vous accédez à l\'espace client en mode démo.',
-        variant: 'default',
-      });
+    // Always show demo mode if authentication fails
+    if (isLoaded && !clerkLoaded) {
+      console.log('Authentication service unavailable, showing demo mode automatically');
     }
-  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut]);
+  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut, isDemoMode]);
 
-  // Show enhanced loading spinner (shorter timeout now, maximum 3 seconds)
-  if (!isLoaded && !showingDemoMode) {
+  // Show loading spinner with reduced timeout (max 2 seconds)
+  if (!isLoaded && !isDemoMode) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
@@ -61,8 +55,8 @@ const ClientArea = () => {
     );
   }
 
-  // Show demo mode if authentication failed
-  if (showingDemoMode || (loadingTimedOut && !isSignedIn)) {
+  // Show demo mode if authentication failed or timed out
+  if (isDemoMode || (loadingTimedOut && !isSignedIn) || (isLoaded && !clerkLoaded)) {
     return (
       <>
         <Helmet>
@@ -120,7 +114,7 @@ const ClientArea = () => {
     );
   }
 
-  // If user is not authenticated, show login prompt
+  // Regular authenticated view (this code rarely runs if authentication isn't working)
   if (!isSignedIn) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">

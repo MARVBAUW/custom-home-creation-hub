@@ -6,10 +6,12 @@ import Button from '@/components/common/Button';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
+import { useClientAuth } from '@/hooks/useClientAuth';
 
 const ClientLoginCard = () => {
   const navigate = useNavigate();
   const { isSignedIn, isLoaded } = useUser();
+  const { accessClientAreaInDemoMode } = useClientAuth({ allowDemoMode: true });
   const [clerkTimeout, setClerkTimeout] = useState(false);
   
   // Set a timeout to handle Clerk not loading properly
@@ -19,7 +21,7 @@ const ClientLoginCard = () => {
         setClerkTimeout(true);
         console.log('Clerk loading timed out in ClientLoginCard');
       }
-    }, 4000); // 4 seconds timeout
+    }, 3000); // 3 seconds timeout for faster experience
     
     return () => clearTimeout(timer);
   }, [isLoaded]);
@@ -39,20 +41,8 @@ const ClientLoginCard = () => {
   };
 
   const handleClientArea = () => {
-    console.log('Client area button clicked');
-    
-    if (isLoaded && isSignedIn) {
-      console.log('User is signed in, navigating to client area');
-      navigate('/workspace/client-area');
-    } else {
-      console.log('Navigating to client area in demo mode');
-      toast({
-        title: 'Mode démonstration activé',
-        description: 'Vous accédez à la version de démonstration de l\'espace client.',
-        variant: 'default',
-      });
-      navigate('/workspace/client-area');
-    }
+    console.log('Client area button clicked, using accessClientAreaInDemoMode');
+    accessClientAreaInDemoMode();
   };
   
   const renderContent = () => {

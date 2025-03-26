@@ -13,12 +13,8 @@ import './index.css';
 // Create a client
 const queryClient = new QueryClient();
 
-// Clerk publishable key format (utilisez votre propre clé Clerk)
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_cHJvamVjdC1sYXJrLTM2LmNsZXJrLmFjY291bnRzLmRldiQ";
-
-if (!PUBLISHABLE_KEY) {
-  console.error("Missing Clerk Publishable Key!");
-}
+// Clerk publishable key - using a fallback to prevent errors if env is not set
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || "pk_test_placeholder-key-for-demo-mode.not-valid";
 
 // Configure development mode logging for authentication
 if (import.meta.env.DEV) {
@@ -26,11 +22,19 @@ if (import.meta.env.DEV) {
   console.log('- publishableKey:', PUBLISHABLE_KEY);
 }
 
+// Handle invalid clerk keys by providing a fallback mechanism
+const handleInvalidClerkKey = (err: Error) => {
+  console.warn('Clerk authentication error:', err.message);
+  console.warn('Proceeding with demo mode (no authentication)');
+  return null;
+};
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ClerkProvider 
       publishableKey={PUBLISHABLE_KEY}
       clerkJSVersion="5.56.0-snapshot.v20250312225817"
+      onInitializationError={handleInvalidClerkKey}
     >
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
