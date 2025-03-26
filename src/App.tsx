@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { ThemeProvider } from "@/components/theme/ThemeProvider"
-import { useTheme } from "@/components/theme/useTheme"
-import { cn } from "@/lib/utils"
-import { Toaster } from "@/components/ui/toaster"
+
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Toaster } from "@/components/ui/toaster";
 import Index from './pages/Index';
 import About from './pages/About';
 import Contact from './pages/Contact';
@@ -11,11 +9,11 @@ import Realisations from './pages/Realisations';
 import Prestations from './pages/Prestations';
 import Estimation from './pages/Estimation';
 import Equipe from './pages/Equipe';
-import MentionsLegales from './pages/MentionsLegales';
+import Legal from './pages/Legal';
 import CGV from './pages/CGV';
 import FAQ from './pages/FAQ';
-import DevenirPartenaire from './pages/DevenirPartenaire';
-import ParrainageTravaux from './pages/ParrainageTravaux';
+import Partenaires from './pages/Partenaires'; 
+import Parrainage from './pages/Parrainage';
 import Workspace from './pages/Workspace';
 import ClientArea from './pages/client/ClientArea';
 import ClientDocuments from './pages/client/ClientDocuments';
@@ -26,12 +24,7 @@ import ClientGallery from './pages/client/ClientGallery';
 
 function App() {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <>
       <Router>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -41,11 +34,11 @@ function App() {
           <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
           <Route path="/estimation" element={<Estimation />} />
           <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/mentions-legales" element={<Legal />} />
           <Route path="/cgv" element={<CGV />} />
           <Route path="/faq" element={<FAQ />} />
-          <Route path="/devenir-partenaire" element={<DevenirPartenaire />} />
-          <Route path="/parrainage-travaux" element={<ParrainageTravaux />} />
+          <Route path="/devenir-partenaire" element={<Partenaires />} />
+          <Route path="/parrainage-travaux" element={<Parrainage />} />
           
           {/* Workspace routes */}
           <Route path="/workspace" element={<Workspace />} />
@@ -55,14 +48,14 @@ function App() {
           <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
           <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
           <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
-          <Route path="gallery" element={<ClientGallery />} />
+          <Route path="/gallery" element={<ClientGallery />} />
           
           {/* Client Documentation route */}
           <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
         </Routes>
       </Router>
       <Toaster />
-    </ThemeProvider>
+    </>
   );
 }
 
