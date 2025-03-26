@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Toaster } from "@/components/ui/toaster";
 import Index from './pages/Index';
 import About from './pages/About';
@@ -25,35 +25,33 @@ import ClientGallery from './pages/client/ClientGallery';
 function App() {
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/a-propos" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/realisations-architecte-maison" element={<Realisations />} />
-          <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
-          <Route path="/estimation" element={<Estimation />} />
-          <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
-          <Route path="/mentions-legales" element={<Legal />} />
-          <Route path="/cgv" element={<CGV />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/devenir-partenaire" element={<Partenaires />} />
-          <Route path="/parrainage-travaux" element={<Parrainage />} />
-          
-          {/* Workspace routes */}
-          <Route path="/workspace" element={<Workspace />} />
-          
-          {/* Client Area routes */}
-          <Route path="/workspace/client-area" element={<ClientArea />} />
-          <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
-          <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
-          <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
-          <Route path="/gallery" element={<ClientGallery />} />
-          
-          {/* Client Documentation route */}
-          <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/a-propos" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/realisations-architecte-maison" element={<Realisations />} />
+        <Route path="/prestations-maitre-oeuvre" element={<Prestations />} />
+        <Route path="/estimation" element={<Estimation />} />
+        <Route path="/equipe-maitrise-oeuvre" element={<Equipe />} />
+        <Route path="/mentions-legales" element={<Legal />} />
+        <Route path="/cgv" element={<CGV />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/devenir-partenaire" element={<Partenaires />} />
+        <Route path="/parrainage-travaux" element={<Parrainage />} />
+        
+        {/* Workspace routes */}
+        <Route path="/workspace" element={<Workspace />} />
+        
+        {/* Client Area routes */}
+        <Route path="/workspace/client-area" element={<ClientArea />} />
+        <Route path="/workspace/client-area/documents" element={<ClientDocuments />} />
+        <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
+        <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
+        <Route path="/gallery" element={<ClientGallery />} />
+        
+        {/* Client Documentation route */}
+        <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
+      </Routes>
       <Toaster />
     </>
   );
