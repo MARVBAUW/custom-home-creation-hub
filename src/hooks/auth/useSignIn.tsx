@@ -16,13 +16,77 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
       setError(null);
       
       console.log('Attempting to sign in with:', email);
-      console.log('Using password:', password.substring(0, 3) + '...' + password.substring(password.length - 3)); // Log partial password for debugging
       
       // Vérifier si c'est un email administrateur
       const isAdminUser = ADMIN_EMAILS.includes(email.toLowerCase());
-      console.log('Is admin user:', isAdminUser, 'Email verified status check not needed anymore');
+      console.log('Is admin user:', isAdminUser);
       
-      // Tentative de connexion standard
+      // Spécial pour l'administrateur connu
+      if (isAdminUser && password === 'Baullanowens1112.') {
+        console.log('Admin with known password, checking if account exists first');
+        
+        // Tentative de connexion d'abord
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (signInError) {
+          console.log('Admin login failed, will attempt to create account:', signInError.message);
+          
+          // Tentative de création du compte administrateur s'il n'existe pas
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                full_name: 'Administrateur',
+                is_admin: true
+              },
+              emailRedirectTo: undefined,
+            }
+          });
+          
+          if (signUpError) {
+            console.error('Admin account creation failed:', signUpError);
+            setError(`Échec de création du compte administrateur: ${signUpError.message}`);
+            toast({
+              title: 'Erreur',
+              description: `Échec de création du compte administrateur: ${signUpError.message}`,
+              variant: 'destructive',
+            });
+          } else if (signUpData.session) {
+            console.log('Admin account created and signed in successfully');
+            toast({
+              title: 'Compte administrateur créé',
+              description: 'Bienvenue, administrateur!',
+              variant: 'default',
+            });
+            navigate('/workspace/client-area');
+            return; // Important: sortir de la fonction ici
+          } else {
+            console.log('Admin account created but verification might be required');
+            toast({
+              title: 'Compte administrateur créé',
+              description: 'Vérifiez votre email pour confirmer votre compte administrateur',
+              variant: 'default',
+            });
+            return; // Important: sortir de la fonction ici
+          }
+        } else if (signInData.session) {
+          // L'administrateur existe et les identifiants sont corrects
+          console.log('Admin login successful');
+          toast({
+            title: 'Connexion administrateur réussie',
+            description: 'Bienvenue, administrateur!',
+            variant: 'default',
+          });
+          navigate('/workspace/client-area');
+          return; // Important: sortir de la fonction ici
+        }
+      }
+      
+      // Tentative de connexion standard pour tous les utilisateurs
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -43,49 +107,8 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
         if (errorMessage === 'Invalid login credentials') {
           console.log('Invalid credentials error details:', { email });
           
-          // Si c'est un administrateur, tenter de créer le compte si inexistant
           if (isAdminUser) {
-            // Vérifier si l'administrateur tente de se connecter avec le mot de passe connu
-            if (password === 'Baullanowens1112.') {
-              console.log('Admin trying to sign in with known password, attempting signup');
-              
-              // Tentative de création du compte administrateur
-              const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-                email,
-                password,
-                options: {
-                  data: {
-                    full_name: 'Administrateur',
-                    is_admin: true
-                  },
-                  emailRedirectTo: undefined,
-                }
-              });
-              
-              if (signUpError) {
-                console.error('Admin account creation failed:', signUpError);
-                errorMessage = `Échec de création du compte administrateur: ${signUpError.message}`;
-              } else if (signUpData.session) {
-                console.log('Admin account created and signed in successfully');
-                toast({
-                  title: 'Compte administrateur créé',
-                  description: 'Bienvenue, administrateur!',
-                  variant: 'default',
-                });
-                navigate('/workspace/client-area');
-                return; // Important: sortir de la fonction ici
-              } else {
-                console.log('Admin account created but verification might be required');
-                toast({
-                  title: 'Compte administrateur créé',
-                  description: 'Vérifiez votre email pour confirmer votre compte administrateur',
-                  variant: 'default',
-                });
-                return; // Important: sortir de la fonction ici
-              }
-            } else {
-              errorMessage = 'Compte administrateur: Le mot de passe "Baullanowens1112." est peut-être incorrect. Vérifiez vos identifiants ou contactez le support.';
-            }
+            errorMessage = 'Le compte administrateur existe peut-être mais le mot de passe est incorrect. Essayez avec "Baullanowens1112."';
           } else {
             errorMessage = 'Email ou mot de passe incorrect. Vérifiez vos identifiants.';
           }
@@ -104,7 +127,6 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
         console.log('User ID:', data.session.user.id);
         console.log('User email:', data.session.user.email);
         console.log('User metadata:', data.session.user.user_metadata);
-        console.log('Is email confirmed:', data.session.user.email_confirmed_at !== null);
         
         const isAdminInSession = ADMIN_EMAILS.includes((data.session.user.email || '').toLowerCase());
         console.log('Is admin user (confirmed in session):', isAdminInSession);

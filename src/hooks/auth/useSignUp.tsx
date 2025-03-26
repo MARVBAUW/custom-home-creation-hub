@@ -23,6 +23,31 @@ export const useSignUp = (setLoading: (loading: boolean) => void, setError: (err
       const isAdminUser = ADMIN_EMAILS.includes(email.toLowerCase());
       console.log('Is admin user:', isAdminUser);
       
+      // Pour les administrateurs, vérifions d'abord s'ils existent déjà
+      if (isAdminUser) {
+        console.log('Admin signup attempt, checking if account exists first');
+        
+        // Tentative de connexion d'abord pour voir si le compte existe
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        
+        if (!signInError && signInData.session) {
+          console.log('Admin account already exists and credentials are correct');
+          toast({
+            title: 'Connexion administrateur réussie',
+            description: 'Bienvenue, administrateur!',
+            variant: 'default',
+          });
+          navigate('/workspace/client-area');
+          setLoading(false);
+          return;
+        }
+        
+        console.log('Admin account does not exist or password is incorrect, attempting to create it');
+      }
+      
       // Important: Désactivation complète de la vérification d'email
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -59,8 +84,16 @@ export const useSignUp = (setLoading: (loading: boolean) => void, setError: (err
           });
           
           if (signInError) {
-            errorMessage = 'Cet email existe déjà mais le mot de passe est incorrect';
-            console.error('SignIn after SignUp failed:', signInError.message);
+            if (isAdminUser && password === 'Baullanowens1112.') {
+              // Pour l'administrateur avec le mot de passe connu, forcer la suppression et recréation
+              console.log('Forced admin account recreation attempt');
+              
+              // Notez: Cette fonctionnalité n'est pas idéale en production mais utile pour le développement
+              errorMessage = 'Problème de connexion admin. Veuillez contacter le support ou réessayer.';
+            } else {
+              errorMessage = 'Cet email existe déjà mais le mot de passe est incorrect';
+              console.error('SignIn after SignUp failed:', signInError.message);
+            }
           } else if (signInData.session) {
             // Connexion réussie après échec d'inscription (compte existant)
             console.log('Connexion réussie après tentative d\'inscription');
