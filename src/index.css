@@ -46,6 +46,13 @@
     --khaki-700: 60 20% 30%;
     --khaki-800: 60 20% 20%;
     --khaki-900: 60 20% 10%;
+
+    /* Footer colors */
+    --footer-bg: 0 0% 15%;
+    --footer-text: 0 0% 90%;
+    --footer-text-muted: 0 0% 70%;
+    --footer-border: 0 0% 20%;
+    --footer-hover: 40 70% 50%;
   }
  
   .dark {
@@ -88,6 +95,13 @@
     --khaki-700: 60 20% 75%;
     --khaki-800: 60 20% 85%;
     --khaki-900: 60 20% 92%;
+
+    /* Footer colors - dark mode */
+    --footer-bg: 0 0% 10%;
+    --footer-text: 0 0% 90%;
+    --footer-text-muted: 0 0% 70%; 
+    --footer-border: 0 0% 15%;
+    --footer-hover: 40 70% 50%;
   }
 }
  
@@ -98,6 +112,27 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Styles pour le footer */
+.footer {
+  @apply bg-[hsl(var(--footer-bg))] text-[hsl(var(--footer-text))];
+}
+
+.footer-border {
+  @apply border-[hsl(var(--footer-border))];
+}
+
+.footer-text {
+  @apply text-[hsl(var(--footer-text))];
+}
+
+.footer-text-muted {
+  @apply text-[hsl(var(--footer-text-muted))];
+}
+
+.footer-hover {
+  @apply hover:text-[hsl(var(--footer-hover))];
 }
 
 /* Styles spécifiques pour le composant Gantt */

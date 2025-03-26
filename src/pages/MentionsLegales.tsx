@@ -1,16 +1,10 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import Legal from './Legal';
 
 const MentionsLegales = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // Redirect to the Legal page that handles mentions légales
-    navigate('/mentions-legales', { replace: true });
-  }, [navigate]);
-
-  return <div>Redirection...</div>;
+  // Simply render the Legal component directly
+  return <Legal />;
 };
 
 export default MentionsLegales;

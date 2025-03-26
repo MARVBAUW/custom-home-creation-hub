@@ -65,6 +65,15 @@ export default {
           800: "hsl(var(--khaki-800))",
           900: "hsl(var(--khaki-900))",
         },
+        "progineer-dark": "#222222",
+        "progineer-gold": "#D4AF37",
+        footer: {
+          bg: "hsl(var(--footer-bg))",
+          text: "hsl(var(--footer-text))",
+          muted: "hsl(var(--footer-text-muted))",
+          border: "hsl(var(--footer-border))",
+          hover: "hsl(var(--footer-hover))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

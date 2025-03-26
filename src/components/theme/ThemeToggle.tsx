@@ -44,7 +44,7 @@ export function ThemeToggle() {
       variant="outline" 
       size="icon" 
       onClick={toggleTheme}
-      className="rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+      className="rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 relative z-50"
       aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
     >
       {theme === "light" ? (
