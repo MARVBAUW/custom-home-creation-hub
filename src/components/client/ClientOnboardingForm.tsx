@@ -44,9 +44,8 @@ const ClientOnboardingForm = () => {
       password: "password123", // temporary password
       options: {
         data: {
-          full_name: values.fullName || '',
-          // Remove the project_details field as it's not in the expected type
-          // Store only the essential user metadata that matches the profiles table
+          full_name: values.fullName || ''
+          // Only including valid fields that match the profiles table structure
         }
       }
     })
