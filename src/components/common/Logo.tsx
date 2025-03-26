@@ -12,7 +12,11 @@ const Logo: React.FC<LogoProps> = ({
   withTagline = false
 }) => {
   return (
-    <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
+    <Link 
+      to="/" 
+      className={cn("flex flex-col items-center no-underline", className)}
+      aria-label="Accueil Progineer"
+    >
       <div className={cn(
         "transition-all duration-300 hover:scale-105", 
         getSizeClasses(size, variant), 
@@ -24,7 +28,9 @@ const Logo: React.FC<LogoProps> = ({
       {withTagline && (
         <span className={cn(
           "text-xs mt-1 font-medium tracking-wider", 
-          variant === 'white' ? 'text-white/90' : 'text-progineer-gold'
+          variant === 'white' ? 'text-white/90' : 
+          variant === 'metallic' || variant === 'metallic-full' ? 'text-progineer-gold dark:text-progineer-gold/90' : 
+          'text-progineer-gold dark:text-progineer-gold/90'
         )}>
           MAITRISE D'OEUVRE
         </span>

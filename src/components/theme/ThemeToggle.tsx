@@ -44,7 +44,7 @@ export function ThemeToggle() {
       variant="outline" 
       size="icon" 
       onClick={toggleTheme}
-      className="rounded-full transition-colors"
+      className="rounded-full transition-colors hover:bg-stone-200 dark:hover:bg-gray-700"
       aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
     >
       {theme === "light" ? (
@@ -52,6 +52,9 @@ export function ThemeToggle() {
       ) : (
         <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-400" />
       )}
+      <span className="sr-only">
+        {theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
+      </span>
     </Button>
   );
 }

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Briefcase, Building, GraduationCap, Mail, Phone, Linkedin } from 'lucide-react';
@@ -9,11 +9,12 @@ import { cn } from '@/lib/utils';
 const Equipe = () => {
   return (
     <>
-      <Helmet>
-        <title>Notre équipe | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Découvrez l'équipe de Progineer, experts en architecture et maîtrise d'œuvre pour vos projets de construction et rénovation en région PACA." />
-        <meta name="keywords" content="équipe architecte, maître d'œuvre PACA, experts construction, ingénieurs bâtiment Marseille" />
-      </Helmet>
+      <SEO
+        title="Notre équipe | Progineer - Architecte & Maître d'œuvre en PACA"
+        description="Découvrez l'équipe de Progineer, experts en architecture et maîtrise d'œuvre pour vos projets de construction et rénovation en région PACA."
+        keywords="équipe architecte, maître d'œuvre PACA, experts construction, ingénieurs bâtiment Marseille"
+        canonicalUrl="https://progineer.fr/equipe-maitrise-oeuvre"
+      />
 
       {/* Hero section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white dark:from-gray-900 dark:to-gray-950">
@@ -42,8 +43,9 @@ const Equipe = () => {
                 <div className="rounded-xl overflow-hidden mb-6 aspect-square max-w-[240px] mx-auto">
                   <img 
                     src="/lovable-uploads/23fe2b30-1f84-472d-a3c8-d4c413ffbbc4.png" 
-                    alt="Marvin Bauwens" 
+                    alt="Marvin Bauwens - PDG Progineer" 
                     className="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-500"
+                    loading="lazy"
                   />
                 </div>
                 
@@ -114,8 +116,9 @@ const Equipe = () => {
                 <div className="rounded-xl overflow-hidden mb-6 aspect-square max-w-[240px] mx-auto">
                   <img 
                     src="/lovable-uploads/3f77f084-4061-4e36-9f32-85cb08372b51.png" 
-                    alt="Mael Allano" 
+                    alt="Mael Allano - Directeur Général Progineer" 
                     className="w-full h-full object-cover object-center grayscale hover:grayscale-0 transition-all duration-500"
+                    loading="lazy"
                   />
                 </div>
                 
@@ -251,11 +254,11 @@ const Equipe = () => {
               <h3 className="text-xl font-semibold mb-4 text-center dark:text-white">Progineer garantit :</h3>
               <ul className="space-y-4 text-gray-600 dark:text-gray-300">
                 <li className="flex items-start">
-                  <span className="inline-block w-2 h-2 rounded-full bg-khaki-500 mr-2 mt-2"></span>
+                  <span className="inline-block w-2 h-2 rounded-full bg-khaki-500 mr-2 mt-2 dark:bg-khaki-400"></span>
                   <span>Une écoute attentive, afin d'offrir un suivi personnalisé respectant au mieux vos besoins et votre budget.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="inline-block w-2 h-2 rounded-full bg-khaki-500 mr-2 mt-2"></span>
+                  <span className="inline-block w-2 h-2 rounded-full bg-khaki-500 mr-2 mt-2 dark:bg-khaki-400"></span>
                   <span>Une communication transparente, pour assurer une coordination efficace entre vous et les entreprises partenaires de votre projet.</span>
                 </li>
                 <li className="mt-4">

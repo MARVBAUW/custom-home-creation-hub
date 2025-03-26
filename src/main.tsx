@@ -16,7 +16,7 @@ const queryClient = new QueryClient();
 
 // Configure development mode logging for authentication
 if (import.meta.env.DEV) {
-  console.log('Supabase authentification est configurée');
+  console.log('Supabase authentification est configurée et prête à être utilisée');
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

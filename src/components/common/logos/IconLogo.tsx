@@ -11,11 +11,15 @@ const IconLogo: React.FC<IconLogoProps> = ({
   getSizeClasses 
 }) => {
   return (
-    <svg viewBox="0 0 200 200" className={getSizeClasses()}>
+    <svg viewBox="0 0 200 200" className={getSizeClasses()} role="img" aria-label="Progineer logo icon">
       <defs>
         <linearGradient id="goldIcon" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#c8a86d"/>
           <stop offset="100%" stopColor="#4b4b3b"/>
+        </linearGradient>
+        <linearGradient id="goldIconDark" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#d4b47d"/>
+          <stop offset="100%" stopColor="#5a5a4a"/>
         </linearGradient>
         <filter id="glow">
           <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
@@ -29,7 +33,7 @@ const IconLogo: React.FC<IconLogoProps> = ({
         fill="none" 
         stroke="url(#goldIcon)" 
         strokeWidth="8" 
-        className="logo-path"
+        className="logo-path dark:stroke-[url(#goldIconDark)]"
       />
     </svg>
   );
