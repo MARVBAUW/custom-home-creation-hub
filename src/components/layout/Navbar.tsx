@@ -6,7 +6,8 @@ import { Menu, X } from 'lucide-react';
 import Container from '@/components/common/Container';
 import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
-import { mainNavLinks } from './navbar/types';
+import { navLinks } from './navbar/types';
+import Logo from '@/components/common/Logo';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 
 const Navbar = () => {
@@ -24,6 +25,7 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu when route changes
   useEffect(() => {
     setIsOpen(false);
     setOpenDropdown(null);
@@ -36,35 +38,41 @@ const Navbar = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm shadow-md",
+        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
         isScrolled || isOpen
-          ? "bg-white/95 dark:bg-gray-900/95 py-1.5 border-b border-stone-200/80 dark:border-gray-700/50" 
-          : "bg-white/80 py-2 border-b border-stone-200/50"
+          ? "bg-white/95 dark:bg-gray-900/95 py-2 border-b border-stone-200/50 dark:border-gray-700/50" 
+          : "bg-transparent py-3"
       )}
     >
-      <Container size="lg" className="px-4">
+      <Container size="lg">
         <nav className="flex items-center justify-between w-full">
-          {/* Desktop Navigation & Controls */}
-          <div className="flex-grow flex items-center justify-between">
-            <DesktopNav 
-              navLinks={mainNavLinks} 
-              openDropdown={openDropdown} 
-              toggleDropdown={toggleDropdown} 
+          {/* Logo */}
+          <Link to="/" className="flex-shrink-0 relative z-50">
+            <Logo 
+              variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
+              size="md" 
             />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <DesktopNav 
+            navLinks={navLinks} 
+            openDropdown={openDropdown} 
+            toggleDropdown={toggleDropdown} 
+          />
+
+          {/* Theme Toggle */}
+          <div className="flex items-center gap-4 relative z-50">
+            <ThemeToggle />
             
-            {/* Theme Toggle and Mobile Menu Button */}
-            <div className="flex items-center gap-2 relative z-50 md:ml-2">
-              <ThemeToggle />
-              
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="md:hidden p-1.5 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
-                aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-              >
-                {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
-            </div>
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
+              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </nav>
       </Container>
@@ -72,7 +80,7 @@ const Navbar = () => {
       {/* Mobile Navigation */}
       <MobileNav 
         isOpen={isOpen} 
-        navLinks={mainNavLinks} 
+        navLinks={navLinks} 
         openDropdown={openDropdown} 
         toggleDropdown={toggleDropdown} 
       />

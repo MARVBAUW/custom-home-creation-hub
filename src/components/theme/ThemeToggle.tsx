@@ -1,20 +1,39 @@
 
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { useTheme } from "@/hooks/use-theme";
 
-export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, toggleTheme } = useTheme();
+type ThemeType = "light" | "dark";
+
+export function ThemeToggle() {
+  const [theme, setTheme] = useState<ThemeType>("light");
   const { toast } = useToast();
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const handleToggleTheme = () => {
-    toggleTheme();
+  useEffect(() => {
+    // Check for theme in localStorage or use system preference
+    const storedTheme = localStorage.getItem("theme") as ThemeType | null;
+    
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
+    } else if (prefersDark) {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+    }
+  }, [prefersDark]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
     
     // Notify user about theme change
     toast({
-      title: theme === "light" ? "Mode sombre activé" : "Mode clair activé",
+      title: newTheme === "light" ? "Mode clair activé" : "Mode sombre activé",
       description: "Les préférences d'affichage ont été mises à jour.",
       duration: 2000,
     });
@@ -24,13 +43,8 @@ export function ThemeToggle({ className }: { className?: string }) {
     <Button 
       variant="outline" 
       size="icon" 
-      onClick={handleToggleTheme}
-      className={cn(
-        "rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 relative z-50 btn-enhanced",
-        "shadow-md border-2",
-        "dark:border-gray-700 light:border-gray-300",
-        className
-      )}
+      onClick={toggleTheme}
+      className="rounded-full transition-colors"
       aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
     >
       {theme === "light" ? (

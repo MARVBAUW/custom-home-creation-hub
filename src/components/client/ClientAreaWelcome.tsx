@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, MessageSquare, Calendar, ArrowRight, HelpCircle, BookOpen, Image } from 'lucide-react';
+import { FileText, MessageSquare, Calendar, ArrowRight, HelpCircle, BookOpen } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const ClientAreaWelcome = () => {
@@ -19,7 +19,7 @@ const ClientAreaWelcome = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
             <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mb-3">
               <FileText className="h-6 w-6 text-blue-600" />
@@ -61,21 +61,6 @@ const ClientAreaWelcome = () => {
             <Link to="/workspace/client-area/messages">
               <Button variant="outline" size="sm" className="mt-auto">
                 Voir les messages
-              </Button>
-            </Link>
-          </div>
-          
-          <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg border border-gray-100">
-            <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mb-3">
-              <Image className="h-6 w-6 text-amber-600" />
-            </div>
-            <h3 className="font-medium text-center mb-1">Galerie photos</h3>
-            <p className="text-sm text-gray-600 text-center mb-3">
-              Visualisez l'avancement de votre chantier en images
-            </p>
-            <Link to="/workspace/client-area/gallery">
-              <Button variant="outline" size="sm" className="mt-auto">
-                Voir les photos
               </Button>
             </Link>
           </div>

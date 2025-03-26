@@ -58,68 +58,68 @@ const ElectriciteForm: React.FC<ElectriciteFormProps> = ({
                     defaultValue={field.value}
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
-                    <FormItem className="flex flex-col space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
+                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
                       <FormControl>
-                        <RadioGroupItem value="standard" id="standard" className="absolute top-4 right-4" />
+                        <RadioGroupItem value="standard" className="sr-only" />
                       </FormControl>
-                      <div className="w-full">
+                      <div className="w-full text-center">
                         <img
                           src="/images/electricite-standard.jpg"
                           alt="Installation standard"
                           className="w-full h-32 object-cover rounded-md mb-3"
                         />
-                        <label htmlFor="standard" className="text-base font-medium block">Standard</label>
+                        <div className="font-medium">Standard</div>
                         <p className="text-sm text-muted-foreground">
                           Installation de base avec prises et interrupteurs standards
                         </p>
                       </div>
                     </FormItem>
                     
-                    <FormItem className="flex flex-col space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
+                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
                       <FormControl>
-                        <RadioGroupItem value="premium" id="premium" className="absolute top-4 right-4" />
+                        <RadioGroupItem value="premium" className="sr-only" />
                       </FormControl>
-                      <div className="w-full">
+                      <div className="w-full text-center">
                         <img
                           src="/images/electricite-premium.jpg"
                           alt="Installation premium"
                           className="w-full h-32 object-cover rounded-md mb-3"
                         />
-                        <label htmlFor="premium" className="text-base font-medium block">Premium</label>
+                        <div className="font-medium">Premium</div>
                         <p className="text-sm text-muted-foreground">
                           Installation haut de gamme avec domotique et smart home
                         </p>
                       </div>
                     </FormItem>
                     
-                    <FormItem className="flex flex-col space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
+                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
                       <FormControl>
-                        <RadioGroupItem value="economy" id="economy" className="absolute top-4 right-4" />
+                        <RadioGroupItem value="economy" className="sr-only" />
                       </FormControl>
-                      <div className="w-full">
+                      <div className="w-full text-center">
                         <img
                           src="/images/electricite-economic.jpg"
                           alt="Installation économique"
                           className="w-full h-32 object-cover rounded-md mb-3"
                         />
-                        <label htmlFor="economy" className="text-base font-medium block">Économique</label>
+                        <div className="font-medium">Économique</div>
                         <p className="text-sm text-muted-foreground">
                           Installation basique avec équipements essentiels
                         </p>
                       </div>
                     </FormItem>
                     
-                    <FormItem className="flex flex-col space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
+                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
                       <FormControl>
-                        <RadioGroupItem value="smart" id="smart" className="absolute top-4 right-4" />
+                        <RadioGroupItem value="smart" className="sr-only" />
                       </FormControl>
-                      <div className="w-full">
+                      <div className="w-full text-center">
                         <img
                           src="/images/electricite-domotique.jpg"
                           alt="Domotique"
                           className="w-full h-32 object-cover rounded-md mb-3"
                         />
-                        <label htmlFor="smart" className="text-base font-medium block">Domotique complète</label>
+                        <div className="font-medium">Domotique complète</div>
                         <p className="text-sm text-muted-foreground">
                           Système complet de contrôle intelligent de la maison
                         </p>

@@ -13,22 +13,22 @@ const EstimationTrustMetrics = () => {
         
         <div className="grid md:grid-cols-4 gap-6 mb-10">
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">+150</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">+300</p>
             <p className="text-progineer-dark/80">Projets réalisés</p>
           </div>
           
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">95%</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">98%</p>
             <p className="text-progineer-dark/80">Clients satisfaits</p>
           </div>
           
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">8+</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">15+</p>
             <p className="text-progineer-dark/80">Années d'expérience</p>
           </div>
           
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">+10</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">+20</p>
             <p className="text-progineer-dark/80">Villes couvertes</p>
           </div>
         </div>

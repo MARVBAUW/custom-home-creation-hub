@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { LogoSize } from './LogoConstants';
-import { useTheme } from '@/hooks/use-theme';
 
 interface IconLogoProps {
   size: LogoSize;
@@ -11,16 +10,28 @@ interface IconLogoProps {
 const IconLogo: React.FC<IconLogoProps> = ({ 
   getSizeClasses 
 }) => {
-  const { theme } = useTheme();
-  
   return (
-    <div className={getSizeClasses()}>
-      <img 
-        src={`/lovable-uploads/${theme === 'dark' ? 'b368b662-57ea-4b2f-8f6e-95746e433063.png' : '5b2ba673-2bf6-4e95-9da6-eaeafafa4e8e.png'}`}
-        alt="Progineer Logo Icon"
-        className="w-full h-auto transition-colors duration-300 logo-icon-path"
+    <svg viewBox="0 0 200 200" className={getSizeClasses()}>
+      <defs>
+        <linearGradient id="goldIcon" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#c8a86d"/>
+          <stop offset="100%" stopColor="#4b4b3b"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <path d="M40 40 L100 40 L120 70 L140 40 L180 40 L180 150 L140 150 L140 70 L120 100 L100 70 L60 70 L60 150 L20 150 L20 40 Z" 
+        fill="none" 
+        stroke="url(#goldIcon)" 
+        strokeWidth="8" 
+        className="logo-path"
       />
-    </div>
+    </svg>
   );
 };
 

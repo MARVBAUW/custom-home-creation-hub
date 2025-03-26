@@ -2,46 +2,78 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { useTheme } from '@/hooks/use-theme';
+import { Check } from 'lucide-react';
+
+const features = [
+  "Écoute attentive de vos besoins",
+  "Solutions innovantes et durables",
+  "Respect strict des délais",
+  "Communication fluide tout au long du projet",
+  "Maîtrise des coûts et transparence",
+  "Accompagnement administratif complet"
+];
 
 const CTASection = () => {
-  const { theme } = useTheme();
-  
   return (
-    <section className="py-20 bg-gradient-to-r from-progineer-dark to-progineer-dark/90 text-white relative overflow-hidden">
-      {/* Background pattern overlay */}
-      <div 
-        className="absolute inset-0 opacity-10" 
-        style={{ 
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
-        }}
-      ></div>
+    <section className="py-20 relative overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-progineer-light to-white"></div>
       
-      <Container>
-        <div className="bg-white/10 backdrop-blur-sm p-10 rounded-2xl border border-white/20 shadow-2xl max-w-3xl mx-auto relative z-10">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-white">
-              Prêt à concrétiser votre projet ?
+      {/* Decorative elements */}
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-progineer-gold/10 rounded-full opacity-40 transform translate-x-1/3 -translate-y-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-progineer-gold/20 rounded-full opacity-30 transform -translate-x-1/3 translate-y-1/3"></div>
+      
+      <Container className="relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/10 text-progineer-gold text-sm font-medium">
+              Notre approche
+            </div>
+            <h2 className="text-3xl md:text-4xl font-rare tracking-wide mb-6 text-progineer-dark">
+              Un accompagnement sur mesure pour votre projet
             </h2>
-            <div className="h-1 w-20 bg-progineer-gold mx-auto mb-6"></div>
-            <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-              Contactez-nous dès aujourd'hui pour discuter de votre vision et découvrir comment 
-              notre expertise peut vous aider à la réaliser.
+            <p className="text-gray-700 text-lg mb-8">
+              Chez Progineer, nous croyons qu'un projet réussi commence par une écoute attentive de vos besoins. Notre équipe d'experts vous accompagne à chaque étape, de la conception à la livraison.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                href="/estimation" 
-                className={`${theme === 'light' ? 'bg-progineer-gold hover:bg-progineer-gold/90 text-white' : 'bg-white hover:bg-white/90 text-progineer-dark'} shadow-lg border border-progineer-gold/50 text-lg py-3`}
-              >
+            
+            <div className="mb-8">
+              <ul className="space-y-3">
+                {features.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-progineer-gold/20 flex items-center justify-center mt-1 mr-3">
+                      <Check className="h-3 w-3 text-progineer-gold" />
+                    </div>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button href="/estimation" className="bg-progineer-gold hover:bg-progineer-gold/90 text-white">
                 Estimer mon projet
               </Button>
-              <Button 
-                href="/contact" 
-                variant="outline" 
-                className={`${theme === 'light' ? 'bg-transparent border-white text-white hover:bg-white/10' : 'bg-transparent border-white text-white hover:bg-white/10'} shadow-lg text-lg py-3`}
-              >
-                Nous contacter
+              <Button href="/contact" variant="outline" className="border-progineer-gold/50 bg-transparent text-progineer-gold hover:bg-progineer-gold/10">
+                Prendre rendez-vous
               </Button>
+            </div>
+          </div>
+          
+          <div className="relative">
+            <div className="rounded-2xl overflow-hidden shadow-xl">
+              <img 
+                src="https://images.unsplash.com/photo-1600566753376-12c8ab8e17a5?q=80&w=2070&auto=format&fit=crop" 
+                alt="Maison contemporaine avec grande baie vitrée" 
+                className="w-full h-auto object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-6 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm font-medium text-gray-500">Projet livré</div>
+                <div className="px-2 py-1 text-xs bg-progineer-gold/10 text-progineer-gold rounded-full">Marseille</div>
+              </div>
+              <h3 className="text-lg font-semibold mb-1 text-progineer-dark">Villa contemporaine</h3>
+              <p className="text-sm text-gray-600">Construction neuve avec piscine et vue panoramique</p>
             </div>
           </div>
         </div>

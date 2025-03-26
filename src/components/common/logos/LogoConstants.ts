@@ -1,29 +1,28 @@
 
+import { ComponentProps } from 'react';
+
+export type LogoVariant = 'default' | 'white' | 'gold' | 'icon' | 'metallic' | 'metallic-full';
+export type LogoSize = 'sm' | 'md' | 'lg';
+
 export interface LogoProps {
-  variant?: 'default' | 'metallic' | 'metallic-full' | 'white' | 'icon' | 'gold';
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  variant?: LogoVariant;
+  size?: LogoSize;
   className?: string;
   withTagline?: boolean;
-  asLink?: boolean;
 }
 
-// TypeScript types for component props
-export type LogoVariant = 'default' | 'metallic' | 'metallic-full' | 'white' | 'icon' | 'gold';
-export type LogoSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
-export const getSizeClasses = (size: string, variant: string) => {
+export const getSizeClasses = (size: LogoSize, variant: LogoVariant): string => {
   switch (size) {
-    case 'xs':
-      return variant === 'icon' ? 'h-5' : 'h-6';
     case 'sm':
-      return variant === 'icon' ? 'h-6' : 'h-7';
-    case 'md':
-      return variant === 'icon' ? 'h-7' : 'h-8';
+      return variant === 'icon' ? 'h-6 w-auto' : 'h-8 w-auto';
     case 'lg':
-      return variant === 'icon' ? 'h-8' : 'h-9';
-    case 'xl':
-      return variant === 'icon' ? 'h-9' : 'h-10';
+      return variant === 'icon' ? 'h-10 w-auto' : 
+             variant === 'metallic' ? 'h-36 w-auto' : 
+             variant === 'metallic-full' ? 'h-40 w-auto' : 'h-14 w-auto';
     default:
-      return variant === 'icon' ? 'h-7' : 'h-8';
+      // md
+      return variant === 'icon' ? 'h-8 w-auto' : 
+             variant === 'metallic' ? 'h-28 w-auto' : 
+             variant === 'metallic-full' ? 'h-32 w-auto' : 'h-10 w-auto';
   }
 };

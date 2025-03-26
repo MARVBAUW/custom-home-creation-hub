@@ -2,49 +2,23 @@
 export interface NavLink {
   name: string;
   path: string;
-  subLinks?: {
-    name: string;
-    path: string;
-  }[];
+  subLinks?: { name: string; path: string }[];
 }
 
-export const mainNavLinks: NavLink[] = [
-  {
-    name: "Accueil",
-    path: "/"
-  },
-  {
-    name: "À propos",
-    path: "/a-propos",
+export const navLinks: NavLink[] = [
+  { name: 'Accueil', path: '/' },
+  { 
+    name: 'Nos prestations', 
+    path: '/prestations-maitre-oeuvre',
     subLinks: [
-      { name: "Notre histoire", path: "/a-propos#histoire" },
-      { name: "Notre approche", path: "/a-propos#approche" },
-      { name: "Notre équipe", path: "/a-propos#equipe" }
+      { name: 'Construction sur mesure', path: '/prestations-maitre-oeuvre#construction' },
+      { name: 'Rénovation énergétique', path: '/prestations-maitre-oeuvre#renovation' },
+      { name: 'Extension & agrandissement', path: '/prestations-maitre-oeuvre#extension' },
+      { name: 'Optimisation d\'espace', path: '/prestations-maitre-oeuvre#optimisation' },
+      { name: 'Design d\'espace', path: '/prestations-maitre-oeuvre#design' },
     ]
   },
-  {
-    name: "Prestations",
-    path: "/prestations-maitre-oeuvre",
-    subLinks: [
-      { name: "Construction neuve", path: "/prestations-maitre-oeuvre/construction-neuve" },
-      { name: "Rénovation & Extension", path: "/prestations-maitre-oeuvre/renovation-extension" },
-      { name: "Conseils & Assistance", path: "/prestations-maitre-oeuvre/conseil-assistance" }
-    ]
-  },
-  {
-    name: "Réalisations",
-    path: "/realisations"
-  },
-  {
-    name: "Estimation",
-    path: "/estimation"
-  },
-  {
-    name: "Workspace",
-    path: "/workspace"
-  },
-  {
-    name: "Contact",
-    path: "/contact"
-  }
+  { name: 'Nos réalisations', path: '/realisations-architecte-maison' },
+  { name: 'Notre équipe', path: '/equipe-maitrise-oeuvre' },
+  { name: 'Workspace', path: '/workspace' },
 ];

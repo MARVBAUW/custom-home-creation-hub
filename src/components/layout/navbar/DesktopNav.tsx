@@ -19,7 +19,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
     if (location.pathname === item.path) return true;
     
     if (item.subLinks) {
-      // Check if any sublink matches the current location
+      // Pour les éléments avec sous-liens, vérifier si un sous-lien correspond à la location actuelle
       return item.subLinks.some(subLink => {
         const [path, hash] = subLink.path.split('#');
         return location.pathname === path && (!hash || location.hash === `#${hash}`);
@@ -30,9 +30,8 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
   };
 
   return (
-    <div className="flex md:flex items-center justify-between w-full gap-4">
-      {/* Navigation Links */}
-      <ul className="flex items-center gap-1.5 flex-wrap">
+    <div className="hidden md:flex items-center justify-between w-full px-1">
+      <ul className="flex items-center space-x-1 flex-shrink-0">
         {navLinks.map((item) => (
           <NavItem 
             key={item.name} 
@@ -45,16 +44,16 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
       </ul>
 
       {/* Contact Info & CTAs - Desktop */}
-      <div className="flex items-center gap-3 flex-shrink-0">
+      <div className="flex items-center space-x-2 flex-shrink-0">
         <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800 whitespace-nowrap">
           <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>
         </a>
-        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white whitespace-nowrap text-xs px-3 py-1.5">
+        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
           Estimer mon projet
         </Button>
-        <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap text-xs px-3 py-1.5">
-          Demander un devis
+        <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
+          Contact
         </Button>
       </div>
     </div>

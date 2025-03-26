@@ -18,20 +18,7 @@ const About = () => {
       </Helmet>
 
       <AboutHero />
-      <AboutStory 
-        history={{
-          paragraphs: [
-            "Progineer est une entreprise d'architecture et de maîtrise d'œuvre travaillant sur des projets de construction, rénovation ou de modification du bâti existant. Nous réalisons les études, le dépôt des autorisations administratives, l'appel d'offre et le suivi des travaux.",
-            "Nous intervenons principalement à Marseille et ses alentours, nous sommes également présent sur toute de la côte d'azur en passant par Saint Tropez, Toulon, Nice, Cannes, Fréjus.",
-            "Progineer s'engage à mettre en œuvre des réalisations qui reflètent vos aspirations et vos besoins, en alliant innovation, savoir-faire et respect des délais."
-          ],
-          guarantees: [
-            "Une écoute attentive, afin d'offrir un suivi personnalisé respectant au mieux vos besoins et votre budget.",
-            "Une communication transparente, pour assurer une coordination efficace entre vous et les entreprises partenaires de votre projet."
-          ],
-          conclusion: "Que vous soyez un particulier ou un professionnel, nous sommes à votre disposition pour vous accompagner dans la concrétisation de vos idées, afin d'obtenir un résultat à la hauteur de vos attentes."
-        }}
-      />
+      <AboutStory />
       <AboutValues />
       <AboutApproach />
       <CTACTA />

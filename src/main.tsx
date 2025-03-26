@@ -10,7 +10,6 @@ import { BrowserRouter } from "react-router-dom";
 import App from './App';
 import './index.css';
 import { AuthProvider } from './hooks/useAuth';
-import { ThemeProvider } from './hooks/use-theme';
 
 // Create a client
 const queryClient = new QueryClient();
@@ -26,13 +25,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <TooltipProvider>
-            <ThemeProvider>
-              <AuthProvider>
-                <Toaster />
-                <Sonner />
-                <App />
-              </AuthProvider>
-            </ThemeProvider>
+            <AuthProvider>
+              <Toaster />
+              <Sonner />
+              <App />
+            </AuthProvider>
           </TooltipProvider>
         </HelmetProvider>
       </QueryClientProvider>

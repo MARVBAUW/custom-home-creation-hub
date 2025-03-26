@@ -7,30 +7,30 @@ import Logo from '@/components/common/Logo';
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="bg-progineer-dark">
       {/* Top Section with Border */}
-      <div className="border-b footer-border">
+      <div className="border-b border-white/10">
         <Container size="lg" className="py-14">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Company Info */}
             <div className="md:col-span-4">
               <Logo variant="white" withTagline className="mx-auto md:mx-0 mb-6" />
-              <p className="footer-text-muted mb-6 text-sm leading-relaxed">
+              <p className="text-white/80 mb-6 text-sm leading-relaxed">
                 Entreprise d'architecture, de maîtrise d'œuvre et de construction 
                 de maisons sur mesure en région PACA. Notre équipe vous accompagne 
                 de la conception à la réalisation.
               </p>
               <div className="flex space-x-4 justify-center md:justify-start">
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
+                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="https://www.instagram.com/progineer_moe/profilecard/?igsh=NjAwa3pkaWtlMTZ0" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
+                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a href="https://fr.linkedin.com/company/progineer-maitrise-d-oeuvre" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full footer-text hover:bg-progineer-gold hover:text-white transition-colors">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
+                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Linkedin className="h-4 w-4" />
                 </a>
               </div>
@@ -38,36 +38,36 @@ const Footer = () => {
 
             {/* Navigation */}
             <div className="md:col-span-2">
-              <h3 className="footer-text text-lg font-medium mb-5 pb-2 border-b footer-border text-center md:text-left">Navigation</h3>
+              <h3 className="text-white text-lg font-medium mb-5 pb-2 border-b border-white/10 text-center md:text-left">Navigation</h3>
               <ul className="space-y-3 text-center md:text-left">
                 <li>
-                  <Link to="/" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Accueil
+                  <Link to="/" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Accueil
                   </Link>
                 </li>
                 <li>
-                  <Link to="/estimation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Estimer mon projet
+                  <Link to="/estimation" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Estimer mon projet
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Nos prestations
+                  <Link to="/prestations-maitre-oeuvre" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos prestations
                   </Link>
                 </li>
                 <li>
-                  <Link to="/realisations-architecte-maison" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Nos réalisations
+                  <Link to="/realisations-architecte-maison" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos réalisations
                   </Link>
                 </li>
                 <li>
-                  <Link to="/equipe-maitrise-oeuvre" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Notre équipe
+                  <Link to="/equipe-maitrise-oeuvre" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Notre équipe
                   </Link>
                 </li>
                 <li>
-                  <Link to="/contact" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Contact
+                  <Link to="/contact" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Contact
                   </Link>
                 </li>
               </ul>
@@ -75,31 +75,31 @@ const Footer = () => {
 
             {/* Services */}
             <div className="md:col-span-3">
-              <h3 className="footer-text text-lg font-medium mb-5 pb-2 border-b footer-border text-center md:text-left">Nos services</h3>
+              <h3 className="text-white text-lg font-medium mb-5 pb-2 border-b border-white/10 text-center md:text-left">Nos services</h3>
               <ul className="space-y-3 text-center md:text-left">
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#construction" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Construction sur mesure
+                  <Link to="/prestations-maitre-oeuvre#construction" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Construction sur mesure
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#renovation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Rénovation énergétique
+                  <Link to="/prestations-maitre-oeuvre#renovation" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Rénovation énergétique
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#extension" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Extension & agrandissement
+                  <Link to="/prestations-maitre-oeuvre#extension" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Extension & agrandissement
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#optimisation" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Optimisation d'espace
+                  <Link to="/prestations-maitre-oeuvre#optimisation" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Optimisation d'espace
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#design" className="footer-text-muted footer-hover transition-colors text-sm flex items-center justify-center md:justify-start">
-                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/90" /> Design d'espace
+                  <Link to="/prestations-maitre-oeuvre#design" className="text-white/70 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Design d'espace
                   </Link>
                 </li>
               </ul>
@@ -107,29 +107,29 @@ const Footer = () => {
 
             {/* Contact */}
             <div className="md:col-span-3">
-              <h3 className="footer-text text-lg font-medium mb-5 pb-2 border-b footer-border text-center md:text-left">Contact</h3>
+              <h3 className="text-white text-lg font-medium mb-5 pb-2 border-b border-white/10 text-center md:text-left">Contact</h3>
               <ul className="space-y-4 text-center md:text-left">
                 <li className="flex items-start justify-center md:justify-start">
                   <Phone className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
-                  <a href="tel:+33783762156" className="footer-text-muted footer-hover transition-colors text-sm">
+                  <a href="tel:+33783762156" className="text-white/70 hover:text-progineer-gold transition-colors text-sm">
                     +33 7 83 76 21 56
                   </a>
                 </li>
                 <li className="flex items-start justify-center md:justify-start">
                   <Mail className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
-                  <a href="mailto:progineer.moe@gmail.com" className="footer-text-muted footer-hover transition-colors text-sm">
+                  <a href="mailto:progineer.moe@gmail.com" className="text-white/70 hover:text-progineer-gold transition-colors text-sm">
                     progineer.moe@gmail.com
                   </a>
                 </li>
                 <li className="flex items-start justify-center md:justify-start">
                   <Clock className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
-                  <span className="footer-text-muted text-sm">
+                  <span className="text-white/70 text-sm">
                     Lun - Ven: 9h - 18h
                   </span>
                 </li>
                 <li className="flex items-start justify-center md:justify-start">
                   <MapPin className="h-4 w-4 mr-3 text-progineer-gold flex-shrink-0 mt-0.5" />
-                  <span className="footer-text-muted text-sm">
+                  <span className="text-white/70 text-sm">
                     Marseille, Saint-Tropez, Toulon,<br /> 
                     Nice, Cannes, Fréjus, région PACA
                   </span>
@@ -145,22 +145,22 @@ const Footer = () => {
         <Container size="lg">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
-              <p className="text-xs footer-text-muted">
+              <p className="text-xs text-white/50">
                 &copy; {new Date().getFullYear()} Progineer. Tous droits réservés.
               </p>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 justify-center">
-              <Link to="/mentions-legales" className="text-xs footer-text-muted footer-hover transition-colors">Mentions légales</Link>
-              <Link to="/cgv" className="text-xs footer-text-muted footer-hover transition-colors">CGV</Link>
-              <Link to="/faq" className="text-xs footer-text-muted footer-hover transition-colors">FAQ</Link>
-              <Link to="/a-propos" className="text-xs footer-text-muted footer-hover transition-colors">À propos</Link>
-              <Link to="/devenir-partenaire" className="text-xs footer-text-muted footer-hover transition-colors">Devenir partenaire</Link>
-              <Link to="/parrainage-travaux" className="text-xs footer-text-muted footer-hover transition-colors">Parrainage</Link>
+              <Link to="/mentions-legales" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">Mentions légales</Link>
+              <Link to="/cgv" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">CGV</Link>
+              <Link to="/faq" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">FAQ</Link>
+              <Link to="/a-propos" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">À propos</Link>
+              <Link to="/devenir-partenaire" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">Devenir partenaire</Link>
+              <Link to="/parrainage-travaux" className="text-xs text-white/50 hover:text-progineer-gold transition-colors">Parrainage</Link>
             </div>
           </div>
 
           {/* SEO Footer Text */}
-          <div className="mt-6 pt-6 border-t footer-border text-xs footer-text-muted text-center md:text-left">
+          <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/30 text-center md:text-left">
             <p className="max-w-4xl">
               Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z.
             </p>

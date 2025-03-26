@@ -2,12 +2,10 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { useToast } from "@/hooks/use-toast";
-import { useTheme } from "@/hooks/use-theme";
+import { useToast } from "@/components/ui/use-toast";
 
 const CTACTA = () => {
   const { toast } = useToast();
-  const { theme } = useTheme();
 
   const handleEstimationClick = () => {
     toast({
@@ -26,20 +24,10 @@ const CTACTA = () => {
   };
 
   return (
-    <section className="py-16 bg-khaki-600 relative overflow-hidden">
-      {/* Arrière-plan avec image */}
-      <div className="absolute inset-0 opacity-15 z-0">
-        <img 
-          src="/lovable-uploads/54a0affa-2d4b-4a87-95da-bcf043f41c54.png" 
-          alt="" 
-          className="w-full h-full object-cover" 
-          aria-hidden="true"
-        />
-      </div>
-      
+    <section className="py-16 bg-khaki-600 text-white">
       <Container>
-        <div className="text-center max-w-3xl mx-auto relative z-10">
-          <h2 className="text-3xl font-semibold mb-6 text-white">
+        <div className="text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl font-semibold mb-6">
             Prêt à concrétiser votre projet ?
           </h2>
           <p className="text-lg text-white/90 mb-8">
@@ -50,7 +38,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className={theme === 'light' ? 'bg-progineer-gold text-white hover:bg-progineer-gold/90' : 'bg-black text-khaki-600 hover:bg-black/90'}
+              className="bg-white text-khaki-800 hover:bg-white/90"
             >
               Estimer mon projet
             </Button>
@@ -58,7 +46,7 @@ const CTACTA = () => {
               href="/contact" 
               onClick={handleContactClick}
               variant="outline" 
-              className="border-white/30 bg-transparent hover:bg-white/10 text-white"
+              className="border-white/30 bg-transparent hover:bg-white/10"
             >
               Nous contacter
             </Button>
