@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 import Container from '@/components/common/Container';
 import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
-import { navLinks } from './navbar/types';
+import { mainNavLinks } from './navbar/types';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 
 const Navbar = () => {
@@ -47,7 +47,7 @@ const Navbar = () => {
           {/* Desktop Navigation & Controls */}
           <div className="flex-grow flex items-center justify-between">
             <DesktopNav 
-              navLinks={navLinks} 
+              navLinks={mainNavLinks} 
               openDropdown={openDropdown} 
               toggleDropdown={toggleDropdown} 
             />
@@ -72,7 +72,7 @@ const Navbar = () => {
       {/* Mobile Navigation */}
       <MobileNav 
         isOpen={isOpen} 
-        navLinks={navLinks} 
+        navLinks={mainNavLinks} 
         openDropdown={openDropdown} 
         toggleDropdown={toggleDropdown} 
       />
