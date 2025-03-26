@@ -1,4 +1,3 @@
-
 import { StepComponentRegistry, createStepComponent, DefaultStepProps } from './StepComponents';
 import { createClientStepRegistry } from './ClientStepRegistry';
 import { createConstructionStepRegistry } from './ConstructionStepRegistry';
@@ -172,8 +171,6 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     return createStepComponent('default' as any, {
       default: (props: DefaultStepProps) => {
         // Return the DefaultStepContent component with the props
-        // This is the key fix - now we're returning the component itself,
-        // not just the props object
         return <DefaultStepContent {...props} />;
       },
     }, defaultProps);
