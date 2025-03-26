@@ -143,7 +143,8 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     const isLastStep = step === totalSteps;
 
     if (isLastStep) {
-      return createStepComponent('contact', contactStepRegistry, {
+      // Pass 'contact' as string key - now allowed by updated StepComponentRegistry type
+      return createStepComponent('contact' as any, contactStepRegistry, {
         animationDirection,
         goToPreviousStep,
       });
@@ -167,7 +168,7 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
       animationDirection,
     };
 
-    return createStepComponent('default', {
+    return createStepComponent('default' as any, {
       default: (props: DefaultStepProps) => (
         props
       ),

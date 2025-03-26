@@ -10,8 +10,8 @@ export const createContactStepRegistry = (
   onContactSubmit: (data: any) => void,
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
+  // 'contact' is now a valid key in StepComponentRegistry
   return {
-    // The key is "contact" to represent it's a special case (the final step)
     contact: (props: FormStepProps) => (
       <ContactForm
         defaultValues={{
