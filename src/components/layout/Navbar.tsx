@@ -8,6 +8,7 @@ import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
 import { navLinks } from './navbar/types';
 import Logo from '@/components/common/Logo';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +40,7 @@ const Navbar = () => {
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
         isScrolled || isOpen
-          ? "bg-white/95 py-2 border-b border-stone-200/50" 
+          ? "bg-white/95 dark:bg-gray-900/95 py-2 border-b border-stone-200/50 dark:border-gray-700/50" 
           : "bg-transparent py-3"
       )}
     >
@@ -60,14 +61,19 @@ const Navbar = () => {
             toggleDropdown={toggleDropdown} 
           />
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-stone-600 hover:text-stone-800 hover:bg-stone-100/50 relative z-50"
-            aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Theme Toggle */}
+          <div className="flex items-center gap-4 relative z-50">
+            <ThemeToggle />
+            
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
+              aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </nav>
       </Container>
 

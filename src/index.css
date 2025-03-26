@@ -1,164 +1,176 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Rare';
-  src: url('/fonts/rare-font.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 @layer base {
   :root {
-    --background: 60 30% 96%;
-    --foreground: 20 10% 5%;
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
 
     --card: 0 0% 100%;
-    --card-foreground: 20 10% 5%;
-
+    --card-foreground: 20 14.3% 4.1%;
+ 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 10% 5%;
-
-    /* Nouvelle couleur principale - gold/olive */
-    --primary: 60 26% 37%;
-    --primary-foreground: 60 30% 98%;
-
-    --secondary: 42 25% 65%;
-    --secondary-foreground: 20 10% 5%;
-
-    --muted: 60 15% 90%;
-    --muted-foreground: 20 10% 40%;
-
-    --accent: 42 25% 65%;
-    --accent-foreground: 20 10% 5%;
-
+    --popover-foreground: 20 14.3% 4.1%;
+ 
+    --primary: 24 9.8% 10%;
+    --primary-foreground: 60 9.1% 97.8%;
+ 
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+ 
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+ 
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+ 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 60 9.1% 97.8%;
 
-    --border: 20 10% 85%;
-    --input: 20 10% 85%;
-    --ring: 60 26% 37%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 24 9.8% 10%;
+ 
+    --radius: 0.5rem;
 
-    --radius: 0.375rem;
+    /* Couleurs spécifiques à l'application */
+    --khaki-50: 60 20% 96%;
+    --khaki-100: 60 20% 90%;
+    --khaki-200: 60 20% 80%;
+    --khaki-300: 60 20% 70%;
+    --khaki-400: 60 20% 60%;
+    --khaki-500: 60 20% 50%;
+    --khaki-600: 60 20% 40%;
+    --khaki-700: 60 20% 30%;
+    --khaki-800: 60 20% 20%;
+    --khaki-900: 60 20% 10%;
   }
+ 
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+ 
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+ 
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+ 
+    --primary: 60 9.1% 97.8%;
+    --primary-foreground: 24 9.8% 10%;
+ 
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+ 
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+ 
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+ 
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 24 5.7% 82.9%;
 
+    /* Couleurs spécifiques à l'application - version sombre */
+    --khaki-50: 60 10% 8%;
+    --khaki-100: 60 10% 15%;
+    --khaki-200: 60 10% 20%;
+    --khaki-300: 60 10% 30%;
+    --khaki-400: 60 10% 40%;
+    --khaki-500: 60 15% 50%;
+    --khaki-600: 60 20% 60%;
+    --khaki-700: 60 20% 70%;
+    --khaki-800: 60 20% 80%;
+    --khaki-900: 60 20% 90%;
+  }
+}
+ 
+@layer base {
   * {
     @apply border-border;
   }
-
-  html {
-    scroll-behavior: smooth;
-    @apply overflow-x-hidden;
-  }
-
   body {
-    @apply bg-background text-foreground antialiased font-sans overflow-x-hidden;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-rare tracking-wide;
-  }
-
-  ::selection {
-    @apply bg-progineer-gold/40 text-foreground;
+    @apply bg-background text-foreground;
   }
 }
 
-@layer components {
-  .section {
-    @apply py-16 md:py-24 px-4 md:px-8 w-full;
-  }
+/* Styles spécifiques pour le composant Gantt */
+.gantt-container {
+  overflow-x: auto;
+  padding-bottom: 20px;
+}
 
-  .container-lg {
-    @apply max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8;
-  }
+.gantt-timeline {
+  display: grid;
+  grid-template-columns: 200px repeat(auto-fill, minmax(80px, 1fr));
+}
 
-  .container-md {
-    @apply max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8;
-  }
+.gantt-task-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  align-items: center;
+  min-height: 40px;
+}
 
-  .container-sm {
-    @apply max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8;
-  }
+.gantt-task-bar {
+  position: relative;
+  height: 24px;
+  border-radius: 4px;
+  margin: 4px 0;
+  transition: all 0.2s ease;
+}
 
-  .highlight-text {
-    @apply text-progineer-gold font-medium;
-  }
+.gantt-milestone {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 16px solid currentColor;
+  position: absolute;
+  transform: translateX(-50%);
+}
 
-  .text-balance {
-    text-wrap: balance;
+/* Animation pour les barres de progression */
+@keyframes progressAnimation {
+  0% {
+    background-position: 0% 0%;
   }
+  100% {
+    background-position: 100% 100%;
+  }
+}
 
-  .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-white/40 shadow-sm;
-  }
+.animate-progress {
+  background: linear-gradient(
+    45deg,
+    hsl(var(--khaki-500)) 25%,
+    hsl(var(--khaki-400)) 25%,
+    hsl(var(--khaki-400)) 50%,
+    hsl(var(--khaki-500)) 50%,
+    hsl(var(--khaki-500)) 75%,
+    hsl(var(--khaki-400)) 75%,
+    hsl(var(--khaki-400)) 100%
+  );
+  background-size: 40px 40px;
+  animation: progressAnimation 2s linear infinite;
+}
 
-  .glassmorphism {
-    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-sm;
-  }
+/* Style pour les cards cliquables */
+.clickable-card {
+  transition: all 0.2s ease-in-out;
+}
 
-  .page-transition-enter {
-    @apply opacity-0;
-  }
+.clickable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
 
-  .page-transition-enter-active {
-    @apply opacity-100 transition-opacity duration-300;
-  }
-
-  .page-transition-exit {
-    @apply opacity-100;
-  }
-
-  .page-transition-exit-active {
-    @apply opacity-0 transition-opacity duration-300;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
-    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
-    bg-progineer-gold text-white shadow hover:bg-progineer-gold/90 h-9 px-4 py-2;
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
-    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
-    bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2;
-  }
-  
-  .btn-outline {
-    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
-    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
-    border border-progineer-gold text-progineer-gold bg-transparent hover:bg-progineer-gold/10 h-9 px-4 py-2;
-  }
-
-  .reveal {
-    position: relative;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .reveal.active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  /* Ajouter des classes pour les éléments spécifiques au style Progineer */
-  .progineer-title {
-    @apply font-rare tracking-wide uppercase text-progineer-gold;
-  }
-  
-  .progineer-subtitle {
-    @apply font-montserrat font-light tracking-wider text-progineer-dark/80;
-  }
-  
-  .progineer-divider {
-    @apply w-full h-px bg-progineer-gold/30 my-8;
-  }
+.dark .clickable-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }

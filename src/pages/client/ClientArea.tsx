@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
 import ClientNavigation from '@/components/client/ClientNavigation';
@@ -10,15 +10,26 @@ import ClientAreaNotifications from '@/components/client/ClientAreaNotifications
 import ClientAreaBudget from '@/components/client/ClientAreaBudget';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import AdminSwitch from '@/components/client/AdminSwitch';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
+import AdminDashboard from '@/components/admin/AdminDashboard';
 
 const ClientArea = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
   const [isAdminMode, setIsAdminMode] = useState(false);
+  const { toast } = useToast();
+  
+  // Persister le mode admin dans localStorage
+  useEffect(() => {
+    const savedMode = localStorage.getItem('adminMode');
+    if (savedMode === 'true') {
+      setIsAdminMode(true);
+    }
+  }, []);
   
   // Handle admin mode toggle
   const handleAdminModeToggle = (checked: boolean) => {
     setIsAdminMode(checked);
+    localStorage.setItem('adminMode', checked.toString());
     toast({
       title: checked ? "Mode administrateur activé" : "Mode client activé",
       description: checked 
@@ -43,17 +54,17 @@ const ClientArea = () => {
         <meta name="description" content="Accédez à votre espace client Progineer pour suivre l'avancement de vos projets de construction et rénovation." />
       </Helmet>
 
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white dark:from-gray-900 dark:to-gray-950">
         <Container size="lg">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
-              <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
+              <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 dark:bg-khaki-900 dark:text-khaki-100 text-sm font-medium">
                 {isAdminMode ? 'Administration' : 'Espace Client'}
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
                 {isAdminMode ? 'Tableau de bord administrateur' : 'Bienvenue dans votre espace client'}
               </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mb-8">
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
                 {isAdminMode 
                   ? 'Gérez les dossiers clients, les projets et les communications.' 
                   : 'Retrouvez ici toutes les informations concernant votre projet de construction.'}
@@ -79,26 +90,7 @@ const ClientArea = () => {
             {/* Main Content */}
             <div className="lg:col-span-3">
               {isAdminMode ? (
-                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                  <h2 className="text-xl font-semibold mb-4">Panneau d'administration</h2>
-                  <p className="text-gray-600 mb-4">
-                    Cette interface vous permet de gérer les dossiers clients, les planifications, et les communications.
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                    <div className="p-4 bg-red-50 border border-red-100 rounded-lg">
-                      <h3 className="font-medium text-red-800">Mode administrateur</h3>
-                      <p className="text-sm text-red-700 mt-1">
-                        Vous avez accès à toutes les fonctionnalités d'administration.
-                      </p>
-                    </div>
-                    <div className="p-4 bg-blue-50 border border-blue-100 rounded-lg">
-                      <h3 className="font-medium text-blue-800">Gestion des clients</h3>
-                      <p className="text-sm text-blue-700 mt-1">
-                        Accédez à la liste des clients et gérez leurs dossiers.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                <AdminDashboard />
               ) : (
                 <>
                   <ClientAreaWelcome />
