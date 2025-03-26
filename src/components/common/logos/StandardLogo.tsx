@@ -26,7 +26,9 @@ const StandardLogo: React.FC<StandardLogoProps> = ({
     ? (theme === 'dark' ? "#FFFFFF" : "#000000") 
     : variant === 'white' 
       ? "#FFFFFF"
-      : goldColor;
+      : variant === 'gold'
+        ? goldColor
+        : primaryColor;
   
   // Define gradient ID with a unique identifier to avoid conflicts
   const gradientId = `logoGradient-${Math.random().toString(36).substring(2, 9)}`;
