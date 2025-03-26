@@ -1,35 +1,56 @@
-import React, { useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { SignUp as ClerkSignUp } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
-import { useClientAuth } from '@/hooks/useClientAuth';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
-import { toast } from '@/components/ui/use-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 const SignUp = () => {
-  // Use the custom auth hook with redirection if authenticated
-  useClientAuth({ redirectIfAuthenticated: true });
   const navigate = useNavigate();
-  const { isSignedIn, isLoaded } = useUser();
+  const { signUp, loading, error, user } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
 
-  // Add debugging logs
   useEffect(() => {
-    console.log('SignUp Component: Authentication State', { isSignedIn, isLoaded });
-  }, [isSignedIn, isLoaded]);
-
-  // Redirect if already signed in
-  useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
+    if (user) {
       console.log('User already signed in, redirecting to client area');
-      toast({
-        title: 'Vous êtes déjà connecté',
-        description: 'Redirection vers votre espace client...',
-        variant: 'default',
-      });
       navigate('/workspace/client-area');
     }
-  }, [isSignedIn, isLoaded, navigate]);
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    if (!email.trim()) {
+      setFormError('L\'email est requis');
+      return;
+    }
+
+    if (!password.trim()) {
+      setFormError('Le mot de passe est requis');
+      return;
+    }
+
+    if (password.length < 6) {
+      setFormError('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    const metadata = {
+      full_name: fullName.trim(),
+    };
+
+    await signUp(email, password, metadata);
+  };
 
   return (
     <>
@@ -57,26 +78,102 @@ const SignUp = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            <ClerkSignUp 
-              path="/workspace/sign-up"
-              routing="path"
-              signInUrl="/workspace/sign-in"
-              redirectUrl="/workspace/client-area"
-              appearance={{
-                elements: {
-                  formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
-                  card: 'shadow-none border-none',
-                  headerTitle: 'text-2xl font-semibold text-gray-800',
-                  headerSubtitle: 'text-gray-600',
-                  socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
-                  formFieldLabel: 'text-gray-700',
-                  formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
-                  footerActionLink: 'text-khaki-600 hover:text-khaki-700',
-                  rootBox: 'w-full',
-                  main: 'w-full'
-                }
-              }}
-            />
+            {loading && !user ? (
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
+                <p className="text-gray-600">Vérification de l'authentification...</p>
+              </div>
+            ) : !user ? (
+              <div className="space-y-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-800">Créez votre compte</h2>
+                  <p className="text-gray-600 mt-2">Remplissez le formulaire ci-dessous pour vous inscrire</p>
+                </div>
+
+                {(error || formError) && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertDescription>
+                      {formError || error}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Nom complet</Label>
+                    <Input 
+                      id="fullName" 
+                      type="text" 
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Jean Dupont"
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="votre@email.com"
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Mot de passe</Label>
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
+                    <p className="text-xs text-gray-500">
+                      Le mot de passe doit contenir au moins 6 caractères
+                    </p>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Inscription en cours...
+                      </>
+                    ) : 'S\'inscrire'}
+                  </Button>
+                </form>
+
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-gray-600">
+                    Vous avez déjà un compte ?{' '}
+                    <Link to="/workspace/sign-in" className="text-khaki-600 hover:text-khaki-700 font-medium">
+                      Se connecter
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Vous êtes connecté</h3>
+                <p className="text-gray-600 mb-4">Redirection vers votre espace client...</p>
+              </div>
+            )}
           </div>
         </Container>
       </section>

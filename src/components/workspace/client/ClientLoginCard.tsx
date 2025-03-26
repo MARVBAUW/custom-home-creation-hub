@@ -1,52 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Button from '@/components/common/Button';
 import { Link } from 'react-router-dom';
-import { toast } from '@/components/ui/use-toast';
-import { useClientAuth } from '@/hooks/useClientAuth';
+import { useAuth } from '@/hooks/useAuth';
 
 const ClientLoginCard = () => {
   const navigate = useNavigate();
-  
-  // Use the custom auth hook with demo mode disabled
-  const { 
-    isSignedIn, 
-    isLoaded, 
-    loadingTimedOut 
-  } = useClientAuth({ 
-    allowDemoMode: false,
-    maxLoadingTime: 3000
-  });
-  
-  const [clerkTimeout, setClerkTimeout] = useState(false);
-  
-  // Set a timeout to handle Clerk not loading properly
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isLoaded) {
-        setClerkTimeout(true);
-        console.log('Clerk loading timed out in ClientLoginCard');
-      }
-    }, 3000);
-    
-    return () => clearTimeout(timer);
-  }, [isLoaded]);
-  
-  useEffect(() => {
-    console.log('ClientLoginCard: Auth State', { 
-      isSignedIn, 
-      isLoaded, 
-      clerkTimeout,
-      loadingTimedOut
-    });
-    
-    // If authentication fails to load, automatically use the timeout state
-    if (loadingTimedOut && !isLoaded) {
-      setClerkTimeout(true);
-    }
-  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut]);
+  const { user, loading } = useAuth();
   
   const handleLogin = () => {
     console.log('Login button clicked, navigating to sign-in page');
@@ -59,7 +21,7 @@ const ClientLoginCard = () => {
   };
 
   const renderContent = () => {
-    if (!isLoaded && !clerkTimeout) {
+    if (loading) {
       return (
         <div className="flex flex-col items-center justify-center py-8">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-khaki-600 mb-4"></div>
@@ -68,20 +30,20 @@ const ClientLoginCard = () => {
       );
     }
     
-    if (clerkTimeout) {
+    if (user) {
       return (
-        <div className="space-y-4">
-          <div className="border border-red-200 bg-red-50 text-red-700 p-3 rounded-md">
-            <p className="font-medium">Service temporairement indisponible</p>
-            <p className="mt-1 text-sm">Le service d'authentification n'a pas pu être chargé. Veuillez réessayer plus tard.</p>
+        <div className="space-y-4 text-center">
+          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
           </div>
-          
+          <p className="font-medium text-green-700">Vous êtes connecté</p>
           <Button 
             className="w-full" 
-            variant="outline"
-            onClick={handleLogin}
+            onClick={() => navigate('/workspace/client-area')}
           >
-            Réessayer de se connecter
+            Accéder à mon espace
           </Button>
         </div>
       );

@@ -1,38 +1,46 @@
 
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
-import { useClientAuth } from '@/hooks/useClientAuth';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 const SignIn = () => {
   const navigate = useNavigate();
-  
-  // Use the custom auth hook with demo mode disabled
-  const { 
-    clerkLoaded, 
-    isSignedIn, 
-    authChecked, 
-    isLoaded, 
-    loadingTimedOut
-  } = useClientAuth({ 
-    redirectIfAuthenticated: true,
-    maxLoadingTime: 3000,
-    allowDemoMode: false
-  });
-  
-  // Add improved debugging logs
+  const { signIn, loading, error, user } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
+
   useEffect(() => {
-    console.log('SignIn Component: Authentication State', { 
-      isSignedIn, 
-      clerkLoaded, 
-      authChecked,
-      isLoaded,
-      loadingTimedOut
-    });
-  }, [isSignedIn, clerkLoaded, authChecked, isLoaded, loadingTimedOut]);
+    // Si l'utilisateur est déjà connecté, redirigez-le vers l'espace client
+    if (user) {
+      console.log('User already signed in, redirecting to client area');
+      navigate('/workspace/client-area');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError(null);
+
+    if (!email.trim()) {
+      setFormError('L\'email est requis');
+      return;
+    }
+
+    if (!password.trim()) {
+      setFormError('Le mot de passe est requis');
+      return;
+    }
+
+    await signIn(email, password);
+  };
 
   return (
     <>
@@ -60,61 +68,84 @@ const SignIn = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            {(!clerkLoaded && !loadingTimedOut) ? (
+            {loading && !user ? (
               <div className="flex flex-col items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
-                <p className="text-gray-600">Chargement du formulaire de connexion...</p>
+                <p className="text-gray-600">Vérification de l'authentification...</p>
               </div>
-            ) : loadingTimedOut && !clerkLoaded ? (
-              <div className="space-y-6 py-4">
-                <div className="border border-red-200 bg-red-50 text-red-700 p-4 rounded-md">
-                  <h3 className="font-medium text-lg mb-2">Service d'authentification indisponible</h3>
-                  <p className="mb-3">
-                    Le service d'authentification n'a pas pu être chargé. Veuillez réessayer plus tard ou contacter notre support.
-                  </p>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full mb-2"
-                    onClick={() => window.location.reload()}
-                  >
-                    Réessayer
-                  </Button>
+            ) : !user ? (
+              <div className="space-y-6">
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl font-semibold text-gray-800">Connectez-vous à votre compte</h2>
+                  <p className="text-gray-600 mt-2">Entrez vos identifiants pour accéder à votre espace client</p>
                 </div>
-                
-                <div className="text-center">
-                  <p className="text-gray-600 mb-3">Vous pouvez également:</p>
+
+                {(error || formError) && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertDescription>
+                      {formError || error}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Link to="/workspace" className="block">
-                      <Button variant="ghost" className="w-full">
-                        Retour à l'accueil
-                      </Button>
-                    </Link>
+                    <Label htmlFor="email">Email</Label>
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="votre@email.com"
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Mot de passe</Label>
+                    <Input 
+                      id="password" 
+                      type="password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-khaki-600 hover:bg-khaki-700 text-white"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+                        Connexion en cours...
+                      </>
+                    ) : 'Se connecter'}
+                  </Button>
+                </form>
+
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-gray-600">
+                    Vous n'avez pas encore de compte ?{' '}
+                    <Link to="/workspace/sign-up" className="text-khaki-600 hover:text-khaki-700 font-medium">
+                      Créer un compte
+                    </Link>
+                  </p>
                 </div>
               </div>
             ) : (
-              <div>
-                <ClerkSignIn 
-                  path="/workspace/sign-in"
-                  routing="path"
-                  signUpUrl="/workspace/sign-up"
-                  redirectUrl="/workspace/client-area"
-                  appearance={{
-                    elements: {
-                      formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
-                      card: 'shadow-none border-none',
-                      headerTitle: 'text-2xl font-semibold text-gray-800',
-                      headerSubtitle: 'text-gray-600',
-                      socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
-                      formFieldLabel: 'text-gray-700',
-                      formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
-                      footerActionLink: 'text-khaki-600 hover:text-khaki-700',
-                      rootBox: 'w-full',
-                      main: 'w-full'
-                    }
-                  }}
-                />
+              <div className="text-center py-4">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Vous êtes connecté</h3>
+                <p className="text-gray-600 mb-4">Redirection vers votre espace client...</p>
               </div>
             )}
           </div>
