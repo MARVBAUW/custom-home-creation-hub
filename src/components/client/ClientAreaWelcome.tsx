@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, MessageSquare, Calendar, ArrowRight, HelpCircle, BookOpen } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 const ClientAreaWelcome = () => {
-  const { user } = useUser();
-  const firstName = user?.firstName || 'Client';
+  const { user } = useAuth();
+  const firstName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Client';
 
   return (
     <Card>

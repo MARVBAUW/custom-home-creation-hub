@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { SignOutButton } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   FileText, 
@@ -17,37 +16,29 @@ import ClientAreaWelcome from '@/components/client/ClientAreaWelcome';
 import ClientAreaNotifications from '@/components/client/ClientAreaNotifications';
 import ClientAreaRecentDocuments from '@/components/client/ClientAreaRecentDocuments';
 import ClientAreaProjectProgress from '@/components/client/ClientAreaProjectProgress';
-import { useClientAuth } from '@/hooks/useClientAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ClientArea = () => {
   const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
   
-  // Use the custom auth hook with demo mode disabled
-  const { isLoaded, clerkLoaded, isSignedIn, user, loadingTimedOut } = useClientAuth({ 
-    redirectIfUnauthenticated: true, // Enable redirect to force authentication
-    maxLoadingTime: 3000,
-    allowDemoMode: false
-  });
-  
-  // Add debugging for loading state
+  // Log des informations d'authentification pour faciliter le débogage
   useEffect(() => {
-    console.log('ClientArea: Loading State', { 
-      isLoaded, 
-      clerkLoaded, 
-      isSignedIn, 
-      loadingTimedOut
+    console.log('ClientArea: Auth State', { 
+      user,
+      loading,
+      isAuthenticated: !!user
     });
     
-    // If auth fails, redirect to sign-in
-    if ((isLoaded && !isSignedIn) || loadingTimedOut) {
+    if (!loading && !user) {
       console.log('Authentication required, redirecting to sign-in');
       navigate('/workspace/sign-in');
     }
-  }, [isLoaded, clerkLoaded, isSignedIn, loadingTimedOut, navigate]);
+  }, [user, loading, navigate]);
 
   // Show loading spinner with reduced timeout (max 2 seconds)
-  if (!isLoaded) {
+  if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
@@ -58,7 +49,7 @@ const ClientArea = () => {
   }
 
   // Show auth required message if not signed in
-  if (!isSignedIn) {
+  if (!user) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <div className="text-center max-w-md p-8 bg-white rounded-xl shadow-md border border-gray-200">
@@ -80,6 +71,10 @@ const ClientArea = () => {
     );
   }
 
+  // Extract user information
+  const fullName = user.user_metadata?.full_name || user.email?.split('@')[0];
+  const userEmail = user.email;
+
   // Normal authenticated view
   return (
     <>
@@ -96,7 +91,7 @@ const ClientArea = () => {
                 Espace Client
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                Bienvenue, {user?.firstName || 'Client'}
+                Bienvenue, {fullName || 'Client'}
               </h1>
               <p className="text-lg text-gray-600 max-w-2xl mb-8">
                 Retrouvez ici tous les éléments relatifs à votre projet.
@@ -108,16 +103,22 @@ const ClientArea = () => {
                   <User className="h-5 w-5 text-khaki-600" />
                 </div>
                 <div className="ml-3">
-                  <div className="text-sm font-medium">{user?.fullName || user?.primaryEmailAddress?.emailAddress}</div>
+                  <div className="text-sm font-medium">{fullName || userEmail}</div>
                   <div className="text-xs text-gray-500">Client</div>
                 </div>
               </div>
-              <SignOutButton>
-                <Button variant="outline" size="sm" className="flex items-center">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Déconnexion
-                </Button>
-              </SignOutButton>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center"
+                onClick={() => {
+                  signOut();
+                  navigate('/workspace');
+                }}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Déconnexion
+              </Button>
             </div>
           </div>
         </Container>
