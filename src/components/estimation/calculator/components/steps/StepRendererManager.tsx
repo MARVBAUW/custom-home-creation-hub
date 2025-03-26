@@ -7,6 +7,7 @@ import { createTechnicalStepRegistry } from './TechnicalStepRegistry';
 import { createInteriorStepRegistry } from './InteriorStepRegistry';
 import { createContactStepRegistry } from './ContactStepRegistry';
 import { FormData } from '../../types';
+import DefaultStepContent from '../../DefaultStepContent';
 
 export interface StepRendererManagerProps {
   step: number;
