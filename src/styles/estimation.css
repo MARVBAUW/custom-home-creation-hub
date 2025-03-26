@@ -1,0 +1,83 @@
+
+/* Styles spécifiques pour les éléments de la page d'estimation */
+.estimation-form-container {
+  background-color: #F5F2E7;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.estimation-form-container:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.estimation-input {
+  border: 1px solid #C1A16A;
+  transition: all 0.3s ease;
+}
+
+.estimation-input:focus {
+  border-color: #787346;
+  box-shadow: 0 0 0 2px rgba(120, 115, 70, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Effet de construction progressive */
+.build-element {
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.build-element.built {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Animation pour les petits personnages de construction */
+@keyframes workerAnimation {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.construction-worker {
+  animation: workerAnimation 2s infinite;
+}
+
+/* Animation de pulsation pour les éléments importants */
+@keyframes pulsate {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(193, 161, 106, 0.7);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 10px rgba(193, 161, 106, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(193, 161, 106, 0);
+  }
+}
+
+.pulsate-element {
+  animation: pulsate 2s infinite;
+}
+
+/* Effet d'apparition pour les résultats */
+.result-appear {
+  opacity: 0;
+  transform: scale(0.9);
+  animation: resultAppear 0.5s forwards cubic-bezier(0.26, 0.53, 0.74, 1.48);
+}
+
+@keyframes resultAppear {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

@@ -1,0 +1,21 @@
+
+/* Boutons et éléments interactifs */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
+    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+    bg-progineer-gold text-white shadow hover:bg-progineer-gold/90 h-9 px-4 py-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
+    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+    bg-secondary text-secondary-foreground hover:bg-secondary/80 h-9 px-4 py-2;
+  }
+  
+  .btn-outline {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors 
+    focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50
+    border border-progineer-gold text-progineer-gold bg-transparent hover:bg-progineer-gold/10 h-9 px-4 py-2;
+  }
+}
