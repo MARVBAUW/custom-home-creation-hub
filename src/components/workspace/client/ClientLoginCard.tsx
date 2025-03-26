@@ -3,9 +3,11 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Button from '@/components/common/Button';
+import { useUser } from '@clerk/clerk-react';
 
 const ClientLoginCard = () => {
   const navigate = useNavigate();
+  const { isSignedIn, isLoaded } = useUser();
   
   const handleLogin = () => {
     console.log('Login button clicked, navigating to sign-in page');
@@ -15,6 +17,16 @@ const ClientLoginCard = () => {
   const handleSignUp = () => {
     console.log('Sign up button clicked, navigating to sign-up page');
     navigate('/workspace/sign-up');
+  };
+
+  const handleClientArea = () => {
+    console.log('Client area button clicked');
+    
+    if (isLoaded && isSignedIn) {
+      navigate('/workspace/client-area');
+    } else {
+      navigate('/workspace/sign-in');
+    }
   };
   
   return (
@@ -50,15 +62,17 @@ const ClientLoginCard = () => {
         </div>
         
         <div className="space-y-3">
-          <Link to="/workspace/sign-in" className="w-full block">
-            <Button className="w-full" variant="outline">
-              Accès page de connexion complète
-            </Button>
-          </Link>
+          <Button 
+            className="w-full" 
+            variant="outline"
+            onClick={handleClientArea}
+          >
+            Accès espace client
+          </Button>
           
           <div className="border border-blue-200 bg-blue-50 text-blue-700 p-3 rounded-md text-sm">
-            <p className="font-medium">Accès démo</p>
-            <p className="mt-1">Utilisez le bouton ci-dessus pour accéder à la page de connexion</p>
+            <p className="font-medium">Accès sécurisé</p>
+            <p className="mt-1">L'authentification est requise pour accéder à votre espace client</p>
           </div>
         </div>
       </CardContent>

@@ -1,13 +1,33 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SignIn as ClerkSignIn } from '@clerk/clerk-react';
 import Container from '@/components/common/Container';
 import { useClientAuth } from '@/hooks/useClientAuth';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
+import { toast } from '@/components/ui/use-toast';
 
 const SignIn = () => {
   // Use the custom auth hook with redirection if authenticated
-  useClientAuth({ redirectIfAuthenticated: true });
+  const { isLoaded, isSignedIn } = useClientAuth({ redirectIfAuthenticated: true });
+  const navigate = useNavigate();
+
+  // Add debugging logs
+  useEffect(() => {
+    console.log('SignIn Component: Authentication State', { isSignedIn, isLoaded });
+    
+    // If user is already signed in, redirect to client area
+    if (isLoaded && isSignedIn) {
+      console.log('User already signed in, redirecting to client area');
+      toast({
+        title: 'Session détectée',
+        description: 'Redirection vers votre espace client...',
+        variant: 'default',
+      });
+      navigate('/workspace/client-area');
+    }
+  }, [isSignedIn, isLoaded, navigate]);
 
   return (
     <>
@@ -35,26 +55,33 @@ const SignIn = () => {
       <section className="py-16">
         <Container size="sm">
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
-            <ClerkSignIn 
-              path="/workspace/sign-in"
-              routing="path"
-              signUpUrl="/workspace/sign-up"
-              redirectUrl="/workspace/client-area"
-              appearance={{
-                elements: {
-                  formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
-                  card: 'shadow-none border-none',
-                  headerTitle: 'text-2xl font-semibold text-gray-800',
-                  headerSubtitle: 'text-gray-600',
-                  socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
-                  formFieldLabel: 'text-gray-700',
-                  formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
-                  footerActionLink: 'text-khaki-600 hover:text-khaki-700',
-                  rootBox: 'w-full',
-                  main: 'w-full'
-                }
-              }}
-            />
+            {isLoaded && (
+              <ClerkSignIn 
+                path="/workspace/sign-in"
+                routing="path"
+                signUpUrl="/workspace/sign-up"
+                redirectUrl="/workspace/client-area"
+                appearance={{
+                  elements: {
+                    formButtonPrimary: 'bg-khaki-600 hover:bg-khaki-700 text-white',
+                    card: 'shadow-none border-none',
+                    headerTitle: 'text-2xl font-semibold text-gray-800',
+                    headerSubtitle: 'text-gray-600',
+                    socialButtonsBlockButton: 'border border-gray-300 hover:bg-gray-50',
+                    formFieldLabel: 'text-gray-700',
+                    formFieldInput: 'border-gray-300 focus:ring-khaki-500 focus:border-khaki-500',
+                    footerActionLink: 'text-khaki-600 hover:text-khaki-700',
+                    rootBox: 'w-full',
+                    main: 'w-full'
+                  }
+                }}
+              />
+            )}
+            {!isLoaded && (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+              </div>
+            )}
           </div>
         </Container>
       </section>

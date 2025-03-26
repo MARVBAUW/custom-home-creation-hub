@@ -23,13 +23,22 @@ import { useClientAuth } from '@/hooks/useClientAuth';
 const ClientArea = () => {
   // Use the custom auth hook with redirection if unauthenticated
   const { isLoaded, isSignedIn, user } = useClientAuth({ 
-    redirectIfUnauthenticated: true 
+    redirectIfUnauthenticated: true,
+    redirectTo: '/workspace/sign-in'
   });
 
-  if (!isLoaded || !isSignedIn) {
-    return <div className="flex justify-center items-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
-    </div>;
+  // Show loading spinner while authentication is being checked
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+      </div>
+    );
+  }
+
+  // Protect the route - if not signed in, this should never render due to the redirect
+  if (!isSignedIn) {
+    return null;
   }
 
   return (

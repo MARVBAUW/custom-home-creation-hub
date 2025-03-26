@@ -46,6 +46,11 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     
     if (!isSignedIn && redirectIfUnauthenticated) {
       console.log('User not signed in, redirecting to sign in page');
+      toast({
+        title: 'Authentification requise',
+        description: 'Veuillez vous connecter pour accéder à cette page.',
+        variant: 'destructive',
+      });
       navigate(redirectTo);
     }
   }, [isLoaded, isSignedIn, navigate, redirectTo, redirectIfAuthenticated, redirectIfUnauthenticated]);
