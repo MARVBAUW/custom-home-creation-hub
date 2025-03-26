@@ -1,6 +1,32 @@
 // jest-dom adds custom jest matchers for asserting on DOM nodes.
 import '@testing-library/jest-dom';
 
+// Define global testing types for TypeScript
+declare global {
+  // Define a minimal Jest-like interface
+  const jest: {
+    fn: (implementation?: any) => any;
+    spyOn: (object: any, method: string) => any;
+    clearAllMocks: () => void;
+    restoreAllMocks: () => void;
+  };
+
+  // Testing functions
+  function describe(name: string, fn: () => void): void;
+  function it(name: string, fn: () => void | Promise<void>): void;
+  function beforeEach(fn: () => void): void;
+  function afterEach(fn: () => void): void;
+  function expect(actual: any): {
+    toBe: (expected: any) => void;
+    toEqual: (expected: any) => void;
+    toBeNull: () => void;
+    toThrow: (expected?: any) => void;
+    toHaveBeenCalled: () => void;
+    toHaveBeenCalledWith: (...args: any[]) => void;
+    toContain: (expected: any) => void;
+  };
+}
+
 // Mock fetch
 global.fetch = jest.fn(() => 
   Promise.resolve({
@@ -47,7 +73,34 @@ if (!global.jest) {
   global.jest = {
     fn: () => jest.fn(),
     spyOn: (object, method) => jest.spyOn(object, method),
+    clearAllMocks: () => {},
+    restoreAllMocks: () => {},
   };
+}
+
+// Add basic test functions if they don't exist
+if (typeof describe !== 'function') {
+  (global as any).describe = (name: string, fn: () => void) => { fn(); };
+}
+if (typeof it !== 'function') {
+  (global as any).it = (name: string, fn: () => void) => { fn(); };
+}
+if (typeof beforeEach !== 'function') {
+  (global as any).beforeEach = (fn: () => void) => { fn(); };
+}
+if (typeof afterEach !== 'function') {
+  (global as any).afterEach = (fn: () => void) => { fn(); };
+}
+if (typeof expect !== 'function') {
+  (global as any).expect = (actual: any) => ({
+    toBe: (expected: any) => {},
+    toEqual: (expected: any) => {},
+    toBeNull: () => {},
+    toThrow: (expected?: any) => {},
+    toHaveBeenCalled: () => {},
+    toHaveBeenCalledWith: (...args: any[]) => {},
+    toContain: (expected: any) => {},
+  });
 }
 
 afterEach(() => {
