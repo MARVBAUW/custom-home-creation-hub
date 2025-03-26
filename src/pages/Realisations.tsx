@@ -1,79 +1,66 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-
-const projects = [
-  {
-    id: 1,
-    title: 'Villa en bord de mer',
-    location: 'Martignas sur Jalles',
-    category: 'Construction neuve',
-    description: 'Villa contemporaine avec piscine à débordement et vue sur la mer.',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 2,
-    title: 'Restructuration d\'une friche',
-    location: 'Lomme / Lille',
-    category: 'Réhabilitation',
-    description: 'Transformation d\'un site industriel en espace de vie moderne et fonctionnel.',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop'
-  },
-  {
-    id: 3,
-    title: 'Logements collectifs',
-    location: 'Clermont-Ferrand',
-    category: 'Petit collectif',
-    description: 'Ensemble de logements collectifs alliant confort, esthétique et durabilité.',
-    image: 'https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 4,
-    title: 'Villa enclavée',
-    location: 'Laon',
-    category: 'Construction',
-    description: 'Villa moderne parfaitement intégrée dans son environnement naturel.',
-    image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=2074&auto=format&fit=crop'
-  },
-  {
-    id: 5,
-    title: 'Villa Golf du Sart',
-    location: 'Wasquehal',
-    category: 'Construction',
-    description: 'Résidence de luxe avec vue panoramique sur le golf.',
-    image: 'https://images.unsplash.com/photo-1619542402915-dcaf30e4e2a1?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 6,
-    title: 'Galerie Centre Commercial',
-    location: 'Roye',
-    category: 'Commercial',
-    description: 'Espace commercial moderne avec circulation fluide et design contemporain.',
-    image: 'https://images.unsplash.com/photo-1606744858291-9763e4e785fa?q=80&w=2074&auto=format&fit=crop'
-  },
-  {
-    id: 7,
-    title: 'Rénovation Énergétique',
-    location: 'St Quentin',
-    category: 'Rénovation',
-    description: 'Optimisation énergétique complète d\'un bâtiment existant.',
-    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop'
-  },
-  {
-    id: 8,
-    title: 'Villa Mougins',
-    location: 'Mougins (13)',
-    category: 'Construction',
-    description: 'Villa contemporaine avec jardin paysager.',
-    image: '/images/villa-mougins.jpg'
-  }
-];
-
+const projects = [{
+  id: 1,
+  title: 'Villa en bord de mer',
+  location: 'Martignas sur Jalles',
+  category: 'Construction neuve',
+  description: 'Villa contemporaine avec piscine à débordement et vue sur la mer.',
+  image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop'
+}, {
+  id: 2,
+  title: 'Restructuration d\'une friche',
+  location: 'Lomme / Lille',
+  category: 'Réhabilitation',
+  description: 'Transformation d\'un site industriel en espace de vie moderne et fonctionnel.',
+  image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2053&auto=format&fit=crop'
+}, {
+  id: 3,
+  title: 'Logements collectifs',
+  location: 'Clermont-Ferrand',
+  category: 'Petit collectif',
+  description: 'Ensemble de logements collectifs alliant confort, esthétique et durabilité.',
+  image: 'https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop'
+}, {
+  id: 4,
+  title: 'Villa enclavée',
+  location: 'Laon',
+  category: 'Construction',
+  description: 'Villa moderne parfaitement intégrée dans son environnement naturel.',
+  image: 'https://images.unsplash.com/photo-1600210492493-0946911123ea?q=80&w=2074&auto=format&fit=crop'
+}, {
+  id: 5,
+  title: 'Villa Golf du Sart',
+  location: 'Wasquehal',
+  category: 'Construction',
+  description: 'Résidence de luxe avec vue panoramique sur le golf.',
+  image: 'https://images.unsplash.com/photo-1619542402915-dcaf30e4e2a1?q=80&w=2070&auto=format&fit=crop'
+}, {
+  id: 6,
+  title: 'Galerie Centre Commercial',
+  location: 'Roye',
+  category: 'Commercial',
+  description: 'Espace commercial moderne avec circulation fluide et design contemporain.',
+  image: 'https://images.unsplash.com/photo-1606744858291-9763e4e785fa?q=80&w=2074&auto=format&fit=crop'
+}, {
+  id: 7,
+  title: 'Rénovation Énergétique',
+  location: 'St Quentin',
+  category: 'Rénovation',
+  description: 'Optimisation énergétique complète d\'un bâtiment existant.',
+  image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=2070&auto=format&fit=crop'
+}, {
+  id: 8,
+  title: 'Villa Mougins',
+  location: 'Mougins (13)',
+  category: 'Construction',
+  description: 'Villa contemporaine avec jardin paysager.',
+  image: '/images/villa-mougins.jpg'
+}];
 const Realisations = () => {
-  return (
-    <>
+  return <>
       <Helmet>
         <title>Nos réalisations | Architecte et Maître d'œuvre PACA - Progineer</title>
         <meta name="description" content="Découvrez les projets de construction, rénovation et extension réalisés par Progineer, architecte et maître d'œuvre en région PACA." />
@@ -102,17 +89,9 @@ const Realisations = () => {
       <section className="py-16">
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map((project) => (
-              <div 
-                key={project.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 transition-transform duration-300 hover:shadow-md hover:-translate-y-1"
-              >
+            {projects.map(project => <div key={project.id} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
                 <div className="h-64 overflow-hidden">
-                  <img 
-                    src={project.image} 
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
+                  <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
                 </div>
                 
                 <div className="p-6">
@@ -130,8 +109,7 @@ const Realisations = () => {
                     Voir le projet
                   </Button>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </Container>
       </section>
@@ -158,14 +136,10 @@ const Realisations = () => {
       <section className="py-8 bg-white">
         <Container>
           <div className="text-sm text-stone-500">
-            <p>
-              SAS PROGINEER - SIREN XXXXX - 24 Travers Chante Perdrix, 13010 Marseilles - PROGINEER 2024 © Tous droits réservés
-            </p>
+            <p>SAS PROGINEER - SIREN 935185785 - 365 Avenue du Prado, 13008 Marseilles - PROGINEER 2024 © Tous droits réservés</p>
           </div>
         </Container>
       </section>
-    </>
-  );
+    </>;
 };
-
 export default Realisations;
