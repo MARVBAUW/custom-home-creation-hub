@@ -28,17 +28,30 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     allowDemoMode = true
   } = options;
   
+  // Check if we're in demo mode (set by main.tsx)
+  const isDemoModeFromWindow = typeof window !== 'undefined' && (window as any).__DEMO_MODE__;
+  
   const { isLoaded: clerkLoaded, isSignedIn, user } = useUser();
   const navigate = useNavigate();
   const [authChecked, setAuthChecked] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadingTimedOut, setLoadingTimedOut] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(isDemoModeFromWindow || false);
+  
+  // Immediately set demo mode if window flag is set
+  useEffect(() => {
+    if (isDemoModeFromWindow) {
+      console.log('Demo mode detected from window configuration');
+      setIsDemoMode(true);
+      setIsLoaded(true);
+      setAuthChecked(true);
+    }
+  }, [isDemoModeFromWindow]);
   
   // Enhanced detection for Clerk initialization errors - using an even earlier check (2 seconds)
   useEffect(() => {
     const earlyErrorTimer = setTimeout(() => {
-      if (!clerkLoaded) {
+      if (!clerkLoaded && !isDemoMode) {
         console.log('Early Clerk initialization error check - potential issue detected');
         
         if (allowDemoMode) {
@@ -49,13 +62,13 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     }, 2000); // Earlier check at 2 seconds
     
     return () => clearTimeout(earlyErrorTimer);
-  }, [clerkLoaded, allowDemoMode]);
+  }, [clerkLoaded, allowDemoMode, isDemoMode]);
   
   // Enhanced detection for Clerk initialization errors
   useEffect(() => {
     // Detect potential Clerk initialization errors by checking console errors
     const handleClerkError = () => {
-      if (!clerkLoaded) {
+      if (!clerkLoaded && !isDemoMode) {
         console.log('Potential Clerk initialization error detected');
         setLoadingTimedOut(true);
         setIsLoaded(true);
@@ -80,7 +93,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     // Check more aggressively for Clerk errors
     const errorTimer = setTimeout(handleClerkError, 2000);
     return () => clearTimeout(errorTimer);
-  }, [clerkLoaded, navigate, allowDemoMode]);
+  }, [clerkLoaded, navigate, allowDemoMode, isDemoMode]);
   
   // Fix debugging logs to properly display boolean values
   useEffect(() => {
@@ -98,7 +111,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   // Set a timeout to handle cases where Clerk doesn't load properly
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (!clerkLoaded) {
+      if (!clerkLoaded && !isDemoMode) {
         console.log('Clerk loading timed out after', maxLoadingTime, 'ms');
         setLoadingTimedOut(true);
         setIsLoaded(true); // Mark as loaded even though Clerk failed
@@ -123,7 +136,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
     }, maxLoadingTime);
     
     return () => clearTimeout(timer);
-  }, [clerkLoaded, maxLoadingTime, navigate, allowDemoMode]);
+  }, [clerkLoaded, maxLoadingTime, navigate, allowDemoMode, isDemoMode]);
   
   // Handle redirection based on authentication state
   useEffect(() => {
@@ -184,7 +197,7 @@ export const useClientAuth = (options: UseClientAuthOptions = {}) => {
   };
   
   return { 
-    isLoaded: isLoaded || clerkLoaded, 
+    isLoaded: isLoaded || clerkLoaded || isDemoMode, 
     clerkLoaded, 
     isSignedIn: isSignedIn === undefined ? false : isSignedIn, 
     user, 
