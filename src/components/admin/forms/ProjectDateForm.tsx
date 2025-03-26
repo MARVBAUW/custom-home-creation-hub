@@ -72,7 +72,7 @@ const ProjectDateForm = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={control}
-                name={`dates.${phase}.startDate`}
+                name={`dates.${phase}.startDate` as any}
                 render={({ field }) => (
                   <FormItem>
                     <Label htmlFor={`${phase}-start-date`}>Date de début</Label>
@@ -89,7 +89,7 @@ const ProjectDateForm = () => {
               />
               <FormField
                 control={control}
-                name={`dates.${phase}.endDate`}
+                name={`dates.${phase}.endDate` as any}
                 render={({ field }) => (
                   <FormItem>
                     <Label htmlFor={`${phase}-end-date`}>Date de fin</Label>

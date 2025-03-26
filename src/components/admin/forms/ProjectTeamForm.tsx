@@ -25,7 +25,7 @@ const ProjectTeamForm = () => {
           <FormField
             key={member.id}
             control={control}
-            name={`team.${member.id}`}
+            name={`team.${member.id}` as any}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{member.label}</FormLabel>
