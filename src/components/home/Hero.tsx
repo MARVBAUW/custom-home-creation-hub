@@ -10,7 +10,7 @@ const Hero = () => {
     <section className="relative min-h-screen flex items-center py-24 overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/50 z-10"></div>
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
@@ -24,7 +24,7 @@ const Hero = () => {
         <div className="flex flex-col items-start animate-fade-in">
           {/* Centered metallic logo */}
           <div className="w-full flex justify-center mb-12">
-            <Logo variant="metallic-full" size="lg" className="mx-auto" withTagline={true} />
+            <Logo variant="metallic-full" size="xl" className="mx-auto" withTagline={true} />
           </div>
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
@@ -41,11 +41,11 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button href="/estimation" size="lg" className="font-medium bg-progineer-gold hover:bg-progineer-gold/90 text-white">
+            <Button href="/estimation" size="lg" className="font-medium bg-progineer-gold hover:bg-progineer-gold/90 text-white shadow-lg">
               Estimer mon projet
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button href="/prestations-maitre-oeuvre" variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+            <Button href="/prestations-maitre-oeuvre" variant="outline" size="lg" className="bg-white/20 border-white/50 text-white hover:bg-white/30 shadow-lg">
               Découvrir nos prestations
             </Button>
           </div>

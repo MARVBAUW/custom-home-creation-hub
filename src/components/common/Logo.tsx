@@ -16,7 +16,7 @@ const Logo: React.FC<LogoProps> = ({
   console.log(`Logo rendering: variant=${variant}, size=${size}, withTagline=${withTagline}`);
   
   const LogoContent = (
-    <>
+    <div className="flex flex-col items-center">
       <div className={cn(
         "transition-all duration-300 hover:scale-105", 
         getSizeClasses(size, variant), 
@@ -30,10 +30,10 @@ const Logo: React.FC<LogoProps> = ({
           "text-xs mt-1 font-medium tracking-wider", 
           variant === 'white' ? 'text-white/90' : 'text-progineer-gold'
         )}>
-          MAITRISE D'OEUVRE
+          MAÎTRISE D'ŒUVRE
         </span>
       )}
-    </>
+    </div>
   );
   
   // Either render as a link or just the content

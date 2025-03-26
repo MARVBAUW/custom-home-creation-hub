@@ -1,211 +1,87 @@
 
-/* Animation pour les barres de progression */
-@keyframes progressAnimation {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
-}
-
-.animate-progress {
-  background: linear-gradient(
-    45deg,
-    hsl(var(--khaki-500)) 25%,
-    hsl(var(--khaki-400)) 25%,
-    hsl(var(--khaki-400)) 50%,
-    hsl(var(--khaki-500)) 50%,
-    hsl(var(--khaki-500)) 75%,
-    hsl(var(--khaki-400)) 75%,
-    hsl(var(--khaki-400)) 100%
-  );
-  background-size: 40px 40px;
-  animation: progressAnimation 2s linear infinite;
-}
-
-/* Page transitions */
-.page-transition-enter {
-  @apply opacity-0;
-}
-
-.page-transition-enter-active {
-  @apply opacity-100 transition-opacity duration-300;
-}
-
-.page-transition-exit {
-  @apply opacity-100;
-}
-
-.page-transition-exit-active {
-  @apply opacity-0 transition-opacity duration-300;
-}
-
-/* Animations for build elements */
-.build-element {
-  transform: translateY(20px);
+/* Animations */
+.reveal {
   opacity: 0;
-  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(30px);
+  transition: all 0.8s ease-in-out;
 }
 
-.build-element.built {
-  transform: translateY(0);
+.reveal.active {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* Animation de "construction" */
+/* Effet de parallaxe au scroll */
+.parallax {
+  transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Animations progressives */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Animation avec délai pour les éléments successifs */
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+.delay-3 { animation-delay: 0.6s; }
+.delay-4 { animation-delay: 0.8s; }
+
+/* Effet de hover doux */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Animation de construction */
 @keyframes buildUp {
-  0% {
+  from {
     height: 0;
     opacity: 0;
   }
-  100% {
+  to {
     height: 100%;
     opacity: 1;
   }
 }
 
-/* Animation pour les petits personnages de construction */
-@keyframes workerAnimation {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
+.build-element {
+  animation: buildUp 1s ease-out forwards;
 }
 
-.construction-worker {
-  animation: workerAnimation 2s infinite;
+/* Animation de pulsation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
-/* Animation de pulsation pour les éléments importants */
-@keyframes pulsate {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(193, 161, 106, 0.7);
-  }
-  50% {
-    transform: scale(1.03);
-    box-shadow: 0 0 0 10px rgba(193, 161, 106, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(193, 161, 106, 0);
-  }
+.pulse-animation {
+  animation: pulse 2s infinite;
 }
 
-.pulsate-element {
-  animation: pulsate 2s infinite;
+/* Effet d'oscillation légère */
+@keyframes floating {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes goldPulse {
-  0% {
-    filter: drop-shadow(0 0 2px rgba(200, 168, 109, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 8px rgba(200, 168, 109, 0.6));
-  }
-  100% {
-    filter: drop-shadow(0 0 2px rgba(200, 168, 109, 0.3));
-  }
-}
-
-/* Animation classes */
-.logo-animation {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s forwards;
-}
-
-.slide-in-left {
-  opacity: 0;
-  transform: translateX(-30px);
-  animation: slideInLeft 0.8s forwards;
-}
-
-.slide-in-right {
-  opacity: 0;
-  transform: translateX(30px);
-  animation: slideInRight 0.8s forwards;
-}
-
-.estimation-animate-fade {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s forwards;
-}
-
-.estimation-animate-left {
-  opacity: 0;
-  transform: translateX(-30px);
-  animation: slideInLeft 0.8s forwards;
-}
-
-.estimation-animate-right {
-  opacity: 0;
-  transform: translateX(30px);
-  animation: slideInRight 0.8s forwards;
-}
-
-.result-appear {
-  opacity: 0;
-  transform: scale(0.9);
-  animation: resultAppear 0.5s forwards cubic-bezier(0.26, 0.53, 0.74, 1.48);
-}
-
-@keyframes resultAppear {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Transition animations */
-.estimation-step-enter {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.estimation-step-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.estimation-step-exit {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.estimation-step-exit-active {
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* Animation for the metallic logo variants */
-.metallic-logo:hover {
-  animation: goldPulse 1.5s infinite;
+.floating {
+  animation: floating 3s ease-in-out infinite;
 }
