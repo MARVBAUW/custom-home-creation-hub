@@ -1,16 +1,13 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ChevronRight } from 'lucide-react';
 import Logo from '@/components/common/Logo';
-
 const Footer = () => {
-  return (
-    <footer className="bg-progineer-dark dark:bg-gray-950">
+  return <footer className="bg-progineer-dark dark:bg-gray-950">
       {/* Top Section with Border */}
       <div className="border-b border-white/10">
-        <Container size="lg" className="py-14">
+        <Container size="lg" className="py-14 bg-gray-600">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Company Info */}
             <div className="md:col-span-4">
@@ -21,16 +18,13 @@ const Footer = () => {
                 de la conception à la réalisation.
               </p>
               <div className="flex space-x-4 justify-center md:justify-start">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Facebook className="h-4 w-4" />
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Instagram className="h-4 w-4" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" 
-                  className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full text-white hover:bg-progineer-gold hover:text-white transition-colors">
                   <Linkedin className="h-4 w-4" />
                 </a>
               </div>
@@ -141,7 +135,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom section */}
-      <div className="py-6">
+      <div className="py-6 bg-gray-600">
         <Container size="lg">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
@@ -167,8 +161,6 @@ const Footer = () => {
           </div>
         </Container>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
