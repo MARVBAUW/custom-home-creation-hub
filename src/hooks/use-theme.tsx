@@ -13,28 +13,51 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<ThemeType>('light');
+  const [mounted, setMounted] = useState(false);
 
+  // Cette fonction gère la mise à jour du DOM et du localStorage
+  const applyTheme = (newTheme: ThemeType) => {
+    const root = window.document.documentElement;
+    
+    // Supprimer les anciennes classes et ajouter la nouvelle
+    root.classList.remove('light', 'dark');
+    root.classList.add(newTheme);
+    
+    // Mettre à jour le localStorage
+    localStorage.setItem('theme', newTheme);
+  };
+
+  // Effet initial pour charger le thème
   useEffect(() => {
-    // Get the theme from localStorage or use system preference
+    setMounted(true);
+    // Récupérer le thème du localStorage ou utiliser la préférence système
     const storedTheme = localStorage.getItem('theme') as ThemeType | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    if (storedTheme) {
-      setTheme(storedTheme);
-    } else if (prefersDark) {
-      setTheme('dark');
-    }
+    const initialTheme = storedTheme || (prefersDark ? 'dark' : 'light');
+    setTheme(initialTheme);
+    applyTheme(initialTheme);
   }, []);
 
+  // Effet pour mettre à jour le DOM quand le thème change
   useEffect(() => {
-    // Update document class and localStorage when theme changes
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    if (mounted) {
+      applyTheme(theme);
+    }
+  }, [theme, mounted]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme(prevTheme => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
+      console.log('Toggling theme to:', newTheme);
+      return newTheme;
+    });
   };
+
+  // Retourner un placeholder pendant le chargement pour éviter le flash
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>

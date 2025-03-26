@@ -14,7 +14,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     
     // Notify user about theme change
     toast({
-      title: theme === "dark" ? "Mode clair activé" : "Mode sombre activé",
+      title: theme === "light" ? "Mode sombre activé" : "Mode clair activé",
       description: "Les préférences d'affichage ont été mises à jour.",
       duration: 2000,
     });

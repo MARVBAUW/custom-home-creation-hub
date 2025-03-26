@@ -40,7 +40,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className={`${theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}`}
+              className={theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}
             >
               Estimer mon projet
             </Button>
@@ -48,7 +48,7 @@ const CTACTA = () => {
               href="/contact" 
               onClick={handleContactClick}
               variant="outline" 
-              className={`${theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}`}
+              className={theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}
             >
               Nous contacter
             </Button>

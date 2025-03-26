@@ -21,14 +21,14 @@ const CTASection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               href="/estimation" 
-              className={`${theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}`}
+              className={theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}
             >
               Estimer mon projet
             </Button>
             <Button 
               href="/contact" 
               variant="outline" 
-              className={`${theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}`}
+              className={theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}
             >
               Nous contacter
             </Button>
