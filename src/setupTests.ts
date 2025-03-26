@@ -1,3 +1,4 @@
+
 // jest-dom adds custom jest matchers for asserting on DOM nodes.
 import '@testing-library/jest-dom';
 
@@ -70,9 +71,20 @@ global.console = {
 
 // Create a mock jest object if it doesn't exist
 if (typeof jest === 'undefined') {
+  // Create a mock function for jest.fn
+  const mockFn = function() {
+    return function() {};
+  };
+  
+  // Create a mock function for jest.spyOn
+  const mockSpyOn = function() {
+    return function() {};
+  };
+  
+  // Assign the mock jest object to window
   (window as any).jest = {
-    fn: () => jest.fn(),
-    spyOn: (object: any, method: string) => jest.spyOn(object, method),
+    fn: mockFn,
+    spyOn: mockSpyOn,
     clearAllMocks: () => {},
     restoreAllMocks: () => {},
   };
