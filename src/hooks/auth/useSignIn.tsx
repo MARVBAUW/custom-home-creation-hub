@@ -19,45 +19,39 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
       
       // Vérifier si c'est un email administrateur
       const isAdminUser = ADMIN_EMAILS.includes(email.toLowerCase());
-      console.log('Is admin user:', isAdminUser);
+      console.log('Is admin user:', isAdminUser, 'Email verified status check not needed anymore');
       
-      // Tentative de connexion
+      // Tentative de connexion standard
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      // Vérification détaillée des erreurs
       if (error) {
-        console.error('SignIn error:', error.message, error);
+        console.error('SignIn error details:', {
+          message: error.message,
+          code: error.code,
+          status: error.status,
+          fullError: JSON.stringify(error)
+        });
+        
         let errorMessage = error.message;
         
         // Messages d'erreur plus détaillés pour aider au diagnostic
         if (errorMessage === 'Invalid login credentials') {
           console.log('Invalid credentials error details:', { email });
-          errorMessage = 'Email ou mot de passe incorrect. Vérifiez vos identifiants.';
-        } else if (errorMessage.includes('Email not confirmed')) {
-          console.log('Email not confirmed for:', email);
+          
+          // Si c'est un administrateur, vérifier si l'utilisateur existe
           if (isAdminUser) {
-            // Pour les utilisateurs administrateurs, on peut tenter une connexion forcée
-            console.log('Attempting forced sign-in for admin user');
-            try {
-              // Connexion sans vérification d'email (nécessiterait une fonction edge)
-              toast({
-                title: 'Mode administrateur',
-                description: 'Tentative de connexion en mode administrateur...',
-                variant: 'default',
-              });
-              
-              // Si l'utilisateur existe mais n'est pas confirmé, on pourrait ici
-              // utiliser une méthode alternative de connexion ou une API spéciale
-              
-              // Pour l'instant, on notifie simplement l'utilisateur
-              errorMessage = 'Compte admin détecté. Veuillez contacter le support pour activer votre compte.';
-            } catch (adminError) {
-              console.error('Admin bypass failed:', adminError);
-            }
+            // Vérifier si l'utilisateur existe mais que le mot de passe est incorrect
+            console.log('Checking if admin user exists...');
+            
+            // Note: On ne peut pas vérifier directement si un utilisateur existe via l'API publique
+            // Pour l'interface utilisateur, on donne simplement un message plus précis
+            errorMessage = 'Compte administrateur: vérifiez votre mot de passe ou contactez le support si vous ne pouvez pas vous connecter';
           } else {
-            errorMessage = 'Veuillez vérifier votre email pour confirmer votre compte avant de vous connecter.';
+            errorMessage = 'Email ou mot de passe incorrect. Vérifiez vos identifiants.';
           }
         }
         
@@ -73,11 +67,15 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
         // Afficher des informations détaillées sur la session pour le débogage
         console.log('User ID:', data.session.user.id);
         console.log('User email:', data.session.user.email);
+        console.log('User metadata:', data.session.user.user_metadata);
         console.log('Is email confirmed:', data.session.user.email_confirmed_at !== null);
+        
+        const isAdminInSession = ADMIN_EMAILS.includes((data.session.user.email || '').toLowerCase());
+        console.log('Is admin user (confirmed in session):', isAdminInSession);
         
         toast({
           title: 'Connexion réussie',
-          description: 'Vous êtes maintenant connecté',
+          description: isAdminInSession ? 'Bienvenue, administrateur!' : 'Vous êtes maintenant connecté',
           variant: 'default',
         });
         navigate('/workspace/client-area');
