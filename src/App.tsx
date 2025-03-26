@@ -21,6 +21,9 @@ import ClientProjects from './pages/client/ClientProjects';
 import ClientMessages from './pages/client/ClientMessages';
 import ClientDocumentation from './pages/client/ClientDocumentation';
 import ClientGallery from './pages/client/ClientGallery';
+import AdminProjectsOverview from './pages/client/AdminProjectsOverview';
+import AdminQuotes from './pages/client/AdminQuotes';
+import ProjectDetails from './pages/client/ProjectDetails';
 
 function App() {
   return (
@@ -48,6 +51,11 @@ function App() {
         <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
         <Route path="/workspace/client-area/messages" element={<ClientMessages />} />
         <Route path="/gallery" element={<ClientGallery />} />
+        
+        {/* Admin routes */}
+        <Route path="/workspace/client-area/admin/projects-overview" element={<AdminProjectsOverview />} />
+        <Route path="/workspace/client-area/admin/quotes" element={<AdminQuotes />} />
+        <Route path="/workspace/client-area/projects/:projectId" element={<ProjectDetails />} />
         
         {/* Client Documentation route */}
         <Route path="/workspace/client-documentation" element={<ClientDocumentation />} />
