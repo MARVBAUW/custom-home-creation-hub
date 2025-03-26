@@ -22,9 +22,9 @@ const Hero = () => {
       
       <Container className="relative z-10 mt-16">
         <div className="flex flex-col items-center animate-fade-in">
-          {/* Centered metallic logo */}
-          <div className="w-full flex justify-center mb-12">
-            <Logo variant="metallic-full" size="xl" className="mx-auto" withTagline={true} />
+          {/* Centered metallic logo - LARGER */}
+          <div className="w-full flex justify-center mb-16">
+            <Logo variant="metallic-full" size="xl" className="mx-auto scale-125 transform" withTagline={true} />
           </div>
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">

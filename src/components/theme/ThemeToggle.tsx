@@ -6,16 +6,15 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/use-theme";
 
 export function ThemeToggle({ className }: { className?: string }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
+  const handleToggleTheme = () => {
+    toggleTheme();
     
     // Notify user about theme change
     toast({
-      title: newTheme === "light" ? "Mode clair activé" : "Mode sombre activé",
+      title: theme === "dark" ? "Mode clair activé" : "Mode sombre activé",
       description: "Les préférences d'affichage ont été mises à jour.",
       duration: 2000,
     });
@@ -25,7 +24,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <Button 
       variant="outline" 
       size="icon" 
-      onClick={toggleTheme}
+      onClick={handleToggleTheme}
       className={cn(
         "rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 relative z-50 btn-enhanced",
         "shadow-md border-2",

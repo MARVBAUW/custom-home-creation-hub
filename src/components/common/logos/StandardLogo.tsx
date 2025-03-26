@@ -38,11 +38,13 @@ const StandardLogo: React.FC<StandardLogoProps> = ({
         </filter>
       </defs>
 
-      {/* Nouveau design de bâtiment basé sur l'image téléchargée */}
+      {/* Building logo design */}
       <path 
-        d="M40 400 L0 400 L325 50 L450 200 L575 50 L800 400 L760 400 L575 150 L450 300 L325 150 L40 400" 
+        d="M80 400 L0 400 L275 150 L400 300 L525 150 L800 400 L720 400 L525 150 L400 300 L275 150 L80 400" 
         fill={`url(#${gradientId})`} 
         className="logo-polygon"
+        strokeWidth="5"
+        stroke={primaryColor}
       />
       <line 
         x1="0" 
@@ -50,7 +52,7 @@ const StandardLogo: React.FC<StandardLogoProps> = ({
         x2="800" 
         y2="400" 
         stroke={primaryColor} 
-        strokeWidth="2" 
+        strokeWidth="4" 
         className="logo-rect"
       />
     </svg>

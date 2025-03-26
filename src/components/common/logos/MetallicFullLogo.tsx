@@ -14,7 +14,7 @@ const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({ getSizeClasses }) =
   const secondaryColor = theme === 'dark' ? "#CCCCCC" : "#4b4b3b";
   
   return (
-    <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" className={getSizeClasses()}>
+    <svg viewBox="0 0 1200 200" xmlns="http://www.w3.org/2000/svg" className={`${getSizeClasses()} w-full max-w-3xl mx-auto`}>
       <defs>
         <linearGradient id="metallicFullGradient" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={primaryColor}/>
@@ -26,13 +26,13 @@ const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({ getSizeClasses }) =
         </filter>
       </defs>
       
-      {/* Logo PROGINEER */}
-      <text x="250" y="100" fill="url(#metallicFullGradient)" className="metallic-full-path" style={{ fontFamily: 'sans-serif', fontSize: '80px', fontWeight: 300, letterSpacing: '15px' }}>
+      {/* Logo PROGINEER - larger and more centered */}
+      <text x="250" y="100" fill="url(#metallicFullGradient)" className="metallic-full-path" style={{ fontFamily: 'sans-serif', fontSize: '100px', fontWeight: 300, letterSpacing: '15px' }}>
         PROGINEER
       </text>
       
       {/* Sous-titre */}
-      <text x="600" y="150" fill="url(#metallicFullGradient)" className="metallic-full-path" style={{ fontFamily: 'sans-serif', fontSize: '24px', fontWeight: 300, letterSpacing: '5px', textAlign: 'center' }}>
+      <text x="600" y="150" fill="url(#metallicFullGradient)" className="metallic-full-path" style={{ fontFamily: 'sans-serif', fontSize: '28px', fontWeight: 300, letterSpacing: '5px', textAlign: 'center' }}>
         MAITRISE D'OEUVRE
       </text>
       

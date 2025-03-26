@@ -3,8 +3,11 @@ import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { ArrowRight } from 'lucide-react';
+import { useTheme } from '@/hooks/use-theme';
 
 const FinalCTASection = () => {
+  const { theme } = useTheme();
+  
   return (
     <section className="py-20 bg-progineer-dark text-white relative overflow-hidden">
       {/* Background decoration */}
@@ -17,12 +20,12 @@ const FinalCTASection = () => {
           </h2>
           <div className="h-1 w-20 bg-progineer-gold mx-auto mb-6"></div>
           <p className="text-lg text-white/90 mb-8">
-            Contactez notre équipe d'architectes et de maîtres d'œuvre pour transformer votre vision en réalité.
+            Contactez-nous dès aujourd'hui pour discuter de votre vision et découvrir comment notre expertise peut vous aider à la réaliser.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               href="/estimation" 
-              className="bg-progineer-gold text-white hover:bg-progineer-gold/90 shadow-lg border border-progineer-gold/50 text-lg py-3"
+              className={`${theme === 'light' ? 'bg-progineer-gold text-white hover:bg-progineer-gold/90' : 'bg-white text-progineer-dark hover:bg-white/90'} shadow-lg border border-progineer-gold/50 text-lg py-3`}
             >
               Estimer mon projet
               <ArrowRight className="ml-2 h-4 w-4" />
@@ -30,9 +33,9 @@ const FinalCTASection = () => {
             <Button 
               href="/contact" 
               variant="outline" 
-              className="border-white/40 bg-white/10 hover:bg-white/20 shadow-lg text-lg py-3"
+              className={`${theme === 'light' ? 'border-white/40 bg-white/10 text-white hover:bg-white/20' : 'border-white/40 bg-white/10 text-white hover:bg-white/20'} shadow-lg text-lg py-3`}
             >
-              Demander un devis
+              Nous contacter
             </Button>
           </div>
         </div>

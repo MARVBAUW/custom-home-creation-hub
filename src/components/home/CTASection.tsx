@@ -2,8 +2,11 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
+import { useTheme } from '@/hooks/use-theme';
 
 const CTASection = () => {
+  const { theme } = useTheme();
+  
   return (
     <section className="py-20 bg-gradient-to-r from-progineer-dark to-progineer-dark/90 text-white relative overflow-hidden">
       {/* Background pattern overlay */}
@@ -22,20 +25,20 @@ const CTASection = () => {
             </h2>
             <div className="h-1 w-20 bg-progineer-gold mx-auto mb-6"></div>
             <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-              Contactez notre équipe d'architectes et de maîtres d'œuvre pour transformer 
-              votre vision en réalité.
+              Contactez-nous dès aujourd'hui pour discuter de votre vision et découvrir comment 
+              notre expertise peut vous aider à la réaliser.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 href="/estimation" 
-                className="bg-progineer-gold hover:bg-progineer-gold/90 text-white shadow-lg border border-progineer-gold/50 text-lg py-3"
+                className={`${theme === 'light' ? 'bg-progineer-gold hover:bg-progineer-gold/90 text-white' : 'bg-white hover:bg-white/90 text-progineer-dark'} shadow-lg border border-progineer-gold/50 text-lg py-3`}
               >
                 Estimer mon projet
               </Button>
               <Button 
                 href="/contact" 
                 variant="outline" 
-                className="bg-transparent border-white text-white hover:bg-white/10 shadow-lg text-lg py-3"
+                className={`${theme === 'light' ? 'bg-transparent border-white text-white hover:bg-white/10' : 'bg-transparent border-white text-white hover:bg-white/10'} shadow-lg text-lg py-3`}
               >
                 Nous contacter
               </Button>

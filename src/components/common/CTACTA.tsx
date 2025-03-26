@@ -2,10 +2,12 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/hooks/use-theme";
 
 const CTACTA = () => {
   const { toast } = useToast();
+  const { theme } = useTheme();
 
   const handleEstimationClick = () => {
     toast({
@@ -24,10 +26,10 @@ const CTACTA = () => {
   };
 
   return (
-    <section className="py-16 bg-khaki-600 text-white">
+    <section className="py-16 bg-khaki-600 relative overflow-hidden">
       <Container>
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl font-semibold mb-6">
+          <h2 className="text-3xl font-semibold mb-6 text-white">
             Prêt à concrétiser votre projet ?
           </h2>
           <p className="text-lg text-white/90 mb-8">
@@ -38,7 +40,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className="bg-white text-khaki-800 hover:bg-white/90"
+              className={`${theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-white text-khaki-800 hover:bg-white/90'}`}
             >
               Estimer mon projet
             </Button>
@@ -46,7 +48,7 @@ const CTACTA = () => {
               href="/contact" 
               onClick={handleContactClick}
               variant="outline" 
-              className="border-white/30 bg-transparent hover:bg-white/10"
+              className={`${theme === 'light' ? 'border-white/30 bg-transparent hover:bg-white/10 text-white' : 'border-white/30 bg-transparent hover:bg-white/10 text-white'}`}
             >
               Nous contacter
             </Button>
