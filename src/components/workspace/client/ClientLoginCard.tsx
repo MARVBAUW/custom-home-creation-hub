@@ -3,15 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import Button from '@/components/common/Button';
-import { useUser } from '@clerk/clerk-react';
 import { Link } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
 import { useClientAuth } from '@/hooks/useClientAuth';
 
 const ClientLoginCard = () => {
   const navigate = useNavigate();
-  const { isSignedIn, isLoaded } = useUser();
-  const { accessClientAreaInDemoMode } = useClientAuth({ allowDemoMode: true });
+  
+  // Use the custom auth hook with improved demo mode access
+  const { 
+    isSignedIn, 
+    isLoaded, 
+    loadingTimedOut,
+    accessClientAreaInDemoMode 
+  } = useClientAuth({ 
+    allowDemoMode: true,
+    maxLoadingTime: 3000  // Reduced to 3 seconds for faster response
+  });
+  
   const [clerkTimeout, setClerkTimeout] = useState(false);
   
   // Set a timeout to handle Clerk not loading properly
@@ -27,8 +36,18 @@ const ClientLoginCard = () => {
   }, [isLoaded]);
   
   useEffect(() => {
-    console.log('ClientLoginCard: Auth State', { isSignedIn, isLoaded, clerkTimeout });
-  }, [isSignedIn, isLoaded, clerkTimeout]);
+    console.log('ClientLoginCard: Auth State', { 
+      isSignedIn, 
+      isLoaded, 
+      clerkTimeout,
+      loadingTimedOut
+    });
+    
+    // If authentication fails to load, automatically use the timeout state
+    if (loadingTimedOut && !isLoaded) {
+      setClerkTimeout(true);
+    }
+  }, [isSignedIn, isLoaded, clerkTimeout, loadingTimedOut]);
   
   const handleLogin = () => {
     console.log('Login button clicked, navigating to sign-in page');

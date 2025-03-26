@@ -8,43 +8,30 @@ import ClientFeaturesOverview from './client/ClientFeaturesOverview';
 import ClientServiceCards from './client/ClientServiceCards';
 import ClientLoginCard from './client/ClientLoginCard';
 import SecurityAlert from './client/SecurityAlert';
-import { useUser } from '@clerk/clerk-react';
+import { useClientAuth } from '@/hooks/useClientAuth';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
 
 const WorkspaceEspaceClient = () => {
   const navigate = useNavigate();
-  const { isSignedIn, isLoaded } = useUser();
-  const [clerkTimeout, setClerkTimeout] = useState(false);
   
-  // Set a timeout to handle Clerk not loading properly (reduced to 4 seconds)
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!isLoaded) {
-        setClerkTimeout(true);
-        console.log('Clerk loading timed out in WorkspaceEspaceClient');
-      }
-    }, 4000); // 4 seconds timeout
-    
-    return () => clearTimeout(timer);
-  }, [isLoaded]);
+  // Use our custom auth hook that handles demo mode and Clerk unavailability
+  const { isSignedIn, isLoaded, isDemoMode, accessClientAreaInDemoMode } = useClientAuth({
+    allowDemoMode: true,
+    maxLoadingTime: 3000
+  });
   
   // Add debugging for loading and authentication state
   useEffect(() => {
     console.log('WorkspaceEspaceClient: Auth State', { 
       isSignedIn, 
       isLoaded, 
-      clerkTimeout 
+      isDemoMode 
     });
-  }, [isSignedIn, isLoaded, clerkTimeout]);
+  }, [isSignedIn, isLoaded, isDemoMode]);
   
   const handleDemoAccess = () => {
-    toast({
-      title: 'Mode démonstration activé',
-      description: 'Vous accédez à l\'espace client en mode démonstration.',
-      variant: 'default',
-    });
-    navigate('/workspace/client-area');
+    accessClientAreaInDemoMode();
   };
   
   return (
@@ -69,9 +56,9 @@ const WorkspaceEspaceClient = () => {
         )}
         
         {/* Enhanced direct access section */}
-        {(!isLoaded || clerkTimeout) && (
+        {(!isLoaded || isDemoMode) && (
           <div className="mt-4">
-            {clerkTimeout && (
+            {isDemoMode && (
               <Alert className="border-amber-200 bg-amber-50 mb-4">
                 <AlertTriangle className="h-4 w-4 text-amber-800" />
                 <AlertTitle className="text-amber-800">Service d'authentification indisponible</AlertTitle>
@@ -89,7 +76,7 @@ const WorkspaceEspaceClient = () => {
                 Accéder à l'espace client
               </Button>
               
-              {clerkTimeout && (
+              {isDemoMode && (
                 <Link to="/workspace/sign-in">
                   <Button variant="outline">
                     Essayer de se connecter
@@ -125,7 +112,7 @@ const WorkspaceEspaceClient = () => {
         </div>
         
         <div>
-          {!isLoaded && !clerkTimeout ? (
+          {!isLoaded && !isDemoMode ? (
             <div className="flex flex-col justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600 mb-3"></div>
               <p className="text-gray-600">Vérification de l'authentification...</p>
@@ -139,7 +126,7 @@ const WorkspaceEspaceClient = () => {
                 Accéder directement sans attendre
               </button>
             </div>
-          ) : clerkTimeout ? (
+          ) : isDemoMode ? (
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
               <div className="text-center">
                 <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
