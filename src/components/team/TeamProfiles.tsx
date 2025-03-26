@@ -6,7 +6,7 @@ import TeamMember, { TeamMemberProps } from './TeamMember';
 const TeamProfiles = () => {
   const teamMembers: TeamMemberProps[] = [
     {
-      image: "/lovable-uploads/d674d37d-7176-457e-8dac-529981672eda.png",
+      image: "/lovable-uploads/e861b499-9056-4f3d-9e51-ba393450c8ac.png",
       name: "Marvin Bauwens",
       title: "PRÉSIDENT DIRECTEUR GÉNÉRAL",
       position: "PRÉSIDENT",
@@ -18,7 +18,7 @@ const TeamProfiles = () => {
       ]
     },
     {
-      image: "/lovable-uploads/e861b499-9056-4f3d-9e51-ba393450c8ac.png",
+      image: "/lovable-uploads/d674d37d-7176-457e-8dac-529981672eda.png",
       name: "Mael Allano",
       title: "DIRECTEUR GÉNÉRAL",
       position: "DIRECTEUR",

@@ -31,7 +31,7 @@ const CTASection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               href="/estimation" 
-              className={theme === 'light' ? 'bg-white text-khaki-800 hover:bg-white/90' : 'bg-black text-khaki-600 hover:bg-black/90'}
+              className={theme === 'light' ? 'bg-progineer-gold text-white hover:bg-progineer-gold/90' : 'bg-black text-khaki-600 hover:bg-black/90'}
             >
               Estimer mon projet
             </Button>

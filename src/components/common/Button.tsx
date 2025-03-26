@@ -2,6 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
+import { useTheme } from '@/hooks/use-theme';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -24,11 +25,17 @@ const Button = ({
   rel,
   ...props
 }: ButtonProps) => {
+  const { theme } = useTheme();
+  
   const baseStyles = cn(
     'relative inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-colors',
     'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
     'disabled:pointer-events-none disabled:opacity-50',
-    variant === 'primary' && 'bg-khaki-600 text-khaki-50 shadow hover:bg-khaki-700',
+    variant === 'primary' && theme === 'light' 
+      ? 'bg-progineer-gold text-white shadow hover:bg-progineer-gold/90' 
+      : variant === 'primary' && theme === 'dark'
+      ? 'bg-khaki-600 text-khaki-50 shadow hover:bg-khaki-700'
+      : '',
     variant === 'secondary' && 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
     variant === 'outline' && 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
     size === 'sm' && 'h-8 text-xs px-3',
