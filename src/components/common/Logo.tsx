@@ -9,13 +9,14 @@ const Logo: React.FC<LogoProps> = ({
   variant = 'default',
   size = 'md',
   className,
-  withTagline = false
+  withTagline = false,
+  asLink = true // New prop to control whether to render as a link
 }) => {
   // Afficher les propriétés pour débogage
   console.log(`Logo rendering: variant=${variant}, size=${size}, withTagline=${withTagline}`);
   
-  return (
-    <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
+  const LogoContent = (
+    <>
       <div className={cn(
         "transition-all duration-300 hover:scale-105", 
         getSizeClasses(size, variant), 
@@ -32,7 +33,22 @@ const Logo: React.FC<LogoProps> = ({
           MAITRISE D'OEUVRE
         </span>
       )}
-    </Link>
+    </>
+  );
+  
+  // Either render as a link or just the content
+  if (asLink) {
+    return (
+      <Link to="/" className={cn("flex flex-col items-center no-underline", className)}>
+        {LogoContent}
+      </Link>
+    );
+  }
+  
+  return (
+    <div className={cn("flex flex-col items-center", className)}>
+      {LogoContent}
+    </div>
   );
 };
 

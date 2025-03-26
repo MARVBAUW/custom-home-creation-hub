@@ -46,13 +46,14 @@ const Navbar = () => {
     >
       <Container size="lg">
         <nav className="flex items-center justify-between w-full">
-          {/* Logo */}
-          <Link to="/" className="flex-shrink-0 relative z-50">
+          {/* Logo - using Link directly instead of wrapping Logo with Link */}
+          <div className="flex-shrink-0 relative z-50">
             <Logo 
               variant={isScrolled || location.pathname !== '/' ? 'metallic' : 'metallic'} 
               size="md" 
+              asLink={true} // Explicitly set to render as a link
             />
-          </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <DesktopNav 
