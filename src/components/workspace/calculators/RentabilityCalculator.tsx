@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -822,3 +823,353 @@ const RentabilityCalculator = () => {
                     placeholder="Frais d'agence ou de gestion"
                   />
                 </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-end pt-4">
+              <Button onClick={() => setActiveTab('financing')}>
+                Passer au financement
+              </Button>
+            </div>
+          </TabsContent>
+          
+          {/* Onglet Financement */}
+          <TabsContent value="financing" className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="loanAmount">Montant du prêt (€)</Label>
+                  <Input 
+                    id="loanAmount" 
+                    type="number" 
+                    value={investmentData.loanAmount} 
+                    onChange={(e) => handleInputChange('loanAmount', parseFloat(e.target.value) || 0)} 
+                    placeholder="Montant à emprunter"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="loanRate">Taux d'intérêt (%)</Label>
+                  <div className="flex items-center gap-4">
+                    <Slider
+                      id="loanRate"
+                      min={0}
+                      max={10}
+                      step={0.05}
+                      value={[investmentData.loanRate]}
+                      onValueChange={(value) => handleInputChange('loanRate', value[0])}
+                      className="flex-1"
+                    />
+                    <span className="w-12 text-right">{investmentData.loanRate.toFixed(2)}%</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="loanDuration">Durée du prêt (années)</Label>
+                  <div className="flex items-center gap-4">
+                    <Slider
+                      id="loanDuration"
+                      min={5}
+                      max={30}
+                      step={1}
+                      value={[investmentData.loanDuration]}
+                      onValueChange={(value) => handleInputChange('loanDuration', value[0])}
+                      className="flex-1"
+                    />
+                    <span className="w-12 text-right">{investmentData.loanDuration} ans</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="loanInsuranceRate">Taux assurance prêt (%)</Label>
+                  <div className="flex items-center gap-4">
+                    <Slider
+                      id="loanInsuranceRate"
+                      min={0}
+                      max={1}
+                      step={0.01}
+                      value={[investmentData.loanInsuranceRate]}
+                      onValueChange={(value) => handleInputChange('loanInsuranceRate', value[0])}
+                      className="flex-1"
+                    />
+                    <span className="w-12 text-right">{investmentData.loanInsuranceRate.toFixed(2)}%</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">Taux annuel en % du capital emprunté</p>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div className="rounded-xl bg-khaki-50 p-6 space-y-4">
+                  <h3 className="font-semibold text-lg">Synthèse du financement</h3>
+                  <div className="grid grid-cols-2 gap-y-3">
+                    <div>Prix d'achat total:</div>
+                    <div className="text-right font-medium">{(investmentData.purchasePrice + investmentData.notaryFees).toLocaleString('fr-FR')} €</div>
+                    
+                    <div>Frais annexes:</div>
+                    <div className="text-right font-medium">{(investmentData.renovationCost + investmentData.furnitureCost).toLocaleString('fr-FR')} €</div>
+                    
+                    <div>Montant emprunté:</div>
+                    <div className="text-right font-medium">{investmentData.loanAmount.toLocaleString('fr-FR')} €</div>
+                    
+                    <div>Apport personnel:</div>
+                    <div className="text-right font-medium">
+                      {(investmentData.purchasePrice + investmentData.notaryFees + 
+                         investmentData.renovationCost + investmentData.furnitureCost - 
+                         investmentData.loanAmount).toLocaleString('fr-FR')} €
+                    </div>
+                    
+                    <div>Taux d'endettement:</div>
+                    <div className="text-right font-medium">
+                      {investmentData.loanAmount > 0 ?
+                        (investmentData.loanAmount / (investmentData.purchasePrice + investmentData.notaryFees) * 100).toFixed(1) + '%'
+                      : '0%'}
+                    </div>
+                  </div>
+                  
+                  <Separator className="my-4" />
+                  
+                  <div className="space-y-4">
+                    <Button onClick={calculateInvestment} className="w-full">
+                      <Calculator className="mr-2 h-4 w-4" />
+                      Calculer la rentabilité
+                    </Button>
+                    
+                    {hasCalculated && (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-2 gap-y-2">
+                          <div>Mensualité:</div>
+                          <div className="text-right font-semibold">{results.monthlyPayment.toFixed(2)} €</div>
+                          
+                          <div>Cash-flow mensuel:</div>
+                          <div className={`text-right font-semibold ${results.monthlyCashFlow >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {results.monthlyCashFlow.toFixed(2)} €
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex justify-end pt-4">
+                  <Button onClick={() => setActiveTab('results')} disabled={!hasCalculated}>
+                    Voir les résultats détaillés
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          {/* Onglet Résultats */}
+          <TabsContent value="results" className="space-y-6">
+            {!hasCalculated ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Calculator className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="text-xl font-medium mb-2">Aucun calcul effectué</h3>
+                <p className="text-muted-foreground max-w-md mb-8">
+                  Veuillez renseigner les informations concernant votre investissement et cliquer sur "Calculer la rentabilité" dans l'onglet Financement.
+                </p>
+                <Button onClick={() => setActiveTab('financing')}>
+                  Aller au financement
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {/* Carte Rendement brut */}
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base font-medium flex items-center">
+                        <TrendingUp className="mr-2 h-4 w-4 text-green-500" />
+                        Rendement brut
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold">{results.grossYield.toFixed(2)}%</div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Rapport entre les loyers annuels et le prix d'achat total
+                      </p>
+                      {results.grossYield < 4 ? (
+                        <Badge variant="outline" className="mt-2 bg-red-50 text-red-700">Faible</Badge>
+                      ) : results.grossYield < 7 ? (
+                        <Badge variant="outline" className="mt-2 bg-amber-50 text-amber-700">Moyen</Badge>
+                      ) : (
+                        <Badge variant="outline" className="mt-2 bg-green-50 text-green-700">Bon</Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Carte Rendement net */}
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base font-medium flex items-center">
+                        <TrendingUp className="mr-2 h-4 w-4 text-blue-500" />
+                        Rendement net
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold">{results.netYield.toFixed(2)}%</div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Revenus locatifs nets de charges / prix d'achat total
+                      </p>
+                      {results.netYield < 2 ? (
+                        <Badge variant="outline" className="mt-2 bg-red-50 text-red-700">Faible</Badge>
+                      ) : results.netYield < 4 ? (
+                        <Badge variant="outline" className="mt-2 bg-amber-50 text-amber-700">Moyen</Badge>
+                      ) : (
+                        <Badge variant="outline" className="mt-2 bg-green-50 text-green-700">Bon</Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Carte Cash on Cash */}
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base font-medium flex items-center">
+                        <Banknote className="mr-2 h-4 w-4 text-khaki-600" />
+                        Cash on Cash
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="text-3xl font-bold">{results.cashOnCash.toFixed(2)}%</div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Rapport entre le cash-flow annuel et l'apport personnel
+                      </p>
+                      {results.cashOnCash < 0 ? (
+                        <Badge variant="outline" className="mt-2 bg-red-50 text-red-700">Négatif</Badge>
+                      ) : results.cashOnCash < 5 ? (
+                        <Badge variant="outline" className="mt-2 bg-amber-50 text-amber-700">Faible</Badge>
+                      ) : (
+                        <Badge variant="outline" className="mt-2 bg-green-50 text-green-700">Bon</Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                  {/* Graphique de répartition des charges */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Répartition des charges annuelles</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={expensesData}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            outerRadius={100}
+                            fill="#8884d8"
+                            dataKey="value"
+                            nameKey="name"
+                            label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                          >
+                            {expensesData.map((entry, index) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Legend layout="horizontal" verticalAlign="bottom" align="center" />
+                          <ReTooltip formatter={(value: any) => [`${value.toFixed(2)} €`, 'Montant annuel']} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                  
+                  {/* Graphique de cash-flow */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Analyse du cash-flow mensuel</CardTitle>
+                    </CardHeader>
+                    <CardContent className="h-[300px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={cashFlowData}
+                          margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} />
+                          <YAxis />
+                          <ReTooltip formatter={(value: any) => [`${value.toFixed(2)} €`, 'Montant']} />
+                          <Bar dataKey="value" fill="#A28554">
+                            {cashFlowData.map((entry, index) => (
+                              <Cell 
+                                key={`cell-${index}`} 
+                                fill={index === cashFlowData.length - 1 
+                                  ? (entry.value >= 0 ? '#10B981' : '#EF4444') 
+                                  : '#A28554'
+                                } 
+                              />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Évolution du patrimoine sur 10 ans</CardTitle>
+                      <CardDescription>
+                        Projection de l'évolution de la valeur du bien et du cash-flow cumulé
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="h-[350px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart
+                          data={performanceData}
+                          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="year" />
+                          <YAxis />
+                          <ReTooltip formatter={(value: any) => [`${value.toLocaleString('fr-FR')} €`, '']} />
+                          <Area 
+                            type="monotone" 
+                            dataKey="propertyValue" 
+                            stackId="1"
+                            stroke="#8884d8" 
+                            fill="#8884d8"
+                            name="Valeur du bien" 
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="cumulativeCashFlow" 
+                            stackId="2"
+                            stroke="#82ca9d" 
+                            fill="#82ca9d"
+                            name="Cash-flow cumulé" 
+                          />
+                          <Legend />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                  <Button onClick={generatePDF} className="flex-1">
+                    <Download className="mr-2 h-4 w-4" />
+                    Exporter en PDF
+                  </Button>
+                  <Button onClick={saveToLocalStorage} variant="outline" className="flex-1">
+                    <Save className="mr-2 h-4 w-4" />
+                    Sauvegarder
+                  </Button>
+                  <Button onClick={loadFromLocalStorage} variant="outline" className="flex-1">
+                    <RotateCcw className="mr-2 h-4 w-4" />
+                    Charger
+                  </Button>
+                </div>
+              </>
+            )}
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default RentabilityCalculator;
