@@ -1,8 +1,10 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ChevronRight } from 'lucide-react';
 import Logo from '@/components/common/Logo';
+
 const Footer = () => {
   return <footer className="bg-progineer-dark dark:bg-gray-950">
       {/* Top Section with Border */}
@@ -45,17 +47,17 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos prestations
                   </Link>
                 </li>
                 <li>
-                  <Link to="/realisations-architecte-maison" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/realisations" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Nos réalisations
                   </Link>
                 </li>
                 <li>
-                  <Link to="/equipe-maitrise-oeuvre" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/equipe" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Notre équipe
                   </Link>
                 </li>
@@ -72,27 +74,27 @@ const Footer = () => {
               <h3 className="text-white text-lg font-medium mb-5 pb-2 border-b border-white/10 text-center md:text-left">Nos services</h3>
               <ul className="space-y-3 text-center md:text-left">
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#construction" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations#construction" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Construction sur mesure
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#renovation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations#renovation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Rénovation énergétique
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#extension" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations#extension" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Extension & agrandissement
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#optimisation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations#optimisation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Optimisation d'espace
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#design" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations#design" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Design d'espace
                   </Link>
                 </li>
@@ -154,7 +156,7 @@ const Footer = () => {
               <Link to="/faq" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">FAQ</Link>
               <Link to="/a-propos" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">À propos</Link>
               <Link to="/devenir-partenaire" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Devenir partenaire</Link>
-              <Link to="/parrainage-travaux" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Parrainage</Link>
+              <Link to="/parrainage" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Parrainage</Link>
             </div>
           </div>
 
@@ -168,4 +170,5 @@ const Footer = () => {
       </div>
     </footer>;
 };
+
 export default Footer;
