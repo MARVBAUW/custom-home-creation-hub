@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from "./components/theme/ThemeProvider"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -34,6 +34,10 @@ import AdminClientDetail from './pages/client/AdminClientDetail';
 // Import protected route component
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
+// Import layout components
+import Navbar from './components/layout/Navbar';
+import Footer from './components/layout/Footer';
+
 // Create temporary placeholder components for missing pages
 const LegalNotice = () => <div className="p-8"><h1 className="text-2xl">Mentions Légales</h1></div>;
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
@@ -44,6 +48,15 @@ const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">
 const queryClient = new QueryClient();
 
 const App = () => {
+  // Wrap routes that need the standard layout (with navbar and footer)
+  const StandardLayout = ({ children }: { children: React.ReactNode }) => (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
+  );
+
   return (
     <ThemeProvider defaultTheme="light" storageKey="progineer-theme">
       <QueryClientProvider client={queryClient}>
@@ -51,14 +64,46 @@ const App = () => {
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/estimation" element={<Estimation />} />
-              <Route path="/legal-notice" element={<LegalNotice />} />
-              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-              <Route path="/cgu" element={<CGU />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/sitemap" element={<Sitemap />} />
+              <Route path="/" element={
+                <StandardLayout>
+                  <Index />
+                </StandardLayout>
+              } />
+              <Route path="/contact" element={
+                <StandardLayout>
+                  <Contact />
+                </StandardLayout>
+              } />
+              <Route path="/estimation" element={
+                <StandardLayout>
+                  <Estimation />
+                </StandardLayout>
+              } />
+              <Route path="/legal-notice" element={
+                <StandardLayout>
+                  <LegalNotice />
+                </StandardLayout>
+              } />
+              <Route path="/privacy-policy" element={
+                <StandardLayout>
+                  <PrivacyPolicy />
+                </StandardLayout>
+              } />
+              <Route path="/cgu" element={
+                <StandardLayout>
+                  <CGU />
+                </StandardLayout>
+              } />
+              <Route path="/faq" element={
+                <StandardLayout>
+                  <FAQ />
+                </StandardLayout>
+              } />
+              <Route path="/sitemap" element={
+                <StandardLayout>
+                  <Sitemap />
+                </StandardLayout>
+              } />
               <Route path="/workspace" element={<Workspace />} />
               <Route path="/workspace/sign-in" element={<SignIn />} />
               <Route path="/sign-in" element={<SignIn />} />
@@ -124,6 +169,9 @@ const App = () => {
                   <AdminClientDetail />
                 </ProtectedRoute>
               } />
+
+              {/* Redirect index route to home page */}
+              <Route path="/index" element={<Navigate to="/" replace />} />
 
               {/* 404 route */}
               <Route path="*" element={<NotFound />} />

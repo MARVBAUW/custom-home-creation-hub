@@ -10,9 +10,6 @@ import { BrowserRouter } from "react-router-dom";
 import App from './App';
 import './index.css';
 
-// Create a client
-const queryClient = new QueryClient();
-
 // Configure development mode logging for authentication
 if (import.meta.env.DEV) {
   console.log('Supabase authentification est configurée et prête à être utilisée');
@@ -21,15 +18,7 @@ if (import.meta.env.DEV) {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <App />
-          </TooltipProvider>
-        </HelmetProvider>
-      </QueryClientProvider>
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 );

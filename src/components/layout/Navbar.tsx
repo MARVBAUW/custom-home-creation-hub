@@ -22,6 +22,9 @@ const Navbar = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
+    // Vérifier l'état initial
+    handleScroll();
+    
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -31,7 +34,7 @@ const Navbar = () => {
     setOpenDropdown(null);
   }, [location]);
 
-  const toggleDropdown = (name: string | null) => {
+  const toggleDropdown = (name: string) => {
     setOpenDropdown(openDropdown === name ? null : name);
   };
 

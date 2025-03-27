@@ -99,6 +99,7 @@ const Index = () => {
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
                 src="/lovable-uploads/732fa99d-df25-4869-9ca9-b49ccf6f51a4.png" 
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Martignas sur Jalles</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Villa en bord de mer</h3>
@@ -113,6 +114,7 @@ const Index = () => {
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
                 src="/lovable-uploads/2443b8c7-2cec-45ef-becc-407fb5078cf6.jpg" 
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Lomme / Lille</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Restructuration d'une friche</h3>
@@ -127,6 +129,7 @@ const Index = () => {
                 className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
                 src="/lovable-uploads/32221f3f-9469-4804-9663-067d2065aa7e.png" 
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Clermont-Ferrand</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Logements collectifs</h3>
