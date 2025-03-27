@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import SEO from '@/components/common/SEO';
 import Hero from '@/components/home/Hero';
@@ -8,7 +7,6 @@ import Testimonials from '@/components/home/Testimonials';
 import LocationMap from '@/components/home/LocationMap';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
-
 const Index = () => {
   // Structured data for LocalBusiness
   const structuredData = {
@@ -59,16 +57,8 @@ const Index = () => {
       revealElements.forEach(el => observer.unobserve(el));
     };
   }, []);
-  
-  return (
-    <>
-      <SEO 
-        title="Progineer | Architecte & Maître d'oeuvre en PACA - Marseille, Nice, Toulon" 
-        description="Progineer, entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA." 
-        keywords="architecte Marseille, maître d'œuvre PACA, constructeur maison sur mesure, entreprise de travaux, rénovation, extension, optimisation énergétique, maîtrise d'ouvrage, accompagnement travaux" 
-        canonicalUrl="https://progineer.fr/" 
-        structuredData={structuredData} 
-      />
+  return <>
+      <SEO title="Progineer | Architecte & Maître d'oeuvre en PACA - Marseille, Nice, Toulon" description="Progineer, entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA." keywords="architecte Marseille, maître d'œuvre PACA, constructeur maison sur mesure, entreprise de travaux, rénovation, extension, optimisation énergétique, maîtrise d'ouvrage, accompagnement travaux" canonicalUrl="https://progineer.fr/" structuredData={structuredData} />
 
       <Hero />
       
@@ -94,11 +84,7 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 reveal">
             {/* Project 1 */}
             <div className="group relative overflow-hidden rounded-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop" 
-                alt="Villa en bord de mer à Martignas sur Jalles" 
-                className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
-              />
+              <img alt="Villa en bord de mer à Martignas sur Jalles" className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" src="/lovable-uploads/732fa99d-df25-4869-9ca9-b49ccf6f51a4.png" />
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Martignas sur Jalles</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Villa en bord de mer</h3>
@@ -108,11 +94,7 @@ const Index = () => {
 
             {/* Project 2 */}
             <div className="group relative overflow-hidden rounded-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" 
-                alt="Restructuration d'une friche industrielle à Lomme / Lille" 
-                className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
-              />
+              <img alt="Restructuration d'une friche industrielle à Lomme / Lille" className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" src="/lovable-uploads/2443b8c7-2cec-45ef-becc-407fb5078cf6.jpg" />
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Lomme / Lille</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Restructuration d'une friche</h3>
@@ -122,11 +104,7 @@ const Index = () => {
 
             {/* Project 3 */}
             <div className="group relative overflow-hidden rounded-xl">
-              <img 
-                src="https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop" 
-                alt="Logements collectifs à Clermont-Ferrand" 
-                className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" 
-              />
+              <img src="https://images.unsplash.com/photo-1592595896551-12b371d546d5?q=80&w=2070&auto=format&fit=crop" alt="Logements collectifs à Clermont-Ferrand" className="w-full h-80 object-cover transition-transform duration-300 group-hover:scale-105" />
               <div className="absolute bottom-0 left-0 p-6 z-20">
                 <div className="text-xs font-medium text-khaki-200 mb-2">Clermont-Ferrand</div>
                 <h3 className="text-xl font-semibold text-white mb-1">Logements collectifs</h3>
@@ -183,8 +161,6 @@ const Index = () => {
           </div>
         </Container>
       </section>
-    </>
-  );
+    </>;
 };
-
 export default Index;
