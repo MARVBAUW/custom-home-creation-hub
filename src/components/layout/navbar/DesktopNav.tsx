@@ -62,7 +62,7 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
           </div>
         ) : (
           <>
-            <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white !text-white whitespace-nowrap">
+            <Button href="/estimation" size="sm" className="bg-green-600 hover:bg-green-700 text-white !text-white whitespace-nowrap">
               Estimer mon projet
             </Button>
             <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 text-stone-700 whitespace-nowrap">

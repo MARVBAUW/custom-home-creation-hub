@@ -1,105 +1,206 @@
 
-import React from 'react';
-import { Send } from 'lucide-react';
-import Button from '@/components/common/Button';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, CheckCircle2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Le nom doit contenir au moins 2 caractères.",
+  }),
+  email: z.string().email({
+    message: "Veuillez entrer une adresse email valide.",
+  }),
+  phone: z.string().min(10, {
+    message: "Veuillez entrer un numéro de téléphone valide.",
+  }).optional(),
+  subject: z.string().min(2, {
+    message: "Veuillez sélectionner un sujet.",
+  }),
+  message: z.string().min(10, {
+    message: "Votre message doit contenir au moins 10 caractères.",
+  }),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 const ContactForm = () => {
-  return (
-    <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
-      <h2 className="text-2xl font-semibold mb-6">Envoyez-nous un message</h2>
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { toast } = useToast();
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
+    },
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    
+    try {
+      // Simuler un appel API
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      <form className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
-              Prénom
-            </label>
-            <input
-              type="text"
-              id="firstName"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
-            />
-          </div>
+      console.log('Form data submitted:', data);
+      
+      toast({
+        title: "Message envoyé",
+        description: "Nous avons bien reçu votre message et nous vous répondrons dans les plus brefs délais.",
+      });
+      
+      setIsSuccess(true);
+      form.reset();
+      
+      // Réinitialiser le succès après 5 secondes
+      setTimeout(() => setIsSuccess(false), 5000);
+    } catch (error) {
+      console.error('Error sending form:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'envoi du formulaire. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const subjectOptions = [
+    { value: "information", label: "Demande d'information" },
+    { value: "devis", label: "Demande de devis" },
+    { value: "rendez-vous", label: "Prise de rendez-vous" },
+    { value: "reclamation", label: "Réclamation" },
+    { value: "autre", label: "Autre" },
+  ];
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nom complet</FormLabel>
+                <FormControl>
+                  <Input placeholder="Votre nom" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
-          <div>
-            <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
-              Nom
-            </label>
-            <input
-              type="text"
-              id="lastName"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
-            />
-          </div>
-        </div>
-        
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="votre@email.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
         
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Téléphone
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Téléphone (optionnel)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Votre numéro de téléphone" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="subject"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sujet</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un sujet" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {subjectOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
         
-        <div>
-          <label htmlFor="projectType" className="block text-sm font-medium text-gray-700 mb-1">
-            Type de projet
-          </label>
-          <select
-            id="projectType"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
+        <FormField
+          control={form.control}
+          name="message"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Message</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="Votre message..." 
+                  className="min-h-[150px]" 
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <div className="pt-4">
+          <Button 
+            type="submit" 
+            disabled={isSubmitting || isSuccess}
+            className="w-full sm:w-auto px-8 bg-green-600 hover:bg-green-700 text-white"
           >
-            <option value="">Sélectionnez un type de projet</option>
-            <option value="construction">Construction neuve</option>
-            <option value="renovation">Rénovation</option>
-            <option value="extension">Extension</option>
-            <option value="design">Design d'espace</option>
-            <option value="other">Autre</option>
-          </select>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Envoi en cours...
+              </>
+            ) : isSuccess ? (
+              <>
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+                Envoyé !
+              </>
+            ) : (
+              "Envoyer le message"
+            )}
+          </Button>
         </div>
-        
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-            Message
-          </label>
-          <textarea
-            id="message"
-            rows={5}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-progineer-gold focus:border-progineer-gold"
-          ></textarea>
-        </div>
-        
-        <div className="flex items-start">
-          <input
-            id="privacy"
-            type="checkbox"
-            className="h-4 w-4 text-progineer-gold focus:ring-progineer-gold border-gray-300 rounded mt-1"
-          />
-          <label htmlFor="privacy" className="ml-2 block text-sm text-gray-600">
-            J'accepte que mes données personnelles soient traitées conformément à la politique de confidentialité.
-          </label>
-        </div>
-        
-        <Button className="w-full justify-center bg-progineer-gold hover:bg-progineer-gold/90 text-white">
-          <Send className="mr-2 h-4 w-4" />
-          Envoyer
-        </Button>
       </form>
-    </div>
+    </Form>
   );
 };
 

@@ -21,6 +21,10 @@ import SignIn from './pages/client/SignIn';
 import Prestations from './pages/Prestations';
 import Realisations from './pages/Realisations';
 import Equipe from './pages/Equipe';
+import Parrainage from './pages/Parrainage';
+import DevenirPartenaire from './pages/DevenirPartenaire';
+import Legal from './pages/Legal';
+import CGV from './pages/CGV';
 
 // Import client area pages
 import ClientArea from './pages/client/ClientArea';
@@ -44,15 +48,10 @@ import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
 // Create placeholder components for pages
-const LegalNotice = () => <div className="p-8"><h1 className="text-2xl">Mentions Légales</h1></div>;
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
 const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
 const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
-const Parrainage = () => <div className="p-8"><h1 className="text-2xl">Programme de Parrainage</h1></div>;
-const DevenirPartenaire = () => <div className="p-8"><h1 className="text-2xl">Devenir Partenaire</h1></div>;
-const APropos = () => <div className="p-8"><h1 className="text-2xl">À Propos de Progineer</h1></div>;
-const CGV = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales de Vente</h1></div>;
 const AdminSettings = () => <div className="p-8"><h1 className="text-2xl">Paramètres Admin</h1></div>;
 const AdminPartners = () => <div className="p-8"><h1 className="text-2xl">Gestion des Partenaires</h1></div>;
 const AdminDocuments = () => <div className="p-8"><h1 className="text-2xl">Gestion des Documents</h1></div>;
@@ -95,7 +94,7 @@ const App = () => {
               } />
               <Route path="/mentions-legales" element={
                 <StandardLayout>
-                  <LegalNotice />
+                  <Legal />
                 </StandardLayout>
               } />
               <Route path="/privacy-policy" element={
@@ -123,19 +122,14 @@ const App = () => {
                   <Sitemap />
                 </StandardLayout>
               } />
-              <Route path="/a-propos" element={
+              <Route path="/parrainage" element={
                 <StandardLayout>
-                  <APropos />
+                  <Parrainage />
                 </StandardLayout>
               } />
               <Route path="/devenir-partenaire" element={
                 <StandardLayout>
                   <DevenirPartenaire />
-                </StandardLayout>
-              } />
-              <Route path="/parrainage" element={
-                <StandardLayout>
-                  <Parrainage />
                 </StandardLayout>
               } />
               

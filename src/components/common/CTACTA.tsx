@@ -2,7 +2,7 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const CTACTA = () => {
   const { toast } = useToast();
@@ -38,7 +38,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className="bg-white text-khaki-800 hover:bg-white/90 !text-khaki-800"
+              className="bg-green-600 text-white hover:bg-green-700 !text-white"
             >
               Estimer mon projet
             </Button>

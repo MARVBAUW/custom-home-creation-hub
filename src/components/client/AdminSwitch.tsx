@@ -13,16 +13,8 @@ interface AdminSwitchProps {
 const AdminSwitch = ({ isAdminMode, onToggle }: AdminSwitchProps) => {
   const { user } = useAuth();
   
-  // Log for debugging
-  console.log("AdminSwitch - User data:", user);
-  
   // Check if the user is an administrator
-  // We're checking both user_metadata.is_admin and specific email addresses
-  const isAdmin = 
-    (user?.user_metadata?.is_admin === true) || 
-    (user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email));
-  
-  console.log("AdminSwitch - Is admin?", isAdmin);
+  const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
   
   // If the user is not admin, don't display the switch
   if (!isAdmin) return null;

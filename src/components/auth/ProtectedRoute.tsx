@@ -18,6 +18,7 @@ const ProtectedRoute = ({
   const { user, loading } = useAuth();
   const location = useLocation();
 
+  // Check if user is admin based on email
   const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
 
   useEffect(() => {
@@ -50,14 +51,17 @@ const ProtectedRoute = ({
     );
   }
 
+  // Redirect if not logged in
   if (!user) {
     return <Navigate to="/workspace/sign-in" state={{ from: location }} replace />;
   }
 
+  // Restrict access for admin-only routes
   if (adminOnly && !isAdmin) {
     return <Navigate to="/workspace/client-area" replace />;
   }
 
+  // Redirect admins to admin page if trying to access client-only areas
   if (clientOnly && isAdmin) {
     return <Navigate to="/workspace/client-area/admin" replace />;
   }

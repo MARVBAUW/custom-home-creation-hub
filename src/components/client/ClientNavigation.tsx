@@ -33,7 +33,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   // Vérifier si l'email est un email administrateur
   const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
   
-  // Navigation items for clients only - enriched
+  // Navigation items for clients only - simplified for better UX
   const clientNavItems = [
     { 
       href: '/workspace/client-area', 
@@ -56,16 +56,6 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       label: 'Planning',
     },
     { 
-      href: '/workspace/client-area/estimate', 
-      icon: <Calculator className="w-5 h-5" />, 
-      label: 'Estimation de travaux',
-    },
-    { 
-      href: '/workspace/client-area/budget', 
-      icon: <CreditCard className="w-5 h-5" />, 
-      label: 'Suivi financier',
-    },
-    { 
       href: '/workspace/client-area/profile', 
       icon: <User className="w-5 h-5" />, 
       label: 'Mon profil',
@@ -77,7 +67,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
     },
   ];
 
-  // Outils réservés aux administrateurs - homogénéisés
+  // Admin navigation items
   const adminNavItems = [
     { 
       href: '/workspace/client-area/admin', 
@@ -116,11 +106,11 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
     }
   ];
 
-  // Use appropriate navigation items based on user role
-  const navItems = isAdminMode ? adminNavItems : clientNavItems;
+  // Use appropriate navigation items based on user role and mode
+  const navItems = isAdminMode && isAdmin ? adminNavItems : clientNavItems;
 
   // Back button function to return to client area
-  const backButton = location.pathname.includes('/admin') && (
+  const backButton = location.pathname.includes('/admin') && isAdmin && (
     <Link
       to="/workspace/client-area"
       className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-khaki-800 hover:bg-khaki-100 rounded-md mb-4"
@@ -135,7 +125,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       <div className="flex-1">
         <Link to="/" className="flex items-center py-4 px-4 mb-4">
           <span className="text-xl font-semibold text-khaki-800">Progineer</span>
-          <span className="ml-1 text-sm text-gray-500">Espace {isAdminMode ? 'admin' : 'client'}</span>
+          <span className="ml-1 text-sm text-gray-500">Espace {isAdminMode && isAdmin ? 'admin' : 'client'}</span>
         </Link>
         
         {backButton}

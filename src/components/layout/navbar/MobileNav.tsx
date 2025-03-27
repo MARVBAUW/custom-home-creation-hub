@@ -117,8 +117,8 @@ const MobileNav = ({
                 <Button href="/contact" className="w-full justify-center py-2 text-sm">
                   Contact
                 </Button>
-                <Button href="/workspace" variant="outline" className="w-full justify-center py-2 text-sm">
-                  Espace
+                <Button href="/estimation" variant="outline" className="w-full justify-center py-2 text-sm bg-green-600 hover:bg-green-700 text-white !text-white">
+                  Estimation
                 </Button>
               </>
             )}
