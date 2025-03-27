@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -7,54 +6,40 @@ import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 import { NavLink } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
-
 interface MobileNavProps {
   isOpen: boolean;
   navLinks: NavLink[];
   openDropdown: string | null;
   toggleDropdown: (name: string | null) => void;
 }
-
-const MobileNav = ({ isOpen, navLinks }: MobileNavProps) => {
+const MobileNav = ({
+  isOpen,
+  navLinks
+}: MobileNavProps) => {
   const isMobile = useIsMobile();
-  
   if (!isOpen) return null;
-  
-  return (
-    <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
+  return <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
       <Container className="flex flex-col h-[calc(100vh-4rem)] py-2">
         <ul className="space-y-0.5 overflow-y-auto">
-          {navLinks.map((item) => (
-            <React.Fragment key={item.name}>
+          {navLinks.map(item => <React.Fragment key={item.name}>
               {/* Main menu item */}
               <li className="border-b border-stone-200">
-                <Link
-                  to={item.path}
-                  className="block py-1.5 text-xs font-medium text-stone-800 hover:text-khaki-800"
-                >
+                <Link to={item.path} className="block py-5 text-xs font-medium text-stone-800 hover:text-khaki-800">
                   {item.name}
                 </Link>
               </li>
               
               {/* Sub-links if they exist */}
-              {item.subLinks && (
-                <li className="pl-3 mb-1">
+              {item.subLinks && <li className="pl-3 mb-1">
                   <ul className="space-y-0.5 border-l border-stone-200 pl-2">
-                    {item.subLinks.map((subLink) => (
-                      <li key={subLink.name}>
-                        <Link
-                          to={subLink.path}
-                          className="block py-1 text-xs text-stone-600 hover:text-khaki-800"
-                        >
+                    {item.subLinks.map(subLink => <li key={subLink.name}>
+                        <Link to={subLink.path} className="block py-1 text-xs text-stone-600 hover:text-khaki-800">
                           {subLink.name}
                         </Link>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
-                </li>
-              )}
-            </React.Fragment>
-          ))}
+                </li>}
+            </React.Fragment>)}
         </ul>
         
         <div className="mt-1 space-y-1.5 pt-1">
@@ -79,8 +64,6 @@ const MobileNav = ({ isOpen, navLinks }: MobileNavProps) => {
           </div>
         </div>
       </Container>
-    </div>
-  );
+    </div>;
 };
-
 export default MobileNav;
