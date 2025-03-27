@@ -2,18 +2,9 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BaseProjectsListProps } from './types';
 
-interface AvailableProjectsListProps {
-  projects: Array<{
-    id: string;
-    title: string;
-    type: string;
-    location: string;
-    status: string;
-  }>;
-}
-
-const AvailableProjectsList: React.FC<AvailableProjectsListProps> = ({ projects }) => {
+const AvailableProjectsList: React.FC<BaseProjectsListProps> = ({ projects }) => {
   return (
     <div className="pt-6">
       <h3 className="text-lg font-medium mb-3">Projets disponibles</h3>

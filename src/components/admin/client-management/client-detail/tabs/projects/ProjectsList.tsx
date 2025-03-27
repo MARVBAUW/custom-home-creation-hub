@@ -3,18 +3,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { BaseProjectsListProps } from './types';
 
-interface ProjectsListProps {
-  projects: Array<{
-    id: string;
-    title: string;
-    type: string;
-    location: string;
-    status: string;
-  }>;
-}
-
-const ProjectsList: React.FC<ProjectsListProps> = ({ projects }) => {
+const ProjectsList: React.FC<BaseProjectsListProps> = ({ projects }) => {
   return (
     <div className="space-y-4">
       {projects.map(project => (

@@ -1,21 +1,16 @@
 
 import React from 'react';
-import ProjectsList from './ProjectsList';
-import EmptyProjectsState from './EmptyProjectsState';
-import AvailableProjectsList from './AvailableProjectsList';
+import { ProjectsList } from './';
+import { EmptyProjectsState } from './';
+import { AvailableProjectsList } from './';
+import { Project } from './types';
 
 interface ProjectsTabContentProps {
   client: { 
-    projects: any[]; 
+    projects: Project[]; 
     hasProjects: boolean;
   };
-  availableProjects: Array<{
-    id: string;
-    title: string;
-    type: string;
-    location: string;
-    status: string;
-  }>;
+  availableProjects: Project[];
 }
 
 const ProjectsTabContent: React.FC<ProjectsTabContentProps> = ({ client, availableProjects }) => {
