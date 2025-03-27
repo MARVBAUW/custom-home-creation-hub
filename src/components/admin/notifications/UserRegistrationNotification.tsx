@@ -35,7 +35,7 @@ export const triggerUserRegistrationNotification = (
     description: `${userName} vient de créer un compte.`,
     action: (
       <Button variant="outline" size="sm" asChild>
-        <Link to="/workspace/client-area/admin/clients">
+        <Link to={`/workspace/client-area/admin/clients/${userId}`}>
           Voir
         </Link>
       </Button>
@@ -115,7 +115,7 @@ const UserRegistrationNotification: React.FC<UserRegistrationProps> = ({
           </Button>
           {!hasProject && (
             <Button size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white" asChild>
-              <Link to={`/workspace/client-area/admin/clients/${userId}/assign-project`}>
+              <Link to={`/workspace/client-area/admin/clients/${userId}?tab=projects`}>
                 Assigner un projet
               </Link>
             </Button>

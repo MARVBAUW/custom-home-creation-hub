@@ -25,6 +25,8 @@ import AdminProjectsOverview from './pages/client/AdminProjectsOverview';
 import AdminProjects from './pages/client/AdminProjects';
 import AdminProjectDetail from './pages/client/AdminProjectDetail';
 import AdminAssignClient from './pages/client/AdminAssignClient';
+import AdminClients from './pages/client/AdminClients';
+import AdminClientDetail from './pages/client/AdminClientDetail';
 
 // Create a custom Home component until the actual one is implemented
 const Home = () => (
@@ -84,6 +86,10 @@ const App = () => {
               <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={<AdminAssignClient />} />
               <Route path="/workspace/client-area/admin/projects/create" element={<AdminProjectCreation />} />
               <Route path="/workspace/client-area/admin/planning" element={<AdminProjectsOverview />} />
+              
+              {/* Admin Client Routes */}
+              <Route path="/workspace/client-area/admin/clients" element={<AdminClients />} />
+              <Route path="/workspace/client-area/admin/clients/:clientId" element={<AdminClientDetail />} />
             </Routes>
             <Toaster />
           </AuthProvider>
