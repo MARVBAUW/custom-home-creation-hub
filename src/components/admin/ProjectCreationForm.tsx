@@ -54,10 +54,11 @@ const ProjectCreationForm = () => {
     console.log("Form submitted", data);
     setIsSubmitting(true);
     
-    // Simulate API call with timeout
-    setTimeout(() => {
-      // Save to localStorage for demonstration
-      const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    try {
+      // Get existing projects from localStorage
+      const existingProjects = JSON.parse(localStorage.getItem('projects') || '[]');
+      
+      // Create new project with unique ID and timestamp
       const newProject = {
         ...data,
         id: `project-${Date.now()}`,
@@ -65,10 +66,9 @@ const ProjectCreationForm = () => {
         status: 'active'
       };
       
-      projects.push(newProject);
-      localStorage.setItem('projects', JSON.stringify(projects));
-      
-      setIsSubmitting(false);
+      // Add to projects array and save back to localStorage
+      existingProjects.push(newProject);
+      localStorage.setItem('projects', JSON.stringify(existingProjects));
       
       toast({
         title: "Projet créé avec succès",
@@ -76,8 +76,19 @@ const ProjectCreationForm = () => {
       });
       
       // Redirect to projects list
-      navigate('/workspace/client-area/admin/projects');
-    }, 1000);
+      setTimeout(() => {
+        navigate('/workspace/client-area/admin/projects');
+      }, 1000);
+    } catch (error) {
+      console.error("Error saving project:", error);
+      toast({
+        title: "Erreur lors de la création du projet",
+        description: "Une erreur est survenue lors de l'enregistrement du projet.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

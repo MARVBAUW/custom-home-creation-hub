@@ -18,6 +18,9 @@ import FAQ from './pages/FAQ';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import SignIn from './pages/client/SignIn';
+import Prestations from './pages/Prestations';
+import Realisations from './pages/Realisations';
+import Equipe from './pages/Equipe';
 
 // Import client area pages
 import ClientArea from './pages/client/ClientArea';
@@ -106,6 +109,24 @@ const App = () => {
                   <Sitemap />
                 </StandardLayout>
               } />
+              
+              {/* Add the missing routes for Prestations, Realisations, and Equipe */}
+              <Route path="/prestations-maitre-oeuvre" element={
+                <StandardLayout>
+                  <Prestations />
+                </StandardLayout>
+              } />
+              <Route path="/realisations-architecte-maison" element={
+                <StandardLayout>
+                  <Realisations />
+                </StandardLayout>
+              } />
+              <Route path="/equipe-maitrise-oeuvre" element={
+                <StandardLayout>
+                  <Equipe />
+                </StandardLayout>
+              } />
+              
               <Route path="/workspace" element={<Workspace />} />
               <Route path="/workspace/sign-in" element={<SignIn />} />
               <Route path="/sign-in" element={<SignIn />} />
