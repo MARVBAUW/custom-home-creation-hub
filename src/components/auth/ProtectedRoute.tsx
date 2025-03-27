@@ -7,9 +7,14 @@ import { toast } from '@/hooks/use-toast';
 interface ProtectedRouteProps {
   children: React.ReactNode;
   adminOnly?: boolean;
+  clientOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ 
+  children, 
+  adminOnly = false,
+  clientOnly = false 
+}: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -28,8 +33,13 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
         description: "Cette section est réservée aux administrateurs",
         variant: "destructive",
       });
+    } else if (!loading && clientOnly && isAdmin) {
+      toast({
+        title: "Redirection",
+        description: "Vous êtes redirigé vers l'espace administrateur",
+      });
     }
-  }, [user, loading, adminOnly, isAdmin]);
+  }, [user, loading, adminOnly, clientOnly, isAdmin]);
 
   if (loading) {
     return (
@@ -46,6 +56,10 @@ const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) =>
 
   if (adminOnly && !isAdmin) {
     return <Navigate to="/workspace/client-area" replace />;
+  }
+
+  if (clientOnly && isAdmin) {
+    return <Navigate to="/workspace/client-area/admin" replace />;
   }
 
   return <>{children}</>;

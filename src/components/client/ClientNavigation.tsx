@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -10,10 +11,7 @@ import {
   CreditCard, 
   Settings,
   Users,
-  Calculator,
   FileSpreadsheet,
-  ReceiptText,
-  Hammer,
   ChevronLeft
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -30,66 +28,61 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   // Vérifier si l'email est un email administrateur
   const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
   
-  const navItems = [
+  // Navigation items for clients only
+  const clientNavItems = [
     { 
       href: '/workspace/client-area', 
       icon: <Home className="w-5 h-5" />, 
       label: 'Tableau de bord',
-      showAlways: true
     },
     { 
       href: '/workspace/client-area/projects', 
       icon: <FileText className="w-5 h-5" />, 
-      label: 'Mes projets',
-      showAlways: true
+      label: 'Mon projet',
     },
     { 
       href: '/workspace/client-area/messages', 
       icon: <MessageSquare className="w-5 h-5" />, 
       label: 'Messages',
-      showAlways: true
-    },
-    { 
-      href: '/workspace/client-area/budget', 
-      icon: <CreditCard className="w-5 h-5" />, 
-      label: 'Budget & Paiements',
-      showAlways: true
     },
     { 
       href: '/workspace/client-area/planning', 
       icon: <Clock className="w-5 h-5" />, 
       label: 'Planning',
-      showAlways: true
+    },
+    { 
+      href: '/workspace/client-area/budget', 
+      icon: <CreditCard className="w-5 h-5" />, 
+      label: 'Budget & Paiements',
     },
     { 
       href: '/workspace/client-area/profile', 
       icon: <User className="w-5 h-5" />, 
       label: 'Mon profil',
-      showAlways: true
     },
   ];
 
   // Outils réservés aux administrateurs
-  const adminTools = [
+  const adminNavItems = [
     { 
       href: '/workspace/client-area/admin', 
       icon: <Settings className="w-5 h-5" />, 
       label: 'Admin Dashboard',
-      adminOnly: true
     },
     { 
       href: '/workspace/client-area/admin/clients', 
       icon: <Users className="w-5 h-5" />, 
       label: 'Gestion Clients',
-      adminOnly: true
     },
     { 
       href: '/workspace/client-area/admin/projects', 
       icon: <FileSpreadsheet className="w-5 h-5" />, 
       label: 'Gestion Projets',
-      adminOnly: true
     }
   ];
+
+  // Use appropriate navigation items based on user role
+  const navItems = isAdminMode ? adminNavItems : clientNavItems;
 
   const backButton = location.pathname.includes('/admin') && (
     <Link
@@ -106,13 +99,13 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       <div className="flex-1">
         <Link to="/" className="flex items-center py-4 px-4 mb-4">
           <span className="text-xl font-semibold text-khaki-800">Progineer</span>
-          <span className="ml-1 text-sm text-gray-500">Espace client</span>
+          <span className="ml-1 text-sm text-gray-500">Espace {isAdminMode ? 'admin' : 'client'}</span>
         </Link>
         
         {backButton}
         
         <nav className="space-y-1 px-3">
-          {/* Éléments de navigation principaux */}
+          {/* Navigation elements */}
           <div className="mb-6">
             {navItems.map(item => (
               <Link
@@ -130,38 +123,10 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
               </Link>
             ))}
           </div>
-          
-          {/* Éléments de navigation administrateur */}
-          {(isAdmin || isAdminMode) && (
-            <>
-              <div className="pt-4 pb-2">
-                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                  Administration
-                </h3>
-              </div>
-              <div>
-                {adminTools.map(item => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className={cn(
-                      "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
-                      location.pathname === item.href 
-                        ? "bg-khaki-100 text-khaki-800" 
-                        : "text-gray-600"
-                    )}
-                  >
-                    <span className="mr-3 text-gray-500">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </>
-          )}
         </nav>
       </div>
       
-      {/* Section utilisateur et déconnexion */}
+      {/* User information and logout */}
       <div className="p-4 border-t border-gray-200">
         <div className="flex items-center mb-4">
           <div className="h-10 w-10 rounded-full bg-khaki-200 flex items-center justify-center text-khaki-800 font-semibold">

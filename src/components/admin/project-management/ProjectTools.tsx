@@ -8,7 +8,8 @@ import {
   FileSpreadsheet, 
   ClipboardList, 
   GanttChart,
-  DollarSign 
+  DollarSign,
+  ArrowRight 
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -25,67 +26,85 @@ const ProjectTools: React.FC<ProjectToolsProps> = ({ projectId }) => {
       <CardContent className="pt-4 space-y-3">
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/estimate`}>
-            <Calculator className="h-4 w-4 mr-2 text-khaki-600" />
-            Estimation des travaux
+            <div className="flex items-center">
+              <Calculator className="h-4 w-4 mr-2 text-khaki-600" />
+              Estimation des travaux
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
 
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/fees`}>
-            <DollarSign className="h-4 w-4 mr-2 text-khaki-600" />
-            Devis d'honoraires
+            <div className="flex items-center">
+              <DollarSign className="h-4 w-4 mr-2 text-khaki-600" />
+              Devis d'honoraires
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
 
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/budget`}>
-            <FileSpreadsheet className="h-4 w-4 mr-2 text-khaki-600" />
-            Estimatif TCE
+            <div className="flex items-center">
+              <FileSpreadsheet className="h-4 w-4 mr-2 text-khaki-600" />
+              Estimatif TCE
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
 
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/cctp`}>
-            <FileText className="h-4 w-4 mr-2 text-khaki-600" />
-            CCTP
+            <div className="flex items-center">
+              <FileText className="h-4 w-4 mr-2 text-khaki-600" />
+              CCTP
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
 
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/dpgf`}>
-            <ClipboardList className="h-4 w-4 mr-2 text-khaki-600" />
-            DPGF
+            <div className="flex items-center">
+              <ClipboardList className="h-4 w-4 mr-2 text-khaki-600" />
+              DPGF
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
 
         <Button 
           variant="outline" 
-          className="w-full justify-start text-sm" 
+          className="w-full justify-between text-sm" 
           asChild
         >
           <Link to={`/workspace/client-area/admin/projects/${projectId}/planning`}>
-            <GanttChart className="h-4 w-4 mr-2 text-khaki-600" />
-            Planning Gantt
+            <div className="flex items-center">
+              <GanttChart className="h-4 w-4 mr-2 text-khaki-600" />
+              Planning Gantt
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
       </CardContent>

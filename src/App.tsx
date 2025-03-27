@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -68,6 +69,7 @@ const App = () => {
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
             <Routes>
+              {/* Public routes with standard layout */}
               <Route path="/" element={
                 <StandardLayout>
                   <Index />
@@ -109,7 +111,7 @@ const App = () => {
                 </StandardLayout>
               } />
               
-              {/* Add the missing routes for Prestations, Realisations, and Equipe */}
+              {/* Prestations, Realisations, and Equipe routes */}
               <Route path="/prestations-maitre-oeuvre" element={
                 <StandardLayout>
                   <Prestations />
@@ -131,20 +133,40 @@ const App = () => {
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/client-onboarding" element={<ClientOnboarding />} />
               
-              {/* Client Area Routes */}
+              {/* Client Area Routes - Protected for clients */}
               <Route path="/workspace/client-area" element={
                 <ProtectedRoute>
                   <ClientArea />
                 </ProtectedRoute>
               } />
               <Route path="/workspace/client-area/projects" element={
-                <ProtectedRoute>
+                <ProtectedRoute clientOnly>
                   <ClientProjects />
                 </ProtectedRoute>
               } />
               <Route path="/workspace/client-area/projects/:projectId" element={
-                <ProtectedRoute>
+                <ProtectedRoute clientOnly>
                   <ClientProjectDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/messages" element={
+                <ProtectedRoute>
+                  <div>Messages</div>
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/planning" element={
+                <ProtectedRoute>
+                  <div>Planning</div>
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/budget" element={
+                <ProtectedRoute>
+                  <div>Budget & Paiements</div>
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/profile" element={
+                <ProtectedRoute>
+                  <div>Profil</div>
                 </ProtectedRoute>
               } />
               
@@ -160,6 +182,12 @@ const App = () => {
                     <Route path="planning" element={<AdminProjectsOverview />} />
                     <Route path="clients" element={<AdminClients />} />
                     <Route path="clients/:clientId" element={<AdminClientDetail />} />
+                    <Route path="projects/:projectId/estimate" element={<EstimationTravaux />} />
+                    <Route path="projects/:projectId/fees" element={<DevisHonoraires />} />
+                    <Route path="projects/:projectId/budget" element={<div>Estimatif TCE</div>} />
+                    <Route path="projects/:projectId/cctp" element={<div>CCTP</div>} />
+                    <Route path="projects/:projectId/dpgf" element={<div>DPGF</div>} />
+                    <Route path="projects/:projectId/planning" element={<div>Planning Gantt</div>} />
                   </Routes>
                 </ProtectedRoute>
               } />
