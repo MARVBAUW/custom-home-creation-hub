@@ -47,7 +47,7 @@ const CTASection = () => {
           </div>
           
           <div className="relative">
-            <div className="rounded-2xl overflow-hidden shadow-xl">
+            <div className="cellule \" <div class=\"w-full max-w-screen-md mx-auto p-4\"> <img src=\"/mnt/data/1000011017-enhanced.png\" alt=\"1000011017-enhanced.png\" class=\"w-full h-auto rounded-xl shadow-lg\" /> </div> \"">
               <img alt="Maison contemporaine avec grande baie vitrée" className="w-14 h-auto object-fill" src="/lovable-uploads/2ab0f303-213f-43c9-94dc-75e0e8e55718.png" />
             </div>
             <div className="absolute -bottom-6 -riight-20 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
