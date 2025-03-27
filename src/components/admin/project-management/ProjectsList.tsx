@@ -1,193 +1,254 @@
 
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
-import ProjectCard, { ProjectCardProps } from './ProjectCard';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
+import { Building2, User2, MoreVertical, Plus, Search, Filter } from 'lucide-react';
 
-// Mock data for demo purposes
-const mockProjects: ProjectCardProps[] = [
+// Mock data for projects
+const mockProjects = [
   {
-    id: "1",
-    projectName: "Villa Méditerranée",
-    fileNumber: "PRJ-2023-001",
-    clientName: "Jean Dupont",
-    clientAssigned: true,
-    createdAt: "2023-06-15",
-    projectType: "residential",
-    location: "Marseille",
-    budget: "450 000 €",
-    status: "active",
-    progress: 65
+    id: '1',
+    title: 'Villa Méditerranée',
+    location: 'Marseille',
+    type: 'Construction neuve',
+    status: 'En cours',
+    progress: 65,
+    client: 'Jean Dupont',
+    hasClient: true,
+    updatedAt: '2023-09-15T10:30:00.000Z',
   },
   {
-    id: "2",
-    projectName: "Commerce Centre-Ville",
-    fileNumber: "PRJ-2023-002",
-    clientName: "Marie Martin",
-    clientAssigned: true,
-    createdAt: "2023-07-22",
-    projectType: "commercial",
-    location: "Aix-en-Provence",
-    budget: "280 000 €",
-    status: "active",
-    progress: 30
+    id: '2',
+    title: 'Rénovation appartement haussmannien',
+    location: 'Paris',
+    type: 'Rénovation complète',
+    status: 'En attente',
+    progress: 25,
+    client: null,
+    hasClient: false,
+    updatedAt: '2023-09-12T14:45:00.000Z',
   },
   {
-    id: "3",
-    projectName: "Bureau Open Space",
-    fileNumber: "PRJ-2023-003",
-    clientAssigned: false,
-    createdAt: "2023-08-10",
-    projectType: "commercial",
-    location: "Nice",
-    budget: "320 000 €",
-    status: "draft",
-    progress: 0
+    id: '3',
+    title: 'Extension maison de campagne',
+    location: 'Aix-en-Provence',
+    type: 'Extension',
+    status: 'Planifié',
+    progress: 10,
+    client: 'Marie Lambert',
+    hasClient: true,
+    updatedAt: '2023-09-10T09:15:00.000Z',
   },
   {
-    id: "4",
-    projectName: "Rénovation Appartement",
-    fileNumber: "PRJ-2023-004",
-    clientName: "Sophie Lefebvre",
-    clientAssigned: true,
-    createdAt: "2023-09-05",
-    projectType: "residential",
-    location: "Toulon",
-    budget: "120 000 €",
-    status: "completed",
-    progress: 100
-  },
-  {
-    id: "5",
-    projectName: "Entrepôt Logistique",
-    fileNumber: "PRJ-2023-005",
-    clientAssigned: false,
-    createdAt: "2023-09-18",
-    projectType: "industrial",
-    location: "Fos-sur-Mer",
-    budget: "780 000 €",
-    status: "on-hold",
-    progress: 15
+    id: '4',
+    title: 'Réaménagement bureaux',
+    location: 'Lyon',
+    type: 'Aménagement intérieur',
+    status: 'Terminé',
+    progress: 100,
+    client: 'Société ABC',
+    hasClient: true,
+    updatedAt: '2023-08-28T16:20:00.000Z',
   }
 ];
 
 const ProjectsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [typeFilter, setTypeFilter] = useState<string>('all');
-  const [clientFilter, setClientFilter] = useState<string>('all');
-
-  // Filter projects based on search and filters
+  const [activeTab, setActiveTab] = useState('all'); // 'all', 'withClient', 'withoutClient'
+  const { toast } = useToast();
+  
+  // Filter projects based on search and tabs
   const filteredProjects = mockProjects.filter(project => {
-    const matchesSearch = 
-      project.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.fileNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (project.clientName && project.clientName.toLowerCase().includes(searchTerm.toLowerCase()));
+    // Search filter
+    if (searchTerm && !project.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
+        !project.location.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !project.type.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false;
+    }
     
-    const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
-    const matchesType = typeFilter === 'all' || project.projectType === typeFilter;
-    const matchesClient = clientFilter === 'all' || 
-      (clientFilter === 'assigned' && project.clientAssigned) ||
-      (clientFilter === 'unassigned' && !project.clientAssigned);
+    // Tab filter
+    if (activeTab === 'withClient' && !project.hasClient) return false;
+    if (activeTab === 'withoutClient' && project.hasClient) return false;
     
-    return matchesSearch && matchesStatus && matchesType && matchesClient;
+    return true;
   });
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
-        <div className="relative w-full md:w-72">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold">Projets</h2>
+        <Link to="/workspace/client-area/admin/projects/create">
+          <Button variant="default" className="bg-khaki-600 hover:bg-khaki-700">
+            <Plus className="h-4 w-4 mr-2" />
+            Nouveau projet
+          </Button>
+        </Link>
+      </div>
+      
+      {/* Search and filters */}
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
           <Input
             type="search"
             placeholder="Rechercher un projet..."
-            className="pl-9 bg-white border-gray-200"
+            className="pl-8"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
-        <div className="flex flex-wrap gap-2 w-full md:w-auto">
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-full md:w-[180px] h-9 text-sm">
-              <Filter className="h-3.5 w-3.5 mr-2" />
-              <SelectValue placeholder="Statut" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tous les statuts</SelectItem>
-              <SelectItem value="draft">Brouillon</SelectItem>
-              <SelectItem value="active">En cours</SelectItem>
-              <SelectItem value="on-hold">En attente</SelectItem>
-              <SelectItem value="completed">Terminé</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-full md:w-[180px] h-9 text-sm">
-              <Building className="h-3.5 w-3.5 mr-2" />
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tous les types</SelectItem>
-              <SelectItem value="residential">Résidentiel</SelectItem>
-              <SelectItem value="commercial">Commercial</SelectItem>
-              <SelectItem value="industrial">Industriel</SelectItem>
-              <SelectItem value="public">Établissement public</SelectItem>
-              <SelectItem value="mixed">Mixte</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Select value={clientFilter} onValueChange={setClientFilter}>
-            <SelectTrigger className="w-full md:w-[180px] h-9 text-sm">
-              <User className="h-3.5 w-3.5 mr-2" />
-              <SelectValue placeholder="Client" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tous les projets</SelectItem>
-              <SelectItem value="assigned">Avec client</SelectItem>
-              <SelectItem value="unassigned">Sans client</SelectItem>
-            </SelectContent>
-          </Select>
-          
-          <Button 
-            size="sm" 
-            className="bg-khaki-600 hover:bg-khaki-700 text-white"
-            asChild
-          >
-            <Link to="/workspace/client-area/admin/projects/create">
-              <Plus className="h-4 w-4 mr-1" />
-              Nouveau projet
-            </Link>
-          </Button>
-        </div>
+        <Button variant="outline" className="flex items-center md:w-auto">
+          <Filter className="h-4 w-4 mr-2" />
+          Filtres
+        </Button>
       </div>
       
-      {filteredProjects.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} {...project} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-10 bg-gray-50 rounded-lg border border-dashed border-gray-200">
-          <SlidersHorizontal className="h-10 w-10 text-gray-400 mx-auto mb-3" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">Aucun projet trouvé</h3>
-          <p className="text-gray-500 mb-4">Modifiez vos critères de recherche ou créez un nouveau projet.</p>
-          <Button 
-            className="bg-khaki-600 hover:bg-khaki-700 text-white"
-            asChild
-          >
-            <Link to="/workspace/client-area/admin/projects/create">
-              <Plus className="h-4 w-4 mr-2" />
-              Créer un nouveau projet
-            </Link>
-          </Button>
-        </div>
-      )}
+      {/* Tabs */}
+      <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="all">Tous les projets</TabsTrigger>
+          <TabsTrigger value="withClient">Avec client</TabsTrigger>
+          <TabsTrigger value="withoutClient">Sans client</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="all" className="mt-6">
+          <ProjectsGrid 
+            projects={filteredProjects} 
+            formatDate={formatDate} 
+            toast={toast} 
+          />
+        </TabsContent>
+        
+        <TabsContent value="withClient" className="mt-6">
+          <ProjectsGrid 
+            projects={filteredProjects} 
+            formatDate={formatDate} 
+            toast={toast} 
+          />
+        </TabsContent>
+        
+        <TabsContent value="withoutClient" className="mt-6">
+          <ProjectsGrid 
+            projects={filteredProjects} 
+            formatDate={formatDate} 
+            toast={toast} 
+          />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+// ProjectsGrid component to display the list of projects
+const ProjectsGrid = ({ projects, formatDate, toast }) => {
+  if (projects.length === 0) {
+    return (
+      <div className="text-center py-10">
+        <p className="text-gray-500">Aucun projet ne correspond aux critères de recherche.</p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {projects.map((project) => (
+        <Card key={project.id} className="overflow-hidden">
+          <CardHeader className="p-4 pb-2">
+            <div className="flex justify-between items-start">
+              <Badge variant={
+                project.status === 'En cours' ? 'default' :
+                project.status === 'En attente' ? 'secondary' :
+                project.status === 'Planifié' ? 'outline' : 'success'
+              }>
+                {project.status}
+              </Badge>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <Link to={`/workspace/client-area/admin/projects/${project.id}`} className="w-full">
+                      Voir les détails
+                    </Link>
+                  </DropdownMenuItem>
+                  {!project.hasClient && (
+                    <DropdownMenuItem>
+                      <Link to={`/workspace/client-area/admin/projects/${project.id}/assign-client`} className="w-full">
+                        Assigner un client
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem onClick={() => {
+                    toast({
+                      title: "Action en cours de développement",
+                      description: "Cette fonctionnalité sera bientôt disponible.",
+                    });
+                  }}>
+                    Modifier
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <CardTitle className="text-lg mt-2">{project.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 pt-0">
+            <div className="text-sm text-gray-500 space-y-2">
+              <div className="flex items-center">
+                <Building2 className="h-4 w-4 mr-2" />
+                <span>{project.type} - {project.location}</span>
+              </div>
+              {project.hasClient ? (
+                <div className="flex items-center">
+                  <User2 className="h-4 w-4 mr-2" />
+                  <span>{project.client}</span>
+                </div>
+              ) : (
+                <div className="flex items-center text-amber-600">
+                  <User2 className="h-4 w-4 mr-2" />
+                  <span>Aucun client assigné</span>
+                </div>
+              )}
+              <div className="bg-gray-100 dark:bg-gray-800 h-2 rounded-full mt-3">
+                <div 
+                  className="bg-khaki-600 h-2 rounded-full" 
+                  style={{ width: `${project.progress}%` }}
+                ></div>
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter className="p-4 pt-0 text-xs text-gray-500">
+            Mis à jour le {formatDate(project.updatedAt)}
+          </CardFooter>
+        </Card>
+      ))}
     </div>
   );
 };
