@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   FileText, FolderPlus, Upload, File, FileArchive, 
-  FileImage, FilePdf, FileCheck, Trash2
+  FileImage, FileCheck, Trash2
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -69,7 +69,7 @@ const DocumentItem: React.FC<DocumentItemProps> = ({ document, onDelete }) => {
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'pdf':
-        return <FilePdf className="h-5 w-5 text-red-500" />;
+        return <FileText className="h-5 w-5 text-red-500" />;
       case 'image':
         return <FileImage className="h-5 w-5 text-blue-500" />;
       case 'archive':
