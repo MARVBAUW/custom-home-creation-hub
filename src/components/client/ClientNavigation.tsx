@@ -15,7 +15,11 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import LogoutButton from '@/components/auth/LogoutButton';
 
-const ClientNavigation = () => {
+interface ClientNavigationProps {
+  isAdminMode?: boolean;
+}
+
+const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   const location = useLocation();
   const { user } = useAuth();
   
@@ -55,8 +59,8 @@ const ClientNavigation = () => {
     },
   ];
 
-  // Ajouter les éléments de navigation administrateur si l'utilisateur est administrateur
-  const adminNavItems = isAdmin ? [
+  // Ajouter les éléments de navigation administrateur si l'utilisateur est administrateur ou en mode admin
+  const adminNavItems = (isAdmin || isAdminMode) ? [
     { 
       href: '/workspace/client-area/admin', 
       icon: <Settings className="w-5 h-5" />, 
