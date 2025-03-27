@@ -1,229 +1,127 @@
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
-  LayoutDashboard, Users, FolderKanban, Calendar, FileText, 
-  Settings, GanttChart, CreditCard, MessageSquare, User, FilePlus2
+  Home, 
+  FileText, 
+  Clock, 
+  User, 
+  MessageSquare, 
+  CreditCard, 
+  Settings,
+  Users
 } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import LogoutButton from '@/components/auth/LogoutButton';
 
-interface ClientNavigationProps {
-  isAdminMode?: boolean;
-}
+const ClientNavigation = () => {
+  const location = useLocation();
+  const { user } = useAuth();
+  
+  // Vérifier si l'email est un email administrateur
+  const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
+  
+  const navItems = [
+    { 
+      href: '/workspace/client-area', 
+      icon: <Home className="w-5 h-5" />, 
+      label: 'Tableau de bord' 
+    },
+    { 
+      href: '/workspace/client-area/projects', 
+      icon: <FileText className="w-5 h-5" />, 
+      label: 'Mes projets' 
+    },
+    { 
+      href: '/workspace/client-area/messages', 
+      icon: <MessageSquare className="w-5 h-5" />, 
+      label: 'Messages' 
+    },
+    { 
+      href: '/workspace/client-area/budget', 
+      icon: <CreditCard className="w-5 h-5" />, 
+      label: 'Budget & Paiements' 
+    },
+    { 
+      href: '/workspace/client-area/planning', 
+      icon: <Clock className="w-5 h-5" />, 
+      label: 'Planning' 
+    },
+    { 
+      href: '/workspace/client-area/profile', 
+      icon: <User className="w-5 h-5" />, 
+      label: 'Mon profil' 
+    },
+  ];
 
-const ClientNavigation: React.FC<ClientNavigationProps> = ({ isAdminMode = false }) => {
+  // Ajouter les éléments de navigation administrateur si l'utilisateur est administrateur
+  const adminNavItems = isAdmin ? [
+    { 
+      href: '/workspace/client-area/admin', 
+      icon: <Settings className="w-5 h-5" />, 
+      label: 'Admin Dashboard' 
+    },
+    { 
+      href: '/workspace/client-area/admin/clients', 
+      icon: <Users className="w-5 h-5" />, 
+      label: 'Gestion Clients' 
+    },
+  ] : [];
+  
+  // Combiner les éléments de navigation
+  const allNavItems = [...navItems, ...adminNavItems];
+
   return (
-    <Card className="border-gray-200 shadow-sm overflow-hidden sticky top-24">
-      <CardContent className="p-0">
-        <nav className="flex flex-col">
-          {isAdminMode ? (
-            // Admin navigation
-            <>
-              <NavLink 
-                to="/workspace/client-area/admin"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <LayoutDashboard className="h-4 w-4 mr-3" />
-                Tableau de bord
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/admin/clients"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <Users className="h-4 w-4 mr-3" />
-                Clients
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/admin/projects"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <FolderKanban className="h-4 w-4 mr-3" />
-                Projets
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/admin/projects/create"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <FilePlus2 className="h-4 w-4 mr-3" />
-                Nouveau projet
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/admin/planning"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <GanttChart className="h-4 w-4 mr-3" />
-                Planning
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/admin/reports"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <FileText className="h-4 w-4 mr-3" />
-                Rapports
-              </NavLink>
-
-              <NavLink 
-                to="/workspace/client-area/admin/settings"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <Settings className="h-4 w-4 mr-3" />
-                Paramètres
-              </NavLink>
-            </>
-          ) : (
-            // Client navigation
-            <>
-              <NavLink 
-                to="/workspace/client-area"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-                end
-              >
-                <LayoutDashboard className="h-4 w-4 mr-3" />
-                Tableau de bord
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/projects"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <FolderKanban className="h-4 w-4 mr-3" />
-                Mes projets
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/calendar"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <Calendar className="h-4 w-4 mr-3" />
-                Calendrier
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/documents"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <FileText className="h-4 w-4 mr-3" />
-                Documents
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/payments"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <CreditCard className="h-4 w-4 mr-3" />
-                Paiements
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/messages"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <MessageSquare className="h-4 w-4 mr-3" />
-                Messages
-              </NavLink>
-              
-              <NavLink 
-                to="/workspace/client-area/account"
-                className={({ isActive }) => cn(
-                  "flex items-center px-4 py-3 text-sm",
-                  "hover:bg-gray-50 transition-colors border-l-2",
-                  isActive 
-                    ? "border-l-khaki-500 bg-khaki-50 text-khaki-900 font-medium" 
-                    : "border-l-transparent text-gray-700"
-                )}
-              >
-                <User className="h-4 w-4 mr-3" />
-                Mon compte
-              </NavLink>
-            </>
-          )}
+    <div className="h-full flex flex-col">
+      <div className="flex-1">
+        <Link to="/" className="flex items-center py-4 px-4 mb-4">
+          <span className="text-xl font-semibold text-khaki-800">Progineer</span>
+          <span className="ml-1 text-sm text-gray-500">Espace client</span>
+        </Link>
+        
+        <nav className="space-y-1 px-3">
+          {allNavItems.map(item => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className={cn(
+                "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
+                location.pathname === item.href 
+                  ? "bg-khaki-100 text-khaki-800" 
+                  : "text-gray-600"
+              )}
+            >
+              <span className="mr-3 text-gray-500">{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
         </nav>
-      </CardContent>
-    </Card>
+      </div>
+      
+      {/* Section utilisateur et déconnexion */}
+      <div className="p-4 border-t border-gray-200">
+        <div className="flex items-center mb-4">
+          <div className="h-10 w-10 rounded-full bg-khaki-200 flex items-center justify-center text-khaki-800 font-semibold">
+            {user?.email?.charAt(0).toUpperCase() || 'U'}
+          </div>
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-700 truncate w-40">
+              {user?.user_metadata?.full_name || user?.email || 'Utilisateur'}
+            </p>
+            <p className="text-xs text-gray-500 truncate w-40">
+              {user?.email}
+            </p>
+          </div>
+        </div>
+        
+        <LogoutButton 
+          variant="outline"
+          size="default"
+          className="w-full justify-start text-gray-700 hover:text-red-700 hover:bg-red-50"
+        />
+      </div>
+    </div>
   );
 };
 

@@ -15,6 +15,9 @@ import Workspace from './pages/Workspace';
 import Contact from './pages/Contact';
 import Estimation from './pages/Estimation';
 import FAQ from './pages/FAQ';
+import Index from './pages/Index';
+import NotFound from './pages/NotFound';
+import SignIn from './pages/client/SignIn';
 
 // Import client area pages
 import ClientArea from './pages/client/ClientArea';
@@ -28,28 +31,14 @@ import AdminAssignClient from './pages/client/AdminAssignClient';
 import AdminClients from './pages/client/AdminClients';
 import AdminClientDetail from './pages/client/AdminClientDetail';
 
-// Create a custom Home component until the actual one is implemented
-const Home = () => (
-  <div className="p-8">
-    <h1 className="text-3xl font-bold mb-4">Progineer - Accueil</h1>
-    <p className="mb-4">Bienvenue sur le site de Progineer.</p>
-    <div className="flex space-x-4 mt-8">
-      <a href="/workspace" className="bg-khaki-600 hover:bg-khaki-700 text-white px-4 py-2 rounded">
-        Espace de travail
-      </a>
-      <a href="/contact" className="bg-khaki-600 hover:bg-khaki-700 text-white px-4 py-2 rounded">
-        Contact
-      </a>
-    </div>
-  </div>
-);
+// Import protected route component
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Create temporary placeholder components for missing pages
 const LegalNotice = () => <div className="p-8"><h1 className="text-2xl">Mentions Légales</h1></div>;
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
 const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
 const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
-const SignIn = () => <div className="p-8"><h1 className="text-2xl">Connexion</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
 
 const queryClient = new QueryClient();
@@ -62,7 +51,7 @@ const App = () => {
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Index />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/estimation" element={<Estimation />} />
               <Route path="/legal-notice" element={<LegalNotice />} />
@@ -71,25 +60,73 @@ const App = () => {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/sitemap" element={<Sitemap />} />
               <Route path="/workspace" element={<Workspace />} />
+              <Route path="/workspace/sign-in" element={<SignIn />} />
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/client-onboarding" element={<ClientOnboarding />} />
               
               {/* Client Area Routes */}
-              <Route path="/workspace/client-area" element={<ClientArea />} />
-              <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
-              <Route path="/workspace/client-area/projects/:projectId" element={<ClientProjectDetail />} />
+              <Route path="/workspace/client-area" element={
+                <ProtectedRoute>
+                  <ClientArea />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/projects" element={
+                <ProtectedRoute>
+                  <ClientProjects />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/projects/:projectId" element={
+                <ProtectedRoute>
+                  <ClientProjectDetail />
+                </ProtectedRoute>
+              } />
               
               {/* Admin Routes */}
-              <Route path="/workspace/client-area/admin" element={<AdminDashboard />} />
-              <Route path="/workspace/client-area/admin/projects" element={<AdminProjects />} />
-              <Route path="/workspace/client-area/admin/projects/:projectId" element={<AdminProjectDetail />} />
-              <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={<AdminAssignClient />} />
-              <Route path="/workspace/client-area/admin/projects/create" element={<AdminProjectCreation />} />
-              <Route path="/workspace/client-area/admin/planning" element={<AdminProjectsOverview />} />
+              <Route path="/workspace/client-area/admin" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/projects" element={
+                <ProtectedRoute>
+                  <AdminProjects />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/projects/:projectId" element={
+                <ProtectedRoute>
+                  <AdminProjectDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={
+                <ProtectedRoute>
+                  <AdminAssignClient />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/projects/create" element={
+                <ProtectedRoute>
+                  <AdminProjectCreation />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/planning" element={
+                <ProtectedRoute>
+                  <AdminProjectsOverview />
+                </ProtectedRoute>
+              } />
               
               {/* Admin Client Routes */}
-              <Route path="/workspace/client-area/admin/clients" element={<AdminClients />} />
-              <Route path="/workspace/client-area/admin/clients/:clientId" element={<AdminClientDetail />} />
+              <Route path="/workspace/client-area/admin/clients" element={
+                <ProtectedRoute>
+                  <AdminClients />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/admin/clients/:clientId" element={
+                <ProtectedRoute>
+                  <AdminClientDetail />
+                </ProtectedRoute>
+              } />
+
+              {/* 404 route */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
           </AuthProvider>

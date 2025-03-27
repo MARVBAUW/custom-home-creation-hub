@@ -5,6 +5,8 @@ import Button from '@/components/common/Button';
 import NavItem from './NavItem';
 import { NavLink } from './types';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 interface DesktopNavProps {
   navLinks: NavLink[];
@@ -14,6 +16,7 @@ interface DesktopNavProps {
 
 const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps) => {
   const location = useLocation();
+  const { user } = useAuth();
 
   const isActive = (item: NavLink) => {
     if (location.pathname === item.path) return true;
@@ -49,12 +52,24 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
           <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
           <span>+33 7 83 76 21 56</span>
         </a>
-        <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
-          Estimer mon projet
-        </Button>
-        <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
-          Contact
-        </Button>
+        
+        {user ? (
+          <div className="flex items-center space-x-2">
+            <Button href="/workspace/client-area" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+              Mon espace
+            </Button>
+            <LogoutButton variant="outline" size="sm" className="border-red-200 hover:bg-red-50 text-red-600" />
+          </div>
+        ) : (
+          <>
+            <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+              Estimer mon projet
+            </Button>
+            <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
+              Contact
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,8 @@ import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
 import { NavLink } from './types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/hooks/useAuth';
+import LogoutButton from '@/components/auth/LogoutButton';
 
 interface MobileNavProps {
   isOpen: boolean;
@@ -22,6 +24,7 @@ const MobileNav = ({
   toggleDropdown
 }: MobileNavProps) => {
   const isMobile = useIsMobile();
+  const { user } = useAuth();
   
   if (!isOpen) return null;
   
@@ -69,12 +72,27 @@ const MobileNav = ({
           </div>
           
           <div className="grid grid-cols-2 gap-2">
-            <Button href="/contact" className="w-full justify-center py-1 text-xs">
-              Contact
-            </Button>
-            <Button href="/workspace" variant="outline" className="w-full justify-center py-1 text-xs">
-              Espace
-            </Button>
+            {user ? (
+              <>
+                <Button href="/workspace/client-area" className="w-full justify-center py-1 text-xs">
+                  Mon espace
+                </Button>
+                <LogoutButton 
+                  variant="outline"
+                  size="sm" 
+                  className="w-full justify-center py-1 text-xs border-red-200 text-red-600"
+                />
+              </>
+            ) : (
+              <>
+                <Button href="/contact" className="w-full justify-center py-1 text-xs">
+                  Contact
+                </Button>
+                <Button href="/workspace" variant="outline" className="w-full justify-center py-1 text-xs">
+                  Espace
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Container>
