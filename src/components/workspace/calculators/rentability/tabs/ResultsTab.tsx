@@ -76,7 +76,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
           <div className="text-sm text-gray-500 mb-1">Rendement brut</div>
           <div className="flex items-center">
             <div className="text-2xl font-bold mr-2">{results.grossYield.toFixed(2)}%</div>
-            <Badge variant={results.grossYield > 5 ? "success" : "warning"} className="ml-auto">
+            <Badge variant={results.grossYield > 5 ? "success" : "destructive"} className="ml-auto">
               {results.grossYield > 5 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
               {results.grossYield > 5 ? "Bon" : "Moyen"}
             </Badge>
@@ -87,7 +87,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
           <div className="text-sm text-gray-500 mb-1">Rendement net</div>
           <div className="flex items-center">
             <div className="text-2xl font-bold mr-2">{results.netYield.toFixed(2)}%</div>
-            <Badge variant={results.netYield > 4 ? "success" : "warning"} className="ml-auto">
+            <Badge variant={results.netYield > 4 ? "success" : "destructive"} className="ml-auto">
               {results.netYield > 4 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
               {results.netYield > 4 ? "Bon" : "Moyen"}
             </Badge>
@@ -109,7 +109,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
           <div className="text-sm text-gray-500 mb-1">Cash on Cash</div>
           <div className="flex items-center">
             <div className="text-2xl font-bold mr-2">{results.cashOnCash.toFixed(2)}%</div>
-            <Badge variant={results.cashOnCash > 6 ? "success" : "warning"} className="ml-auto">
+            <Badge variant={results.cashOnCash > 6 ? "success" : "destructive"} className="ml-auto">
               {results.cashOnCash > 6 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
               {results.cashOnCash > 6 ? "Excellent" : "Correct"}
             </Badge>
@@ -120,7 +120,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
           <div className="text-sm text-gray-500 mb-1">TRI sur 10 ans</div>
           <div className="flex items-center">
             <div className="text-2xl font-bold mr-2">{results.irr10Years.toFixed(2)}%</div>
-            <Badge variant={results.irr10Years > 7 ? "success" : "warning"} className="ml-auto">
+            <Badge variant={results.irr10Years > 7 ? "success" : "destructive"} className="ml-auto">
               {results.irr10Years > 7 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
               {results.irr10Years > 7 ? "Excellent" : "Correct"}
             </Badge>
@@ -133,7 +133,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
             <div className="text-2xl font-bold mr-2">
               {results.amortizationPeriod > 0 ? results.amortizationPeriod.toFixed(1) : "∞"} ans
             </div>
-            <Badge variant={results.amortizationPeriod > 0 && results.amortizationPeriod < 15 ? "success" : "warning"} className="ml-auto">
+            <Badge variant={results.amortizationPeriod > 0 && results.amortizationPeriod < 15 ? "success" : "destructive"} className="ml-auto">
               {results.amortizationPeriod > 0 && results.amortizationPeriod < 15 ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
               {results.amortizationPeriod > 0 && results.amortizationPeriod < 15 ? "Rapide" : "Long terme"}
             </Badge>
@@ -162,7 +162,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
                   ))}
                 </Pie>
                 <Legend />
-                <ReTooltip formatter={(value) => `${value.toFixed(0)} €`} />
+                <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toFixed(0) : value} €`} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -179,7 +179,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <ReTooltip formatter={(value) => `${value.toFixed(0)} €`} />
+                <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toFixed(0) : value} €`} />
                 <Bar dataKey="value" fill="#A28554" />
               </BarChart>
             </ResponsiveContainer>
@@ -198,7 +198,7 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="year" />
               <YAxis />
-              <ReTooltip formatter={(value) => `${value.toLocaleString('fr-FR')} €`} />
+              <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toLocaleString('fr-FR') : value} €`} />
               <Area type="monotone" dataKey="propertyValue" stackId="1" stroke="#8884d8" fill="#8884d8" name="Valeur du bien" />
               <Area type="monotone" dataKey="cumulativeCashFlow" stackId="2" stroke="#82ca9d" fill="#82ca9d" name="Cash flow cumulé" />
               <Area type="monotone" dataKey="netWorth" stackId="3" stroke="#ffc658" fill="#ffc658" name="Patrimoine net" />
