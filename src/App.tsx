@@ -30,6 +30,8 @@ import AdminProjectDetail from './pages/client/AdminProjectDetail';
 import AdminAssignClient from './pages/client/AdminAssignClient';
 import AdminClients from './pages/client/AdminClients';
 import AdminClientDetail from './pages/client/AdminClientDetail';
+import EstimationTravaux from './pages/client/EstimationTravaux';
+import DevisHonoraires from './pages/client/DevisHonoraires';
 
 // Import protected route component
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -123,6 +125,16 @@ const App = () => {
               <Route path="/workspace/client-area/projects/:projectId" element={
                 <ProtectedRoute>
                   <ClientProjectDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/estimation-travaux" element={
+                <ProtectedRoute>
+                  <EstimationTravaux />
+                </ProtectedRoute>
+              } />
+              <Route path="/workspace/client-area/devis-honoraires" element={
+                <ProtectedRoute>
+                  <DevisHonoraires />
                 </ProtectedRoute>
               } />
               

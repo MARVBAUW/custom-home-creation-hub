@@ -1,11 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, Users, UserCheck, RefreshCcw, Check, X } from "lucide-react";
+import { Search, Users, UserCheck, RefreshCcw, Check, X, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Mock client data for demonstration
@@ -89,6 +89,16 @@ const AssignClientToProject = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [projectData, setProjectData] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch project data from localStorage
+    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+    const project = projects.find((p: any) => p.id === projectId);
+    if (project) {
+      setProjectData(project);
+    }
+  }, [projectId]);
 
   const filteredClients = mockClients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -107,8 +117,25 @@ const AssignClientToProject = () => {
 
     setIsLoading(true);
     
-    // Simulate API call
+    // Simulate API call and save to localStorage
     setTimeout(() => {
+      // Get projects from localStorage
+      const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+      const projectIndex = projects.findIndex((p: any) => p.id === projectId);
+      
+      if (projectIndex !== -1) {
+        // Update project with client
+        projects[projectIndex].clientId = selectedClientId;
+        
+        // Find client details
+        const client = mockClients.find(c => c.id === selectedClientId);
+        projects[projectIndex].clientName = client?.name;
+        projects[projectIndex].clientEmail = client?.email;
+        
+        // Save back to localStorage
+        localStorage.setItem('projects', JSON.stringify(projects));
+      }
+      
       setIsLoading(false);
       
       toast({
@@ -124,7 +151,14 @@ const AssignClientToProject = () => {
     <Card className="border-gray-200">
       <CardHeader className="border-b border-gray-100 bg-gray-50 px-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-          <CardTitle className="text-xl">Assigner un client au projet</CardTitle>
+          <div>
+            <CardTitle className="text-xl">Assigner un client au projet</CardTitle>
+            {projectData && (
+              <p className="text-sm text-gray-500 mt-1">
+                Projet: {projectData.projectName} (Référence: {projectData.fileNumber || 'N/A'})
+              </p>
+            )}
+          </div>
           <div className="flex gap-2">
             <Button 
               variant="outline" 
@@ -167,6 +201,24 @@ const AssignClientToProject = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+          </div>
+          
+          {/* Bouton pour créer un nouveau client */}
+          <div className="flex justify-end">
+            <Button 
+              variant="outline"
+              size="sm"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50"
+              onClick={() => {
+                toast({
+                  title: "Fonctionnalité à venir",
+                  description: "La création de nouveaux clients sera disponible prochainement."
+                });
+              }}
+            >
+              <UserPlus className="h-3.5 w-3.5 mr-1.5" />
+              Créer un nouveau client
+            </Button>
           </div>
           
           <div className="space-y-3">

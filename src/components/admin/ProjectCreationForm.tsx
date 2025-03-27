@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, FormProvider } from "react-hook-form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ProjectDetails, ProjectPhase } from '@/types/project';
+import { ProjectDetails } from '@/types/project';
+import { useNavigate } from 'react-router-dom';
 import ProjectGeneralForm from './forms/ProjectGeneralForm';
 import ProjectPhaseForm from './forms/ProjectPhaseForm';
 import ProjectDateForm from './forms/ProjectDateForm';
@@ -45,14 +46,38 @@ const ProjectCreationForm = () => {
   const methods = useForm<ProjectDetails>({
     defaultValues
   });
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = (data: ProjectDetails) => {
     console.log("Form submitted", data);
+    setIsSubmitting(true);
     
-    toast({
-      title: "Projet créé avec succès",
-      description: `Le projet ${data.projectName} a été créé.`,
-    });
+    // Simulate API call with timeout
+    setTimeout(() => {
+      // Save to localStorage for demonstration
+      const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+      const newProject = {
+        ...data,
+        id: `project-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        status: 'active'
+      };
+      
+      projects.push(newProject);
+      localStorage.setItem('projects', JSON.stringify(projects));
+      
+      setIsSubmitting(false);
+      
+      toast({
+        title: "Projet créé avec succès",
+        description: `Le projet ${data.projectName} a été créé.`,
+      });
+      
+      // Redirect to projects list
+      navigate('/workspace/client-area/admin/projects');
+    }, 1000);
   };
 
   return (
@@ -99,8 +124,9 @@ const ProjectCreationForm = () => {
               <Button 
                 type="submit" 
                 className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                disabled={isSubmitting}
               >
-                Valider la saisie et enregistrer
+                {isSubmitting ? 'Enregistrement en cours...' : 'Valider la saisie et enregistrer'}
               </Button>
             </div>
           </form>

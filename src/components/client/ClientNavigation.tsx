@@ -10,7 +10,11 @@ import {
   MessageSquare, 
   CreditCard, 
   Settings,
-  Users
+  Users,
+  Calculator,
+  FileSpreadsheet,
+  ReceiptText,
+  Hammer
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import LogoutButton from '@/components/auth/LogoutButton';
@@ -59,6 +63,20 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
     },
   ];
 
+  // Ajouter les éléments de navigation pour les outils
+  const outilsNavItems = [
+    { 
+      href: '/workspace/client-area/estimation-travaux', 
+      icon: <Calculator className="w-5 h-5" />, 
+      label: 'Estimation travaux' 
+    },
+    { 
+      href: '/workspace/client-area/devis-honoraires', 
+      icon: <ReceiptText className="w-5 h-5" />, 
+      label: 'Devis honoraires' 
+    },
+  ];
+
   // Ajouter les éléments de navigation administrateur si l'utilisateur est administrateur ou en mode admin
   const adminNavItems = (isAdmin || isAdminMode) ? [
     { 
@@ -71,10 +89,12 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       icon: <Users className="w-5 h-5" />, 
       label: 'Gestion Clients' 
     },
+    { 
+      href: '/workspace/client-area/admin/projects', 
+      icon: <FileSpreadsheet className="w-5 h-5" />, 
+      label: 'Gestion Projets' 
+    },
   ] : [];
-  
-  // Combiner les éléments de navigation
-  const allNavItems = [...navItems, ...adminNavItems];
 
   return (
     <div className="h-full flex flex-col">
@@ -85,21 +105,78 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
         </Link>
         
         <nav className="space-y-1 px-3">
-          {allNavItems.map(item => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className={cn(
-                "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
-                location.pathname === item.href 
-                  ? "bg-khaki-100 text-khaki-800" 
-                  : "text-gray-600"
-              )}
-            >
-              <span className="mr-3 text-gray-500">{item.icon}</span>
-              {item.label}
-            </Link>
-          ))}
+          {/* Éléments de navigation principaux */}
+          <div className="mb-6">
+            {navItems.map(item => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
+                  location.pathname === item.href 
+                    ? "bg-khaki-100 text-khaki-800" 
+                    : "text-gray-600"
+                )}
+              >
+                <span className="mr-3 text-gray-500">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Séparateur pour les outils */}
+          <div className="pt-4 pb-2">
+            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Outils
+            </h3>
+          </div>
+          
+          {/* Éléments de navigation pour les outils */}
+          <div className="mb-6">
+            {outilsNavItems.map(item => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
+                  location.pathname === item.href 
+                    ? "bg-khaki-100 text-khaki-800" 
+                    : "text-gray-600"
+                )}
+              >
+                <span className="mr-3 text-gray-500">{item.icon}</span>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          
+          {/* Éléments de navigation administrateur (si applicable) */}
+          {adminNavItems.length > 0 && (
+            <>
+              <div className="pt-4 pb-2">
+                <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  Administration
+                </h3>
+              </div>
+              <div>
+                {adminNavItems.map(item => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
+                      location.pathname === item.href 
+                        ? "bg-khaki-100 text-khaki-800" 
+                        : "text-gray-600"
+                    )}
+                  >
+                    <span className="mr-3 text-gray-500">{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
         </nav>
       </div>
       
