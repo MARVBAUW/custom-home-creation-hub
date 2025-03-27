@@ -9,7 +9,8 @@ import {
   ClipboardList, 
   GanttChart,
   DollarSign,
-  ArrowRight 
+  ArrowRight,
+  Calendar
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -103,6 +104,20 @@ const ProjectTools: React.FC<ProjectToolsProps> = ({ projectId }) => {
             <div className="flex items-center">
               <GanttChart className="h-4 w-4 mr-2 text-khaki-600" />
               Planning Gantt
+            </div>
+            <ArrowRight className="h-4 w-4 text-gray-400" />
+          </Link>
+        </Button>
+        
+        <Button 
+          variant="outline" 
+          className="w-full justify-between text-sm" 
+          asChild
+        >
+          <Link to={`/workspace/client-area/admin/projects/${projectId}/meetings`}>
+            <div className="flex items-center">
+              <Calendar className="h-4 w-4 mr-2 text-khaki-600" />
+              Réunions
             </div>
             <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>

@@ -43,12 +43,20 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 
-// Create temporary placeholder components for missing pages
+// Create placeholder components for pages
 const LegalNotice = () => <div className="p-8"><h1 className="text-2xl">Mentions Légales</h1></div>;
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
 const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
 const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
+const Parrainage = () => <div className="p-8"><h1 className="text-2xl">Programme de Parrainage</h1></div>;
+const DevenirPartenaire = () => <div className="p-8"><h1 className="text-2xl">Devenir Partenaire</h1></div>;
+const APropos = () => <div className="p-8"><h1 className="text-2xl">À Propos de Progineer</h1></div>;
+const CGV = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales de Vente</h1></div>;
+const AdminSettings = () => <div className="p-8"><h1 className="text-2xl">Paramètres Admin</h1></div>;
+const AdminPartners = () => <div className="p-8"><h1 className="text-2xl">Gestion des Partenaires</h1></div>;
+const AdminDocuments = () => <div className="p-8"><h1 className="text-2xl">Gestion des Documents</h1></div>;
+const AdminNotifications = () => <div className="p-8"><h1 className="text-2xl">Notifications Admin</h1></div>;
 
 const queryClient = new QueryClient();
 
@@ -85,7 +93,7 @@ const App = () => {
                   <Estimation />
                 </StandardLayout>
               } />
-              <Route path="/legal-notice" element={
+              <Route path="/mentions-legales" element={
                 <StandardLayout>
                   <LegalNotice />
                 </StandardLayout>
@@ -100,6 +108,11 @@ const App = () => {
                   <CGU />
                 </StandardLayout>
               } />
+              <Route path="/cgv" element={
+                <StandardLayout>
+                  <CGV />
+                </StandardLayout>
+              } />
               <Route path="/faq" element={
                 <StandardLayout>
                   <FAQ />
@@ -108,6 +121,21 @@ const App = () => {
               <Route path="/sitemap" element={
                 <StandardLayout>
                   <Sitemap />
+                </StandardLayout>
+              } />
+              <Route path="/a-propos" element={
+                <StandardLayout>
+                  <APropos />
+                </StandardLayout>
+              } />
+              <Route path="/devenir-partenaire" element={
+                <StandardLayout>
+                  <DevenirPartenaire />
+                </StandardLayout>
+              } />
+              <Route path="/parrainage" element={
+                <StandardLayout>
+                  <Parrainage />
                 </StandardLayout>
               } />
               
@@ -140,12 +168,12 @@ const App = () => {
                 </ProtectedRoute>
               } />
               <Route path="/workspace/client-area/projects" element={
-                <ProtectedRoute clientOnly>
+                <ProtectedRoute>
                   <ClientProjects />
                 </ProtectedRoute>
               } />
               <Route path="/workspace/client-area/projects/:projectId" element={
-                <ProtectedRoute clientOnly>
+                <ProtectedRoute>
                   <ClientProjectDetail />
                 </ProtectedRoute>
               } />
@@ -157,11 +185,6 @@ const App = () => {
               <Route path="/workspace/client-area/planning" element={
                 <ProtectedRoute>
                   <div>Planning</div>
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/budget" element={
-                <ProtectedRoute>
-                  <div>Budget & Paiements</div>
                 </ProtectedRoute>
               } />
               <Route path="/workspace/client-area/profile" element={
@@ -182,12 +205,17 @@ const App = () => {
                     <Route path="planning" element={<AdminProjectsOverview />} />
                     <Route path="clients" element={<AdminClients />} />
                     <Route path="clients/:clientId" element={<AdminClientDetail />} />
+                    <Route path="partners" element={<AdminPartners />} />
+                    <Route path="documents" element={<AdminDocuments />} />
+                    <Route path="notifications" element={<AdminNotifications />} />
+                    <Route path="settings" element={<AdminSettings />} />
                     <Route path="projects/:projectId/estimate" element={<EstimationTravaux />} />
                     <Route path="projects/:projectId/fees" element={<DevisHonoraires />} />
                     <Route path="projects/:projectId/budget" element={<div>Estimatif TCE</div>} />
                     <Route path="projects/:projectId/cctp" element={<div>CCTP</div>} />
                     <Route path="projects/:projectId/dpgf" element={<div>DPGF</div>} />
                     <Route path="projects/:projectId/planning" element={<div>Planning Gantt</div>} />
+                    <Route path="projects/:projectId/meetings" element={<div>Réunions de chantier</div>} />
                   </Routes>
                 </ProtectedRoute>
               } />

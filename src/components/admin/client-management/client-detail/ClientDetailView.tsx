@@ -8,7 +8,6 @@ import ClientHeader from './ClientHeader';
 import ClientContactCard from './ClientContactCard';
 import ClientProjectsCard from './ClientProjectsCard';
 import ClientTabsSection from './ClientTabsSection';
-import { mockClient, availableProjects } from './mockData';
 
 interface ClientDetailViewProps {
   clientId: string;
@@ -17,8 +16,27 @@ interface ClientDetailViewProps {
 const ClientDetailView: React.FC<ClientDetailViewProps> = ({ clientId }) => {
   const [activeTab, setActiveTab] = useState("profile");
   
-  // In a real app, fetch client details based on clientId
-  const client = mockClient;
+  // Placeholder for real data that will come from the database
+  const client = {
+    id: clientId,
+    firstName: "Client",
+    lastName: "En Attente",
+    email: "client@example.com",
+    phone: "À renseigner",
+    address: "À renseigner",
+    city: "À renseigner",
+    postalCode: "À renseigner",
+    country: "France",
+    company: "À renseigner",
+    projectDescription: "Aucun projet associé actuellement.",
+    projects: [],
+    hasProjects: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  
+  // Placeholder for projects
+  const availableProjects = [];
 
   return (
     <div className="space-y-6">

@@ -12,7 +12,11 @@ import {
   Settings,
   Users,
   FileSpreadsheet,
-  ChevronLeft
+  ChevronLeft,
+  BarChart,
+  FileCheck,
+  Building,
+  Bell
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import LogoutButton from '@/components/auth/LogoutButton';
@@ -28,7 +32,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   // Vérifier si l'email est un email administrateur
   const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
   
-  // Navigation items for clients only
+  // Navigation items for clients only - simplified
   const clientNavItems = [
     { 
       href: '/workspace/client-area', 
@@ -51,39 +55,55 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       label: 'Planning',
     },
     { 
-      href: '/workspace/client-area/budget', 
-      icon: <CreditCard className="w-5 h-5" />, 
-      label: 'Budget & Paiements',
-    },
-    { 
       href: '/workspace/client-area/profile', 
       icon: <User className="w-5 h-5" />, 
       label: 'Mon profil',
     },
   ];
 
-  // Outils réservés aux administrateurs
+  // Outils réservés aux administrateurs - expanded
   const adminNavItems = [
     { 
       href: '/workspace/client-area/admin', 
-      icon: <Settings className="w-5 h-5" />, 
-      label: 'Admin Dashboard',
+      icon: <BarChart className="w-5 h-5" />, 
+      label: 'Dashboard',
     },
     { 
       href: '/workspace/client-area/admin/clients', 
       icon: <Users className="w-5 h-5" />, 
-      label: 'Gestion Clients',
+      label: 'Clients',
     },
     { 
       href: '/workspace/client-area/admin/projects', 
       icon: <FileSpreadsheet className="w-5 h-5" />, 
-      label: 'Gestion Projets',
+      label: 'Projets',
+    },
+    { 
+      href: '/workspace/client-area/admin/partners', 
+      icon: <Building className="w-5 h-5" />, 
+      label: 'Partenaires',
+    },
+    { 
+      href: '/workspace/client-area/admin/documents', 
+      icon: <FileCheck className="w-5 h-5" />, 
+      label: 'Documents',
+    },
+    { 
+      href: '/workspace/client-area/admin/notifications', 
+      icon: <Bell className="w-5 h-5" />, 
+      label: 'Notifications',
+    },
+    { 
+      href: '/workspace/client-area/admin/settings', 
+      icon: <Settings className="w-5 h-5" />, 
+      label: 'Paramètres',
     }
   ];
 
   // Use appropriate navigation items based on user role
   const navItems = isAdminMode ? adminNavItems : clientNavItems;
 
+  // Back button function to return to client area
   const backButton = location.pathname.includes('/admin') && (
     <Link
       to="/workspace/client-area"
