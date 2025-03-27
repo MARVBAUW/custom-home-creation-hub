@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -148,61 +147,23 @@ const App = () => {
                   <ClientProjectDetail />
                 </ProtectedRoute>
               } />
-              <Route path="/workspace/client-area/estimation-travaux" element={
-                <ProtectedRoute>
-                  <EstimationTravaux />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/devis-honoraires" element={
-                <ProtectedRoute>
-                  <DevisHonoraires />
+              
+              {/* Admin Routes - Require admin role */}
+              <Route path="/workspace/client-area/admin/*" element={
+                <ProtectedRoute adminOnly>
+                  <Routes>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="projects" element={<AdminProjects />} />
+                    <Route path="projects/:projectId/*" element={<AdminProjectDetail />} />
+                    <Route path="projects/:projectId/assign-client" element={<AdminAssignClient />} />
+                    <Route path="projects/create" element={<AdminProjectCreation />} />
+                    <Route path="planning" element={<AdminProjectsOverview />} />
+                    <Route path="clients" element={<AdminClients />} />
+                    <Route path="clients/:clientId" element={<AdminClientDetail />} />
+                  </Routes>
                 </ProtectedRoute>
               } />
               
-              {/* Admin Routes */}
-              <Route path="/workspace/client-area/admin" element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/projects" element={
-                <ProtectedRoute>
-                  <AdminProjects />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/projects/:projectId" element={
-                <ProtectedRoute>
-                  <AdminProjectDetail />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={
-                <ProtectedRoute>
-                  <AdminAssignClient />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/projects/create" element={
-                <ProtectedRoute>
-                  <AdminProjectCreation />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/planning" element={
-                <ProtectedRoute>
-                  <AdminProjectsOverview />
-                </ProtectedRoute>
-              } />
-              
-              {/* Admin Client Routes */}
-              <Route path="/workspace/client-area/admin/clients" element={
-                <ProtectedRoute>
-                  <AdminClients />
-                </ProtectedRoute>
-              } />
-              <Route path="/workspace/client-area/admin/clients/:clientId" element={
-                <ProtectedRoute>
-                  <AdminClientDetail />
-                </ProtectedRoute>
-              } />
-
               {/* Redirect index route to home page */}
               <Route path="/index" element={<Navigate to="/" replace />} />
 

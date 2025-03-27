@@ -1,17 +1,16 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Calendar, FileText, UserPlus, DollarSign, ChevronLeft, 
-  PenSquare, FileSpreadsheet, ClipboardList, GanttChart,
-  Building, MapPin, Briefcase, Clock, User
+  PenSquare, ClipboardList, User, Building, MapPin, Clock
 } from "lucide-react";
 
-// Import the project tabs
+import ProjectTools from './ProjectTools';
+import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ProjectGeneralForm from '../forms/ProjectGeneralForm';
 import ProjectPhaseForm from '../forms/ProjectPhaseForm';
 import ProjectDateForm from '../forms/ProjectDateForm';
@@ -203,7 +202,7 @@ const ProjectDetail = () => {
                 
                 <div className="flex items-center justify-between text-sm">
                   <div className="text-gray-500 flex items-center">
-                    <Briefcase className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
+                    <Building className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
                     Maître d'ouvrage
                   </div>
                   <div>{project.projectOwner}</div>
@@ -250,63 +249,8 @@ const ProjectDetail = () => {
             </CardContent>
           </Card>
           
-          <Card className="border-gray-200">
-            <CardHeader className="pb-3 border-b border-gray-100">
-              <CardTitle className="text-lg">Outils rapides</CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm" 
-                asChild
-              >
-                <Link to={`/workspace/client-area/admin/projects/${projectId}/estimate`}>
-                  <DollarSign className="h-4 w-4 mr-2 text-khaki-600" />
-                  Devis d'honoraires
-                </Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm" 
-                asChild
-              >
-                <Link to={`/workspace/client-area/admin/projects/${projectId}/budget`}>
-                  <FileSpreadsheet className="h-4 w-4 mr-2 text-khaki-600" />
-                  Estimatif TCE
-                </Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm" 
-                asChild
-              >
-                <Link to={`/workspace/client-area/admin/projects/${projectId}/reports`}>
-                  <ClipboardList className="h-4 w-4 mr-2 text-khaki-600" />
-                  Comptes rendus
-                </Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm" 
-                asChild
-              >
-                <Link to={`/workspace/client-area/admin/projects/${projectId}/planning`}>
-                  <GanttChart className="h-4 w-4 mr-2 text-khaki-600" />
-                  Planning Gantt
-                </Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-sm" 
-                asChild
-              >
-                <Link to={`/workspace/client-area/admin/projects/${projectId}/documents`}>
-                  <FileText className="h-4 w-4 mr-2 text-khaki-600" />
-                  CCTP / CDPGF
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Intégration des outils du projet */}
+          <ProjectTools projectId={projectId || ''} />
         </div>
         
         <div className="lg:col-span-3">

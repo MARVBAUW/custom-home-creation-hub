@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -14,7 +13,8 @@ import {
   Calculator,
   FileSpreadsheet,
   ReceiptText,
-  Hammer
+  Hammer,
+  ChevronLeft
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import LogoutButton from '@/components/auth/LogoutButton';
@@ -34,67 +34,72 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
     { 
       href: '/workspace/client-area', 
       icon: <Home className="w-5 h-5" />, 
-      label: 'Tableau de bord' 
+      label: 'Tableau de bord',
+      showAlways: true
     },
     { 
       href: '/workspace/client-area/projects', 
       icon: <FileText className="w-5 h-5" />, 
-      label: 'Mes projets' 
+      label: 'Mes projets',
+      showAlways: true
     },
     { 
       href: '/workspace/client-area/messages', 
       icon: <MessageSquare className="w-5 h-5" />, 
-      label: 'Messages' 
+      label: 'Messages',
+      showAlways: true
     },
     { 
       href: '/workspace/client-area/budget', 
       icon: <CreditCard className="w-5 h-5" />, 
-      label: 'Budget & Paiements' 
+      label: 'Budget & Paiements',
+      showAlways: true
     },
     { 
       href: '/workspace/client-area/planning', 
       icon: <Clock className="w-5 h-5" />, 
-      label: 'Planning' 
+      label: 'Planning',
+      showAlways: true
     },
     { 
       href: '/workspace/client-area/profile', 
       icon: <User className="w-5 h-5" />, 
-      label: 'Mon profil' 
+      label: 'Mon profil',
+      showAlways: true
     },
   ];
 
-  // Ajouter les éléments de navigation pour les outils
-  const outilsNavItems = [
-    { 
-      href: '/workspace/client-area/estimation-travaux', 
-      icon: <Calculator className="w-5 h-5" />, 
-      label: 'Estimation travaux' 
-    },
-    { 
-      href: '/workspace/client-area/devis-honoraires', 
-      icon: <ReceiptText className="w-5 h-5" />, 
-      label: 'Devis honoraires' 
-    },
-  ];
-
-  // Ajouter les éléments de navigation administrateur si l'utilisateur est administrateur ou en mode admin
-  const adminNavItems = (isAdmin || isAdminMode) ? [
+  // Outils réservés aux administrateurs
+  const adminTools = [
     { 
       href: '/workspace/client-area/admin', 
       icon: <Settings className="w-5 h-5" />, 
-      label: 'Admin Dashboard' 
+      label: 'Admin Dashboard',
+      adminOnly: true
     },
     { 
       href: '/workspace/client-area/admin/clients', 
       icon: <Users className="w-5 h-5" />, 
-      label: 'Gestion Clients' 
+      label: 'Gestion Clients',
+      adminOnly: true
     },
     { 
       href: '/workspace/client-area/admin/projects', 
       icon: <FileSpreadsheet className="w-5 h-5" />, 
-      label: 'Gestion Projets' 
-    },
-  ] : [];
+      label: 'Gestion Projets',
+      adminOnly: true
+    }
+  ];
+
+  const backButton = location.pathname.includes('/admin') && (
+    <Link
+      to="/workspace/client-area"
+      className="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:text-khaki-800 hover:bg-khaki-100 rounded-md mb-4"
+    >
+      <ChevronLeft className="w-5 h-5 mr-2" />
+      Retour à l'espace client
+    </Link>
+  );
 
   return (
     <div className="h-full flex flex-col">
@@ -103,6 +108,8 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
           <span className="text-xl font-semibold text-khaki-800">Progineer</span>
           <span className="ml-1 text-sm text-gray-500">Espace client</span>
         </Link>
+        
+        {backButton}
         
         <nav className="space-y-1 px-3">
           {/* Éléments de navigation principaux */}
@@ -124,34 +131,8 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
             ))}
           </div>
           
-          {/* Séparateur pour les outils */}
-          <div className="pt-4 pb-2">
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Outils
-            </h3>
-          </div>
-          
-          {/* Éléments de navigation pour les outils */}
-          <div className="mb-6">
-            {outilsNavItems.map(item => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={cn(
-                  "flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-khaki-100 hover:text-khaki-800",
-                  location.pathname === item.href 
-                    ? "bg-khaki-100 text-khaki-800" 
-                    : "text-gray-600"
-                )}
-              >
-                <span className="mr-3 text-gray-500">{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
-          </div>
-          
-          {/* Éléments de navigation administrateur (si applicable) */}
-          {adminNavItems.length > 0 && (
+          {/* Éléments de navigation administrateur */}
+          {(isAdmin || isAdminMode) && (
             <>
               <div className="pt-4 pb-2">
                 <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -159,7 +140,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
                 </h3>
               </div>
               <div>
-                {adminNavItems.map(item => (
+                {adminTools.map(item => (
                   <Link
                     key={item.href}
                     to={item.href}

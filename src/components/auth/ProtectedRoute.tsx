@@ -2,15 +2,18 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  adminOnly?: boolean;
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, adminOnly = false }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
   const location = useLocation();
+
+  const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -19,8 +22,14 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         description: "Veuillez vous connecter pour accéder à cette page",
         variant: "destructive",
       });
+    } else if (!loading && adminOnly && !isAdmin) {
+      toast({
+        title: "Accès refusé",
+        description: "Cette section est réservée aux administrateurs",
+        variant: "destructive",
+      });
     }
-  }, [user, loading]);
+  }, [user, loading, adminOnly, isAdmin]);
 
   if (loading) {
     return (
@@ -33,6 +42,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (!user) {
     return <Navigate to="/workspace/sign-in" state={{ from: location }} replace />;
+  }
+
+  if (adminOnly && !isAdmin) {
+    return <Navigate to="/workspace/client-area" replace />;
   }
 
   return <>{children}</>;
