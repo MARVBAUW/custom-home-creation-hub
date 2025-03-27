@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -12,16 +13,14 @@ interface AdminSwitchProps {
 const AdminSwitch = ({ isAdminMode, onToggle }: AdminSwitchProps) => {
   const { user } = useAuth();
   
-  // For debugging
+  // Pour debugging
   console.log("AdminSwitch - User data:", user);
   console.log("AdminSwitch - Is admin?", user?.user_metadata?.is_admin);
   
-  // Check if the user is an administrator (for testing purposes, showing for all users)
-  // In production, uncomment the line below and remove the test override
-  // const isAdmin = user?.user_metadata?.is_admin === true;
-  const isAdmin = true; // Temporarily show for all users for testing
+  // Vérifier si l'utilisateur est un administrateur
+  const isAdmin = user?.user_metadata?.is_admin === true;
   
-  // If the user isn't admin, don't render the switch
+  // Si l'utilisateur n'est pas admin, ne pas afficher le switch
   if (!isAdmin) return null;
   
   return (
