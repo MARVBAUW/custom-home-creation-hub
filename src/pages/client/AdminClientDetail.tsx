@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -8,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { useParams, Link } from 'react-router-dom';
-import ClientDetailView from '@/components/admin/client-management/ClientDetailView';
+import ClientDetailView from '@/components/admin/client-management/client-detail/ClientDetailView';
 
 const AdminClientDetail = () => {
   const { clientId } = useParams<{ clientId: string }>();
