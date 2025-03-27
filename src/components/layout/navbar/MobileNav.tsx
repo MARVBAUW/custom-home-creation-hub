@@ -24,7 +24,7 @@ const MobileNav = ({
           {navLinks.map(item => <React.Fragment key={item.name}>
               {/* Main menu item */}
               <li className="border-b border-stone-200">
-                <Link to={item.path} className="block py-5 text-xs font-medium text-stone-800 hover:text-khaki-800">
+                <Link to={item.path} className="block text-xs font-medium text-stone-800 hover:text-khaki-800 py-[30px]">
                   {item.name}
                 </Link>
               </li>
