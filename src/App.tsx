@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from "./components/theme/ThemeProvider"
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -59,34 +59,32 @@ const App = () => {
         <HelmetProvider>
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
-            <Router>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/estimation" element={<Estimation />} />
-                <Route path="/legal-notice" element={<LegalNotice />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/cgu" element={<CGU />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/sitemap" element={<Sitemap />} />
-                <Route path="/workspace" element={<Workspace />} />
-                <Route path="/sign-in" element={<SignIn />} />
-                <Route path="/client-onboarding" element={<ClientOnboarding />} />
-                
-                {/* Client Area Routes */}
-                <Route path="/workspace/client-area" element={<ClientArea />} />
-                <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
-                <Route path="/workspace/client-area/projects/:projectId" element={<ClientProjectDetail />} />
-                
-                {/* Admin Routes */}
-                <Route path="/workspace/client-area/admin" element={<AdminDashboard />} />
-                <Route path="/workspace/client-area/admin/projects" element={<AdminProjects />} />
-                <Route path="/workspace/client-area/admin/projects/:projectId" element={<AdminProjectDetail />} />
-                <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={<AdminAssignClient />} />
-                <Route path="/workspace/client-area/admin/projects/create" element={<AdminProjectCreation />} />
-                <Route path="/workspace/client-area/admin/planning" element={<AdminProjectsOverview />} />
-              </Routes>
-            </Router>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/estimation" element={<Estimation />} />
+              <Route path="/legal-notice" element={<LegalNotice />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/cgu" element={<CGU />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/sitemap" element={<Sitemap />} />
+              <Route path="/workspace" element={<Workspace />} />
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/client-onboarding" element={<ClientOnboarding />} />
+              
+              {/* Client Area Routes */}
+              <Route path="/workspace/client-area" element={<ClientArea />} />
+              <Route path="/workspace/client-area/projects" element={<ClientProjects />} />
+              <Route path="/workspace/client-area/projects/:projectId" element={<ClientProjectDetail />} />
+              
+              {/* Admin Routes */}
+              <Route path="/workspace/client-area/admin" element={<AdminDashboard />} />
+              <Route path="/workspace/client-area/admin/projects" element={<AdminProjects />} />
+              <Route path="/workspace/client-area/admin/projects/:projectId" element={<AdminProjectDetail />} />
+              <Route path="/workspace/client-area/admin/projects/:projectId/assign-client" element={<AdminAssignClient />} />
+              <Route path="/workspace/client-area/admin/projects/create" element={<AdminProjectCreation />} />
+              <Route path="/workspace/client-area/admin/planning" element={<AdminProjectsOverview />} />
+            </Routes>
             <Toaster />
           </AuthProvider>
         </HelmetProvider>
