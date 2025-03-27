@@ -13,13 +13,14 @@ import AdminSwitch from '@/components/client/AdminSwitch';
 import { useToast } from '@/hooks/use-toast';
 import AdminDashboard from '@/components/admin/AdminDashboard';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import Navbar from '@/components/layout/Navbar';
 
 const ClientArea = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
   const [isAdminMode, setIsAdminMode] = useState(false);
   const { toast } = useToast();
   
-  // Persister le mode admin dans localStorage
+  // Persist admin mode in localStorage
   useEffect(() => {
     const savedMode = localStorage.getItem('adminMode');
     if (savedMode === 'true') {
@@ -55,6 +56,8 @@ const ClientArea = () => {
         <meta name="description" content="Accédez à votre espace client Progineer pour suivre l'avancement de vos projets de construction et rénovation." />
       </Helmet>
 
+      <Navbar />
+
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white dark:from-gray-900 dark:to-gray-950">
         <Container size="lg">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
@@ -72,7 +75,7 @@ const ClientArea = () => {
               </p>
             </div>
             
-            {/* Admin Switch always shown for testing */}
+            {/* Admin Switch and Theme Toggle */}
             <div className="md:mt-0 mt-4 flex items-center gap-3">
               <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
               <ThemeToggle />

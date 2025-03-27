@@ -13,18 +13,22 @@ interface AdminSwitchProps {
 const AdminSwitch = ({ isAdminMode, onToggle }: AdminSwitchProps) => {
   const { user } = useAuth();
   
-  // Pour debugging
+  // Log for debugging
   console.log("AdminSwitch - User data:", user);
-  console.log("AdminSwitch - Is admin?", user?.user_metadata?.is_admin);
   
-  // Vérifier si l'utilisateur est un administrateur
-  const isAdmin = user?.user_metadata?.is_admin === true;
+  // Check if the user is an administrator
+  // We're checking both user_metadata.is_admin and specific email addresses
+  const isAdmin = 
+    (user?.user_metadata?.is_admin === true) || 
+    (user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email));
   
-  // Si l'utilisateur n'est pas admin, ne pas afficher le switch
+  console.log("AdminSwitch - Is admin?", isAdmin);
+  
+  // If the user is not admin, don't display the switch
   if (!isAdmin) return null;
   
   return (
-    <div className="flex items-center space-x-3 bg-white rounded-lg px-3 py-2 border border-gray-200 shadow-sm">
+    <div className="flex items-center space-x-3 bg-white dark:bg-gray-800 rounded-lg px-3 py-2 border border-gray-200 dark:border-gray-700 shadow-sm">
       <Shield className={`h-4 w-4 ${isAdminMode ? 'text-red-500' : 'text-gray-400'}`} />
       <div className="flex items-center space-x-2">
         <Switch 
