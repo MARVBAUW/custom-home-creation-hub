@@ -35,6 +35,25 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ clientId }) => {
     updatedAt: new Date().toISOString(),
   };
   
+  // Format client data for ClientHeader component
+  const headerClientData = {
+    name: `${client.firstName} ${client.lastName}`,
+    email: client.email
+  };
+  
+  // Format client data for ClientContactCard component
+  const contactClientData = {
+    name: `${client.firstName} ${client.lastName}`,
+    email: client.email,
+    phone: client.phone,
+    company: client.company,
+    address: `${client.address}, ${client.city}, ${client.postalCode}, ${client.country}`,
+    registrationDate: client.createdAt,
+    projectType: "residential", // Default value since it's required
+    projectLocation: client.city || "Non spécifié",
+    projectBudget: "Non spécifié" // Default value since it's required
+  };
+  
   // Placeholder for projects
   const availableProjects = [];
 
@@ -48,7 +67,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ clientId }) => {
               Retour à la liste
             </Link>
           </Button>
-          <ClientHeader client={client} />
+          <ClientHeader client={headerClientData} />
         </div>
         
         <div className="flex flex-wrap gap-2">
@@ -75,7 +94,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ clientId }) => {
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-1 space-y-4">
-          <ClientContactCard client={client} />
+          <ClientContactCard client={contactClientData} />
           <ClientProjectsCard client={client} />
         </div>
         
