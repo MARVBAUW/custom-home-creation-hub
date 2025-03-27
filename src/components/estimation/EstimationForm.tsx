@@ -15,7 +15,7 @@ const EstimationForm = () => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white group transition-all duration-300 transform hover:scale-105">
+          <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white !text-white group transition-all duration-300 transform hover:scale-105">
             <Construction className="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" />
             Estimer gratuitement mon projet
           </Button>
@@ -34,7 +34,7 @@ const EstimationForm = () => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white group transition-all duration-300 transform hover:scale-105">
+        <Button className="bg-progineer-gold hover:bg-progineer-gold/90 text-white !text-white group transition-all duration-300 transform hover:scale-105">
           <Construction className="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" />
           Estimer gratuitement mon projet
         </Button>

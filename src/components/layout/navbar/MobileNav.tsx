@@ -30,24 +30,53 @@ const MobileNav = ({
   
   return (
     <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
-      <Container className="flex flex-col h-[calc(100vh-4rem)] py-2">
-        <ul className="space-y-0.5 overflow-y-auto">
+      <Container className="flex flex-col h-[calc(100vh-4rem)] py-4">
+        <ul className="space-y-1 overflow-y-auto">
           {navLinks.map(item => (
             <React.Fragment key={item.name}>
               {/* Main menu item */}
               <li className="border-b border-stone-200">
-                <Link to={item.path} className="block text-xs font-medium text-stone-800 hover:text-khaki-800 py-[30px]">
-                  {item.name}
-                </Link>
+                {item.subLinks ? (
+                  <button 
+                    onClick={() => toggleDropdown(openDropdown === item.name ? null : item.name)}
+                    className="flex items-center justify-between w-full text-sm font-medium text-stone-800 hover:text-khaki-800 py-3 px-1"
+                  >
+                    <span>{item.name}</span>
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className={`transition-transform ${openDropdown === item.name ? "rotate-180" : ""}`}
+                    >
+                      <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                  </button>
+                ) : (
+                  <Link 
+                    to={item.path} 
+                    className="block text-sm font-medium text-stone-800 hover:text-khaki-800 py-3 px-1"
+                  >
+                    {item.name}
+                  </Link>
+                )}
               </li>
               
-              {/* Sub-links if they exist */}
-              {item.subLinks && (
-                <li className="pl-3 mb-1">
-                  <ul className="space-y-0.5 border-l border-stone-200 pl-2">
+              {/* Sub-links if they exist and dropdown is open */}
+              {item.subLinks && openDropdown === item.name && (
+                <li className="pl-3 mb-2 bg-gray-50 rounded-md">
+                  <ul className="space-y-1 border-l border-stone-200 pl-2 py-2">
                     {item.subLinks.map(subLink => (
                       <li key={subLink.name}>
-                        <Link to={subLink.path} className="block py-1 text-xs text-stone-600 hover:text-khaki-800">
+                        <Link 
+                          to={subLink.path} 
+                          className="block py-2 px-2 text-sm text-stone-600 hover:text-khaki-800 hover:bg-gray-100 rounded-md"
+                        >
                           {subLink.name}
                         </Link>
                       </li>
@@ -59,36 +88,36 @@ const MobileNav = ({
           ))}
         </ul>
         
-        <div className="mt-1 space-y-1.5 pt-1">
-          <div className="flex flex-col space-y-0.5">
-            <a href="tel:+33783762156" className="flex items-center py-1 text-stone-700">
-              <Phone className="h-2.5 w-2.5 mr-1 text-khaki-600" />
-              <span className="text-xs">+33 7 83 76 21 56</span>
+        <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
+          <div className="flex flex-col space-y-2">
+            <a href="tel:+33783762156" className="flex items-center py-2 text-stone-700">
+              <Phone className="h-4 w-4 mr-2 text-khaki-600" />
+              <span className="text-sm">+33 7 83 76 21 56</span>
             </a>
-            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-1 text-stone-700">
-              <Mail className="h-2.5 w-2.5 mr-1 text-khaki-600" />
-              <span className="text-xs">progineer.moe@gmail.com</span>
+            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-2 text-stone-700">
+              <Mail className="h-4 w-4 mr-2 text-khaki-600" />
+              <span className="text-sm">progineer.moe@gmail.com</span>
             </a>
           </div>
           
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {user ? (
               <>
-                <Button href="/workspace/client-area" className="w-full justify-center py-1 text-xs">
+                <Button href="/workspace/client-area" className="w-full justify-center py-2 text-sm">
                   Mon espace
                 </Button>
                 <LogoutButton 
                   variant="outline"
                   size="sm" 
-                  className="w-full justify-center py-1 text-xs border-red-200 text-red-600"
+                  className="w-full justify-center py-2 text-sm border-red-200 text-red-600"
                 />
               </>
             ) : (
               <>
-                <Button href="/contact" className="w-full justify-center py-1 text-xs">
+                <Button href="/contact" className="w-full justify-center py-2 text-sm">
                   Contact
                 </Button>
-                <Button href="/workspace" variant="outline" className="w-full justify-center py-1 text-xs">
+                <Button href="/workspace" variant="outline" className="w-full justify-center py-2 text-sm">
                   Espace
                 </Button>
               </>

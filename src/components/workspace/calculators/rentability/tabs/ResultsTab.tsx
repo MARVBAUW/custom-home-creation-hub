@@ -162,7 +162,10 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
                   ))}
                 </Pie>
                 <Legend />
-                <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toFixed(0) : value} €`} />
+                <ReTooltip formatter={(value: any) => {
+                  // Check if value is a number before calling toFixed
+                  return typeof value === 'number' ? `${value.toFixed(0)} €` : `${value} €`;
+                }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -179,7 +182,10 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toFixed(0) : value} €`} />
+                <ReTooltip formatter={(value: any) => {
+                  // Check if value is a number before calling toFixed
+                  return typeof value === 'number' ? `${value.toFixed(0)} €` : `${value} €`;
+                }} />
                 <Bar dataKey="value" fill="#A28554" />
               </BarChart>
             </ResponsiveContainer>
@@ -198,7 +204,10 @@ export const ResultsTab: React.FC<ResultsTabProps> = ({
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="year" />
               <YAxis />
-              <ReTooltip formatter={(value: any) => `${typeof value === 'number' ? value.toLocaleString('fr-FR') : value} €`} />
+              <ReTooltip formatter={(value: any) => {
+                // Check if value is a number before calling toLocaleString
+                return typeof value === 'number' ? `${value.toLocaleString('fr-FR')} €` : `${value} €`;
+              }} />
               <Area type="monotone" dataKey="propertyValue" stackId="1" stroke="#8884d8" fill="#8884d8" name="Valeur du bien" />
               <Area type="monotone" dataKey="cumulativeCashFlow" stackId="2" stroke="#82ca9d" fill="#82ca9d" name="Cash flow cumulé" />
               <Area type="monotone" dataKey="netWorth" stackId="3" stroke="#ffc658" fill="#ffc658" name="Patrimoine net" />

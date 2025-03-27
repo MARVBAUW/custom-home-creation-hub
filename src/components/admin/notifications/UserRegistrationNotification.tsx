@@ -12,6 +12,7 @@ import {
   CardHeader, 
   CardTitle 
 } from '@/components/ui/card';
+import { useAuth } from '@/hooks/useAuth';
 
 interface UserRegistrationProps {
   userId: string;
@@ -129,8 +130,15 @@ const UserRegistrationNotification: React.FC<UserRegistrationProps> = ({
 export const UserRegistrationNotificationsContainer = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const { toast } = useToast();
+  const { user } = useAuth();
+  
+  // Vérifier si l'utilisateur est un administrateur
+  const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
 
   useEffect(() => {
+    // Si l'utilisateur n'est pas admin, ne pas afficher les notifications
+    if (!isAdmin) return;
+    
     // Load notifications from localStorage
     const storedNotifications = JSON.parse(localStorage.getItem('userRegistrationNotifications') || '[]');
     setNotifications(storedNotifications.filter((n: any) => !n.seen).slice(0, 3)); // Show only 3 most recent
@@ -157,7 +165,7 @@ export const UserRegistrationNotificationsContainer = () => {
     }, 10000);
     
     return () => clearInterval(interval);
-  }, [toast]);
+  }, [toast, isAdmin]);
 
   const handleDismiss = (userId: string) => {
     // Mark as seen in localStorage
@@ -171,7 +179,8 @@ export const UserRegistrationNotificationsContainer = () => {
     setNotifications(notifications.filter(n => n.userId !== userId));
   };
 
-  if (notifications.length === 0) return null;
+  // Si l'utilisateur n'est pas admin OU s'il n'y a pas de notifications, ne rien afficher
+  if (!isAdmin || notifications.length === 0) return null;
 
   return (
     <div className="fixed bottom-4 right-4 z-50 w-80 space-y-2">

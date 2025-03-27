@@ -55,17 +55,17 @@ const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps)
         
         {user ? (
           <div className="flex items-center space-x-2">
-            <Button href="/workspace/client-area" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+            <Button href="/workspace/client-area" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white !text-white whitespace-nowrap">
               Mon espace
             </Button>
             <LogoutButton variant="outline" size="sm" className="border-red-200 hover:bg-red-50 text-red-600" />
           </div>
         ) : (
           <>
-            <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 whitespace-nowrap">
+            <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white !text-white whitespace-nowrap">
               Estimer mon projet
             </Button>
-            <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 whitespace-nowrap">
+            <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 text-stone-700 whitespace-nowrap">
               Contact
             </Button>
           </>
