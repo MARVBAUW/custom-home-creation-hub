@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
@@ -33,7 +34,7 @@ const Parrainage = () => {
 
   return (
     <>
-      <SEO
+      <SEO 
         title="Programme de parrainage | Progineer - Architecte & Maître d'œuvre en PACA"
         description="Programme d'apporteurs d'affaires Progineer. Recommandez-nous et recevez une commission pour chaque nouveau client. Architecte et maître d'œuvre en région PACA."
         keywords="parrainage travaux, apporteur d'affaires architecte, recommandation maître d'œuvre, commission travaux PACA"

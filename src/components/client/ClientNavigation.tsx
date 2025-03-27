@@ -16,7 +16,8 @@ import {
   BarChart,
   FileCheck,
   Building,
-  Bell
+  Bell,
+  Calculator
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import LogoutButton from '@/components/auth/LogoutButton';
@@ -32,7 +33,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   // Vérifier si l'email est un email administrateur
   const isAdmin = user?.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(user.email);
   
-  // Navigation items for clients only - simplified
+  // Navigation items for clients only - enriched
   const clientNavItems = [
     { 
       href: '/workspace/client-area', 
@@ -55,13 +56,28 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
       label: 'Planning',
     },
     { 
+      href: '/workspace/client-area/estimate', 
+      icon: <Calculator className="w-5 h-5" />, 
+      label: 'Estimation de travaux',
+    },
+    { 
+      href: '/workspace/client-area/budget', 
+      icon: <CreditCard className="w-5 h-5" />, 
+      label: 'Suivi financier',
+    },
+    { 
       href: '/workspace/client-area/profile', 
       icon: <User className="w-5 h-5" />, 
       label: 'Mon profil',
     },
+    { 
+      href: '/workspace/client-area/settings', 
+      icon: <Settings className="w-5 h-5" />, 
+      label: 'Paramètres',
+    },
   ];
 
-  // Outils réservés aux administrateurs - expanded
+  // Outils réservés aux administrateurs - homogénéisés
   const adminNavItems = [
     { 
       href: '/workspace/client-area/admin', 
