@@ -48,7 +48,7 @@ const CTASection = () => {
           
           <div className="relative">
             <div className="rounded-2xl overflow-hidden shadow-xl">
-              <img src="https://images.unsplash.com/photo-1600566753376-12c8ab8e17a5?q=80&w=2070&auto=format&fit=crop" alt="Maison contemporaine avec grande baie vitrée" className="w-full h-auto object-cover" />
+              <img src="https://images.unsplash.com/photo-1600566753376-12c8ab8e17a5?q=80&w=2070&auto=format&fit=crop" alt="Maison contemporaine avec grande baie vitrée" className="w-full h-auto object-fill" />
             </div>
             <div className="absolute -bottom-6 -riight-20 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
               <div className="flex items-center justify-between mb-2">
