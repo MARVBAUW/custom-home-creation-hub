@@ -7,6 +7,9 @@ import { menuiseriesDTUs } from './menuiseries';
 import { plomberieDTUs } from './plomberie';
 import { electriciteDTUs } from './electricite';
 import { toitureDTUs } from './toiture';
+import { fondationsDTUs } from './fondations';
+import { facadeDTUs } from './facade';
+import { assainissementDTUs } from './assainissement';
 
 // Combine all DTU data from different categories
 export const dtuRecaps: DTU[] = [
@@ -16,5 +19,8 @@ export const dtuRecaps: DTU[] = [
   ...menuiseriesDTUs,
   ...plomberieDTUs,
   ...electriciteDTUs,
-  ...toitureDTUs
+  ...toitureDTUs,
+  ...fondationsDTUs,
+  ...facadeDTUs,
+  ...assainissementDTUs
 ];
