@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { dtuRecaps } from './data/dtuRecapData';
+import { dtuRecaps } from './data/dtu';
 import { SearchAndFilterBar } from './dtu/SearchAndFilterBar';
 import { DTUGridList } from './dtu/DTUGridList';
 import { DTUDetailDialog } from './dtu/DTUDetailDialog';
