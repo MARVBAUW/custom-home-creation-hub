@@ -25,11 +25,16 @@ export const SearchAndFilterBar: React.FC<SearchAndFilterBarProps> = ({
       <div className="flex-1 relative">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
         <Input 
-          placeholder="Rechercher un DTU..." 
+          placeholder="Rechercher un DTU, une règle ou un contenu spécifique..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
         />
+        {searchTerm && (
+          <div className="mt-1 text-xs text-gray-500">
+            Recherche dans les titres, descriptions, règles et sections des DTUs
+          </div>
+        )}
       </div>
       
       {/* Filtre par catégorie */}

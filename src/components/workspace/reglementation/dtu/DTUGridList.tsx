@@ -7,9 +7,10 @@ import { DTU } from './types';
 interface DTUGridListProps {
   dtus: DTU[];
   onViewDetails: (dtu: DTU) => void;
+  searchTerm?: string;
 }
 
-export const DTUGridList: React.FC<DTUGridListProps> = ({ dtus, onViewDetails }) => {
+export const DTUGridList: React.FC<DTUGridListProps> = ({ dtus, onViewDetails, searchTerm = '' }) => {
   if (dtus.length === 0) {
     return <DTUEmptyState />;
   }
@@ -17,7 +18,12 @@ export const DTUGridList: React.FC<DTUGridListProps> = ({ dtus, onViewDetails })
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {dtus.map((dtu) => (
-        <DTUCard key={dtu.id} dtu={dtu} onViewDetails={onViewDetails} />
+        <DTUCard 
+          key={dtu.id} 
+          dtu={dtu} 
+          onViewDetails={onViewDetails} 
+          searchTerm={searchTerm}
+        />
       ))}
     </div>
   );

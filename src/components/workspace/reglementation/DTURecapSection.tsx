@@ -38,12 +38,14 @@ export const DTURecapSection = () => {
       <DTUGridList 
         dtus={filteredDTUs} 
         onViewDetails={handleDTUClick} 
+        searchTerm={searchTerm}
       />
       
       <DTUDetailDialog 
         dtu={selectedDTU} 
         isOpen={isDetailOpen} 
         onOpenChange={setIsDetailOpen} 
+        searchTerm={searchTerm}
       />
     </div>
   );
