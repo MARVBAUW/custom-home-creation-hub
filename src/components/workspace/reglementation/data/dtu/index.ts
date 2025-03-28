@@ -10,6 +10,9 @@ import { toitureDTUs } from './toiture';
 import { fondationsDTUs } from './fondations';
 import { facadeDTUs } from './facade';
 import { assainissementDTUs } from './assainissement';
+import { incendieDTUs } from './incendie';
+import { accessibiliteDTUs } from './accessibilite';
+import { urbanismeDTUs } from './urbanisme';
 
 // Combine all DTU data from different categories
 export const dtuRecaps: DTU[] = [
@@ -22,5 +25,8 @@ export const dtuRecaps: DTU[] = [
   ...toitureDTUs,
   ...fondationsDTUs,
   ...facadeDTUs,
-  ...assainissementDTUs
+  ...assainissementDTUs,
+  ...incendieDTUs,
+  ...accessibiliteDTUs,
+  ...urbanismeDTUs
 ];
