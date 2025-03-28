@@ -5,6 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthChangeEvent } from '@supabase/supabase-js';
 
+// Define a type that aligns with the actual string values Supabase uses
+type AuthEvent = 'SIGNED_IN' | 'SIGNED_OUT' | 'USER_UPDATED' | 'USER_DELETED' | 'PASSWORD_RECOVERY' | 'TOKEN_REFRESHED' | 'SIGNED_UP';
+
 export const UserRegistrationNotificationsContainer = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const { user } = useAuth();
@@ -19,7 +22,7 @@ export const UserRegistrationNotificationsContainer = () => {
     if (!isInitialized) {
       setIsInitialized(true);
       
-      const subscription = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
+      const subscription = supabase.auth.onAuthStateChange((event: AuthChangeEvent | AuthEvent, session) => {
         // Only notify the admin about others' activity, not their own
         if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && 
             session?.user && 
