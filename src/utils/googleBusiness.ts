@@ -29,7 +29,7 @@ export const fetchGoogleBusinessData = async (): Promise<GoogleBusinessData> => 
     // In a real implementation, this would make API calls to the Google Places API
     // Example: https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJLaxkkP-_yRIRJrPRw2qQEJs&fields=name,formatted_address,formatted_phone_number,opening_hours,website,rating,reviews&key=YOUR_API_KEY
     
-    // For now, return data based on the actual Google Business Profile: https://g.co/kgs/tKYZGPy
+    // Pour simuler une API, nous retournons des horaires en format français
     return {
       name: "Progineer",
       formatted_address: "Marseille, France",
@@ -39,13 +39,13 @@ export const fetchGoogleBusinessData = async (): Promise<GoogleBusinessData> => 
       business_status: "OPERATIONAL",
       opening_hours: {
         weekday_text: [
-          "Monday: 9:00 AM – 6:00 PM",
-          "Tuesday: 9:00 AM – 6:00 PM",
-          "Wednesday: 9:00 AM – 6:00 PM",
-          "Thursday: 9:00 AM – 6:00 PM",
-          "Friday: 9:00 AM – 6:00 PM",
-          "Saturday: Closed",
-          "Sunday: Closed"
+          "Lundi: 9h00 - 18h00",
+          "Mardi: 9h00 - 18h00",
+          "Mercredi: 9h00 - 18h00",
+          "Jeudi: 9h00 - 18h00",
+          "Vendredi: 9h00 - 18h00",
+          "Samedi: Sur rendez-vous",
+          "Dimanche: Fermé"
         ]
       },
       rating: 5.0,
