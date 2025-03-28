@@ -19,7 +19,7 @@ export const UserRegistrationNotificationsContainer = () => {
     if (!isInitialized) {
       setIsInitialized(true);
       
-      const subscription = supabase.auth.onAuthStateChange((event, session) => {
+      const subscription = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
         // Only notify the admin about others' activity, not their own
         if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && 
             session?.user && 
@@ -41,7 +41,6 @@ export const UserRegistrationNotificationsContainer = () => {
         }
         
         // Special handling for new user registration (only for admins)
-        // Correctly handle the event as a valid AuthChangeEvent type
         if (event === 'SIGNED_UP' && isAdmin) {
           toast({
             title: "Nouvel utilisateur",
