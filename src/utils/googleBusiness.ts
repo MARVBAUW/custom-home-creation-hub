@@ -61,8 +61,8 @@ export const fetchGoogleBusinessData = async (): Promise<GoogleBusinessData> => 
           text: "Une équipe à l'écoute et très compétente. Ils ont parfaitement compris nos besoins et ont livré un projet qui dépassait nos attentes."
         }
       ],
-      siret: "951 045 509 00015",
-      tva: "FR 24 951045509"
+      siret: "935 185 785 00018",
+      tva: "FR 80 935185785"
     };
   } catch (error) {
     console.error('Error fetching Google Business data:', error);

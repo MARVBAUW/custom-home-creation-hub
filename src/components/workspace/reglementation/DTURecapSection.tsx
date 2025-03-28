@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -27,6 +26,7 @@ interface DTURecap {
 }
 
 export const DTURecapSection = () => {
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('tous');
   const [selectedDTU, setSelectedDTU] = useState<DTURecap | null>(null);
@@ -60,6 +60,7 @@ export const DTURecapSection = () => {
   };
 
   return (
+    
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         {/* Barre de recherche */}
@@ -140,7 +141,7 @@ export const DTURecapSection = () => {
                 <Button 
                   variant="outline" 
                   className="w-full text-khaki-600 border-khaki-200"
-                  onClick={() => handleDTUClick(dtu)}
+                  onClick={() => handleDTUClick(dtu as DTURecap)}
                 >
                   Voir la fiche complète
                   <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
