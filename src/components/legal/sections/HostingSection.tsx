@@ -13,6 +13,9 @@ const HostingSection = () => {
         Le site progineer.fr est hébergé par la société Hostinger, UAB, immatriculée sous le numéro 
         302994952, dont le siège social est situé au Kaunas, Jonavos g. 60C, LT-44192, Lituanie.
       </p>
+      <p className="mt-2">
+        Numéro de TVA intracommunautaire : FR80935185785
+      </p>
     </LegalSection>
   );
 };

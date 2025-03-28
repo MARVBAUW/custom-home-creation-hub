@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Network, Handshake, Building2, TrendingUp, ShieldCheck, Users, FileCheck, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const PartenairesContent = () => {
   return (
@@ -96,8 +96,8 @@ const PartenairesContent = () => {
         </div>
         
         <div className="mt-8 text-center">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-8">
-            Demander à devenir partenaire
+          <Button className="bg-green-600 hover:bg-green-700 text-white px-8" asChild>
+            <a href="#partner-form">Demander à devenir partenaire</a>
           </Button>
         </div>
       </section>
@@ -247,10 +247,19 @@ const PartenairesContent = () => {
         </div>
         
         <div className="mt-8 text-center">
-          <Button className="bg-green-600 hover:bg-green-700 text-white px-8">
-            Contactez-nous pour en savoir plus
+          <Button className="bg-green-600 hover:bg-green-700 text-white px-8" asChild>
+            <a href="#partner-form">Contactez-nous pour en savoir plus</a>
           </Button>
         </div>
+      </section>
+
+      <section id="partner-form" className="scroll-mt-24">
+        <h2 className="text-2xl font-semibold mb-6 text-center">Formulaire de demande de partenariat</h2>
+        <p className="text-center text-gray-600 mb-8">
+          Complétez ce formulaire pour nous faire part de votre intérêt à rejoindre notre réseau de partenaires.
+        </p>
+        
+        {/* Placeholder for the form - it will be filled by PartnersSection component */}
       </section>
     </div>
   );

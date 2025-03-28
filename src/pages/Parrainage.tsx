@@ -5,9 +5,9 @@ import Container from '@/components/common/Container';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import ParrainageContent from '@/components/parrainage/ParrainageContent';
+import ParrainageForm from '@/components/parrainage/ParrainageForm';
 import { motion } from 'framer-motion';
 import SEOFooter from '@/components/common/SEOFooter';
-import CTACTA from '@/components/common/CTACTA';
 
 const Parrainage = () => {
   return (
@@ -48,7 +48,18 @@ const Parrainage = () => {
         </Container>
       </motion.section>
 
-      <CTACTA />
+      <motion.section 
+        className="py-16 bg-khaki-50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <Container size="sm">
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+            <ParrainageForm />
+          </div>
+        </Container>
+      </motion.section>
 
       <SEOFooter text="Programme de parrainage Progineer - Architecte et maître d'œuvre en région PACA. Recommandez nos services de construction et rénovation à votre entourage et recevez une prime allant jusqu'à 800€ par projet concrétisé. Offre valable à Marseille, Nice, Toulon et dans toute la région PACA." />
       

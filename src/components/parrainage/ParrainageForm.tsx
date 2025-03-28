@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
@@ -21,11 +20,11 @@ import { toast } from '@/components/ui/use-toast';
 const formSchema = z.object({
   firstName: z.string().min(2, { message: 'Le prénom doit contenir au moins 2 caractères' }),
   lastName: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères' }),
-  company: z.string().min(2, { message: 'Le nom de l\'entreprise doit contenir au moins 2 caractères' }),
-  activity: z.string().min(1, { message: 'Veuillez sélectionner une activité' }),
   email: z.string().email({ message: 'Veuillez entrer une adresse email valide' }),
   phone: z.string().min(10, { message: 'Veuillez entrer un numéro de téléphone valide' }),
-  message: z.string().min(10, { message: 'Veuillez décrire votre activité (minimum 10 caractères)' }),
+  referralName: z.string().min(2, { message: 'Le nom doit contenir au moins 2 caractères' }),
+  referralPhone: z.string().min(10, { message: 'Veuillez entrer un numéro de téléphone valide' }),
+  message: z.string().optional(),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: 'Vous devez accepter les conditions' }),
   }),
@@ -33,16 +32,16 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const PartnerContactForm = () => {
+const ParrainageForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
-      company: '',
-      activity: '',
       email: '',
       phone: '',
+      referralName: '',
+      referralPhone: '',
       message: '',
       acceptTerms: false,
     },
@@ -54,19 +53,19 @@ const PartnerContactForm = () => {
     
     toast({
       title: "Demande envoyée",
-      description: "Votre demande de partenariat a bien été envoyée. Nous vous contacterons rapidement.",
+      description: "Votre demande de parrainage a bien été envoyée. Nous vous contacterons rapidement.",
     });
     
     form.reset();
   };
 
   return (
-    <div id="partner-form" className="scroll-mt-24">
-      <h3 className="text-2xl font-semibold mb-6">Devenir partenaire Progineer</h3>
+    <div>
+      <h2 className="text-2xl font-semibold mb-6 text-center">Inscrivez-vous au programme</h2>
       
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="firstName"
@@ -96,48 +95,7 @@ const PartnerContactForm = () => {
             />
           </div>
           
-          <FormField
-            control={form.control}
-            name="company"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Entreprise</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nom de votre entreprise" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="activity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Activité</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez votre activité" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="artisan">Artisan</SelectItem>
-                    <SelectItem value="entreprise">Entreprise du BTP</SelectItem>
-                    <SelectItem value="architecte">Architecte / Designer</SelectItem>
-                    <SelectItem value="bureau-etudes">Bureau d'études</SelectItem>
-                    <SelectItem value="immobilier">Professionnel de l'immobilier</SelectItem>
-                    <SelectItem value="fournisseur">Fournisseur de matériaux</SelectItem>
-                    <SelectItem value="autre">Autre</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="email"
@@ -167,15 +125,49 @@ const PartnerContactForm = () => {
             />
           </div>
           
+          <div className="border-t border-gray-200 pt-6 mt-6">
+            <h3 className="text-lg font-medium mb-4">Informations sur votre filleul</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="referralName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nom du filleul</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Nom de la personne référée" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="referralPhone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Téléphone du filleul</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Numéro de téléphone du filleul" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          
           <FormField
             control={form.control}
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Présentez-vous et votre activité</FormLabel>
+                <FormLabel>Message (optionnel)</FormLabel>
                 <FormControl>
                   <Textarea 
-                    placeholder="Parlez-nous de votre expérience, vos compétences et vos motivations pour rejoindre notre réseau."
+                    placeholder="Informations complémentaires sur le projet de votre filleul"
                     className="min-h-[100px]"
                     {...field} 
                   />
@@ -207,7 +199,7 @@ const PartnerContactForm = () => {
           />
           
           <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-            Envoyer ma candidature
+            Envoyer ma demande de parrainage
           </Button>
         </form>
       </Form>
@@ -215,4 +207,4 @@ const PartnerContactForm = () => {
   );
 };
 
-export default PartnerContactForm;
+export default ParrainageForm;
