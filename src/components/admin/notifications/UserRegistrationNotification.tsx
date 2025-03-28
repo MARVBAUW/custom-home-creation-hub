@@ -41,7 +41,7 @@ export const UserRegistrationNotificationsContainer = () => {
         }
         
         // Special handling for new user registration (only for admins)
-        if (event === 'SIGNED_UP' as AuthChangeEvent && isAdmin) {
+        if (event === 'SIGNED_UP' && isAdmin) {
           toast({
             title: "Nouvel utilisateur",
             description: `L'utilisateur ${session?.user?.email || 'Inconnu'} vient de s'inscrire.`,
