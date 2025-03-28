@@ -2,7 +2,7 @@
 import React from 'react';
 import { FileText, Video, Eye, ArrowDownToLine } from 'lucide-react';
 import { GuideDocument } from './types';
-import { categories } from './guidesData';
+import { guideCategories } from './guidesData';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -66,7 +66,7 @@ export const DocumentDialog: React.FC<DocumentDialogProps> = ({
             <div className="flex justify-between">
               <span className="text-gray-500">Catégorie:</span>
               <span className="font-medium">
-                {categories.find(c => c.id === selectedDocument.categoryId)?.name}
+                {guideCategories.find(c => c.id === selectedDocument.categoryId)?.name}
               </span>
             </div>
           </div>

@@ -2,22 +2,22 @@
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { GuideDocument } from './types';
-import { guides, categories } from './guidesData';
+import { guideDocuments, guideCategories } from './guidesData';
 
 export const useGuides = () => {
   const { toast } = useToast();
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>("tous");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
   const [selectedDocument, setSelectedDocument] = useState<GuideDocument | null>(null);
 
   // Featured guides
-  const featuredGuides = guides.filter(guide => guide.featured);
+  const featuredGuides = guideDocuments.filter(guide => guide.featured);
 
   // Filter guides based on active category and search query
-  const filteredGuides = guides.filter(guide => {
-    const matchesCategory = activeCategory === "all" || guide.categoryId === activeCategory;
+  const filteredGuides = guideDocuments.filter(guide => {
+    const matchesCategory = activeCategory === "tous" || guide.categoryId === activeCategory;
     const matchesSearch = guide.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           guide.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -68,8 +68,8 @@ export const useGuides = () => {
     setSelectedDocument,
     featuredGuides,
     filteredGuides,
-    categories,
-    guides,
+    categories: guideCategories,
+    guides: guideDocuments,
     handleDocumentClick,
     handleDownload,
     handlePreview
