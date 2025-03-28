@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -8,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+
 const formSchema = z.object({
   firstName: z.string().min(2, {
     message: 'Le prénom doit contenir au moins 2 caractères'
@@ -28,13 +30,13 @@ const formSchema = z.object({
     message: 'Veuillez entrer un numéro de téléphone valide'
   }),
   message: z.string().optional(),
-  acceptTerms: z.literal(true, {
-    errorMap: () => ({
-      message: 'Vous devez accepter les conditions'
-    })
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: 'Vous devez accepter les conditions'
   })
 });
+
 type FormValues = z.infer<typeof formSchema>;
+
 const ParrainageForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -49,6 +51,7 @@ const ParrainageForm = () => {
       acceptTerms: false
     }
   });
+
   const onSubmit = (data: FormValues) => {
     console.log(data);
     // Here you would typically send the data to your backend
@@ -59,6 +62,7 @@ const ParrainageForm = () => {
     });
     form.reset();
   };
+
   return <div>
       <h2 className="text-2xl font-semibold mb-6 text-center">Inscrivez-vous au programme</h2>
       
@@ -165,4 +169,5 @@ const ParrainageForm = () => {
       </Form>
     </div>;
 };
+
 export default ParrainageForm;
