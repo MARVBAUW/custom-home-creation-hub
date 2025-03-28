@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { AuthChangeEvent } from '@supabase/supabase-js';
 
 export const UserRegistrationNotificationsContainer = () => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -40,7 +41,8 @@ export const UserRegistrationNotificationsContainer = () => {
         }
         
         // Special handling for new user registration (only for admins)
-        if (event === 'SIGNED_UP' && isAdmin) {
+        // Using type assertion to fix the TypeScript error
+        if (event === 'SIGNED_UP' as AuthChangeEvent && isAdmin) {
           toast({
             title: "Nouvel utilisateur",
             description: `L'utilisateur ${session?.user?.email || 'Inconnu'} vient de s'inscrire.`,
