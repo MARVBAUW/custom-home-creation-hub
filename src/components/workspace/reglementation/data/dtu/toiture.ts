@@ -130,5 +130,48 @@ export const toitureDTUs: DTU[] = [
         content: "La hauteur minimale des relevés d'étanchéité est de 15 cm au-dessus de la protection, réduite à 10 cm dans le cas de terrasses privatives de surface inférieure à 100 m²."
       }
     ]
+  },
+  {
+    id: "dtu-40-35",
+    title: "DTU 40.35 - Couvertures en plaques nervurées métalliques",
+    category: "Toiture",
+    description: "Plaques nervurées issues de tôles d'acier revêtues",
+    lastUpdate: "Mai 2022",
+    rules: [
+      {
+        title: "Pente minimale",
+        content: "La pente minimale pour une couverture en plaques nervurées métalliques est de 5% (3°) avec recouvrement adapté et joints d'étanchéité.",
+        type: "standard"
+      },
+      {
+        title: "Recouvrement longitudinal",
+        content: "Le recouvrement longitudinal doit être d'au moins une onde complète et comporter un joint d'étanchéité en zones exposées.",
+        type: "standard"
+      },
+      {
+        title: "Risque de condensation",
+        content: "Dans les bâtiments non chauffés, prévoir une solution anti-condensation (feutre absorbant, isolation adaptée) pour éviter les gouttelettes sous la couverture.",
+        type: "warning"
+      },
+      {
+        title: "Fixations adaptées",
+        content: "Utiliser des fixations avec rondelles d'étanchéité EPDM de diamètre 19 mm minimum et les placer en sommet d'onde pour garantir l'étanchéité.",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "Le DTU 40.35 s'applique aux couvertures en plaques nervurées métalliques fabriquées à partir de tôles d'acier revêtues pour des bâtiments de toute destination."
+      },
+      {
+        title: "Types de plaques",
+        content: "Les plaques peuvent être en acier galvanisé, galvanisé prélaqué, ou en aluminium. L'épaisseur minimale est de 0,63 mm pour l'acier et 0,70 mm pour l'aluminium."
+      },
+      {
+        title: "Ventilation de la sous-face",
+        content: "La ventilation de la sous-face de couverture doit être assurée par une lame d'air ventilée de 20 mm minimum, avec entrées d'air en partie basse et sorties en partie haute."
+      }
+    ]
   }
 ];

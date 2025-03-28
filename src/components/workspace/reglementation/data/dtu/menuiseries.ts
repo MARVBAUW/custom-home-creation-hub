@@ -44,5 +44,48 @@ export const menuiseriesDTUs: DTU[] = [
         content: "L'étanchéité à l'air doit être assurée de manière continue sur tout le pourtour de la menuiserie, à l'interface entre le dormant et le gros œuvre."
       }
     ]
+  },
+  {
+    id: "dtu-36-2",
+    title: "DTU 36.2 - Menuiseries intérieures en bois",
+    category: "Menuiseries",
+    description: "Conception et installation des menuiseries intérieures en bois",
+    lastUpdate: "Juin 2023",
+    rules: [
+      {
+        title: "Jeu sous porte",
+        content: "Le jeu sous les portes doit être de 7 mm minimum pour les sols bruts et 5 mm pour les sols finis, pour permettre la ventilation et le passage sur revêtements.",
+        type: "standard"
+      },
+      {
+        title: "Humidité du bois",
+        content: "L'humidité du bois au moment de la pose doit être comprise entre 8% et 12% pour éviter les déformations ultérieures.",
+        type: "standard"
+      },
+      {
+        title: "Risque de déformation",
+        content: "Une menuiserie posée dans des locaux trop humides (>65% HR) ou insuffisamment chauffés peut se déformer de façon irréversible.",
+        type: "warning"
+      },
+      {
+        title: "Pose des huisseries",
+        content: "Dans les cloisons sèches, utiliser des pattes à scellement spécifiques type queue de carpe et prévoir au moins 3 points de fixation par montant d'huisserie.",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "Le DTU 36.2 traite de la conception et de la mise en œuvre des menuiseries intérieures en bois : portes, placards, habillages, plinthes, trappes et escaliers intérieurs."
+      },
+      {
+        title: "Tolérances dimensionnelles",
+        content: "La tolérance dimensionnelle pour les huisseries est de ±2 mm pour la hauteur et largeur. Pour les vantaux, elle est de ±1 mm en largeur et ±2 mm en hauteur."
+      },
+      {
+        title: "Finitions",
+        content: "Les menuiseries intérieures doivent recevoir au minimum une couche d'impression avant pose. La finition doit être appliquée après pose et ajustements, dans un délai maximum de 3 mois."
+      }
+    ]
   }
 ];

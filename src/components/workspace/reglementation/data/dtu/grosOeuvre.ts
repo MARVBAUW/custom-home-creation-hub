@@ -92,5 +92,48 @@ export const grosOeuvreDTUs: DTU[] = [
         content: "La longueur d'appui minimale des planchers sur les murs est de 2/3 de l'épaisseur du mur avec un minimum de 5 cm pour les planchers en béton armé."
       }
     ]
+  },
+  {
+    id: "dtu-21",
+    title: "DTU 21 - Exécution des ouvrages en béton",
+    category: "Gros œuvre",
+    description: "Règles d'exécution pour les ouvrages en béton",
+    lastUpdate: "Janvier 2023",
+    rules: [
+      {
+        title: "Enrobage minimal des armatures",
+        content: "L'enrobage minimal des armatures doit être de 3 cm pour les bétons exposés aux intempéries et 2 cm pour les bétons protégés.",
+        type: "standard"
+      },
+      {
+        title: "Cure du béton",
+        content: "La durée minimale de cure du béton doit être de 3 jours en conditions normales, et 7 jours en période froide (< 10°C).",
+        type: "standard"
+      },
+      {
+        title: "Protection contre la dessiccation",
+        content: "Par temps sec ou venteux, le béton frais doit être protégé contre le dessèchement par pulvérisation d'eau, application d'un produit de cure ou bâchage.",
+        type: "warning"
+      },
+      {
+        title: "Vibration efficace",
+        content: "Une vibration efficace du béton utilise un vibrateur plongé verticalement à intervalles réguliers, sans toucher les armatures ou le coffrage.",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "Le DTU 21 s'applique à l'exécution des ouvrages en béton armé coulé en place : fondations, murs, poteaux, poutres, planchers, etc."
+      },
+      {
+        title: "Classes d'exposition",
+        content: "Le choix de la classe d'exposition (XC, XD, XS, XF, XA) détermine la durabilité et la résistance minimale du béton selon les conditions environnementales auxquelles il sera soumis."
+      },
+      {
+        title: "Décoffrage",
+        content: "Le délai minimal avant décoffrage dépend de la température ambiante : 16h à 20°C, 24h à 15°C, 36h à 10°C pour les coffrages verticaux. Pour les coffrages horizontaux, ces délais sont doublés."
+      }
+    ]
   }
 ];

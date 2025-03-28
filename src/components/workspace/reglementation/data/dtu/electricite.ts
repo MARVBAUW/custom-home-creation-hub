@@ -87,5 +87,48 @@ export const electriciteDTUs: DTU[] = [
         content: "L'installation doit faire l'objet de tests de conformité à l'aide d'un testeur adapté permettant de vérifier la continuité, le câblage et les performances des liens."
       }
     ]
+  },
+  {
+    id: "nfc-14-100",
+    title: "NF C 14-100 - Installations de branchement électrique",
+    category: "Électricité",
+    description: "Conception et réalisation des branchements électriques",
+    lastUpdate: "Novembre 2021",
+    rules: [
+      {
+        title: "Emplacement du compteur",
+        content: "Le compteur électrique doit être installé dans un emplacement facilement accessible, à une hauteur comprise entre 1,00 m et 1,80 m du sol fini.",
+        type: "standard"
+      },
+      {
+        title: "Gaine technique",
+        content: "La gaine technique logement (GTL) doit avoir une largeur minimale de 600 mm et une profondeur de 200 mm pour accueillir les équipements électriques.",
+        type: "standard"
+      },
+      {
+        title: "Protection du branchement",
+        content: "Les canalisations de branchement enterrées doivent être protégées mécaniquement sur toute leur longueur par un fourreau ou une goulotte.",
+        type: "warning"
+      },
+      {
+        title: "Réserve d'espace",
+        content: "Prévoir une réserve d'espace de 20% dans la GTL pour permettre l'ajout futur d'équipements (Linky, domotique, etc.).",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "La norme NF C 14-100 s'applique aux installations de branchement à basse tension, depuis le réseau de distribution publique jusqu'au point de livraison (compteur)."
+      },
+      {
+        title: "Puissance de branchement",
+        content: "Le branchement peut être monophasé (jusqu'à 12 kVA) ou triphasé (jusqu'à 36 kVA), nécessitant des sections de câbles adaptées à la puissance souscrite."
+      },
+      {
+        title: "Liaison de téléreport",
+        content: "Une liaison de téléreport doit être prévue entre le compteur et un emplacement accessible depuis l'extérieur pour permettre le relevé à distance."
+      }
+    ]
   }
 ];

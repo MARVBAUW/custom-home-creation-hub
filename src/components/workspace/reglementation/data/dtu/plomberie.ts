@@ -87,5 +87,48 @@ export const plomberieDTUs: DTU[] = [
         content: "Pour les tronçons collectifs en colonnes montantes, la vitesse de référence est de 1,5 m/s maximum. Pour les branchements d'étage, elle est limitée à 1 m/s. Pour les tronçons en sous-sol ou vide sanitaire, elle peut atteindre 2 m/s."
       }
     ]
+  },
+  {
+    id: "dtu-60-2",
+    title: "DTU 60.2 - Canalisations en fonte",
+    category: "Plomberie",
+    description: "Canalisations en fonte, évacuations d'eaux usées et pluviales",
+    lastUpdate: "Septembre 2022",
+    rules: [
+      {
+        title: "Assemblage des tuyaux en fonte",
+        content: "L'assemblage des tuyaux en fonte doit être réalisé par joints élastomères conformes à la norme NF EN 681-1, correctement lubrifiés lors du montage.",
+        type: "standard"
+      },
+      {
+        title: "Fixation des canalisations",
+        content: "Les canalisations en fonte doivent être supportées par des colliers anti-vibratiles, espacés de 2 m maximum pour les canalisations horizontales.",
+        type: "standard"
+      },
+      {
+        title: "Protection anticorrosion",
+        content: "Dans les environnements agressifs, prévoir une protection complémentaire par peinture époxy ou gainage pour éviter la corrosion externe des canalisations en fonte.",
+        type: "warning"
+      },
+      {
+        title: "Isolation acoustique",
+        content: "Pour réduire les bruits d'écoulement, envelopper les canalisations traversant les locaux sensibles avec des matériaux acoustiques d'au moins 5 mm d'épaisseur.",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "Le DTU 60.2 s'applique aux canalisations d'évacuation en fonte pour les eaux usées, eaux vannes et eaux pluviales à l'intérieur des bâtiments."
+      },
+      {
+        title: "Types de fonte",
+        content: "Les canalisations peuvent être en fonte grise (ancienne génération) ou en fonte ductile/graphite sphéroïdal (SMU/SME) avec revêtement intérieur époxy pour les installations modernes."
+      },
+      {
+        title: "Calorifugeage",
+        content: "Les canalisations d'eaux usées et vannes situées en faux plafonds de locaux habitables doivent être calorifugées avec un matériau de 9 mm d'épaisseur minimum pour limiter le bruit et la condensation."
+      }
+    ]
   }
 ];
