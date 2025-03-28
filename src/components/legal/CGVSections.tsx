@@ -1,9 +1,6 @@
-
 import React from 'react';
-
 const CGVSections = () => {
-  return (
-    <div className="space-y-8">
+  return <div className="space-y-8">
       <section>
         <h2 className="text-xl font-semibold mb-4">1. Préambule</h2>
         <p>Les présentes Conditions Générales de Vente (CGV) constituent le socle de la relation commerciale entre la société Progineer (ci-après "le Prestataire") et ses clients professionnels ou particuliers (ci-après "le Client").</p>
@@ -129,13 +126,11 @@ const CGVSections = () => {
         <p>Pour toute information, question ou réclamation, le Client peut contacter le Prestataire aux coordonnées suivantes :</p>
         <div className="mt-2">
           <p><strong>Progineer</strong></p>
-          <p>Adresse : 78 Boulevard des Anglais, 13008 Marseille</p>
+          <p>Adresse : 365 Avenue du Prado, 13008 Marseille</p>
           <p>Email : progineer.moe@gmail.com</p>
           <p>Téléphone : +33 7 83 76 21 56</p>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default CGVSections;
