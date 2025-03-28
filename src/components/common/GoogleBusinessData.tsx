@@ -122,9 +122,7 @@ const GoogleBusinessData: React.FC<GoogleBusinessDataProps> = ({
     <>
       {structuredData && (
         <Helmet>
-          <script type="application/ld+json">
-            {JSON.stringify(structuredData)}
-          </script>
+          <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
         </Helmet>
       )}
       

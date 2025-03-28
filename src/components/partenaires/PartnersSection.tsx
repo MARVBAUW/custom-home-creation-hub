@@ -1,7 +1,8 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
-import PartnerContactForm from './PartnerContactForm'; // Add this import
+import PartnerContactForm from './PartnerContactForm';
+import GoogleBusinessData from '@/components/common/GoogleBusinessData';
 
 const PartnersSection = () => {
   return (
@@ -41,6 +42,10 @@ const PartnersSection = () => {
                   "Bureaux d'études techniques"
                 ]}
               />
+            </div>
+            
+            <div className="mt-8">
+              <GoogleBusinessData showHours={true} showExtraInfo={true} className="mt-8" />
             </div>
           </div>
           
