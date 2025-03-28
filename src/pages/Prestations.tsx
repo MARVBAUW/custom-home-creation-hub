@@ -1,12 +1,13 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building, Construction, Wrench, Settings, Plus, Info } from 'lucide-react';
+import { Building, Construction, Wrench, Settings, Plus, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 // Define service categories
 const services = [
@@ -23,6 +24,14 @@ const services = [
       'Gestion administrative (permis de construire, déclarations)',
       'Garantie de livraison dans les délais convenus'
     ],
+    detailedContent: `Notre service de construction sur mesure est conçu pour transformer vos idées en réalité concrète. 
+      Nous prenons en compte chaque détail de votre projet, depuis l'étude de faisabilité jusqu'à la livraison finale.
+      
+      Notre équipe d'architectes et d'ingénieurs élabore des plans personnalisés qui respectent vos besoins, vos goûts et votre budget.
+      Nous privilégions les matériaux durables et les techniques de construction innovantes pour garantir une qualité optimale.
+      
+      Tout au long du projet, nous assurons une communication transparente et régulière pour vous tenir informé de l'avancement des travaux.
+      Nous nous occupons de toutes les démarches administratives, y compris l'obtention du permis de construire et les différentes autorisations nécessaires.`
   },
   {
     id: 'renovation',
@@ -37,6 +46,19 @@ const services = [
       'Isolation thermique et phonique',
       'Installation de systèmes de chauffage écologiques'
     ],
+    detailedContent: `Notre service de rénovation énergétique est une solution complète pour améliorer l'efficacité énergétique de votre logement.
+      Nous commençons par un audit énergétique approfondi pour identifier les points faibles de votre habitat.
+      
+      Notre équipe propose ensuite des solutions adaptées à votre budget et à vos objectifs d'économie d'énergie:
+      - Isolation des combles, murs et planchers
+      - Remplacement des fenêtres et portes
+      - Installation de systèmes de chauffage performants
+      - Mise en place de ventilation efficace
+      
+      Nous vous accompagnons dans toutes les démarches pour obtenir les aides financières auxquelles vous avez droit,
+      comme MaPrimeRénov', les Certificats d'Économie d'Énergie (CEE), l'éco-prêt à taux zéro et les aides locales.
+      
+      Nos travaux respectent scrupuleusement les normes en vigueur, notamment la RE2020, pour garantir des performances optimales.`
   },
   {
     id: 'extension',
@@ -51,6 +73,19 @@ const services = [
       'Choix de matériaux durables et écologiques',
       'Optimisation de l\'apport lumineux naturel'
     ],
+    detailedContent: `Notre service d'extension et d'agrandissement vous permet d'augmenter votre surface habitable tout en valorisant votre bien immobilier.
+      Nous concevons des extensions qui s'intègrent harmonieusement à l'architecture existante de votre maison.
+      
+      Nos solutions d'agrandissement comprennent:
+      - Les extensions horizontales classiques
+      - Les surélévations pour ajouter un étage
+      - Les vérandas et jardins d'hiver
+      - Les aménagements de combles ou de sous-sols
+      
+      Chaque projet est unique et bénéficie d'une étude personnalisée pour optimiser l'espace, la luminosité et la circulation.
+      Nous accordons une attention particulière à la jonction entre le bâtiment existant et la nouvelle extension pour assurer une transition fluide et esthétique.
+      
+      Nos équipes gèrent l'ensemble des démarches administratives et techniques, depuis le dépôt du permis de construire jusqu'à la livraison finale.`
   },
   {
     id: 'optimisation',
@@ -65,6 +100,18 @@ const services = [
       'Optimisation des circulations',
       'Amélioration de l\'ergonomie du logement'
     ],
+    detailedContent: `Notre service d'optimisation d'espace transforme votre intérieur pour exploiter pleinement chaque mètre carré disponible.
+      Nous analysons vos habitudes de vie et vos besoins pour créer un aménagement sur mesure qui optimise la fonctionnalité de votre habitat.
+      
+      Nos solutions comprennent:
+      - La réorganisation des cloisons et des circulations
+      - La création de rangements intelligents et intégrés
+      - L'installation de meubles multifonctions
+      - L'aménagement d'espaces modulables adaptables à différents usages
+      - La création de mezzanines pour gagner de la surface
+      
+      Nos architectes d'intérieur conçoivent des solutions ergonomiques qui facilitent votre quotidien tout en valorisant l'esthétique de votre logement.
+      Nous portons une attention particulière à la lumière naturelle et aux perspectives visuelles pour créer une sensation d'espace et de confort.`
   },
   {
     id: 'design',
@@ -79,6 +126,19 @@ const services = [
       'Moodboards et visualisations 3D',
       'Suivi de la mise en œuvre'
     ],
+    detailedContent: `Notre service de design d'espace crée des intérieurs qui vous ressemblent, alliant esthétique, fonctionnalité et confort.
+      Nos designers d'intérieur travaillent en étroite collaboration avec vous pour comprendre vos goûts, vos besoins et votre style de vie.
+      
+      Notre approche comprend:
+      - L'analyse de vos espaces et de vos besoins
+      - La création de planches d'ambiance (moodboards)
+      - La sélection des matériaux, couleurs et finitions
+      - Le choix du mobilier et des éléments décoratifs
+      - La conception d'éclairages adaptés à chaque espace
+      - La réalisation de visualisations 3D pour vous projeter dans votre futur intérieur
+      
+      Nous accordons une attention particulière à la cohérence entre les différents espaces de votre logement pour créer une harmonie visuelle.
+      Notre objectif est de concevoir des espaces qui non seulement vous plaisent esthétiquement, mais qui améliorent également votre qualité de vie au quotidien.`
   },
   {
     id: 'administratif',
@@ -93,11 +153,25 @@ const services = [
       'Assistance aux recours éventuels',
       'Relations avec les services d\'urbanisme'
     ],
+    detailedContent: `Notre service de montage administratif vous libère des contraintes bureaucratiques liées à votre projet de construction ou de rénovation.
+      Nous prenons en charge l'ensemble des démarches administratives, depuis la préparation des dossiers jusqu'à l'obtention des autorisations.
+      
+      Notre accompagnement comprend:
+      - L'analyse des règles d'urbanisme applicables à votre projet
+      - La préparation complète des dossiers de permis de construire ou de déclaration préalable
+      - La rédaction des notices techniques et descriptives
+      - Le dépôt des dossiers auprès des services compétents
+      - Le suivi de l'instruction et les réponses aux demandes complémentaires
+      - L'assistance en cas de recours ou de difficultés particulières
+      
+      Notre expertise des réglementations et notre connaissance des procédures administratives nous permettent d'optimiser les délais et de sécuriser l'obtention de vos autorisations.
+      Nous nous chargeons également des déclarations d'ouverture et d'achèvement de chantier, ainsi que de l'obtention du certificat de conformité.`
   },
 ];
 
 const Prestations = () => {
   const location = useLocation();
+  const [openServiceId, setOpenServiceId] = useState<string | null>(null);
   
   // Scroll to hash on initial load and hash changes
   useEffect(() => {
@@ -113,6 +187,10 @@ const Prestations = () => {
       window.scrollTo(0, 0);
     }
   }, [location]);
+
+  const toggleService = (id: string) => {
+    setOpenServiceId(openServiceId === id ? null : id);
+  };
 
   return (
     <>
@@ -167,9 +245,36 @@ const Prestations = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button href="/contact" variant="outline" className="w-full justify-center">
-                    En savoir plus
-                  </Button>
+                  <Collapsible 
+                    className="w-full" 
+                    open={openServiceId === service.id}
+                    onOpenChange={() => toggleService(service.id)}
+                  >
+                    <CollapsibleTrigger className="w-full">
+                      <Button 
+                        variant="outline" 
+                        className="w-full justify-center flex items-center"
+                      >
+                        {openServiceId === service.id ? (
+                          <>Voir moins <ChevronUp className="ml-2 h-4 w-4" /></>
+                        ) : (
+                          <>En savoir plus <ChevronDown className="ml-2 h-4 w-4" /></>
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4">
+                      <div className="p-4 bg-khaki-50 rounded-lg">
+                        <p className="text-gray-700 whitespace-pre-line">
+                          {service.detailedContent}
+                        </p>
+                        <div className="mt-4">
+                          <Button href="/contact" className="w-full sm:w-auto justify-center mt-2">
+                            Demander un devis
+                          </Button>
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </CardFooter>
               </Card>
             ))}

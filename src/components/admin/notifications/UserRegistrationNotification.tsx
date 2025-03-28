@@ -3,9 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
-
-// Define a union type matching the expected Supabase auth events
-type AuthEvent = 'SIGNED_IN' | 'SIGNED_UP' | 'SIGNED_OUT' | 'USER_UPDATED' | 'USER_DELETED' | 'PASSWORD_RECOVERY';
+import { AuthChangeEvent } from '@supabase/supabase-js';
 
 export const UserRegistrationNotificationsContainer = () => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -21,7 +19,7 @@ export const UserRegistrationNotificationsContainer = () => {
     if (!isInitialized) {
       setIsInitialized(true);
       
-      const subscription = supabase.auth.onAuthStateChange((event, session) => {
+      const subscription = supabase.auth.onAuthStateChange((event: AuthChangeEvent, session) => {
         // Only notify the admin about others' activity, not their own
         if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && 
             session?.user && 
