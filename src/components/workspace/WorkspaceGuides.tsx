@@ -6,7 +6,7 @@ import { CategoryTabs } from './guides/CategoryTabs';
 import { ResourceStats } from './guides/ResourceStats';
 import { UpdateNotice } from './guides/UpdateNotice';
 import { DocumentDialog } from './guides/DocumentDialog';
-import { PreviewDialog } from './guides/PreviewDialog';
+import PreviewDialog from './guides/PreviewDialog';
 import { useGuides } from './guides/useGuides';
 
 const WorkspaceGuides = () => {
