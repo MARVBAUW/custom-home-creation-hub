@@ -21,8 +21,8 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
   handleDocumentClick
 }) => {
   return (
-    <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
-      <TabsList className="bg-muted mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+    <Tabs defaultValue="tous" value={activeCategory} onValueChange={setActiveCategory}>
+      <TabsList className="bg-muted mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
         {categories.map(category => {
           const IconComponent = category.icon;
           return (

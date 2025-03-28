@@ -1,4 +1,3 @@
-import React from 'react';
 import { BookOpen, FileText, Video, FileSpreadsheet, Calculator } from 'lucide-react';
 import { GuideCategory, GuideDocument } from './types';
 
@@ -24,7 +23,63 @@ export const guideDocuments: GuideDocument[] = [
     url: '/files/guide-construction.pdf',
     categoryId: 'construction',
     featured: true,
-    isNew: false
+    isNew: false,
+    content: `
+    # Guide complet de la construction
+
+    ## Introduction
+    Ce guide a été conçu pour vous accompagner à travers chaque étape de votre projet de construction, de la conception initiale à la remise des clés.
+
+    ## Sommaire
+    1. Définir votre projet et votre budget
+    2. Choisir un terrain adapté
+    3. Sélectionner les professionnels qui vous accompagneront
+    4. Comprendre les démarches administratives
+    5. Suivre efficacement le chantier
+    6. Réceptionner les travaux
+
+    ## 1. Définir votre projet et votre budget
+    La première étape, et sans doute la plus importante, est de définir clairement votre projet et d'établir un budget réaliste. Prenez en compte non seulement le coût de la construction, mais aussi les frais annexes comme :
+    - Les frais de notaire
+    - Les taxes d'aménagement
+    - Les raccordements aux réseaux
+    - L'aménagement extérieur
+    - Les éventuels dépassements de budget (prévoyez une marge de 10% minimum)
+
+    ## 2. Choisir un terrain adapté
+    Le choix du terrain déterminera en grande partie votre projet. Analysez :
+    - La localisation et l'environnement
+    - L'exposition et la topographie
+    - Les contraintes d'urbanisme (PLU, servitudes)
+    - L'accessibilité aux réseaux
+    - Les risques naturels et technologiques
+
+    ## 3. Sélectionner les professionnels
+    Selon la complexité de votre projet, vous pourrez faire appel à :
+    - Un architecte
+    - Un maître d'œuvre comme Progineer
+    - Un constructeur de maisons individuelles
+    - Des artisans si vous optez pour l'auto-construction partielle
+
+    ## 4. Comprendre les démarches administratives
+    Votre projet nécessitera différentes autorisations :
+    - Déclaration préalable de travaux ou permis de construire
+    - Déclaration d'ouverture de chantier
+    - Assurance dommage-ouvrage (obligatoire)
+    - Déclaration d'achèvement des travaux
+
+    ## 5. Suivre efficacement le chantier
+    Le suivi de chantier implique :
+    - Des réunions régulières avec les intervenants
+    - Le respect du planning
+    - La validation des différentes étapes
+    - La gestion des éventuelles modifications
+
+    ## 6. Réceptionner les travaux
+    La réception des travaux est une étape juridique importante qui marque le transfert de la garde de l'ouvrage et le point de départ des garanties.
+
+    Pour plus d'informations ou un accompagnement personnalisé, n'hésitez pas à contacter notre équipe.
+    `
   },
   {
     id: '2',
@@ -36,132 +91,211 @@ export const guideDocuments: GuideDocument[] = [
     url: '/files/renovation-energetique.pdf',
     categoryId: 'renovation',
     featured: true,
-    isNew: true
+    isNew: true,
+    content: `
+    # Guide de rénovation énergétique
+
+    ## Pourquoi rénover énergétiquement votre logement ?
+    La rénovation énergétique présente de nombreux avantages :
+    - Réduction significative des factures d'énergie
+    - Amélioration du confort thermique été comme hiver
+    - Valorisation de votre patrimoine immobilier
+    - Contribution à la réduction des émissions de gaz à effet de serre
+    - Possibilité de bénéficier d'aides financières importantes
+
+    ## Les points clés d'une rénovation énergétique efficace
+    
+    ### 1. L'isolation thermique
+    L'isolation est la priorité absolue. Concentrez-vous sur :
+    - L'isolation des combles (30% des pertes de chaleur)
+    - L'isolation des murs (25% des pertes)
+    - Le remplacement des fenêtres (13% des pertes)
+    - L'isolation des planchers bas (7% des pertes)
+
+    ### 2. La ventilation
+    Une bonne ventilation est essentielle pour :
+    - Évacuer l'humidité et les polluants
+    - Prévenir les problèmes de condensation et de moisissures
+    - Maintenir une bonne qualité d'air intérieur
+    
+    Les solutions comme la VMC double flux permettent de récupérer la chaleur de l'air extrait.
+
+    ### 3. Le chauffage et la production d'eau chaude
+    Après avoir isolé, optimisez votre système de chauffage :
+    - Pompe à chaleur (aérothermie ou géothermie)
+    - Chaudière à condensation
+    - Poêle à bois ou granulés
+    - Systèmes solaires thermiques
+
+    ### 4. Les énergies renouvelables
+    Complétez votre rénovation par l'installation de :
+    - Panneaux photovoltaïques
+    - Chauffe-eau solaire
+    - Récupération des eaux de pluie
+
+    ## La démarche pour une rénovation réussie
+    1. Réaliser un audit énergétique
+    2. Définir un plan de travaux cohérent
+    3. Faire appel à des professionnels qualifiés RGE
+    4. Prioriser les travaux selon leur impact énergétique
+    5. S'informer sur les aides financières disponibles
+
+    Chez Progineer, nous vous accompagnons dans toutes ces étapes pour une rénovation énergétique performante et adaptée à votre budget.
+    `
   },
   {
     id: '3',
-    title: 'RT 2020 expliquée',
-    description: 'Les principes et exigences de la Réglementation Thermique 2020 expliqués simplement.',
-    type: 'pdf',
-    fileSize: '2.5 MB',
-    lastUpdated: '2023-09-10',
-    url: '/files/rt-2020-expliquee.pdf',
+    title: 'Normes de construction parasismiques',
+    description: 'Comprendre les normes de construction parasismiques pour assurer la sécurité de votre bâtiment.',
+    type: 'text',
+    lastUpdated: '2023-09-01',
+    url: '#',
     categoryId: 'reglementation',
-    featured: false,
+    content: `
+    # Normes de construction parasismiques
+
+    ## Introduction
+    Les zones sismiques en France sont classées de 1 à 5, la zone 1 étant la moins à risque et la zone 5 la plus à risque. Les normes de construction parasismiques visent à protéger les bâtiments et leurs occupants en cas de tremblement de terre.
+
+    ## Les principes clés
+    - **Conception:** Le bâtiment doit être conçu pour résister aux forces sismiques.
+    - **Matériaux:** Utilisation de matériaux résistants et adaptés.
+    - **Construction:** Respect strict des règles de construction parasismiques.
+
+    ## Les obligations réglementaires
+    Les bâtiments construits dans les zones sismiques doivent respecter les normes Eurocode 8 et les règles de construction parasismiques françaises.
+
+    Pour plus d'informations, consultez le site du gouvernement.
+    `,
     isNew: false
   },
   {
     id: '4',
-    title: 'Comment calculer le coût de votre projet',
-    description: 'Méthodes et outils pour estimer le budget de votre projet de construction ou rénovation.',
+    title: 'Tutoriel : Installation de panneaux solaires',
+    description: 'Apprenez à installer des panneaux solaires sur votre toit grâce à ce tutoriel vidéo.',
     type: 'video',
-    duration: '15:42',
-    lastUpdated: '2023-11-05',
-    url: 'https://www.youtube.com/watch?v=example',
+    duration: '15 minutes',
+    lastUpdated: '2023-08-10',
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     categoryId: 'videos',
-    featured: true,
     isNew: false
   },
   {
     id: '5',
-    title: 'Choix des matériaux écologiques',
-    description: 'Guide pour sélectionner des matériaux durables et respectueux de l\'environnement.',
-    type: 'pdf',
-    fileSize: '3.2 MB',
-    lastUpdated: '2023-10-30',
-    url: '/files/materiaux-ecologiques.pdf',
-    categoryId: 'construction',
-    featured: false,
-    isNew: true
+    title: 'Calculateur de surface habitable',
+    description: 'Estimez rapidement la surface habitable de votre logement avec notre calculateur en ligne.',
+    type: 'text',
+    lastUpdated: '2023-07-01',
+    url: '#',
+    categoryId: 'calculateurs',
+    content: `
+    # Calculateur de surface habitable
+
+    ## Introduction
+    La surface habitable est la surface de plancher construite, après déduction des surfaces occupées par les murs, cloisons, marches et cages d'escalier, gaines, embrasures de portes et de fenêtres. Il n'est pas tenu compte de la superficie des dépendances.
+
+    ## Comment calculer la surface habitable ?
+    1. Mesurez la surface de chaque pièce.
+    2. Déduisez les surfaces non habitables (murs, escaliers, etc.).
+    3. Additionnez les surfaces habitables de chaque pièce.
+
+    Notre calculateur en ligne vous permet d'estimer rapidement votre surface habitable.
+    `,
+    isNew: false
   },
   {
     id: '6',
-    title: 'Tutorat: Installation d\'une VMC double flux',
-    description: 'Guide pas à pas pour installer correctement un système de ventilation mécanique contrôlée.',
-    type: 'video',
-    duration: '28:17',
-    lastUpdated: '2023-11-15',
-    url: 'https://www.youtube.com/watch?v=example2',
-    categoryId: 'videos',
-    featured: false,
-    isNew: true
+    title: 'Guide des aides financières à la rénovation',
+    description: 'Découvrez toutes les aides financières disponibles pour vos travaux de rénovation.',
+    type: 'pdf',
+    fileSize: '2.5 MB',
+    lastUpdated: '2023-06-15',
+    url: '/files/aides-financieres-renovation.pdf',
+    categoryId: 'renovation',
+    isNew: false
   },
   {
     id: '7',
-    title: 'Les aides financières pour la rénovation 2023',
-    description: 'Panorama complet des subventions et crédits d\'impôt disponibles cette année.',
-    type: 'pdf',
-    fileSize: '2.9 MB',
-    lastUpdated: '2023-11-28',
-    url: '/files/aides-financieres.pdf',
-    categoryId: 'renovation',
-    featured: true,
-    isNew: true
+    title: 'Les étapes clés d\'un projet de construction',
+    description: 'Ce guide vous détaille les étapes essentielles pour mener à bien votre projet de construction.',
+    type: 'text',
+    lastUpdated: '2023-05-20',
+    url: '#',
+    categoryId: 'construction',
+    content: `
+    # Les étapes clés d'un projet de construction
+
+    ## Introduction
+    Un projet de construction réussi nécessite une planification rigoureuse et le respect de certaines étapes clés.
+
+    ## Les étapes essentielles
+    1. Définition du projet et du budget.
+    2. Recherche et acquisition du terrain.
+    3. Conception du projet (plans, permis de construire).
+    4. Sélection des entreprises et artisans.
+    5. Réalisation des travaux.
+    6. Réception des travaux et levée des réserves.
+
+    Chaque étape est cruciale pour la réussite de votre projet.
+    `,
+    isNew: false
   },
   {
     id: '8',
-    title: 'Réglementation urbanisme 2023',
-    description: 'Les dernières mises à jour des PLU et règles d\'urbanisme à connaître avant de démarrer.',
-    type: 'pdf',
-    fileSize: '3.4 MB',
-    lastUpdated: '2023-11-02',
-    url: '/files/urbanisme-2023.pdf',
-    categoryId: 'reglementation',
-    featured: false,
+    title: 'Calculateur de prêt immobilier',
+    description: 'Estimez vos mensualités et votre capacité d\'emprunt avec notre calculateur de prêt immobilier.',
+    type: 'text',
+    lastUpdated: '2023-04-01',
+    url: '#',
+    categoryId: 'calculateurs',
+    content: `
+    # Calculateur de prêt immobilier
+
+    ## Introduction
+    Le financement est une étape importante de votre projet immobilier. Notre calculateur vous aide à estimer vos mensualités et votre capacité d'emprunt.
+
+    ## Comment utiliser le calculateur ?
+    1. Indiquez le montant du prêt souhaité.
+    2. Saisissez la durée du prêt en années.
+    3. Renseignez le taux d'intérêt annuel.
+
+    Le calculateur vous fournira une estimation de vos mensualités et du coût total du prêt.
+    `,
     isNew: false
   },
   {
     id: '9',
-    title: 'Extension de maison : guide complet',
-    description: 'De la conception aux finitions, tout ce qu\'il faut savoir pour agrandir votre maison.',
-    type: 'pdf',
-    fileSize: '4.5 MB',
-    lastUpdated: '2023-10-25',
-    url: '/files/guide-extension.pdf',
-    categoryId: 'construction',
-    featured: true,
+    title: 'La réglementation thermique RT2020',
+    description: 'Tout savoir sur la réglementation thermique RT2020 et ses exigences.',
+    type: 'text',
+    lastUpdated: '2023-03-10',
+    url: '#',
+    categoryId: 'reglementation',
+    content: `
+    # La réglementation thermique RT2020
+
+    ## Introduction
+    La RT2020 est la réglementation thermique en vigueur pour les constructions neuves. Elle vise à améliorer la performance énergétique des bâtiments et à réduire leur impact environnemental.
+
+    ## Les exigences de la RT2020
+    - Bâtiments à énergie positive (BEPOS) : production d'énergie supérieure à la consommation.
+    - Utilisation d'énergies renouvelables.
+    - Isolation thermique renforcée.
+    - Performance énergétique des équipements (chauffage, ventilation, éclairage).
+
+    La RT2020 est une étape importante vers la transition énergétique.
+    `,
     isNew: false
   },
   {
     id: '10',
-    title: 'Diagnostic énergétique : comment l\'interpréter',
-    description: 'Comprendre votre DPE et les recommandations pour améliorer votre logement.',
-    type: 'text',
-    lastUpdated: '2023-09-05',
-    url: '#',
-    categoryId: 'renovation',
-    featured: false,
-    isNew: false,
-    content: `
-    # Comment interpréter votre diagnostic énergétique
-
-    Le Diagnostic de Performance Énergétique (DPE) est un document qui évalue la consommation d'énergie d'un logement et son impact en termes d'émissions de gaz à effet de serre. Voici comment le comprendre :
-
-    ## Les classes énergétiques
-
-    Les logements sont classés de A à G :
-    - **A et B** : Très bonne performance énergétique
-    - **C et D** : Performance moyenne
-    - **E, F et G** : Performance médiocre à très mauvaise
-
-    ## Que regarder dans votre DPE ?
-
-    1. **La consommation d'énergie primaire** (en kWh/m²/an)
-    2. **Les émissions de gaz à effet de serre** (en kg CO₂/m²/an)
-    3. **Les recommandations de travaux** pour améliorer la performance
-
-    ## Impact sur la valeur immobilière
-
-    Depuis 2022, les logements classés F et G (appelés "passoires thermiques") font l'objet de restrictions progressives à la location. D'ici 2028, les logements classés E seront également concernés.
-
-    ## Comment améliorer votre DPE ?
-
-    - Isolation des combles et des murs
-    - Remplacement des fenêtres simple vitrage
-    - Modernisation du système de chauffage
-    - Installation d'une ventilation performante
-
-    Une rénovation énergétique bien menée peut faire gagner 2 à 3 classes énergétiques et valoriser significativement votre bien immobilier.
-    `
-  }
+    title: 'Tutoriel : Création d\'un plan de maison 3D',
+    description: 'Apprenez à créer un plan de maison en 3D avec un logiciel gratuit grâce à ce tutoriel vidéo.',
+    type: 'video',
+    duration: '20 minutes',
+    lastUpdated: '2023-02-01',
+    url: 'https://www.youtube.com/watch?v=YqeW9_5kURI',
+    categoryId: 'videos',
+    isNew: false
+  },
 ];

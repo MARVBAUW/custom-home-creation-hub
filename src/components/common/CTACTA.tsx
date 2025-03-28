@@ -38,7 +38,7 @@ const CTACTA = () => {
             <Button 
               href="/estimation" 
               onClick={handleEstimationClick}
-              className="bg-khaki-500 text-white hover:bg-khaki-600 !text-white"
+              className="bg-[#787346] text-white hover:bg-[#787346]/90 !text-white"
             >
               Estimer mon projet
             </Button>
