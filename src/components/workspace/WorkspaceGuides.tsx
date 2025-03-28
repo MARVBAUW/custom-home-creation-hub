@@ -1,14 +1,13 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Download, FileText, Video, Book, CheckCircle, Calendar, ArrowDownToLine, ExternalLink } from 'lucide-react';
+import { Download, FileText, Video, Book, CheckCircle, Calendar, ArrowDownToLine, ExternalLink, Eye } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Badge } from "@/components/ui/badge";
 
-// Types for our guide data
+// Types pour nos données de guide
 interface GuideCategory {
   id: string;
   name: string;
@@ -27,6 +26,7 @@ interface GuideDocument {
   categoryId: string;
   featured?: boolean;
   isNew?: boolean;
+  content?: string;
 }
 
 const WorkspaceGuides = () => {
@@ -34,6 +34,7 @@ const WorkspaceGuides = () => {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState<boolean>(false);
   const [selectedDocument, setSelectedDocument] = useState<GuideDocument | null>(null);
 
   // Define categories with icons
@@ -57,7 +58,8 @@ const WorkspaceGuides = () => {
       url: "/documents/guide-rt2020.pdf",
       categoryId: "regulations",
       featured: true,
-      isNew: true
+      isNew: true,
+      content: "# Guide complet sur la réglementation thermique RT 2020\n\nLa RT 2020 est une réglementation thermique française qui vise à réduire les consommations énergétiques des bâtiments neufs. Elle s'inscrit dans la continuité de la RT 2012, mais avec des exigences accrues en matière de performance énergétique.\n\n## Objectifs principaux\n\n- Réduire les consommations énergétiques des bâtiments neufs\n- Limiter l'impact carbone des constructions\n- Favoriser l'utilisation d'énergies renouvelables\n- Assurer le confort thermique en été comme en hiver\n\n## Points clés à retenir\n\n1. **Consommation énergétique maximale** : La RT 2020 impose une consommation maximale d'énergie primaire de 50 kWh/m²/an, contre 80 kWh/m²/an pour la RT 2012.\n2. **Bilan énergétique positif** : Les bâtiments devront produire plus d'énergie qu'ils n'en consomment.\n3. **Empreinte carbone** : La RT 2020 introduit une limite d'émissions de gaz à effet de serre sur l'ensemble du cycle de vie du bâtiment.\n4. **Matériaux biosourcés** : Encouragement à l'utilisation de matériaux d'origine biologique (bois, chanvre, paille, etc.).\n\n## Applications pratiques\n\nPour respecter la RT 2020, voici quelques solutions techniques recommandées :\n\n- Isolation renforcée des murs, toitures et planchers\n- Menuiseries à triple vitrage\n- Ventilation double flux avec récupération de chaleur\n- Systèmes de chauffage à haute performance énergétique\n- Installation de panneaux photovoltaïques\n- Orientation et conception bioclimatique du bâtiment\n\n## Calendrier d'application\n\n- **1er janvier 2022** : Application aux bâtiments publics et aux bureaux\n- **1er juillet 2022** : Extension aux logements collectifs\n- **1er janvier 2023** : Application à l'ensemble des constructions neuves\n\nN'hésitez pas à consulter un professionnel pour adapter votre projet aux exigences de la RT 2020."
     },
     {
       id: "guide-2",
@@ -237,14 +239,28 @@ const WorkspaceGuides = () => {
 
   // Handle document download
   const handleDownload = (url: string, title: string) => {
-    // In a real app, this would trigger an actual download
+    // Simulation de téléchargement
     toast({
       title: "Téléchargement démarré",
       description: `Le document "${title}" a commencé à se télécharger.`,
       duration: 5000
     });
     
+    // Dans une vraie application, on utiliserait window.open(url) ou une autre méthode
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = title.replace(/\s+/g, '-').toLowerCase() + '.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
     setIsDialogOpen(false);
+  };
+
+  // Handle document preview
+  const handlePreview = (document: GuideDocument) => {
+    setSelectedDocument(document);
+    setIsPreviewOpen(true);
   };
 
   return (
@@ -479,18 +495,64 @@ const WorkspaceGuides = () => {
                     Fermer
                   </Button>
                   <Button
+                    onClick={() => handlePreview(selectedDocument)}
+                    className="bg-khaki-500 hover:bg-khaki-600 text-white"
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Consulter
+                  </Button>
+                  <Button
                     onClick={() => handleDownload(selectedDocument.url, selectedDocument.title)}
-                    className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                    className="bg-khaki-500 hover:bg-khaki-600 text-white"
                   >
                     <ArrowDownToLine className="h-4 w-4 mr-2" />
                     Télécharger
                   </Button>
-                  {selectedDocument.type === 'video' && (
-                    <Button variant="outline">
-                      <ExternalLink className="h-4 w-4 mr-2" />
-                      Voir en plein écran
-                    </Button>
-                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Document preview panel */}
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+          {selectedDocument && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center">
+                  {getDocumentIcon(selectedDocument.type)}
+                  <span className="ml-2">{selectedDocument.title}</span>
+                </DialogTitle>
+              </DialogHeader>
+              
+              <div className="prose prose-sm max-w-none mt-4">
+                {selectedDocument.content ? (
+                  <div dangerouslySetInnerHTML={{ __html: selectedDocument.content.replace(/\n\n/g, '<br /><br />').replace(/\n/g, '<br />').replace(/# (.*)/g, '<h1>$1</h1>').replace(/## (.*)/g, '<h2>$1</h2>').replace(/\*\*(.*)\*\*/g, '<strong>$1</strong>').replace(/\*(.*)\*/g, '<em>$1</em>').replace(/- (.*)/g, '<li>$1</li>') }} />
+                ) : (
+                  <div className="text-center py-12">
+                    <FileText className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+                    <p className="text-gray-500">Aperçu non disponible pour ce document</p>
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex justify-between items-center pt-4 border-t mt-4">
+                <span className="text-sm text-gray-500">
+                  Mis à jour le {selectedDocument.lastUpdated}
+                </span>
+                <div className="flex space-x-3">
+                  <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>
+                    Fermer
+                  </Button>
+                  <Button
+                    onClick={() => handleDownload(selectedDocument.url, selectedDocument.title)}
+                    className="bg-khaki-500 hover:bg-khaki-600 text-white"
+                  >
+                    <ArrowDownToLine className="h-4 w-4 mr-2" />
+                    Télécharger
+                  </Button>
                 </div>
               </div>
             </>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +8,8 @@ import SurfaceCalculator from './calculators/SurfaceCalculator';
 import RentabilityCalculator from './calculators/RentabilityCalculator';
 import LoanCalculator from './calculators/LoanCalculator';
 import LoanComparisonCalculator from './calculators/LoanComparisonCalculator';
+import TaxCalculator from './calculators/TaxCalculator';
+import YieldCalculator from './calculators/YieldCalculator';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
@@ -68,53 +71,11 @@ const WorkspaceCalculateurs = () => {
         </TabsContent>
         
         <TabsContent value="tax">
-          <Card className="shadow-md">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-khaki-600" />
-                Calculateur de frais de notaire
-              </CardTitle>
-              <CardDescription>
-                Estimez précisément les frais de notaire pour votre acquisition immobilière
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center items-center py-16">
-              <div className="text-center">
-                <Calculator className="h-16 w-16 text-khaki-300 mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">Outil en cours de développement</h3>
-                <p className="text-muted-foreground max-w-md mx-auto mb-6">
-                  Notre calculateur de frais de notaire sera bientôt disponible.
-                  Il prendra en compte les spécificités régionales et le type de bien
-                  pour vous fournir une estimation précise.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <TaxCalculator />
         </TabsContent>
         
         <TabsContent value="yield">
-          <Card className="shadow-md">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <PercentIcon className="h-5 w-5 text-khaki-600" />
-                Calculateur de rendement brut/net
-              </CardTitle>
-              <CardDescription>
-                Évaluez rapidement le rendement de votre investissement immobilier
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center items-center py-16">
-              <div className="text-center">
-                <Calculator className="h-16 w-16 text-khaki-300 mx-auto mb-4" />
-                <h3 className="text-xl font-medium mb-2">Outil en cours de développement</h3>
-                <p className="text-muted-foreground max-w-md mx-auto mb-6">
-                  Notre calculateur de rendement sera bientôt disponible.
-                  Il vous permettra d'analyser en détail la performance 
-                  de votre investissement et de comparer différentes opportunités.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <YieldCalculator />
         </TabsContent>
       </Tabs>
       
@@ -153,7 +114,7 @@ const WorkspaceCalculateurs = () => {
       </div>
       
       <div className="bg-white p-6 rounded-xl border border-gray-200 mt-8">
-        <h3 className="text-lg font-medium mb-2">Fonctionnalités disponibles selon les outils</h3>
+        <h3 className="text-lg font-medium mb-2">Fonctionnalités disponibles</h3>
         <div className="overflow-x-auto">
           <table className="w-full mt-4 text-sm">
             <thead>
@@ -170,8 +131,8 @@ const WorkspaceCalculateurs = () => {
                 <td className="py-2 px-4">Surface habitable</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
-                <td className="py-2 px-4 text-red-600">✗</td>
-                <td className="py-2 px-4 text-red-600">✗</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2 px-4">Rentabilité locative</td>
@@ -189,24 +150,24 @@ const WorkspaceCalculateurs = () => {
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2 px-4">Comparateur de prêts</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
               </tr>
               <tr className="border-b border-gray-100">
                 <td className="py-2 px-4">Frais de notaire</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
               </tr>
               <tr>
                 <td className="py-2 px-4">Rendement brut/net</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
-                <td className="py-2 px-4 text-gray-400">En dev.</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
               </tr>
             </tbody>
           </table>
