@@ -41,8 +41,8 @@ export const UserRegistrationNotificationsContainer = () => {
         }
         
         // Special handling for new user registration (only for admins)
-        // Using type assertion to fix the TypeScript error
-        if (event === 'SIGNED_UP' as AuthChangeEvent && isAdmin) {
+        // Using type assertion to fix TypeScript error
+        if ((event as AuthChangeEvent) === 'SIGNED_UP' && isAdmin) {
           toast({
             title: "Nouvel utilisateur",
             description: `L'utilisateur ${session?.user?.email || 'Inconnu'} vient de s'inscrire.`,

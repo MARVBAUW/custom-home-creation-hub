@@ -95,7 +95,7 @@ export const DocumentDialog: React.FC<DocumentDialogProps> = ({
             {selectedDocument.isNew && (
               <div className="flex justify-between">
                 <span className="text-gray-500">Statut:</span>
-                <span className="font-medium text-green-600">Nouveau</span>
+                <span className="font-medium text-khaki-600">Nouveau</span>
               </div>
             )}
           </div>
