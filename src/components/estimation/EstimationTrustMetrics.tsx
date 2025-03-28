@@ -1,11 +1,8 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import EstimationForm from './EstimationForm';
-
 const EstimationTrustMetrics = () => {
-  return (
-    <section className="py-16 bg-progineer-light/70">
+  return <section className="py-16 bg-progineer-light/70">
       <Container size="md">
         <h2 className="text-2xl md:text-3xl font-rare tracking-wide mb-6 text-center text-progineer-gold">
           Notre expertise en chiffres
@@ -13,8 +10,8 @@ const EstimationTrustMetrics = () => {
         
         <div className="grid md:grid-cols-4 gap-6 mb-10">
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">+300</p>
-            <p className="text-progineer-dark/80">Projets réalisés</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">+50</p>
+            <p className="text-progineer-dark/80 px-[10px] font-thin">Références de projets réalisés</p>
           </div>
           
           <div className="text-center p-4">
@@ -23,12 +20,12 @@ const EstimationTrustMetrics = () => {
           </div>
           
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">15+</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">5+</p>
             <p className="text-progineer-dark/80">Années d'expérience</p>
           </div>
           
           <div className="text-center p-4">
-            <p className="text-4xl font-bold text-progineer-gold mb-2">+20</p>
+            <p className="text-4xl font-bold text-progineer-gold mb-2">+10</p>
             <p className="text-progineer-dark/80">Villes couvertes</p>
           </div>
         </div>
@@ -40,8 +37,6 @@ const EstimationTrustMetrics = () => {
           <EstimationForm />
         </div>
       </Container>
-    </section>
-  );
+    </section>;
 };
-
 export default EstimationTrustMetrics;
