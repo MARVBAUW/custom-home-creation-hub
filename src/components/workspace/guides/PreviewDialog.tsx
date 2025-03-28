@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X } from 'lucide-react';
+import { Download, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { GuideDocument } from './types';
 import { Button } from "@/components/ui/button";
@@ -70,28 +70,44 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
     }
   };
 
-  // Simple markdown to HTML converter
+  // Enhanced markdown to HTML converter
   const convertMarkdownToHtml = (markdown: string): string => {
     let html = markdown
       // Headers
       .replace(/^# (.*$)/gm, '<h1>$1</h1>')
       .replace(/^## (.*$)/gm, '<h2>$1</h2>')
       .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+      .replace(/^#### (.*$)/gm, '<h4>$1</h4>')
       // Bold
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       // Italic
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       // Lists
       .replace(/^\- (.*$)/gm, '<li>$1</li>')
+      // Links
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
       // Line breaks
       .replace(/\n/g, '<br/>');
     
     // Wrap lists in <ul>
-    html = html.replace(/<li>.*?<\/li>/g, match => {
-      return '<ul>' + match + '</ul>';
-    });
+    // Find all sequences of <li> tags
+    const listRegex = /(<li>.*?<\/li>)(<li>.*?<\/li>)+/g;
+    html = html.replace(listRegex, '<ul>$&</ul>');
     
     return html;
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return "Date non disponible";
+    }
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
   };
 
   return (
@@ -111,6 +127,19 @@ const PreviewDialog: React.FC<PreviewDialogProps> = ({
         
         <div className="mt-4">
           {renderContent()}
+        </div>
+
+        <div className="mt-4 flex justify-between items-center text-sm text-gray-500">
+          <span>Dernière mise à jour: {formatDate(selectedDocument.lastUpdated)}</span>
+          <Button 
+            onClick={() => handleDownload(selectedDocument.url, selectedDocument.title)}
+            variant="outline"
+            size="sm"
+            className="flex items-center"
+          >
+            <Download className="h-4 w-4 mr-2" />
+            Télécharger
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

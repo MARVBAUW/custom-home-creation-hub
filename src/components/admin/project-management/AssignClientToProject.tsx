@@ -8,8 +8,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Search, Users, UserCheck, RefreshCcw, Check, X, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// Improved client data interface
+interface ClientData {
+  id: string;
+  name: string;
+  email: string;
+  registrationDate: string;
+  hasProjects: boolean;
+}
+
 // Mock client data for demonstration
-const mockClients = [
+const mockClients: ClientData[] = [
   { id: '1', name: 'Jean Dupont', email: 'jean.dupont@example.com', registrationDate: '2023-05-15', hasProjects: true },
   { id: '2', name: 'Marie Martin', email: 'marie.martin@example.com', registrationDate: '2023-06-22', hasProjects: true },
   { id: '3', name: 'Sophie Lefebvre', email: 'sophie.lefebvre@example.com', registrationDate: '2023-07-10', hasProjects: true },
@@ -29,11 +38,19 @@ interface ClientItemProps {
 
 const ClientItem = ({ id, name, email, registrationDate, hasProjects, onSelect, isSelected }: ClientItemProps) => {
   const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
-  const formattedDate = new Date(registrationDate).toLocaleDateString('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+  
+  // Format date properly
+  const formattedDate = (() => {
+    try {
+      return new Date(registrationDate).toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    } catch (e) {
+      return "Date invalide";
+    }
+  })();
 
   return (
     <div 
@@ -90,17 +107,32 @@ const AssignClientToProject = () => {
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [projectData, setProjectData] = useState<any>(null);
+  const [clients, setClients] = useState<ClientData[]>(mockClients);
 
   useEffect(() => {
     // Fetch project data from localStorage
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const project = projects.find((p: any) => p.id === projectId);
-    if (project) {
-      setProjectData(project);
+    try {
+      const projects = JSON.parse(localStorage.getItem('projects') || '[]');
+      const project = projects.find((p: any) => p.id === projectId);
+      if (project) {
+        setProjectData(project);
+        
+        // If project already has a client assigned, pre-select it
+        if (project.clientId) {
+          setSelectedClientId(project.clientId);
+        }
+      }
+    } catch (error) {
+      console.error("Error loading project data:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger les données du projet.",
+        variant: "destructive",
+      });
     }
-  }, [projectId]);
+  }, [projectId, toast]);
 
-  const filteredClients = mockClients.filter(client => 
+  const filteredClients = clients.filter(client => 
     client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     client.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -117,8 +149,7 @@ const AssignClientToProject = () => {
 
     setIsLoading(true);
     
-    // Simulate API call and save to localStorage
-    setTimeout(() => {
+    try {
       // Get projects from localStorage
       const projects = JSON.parse(localStorage.getItem('projects') || '[]');
       const projectIndex = projects.findIndex((p: any) => p.id === projectId);
@@ -128,23 +159,48 @@ const AssignClientToProject = () => {
         projects[projectIndex].clientId = selectedClientId;
         
         // Find client details
-        const client = mockClients.find(c => c.id === selectedClientId);
-        projects[projectIndex].clientName = client?.name;
-        projects[projectIndex].clientEmail = client?.email;
+        const client = clients.find(c => c.id === selectedClientId);
+        if (client) {
+          projects[projectIndex].clientName = client.name;
+          projects[projectIndex].clientEmail = client.email;
+        }
+        
+        // Update client's projects list
+        const clientIndex = clients.findIndex(c => c.id === selectedClientId);
+        if (clientIndex !== -1) {
+          const updatedClients = [...clients];
+          updatedClients[clientIndex].hasProjects = true;
+          setClients(updatedClients);
+
+          // Store updated clients in localStorage (mock database)
+          localStorage.setItem('clients', JSON.stringify(updatedClients));
+        }
         
         // Save back to localStorage
         localStorage.setItem('projects', JSON.stringify(projects));
+        
+        toast({
+          title: "Client assigné avec succès",
+          description: `Le client ${client?.name || 'sélectionné'} a été assigné au projet.`,
+        });
+        
+        // Redirect back to project page
+        setTimeout(() => {
+          navigate(`/workspace/client-area/admin/projects/${projectId}`);
+        }, 1000);
+      } else {
+        throw new Error("Projet introuvable");
       }
-      
-      setIsLoading(false);
-      
+    } catch (error) {
+      console.error("Error assigning client:", error);
       toast({
-        title: "Client assigné avec succès",
-        description: "Le client a été assigné au projet.",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'assignation du client.",
+        variant: "destructive",
       });
-      
-      navigate(`/workspace/client-area/admin/projects/${projectId}`);
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -155,7 +211,7 @@ const AssignClientToProject = () => {
             <CardTitle className="text-xl">Assigner un client au projet</CardTitle>
             {projectData && (
               <p className="text-sm text-gray-500 mt-1">
-                Projet: {projectData.projectName} (Référence: {projectData.fileNumber || 'N/A'})
+                Projet: {projectData.projectName || 'Non défini'} (Référence: {projectData.fileNumber || 'N/A'})
               </p>
             )}
           </div>

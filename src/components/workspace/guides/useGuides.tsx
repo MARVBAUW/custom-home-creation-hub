@@ -31,17 +31,39 @@ export const useGuides = () => {
 
   // Handle document download
   const handleDownload = (url: string, title: string) => {
-    // Simulation de téléchargement
+    // Check if the URL is valid
+    if (!url || url === '#') {
+      toast({
+        title: "Téléchargement indisponible",
+        description: `Le document "${title}" n'est pas disponible au téléchargement pour le moment.`,
+        duration: 3000
+      });
+      return;
+    }
+    
     toast({
       title: "Téléchargement démarré",
       description: `Le document "${title}" a commencé à se télécharger.`,
       duration: 5000
     });
     
-    // Dans une vraie application, on utiliserait window.open(url) ou une autre méthode
+    // Téléchargement du document
+    let fileExtension = 'pdf';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      // For YouTube videos, open in a new tab instead
+      window.open(url, '_blank');
+      return;
+    } else if (url.endsWith('.pdf')) {
+      fileExtension = 'pdf';
+    } else if (url.endsWith('.docx')) {
+      fileExtension = 'docx';
+    } else if (url.endsWith('.xlsx')) {
+      fileExtension = 'xlsx';
+    }
+    
     const link = document.createElement('a');
     link.href = url;
-    link.download = title.replace(/\s+/g, '-').toLowerCase() + '.pdf';
+    link.download = title.replace(/\s+/g, '-').toLowerCase() + '.' + fileExtension;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -53,6 +75,7 @@ export const useGuides = () => {
   const handlePreview = (document: GuideDocument) => {
     setSelectedDocument(document);
     setIsPreviewOpen(true);
+    setIsDialogOpen(false);
   };
 
   return {

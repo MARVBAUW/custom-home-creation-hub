@@ -19,25 +19,31 @@ export const UserRegistrationNotificationsContainer = () => {
       setIsInitialized(true);
       
       const subscription = supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'USER_UPDATED' && session?.user) {
-          // No need to notify admin of their own actions
-          if (isAdmin && session.user.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(session.user.email)) {
-            return;
-          }
+        // Only notify the admin about others' activity, not their own
+        if ((event === 'USER_UPDATED' || event === 'SIGNED_IN') && 
+            session?.user && 
+            isAdmin && 
+            session.user.email && 
+            !['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(session.user.email)) {
           
-          toast({
-            title: "Utilisateur mis à jour",
-            description: `L'utilisateur ${session.user.email} a mis à jour son profil.`,
-          });
-        } else if (event === 'SIGNED_IN' && session?.user) {
-          // No need to notify admin of their own login
-          if (isAdmin && session.user.email && ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'].includes(session.user.email)) {
-            return;
+          if (event === 'USER_UPDATED') {
+            toast({
+              title: "Utilisateur mis à jour",
+              description: `L'utilisateur ${session.user.email} a mis à jour son profil.`,
+            });
+          } else if (event === 'SIGNED_IN') {
+            toast({
+              title: "Nouvelle connexion",
+              description: `L'utilisateur ${session.user.email} s'est connecté.`,
+            });
           }
-          
+        }
+        
+        // Special handling for new user registration (only for admins)
+        if (event === 'SIGNED_UP' && isAdmin) {
           toast({
-            title: "Nouvelle connexion",
-            description: `L'utilisateur ${session.user.email} s'est connecté.`,
+            title: "Nouvel utilisateur",
+            description: `L'utilisateur ${session?.user?.email || 'Inconnu'} vient de s'inscrire.`,
           });
         }
       });
