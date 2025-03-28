@@ -1,8 +1,10 @@
 
+import { LucideIcon } from 'lucide-react';
+
 export interface GuideCategory {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
 }
 
 export interface GuideDocument {

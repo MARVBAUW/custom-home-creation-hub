@@ -1,16 +1,15 @@
-
 import React from 'react';
 import { BookOpen, FileText, Video, FileSpreadsheet, Calculator } from 'lucide-react';
 import { GuideCategory, GuideDocument } from './types';
 
 // Guide Categories
 export const guideCategories: GuideCategory[] = [
-  { id: 'tous', name: 'Tous les guides', icon: <BookOpen className="h-4 w-4" /> },
-  { id: 'construction', name: 'Construction', icon: <FileText className="h-4 w-4" /> },
-  { id: 'renovation', name: 'Rénovation', icon: <FileSpreadsheet className="h-4 w-4" /> },
-  { id: 'reglementation', name: 'Réglementation', icon: <FileText className="h-4 w-4" /> },
-  { id: 'videos', name: 'Tutoriels Vidéo', icon: <Video className="h-4 w-4" /> },
-  { id: 'calculateurs', name: 'Calculateurs', icon: <Calculator className="h-4 w-4" /> },
+  { id: 'tous', name: 'Tous les guides', icon: BookOpen },
+  { id: 'construction', name: 'Construction', icon: FileText },
+  { id: 'renovation', name: 'Rénovation', icon: FileSpreadsheet },
+  { id: 'reglementation', name: 'Réglementation', icon: FileText },
+  { id: 'videos', name: 'Tutoriels Vidéo', icon: Video },
+  { id: 'calculateurs', name: 'Calculateurs', icon: Calculator },
 ];
 
 // Guide Documents

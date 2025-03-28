@@ -23,12 +23,15 @@ export const CategoryTabs: React.FC<CategoryTabsProps> = ({
   return (
     <Tabs defaultValue="all" value={activeCategory} onValueChange={setActiveCategory}>
       <TabsList className="bg-muted mb-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        {categories.map(category => (
-          <TabsTrigger key={category.id} value={category.id} className="flex items-center">
-            {category.icon}
-            <span className="ml-2">{category.name}</span>
-          </TabsTrigger>
-        ))}
+        {categories.map(category => {
+          const IconComponent = category.icon;
+          return (
+            <TabsTrigger key={category.id} value={category.id} className="flex items-center">
+              <IconComponent className="h-4 w-4" />
+              <span className="ml-2">{category.name}</span>
+            </TabsTrigger>
+          );
+        })}
       </TabsList>
 
       {categories.map(category => (
