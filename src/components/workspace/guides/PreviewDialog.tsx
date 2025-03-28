@@ -9,12 +9,14 @@ interface PreviewDialogProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   selectedDocument: GuideDocument | null;
+  handleDownload: (url: string, title: string) => void;
 }
 
 const PreviewDialog: React.FC<PreviewDialogProps> = ({
   isOpen,
   setIsOpen,
-  selectedDocument
+  selectedDocument,
+  handleDownload
 }) => {
   if (!selectedDocument) return null;
 

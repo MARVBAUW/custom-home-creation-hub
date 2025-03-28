@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SearchBar } from './guides/SearchBar';
 import { FeaturedGuides } from './guides/FeaturedGuides';
