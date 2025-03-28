@@ -7,7 +7,7 @@ import { ArticleCard } from './ArticleCard';
 interface ArticleListProps {
   filteredArticles: any[];
   page: number;
-  setPage: (page: number) => void;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   itemsPerPage: number;
   handleArticleClick: (article: any) => void;
 }
@@ -51,7 +51,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious 
-                onClick={() => setPage(p => Math.max(1, p - 1))}
+                onClick={() => setPage(page => Math.max(1, page - 1))}
                 className={page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>
@@ -69,7 +69,7 @@ export const ArticleList: React.FC<ArticleListProps> = ({
             
             <PaginationItem>
               <PaginationNext 
-                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                onClick={() => setPage(page => Math.min(totalPages, page + 1))}
                 className={page >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>

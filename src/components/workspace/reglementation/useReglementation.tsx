@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react';
 import { articles } from '../data/reglementationArticles';
 
 export const useReglementation = () => {
-  const [page, setPage] = useState(1);
-  const [articlesList, setArticlesList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredArticles, setFilteredArticles] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState("tous");
-  const [lastUpdate, setLastUpdate] = useState("");
-  const [nextScheduledUpdate, setNextScheduledUpdate] = useState("");
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  const [isArticleOpen, setIsArticleOpen] = useState(false);
+  const [page, setPage] = useState<number>(1);
+  const [articlesList, setArticlesList] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
+  const [categoryFilter, setCategoryFilter] = useState<string>("tous");
+  const [lastUpdate, setLastUpdate] = useState<string>("");
+  const [nextScheduledUpdate, setNextScheduledUpdate] = useState<string>("");
+  const [selectedArticle, setSelectedArticle] = useState<any>(null);
+  const [isArticleOpen, setIsArticleOpen] = useState<boolean>(false);
   const itemsPerPage = 5;
   
   useEffect(() => {
@@ -84,7 +84,7 @@ export const useReglementation = () => {
   const categories = ["tous", ...Array.from(new Set(articlesList.map(article => article.category)))];
   
   // Handle article click
-  const handleArticleClick = (article) => {
+  const handleArticleClick = (article: any) => {
     setSelectedArticle(article);
     setIsArticleOpen(true);
   };
