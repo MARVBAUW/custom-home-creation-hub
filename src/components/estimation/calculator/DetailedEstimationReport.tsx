@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FormData } from './types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -65,15 +66,15 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     
     // Configuration du tableau
     const columnStyles = {
-      label: { fontStyle: 'bold' },
-      amount: { halign: 'right' }
+      0: { fontStyle: 'bold' as const },
+      1: { halign: 'right' as const }
     };
     
     const headStyles = {
-      fillColor: '#f2f2f2',
-      textColor: '#333',
-      fontStyle: 'bold',
-      halign: 'center'
+      fillColor: [242, 242, 242],
+      textColor: [51, 51, 51],
+      fontStyle: 'bold' as const,
+      halign: 'center' as const
     };
     
     // Préparation des données pour le tableau
@@ -102,7 +103,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     }
     
     // Footer
-    const pageCount = doc.internal.getNumberOfPages();
+    const pageCount = doc.internal.pages.length - 1;
     for(let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(10);
@@ -131,7 +132,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
               </div>
             </div>
             <div className="text-right">
-              <Logo variant="full" />
+              <Logo variant="default" />
             </div>
           </div>
           
