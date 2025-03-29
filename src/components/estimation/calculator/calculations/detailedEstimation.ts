@@ -1,3 +1,4 @@
+
 import { FormData } from '../../types';
 import { parseToNumber } from '../utils/typeConversions';
 
@@ -65,7 +66,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     bathroomCount,
     kitchenType, // "open" | "closed" | "island"
     flooringType, // "parquet" | "tile" | "concrete"
-    wall покрытие, // "paint" | "wallpaper" | "tile"
+    wallCovering, // "paint" | "wallpaper" | "tile"
 
     // Location
     city,
