@@ -1,0 +1,9988 @@
+Help
+Aucun fichier choisi
+
+
+My workspace
+
+ESTIMER VOTRE PROJET
+Changes
+
+
+
+
+
+Customize
+
+Preview
+
+Publish
+Form cover
+Form logo
+Estimer votre projet
+A
+Particulier
+*
+Votre profil
+Vous êtes? 
+B
+Professionnel
+When
+Untitled multiple choice field
+Is
+Professionnel
+
+Then
+Jump to page
+Page 2
+
+When
+Untitled multiple choice field
+Is
+Particulier
+
+Then
+Jump to page
+Page 3
+
+
+Poursuivre
+Page 2
+Informations sur votre projet 
+Quel est votre activité ?
+*
+
+
+A
+Bureaux
+B
+Commerce
+C
+Hotellerie
+D
+Restauration
+E
+Industrie
+F
+Investisseur immobilier
+Quel type de projet ? 
+*
+
+
+A
+Construction
+B
+Rénovation
+C
+Extension
+D
+Optimisation
+E
+Division
+F
+Disgn d'espace / décoration
+Quand souhaitez-vous réaliser le projet ?
+*
+Date
+Date de fin souhaité ?
+*
+Date
+When
+Untitled multiple choice field
+Is
+Professionnel
+
+Then
+Jump to page
+Page 1
+
+
+Poursuivre
+Page 3
+Informations sur votre projet 
+Cet estimatif de travaux est fourni à titre indicatif pour vous aider dans votre prise de décision. Il ne remplace pas un devis complet, qui nécessite un rendez-vous avec un maître d'œuvre ou des artisans pour étudier votre projet en détail et adapter le chiffrage à vos besoins spécifiques.
+Quel type de projet ? 
+*
+
+
+A
+Construction
+B
+Rénovation
+C
+Extension
+D
+Optimisation
+E
+Division
+F
+Disgn d'espace / décoration
+When
+Quel type de projet ? 
+Is
+Optimisation
+
+Or
+Quel type de projet ? 
+Is
+Disgn d'espace / décoration
+
+Then
+Jump to page
+Page 1
+
+
+Poursuivre
+Page 4
+TYPE D'ESTIMATION
+*
+
+
+L'estimation rapide demande peu ou pas de connaissances
+L'estimation précise demande quelques connaissances dans le domaine
+A
+Rapide 5 mins (Précision à + ou - 10%) 
+B
+Précise 15 mins (précision à + ou- 5%)
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+Or
+Quel type de projet ? 
+Is
+Division
+
+Then
+Show blocks
+L'estimation rapide demande peu ou pas de connaissances, Rapide 5 mins (Précision à + ou - 10%) 
+
+NOTA : Pour les questions nécessitant des quantités (m², ml, nombre, %), il n'est pas nécessaire d'indiquer des valeurs avec une précision absolue. L'important est de donner une estimation selon votre propre appréciation, afin que nous puissions vous fournir une estimation indicative adaptée.
+NOTA : Pour les questions nécessitant un niveau de gamme (Base, milieu de gamme, haut de gamme, premium), ces précisions ont une vocation économique : standards étant le plus économique $ , haut de gamme ou prémium étant le moins économique $$$.
+J'ai pris connaissance des NOTA.
+*
+When
+Untitled checkboxes field
+Is empty
+
+Then
+Hide button to disable completion
+
+When
+Quel type de projet ? 
+Is
+Construction
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+When
+Quel type de projet ? 
+Is
+Extension
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+When
+Quel type de projet ? 
+Is
+Division
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+And
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+When
+Quel type de projet ? 
+Is
+Division
+
+And
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+CONSTRUCTION EXTENSION PRECIS #5
+
+
+Poursuivre
+CONSTRUCTION EXTENSION PRECIS #5
+Montant T€
+Number
+=
+0
+
+Quelle est la surface de votre projet ?
+*
+Surface concerné par le projet de rénovation exemple : 20 m² sur une maison de 100 m² 
+m²
+Combien de niveau comporte votre projet ?
+*
+nb de niveau
+Combien de logement comporte le projet futur  ?
+*
+nb de logement
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+Or
+Quel type de projet ? 
+Is
+Division
+
+Then
+Show blocks
+Combien de logement comporte le projet futur  ?, nb de logement
+
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+Then
+Show blocks
+Surface concerné par le projet de rénovation exemple : 20 m² sur une maison de 100 m² 
+
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+DIVISION / RENOVATION PRECISE #29
+
+When
+Quel type de projet ? 
+Is
+Division
+
+And
+TYPE D'ESTIMATION
+Is
+Précise 15 mins (précision à + ou- 5%)
+
+Then
+Jump to page
+DIVISION / RENOVATION PRECISE #29
+
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+And
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+ESTIMATION RAPIDE 1 #44
+
+When
+Quel type de projet ? 
+Is
+Division
+
+And
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+ESTIMATION RAPIDE 1 #44
+
+
+SUIVANT
+Page 6
+TERRAIN
+*
+
+
+CARACTERISTIQUE DU TERRAIN 
+ROCHEUX
+https://storage.tally.so/ca35d469-4aca-4551-b106-d82eb6685aad/DALL-E-2024-10-23-11.00.10---A-beautiful-illustration-of-a-rocky-terrain-showing-a-rugged-landscape-with-scattered-rocks-and-boulders.-The-ground-is-uneven-with-stone-formations-.webp
+ARGILEUX
+https://storage.tally.so/19204de1-2be8-40c9-82fa-ee1469480b67/DALL-E-2024-10-23-11.00.08---A-beautiful-illustration-of-a-clayey-terrain-showing-a-landscape-with-slightly-cracked-earth-and-a-smooth-surface.-The-ground-looks-soft-and-dense-w.webp
+PLAT
+https://storage.tally.so/02f06ce3-8138-4760-881a-3caaebe90099/DALL-E-2024-10-23-11.00.12---A-beautiful-illustration-of-a-flat-terrain-showing-a-wide-open-plain-with-even-ground.-The-landscape-is-serene-and-peaceful-with-short-green-grass-.webp
+ACCIDENTE
+https://storage.tally.so/1c1404ae-601d-4378-a2ff-d235bd924c65/DALL-E-2024-10-23-10.56.00---An-illustration-of-rugged-accidented-terrain-with-uneven-and-irregular-ground-levels-showing-a-variety-of-small-hills-dips-and-mounds.-The-landsca.webp
+PENTUE
+https://storage.tally.so/e0576168-a151-4776-b05e-640c8aa7f610/DALL-E-2024-10-23-11.01.11---A-beautiful-illustration-of-a-steep-terrain-showing-a-sloped-landscape-with-a-noticeable-incline.-The-ground-features-scattered-rocks-and-patches-of-.webp
+VIABILISE
+https://storage.tally.so/cc16539f-40fa-4acf-8503-1ab1ae322053/DALL-E-2024-10-23-11.09.38---A-detailed-illustration-of-a-serviced-viabilise-terrain-showing-a-flat-plot-of-land-with-essential-infrastructure-in-place.-The-landscape-is-clean-.webp
+SANS OBJET
+TERASSEMENTS VIABILISATION
+Number
+=
+260
+
+VIABILISATION
+Number
+=
+120
+
+TOTAL TERRAIN
+Number
+=
+0
+
+When
+TERRAIN
+Is not empty
+
+Then
+Calculate
+TERASSEMENTS VIABILISATION
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+When
+TERRAIN
+Contains
+VIABILISE
+
+Then
+Calculate
+VIABILISATION
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+TERASSEMENTS VIABILISATION
+Subtract -
+Value
+VIABILISATION
+
+When
+TERRAIN
+Is not empty
+
+Then
+Calculate
+Montant T€
+Add +
+Value
+TERASSEMENTS VIABILISATION
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 7
+DEMOLITION
+*
+
+
+PAS DE DEMOLITION TERRAIN VIERGE 
+DEMOLITION DES EXISTANTS  25%
+DEMOLITION DES EXISTANTS  50%
+DEMOLITION DES EXISTANTS  75%
+DEMOLITION DES EXISTANTS  100%
+surface de plancher des existants en m2
+When
+DEMOLITION
+Does not contain
+PAS DE DEMOLITION TERRAIN VIERGE 
+
+Then
+Show blocks
+surface de plancher des existants en m2
+
+TOTAL TRAVAUX @Montant T€ €/HT
+When
+DEMOLITION
+Does not contain
+PAS DE DEMOLITION TERRAIN VIERGE 
+
+Then
+Require answer
+surface de plancher des existants en m2
+
+SURFDEMO
+Number
+=
+0
+
+PRIX DEMO
+Number
+=
+185
+
+DEMO
+Number
+=
+0
+
+DEMO25
+Number
+=
+0.25
+
+DEMO50
+Number
+=
+0.5
+
+DEMO75
+Number
+=
+0.75
+
+DEMO100
+Number
+=
+1
+
+When
+DEMOLITION
+Contains
+DEMOLITION DES EXISTANTS  25%
+
+Then
+Calculate
+DEMO25
+Multiply *
+Value
+surface de plancher des existants en m2
+
+And
+Calculate
+SURFDEMO
+Add +
+Value
+DEMO25
+
+When
+DEMOLITION
+Contains
+DEMOLITION DES EXISTANTS  50%
+
+Then
+Calculate
+DEMO50
+Multiply *
+Value
+surface de plancher des existants en m2
+
+And
+Calculate
+SURFDEMO
+Add +
+Value
+DEMO50
+
+When
+DEMOLITION
+Contains
+DEMOLITION DES EXISTANTS  50%
+
+Then
+Calculate
+DEMO75
+Multiply *
+Value
+surface de plancher des existants en m2
+
+And
+Calculate
+SURFDEMO
+Add +
+Value
+DEMO75
+
+When
+DEMOLITION
+Contains
+DEMOLITION DES EXISTANTS  100%
+
+Then
+Calculate
+DEMO100
+Multiply *
+Value
+surface de plancher des existants en m2
+
+And
+Calculate
+SURFDEMO
+Add +
+Value
+DEMO100
+
+When
+DEMOLITION
+Is not empty
+
+Then
+Calculate
+SURFDEMO
+Multiply *
+Value
+PRIX DEMO
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SURFDEMO
+
+
+SUIVANT
+Page 8
+GROS OEUVRE
+*
+
+
+COMPOSITION DES MURS DE FACADES 
+https://storage.tally.so/b950805f-687b-4965-a33f-38cce25cd5f1/f9603eac22a9b56431e028f84d372db0.jpg
+BRIQUES
+https://storage.tally.so/808cebc8-91ab-4484-809b-c1470631f6bb/bricklargebare-3.jpg
+PARPAING
+https://storage.tally.so/7b87cade-5935-4353-b20e-d8c2fd40421e/MK_MKT_PHO_Porotherm-25_texture.jpg
+POROTHERME
+https://storage.tally.so/4a1f29f1-4511-4160-bbf6-42dedba2a402/CAUSSE-BEIGE-NUANCE-PDC14.jpg
+PIERRE
+https://storage.tally.so/8503cfd4-ed5f-48c9-bf50-38af18a2b984/5ad7cf40503119c863dbd6d0ad145448.jpg
+BETON
+https://storage.tally.so/84bfe787-ac02-4d8f-a853-1b32ac1df454/bg-beton-cellulaire.jpg
+BETON CELLULAIRE
+SANS AVIS
+BRIQUE
+Number
+=
+590
+
+PARPAING
+Number
+=
+580
+
+PORTHERME
+Number
+=
+430
+
+ITONG
+Number
+=
+433
+
+BETON
+Number
+=
+500
+
+PIERRE
+Number
+=
+730
+
+When
+GROS OEUVRE
+Contains
+BRIQUES
+
+Then
+Calculate
+BETON
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BETON
+
+When
+GROS OEUVRE
+Contains
+PARPAING
+
+Then
+Calculate
+PARPAING
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARPAING
+
+When
+GROS OEUVRE
+Contains
+POROTHERME
+
+Then
+Calculate
+PORTHERME
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PORTHERME
+
+When
+GROS OEUVRE
+Contains
+PIERRE
+
+Then
+Calculate
+PIERRE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PIERRE
+
+When
+GROS OEUVRE
+Contains
+BETON
+
+Then
+Calculate
+BETON
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BETON
+
+When
+GROS OEUVRE
+Contains
+BETON CELLULAIRE
+
+Then
+Calculate
+ITONG
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ITONG
+
+When
+GROS OEUVRE
+Contains
+SANS AVIS
+
+Then
+Calculate
+BRIQUE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BRIQUE
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 9
+CHARPENTE
+*
+
+
+https://storage.tally.so/387c3e1b-17ef-4822-a53b-de5a43148e50/ABE-Etancheite-Couvertines-24.jpg
+TOITURE TERRASSE ACCESSIBLE
+https://storage.tally.so/a3a58cb3-95d2-4edd-9ce9-65ad918abb20/images-2-.jpg
+TOITURE TERRASSE INACCESSIBLE
+https://storage.tally.so/8070e55a-00c0-46ac-85f7-1c6fa6172c21/images-1-.jpg
+CHARPENTE INDUSTRIELLE
+https://storage.tally.so/09d67ffd-fe5b-47e2-aa13-18cc1ff6ad09/charpente-traditionnelle.jpg
+CHARPENTE TRADITIONNELLE
+TOITURE TERRASSE ACCESS
+Number
+=
+150
+
+TOITURE TERRASSE INA 
+Number
+=
+130
+
+CHARPENTE TRAD 
+Number
+=
+1
+
+CHARPENTE INDUS 
+Number
+=
+110
+
+When
+CHARPENTE
+Contains
+TOITURE TERRASSE ACCESSIBLE
+
+Then
+Calculate
+TOITURE TERRASSE ACCESS
+Multiply *
+Value
+TOITURE TERRASSE ACCESS
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOITURE TERRASSE ACCESS
+
+When
+CHARPENTE
+Contains
+TOITURE TERRASSE INACCESSIBLE
+
+Then
+Calculate
+TOITURE TERRASSE INA 
+Multiply *
+Value
+TOITURE TERRASSE INA 
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOITURE TERRASSE INA 
+
+When
+CHARPENTE
+Contains
+CHARPENTE INDUSTRIELLE
+
+Then
+Calculate
+CHARPENTE INDUS 
+Multiply *
+Value
+CHARPENTE INDUS 
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHARPENTE INDUS 
+
+When
+CHARPENTE
+Contains
+CHARPENTE TRADITIONNELLE
+
+Then
+Calculate
+CHARPENTE TRAD 
+Multiply *
+Value
+CHARPENTE TRAD 
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHARPENTE TRAD 
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 10
+TYPE DE COMBLE
+*
+
+
+https://storage.tally.so/07e80bce-c186-4610-91fb-d3ce483c87f5/images.jpg
+COMBLES AMENAGEABLES
+TOTAL TRAVAUX @Montant T€ €/HT
+https://storage.tally.so/73f29ee3-606d-45f5-8a17-b67d49ffd4ad/telecharger.jpg
+COMBLES PERDUS
+ENTRAIT PORTEUR
+Number
+=
+70
+
+When
+TYPE DE COMBLE
+Contains
+COMBLES AMENAGEABLES
+
+Then
+Calculate
+ENTRAIT PORTEUR
+Divide /
+Value
+Combien de niveau comporte votre projet ?
+
+And
+Calculate
+ENTRAIT PORTEUR
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ENTRAIT PORTEUR
+
+
+SUIVANT
+Page 11
+COUVERTURE / ETANCHEITE 
+*
+
+
+https://storage.tally.so/3faa0ac4-67a3-4bdc-88d7-0cdd0011af19/toiture_dune_maison.jpg
+TUILE PLATE 
+https://storage.tally.so/bf4955e0-2e61-44e2-954f-96fb74b88a94/images-3-.jpg
+TUILE RONDE
+https://storage.tally.so/8149bd44-67ad-46b2-832a-9f7614399bdb/telecharger-5-.jpg
+ARDOISE
+https://storage.tally.so/a0bc6578-a067-4229-b498-ba3d9000d813/DSCN0270-scaled.jpg
+ZINC JOINT DEBOUT
+https://storage.tally.so/12152575-8de9-47c7-b7ec-e2f880a49a3f/toiture_chaume.webp
+TOIT DE CHAUME
+https://storage.tally.so/6caab145-3ae3-4a26-8e1b-c5aa22293147/bac-acier-toiture.jpg
+BAC ACIER
+https://storage.tally.so/7e20cf08-76a7-4734-9a6f-3e3898401825/images-2-.jpg
+ETANCHEITE BITUME (TOITURE PLATE)
+https://storage.tally.so/447602be-4e30-4349-ace1-102bb434bd01/telecharger-4-.jpg
+TOITURE VEGETALISE (TOITURE PLATE)
+https://storage.tally.so/e89b21f9-1a52-4ee2-9ec2-7016ff0db2c1/telecharger-3-.jpg
+TOITURE GRAVILLONNEE (TOITURE PLATE)
+TUILEPLATE
+Number
+=
+130
+
+TUILERONDE
+Number
+=
+137
+
+ARDOISE
+Number
+=
+210
+
+ZINC
+Number
+=
+160
+
+TOIT DE CHAUME
+Number
+=
+200
+
+BACSEC
+Number
+=
+65
+
+ETANCHEITE BITUME
+Number
+=
+75
+
+VEGETALISE
+Number
+=
+146
+
+GRAVILLONE
+Number
+=
+105
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+TUILE PLATE 
+
+Then
+Calculate
+TUILEPLATE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TUILEPLATE
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+TUILE RONDE
+
+Then
+Calculate
+TUILERONDE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TUILERONDE
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+ARDOISE
+
+Then
+Calculate
+ARDOISE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ARDOISE
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+ZINC JOINT DEBOUT
+
+Then
+Calculate
+ZINC
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ZINC
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+TOIT DE CHAUME
+
+Then
+Calculate
+TOIT DE CHAUME
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOIT DE CHAUME
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+BAC ACIER
+
+Then
+Calculate
+BACSEC
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BACSEC
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+ETANCHEITE BITUME (TOITURE PLATE)
+
+Then
+Calculate
+ETANCHEITE BITUME
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ETANCHEITE BITUME
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+TOITURE VEGETALISE (TOITURE PLATE)
+
+Then
+Calculate
+VEGETALISE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+VEGETALISE
+
+When
+COUVERTURE / ETANCHEITE 
+Contains
+TOITURE GRAVILLONNEE (TOITURE PLATE)
+
+Then
+Calculate
+GRAVILLONE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+GRAVILLONE
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+Next
+Page 12
+ISOLATION
+*
+
+
+ISOLATION THERMIQUE REGLEMENTAIRE (BASE) 
+ISOLATION THERMIQUE PERFORMANTE
+ISOLATION THERMIQUE ULTRA PERFORMANTE 
+SANS AVIS
+ISO DE BASE
+Number
+=
+80
+
+ISO +
+Number
+=
+100
+
+ISO ++
+Number
+=
+120
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE REGLEMENTAIRE (BASE) 
+
+Then
+Calculate
+ISO DE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO DE BASE
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE PERFORMANTE
+
+Then
+Calculate
+ISO +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO +
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE ULTRA PERFORMANTE 
+
+Then
+Calculate
+ISO ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO ++
+
+When
+ISOLATION
+Contains
+SANS AVIS
+
+Then
+Calculate
+ISO +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO +
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 13
+FACADE
+*
+PIERRE NUE
+https://storage.tally.so/37123883-d433-48b2-876c-07b6c94edf49/CAUSSE-BEIGE-NUANCE-PDC14.jpg
+%
+When
+FACADE
+Contains
+PIERRE NUE
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+ENDUIT
+https://storage.tally.so/24c780b0-4d68-4fcd-b532-7ce875336243/telecharger-6-.jpg
+%
+When
+FACADE
+Contains
+ENDUIT
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BRIQUE 
+https://storage.tally.so/91cc1e41-c3ed-43ff-ac2a-844410bb03a3/f9603eac22a9b56431e028f84d372db0.jpg
+%
+When
+FACADE
+Contains
+BRIQUE 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE METALLIQUE 
+https://storage.tally.so/1c52325e-6481-4609-9828-8c21aed781ba/nettoyage-bardage.jpg
+%
+When
+FACADE
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE BOIS 
+https://storage.tally.so/daf60556-0c23-449b-9c48-93c575c29571/b46141e05a7f311427c245c34828bb78.jpg
+%
+When
+FACADE
+Contains
+BARDAGE BOIS 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE PIERRE
+https://storage.tally.so/a23bd194-7aa2-4ad4-acf6-ce5c25f1e10b/Photo-facade-pierres-naturelles-64-MEDIATEQUE-MOURENX-vetisol.jpg
+%
+When
+FACADE
+Contains
+BARDAGE PIERRE
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+TOTAL TRAVAUX @Montant T€ €/HT
+BARDAGE BOIS
+Number
+=
+2.1
+
+% BOIS
+Number
+=
+0
+
+BARDAGE METAL
+Number
+=
+3
+
+%METAL
+Number
+=
+0
+
+BARDAGE MINERAL
+Number
+=
+3.1
+
+%MINERAL
+Number
+=
+0
+
+ENDUIT
+Number
+=
+0.7
+
+%ENDUIT
+Number
+=
+0
+
+When
+FACADE
+Contains
+BARDAGE BOIS 
+
+Then
+Calculate
+BARDAGE BOIS
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+% BOIS
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE BOIS
+Multiply *
+Value
+% BOIS
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE BOIS
+
+When
+FACADE
+Contains
+BARDAGE PIERRE
+
+Then
+Calculate
+BARDAGE MINERAL
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%MINERAL
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE MINERAL
+Multiply *
+Value
+%MINERAL
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE MINERAL
+
+When
+FACADE
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Calculate
+BARDAGE METAL
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%METAL
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE METAL
+Multiply *
+Value
+%METAL
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE METAL
+
+When
+FACADE
+Contains
+ENDUIT
+
+Then
+Calculate
+ENDUIT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%ENDUIT
+Add +
+Value
+%
+
+And
+Calculate
+ENDUIT
+Multiply *
+Value
+%ENDUIT
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ENDUIT
+
+TROP 
+Number
+=
+0
+
+When
+FACADE
+Contains
+PIERRE NUE
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE
+Contains
+ENDUIT
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE
+Contains
+BRIQUE 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE
+Contains
+BARDAGE BOIS 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE
+Contains
+BARDAGE PIERRE
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+TROP 
+>
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP 
+>
+100
+
+Then
+Show blocks
+La somme des surfaces de façade ne peut pas être supérieure à 100%
+
+La somme des surfaces de façade ne peut pas être supérieure à 100%
+
+SUIVANT
+Page 14
+MENUISERIES EXT
+*
+
+
+https://storage.tally.so/431090b7-6e9f-4b65-9287-b5fbd328627a/fenetre-bois-exotique.jpg
+BOIS
+https://storage.tally.so/373eab2e-754c-4ce1-84c5-06620cd162a4/201824309.jpg
+PVC
+https://storage.tally.so/0c7036b5-5dd9-49e7-a61d-38aa1ce89904/fenetre-aluminium.png
+ALU
+https://storage.tally.so/6a387837-9be3-456c-8b14-df07914e6958/fe_bois_alu.webp
+MIXTE BOIS ALU
+SANS AVIS
+TOTAL TRAVAUX @Montant T€ €/HT
+https://storage.tally.so/d7c9b355-b6a5-4b3b-9886-459581f8c2de/fenetre-pvc-de-differente-couleur.webp
+PVC COLORE
+BOIS
+Number
+=
+650
+
+PVC
+Number
+=
+390
+
+MIXTE
+Number
+=
+690
+
+ALU
+Number
+=
+620
+
+PCV COLORE
+Number
+=
+410
+
+SURF VITRE
+Number
+=
+0
+
+When
+MENUISERIES EXT
+Is not empty
+
+Then
+Calculate
+SURF VITRE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+When
+MENUISERIES EXT
+Contains
+BOIS
+
+Then
+Calculate
+BOIS
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BOIS
+
+When
+MENUISERIES EXT
+Contains
+PVC
+
+Then
+Calculate
+PVC
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PVC
+
+When
+MENUISERIES EXT
+Contains
+ALU
+
+Then
+Calculate
+BOIS
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ALU
+
+When
+MENUISERIES EXT
+Contains
+MIXTE BOIS ALU
+
+Then
+Calculate
+MIXTE
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MIXTE
+
+When
+MENUISERIES EXT
+Contains
+SANS AVIS
+
+Then
+Calculate
+ALU
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ALU
+
+When
+MENUISERIES EXT
+Contains
+PVC COLORE
+
+Then
+Calculate
+PCV COLORE
+Multiply *
+Value
+SURF VITRE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PCV COLORE
+
+
+SUIVANT
+Page 15
+ELECTRICITE
+*
+
+
+PRESTATION DE BASE
+PRESTATIONS AVANCEES
+PRESTATIONS HAUT DE GAMME
+PRESTATIONS HG + DOMMOTIQUE
+BASE ELEC
+Number
+=
+100
+
+ELEC+
+Number
+=
+125
+
+ELEC ++
+Number
+=
+155
+
+ELEC DOMO
+Number
+=
+190
+
+When
+ELECTRICITE
+Contains
+PRESTATION DE BASE
+
+Then
+Calculate
+BASE ELEC
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BASE ELEC
+
+When
+ELECTRICITE
+Contains
+PRESTATIONS AVANCEES
+
+Then
+Calculate
+ELEC+
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC+
+
+When
+ELECTRICITE
+Contains
+PRESTATIONS HAUT DE GAMME
+
+Then
+Calculate
+ELEC ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC ++
+
+When
+ELECTRICITE
+Contains
+PRESTATIONS HG + DOMMOTIQUE
+
+Then
+Calculate
+ELEC DOMO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC DOMO
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 16
+PLOMBERIE
+*
+
+
+PRESTATIONS DE BASE 
+PRESTATIONS AVANCEES
+PRESTATIONS HAUT DE GAMME
+PLOMB BASE
+Number
+=
+80
+
+PLOMB +
+Number
+=
+100
+
+PLOMB HG
+Number
+=
+125
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS DE BASE 
+
+Then
+Calculate
+PLOMB BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB BASE
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS AVANCEES
+
+Then
+Calculate
+PLOMB +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB +
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS HAUT DE GAMME
+
+Then
+Calculate
+PLOMB HG
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB HG
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 17
+CHAUFFAGE 
+*
+
+
+MEILLEURS RAPPORT QUALITE PRIX 
+LE PLUS ECOLOGIQUE 
+LE PLUS ECONOMIQUE
+SANS AVIS
+CLIMATISATION
+*
+
+
+NON
+OUI
+SANS AVIS
+CHAFFAGE BASE
+Number
+=
+60
+
+CHAUFFAGE ECONO
+Number
+=
+45
+
+CHAUFFAGE ECOLO
+Number
+=
+120
+
+CLIMAT
+Number
+=
+65
+
+When
+CHAUFFAGE 
+Contains
+MEILLEURS RAPPORT QUALITE PRIX 
+
+Then
+Calculate
+CHAFFAGE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAFFAGE BASE
+
+When
+CHAUFFAGE 
+Contains
+SANS AVIS
+
+Then
+Calculate
+CHAFFAGE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAFFAGE BASE
+
+When
+CHAUFFAGE 
+Contains
+LE PLUS ECOLOGIQUE 
+
+Then
+Calculate
+CHAUFFAGE ECOLO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAUFFAGE ECOLO
+
+When
+CHAUFFAGE 
+Contains
+LE PLUS ECONOMIQUE
+
+Then
+Calculate
+CHAUFFAGE ECONO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAUFFAGE ECONO
+
+When
+CLIMATISATION
+Contains
+OUI
+
+Then
+Calculate
+CLIMAT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CLIMAT
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 18
+PLATRERIE
+*
+
+
+PRESTATION DE BASE
+PRESTATION AVEC QUELQUES SPECIFICITES
+PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)
+PLATRERIE BASE
+Number
+=
+95
+
+PLATRERIE +
+Number
+=
+105
+
+PLATRERIE ++
+Number
+=
+120
+
+When
+PLATRERIE
+Contains
+PRESTATION DE BASE
+
+Then
+Calculate
+MEN BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN BASE
+
+When
+PLATRERIE
+Contains
+PRESTATION AVEC QUELQUES SPECIFICITES
+
+Then
+Calculate
+MEN +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN +
+
+When
+PLATRERIE
+Contains
+PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)
+
+Then
+Calculate
+PLATRERIE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLATRERIE BASE
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 19
+MENUISERIES INT
+*
+
+
+PORTES INTERIEURES
+BASE
+STANDING 
+HAUT DE GAMME
+AMENAGEMENTS MENUISER INTERIEURE
+SANS OBJET
+MOULURE
+AMEUBLEMENTS SPECIFIQUES
+MEN BASE
+Number
+=
+50
+
+MEN +
+Number
+=
+60
+
+MEN ++
+Number
+=
+70
+
+MOULURE
+Number
+=
+10
+
+AMEUBLEMENT SPE
+Number
+=
+20
+
+When
+MENUISERIES INT
+Contains
+BASE
+
+Then
+Calculate
+MEN BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN BASE
+
+When
+MENUISERIES INT
+Contains
+STANDING 
+
+Then
+Calculate
+MEN +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN +
+
+When
+MENUISERIES INT
+Contains
+HAUT DE GAMME
+
+Then
+Calculate
+MEN ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN ++
+
+When
+MENUISERIES INT
+Contains
+MOULURE
+
+Then
+Calculate
+MOULURE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MOULURE
+
+When
+MENUISERIES INT
+Contains
+AMEUBLEMENTS SPECIFIQUES
+
+Then
+Calculate
+AMEUBLEMENT SPE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AMEUBLEMENT SPE
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 20
+CARRELAGE 
+*
+
+
+CARRELAGE BASE
+CARRELAGE MILIEU DE GAMME
+CARRELAGE HAUT DE GAMME
+NON CONCERNE
+Surface % du projet
+When
+CARRELAGE 
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+Surface % du projet
+
+FAIENCE
+*
+
+
+FAIENCE BASE
+FAIENCE MG
+FAIENCE HG
+CARRELAGE BASE
+Number
+=
+0.66
+
+CARRELAGE +
+Number
+=
+0.76
+
+CARRELAGE ++
+Number
+=
+0.86
+
+FAIENCE BASE 
+Number
+=
+0.0536
+
+FAIENCE +
+Number
+=
+0.0612
+
+FAIENCE ++
+Number
+=
+0.0963
+
+When
+CARRELAGE 
+Contains
+CARRELAGE BASE
+
+Then
+Calculate
+CARRELAGE BASE
+Multiply *
+Value
+Surface % du projet
+
+And
+Calculate
+CARRELAGE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE BASE
+
+When
+CARRELAGE 
+Contains
+CARRELAGE MILIEU DE GAMME
+
+Then
+Calculate
+CARRELAGE +
+Multiply *
+Value
+Surface % du projet
+
+And
+Calculate
+CARRELAGE +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE +
+
+When
+CARRELAGE 
+Contains
+CARRELAGE HAUT DE GAMME
+
+Then
+Calculate
+CARRELAGE ++
+Multiply *
+Value
+Surface % du projet
+
+And
+Calculate
+CARRELAGE ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE ++
+
+When
+FAIENCE
+Contains
+FAIENCE BASE
+
+Then
+Calculate
+FAIENCE BASE 
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE BASE 
+
+When
+FAIENCE
+Contains
+FAIENCE MG
+
+Then
+Calculate
+FAIENCE +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE +
+
+When
+FAIENCE
+Contains
+FAIENCE HG
+
+Then
+Calculate
+FAIENCE ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE ++
+
+TOTAL TRAVAUX @Montant T€ €/HT
+
+SUIVANT
+Page 21
+PARQUET
+*
+PARQUET DE BASE 
+PARQUET MG
+PARQUET HG
+Surface %
+NON CONCERNE 
+When
+PARQUET
+Does not contain
+NON CONCERNE 
+
+Then
+Require answer
+Surface %
+
+PARQUET BASE
+Number
+=
+0.55
+
+PARQUET +
+Number
+=
+0.66
+
+PARQUET ++
+Number
+=
+1.08
+
+When
+PARQUET
+Contains
+PARQUET DE BASE 
+
+Then
+Calculate
+PARQUET BASE
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PARQUET BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET BASE
+
+When
+PARQUET
+Contains
+PARQUET MG
+
+Then
+Calculate
+PARQUET +
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PARQUET +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET +
+
+When
+PARQUET
+Contains
+PARQUET HG
+
+Then
+Calculate
+PARQUET ++
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PARQUET ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET ++
+
+SOL SOUPLE
+*
+SOL SOUPLE BASE
+SOL SOUPLE MG
+SOL SOUPLE HG
+Surface % (20% , 30% ...)
+NON CONCERNE
+When
+SOL SOUPLE
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+Surface % (20% , 30% ...)
+
+SS BASE
+Number
+=
+0.3
+
+SS +
+Number
+=
+0.35
+
+SS ++
+Number
+=
+0.4
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE BASE
+
+Then
+Calculate
+SS BASE
+Multiply *
+Value
+Surface % (20% , 30% ...)
+
+And
+Calculate
+SS BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS BASE
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE MG
+
+Then
+Calculate
+SS +
+Multiply *
+Value
+Surface % (20% , 30% ...)
+
+And
+Calculate
+SS +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS +
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE HG
+
+Then
+Calculate
+SS ++
+Multiply *
+Value
+Surface % (20% , 30% ...)
+
+And
+Calculate
+SS ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS ++
+
+TROP SOL
+Number
+=
+0
+
+When
+CARRELAGE 
+Does not contain
+NON CONCERNE
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+Surface % du projet
+
+When
+PARQUET
+Does not contain
+NON CONCERNE 
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+Surface %
+
+When
+SOL SOUPLE
+Does not contain
+NON CONCERNE
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+Surface % (20% , 30% ...)
+
+When
+TROP SOL
+>
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP SOL
+<
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP SOL
+>
+100
+
+Then
+Show blocks
+La somme des surfaces de de revêtements de sol (carrelage , parquet , sol souple) ne peut pas être supérieure à 100%
+
+When
+TROP SOL
+<
+100
+
+Then
+Show blocks
+La somme des surfaces de de revêtements de sol (carrelage , parquet , sol souple) doit être égal à 100%
+
+La somme des surfaces de de revêtements de sol (carrelage , parquet , sol souple) ne peut pas être supérieure à 100%
+La somme des surfaces de de revêtements de sol (carrelage , parquet , sol souple) doit être égal à 100%
+
+SUIVANT
+Page 22
+PEINTURE / REVETEMENTS MURAUX
+*
+PEINTURE BASE
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE
+
+Then
+Require answer
+Surface %
+
+PEINTURE DECORATIVE
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE
+
+Then
+Require answer
+Surface %
+
+PAPIER PEINT... 
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Require answer
+Surface %
+
+REVETEMENT MURAUX BOIS AJOURE
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Require answer
+Surface %
+
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Require answer
+Surface %
+
+PEINTURE BASE
+Number
+=
+0.58
+
+PEINTURE +
+Number
+=
+0.606
+
+PAPIER PEINT
+Number
+=
+0.6
+
+RVT BOIS
+Number
+=
+1.3
+
+RVT PIERRE
+Number
+=
+1.9
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE
+
+Then
+Calculate
+PEINTURE BASE
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PEINTURE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PEINTURE BASE
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE
+
+Then
+Calculate
+PEINTURE +
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PEINTURE +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PEINTURE +
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Calculate
+PAPIER PEINT
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PAPIER PEINT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PAPIER PEINT
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Calculate
+RVT BOIS
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+RVT BOIS
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RVT BOIS
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Calculate
+RVT PIERRE
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+RVT PIERRE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RVT PIERRE
+
+TROP PEINT
+Number
+=
+0
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+TROP PEINT
+>
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP PEINT
+<
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP PEINT
+>
+100
+
+Then
+Show blocks
+La somme des surfaces de de revêtements muraux (peinture , papier peint, revêtements bois / pierre) ne peut pas être supérieure à 100%
+
+When
+TROP PEINT
+<
+100
+
+Then
+Show blocks
+La somme des surfaces de revêtements muraux (peinture , papier peint, revêtements bois / pierre) doit être égal à 100%
+
+La somme des surfaces de de revêtements muraux (peinture , papier peint, revêtements bois / pierre) ne peut pas être supérieure à 100%
+La somme des surfaces de revêtements muraux (peinture , papier peint, revêtements bois / pierre) doit être égal à 100%
+
+SUIVANT
+Page 23
+ENERGIES RENOUVELABLES 
+*
+
+
+BASE REGLEMENTAIRE (MINIMUM OBLIGATOIRE)
+OPTIMISATION ENERGETIQUE 
+SEMI AUTONOMIE ENERGETIQUE
+AUTONOMIE ENERGETIQUE
+SANS OBJET
+OPTIMI
+Number
+=
+0.035
+
+SEMI AUTO
+Number
+=
+0.07
+
+AUTONO
+Number
+=
+0.11
+
+When
+ENERGIES RENOUVELABLES 
+Contains
+OPTIMISATION ENERGETIQUE 
+
+Then
+Calculate
+OPTIMI
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+OPTIMI
+
+When
+ENERGIES RENOUVELABLES 
+Contains
+SEMI AUTONOMIE ENERGETIQUE
+
+Then
+Calculate
+SEMI AUTO
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SEMI AUTO
+
+When
+ENERGIES RENOUVELABLES 
+Contains
+AUTONOMIE ENERGETIQUE
+
+Then
+Calculate
+AUTONO
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AUTONO
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+
+SUIVANT
+Page 24
+SOLUTION ENVIRONNEMENTALES
+*
+
+
+OUI SI POSSIBLE DANS MON BUDGET 
+MOYENNEMENT SOUHAITE
+FORTEMENT SOUHAITE
+NON
+SI POSSIBLE
+Number
+=
+0.018
+
+MOYENSOUHAITE
+Number
+=
+0.038
+
+FORTSUHAITE
+Number
+=
+0.057
+
+When
+SOLUTION ENVIRONNEMENTALES
+Contains
+OUI SI POSSIBLE DANS MON BUDGET 
+
+Then
+Calculate
+SI POSSIBLE
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SI POSSIBLE
+
+When
+SOLUTION ENVIRONNEMENTALES
+Contains
+MOYENNEMENT SOUHAITE
+
+Then
+Calculate
+MOYENSOUHAITE
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MOYENSOUHAITE
+
+When
+SOLUTION ENVIRONNEMENTALES
+Contains
+FORTEMENT SOUHAITE
+
+Then
+Calculate
+FORTSUHAITE
+Multiply *
+Value
+Montant T€
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FORTSUHAITE
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+
+SUIVANT
+Page 25
+AMENAGEMENTS PAYSAGERS
+*
+UN PEU 
+m²
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+UN PEU 
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+BEAUCOUP 
+m²
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+BEAUCOUP 
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+PASSIONNEMENT
+m²
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+PASSIONNEMENT
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+PAS DU TOUT
+CLOTURE
+ml
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+CLOTURE
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+PORTAIL
+ml
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+PORTAIL
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+TERRASSE
+m²
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+TERRASSE
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+AMGT UN PEU 
+Number
+=
+23
+
+AMGT +
+Number
+=
+42
+
+AMGT ++
+Number
+=
+60
+
+PORTAIL
+Number
+=
+1450
+
+CLOTURE
+Number
+=
+85
+
+TERRASSE
+Number
+=
+90
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+UN PEU 
+
+Then
+Calculate
+AMGT UN PEU 
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AMGT UN PEU 
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+BEAUCOUP 
+
+Then
+Calculate
+AMGT +
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AMGT +
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+PASSIONNEMENT
+
+Then
+Calculate
+AMGT ++
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AMGT ++
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+CLOTURE
+
+Then
+Calculate
+CLOTURE
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CLOTURE
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+PORTAIL
+
+Then
+Calculate
+PORTAIL
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PORTAIL
+
+When
+AMENAGEMENTS PAYSAGERS
+Contains
+TERRASSE
+
+Then
+Calculate
+TERRASSE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TERRASSE
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+
+SUIVANT
+Page 26
+OPTION
+CARPORT
+
+
+SIMPLE 
+DOUBLE
+CARPORT SIMPLE
+Number
+=
+4800
+
+CARPORT DOUBLE
+Number
+=
+6700
+
+When
+CARPORT
+Is
+SIMPLE 
+
+Then
+Calculate
+Montant T€
+Add +
+Value
+CARPORT SIMPLE
+
+When
+CARPORT
+Is
+DOUBLE
+
+Then
+Calculate
+Montant T€
+Add +
+Value
+CARPORT DOUBLE
+
+PISICINE ENTERRE
+
+
+COQUE POLYESTER
+https://storage.tally.so/41f83ef2-79c6-42bb-9918-599ddc736ad4/piscine-en-coque-polyester-en-attente-dinstallation.jpg
+POLYESTER
+BETON
+https://storage.tally.so/eb103ade-3125-4f32-a146-348289625cd2/piscine-en-beton.jpg
+BETON
+PISCINE LAGON (HORS AMENAGEMENT PAYSAGER)
+https://storage.tally.so/4f6e0372-05f8-407a-bd94-2dd094bedeea/62b34acd-33ad-47f0-a3e6-5dbdb4795e67.jpg
+LAGON
+Dimension m²
+When
+PISICINE ENTERRE
+Is not empty
+
+Then
+Show blocks
+Dimension m²
+
+POLYEST
+Number
+=
+880
+
+BETON
+Number
+=
+1350
+
+LAGON 
+Number
+=
+1950
+
+When
+PISICINE ENTERRE
+Is
+COQUE POLYESTER
+
+Then
+Calculate
+POLYEST
+Multiply *
+Value
+Dimension m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+POLYEST
+
+When
+PISICINE ENTERRE
+Is
+BETON
+
+Then
+Calculate
+BETON
+Multiply *
+Value
+Dimension m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BETON
+
+When
+PISICINE ENTERRE
+Is
+PISCINE LAGON (HORS AMENAGEMENT PAYSAGER)
+
+Then
+Calculate
+LAGON 
+Multiply *
+Value
+Dimension m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+LAGON 
+
+When
+PISICINE ENTERRE
+Is not empty
+
+Then
+Require answer
+Dimension m²
+
+SYSTEME DE CHAUFFAGE DE LA PISCINE
+
+
+AVEC
+SANS
+When
+PISICINE ENTERRE
+Is not empty
+
+Then
+Require answer
+SYSTEME DE CHAUFFAGE DE LA PISCINE
+
+CHAUFPISCINE
+Number
+=
+120
+
+When
+SYSTEME DE CHAUFFAGE DE LA PISCINE
+Is
+AVEC
+
+Then
+Calculate
+CHAUFPISCINE
+Multiply *
+Value
+Dimension m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAUFPISCINE
+
+JACUZZI ENTERRE
+
+
+BASE
+PLUS 
+PREMIUM 
+Surface m²
+When
+JACUZZI ENTERRE
+Is not empty
+
+Then
+Show blocks
+Surface m²
+
+JACCUBASE
+Number
+=
+1500
+
+JACCUPLUS
+Number
+=
+2750
+
+JACCUPREMIUM
+Number
+=
+3550
+
+When
+JACUZZI ENTERRE
+Is not empty
+
+Then
+Require answer
+Surface m²
+
+When
+JACUZZI ENTERRE
+Is
+BASE
+
+Then
+Calculate
+JACCUBASE
+Multiply *
+Value
+Surface m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+JACCUBASE
+
+When
+JACUZZI ENTERRE
+Is
+PLUS 
+
+Then
+Calculate
+JACCUPLUS
+Multiply *
+Value
+Surface m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+JACCUPLUS
+
+When
+JACUZZI ENTERRE
+Is
+PREMIUM 
+
+Then
+Calculate
+JACCUPREMIUM
+Multiply *
+Value
+Surface m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+JACCUPREMIUM
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+
+SUIVANT
+Page 27
+CUISINE
+*
+
+
+KITCHENETTE
+CUISINE DE BASE 
+CUISINE +
+CUISINIE PREMIUM
+SANS CUISINE
+When
+CUISINE
+Is
+SANS CUISINE
+
+Then
+Jump to page
+Page 28
+
+KITCHENETTE
+Number
+=
+2700
+
+CUISINE BASE
+Number
+=
+8500
+
+CUISINE +
+Number
+=
+13500
+
+CUISINE PREMIUM
+Number
+=
+19000
+
+When
+CUISINE
+Is
+KITCHENETTE
+
+Then
+Calculate
+KITCHENETTE
+Multiply *
+Value
+Combien de logement comporte le projet futur  ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+KITCHENETTE
+
+When
+CUISINE
+Is
+CUISINE DE BASE 
+
+Then
+Calculate
+CUISINE BASE
+Multiply *
+Value
+Combien de logement comporte le projet futur  ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CUISINE BASE
+
+When
+CUISINE
+Is
+CUISINE +
+
+Then
+Calculate
+CUISINE +
+Multiply *
+Value
+Combien de logement comporte le projet futur  ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CUISINE +
+
+When
+CUISINE
+Is
+CUISINIE PREMIUM
+
+Then
+Calculate
+CUISINE PREMIUM
+Multiply *
+Value
+Combien de logement comporte le projet futur  ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CUISINE PREMIUM
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+
+SUIVANT
+Page 28
+QUALITE DES PRESTATION SALLE DE BAIN / DOUCHE
+*
+
+
+BASE
+MILIEU DE GAMME 
+PREMIUM 
+SANS OBJET
+NON CONCERNE
+NOMBRE DE SALLE DE BAIN / DOUCHE
+*
+Nombre
+When
+NOMBRE DE SALLE DE BAIN / DOUCHE
+Is not empty
+
+Then
+Jump to page
+Page 45
+
+SDE BASE 
+Number
+=
+2000
+
+SDE MG
+Number
+=
+3150
+
+SDE HG
+Number
+=
+4200
+
+When
+QUALITE DES PRESTATION SALLE DE BAIN / DOUCHE
+Contains
+BASE
+
+Then
+Calculate
+SDE BASE 
+Multiply *
+Value
+NOMBRE DE SALLE DE BAIN / DOUCHE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SDE BASE 
+
+When
+QUALITE DES PRESTATION SALLE DE BAIN / DOUCHE
+Contains
+MILIEU DE GAMME 
+
+Then
+Calculate
+SDE MG
+Multiply *
+Value
+NOMBRE DE SALLE DE BAIN / DOUCHE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SDE MG
+
+When
+QUALITE DES PRESTATION SALLE DE BAIN / DOUCHE
+Contains
+PREMIUM 
+
+Then
+Calculate
+SDE HG
+Multiply *
+Value
+NOMBRE DE SALLE DE BAIN / DOUCHE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SDE HG
+
+
+OBTENIR MON ESTIMATION
+DIVISION / RENOVATION PRECISE #29
+Indiquez les % correspondant aux parties à démolir par exemple : démolition / ou dépose de la moitié des revêtements de façade équivaut à 50%.
+DEMOLITION / DEPOSE
+*
+PAS DE DEMOLITION 
+GROS OEUVRE (MACONNERIE, DALLE..)
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+PAS DE DEMOLITION 
+
+Then
+Hide blocks
+GROS OEUVRE (MACONNERIE, DALLE..), Proportion des existants % à démolir, REVETEMENT DE FACADE, Proportion des existants % à démolir, PLATRERIE, Proportion des existants % à démolir, REVETEMENTS DE SOL, Proportion des existants % à démolir, MENUISERIES INTERIEURES, Proportion des existants % à démolir, MENUISERIES EXTERIEURES, Proportion des existants % à démolir, PLOMBERIE, Proportion des existants % à démolir, EQUIPEMENTS SANITAIRES, Proportion des existants % à démolir, ELECTRICITE, Proportion des existants % à démolir, CLIMATISATION, Proportion des existants % à démolir, VENTILATION, Proportion des existants % à démolir, CHAUFFAGE, Proportion des existants % à démolir, TOTALITE HORS GROS OEUVRE, surface de plancher des existants à demolir m2
+
+When
+DEMOLITION / DEPOSE
+Contains
+GROS OEUVRE (MACONNERIE, DALLE..)
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+REVETEMENT DE FACADE
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+REVETEMENT DE FACADE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+PLATRERIE
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+PLATRERIE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+REVETEMENTS DE SOL
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+REVETEMENTS DE SOL
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+MENUISERIES INTERIEURES
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+MENUISERIES INTERIEURES
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+MENUISERIES EXTERIEURES
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+MENUISERIES EXTERIEURES
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+PLOMBERIE
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+PLOMBERIE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+EQUIPEMENTS SANITAIRES
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+EQUIPEMENTS SANITAIRES
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+ELECTRICITE
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+ELECTRICITE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+CLIMATISATION
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+CLIMATISATION
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+VENTILATION
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+VENTILATION
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+CHAUFFAGE
+Proportion des existants % à démolir
+When
+DEMOLITION / DEPOSE
+Contains
+CHAUFFAGE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+And
+Show blocks
+Proportion des existants % à démolir
+
+TOTALITE HORS GROS OEUVRE
+When
+DEMOLITION / DEPOSE
+Contains
+TOTALITE HORS GROS OEUVRE
+
+Then
+Require answer
+Proportion des existants % à démolir
+
+surface de plancher des existants à demolir m2
+When
+DEMOLITION / DEPOSE
+Does not contain
+PAS DE DEMOLITION 
+
+And
+Quel type de projet ? 
+Is
+Construction
+
+Then
+Require answer
+surface de plancher des existants à demolir m2
+
+And
+Show blocks
+surface de plancher des existants à demolir m2
+
+DEMOLRVTFACA
+Number
+=
+0.65
+
+DEMOLPLAT
+Number
+=
+0.19
+
+DEMOLRVTSOL
+Number
+=
+0.25
+
+DEMOLMENINT
+Number
+=
+0.1
+
+DEMOLMENEXT
+Number
+=
+0.08
+
+DEMOLPLOMB
+Number
+=
+0.17
+
+DEMOLEQPSAN
+Number
+=
+0.08
+
+DEMOLELEC
+Number
+=
+0.18
+
+DEMOLCLIM
+Number
+=
+0.06
+
+DEMOLVENT
+Number
+=
+0.06
+
+DEMOLCHAUF
+Number
+=
+0.12
+
+DEMOLTT HORS GO
+Number
+=
+193
+
+When
+DEMOLITION / DEPOSE
+Contains
+REVETEMENT DE FACADE
+
+Then
+Calculate
+DEMOLRVTFACA
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLRVTFACA
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLRVTFACA
+
+When
+DEMOLITION / DEPOSE
+Contains
+PLATRERIE
+
+Then
+Calculate
+DEMOLPLAT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLPLAT
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLPLAT
+
+When
+DEMOLITION / DEPOSE
+Contains
+REVETEMENTS DE SOL
+
+Then
+Calculate
+DEMOLRVTSOL
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLRVTSOL
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLRVTSOL
+
+When
+DEMOLITION / DEPOSE
+Contains
+MENUISERIES INTERIEURES
+
+Then
+Calculate
+DEMOLMENINT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLMENINT
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLMENINT
+
+When
+DEMOLITION / DEPOSE
+Contains
+MENUISERIES EXTERIEURES
+
+Then
+Calculate
+DEMOLMENEXT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLMENEXT
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLMENEXT
+
+When
+DEMOLITION / DEPOSE
+Contains
+PLOMBERIE
+
+Then
+Calculate
+DEMOLPLOMB
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLPLOMB
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLPLOMB
+
+When
+DEMOLITION / DEPOSE
+Contains
+EQUIPEMENTS SANITAIRES
+
+Then
+Calculate
+DEMOLEQPSAN
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLEQPSAN
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLEQPSAN
+
+When
+DEMOLITION / DEPOSE
+Contains
+ELECTRICITE
+
+Then
+Calculate
+DEMOLELEC
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLELEC
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLELEC
+
+When
+DEMOLITION / DEPOSE
+Contains
+CLIMATISATION
+
+Then
+Calculate
+DEMOLCLIM
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLCLIM
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLCLIM
+
+When
+DEMOLITION / DEPOSE
+Contains
+VENTILATION
+
+Then
+Calculate
+DEMOLVENT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLVENT
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLVENT
+
+When
+DEMOLITION / DEPOSE
+Contains
+CHAUFFAGE
+
+Then
+Calculate
+DEMOLCHAUF
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+DEMOLCHAUF
+Multiply *
+Value
+Proportion des existants % à démolir
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLCHAUF
+
+When
+DEMOLITION / DEPOSE
+Contains
+TOTALITE HORS GROS OEUVRE
+
+Then
+Calculate
+DEMOLTT HORS GO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOLTT HORS GO
+
+TOTAL TRAVAUX @Montant T€ €/HT
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Isolation
+
+Then
+Jump to page
+Page 33
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Couverture
+
+Then
+Jump to page
+Page 32
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Charpente
+
+Then
+Jump to page
+Page 31
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Gros œuvre (Dalle, réseaux sous dalle, assainissement, maçonnerie, démolition de maçonnerie, plancher, IPN, fondation, chape)
+
+Then
+Jump to page
+Page 30
+
+
+SUIVANT
+Page 30
+GROS OEUVRE
+Y 'a t'il des murs maçonnés à créer/ recréer ?
+*
+
+
+OUI
+NON
+Surface m²?
+When
+Y 'a t'il des murs maçonnés à créer/ recréer ?
+Contains
+OUI
+
+Then
+Show blocks
+Surface m²?
+
+And
+Require answer
+Surface m²?
+
+MUR MACONNE
+Number
+=
+120
+
+When
+Y 'a t'il des murs maçonnés à créer/ recréer ?
+Contains
+OUI
+
+Then
+Calculate
+MUR MACONNE
+Multiply *
+Value
+Surface m²?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MUR MACONNE
+
+Y 'a t'il des planchers à créer / recréer?
+*
+
+
+OUI
+NON
+Type de plancher
+*
+
+
+BOIS
+BETON
+Surface m²?
+When
+Y 'a t'il des planchers à créer / recréer?
+Contains
+OUI
+
+Then
+Show blocks
+Type de plancher, BOIS, BETON, Surface m²?
+
+And
+Require answer
+Select an input field
+
+When
+Type de plancher
+Contains
+BOIS
+
+Then
+Calculate
+PLANCBOIS
+Multiply *
+Value
+Surface m²?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLANCBOIS
+
+When
+Type de plancher
+Contains
+BETON
+
+Then
+Calculate
+PLANCBETON
+Multiply *
+Value
+Surface m²?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLANCBETON
+
+PLANCBOIS
+Number
+=
+80
+
+PLANCBETON
+Number
+=
+120
+
+SPECIFICITE
+RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE
+ml
+When
+SPECIFICITE
+Contains
+RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+DEMOLITION MUR PORTEUR
+m²
+When
+SPECIFICITE
+Contains
+DEMOLITION MUR PORTEUR
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+POSE D'UN IPN
+ml
+When
+SPECIFICITE
+Contains
+POSE D'UN IPN
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+OUVERTURE EN FACADE/MUR PORTEUR
+m²
+When
+SPECIFICITE
+Contains
+OUVERTURE EN FACADE/MUR PORTEUR
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+CREATION D'UNE TREMIE* (ouverture dans un plancher pour accéder à un étage supérieur)
+m²
+When
+SPECIFICITE
+Contains
+CREATION D'UNE TREMIE* (ouverture dans un plancher pour accéder à un étage supérieur)
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+m²
+
+FONDATION SEMELLE
+ml
+When
+SPECIFICITE
+Contains
+FONDATION SEMELLE
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+FONDATION MASSIF
+nombre
+When
+SPECIFICITE
+Contains
+FONDATION MASSIF
+
+Then
+Require answer
+nombre
+
+And
+Show blocks
+nombre
+
+CHAPE
+m²
+When
+SPECIFICITE
+Contains
+CHAPE
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+RACCORDEMENT SANTAIRE RESEAU URBAIN
+ml
+When
+SPECIFICITE
+Contains
+RACCORDEMENT SANTAIRE RESEAU URBAIN
+
+Then
+Require answer
+ml
+
+And
+Show blocks
+ml
+
+RESEAUXREPRISE
+Number
+=
+120
+
+DEMOL MUR PORTEUR
+Number
+=
+120
+
+POSE IPN
+Number
+=
+850
+
+OUVERTURE MUR PORT
+Number
+=
+120
+
+CREATION TREMIE
+Number
+=
+90
+
+SEMELLE
+Number
+=
+80
+
+MASSIF
+Number
+=
+110
+
+CHAPE
+Number
+=
+22
+
+RESEAU URBAIN
+Number
+=
+145
+
+When
+SPECIFICITE
+Contains
+RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE
+
+Then
+Calculate
+RESEAUXREPRISE
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RESEAUXREPRISE
+
+When
+SPECIFICITE
+Contains
+DEMOLITION MUR PORTEUR
+
+Then
+Calculate
+DEMOL MUR PORTEUR
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+DEMOL MUR PORTEUR
+
+When
+SPECIFICITE
+Contains
+POSE D'UN IPN
+
+Then
+Calculate
+POSE IPN
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+POSE IPN
+
+When
+SPECIFICITE
+Contains
+OUVERTURE EN FACADE/MUR PORTEUR
+
+Then
+Calculate
+OUVERTURE MUR PORT
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+OUVERTURE MUR PORT
+
+When
+SPECIFICITE
+Contains
+CREATION D'UNE TREMIE* (ouverture dans un plancher pour accéder à un étage supérieur)
+
+Then
+Calculate
+CREATION TREMIE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CREATION TREMIE
+
+When
+SPECIFICITE
+Contains
+FONDATION SEMELLE
+
+Then
+Calculate
+SEMELLE
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SEMELLE
+
+When
+SPECIFICITE
+Contains
+FONDATION MASSIF
+
+Then
+Calculate
+MASSIF
+Multiply *
+Value
+nombre
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MASSIF
+
+When
+SPECIFICITE
+Contains
+CHAPE
+
+Then
+Calculate
+CHAPE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAPE
+
+When
+SPECIFICITE
+Contains
+RACCORDEMENT SANTAIRE RESEAU URBAIN
+
+Then
+Calculate
+RESEAU URBAIN
+Multiply *
+Value
+ml
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RESEAU URBAIN
+
+TOTAL TRAVAUX @Montant T€ €/HT
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Isolation
+
+Then
+Jump to page
+Page 33
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Couverture
+
+Then
+Jump to page
+Page 32
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Charpente
+
+Then
+Jump to page
+Page 31
+
+
+SUIVANT
+Page 31
+CHARPENTE (RENOVATION / REPRISE)
+*
+https://storage.tally.so/387c3e1b-17ef-4822-a53b-de5a43148e50/ABE-Etancheite-Couvertines-24.jpg
+TOITURE TERRASSE ACCESSIBLE
+https://storage.tally.so/a3a58cb3-95d2-4edd-9ce9-65ad918abb20/images-2-.jpg
+TOITURE TERRASSE INACCESSIBLE
+https://storage.tally.so/8070e55a-00c0-46ac-85f7-1c6fa6172c21/images-1-.jpg
+CHARPENTE INDUSTRIELLE
+https://storage.tally.so/09d67ffd-fe5b-47e2-aa13-18cc1ff6ad09/charpente-traditionnelle.jpg
+CHARPENTE TRADITIONNELLE
+Surface à rénover en m²
+When
+CHARPENTE (RENOVATION / REPRISE)
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+Surface à rénover en m²
+
+And
+Show blocks
+Surface à rénover en m²
+
+NON CONCERNE
+TOITURE TERRASSE ACCESS RENO
+Number
+=
+190
+
+TOITURE TERRASSE INA RENO
+Number
+=
+180
+
+CHARPENTE TRAD REO
+Number
+=
+185
+
+CHARPENTE INDUS RENO
+Number
+=
+160
+
+When
+CHARPENTE (RENOVATION / REPRISE)
+Contains
+TOITURE TERRASSE ACCESSIBLE
+
+Then
+Calculate
+TOITURE TERRASSE ACCESS RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOITURE TERRASSE ACCESS RENO
+
+When
+CHARPENTE (RENOVATION / REPRISE)
+Contains
+TOITURE TERRASSE INACCESSIBLE
+
+Then
+Calculate
+TOITURE TERRASSE INA RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOITURE TERRASSE INA RENO
+
+When
+CHARPENTE (RENOVATION / REPRISE)
+Contains
+CHARPENTE INDUSTRIELLE
+
+Then
+Calculate
+CHARPENTE INDUS RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHARPENTE INDUS RENO
+
+When
+CHARPENTE (RENOVATION / REPRISE)
+Contains
+CHARPENTE TRADITIONNELLE
+
+Then
+Calculate
+CHARPENTE TRAD REO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHARPENTE TRAD REO
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Isolation
+
+Then
+Jump to page
+Page 33
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Couverture
+
+Then
+Jump to page
+Page 32
+
+
+SUIVANT
+Page 32
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+*
+https://storage.tally.so/3faa0ac4-67a3-4bdc-88d7-0cdd0011af19/toiture_dune_maison.jpg
+TUILE PLATE 
+https://storage.tally.so/bf4955e0-2e61-44e2-954f-96fb74b88a94/images-3-.jpg
+TUILE RONDE
+https://storage.tally.so/8149bd44-67ad-46b2-832a-9f7614399bdb/telecharger-5-.jpg
+ARDOISE
+https://storage.tally.so/a0bc6578-a067-4229-b498-ba3d9000d813/DSCN0270-scaled.jpg
+ZINC JOINT DEBOUT
+https://storage.tally.so/12152575-8de9-47c7-b7ec-e2f880a49a3f/toiture_chaume.webp
+TOIT DE CHAUME
+https://storage.tally.so/6caab145-3ae3-4a26-8e1b-c5aa22293147/bac-acier-toiture.jpg
+BAC ACIER
+https://storage.tally.so/7e20cf08-76a7-4734-9a6f-3e3898401825/images-2-.jpg
+ETANCHEITE BITUME (TOITURE PLATE)
+https://storage.tally.so/447602be-4e30-4349-ace1-102bb434bd01/telecharger-4-.jpg
+TOITURE VEGETALISE (TOITURE PLATE)
+https://storage.tally.so/e89b21f9-1a52-4ee2-9ec2-7016ff0db2c1/telecharger-3-.jpg
+TOITURE GRAVILLONNEE (TOITURE PLATE)
+Surface à rénover en m²
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+Surface à rénover en m²
+
+And
+Show blocks
+Surface à rénover en m²
+
+NON CONCERNE
+TUILEPLATE RENO
+Number
+=
+125
+
+TUILERONDE RENO
+Number
+=
+130
+
+ARDOISE RENO
+Number
+=
+180
+
+ZINC RENO
+Number
+=
+200
+
+TOIT DE CHAUME RENO
+Number
+=
+250
+
+BACSEC RENO
+Number
+=
+115
+
+ETANCHEITE BITUME RENO
+Number
+=
+125
+
+VEGETALISE RENO
+Number
+=
+186
+
+GRAVILLONE RENO
+Number
+=
+145
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+TUILE PLATE 
+
+Then
+Calculate
+TUILEPLATE RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TUILEPLATE RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+TUILE RONDE
+
+Then
+Calculate
+TUILERONDE RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TUILERONDE RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+ARDOISE
+
+Then
+Calculate
+ARDOISE RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ARDOISE RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+ZINC JOINT DEBOUT
+
+Then
+Calculate
+ZINC RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ZINC RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+TOIT DE CHAUME
+
+Then
+Calculate
+TOIT DE CHAUME RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+TOIT DE CHAUME RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+BAC ACIER
+
+Then
+Calculate
+BACSEC RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BACSEC RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+ETANCHEITE BITUME (TOITURE PLATE)
+
+Then
+Calculate
+ETANCHEITE BITUME RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ETANCHEITE BITUME RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+TOITURE VEGETALISE (TOITURE PLATE)
+
+Then
+Calculate
+VEGETALISE RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+VEGETALISE RENO
+
+When
+COUVERTURE / ETANCHEITE (REPRISE RENOVATION)
+Contains
+TOITURE GRAVILLONNEE (TOITURE PLATE)
+
+Then
+Calculate
+GRAVILLONE RENO
+Multiply *
+Value
+Surface à rénover en m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+GRAVILLONE RENO
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Isolation
+
+Then
+Jump to page
+Page 33
+
+
+SUIVANT
+Page 33
+ISOLATION
+*
+
+
+ISOLATION THERMIQUE REGLEMENTAIRE (BASE) 
+ISOLATION THERMIQUE PERFORMANTE
+ISOLATION THERMIQUE ULTRA PERFORMANTE 
+NON CONCERNE
+ISO DE BASE
+Number
+=
+80
+
+ISO +
+Number
+=
+100
+
+ISO ++
+Number
+=
+120
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE REGLEMENTAIRE (BASE) 
+
+Then
+Calculate
+ISO DE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO DE BASE
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE PERFORMANTE
+
+Then
+Calculate
+ISO +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO +
+
+When
+ISOLATION
+Contains
+ISOLATION THERMIQUE ULTRA PERFORMANTE 
+
+Then
+Calculate
+ISO ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ISO ++
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+
+SUIVANT
+Page 34
+Indiquez les % correspondant aux parties à rénover, par exemple : rénover la moitié des façades en enduit équivaut à 50%.
+
+FACADE (REPRISE / RENOVATION)
+*
+PIERRE NUE
+https://storage.tally.so/37123883-d433-48b2-876c-07b6c94edf49/CAUSSE-BEIGE-NUANCE-PDC14.jpg
+%
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+PIERRE NUE
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+ENDUIT
+https://storage.tally.so/24c780b0-4d68-4fcd-b532-7ce875336243/telecharger-6-.jpg
+%
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+ENDUIT
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BRIQUE 
+https://storage.tally.so/91cc1e41-c3ed-43ff-ac2a-844410bb03a3/f9603eac22a9b56431e028f84d372db0.jpg
+%
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BRIQUE 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE METALLIQUE 
+https://storage.tally.so/1c52325e-6481-4609-9828-8c21aed781ba/nettoyage-bardage.jpg
+%
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE BOIS 
+https://storage.tally.so/daf60556-0c23-449b-9c48-93c575c29571/b46141e05a7f311427c245c34828bb78.jpg
+%
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE BOIS 
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+BARDAGE PIERRE
+https://storage.tally.so/a23bd194-7aa2-4ad4-acf6-ce5c25f1e10b/Photo-facade-pierres-naturelles-64-MEDIATEQUE-MOURENX-vetisol.jpg
+%
+NON CONCERNE
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE PIERRE
+
+Then
+Require answer
+%
+
+And
+Show blocks
+%
+
+TOTAL % FACADE @TROP %
+TOTAL % FACADE @TROP %
+BRIQUE NUE
+Number
+=
+1.9
+
+% BRIQUE NUE
+Number
+=
+0
+
+PIERRE NUE
+Number
+=
+2.5
+
+% PIERRE NUR
+Number
+=
+0
+
+BARDAGE BOIS
+Number
+=
+2.1
+
+% BOIS
+Number
+=
+0
+
+BARDAGE METAL
+Number
+=
+3
+
+%METAL
+Number
+=
+0
+
+BARDAGE MINERAL
+Number
+=
+3.1
+
+%MINERAL
+Number
+=
+0
+
+ENDUIT
+Number
+=
+0.7
+
+%ENDUIT
+Number
+=
+0
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE BOIS 
+
+Then
+Calculate
+BARDAGE BOIS
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+% BOIS
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE BOIS
+Multiply *
+Value
+% BOIS
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE BOIS
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE PIERRE
+
+Then
+Calculate
+BARDAGE MINERAL
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%MINERAL
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE MINERAL
+Multiply *
+Value
+%MINERAL
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE MINERAL
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Calculate
+BARDAGE METAL
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%METAL
+Add +
+Value
+%
+
+And
+Calculate
+BARDAGE METAL
+Multiply *
+Value
+%METAL
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BARDAGE METAL
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+ENDUIT
+
+Then
+Calculate
+ENDUIT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+%ENDUIT
+Add +
+Value
+%
+
+And
+Calculate
+ENDUIT
+Multiply *
+Value
+%ENDUIT
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ENDUIT
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+PIERRE NUE
+
+Then
+Calculate
+PIERRE NUE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+% PIERRE NUR
+Add +
+Value
+%
+
+And
+Calculate
+PIERRE NUE
+Multiply *
+Value
+% PIERRE NUR
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PIERRE NUE
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BRIQUE 
+
+Then
+Calculate
+BRIQUE NUE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+% BRIQUE NUE
+Add +
+Value
+%
+
+And
+Calculate
+BRIQUE NUE
+Multiply *
+Value
+% BRIQUE NUE
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BRIQUE NUE
+
+TROP 
+Number
+=
+0
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+PIERRE NUE
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+ENDUIT
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BRIQUE 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE METALLIQUE 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE BOIS 
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+FACADE (REPRISE / RENOVATION)
+Contains
+BARDAGE PIERRE
+
+Then
+Calculate
+TROP 
+Add +
+Value
+%
+
+When
+TROP 
+>
+100
+
+Then
+Hide button to disable completion
+
+And
+Hide blocks
+TOTAL % FACADE @TROP %
+
+When
+TROP 
+>
+100
+
+Then
+Show blocks
+La somme des surfaces de façade ne peut pas être supérieure à 100%, TOTAL % FACADE @TROP %
+
+La somme des surfaces de façade ne peut pas être supérieure à 100%
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+
+SUIVANT
+Page 35
+MENUISERIES EXT
+*
+
+
+REMPLACEMENT
+https://storage.tally.so/431090b7-6e9f-4b65-9287-b5fbd328627a/fenetre-bois-exotique.jpg
+BOIS
+https://storage.tally.so/373eab2e-754c-4ce1-84c5-06620cd162a4/201824309.jpg
+PVC
+https://storage.tally.so/0c7036b5-5dd9-49e7-a61d-38aa1ce89904/fenetre-aluminium.png
+ALU
+https://storage.tally.so/6a387837-9be3-456c-8b14-df07914e6958/fe_bois_alu.webp
+MIXTE BOIS ALU
+https://storage.tally.so/d7c9b355-b6a5-4b3b-9886-459581f8c2de/fenetre-pvc-de-differente-couleur.webp
+PVC COLORE
+NON CONCERNE
+M² à remplacer
+When
+MENUISERIES EXT
+Does not contain
+NON CONCERNE
+
+Then
+Show blocks
+M² à remplacer
+
+And
+Require answer
+M² à remplacer
+
+AJOUT
+*
+
+
+https://storage.tally.so/431090b7-6e9f-4b65-9287-b5fbd328627a/fenetre-bois-exotique.jpg
+BOIS
+https://storage.tally.so/373eab2e-754c-4ce1-84c5-06620cd162a4/201824309.jpg
+PVC
+https://storage.tally.so/0c7036b5-5dd9-49e7-a61d-38aa1ce89904/fenetre-aluminium.png
+ALU
+https://storage.tally.so/6a387837-9be3-456c-8b14-df07914e6958/fe_bois_alu.webp
+MIXTE BOIS ALU
+https://storage.tally.so/d7c9b355-b6a5-4b3b-9886-459581f8c2de/fenetre-pvc-de-differente-couleur.webp
+PVC COLORE
+NON CONCERNE
+m² à creer
+BOIS
+Number
+=
+650
+
+PVC
+Number
+=
+390
+
+MIXTE
+Number
+=
+690
+
+ALU
+Number
+=
+620
+
+PCV COLORE
+Number
+=
+410
+
+BOIS CREA
+Number
+=
+650
+
+PVC CREA
+Number
+=
+390
+
+MIXTE CREA
+Number
+=
+690
+
+ALU CREA
+Number
+=
+620
+
+PCV COLORE CREA
+Number
+=
+410
+
+When
+MENUISERIES EXT
+Contains
+BOIS
+
+Then
+Calculate
+BOIS
+Multiply *
+Value
+M² à remplacer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BOIS
+
+When
+MENUISERIES EXT
+Contains
+PVC
+
+Then
+Calculate
+PVC
+Multiply *
+Value
+M² à remplacer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PVC
+
+When
+MENUISERIES EXT
+Contains
+ALU
+
+Then
+Calculate
+ALU
+Multiply *
+Value
+M² à remplacer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ALU
+
+When
+MENUISERIES EXT
+Contains
+MIXTE BOIS ALU
+
+Then
+Calculate
+MIXTE
+Multiply *
+Value
+M² à remplacer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MIXTE
+
+When
+MENUISERIES EXT
+Contains
+PVC COLORE
+
+Then
+Calculate
+BOIS
+Multiply *
+Value
+M² à remplacer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BOIS
+
+When
+AJOUT
+Contains
+BOIS
+
+Then
+Calculate
+BOIS CREA
+Multiply *
+Value
+m² à creer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BOIS CREA
+
+When
+AJOUT
+Contains
+PVC
+
+Then
+Calculate
+PVC CREA
+Multiply *
+Value
+m² à creer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PVC CREA
+
+When
+AJOUT
+Contains
+ALU
+
+Then
+Calculate
+ALU CREA
+Multiply *
+Value
+m² à creer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ALU CREA
+
+When
+AJOUT
+Contains
+MIXTE BOIS ALU
+
+Then
+Calculate
+MIXTE CREA
+Multiply *
+Value
+m² à creer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MIXTE CREA
+
+When
+AJOUT
+Contains
+PVC COLORE
+
+Then
+Calculate
+PCV COLORE CREA
+Multiply *
+Value
+m² à creer
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PCV COLORE CREA
+
+When
+AJOUT
+Does not contain
+NON CONCERNE
+
+Then
+Show blocks
+m² à creer
+
+And
+Require answer
+m² à creer
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+
+SUIVANT
+Page 36
+ELECTRICITE 
+*
+
+
+PRESTATION DE BASE
+PRESTATIONS AVANCEES
+PRESTATIONS HAUT DE GAMME
+PRESTATIONS HG + DOMMOTIQUE
+NON CONCERNE
+BASE ELEC
+Number
+=
+100
+
+ELEC+
+Number
+=
+125
+
+ELEC ++
+Number
+=
+155
+
+ELEC DOMO
+Number
+=
+190
+
+When
+ELECTRICITE 
+Contains
+PRESTATION DE BASE
+
+Then
+Calculate
+BASE ELEC
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+BASE ELEC
+
+When
+ELECTRICITE 
+Contains
+PRESTATIONS AVANCEES
+
+Then
+Calculate
+ELEC+
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC+
+
+When
+ELECTRICITE 
+Contains
+PRESTATIONS HAUT DE GAMME
+
+Then
+Calculate
+ELEC ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC ++
+
+When
+ELECTRICITE 
+Contains
+PRESTATIONS HG + DOMMOTIQUE
+
+Then
+Calculate
+ELEC DOMO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+ELEC DOMO
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+
+SUIVANT
+Page 37
+PLOMBERIE
+*
+
+
+PRESTATIONS DE BASE 
+PRESTATIONS AVANCEES
+PRESTATIONS HAUT DE GAMME
+NON CONCERNE
+PLOMB BASE
+Number
+=
+80
+
+PLOMB +
+Number
+=
+100
+
+PLOMB HG
+Number
+=
+125
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS DE BASE 
+
+Then
+Calculate
+PLOMB BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB BASE
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS AVANCEES
+
+Then
+Calculate
+PLOMB +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB +
+
+When
+PLOMBERIE
+Contains
+PRESTATIONS HAUT DE GAMME
+
+Then
+Calculate
+PLOMB HG
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLOMB HG
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+
+SUIVANT
+Page 38
+CHAUFFAGE
+*
+
+
+MEILLEURS RAPPORT QUALITE PRIX 
+LE PLUS ECOLOGIQUE 
+LE PLUS ECONOMIQUE
+SANS AVIS
+NON CONCERNE
+CLIMATISATION RENOVATION / CREATION
+*
+
+
+NON
+OUI
+SANS AVIS
+NON CONERNE
+CHAFFAGE BASE
+Number
+=
+60
+
+CHAUFFAGE ECONO
+Number
+=
+45
+
+CHAUFFAGE ECOLO
+Number
+=
+120
+
+CLIMAT
+Number
+=
+65
+
+When
+CHAUFFAGE
+Contains
+MEILLEURS RAPPORT QUALITE PRIX 
+
+Then
+Calculate
+CHAFFAGE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAFFAGE BASE
+
+When
+CHAUFFAGE
+Contains
+SANS AVIS
+
+Then
+Calculate
+CHAFFAGE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAFFAGE BASE
+
+When
+CHAUFFAGE
+Contains
+LE PLUS ECOLOGIQUE 
+
+Then
+Calculate
+CHAUFFAGE ECOLO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAUFFAGE ECOLO
+
+When
+CHAUFFAGE
+Contains
+LE PLUS ECONOMIQUE
+
+Then
+Calculate
+CHAUFFAGE ECONO
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CHAUFFAGE ECONO
+
+When
+CLIMATISATION RENOVATION / CREATION
+Contains
+OUI
+
+Then
+Calculate
+CLIMAT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CLIMAT
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+
+SUIVANT
+Page 39
+PLATRERIE
+*
+
+
+PRESTATION DE BASE
+PRESTATION AVEC QUELQUES SPECIFICITES
+PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)
+NON CONCERNE
+PLATRERIE BASE
+Number
+=
+95
+
+PLATRERIE +
+Number
+=
+105
+
+PLATRERIE ++
+Number
+=
+120
+
+When
+PLATRERIE
+Contains
+PRESTATION DE BASE
+
+Then
+Calculate
+MEN BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN BASE
+
+When
+PLATRERIE
+Contains
+PRESTATION AVEC QUELQUES SPECIFICITES
+
+Then
+Calculate
+MEN +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN +
+
+When
+PLATRERIE
+Contains
+PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)
+
+Then
+Calculate
+PLATRERIE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PLATRERIE BASE
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+
+SUIVANT
+Page 40
+MENUISERIES INT
+*
+
+
+PORTES INTERIEURES
+BASE
+STANDING 
+HAUT DE GAMME
+NON CONCERNE
+AMENAGEMENTS MENUISER INTERIEURE
+SANS OBJET
+MOULURE
+AMEUBLEMENTS SPECIFIQUES
+NON CONCERNE
+MEN BASE
+Number
+=
+50
+
+MEN +
+Number
+=
+60
+
+MEN ++
+Number
+=
+70
+
+MOULURE
+Number
+=
+10
+
+AMEUBLEMENT SPE
+Number
+=
+20
+
+When
+MENUISERIES INT
+Contains
+BASE
+
+Then
+Calculate
+MEN BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN BASE
+
+When
+MENUISERIES INT
+Contains
+STANDING 
+
+Then
+Calculate
+MEN +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN +
+
+When
+MENUISERIES INT
+Contains
+HAUT DE GAMME
+
+Then
+Calculate
+MEN ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MEN ++
+
+When
+MENUISERIES INT
+Contains
+MOULURE
+
+Then
+Calculate
+MOULURE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+MOULURE
+
+When
+MENUISERIES INT
+Contains
+AMEUBLEMENTS SPECIFIQUES
+
+Then
+Calculate
+AMEUBLEMENT SPE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+AMEUBLEMENT SPE
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+
+SUIVANT
+Page 41
+CARRELAGE 
+*
+
+
+CARRELAGE BASE
+CARRELAGE MILIEU DE GAMME
+CARRELAGE HAUT DE GAMME
+NON CONCERNE
+m²
+When
+CARRELAGE 
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+FAIENCE
+*
+
+
+FAIENCE BASE
+FAIENCE MG
+FAIENCE HG
+NON CONCERNE
+CARRELAGE BASE
+Number
+=
+66
+
+CARRELAGE +
+Number
+=
+76
+
+CARRELAGE ++
+Number
+=
+86
+
+FAIENCE BASE 
+Number
+=
+6
+
+FAIENCE +
+Number
+=
+7
+
+FAIENCE ++
+Number
+=
+8
+
+When
+CARRELAGE 
+Contains
+CARRELAGE BASE
+
+Then
+Calculate
+CARRELAGE BASE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE BASE
+
+When
+CARRELAGE 
+Contains
+CARRELAGE MILIEU DE GAMME
+
+Then
+Calculate
+CARRELAGE +
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE +
+
+When
+CARRELAGE 
+Contains
+CARRELAGE HAUT DE GAMME
+
+Then
+Calculate
+CARRELAGE ++
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+CARRELAGE ++
+
+When
+FAIENCE
+Contains
+FAIENCE BASE
+
+Then
+Calculate
+FAIENCE BASE 
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE BASE 
+
+When
+FAIENCE
+Contains
+FAIENCE MG
+
+Then
+Calculate
+FAIENCE +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE +
+
+When
+FAIENCE
+Contains
+FAIENCE HG
+
+Then
+Calculate
+FAIENCE ++
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+FAIENCE ++
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+
+SUIVANT
+Page 42
+PARQUET
+*
+PARQUET DE BASE 
+PARQUET MG
+PARQUET HG
+m²
+NON CONCERNE 
+When
+PARQUET
+Does not contain
+NON CONCERNE 
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+PARQUET BASE
+Number
+=
+55
+
+PARQUET +
+Number
+=
+66
+
+PARQUET ++
+Number
+=
+108
+
+When
+PARQUET
+Contains
+PARQUET DE BASE 
+
+Then
+Calculate
+PARQUET BASE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET BASE
+
+When
+PARQUET
+Contains
+PARQUET MG
+
+Then
+Calculate
+PARQUET +
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET +
+
+When
+PARQUET
+Contains
+PARQUET HG
+
+Then
+Calculate
+PARQUET ++
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PARQUET ++
+
+SOL SOUPLE
+*
+SOL SOUPLE BASE
+SOL SOUPLE MG
+SOL SOUPLE HG
+m²
+NON CONCERNE
+When
+SOL SOUPLE
+Does not contain
+NON CONCERNE
+
+Then
+Require answer
+m²
+
+And
+Show blocks
+m²
+
+SS BASE
+Number
+=
+30
+
+SS +
+Number
+=
+35
+
+SS ++
+Number
+=
+40
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE BASE
+
+Then
+Calculate
+SS BASE
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS BASE
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE MG
+
+Then
+Calculate
+SS +
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS +
+
+When
+SOL SOUPLE
+Contains
+SOL SOUPLE HG
+
+Then
+Calculate
+SS ++
+Multiply *
+Value
+m²
+
+And
+Calculate
+Montant T€
+Add +
+Value
+SS ++
+
+TROP SOL
+Number
+=
+0
+
+When
+CARRELAGE 
+Does not contain
+NON CONCERNE
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+m²
+
+When
+PARQUET
+Does not contain
+NON CONCERNE 
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+m²
+
+When
+SOL SOUPLE
+Does not contain
+NON CONCERNE
+
+Then
+Calculate
+TROP SOL
+Add +
+Value
+m²
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+
+SUIVANT
+Page 43
+PEINTURE / REVETEMENTS MURAUX
+*
+PEINTURE BASE (monochrome blanc)
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE (monochrome blanc)
+
+Then
+Require answer
+Surface %
+
+And
+Show blocks
+Surface %
+
+PEINTURE DECORATIVE (mixite de couleur et de matérialité) 
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE (mixite de couleur et de matérialité) 
+
+Then
+Require answer
+Surface %
+
+And
+Show blocks
+Surface %
+
+PAPIER PEINT... 
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Require answer
+Surface %
+
+And
+Show blocks
+Surface %
+
+REVETEMENT MURAUX BOIS AJOURE
+Surface %
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Require answer
+Surface %
+
+And
+Show blocks
+Surface %
+
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+Surface %
+NON CONCERNE
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Require answer
+Surface %
+
+And
+Show blocks
+Surface %
+
+PEINTURE BASE
+Number
+=
+0.58
+
+PEINTURE +
+Number
+=
+0.606
+
+PAPIER PEINT
+Number
+=
+0.6
+
+RVT BOIS
+Number
+=
+1.3
+
+RVT PIERRE
+Number
+=
+1.9
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE (monochrome blanc)
+
+Then
+Calculate
+PEINTURE BASE
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PEINTURE BASE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PEINTURE BASE
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE (mixite de couleur et de matérialité) 
+
+Then
+Calculate
+PEINTURE +
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PEINTURE +
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PEINTURE +
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Calculate
+PAPIER PEINT
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+PAPIER PEINT
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+PAPIER PEINT
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Calculate
+RVT BOIS
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+RVT BOIS
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RVT BOIS
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Calculate
+RVT PIERRE
+Multiply *
+Value
+Surface %
+
+And
+Calculate
+RVT PIERRE
+Multiply *
+Value
+Quelle est la surface de votre projet ?
+
+And
+Calculate
+Montant T€
+Add +
+Value
+RVT PIERRE
+
+TROP PEINT
+Number
+=
+0
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE BASE (monochrome blanc)
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PEINTURE DECORATIVE (mixite de couleur et de matérialité) 
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+PAPIER PEINT... 
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENT MURAUX BOIS AJOURE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+PEINTURE / REVETEMENTS MURAUX
+Contains
+REVETEMENTS MURAUX TYPE PIERRE NATURELLE
+
+Then
+Calculate
+TROP PEINT
+Add +
+Value
+Surface %
+
+When
+TROP PEINT
+>
+100
+
+Then
+Hide button to disable completion
+
+When
+TROP PEINT
+>
+100
+
+Then
+Show blocks
+La somme des surfaces de de revêtements muraux (peinture , papier peint, revêtements bois / pierre) ne peut pas être supérieure à 100%
+
+La somme des surfaces de de revêtements muraux (peinture , papier peint, revêtements bois / pierre) ne peut pas être supérieure à 100%
+Il s'agit la de proportion exemple : totalité des murs seront peint = 100% 
+La moitié des murs seront peint = 50% et l'autre moitié en papier peint = 50%
+When
+Quel type de projet ? 
+Is
+Rénovation
+
+Or
+Quel type de projet ? 
+Is
+Division
+
+Then
+Jump to page
+Page 23
+
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+
+SUIVANT
+ESTIMATION RAPIDE 1 #44
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+*
+
+
+A
+Démolition dépose
+B
+Gros œuvre (Dalle, réseaux sous dalle, assainissement, maçonnerie, démolition de maçonnerie, plancher, IPN, fondation, chape)
+C
+Charpente
+D
+Couverture
+E
+Isolation
+F
+Revêtements de façade
+G
+Menuiseries extérieures (fenêtre, porte d'entrée)
+H
+Electricité
+I
+Plomberie
+J
+Chauffage / Climatisation
+K
+Platerie (cloison ba13, doublage , plafond)
+L
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+M
+Carrelage / Faïence
+N
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+O
+Peinture revêtements muraux
+P
+Energies renouvelables (photovoltaïque etc.)
+Q
+Solutions environnementales (matériaux respectueux de l'environnement)
+R
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+S
+Options: Piscine, jacuzzi, carport
+T
+Cuisine équipée
+U
+Salle d'eau / de bain
+When
+TYPE D'ESTIMATION
+Is
+Rapide 5 mins (Précision à + ou - 10%) 
+
+Then
+Jump to page
+Page 45
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Salle d'eau / de bain
+
+Then
+Jump to page
+Page 28
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Cuisine équipée
+
+Then
+Jump to page
+Page 27
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Options: Piscine, jacuzzi, carport
+
+Then
+Jump to page
+Page 26
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Aménagement paysagers (Plantations, clôture, terrasse, portail) 
+
+Then
+Jump to page
+Page 25
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Solutions environnementales (matériaux respectueux de l'environnement)
+
+Then
+Jump to page
+Page 24
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Energies renouvelables (photovoltaïque etc.)
+
+Then
+Jump to page
+Page 23
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Peinture revêtements muraux
+
+Then
+Jump to page
+Page 43
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Parquet / sol souple (moquette , linoleum, sol pvc, sol vinylique)
+
+Then
+Jump to page
+Page 42
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Carrelage / Faïence
+
+Then
+Jump to page
+Page 41
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries intérieures (boiseries, portes intérieures, bâti de porte, moulure, meuble encastré)
+
+Then
+Jump to page
+Page 40
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Platerie (cloison ba13, doublage , plafond)
+
+Then
+Jump to page
+Page 39
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Chauffage / Climatisation
+
+Then
+Jump to page
+Page 38
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Plomberie
+
+Then
+Jump to page
+Page 37
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Electricité
+
+Then
+Jump to page
+Page 36
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Menuiseries extérieures (fenêtre, porte d'entrée)
+
+Then
+Jump to page
+Page 35
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Revêtements de façade
+
+Then
+Jump to page
+Page 34
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Isolation
+
+Then
+Jump to page
+Page 33
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Couverture
+
+Then
+Jump to page
+Page 32
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Charpente
+
+Then
+Jump to page
+Page 31
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Gros œuvre (Dalle, réseaux sous dalle, assainissement, maçonnerie, démolition de maçonnerie, plancher, IPN, fondation, chape)
+
+Then
+Jump to page
+Page 30
+
+
+When
+Quels sont les prestations ci-dessous qui concerne votre projet ?
+Contains
+Démolition dépose
+
+Then
+Jump to page
+DIVISION / RENOVATION PRECISE #29
+
+
+
+Poursuivre
+
+Page 45
+Renseignez vos coordonnés pour accéder à votre estimation gratuite
+*
+Prénom
+Nom
+*
+N° téléphone
+*
+Email
+*
+
+Submit
+Page 46
+‘Thank you’ page
+L'estimation de votre projet est de : @Montant T€  €/HT*
+(hors terrain , frais de notaire , étude géotechnique, honoraires de maitrise d'oeuvre, taxe d'aménagement, taxe archéologique, assurance dommage ouvrage)
+Pour connaître le montant des honoraires Progineer pour ce projet c'est par ici!
+Sinon merci de nous avoir contacté pour votre projet nous prendrons contact avec vous rapidement pour pouvoir répondre au mieux à vos attentes pour votre projet 🚀
