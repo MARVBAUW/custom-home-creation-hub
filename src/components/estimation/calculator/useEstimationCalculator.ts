@@ -7,8 +7,23 @@ import { useFormSubmissions } from './hooks/useFormSubmissions';
 export const useEstimationCalculator = () => {
   // Utiliser les hooks décomposés
   const { formData, updateFormData } = useEstimationForm();
-  const { step, setStep, totalSteps, animationDirection, visibleSteps, goToNextStep, goToPreviousStep } = useEstimationSteps(formData);
-  const { estimationResult, showResultDialog, setShowResultDialog, finalizeEstimation } = useEstimationResult(formData);
+  const { 
+    step, 
+    setStep, 
+    totalSteps, 
+    animationDirection, 
+    visibleSteps, 
+    goToNextStep, 
+    goToPreviousStep 
+  } = useEstimationSteps(formData);
+  
+  const { 
+    estimationResult, 
+    showResultDialog, 
+    setShowResultDialog, 
+    finalizeEstimation 
+  } = useEstimationResult(formData);
+  
   const { 
     onClientTypeSubmit, 
     onProfessionalProjectSubmit, 

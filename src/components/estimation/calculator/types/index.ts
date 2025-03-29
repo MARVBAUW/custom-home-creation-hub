@@ -9,9 +9,9 @@ export interface FormData {
   
   // Détails du projet
   surface?: string | number;
-  levels?: string;
+  levels?: string | number;
   units?: string | number;
-  roomCount?: number;
+  roomCount?: string | number;
   
   // Localisation
   city?: string;
@@ -20,7 +20,7 @@ export interface FormData {
   // Terrain
   terrainType?: string;
   hasLand?: boolean;
-  landPrice?: number;
+  landPrice?: number | string;
   landArea?: string | number;
   
   // Finition et qualité
@@ -28,18 +28,33 @@ export interface FormData {
   
   // Gros œuvre
   wallType?: string;
+  foundationType?: string;
+  soilType?: string;
+  wallThickness?: number | string;
+  hasBasement?: boolean;
+  basementType?: string;
+  floorType?: string;
+  slopedLand?: boolean;
+  difficultAccess?: boolean;
+  needsDemolition?: boolean;
+  needsWaterManagement?: boolean;
   
   // Charpente
   roofType?: string;
+  
+  // Combles
+  atticType?: string;
   
   // Couverture
   roofingType?: string;
   
   // Isolation
   insulationType?: string;
+  ecoFriendlyInsulation?: boolean;
   
   // Façade
   facadeMaterial?: string;
+  facadeType?: string;
   metalCladdingPercentage?: string | number;
   woodCladdingPercentage?: string | number;
   stoneCladdingPercentage?: string | number;
@@ -72,6 +87,7 @@ export interface FormData {
   floorTileType?: string;
   wallTileType?: string;
   floorTilePercentage?: string | number;
+  flooringType?: string;
   
   // Parquet
   parquetType?: string;
@@ -89,9 +105,24 @@ export interface FormData {
   
   // Cuisine
   kitchenType?: string;
+  kitchenBudget?: string;
   
   // Salle de bain
-  bathroomCount?: number;
+  bathroomCount?: number | string;
+  bathroomType?: string;
+  bathroomBudget?: string;
+  
+  // Environnement et énergies renouvelables
+  solarPanelType?: string;
+  windTurbineType?: string;
+  solarPanelSurface?: number | string;
+  rainwaterHarvesting?: boolean;
+  greywaterRecycling?: boolean;
+  
+  // Aménagement paysager
+  landscapingType?: string;
+  landscapingBudget?: string;
+  gardenSurface?: string | number;
   
   // Options supplémentaires
   includeOptions?: boolean;
@@ -100,6 +131,9 @@ export interface FormData {
   includeEcoSolutions?: boolean;
   includeRenewableEnergy?: boolean;
   includeLandscaping?: boolean;
+  pool?: boolean;
+  outdoorKitchen?: boolean;
+  terrace?: boolean;
   
   // Caractéristiques extérieures
   exteriorFeatures?: string[];
@@ -108,12 +142,15 @@ export interface FormData {
   renovationType?: string;
   renovationAreas?: string[];
   
+  // Construction
+  constructionType?: string;
+  
   // Planning
   startDate?: string;
   endDate?: string;
   
   // Budget
-  budget?: number;
+  budget?: number | string;
   
   // Informations de contact
   firstName?: string;
@@ -123,6 +160,7 @@ export interface FormData {
   address?: string;
   postalCode?: string;
   contactMethod?: string;
+  message?: string;
   
   // Autres paramètres
   [key: string]: any;

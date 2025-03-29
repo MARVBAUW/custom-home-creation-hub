@@ -20,6 +20,20 @@ const EstimationSummaryReport: React.FC<EstimationSummaryReportProps> = ({
   estimationResult,
   categoriesAmounts
 }) => {
+  // Helper function to parse values to numbers
+  const parseToNumber = (value: any): number => {
+    if (value === null || value === undefined) return 0;
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+
+  // Parse landPrice to number
+  const landPriceValue = parseToNumber(formData.landPrice);
+  
   // Transform data to match DetailedEstimationReport props
   const estimationData = {
     totalHT: estimationResult || 0,
@@ -44,15 +58,15 @@ const EstimationSummaryReport: React.FC<EstimationSummaryReportProps> = ({
     etudesGeotechniques: categoriesAmounts.find(cat => cat.category === 'Études géotechniques')?.amount || 0,
     etudeThermique: categoriesAmounts.find(cat => cat.category === 'Étude thermique')?.amount || 0,
     garantieDecennale: categoriesAmounts.find(cat => cat.category === 'Garantie décennale')?.amount || 0,
-    fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
-    coutTotalAvecTerrain: (estimationResult || 0) * 1.2 + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0)
+    fraisNotaire: landPriceValue ? landPriceValue * 0.08 : 0,
+    coutTotalAvecTerrain: (estimationResult || 0) * 1.2 + landPriceValue + (landPriceValue ? landPriceValue * 0.08 : 0)
   };
 
   return (
     <DetailedEstimationReport
       formData={formData}
       estimation={estimationData}
-      includeTerrainPrice={!!formData.landPrice}
+      includeTerrainPrice={!!landPriceValue}
     />
   );
 };

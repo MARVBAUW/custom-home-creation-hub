@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FormData } from './types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -47,6 +48,17 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     { label: 'Garantie décennale', amount: estimation.garantieDecennale },
   ];
   
+  // Helper function to parse values to numbers
+  const parseToNumber = (value: any): number => {
+    if (value === null || value === undefined) return 0;
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+  
   // Fonction pour générer le PDF
   const handleGeneratePDF = () => {
     try {
@@ -54,13 +66,14 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
       const estimationData = {
         ...estimation,
         // Add calculated fields
-        vat: estimation.totalHT * 0.2,
-        honorairesHT: estimation.totalHT * 0.1,
-        coutGlobalHT: estimation.totalHT * 1.15,
-        coutGlobalTTC: estimation.totalHT * 1.15 * 1.2,
-        terrainPrice: formData.landPrice || 0,
-        fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
-        coutTotalAvecTerrain: estimation.totalTTC + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0),
+        vat: parseToNumber(estimation.totalHT) * 0.2,
+        honorairesHT: parseToNumber(estimation.totalHT) * 0.1,
+        coutGlobalHT: parseToNumber(estimation.totalHT) * 1.15,
+        coutGlobalTTC: parseToNumber(estimation.totalHT) * 1.15 * 1.2,
+        terrainPrice: parseToNumber(formData.landPrice) || 0,
+        fraisNotaire: parseToNumber(formData.landPrice) ? parseToNumber(formData.landPrice) * 0.08 : 0,
+        coutTotalAvecTerrain: parseToNumber(estimation.totalTTC) + parseToNumber(formData.landPrice) + 
+                             (parseToNumber(formData.landPrice) ? parseToNumber(formData.landPrice) * 0.08 : 0),
         // Convert array format to corpsEtat object format needed for PDF
         corpsEtat: tableData.reduce((acc, item) => ({
           ...acc,
@@ -71,7 +84,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
         }), {})
       };
       
-      const pdfName = generateEstimationPDF(formData, estimationData.totalHT, includeTerrainPrice);
+      const pdfName = generateEstimationPDF(formData, parseToNumber(estimationData.totalHT), includeTerrainPrice);
       
       toast({
         title: "PDF téléchargé",
@@ -87,6 +100,9 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     }
   };
   
+  // Parse landPrice to number
+  const landPriceValue = parseToNumber(formData.landPrice);
+
   return (
     <Card className="w-full border shadow-md">
       <CardContent className="p-6">
@@ -129,14 +145,14 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
                 <td className="py-2 px-4 font-semibold text-right">Total TTC</td>
                 <td className="py-2 px-4 font-semibold text-right">{formatPrice(estimation.totalTTC)}</td>
               </tr>
-              {includeTerrainPrice && formData.landPrice && (
+              {includeTerrainPrice && landPriceValue > 0 && (
                 <>
                   <tr className="bg-gray-100">
                     <td className="py-2 px-4 font-semibold text-left" colSpan={2}>Terrain et frais associés</td>
                   </tr>
                   <tr>
                     <td className="py-2 px-4 font-semibold text-right">Prix du terrain</td>
-                    <td className="py-2 px-4 font-semibold text-right">{formatPrice(formData.landPrice)}</td>
+                    <td className="py-2 px-4 font-semibold text-right">{formatPrice(landPriceValue)}</td>
                   </tr>
                   <tr>
                     <td className="py-2 px-4 font-semibold text-right">Frais de notaire (estimation)</td>

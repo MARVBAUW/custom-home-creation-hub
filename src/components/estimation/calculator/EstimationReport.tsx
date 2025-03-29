@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardTitle, CardHeader, CardDescription, CardFooter } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
@@ -130,7 +129,19 @@ const EstimationReport: React.FC<EstimationReportProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState('summary');
   const { toast } = useToast();
-  const [landPrice, setLandPrice] = useState<number>(formData.landPrice as number || 0);
+  
+  // Helper function to parse values to numbers
+  const parseToNumber = (value: any): number => {
+    if (value === null || value === undefined) return 0;
+    if (typeof value === 'number') return value;
+    if (typeof value === 'string') {
+      const parsed = parseFloat(value);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  };
+  
+  const [landPrice, setLandPrice] = useState<number>(parseToNumber(formData.landPrice) || 0);
   const [showLandPriceInput, setShowLandPriceInput] = useState(!formData.landPrice);
   
   // Calculer les frais de notaire (environ 7% du prix du terrain)
