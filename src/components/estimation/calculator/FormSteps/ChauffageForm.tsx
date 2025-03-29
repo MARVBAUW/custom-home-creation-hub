@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight, Thermometer } from 'lucide-react';
+import { ChauffageFormProps } from '../types/formTypes';
 
 const formSchema = z.object({
   heatingType: z.string().min(1, { message: 'Veuillez sélectionner une option de chauffage' }),
@@ -15,13 +16,6 @@ const formSchema = z.object({
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-type ChauffageFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
 
 const ChauffageForm: React.FC<ChauffageFormProps> = ({
   defaultValues,
@@ -32,8 +26,11 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      heatingType: defaultValues.heatingType || '',
-      hasAirConditioning: defaultValues.hasAirConditioning || '',
+      heatingType: defaultValues?.heatingType || '',
+      hasAirConditioning: 
+        typeof defaultValues?.hasAirConditioning === 'boolean' 
+          ? defaultValues.hasAirConditioning ? 'yes' : 'no' 
+          : defaultValues?.hasAirConditioning || '',
     },
   });
 
@@ -87,6 +84,17 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
     }
   ];
 
+  const handleFormSubmit = (values: FormValues) => {
+    if (onSubmit) {
+      // Conversion de "yes"/"no" en boolean pour hasAirConditioning
+      const formattedData = {
+        ...values,
+        hasAirConditioning: values.hasAirConditioning === 'yes'
+      };
+      onSubmit(formattedData);
+    }
+  };
+
   return (
     <AnimatedStepTransition direction={animationDirection}>
       <div className="mb-6">
@@ -100,7 +108,7 @@ const ChauffageForm: React.FC<ChauffageFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="heatingType"

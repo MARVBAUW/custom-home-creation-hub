@@ -1,116 +1,123 @@
 
-// Types de base pour le formulaire d'estimation
+// Types communs pour l'ensemble du formulaire d'estimation
+
 export interface FormData {
+  // Informations client
   clientType?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  postalCode?: string;
+  city?: string;
+  message?: string;
+  agreeTerms?: boolean;
+  newsletter?: boolean;
+  termsAccepted?: boolean;
+  
+  // Informations projet professionnel
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
+  
+  // Informations projet commun
   projectType?: string;
   estimationType?: string;
-  surfaceArea?: number;
-  floors?: number;
+  surface?: number;
+  levels?: number;
+  units?: number;
+  
+  // Terrain
   terrainType?: string;
+  terrainAccess?: string;
+  
+  // Gros oeuvre
   wallType?: string;
+  foundationType?: string;
+  
+  // Charpente et combles
   roofType?: string;
   atticType?: string;
+  
+  // Couverture
   roofingType?: string;
+  
+  // Isolation
   insulationType?: string;
+  
+  // Façade
   facadeMaterial?: string;
+  
+  // Façade rénovation
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
+  
+  // Menuiseries extérieures
   windowType?: string;
+  shutterType?: string;
+  
+  // Techniques
   electricalType?: string;
   plumbingType?: string;
   heatingType?: string;
+  hasAirConditioning?: boolean | string;
+  
+  // Plâtrerie
   plasteringType?: string;
+  
+  // Menuiseries intérieures
   interiorDoorsType?: string;
-  flooringType?: string;
+  
+  // Revêtements
   tileType?: string;
-  paintType?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  message?: string;
+  floorTilePercentage?: number;
+  parquetPercentage?: number;
+  softFloorPercentage?: number;
+  parquetType?: string;
+  softFloorType?: string;
+  
+  // Peinture
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
+  woodCladPercentage?: number | string;
+  stoneCladPercentage?: number | string;
+  
+  // Aménagements extérieurs
+  gardenArea?: number;
+  terrace?: boolean;
+  swimmingPool?: boolean;
+  garage?: boolean;
+  carport?: boolean;
+  driveway?: boolean;
+  fence?: boolean;
+  gate?: boolean;
+  garden?: boolean;
+  terraceType?: string;
+  terraceArea?: number;
+  poolType?: string;
+  garageSize?: string;
+  outdoorLighting?: boolean;
+  irrigation?: boolean;
+  outdoorKitchen?: boolean;
+  pergola?: boolean;
+  exteriorFeatures?: string[];
+
+  // Pièces spécifiques
+  kitchenType?: string;
+  bathroomType?: string;
+  bathroomCount?: string;
+  
+  // Options écologiques et énergies renouvelables
   includeEcoSolutions?: boolean;
   includeRenewableEnergy?: boolean;
   includeLandscaping?: boolean;
   includeOptions?: boolean;
   includeCuisine?: boolean;
   includeBathroom?: boolean;
-  termsAccepted?: boolean;
-  surface?: number;
-  levels?: number;
-  units?: number;
-  firstName?: string;
-  lastName?: string;
-  activity?: string;
-  startDate?: string;
-  endDate?: string;
-  hasAirConditioning?: boolean;
-  doorType?: string;
-  interiorFittings?: string[];
-  floorTileType?: string;
-  wallTileType?: string;
-  floorTilePercentage?: number;
-  parquetType?: string;
-  parquetPercentage?: number;
-  softFloorType?: string;
-  softFloorPercentage?: number;
-  basicPaintPercentage?: number;
-  decorativePaintPercentage?: number;
-  wallpaperPercentage?: number;
-  woodCladPercentage?: number;
-  stoneCladPercentage?: number;
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
-  windowRenovationArea?: number;
-  windowNewArea?: number;
-  landPrice?: number;
-  city?: string;
-  finishLevel?: string;
-  constructionType?: string;
-  constructionMode?: string;
-  terrainSurface?: number;
-  terrainAccess?: string;
-  waterConnection?: boolean;
-  electricityConnection?: boolean;
-  gasConnection?: boolean;
-  sewerConnection?: boolean;
-  fiberConnection?: boolean;
-  needsSepticTank?: boolean;
-  floodRisk?: boolean;
-  claySoil?: boolean;
-  rockySoil?: boolean;
-  wetlandZone?: boolean;
-  heritageZone?: boolean;
-  [key: string]: any;
 }
 
-// Validation schemas for form steps
-import * as z from "zod";
-
-// Schema for EstimationType form
-export const EstimationTypeSchema = z.object({
-  estimationType: z.string().min(1, "Veuillez sélectionner un type d'estimation"),
-  termsAccepted: z.boolean().refine(val => val === true, {
-    message: "Vous devez accepter les conditions d'utilisation",
-  }),
-});
-
-// Export all schemas from their respective files
-export * from './clientTypes';
-export * from './constructionTypes';
-export * from './envelopeTypes';
-export * from './interiorTypes';
-export * from './renovationTypes';
-export * from './roomsTypes';
-export * from './specialFeaturesTypes';
 export * from './formTypes';
-
-// Define the baseFormStepProps that all form components will extend
-export interface BaseFormStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}

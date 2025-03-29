@@ -17,46 +17,40 @@ export const createTechnicalStepRegistry = (
   return {
     14: (props: FormStepProps) => (
       <ElectriciteForm
-        formData={formData}
-        updateFormData={(data) => onElectriciteSubmit({
-          electricalType: data.electricalType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
         defaultValues={{
           electricalType: formData.electricalType || ''
         }}
+        onSubmit={(data) => onElectriciteSubmit({
+          electricalType: data.electricalType || ''
+        })}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
       />
     ),
     15: (props: FormStepProps) => (
       <PlomberieForm
-        formData={formData}
-        updateFormData={(data) => onPlomberieSubmit({
-          plumbingType: data.plumbingType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
         defaultValues={{
           plumbingType: formData.plumbingType || ''
         }}
+        onSubmit={(data) => onPlomberieSubmit({
+          plumbingType: data.plumbingType || ''
+        })}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
       />
     ),
     16: (props: FormStepProps) => (
       <ChauffageForm
-        formData={formData}
-        updateFormData={(data) => onChauffageSubmit({
-          heatingType: data.heatingType || '',
-          hasAirConditioning: data.hasAirConditioning || false
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
         defaultValues={{
           heatingType: formData.heatingType || '',
           hasAirConditioning: formData.hasAirConditioning || ''
         }}
+        onSubmit={(data) => onChauffageSubmit({
+          heatingType: data.heatingType || '',
+          hasAirConditioning: data.hasAirConditioning || false
+        })}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
       />
     ),
   };

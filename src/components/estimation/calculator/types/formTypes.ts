@@ -3,12 +3,10 @@ import { FormData } from './index';
 
 // All form step components should extend BaseFormStepProps
 export interface BaseFormStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
-  defaultValues?: any;
 }
 
 // Form step props for components that use defaultValues and onSubmit pattern

@@ -8,35 +8,65 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserRound, ArrowLeftIcon, ArrowRightIcon, CheckCircle } from 'lucide-react';
+import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 
 interface ContactFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
+  defaultValues?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    message?: string;
+    city?: string;
+    termsAccepted?: boolean;
+  };
+  onSubmit?: (data: any) => void;
   goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
 
 const ContactForm: React.FC<ContactFormProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep,
-  goToPreviousStep
+  defaultValues = {},
+  onSubmit,
+  goToPreviousStep,
+  animationDirection
 }) => {
+  const [formData, setFormData] = React.useState({
+    firstName: defaultValues.firstName || '',
+    lastName: defaultValues.lastName || '',
+    email: defaultValues.email || '',
+    phone: defaultValues.phone || '',
+    message: defaultValues.message || '',
+    city: defaultValues.city || '',
+    termsAccepted: defaultValues.termsAccepted || false,
+    newsletter: false
+  });
+
   const [errors, setErrors] = React.useState<{
-    name?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
     phone?: string;
   }>({});
 
+  const updateField = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const validateForm = () => {
     const newErrors: {
-      name?: string;
+      firstName?: string;
+      lastName?: string;
       email?: string;
       phone?: string;
     } = {};
     
-    if (!formData.name) {
-      newErrors.name = "Le nom est requis";
+    if (!formData.firstName) {
+      newErrors.firstName = "Le prénom est requis";
+    }
+    
+    if (!formData.lastName) {
+      newErrors.lastName = "Le nom est requis";
     }
     
     if (!formData.email) {
@@ -57,150 +87,159 @@ const ContactForm: React.FC<ContactFormProps> = ({
     e.preventDefault();
     
     if (validateForm()) {
-      goToNextStep();
+      if (onSubmit) {
+        onSubmit(formData);
+      }
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <UserRound className="h-5 w-5 text-progineer-gold" />
-              <h3 className="text-xl font-semibold">Vos coordonnées</h3>
-            </div>
-            
-            <div className="text-sm text-gray-600 mb-2">
-              Nous avons besoin de quelques informations pour finaliser votre estimation et vous la transmettre.
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="name" className="flex">
-                  Nom et prénom
-                  <span className="text-red-500 ml-1">*</span>
-                </Label>
-                <Input 
-                  id="name" 
-                  value={formData.name || ''} 
-                  onChange={(e) => updateFormData({ name: e.target.value })}
-                  placeholder="Jean Dupont"
-                  className={errors.name ? "border-red-500" : ""}
-                />
-                {errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
+    <AnimatedStepTransition direction={animationDirection}>
+      <form onSubmit={handleSubmit}>
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <UserRound className="h-5 w-5 text-progineer-gold" />
+                <h3 className="text-xl font-semibold">Vos coordonnées</h3>
+              </div>
+              
+              <div className="text-sm text-gray-600 mb-2">
+                Nous avons besoin de quelques informations pour finaliser votre estimation et vous la transmettre.
               </div>
 
-              <div>
-                <Label htmlFor="email" className="flex">
-                  Email
-                  <span className="text-red-500 ml-1">*</span>
-                </Label>
-                <Input 
-                  id="email" 
-                  type="email"
-                  value={formData.email || ''} 
-                  onChange={(e) => updateFormData({ email: e.target.value })}
-                  placeholder="jean.dupont@example.com"
-                  className={errors.email ? "border-red-500" : ""}
-                />
-                {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
-              </div>
-
-              <div>
-                <Label htmlFor="phone" className="flex">
-                  Téléphone
-                  <span className="text-red-500 ml-1">*</span>
-                </Label>
-                <Input 
-                  id="phone" 
-                  value={formData.phone || ''} 
-                  onChange={(e) => updateFormData({ phone: e.target.value })}
-                  placeholder="06 12 34 56 78"
-                  className={errors.phone ? "border-red-500" : ""}
-                />
-                {errors.phone && <div className="text-red-500 text-xs mt-1">{errors.phone}</div>}
-              </div>
-
-              <div>
-                <Label htmlFor="address">Adresse</Label>
-                <Input 
-                  id="address" 
-                  value={formData.address || ''} 
-                  onChange={(e) => updateFormData({ address: e.target.value })}
-                  placeholder="1 rue de la Paix"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="postalCode">Code postal</Label>
-                <Input 
-                  id="postalCode" 
-                  value={formData.postalCode || ''} 
-                  onChange={(e) => updateFormData({ postalCode: e.target.value })}
-                  placeholder="75000"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="message">Message (facultatif)</Label>
-                <Textarea 
-                  id="message" 
-                  value={formData.message || ''} 
-                  onChange={(e) => updateFormData({ message: e.target.value })}
-                  placeholder="Précisez ici toute information complémentaire concernant votre projet"
-                  rows={4}
-                />
-              </div>
-
-              <div className="space-y-2 pt-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="agreeTerms" 
-                    checked={formData.agreeTerms || false}
-                    onCheckedChange={(checked) => updateFormData({ agreeTerms: checked === true })}
-                    required
-                  />
-                  <Label htmlFor="agreeTerms" className="text-sm">
-                    J'accepte que mes informations soient utilisées pour me contacter
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="firstName" className="flex">
+                    Prénom
+                    <span className="text-red-500 ml-1">*</span>
                   </Label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="newsletter" 
-                    checked={formData.newsletter || false}
-                    onCheckedChange={(checked) => updateFormData({ newsletter: checked === true })}
+                  <Input 
+                    id="firstName" 
+                    value={formData.firstName} 
+                    onChange={(e) => updateField('firstName', e.target.value)}
+                    placeholder="Jean"
+                    className={errors.firstName ? "border-red-500" : ""}
                   />
-                  <Label htmlFor="newsletter" className="text-sm">
-                    Je souhaite recevoir des informations et offres par email
+                  {errors.firstName && <div className="text-red-500 text-xs mt-1">{errors.firstName}</div>}
+                </div>
+
+                <div>
+                  <Label htmlFor="lastName" className="flex">
+                    Nom
+                    <span className="text-red-500 ml-1">*</span>
                   </Label>
+                  <Input 
+                    id="lastName" 
+                    value={formData.lastName} 
+                    onChange={(e) => updateField('lastName', e.target.value)}
+                    placeholder="Dupont"
+                    className={errors.lastName ? "border-red-500" : ""}
+                  />
+                  {errors.lastName && <div className="text-red-500 text-xs mt-1">{errors.lastName}</div>}
+                </div>
+
+                <div>
+                  <Label htmlFor="email" className="flex">
+                    Email
+                    <span className="text-red-500 ml-1">*</span>
+                  </Label>
+                  <Input 
+                    id="email" 
+                    type="email"
+                    value={formData.email} 
+                    onChange={(e) => updateField('email', e.target.value)}
+                    placeholder="jean.dupont@example.com"
+                    className={errors.email ? "border-red-500" : ""}
+                  />
+                  {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
+                </div>
+
+                <div>
+                  <Label htmlFor="phone" className="flex">
+                    Téléphone
+                    <span className="text-red-500 ml-1">*</span>
+                  </Label>
+                  <Input 
+                    id="phone" 
+                    value={formData.phone} 
+                    onChange={(e) => updateField('phone', e.target.value)}
+                    placeholder="06 12 34 56 78"
+                    className={errors.phone ? "border-red-500" : ""}
+                  />
+                  {errors.phone && <div className="text-red-500 text-xs mt-1">{errors.phone}</div>}
+                </div>
+
+                <div>
+                  <Label htmlFor="city">Ville</Label>
+                  <Input 
+                    id="city" 
+                    value={formData.city} 
+                    onChange={(e) => updateField('city', e.target.value)}
+                    placeholder="Marseille"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="message">Message (facultatif)</Label>
+                  <Textarea 
+                    id="message" 
+                    value={formData.message} 
+                    onChange={(e) => updateField('message', e.target.value)}
+                    placeholder="Précisez ici toute information complémentaire concernant votre projet"
+                    rows={4}
+                  />
+                </div>
+
+                <div className="space-y-2 pt-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="termsAccepted" 
+                      checked={formData.termsAccepted}
+                      onCheckedChange={(checked) => updateField('termsAccepted', checked === true)}
+                      required
+                    />
+                    <Label htmlFor="termsAccepted" className="text-sm">
+                      J'accepte que mes informations soient utilisées pour me contacter
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="newsletter" 
+                      checked={formData.newsletter}
+                      onCheckedChange={(checked) => updateField('newsletter', checked === true)}
+                    />
+                    <Label htmlFor="newsletter" className="text-sm">
+                      Je souhaite recevoir des informations et offres par email
+                    </Label>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={goToPreviousStep}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Précédent
-        </Button>
-        <Button
-          type="submit"
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        >
-          Finaliser
-          <CheckCircle className="w-4 h-4" />
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Précédent
+          </Button>
+          <Button
+            type="submit"
+            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+          >
+            Finaliser
+            <CheckCircle className="w-4 h-4" />
+          </Button>
+        </div>
+      </form>
+    </AnimatedStepTransition>
   );
 };
 
