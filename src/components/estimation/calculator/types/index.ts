@@ -13,6 +13,7 @@ export interface FormData {
   // Terrain details
   terrainType?: string;
   terrainSurface?: number;
+  terrainAccess?: string; // Added terrainAccess property
   landPrice?: number;
   
   // Construction details
@@ -20,6 +21,7 @@ export interface FormData {
   constructionStyle?: string;
   levels?: number | string;
   surface?: number;
+  floors?: number | string; // Added floors property
   basement?: boolean;
   garage?: boolean;
   bedrooms?: number;

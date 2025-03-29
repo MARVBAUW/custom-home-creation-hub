@@ -60,7 +60,7 @@ export const useClientInfoSubmissions = (
   const onConstructionDetailsSubmit = (data: {
     constructionType: string;
     surface: number | string;
-    floors: number | string;
+    levels: number | string; // Use levels instead of floors
     rooms: number | string;
     bedrooms: number | string;
     bathrooms: number | string;
@@ -69,7 +69,7 @@ export const useClientInfoSubmissions = (
     updateFormData({
       constructionType: data.constructionType,
       surface: ensureNumber(data.surface),
-      floors: ensureNumber(data.floors),
+      levels: ensureNumber(data.levels), // Use levels instead of floors
       rooms: ensureNumber(data.rooms),
       bedrooms: ensureNumber(data.bedrooms),
       bathrooms: ensureNumber(data.bathrooms)
@@ -80,14 +80,14 @@ export const useClientInfoSubmissions = (
   // Soumission du formulaire de type de terrain
   const onTerrainSubmit = (data: {
     terrainType: string;
-    terrainAccess: string;
+    terrainAccess: string; // Match the property name in FormData
     landIncluded: string;
     landPrice?: number | string;
   }) => {
     console.log("Terrain soumis:", data);
     updateFormData({
       terrainType: data.terrainType,
-      terrainAccess: data.terrainAccess,
+      terrainAccess: data.terrainAccess, // Match the property name in FormData
       landIncluded: data.landIncluded,
       landPrice: data.landPrice ? ensureNumber(data.landPrice) : undefined
     });

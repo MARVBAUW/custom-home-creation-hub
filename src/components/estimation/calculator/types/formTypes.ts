@@ -21,6 +21,7 @@ export interface ProjectTypeStepProps {
   updateFormData: (data: { projectType: string; landIncluded?: string }) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  isIndividual?: boolean;
 }
 
 export interface TerrainDetailsStepProps {
@@ -35,6 +36,7 @@ export interface ConstructionDetailsStepProps {
   updateFormData: (data: any) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  estimationType?: string;
 }
 
 export interface RoomsDetailsStepProps {

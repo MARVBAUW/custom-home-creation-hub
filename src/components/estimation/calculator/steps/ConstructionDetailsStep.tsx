@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '../types';
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,13 +14,15 @@ interface ConstructionDetailsStepProps {
   updateFormData: (data: any) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  estimationType?: string; // Added estimationType prop
 }
 
 const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({ 
   formData, 
   updateFormData, 
   goToNextStep,
-  goToPreviousStep
+  goToPreviousStep,
+  estimationType // Use the prop
 }) => {
   const [constructionType, setConstructionType] = React.useState<string>(
     formData.constructionType || 'traditional'
@@ -56,6 +57,9 @@ const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
   );
 
   const handleSubmit = () => {
+    // Adapt the submit logic based on estimationType if needed
+    const isDetailedEstimation = estimationType?.includes('Précise');
+    
     updateFormData({
       constructionType,
       constructionStyle,
@@ -66,6 +70,7 @@ const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
       basement,
       garage
     });
+    
     goToNextStep();
   };
 
