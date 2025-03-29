@@ -7,7 +7,7 @@ import EstimationBenefits from '@/components/estimation/EstimationBenefits';
 import EstimationTrustMetrics from '@/components/estimation/EstimationTrustMetrics';
 import EstimationFAQ from '@/components/estimation/EstimationFAQ';
 import EstimationLocationCities from '@/components/estimation/EstimationLocationCities';
-import EstimationCalculator from '@/components/estimation/EstimationCalculator';
+import EstimationWizard from '@/components/estimation/calculator/EstimationWizard';
 import { motion } from 'framer-motion';
 
 const Estimation = () => {
@@ -42,8 +42,8 @@ const Estimation = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-10">Estimez votre projet en quelques étapes</h2>
             <div className="p-2 md:p-5 lg:p-8 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm relative z-10 max-w-5xl mx-auto">
-              {/* Un seul composant EstimationCalculator */}
-              <EstimationCalculator />
+              {/* Remplacement de l'ancien calculateur par le nouveau système */}
+              <EstimationWizard />
             </div>
           </div>
         </section>
