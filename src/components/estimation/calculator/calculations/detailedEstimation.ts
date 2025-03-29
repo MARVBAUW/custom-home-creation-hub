@@ -1,391 +1,378 @@
 
-import { FormData } from '../types';
-import { parseToNumber } from '../utils/typeConversions';
+// Detailed estimation calculation function that takes in the form data and returns a detailed estimate
+import { FormData } from "../types";
 
-interface EstimationDetails {
-  terrainSurface?: number;
-  constructionSurface?: number;
-  wallType?: string;
-  roofType?: string;
-  insulationType?: string;
-  heatingType?: string;
-  windowType?: string;
-  landscapingType?: string;
-  exteriorFeatures?: string;
-  solarPanelType?: string;
-  windTurbineType?: string;
-  rainwaterHarvesting?: boolean;
-  greywaterRecycling?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  terrace?: boolean;
-  pool?: boolean;
-  outdoorKitchen?: boolean;
-  // Include other relevant form fields
+export interface DetailedEstimation {
+  totalHT: number;
+  totalTTC: number;
+  vat: number;
+  coutGlobalHT: number;
+  coutGlobalTTC: number;
+  honorairesHT: number;
+  taxeAmenagement: number;
+  garantieDecennale: number;
+  etudesGeotechniques: number;
+  etudeThermique: number;
+  corpsEtat: {
+    [key: string]: {
+      montantHT: number;
+      details: string[];
+    };
+  };
 }
 
-export const calculateDetailedEstimation = (formData: FormData): any => {
-  const {
-    // Client Type
-    clientType, // "individual" | "professional"
-
-    // Project Type
-    projectType, // "construction" | "renovation" | "extension"
-
-    // Terrain
-    landIncluded, // "yes" | "no"
-    landSurface,
-    terrainType, // "flat" | "sloping" | "wooded"
-    landPrice,
-
-    // Construction Details
-    constructionType, // "house" | "apartment"
-    constructionStyle, // "modern" | "traditional" | "contemporary"
-    surface,
-    wallType, // "concrete" | "brick" | "wood"
-    roofType, // "tile" | "slate" | "metal"
-    basement, // "yes" | "no"
-    garage: hasGarage, // "yes" | "no" - renamed to avoid redeclaration
-    floorCount,
-
-    // Special Features
-    solarPanelType,
-    solarPanelSurface,
-    windTurbineType,
-    rainwaterHarvesting,
-    greywaterRecycling,
-    ecoFriendlyInsulation,
-    landscapingType,
-    gardenSurface,
-    pool,
-    outdoorKitchen,
-    terrace,
-    exteriorFeatures,
-
-    // Interior
-    roomCount,
-    bathroomCount,
-    kitchenType, // "open" | "closed" | "island"
-    flooringType, // "parquet" | "tile" | "concrete"
-    wallCovering, // "paint" | "wallpaper" | "tile"
-
-    // Location
-    city,
-    zipCode,
-
-    // Contact Information
-    firstName,
-    lastName,
-    email,
-    phone,
-
-    // Budget & Timeline
-    budget,
-    timeline,
-
-    // Additional Details
-    additionalDetails,
-
-    // Additional form fields - étages et pièces
-    niveaux,
-    étages,
-    combles,
-    sousSOl,
-    chambres,
-    sallesDeBain,
-    cuisine,
-    salon,
-    salleManger,
-    bureau,
-    
-    // Caractéristiques techniques
-    fondationType,
-    structureMurs,
-    typeCouverture,
-    typeMenuiseries,
-    typeIsolation,
-    typeVentilation,
-    typeEnergie,
-    
-    // Options spéciales
-    domotique,
-    alarme,
-    climatisation,
-    aspCentralisée,
-    
-    // Extérieur
-    terrasse,
-    balcon,
-    piscine,
-    poolHouse,
-    aménagementPaysager,
-    clôture,
-    portail,
-    carport,
-    
-    // Qualité de finition
-    niveauFinition, // "standard" | "premium" | "luxe"
-    
-    // Budget et contraintes
-    budgetMaxi,
-    délaiSouhaité,
-    contraintesParticulières,
-  } = formData;
-
-  // Parse surface and landPrice to numbers
-  const surfaceValue = parseToNumber(surface);
-  const landPriceValue = parseToNumber(landPrice);
-  const gardenSurfaceValue = parseToNumber(gardenSurface);
-  const floorCountValue = parseToNumber(floorCount);
-  const roomCountValue = parseToNumber(roomCount);
-  const bathroomCountValue = parseToNumber(bathroomCount);
-  const budgetValue = parseToNumber(budget);
-  const timelineValue = parseToNumber(timeline);
-  const landSurfaceValue = parseToNumber(landSurface);
-  const budgetMaxValue = parseToNumber(budgetMaxi);
-
-  // Base costs
-  let baseCostPerSqMeter = 1500; // Average cost per square meter
-  if (projectType === 'renovation') {
-    baseCostPerSqMeter = 1200; // Lower cost for renovations
-  } else if (projectType === 'extension') {
-    baseCostPerSqMeter = 1800; // Higher cost for extensions
-  }
-
-  // Adjustments based on construction style
-  if (constructionStyle === 'modern') {
-    baseCostPerSqMeter *= 1.1; // 10% increase for modern style
-  } else if (constructionStyle === 'traditional') {
-    baseCostPerSqMeter *= 0.9; // 10% decrease for traditional style
-  } else if (constructionStyle === 'contemporary') {
-    baseCostPerSqMeter *= 1.05; // 5% increase for contemporary style
-  }
-
-  // Adjustments based on finish quality
-  if (niveauFinition === 'premium') {
-    baseCostPerSqMeter *= 1.2; // 20% increase for premium finishes
-  } else if (niveauFinition === 'luxe') {
-    baseCostPerSqMeter *= 1.4; // 40% increase for luxury finishes
-  }
-
-  // Adjustments based on terrain type
-  let terrainAdjustment = 1;
-  if (terrainType === 'sloping') {
-    terrainAdjustment = 1.1; // 10% increase for sloping terrain
-  } else if (terrainType === 'wooded') {
-    terrainAdjustment = 1.15; // 15% increase for wooded terrain
-  }
-
-  // Adjustments based on wall type
-  let wallTypeAdjustment = 1;
-  if (wallType === 'brick') {
-    wallTypeAdjustment = 1.05; // 5% increase for brick walls
-  } else if (wallType === 'wood') {
-    wallTypeAdjustment = 0.95; // 5% decrease for wood walls
-  }
-
-  // Adjustments based on roof type
-  let roofTypeAdjustment = 1;
-  if (roofType === 'slate') {
-    roofTypeAdjustment = 1.1; // 10% increase for slate roofs
-  } else if (roofType === 'metal') {
-    roofTypeAdjustment = 0.9; // 10% decrease for metal roofs
-  }
-
-  // Adjustments based on special features
-  let specialFeaturesAdjustment = 0;
-  if (solarPanelType) specialFeaturesAdjustment += 0.05;
-  if (windTurbineType) specialFeaturesAdjustment += 0.05;
-  if (rainwaterHarvesting) specialFeaturesAdjustment += 0.02;
-  if (greywaterRecycling) specialFeaturesAdjustment += 0.03;
-  if (ecoFriendlyInsulation) specialFeaturesAdjustment += 0.04;
-  if (pool) specialFeaturesAdjustment += 0.06;
-  if (outdoorKitchen) specialFeaturesAdjustment += 0.03;
-  if (terrace) specialFeaturesAdjustment += 0.02;
-  if (domotique) specialFeaturesAdjustment += 0.04;
-  if (alarme) specialFeaturesAdjustment += 0.02;
-  if (climatisation) specialFeaturesAdjustment += 0.03;
-  if (aspCentralisée) specialFeaturesAdjustment += 0.01;
-  if (piscine) specialFeaturesAdjustment += 0.08;
-  if (poolHouse) specialFeaturesAdjustment += 0.04;
-
-  // Calculate base construction cost
-  let constructionCost = baseCostPerSqMeter * surfaceValue * terrainAdjustment * wallTypeAdjustment * roofTypeAdjustment * (1 + specialFeaturesAdjustment);
-
-  // Add costs for additional rooms and levels
-  const étagesValue = parseToNumber(étages);
-  const chambresValue = parseToNumber(chambres);
-  const sallesDeBainValue = parseToNumber(sallesDeBain);
+export const calculateDetailedEstimation = (formData: FormData): DetailedEstimation => {
+  console.log("Calculating detailed estimation with formData:", formData);
   
-  if (étagesValue > 1) {
-    constructionCost *= (1 + ((étagesValue - 1) * 0.1)); // 10% increase per additional floor
-  }
+  // Default values if not provided
+  const livingArea = formData.livingArea || 100; // m²
+  const basePricePerSqm = 1200; // €/m²
   
-  if (sousSOl === 'yes' || basement === 'yes') {
-    constructionCost += 500 * surfaceValue * 0.7; // 70% of main surface for basement
-  }
-  
-  if (combles === 'aménagés') {
-    constructionCost += 400 * surfaceValue * 0.5; // 50% of main surface for finished attic
-  }
-
-  if (hasGarage === 'yes') {
-    constructionCost += 300 * (surfaceValue * 0.2); // 20% of main surface for garage
-  }
-  
-  if (carport === 'yes') {
-    constructionCost += 150 * (surfaceValue * 0.15); // 15% of main surface for carport
-  }
-
-  // Landscaping costs
-  let landscapingCost = 0;
-  if (landscapingType || aménagementPaysager) {
-    landscapingCost = 100 * gardenSurfaceValue;
-    
-    if (clôture) landscapingCost += 50 * Math.sqrt(gardenSurfaceValue) * 4; // Approximate perimeter
-    if (portail) landscapingCost += 2000; // Fixed cost for gate
-    if (terrasse) landscapingCost += 200 * (surfaceValue * 0.2); // 20% of main surface for terrace
-    if (balcon) landscapingCost += 300 * (surfaceValue * 0.1); // 10% of main surface for balcony
-  }
-
-  // Calculate total project cost
-  let totalCost = constructionCost + landscapingCost;
-
-  // Add land price if land is included
-  if (landIncluded === 'yes') {
-    totalCost += landPriceValue;
-  }
-
-  // Calculate fees
-  const architectFees = 0.1 * constructionCost;
-  const permitFees = 0.05 * constructionCost;
-  const vat = 0.2 * totalCost;
-  
-  // Add fees to total
-  totalCost += architectFees + permitFees + vat;
-
-  // Format numbers for display
-  const formatNumber = (value: number) => {
-    return Math.round(value).toLocaleString('fr-FR');
+  // Price modifiers
+  const coefficients = {
+    clientType: formData.clientType === 'professional' ? 1.2 : 1,
+    projectType: formData.projectType === 'renovation' ? 0.9 : 1.1,
+    size: livingArea > 150 ? 0.95 : livingArea < 80 ? 1.1 : 1,
+    landSurface: formData.landSurface && formData.landSurface > 1000 ? 1.1 : 1,
+    quality: 1.0, // Standard by default
   };
-
-  // Calculate detailed breakdown by trade
+  
+  // Quality adjustment based on finishing level
+  if (formData.finishingLevel === 'premium') {
+    coefficients.quality = 1.3;
+  } else if (formData.finishingLevel === 'economic') {
+    coefficients.quality = 0.85;
+  }
+  
+  // Specific building components
+  const hasBasement = formData.basement || false;
+  const hasGarage = formData.garage || false;
+  const floorsCount = formData.floorCount || 1;
+  
+  // Calculate base price with all coefficients
+  let basePrice = basePricePerSqm * livingArea;
+  
+  Object.values(coefficients).forEach(coeff => {
+    basePrice *= coeff;
+  });
+  
+  // Add extras for specific building components
+  if (hasBasement) {
+    basePrice += 15000;
+  }
+  
+  if (hasGarage) {
+    basePrice += 10000;
+  }
+  
+  if (floorsCount > 1) {
+    basePrice += (floorsCount - 1) * 8000; // Additional cost per floor
+  }
+  
+  // Create a detailed breakdown by "Corps d'État" (trade)
+  const corpsEtat: DetailedEstimation['corpsEtat'] = {
+    terrasse: { montantHT: 0, details: [] },
+    vrd: { montantHT: 0, details: [] },
+    grosOeuvre: { montantHT: 0, details: [] },
+    charpente: { montantHT: 0, details: [] },
+    couverture: { montantHT: 0, details: [] },
+    menuiseriesExt: { montantHT: 0, details: [] },
+    cloisons: { montantHT: 0, details: [] },
+    menuiseriesInt: { montantHT: 0, details: [] },
+    electricite: { montantHT: 0, details: [] },
+    plomberie: { montantHT: 0, details: [] },
+    chauffage: { montantHT: 0, details: [] },
+    facade: { montantHT: 0, details: [] },
+    peinture: { montantHT: 0, details: [] },
+    revetements: { montantHT: 0, details: [] },
+    amenagements: { montantHT: 0, details: [] },
+  };
+  
+  // Apply specific adjustments based on form data choices
+  // Wall type adjustments
+  if (formData.wallType === 'brick') {
+    corpsEtat.grosOeuvre.montantHT += livingArea * 180;
+    corpsEtat.grosOeuvre.details.push('Murs en briques');
+  } else if (formData.wallType === 'wood') {
+    corpsEtat.grosOeuvre.montantHT += livingArea * 160;
+    corpsEtat.grosOeuvre.details.push('Ossature bois');
+  } else if (formData.wallType === 'concrete') {
+    corpsEtat.grosOeuvre.montantHT += livingArea * 170;
+    corpsEtat.grosOeuvre.details.push('Murs en béton');
+  } else {
+    corpsEtat.grosOeuvre.montantHT += livingArea * 150;
+    corpsEtat.grosOeuvre.details.push('Murs standard');
+  }
+  
+  // Base VRD costs
+  corpsEtat.vrd.montantHT += livingArea * 80;
+  corpsEtat.vrd.details.push('Voirie et Réseaux Divers');
+  
+  // Additional costs based on form data
+  if (formData.wallCovering === 'stone') {
+    corpsEtat.facade.montantHT += livingArea * 120;
+    corpsEtat.facade.details.push('Façade en pierre');
+  } else {
+    corpsEtat.facade.montantHT += livingArea * 60;
+    corpsEtat.facade.details.push('Enduit de façade');
+  }
+  
+  // Regional coefficient based on zip code (if available)
+  let regionalCoefficient = 1.0;
+  if (formData.zipCode) {
+    const region = formData.zipCode.substring(0, 2);
+    if (['75', '77', '78', '91', '92', '93', '94', '95'].includes(region)) {
+      regionalCoefficient = 1.3; // Paris region
+    } else if (['06', '13', '83', '84'].includes(region)) {
+      regionalCoefficient = 1.15; // PACA region
+    }
+  }
+  
+  // Timeline adjustment
+  let timelineCoefficient = 1.0;
+  if (formData.timeline === 'urgent') {
+    timelineCoefficient = 1.2;
+  } else if (formData.timeline === 'flexible') {
+    timelineCoefficient = 0.95;
+  }
+  
+  // Additional features
+  if (formData.additionalDetails?.includes('custom')) {
+    basePrice *= 1.15;
+  }
+  
+  // Calculate additional corps d'état based on form data
+  const calculateCorpsEtat = () => {
+    // Structure and levels
+    const niveaux = formData.niveaux || 1;
+    const etages = formData.étages || 0;
+    const combles = formData.combles || 0;
+    const sousSol = formData.sousSOl || false;
+    
+    // Rooms
+    const chambres = formData.chambres || 2;
+    const sallesDeBain = formData.sallesDeBain || 1;
+    const cuisine = formData.cuisine || 'standard';
+    const salon = formData.salon || true;
+    const salleManger = formData.salleManger || false;
+    const bureau = formData.bureau || false;
+    
+    // Technical systems
+    const fondationType = formData.fondationType || 'standard';
+    const structureMurs = formData.structureMurs || 'parpaings';
+    const typeCouverture = formData.typeCouverture || 'tuiles';
+    const typeMenuiseries = formData.typeMenuiseries || 'pvc';
+    const typeIsolation = formData.typeIsolation || 'standard';
+    const typeVentilation = formData.typeVentilation || 'simple_flux';
+    const typeEnergie = formData.typeEnergie || 'gaz';
+    
+    // Special equipment
+    const domotique = formData.domotique || false;
+    const alarme = formData.alarme || false;
+    const climatisation = formData.climatisation || false;
+    const aspCentralisée = formData.aspCentralisée || false;
+    
+    // Exterior features
+    const terrasse = formData.terrasse || false;
+    const balcon = formData.balcon || false;
+    const piscine = formData.piscine || false;
+    const poolHouse = formData.poolHouse || false;
+    const amenagementPaysager = formData.aménagementPaysager || false;
+    const cloture = formData.clôture || false;
+    const portail = formData.portail || false;
+    const carport = formData.carport || false;
+    
+    // Finish level
+    const niveauFinition = formData.niveauFinition || 'standard';
+    
+    // Client preferences
+    const budgetMaxi = formData.budgetMaxi || 0;
+    const delaiSouhaite = formData.délaiSouhaité || 'normal';
+    const contraintesParticulieres = formData.contraintesParticulières || '';
+    
+    // Calculate gros œuvre based on the structure
+    corpsEtat.grosOeuvre.montantHT += livingArea * (niveaux * 250 + (sousSol ? 300 : 0));
+    corpsEtat.grosOeuvre.details.push(`${niveaux} niveau(x)${sousSol ? ' avec sous-sol' : ''}`);
+    
+    // Calculate roof based on type and size
+    const surfaceToiture = livingArea * 1.2;  // Approximation
+    if (formData.roofType === 'flat') {
+      corpsEtat.couverture.montantHT += surfaceToiture * 180;
+      corpsEtat.couverture.details.push('Toit terrasse');
+    } else {
+      corpsEtat.couverture.montantHT += surfaceToiture * 150;
+      corpsEtat.couverture.details.push('Toit en pente');
+    }
+    
+    // Calculate electrical system based on type
+    if (formData.electricalType === 'premium') {
+      corpsEtat.electricite.montantHT += livingArea * 110;
+      corpsEtat.electricite.details.push('Installation électrique premium');
+    } else if (formData.electricalType === 'standard') {
+      corpsEtat.electricite.montantHT += livingArea * 80;
+      corpsEtat.electricite.details.push('Installation électrique standard');
+    } else {
+      corpsEtat.electricite.montantHT += livingArea * 60;
+      corpsEtat.electricite.details.push('Installation électrique basique');
+    }
+    
+    // Calculate plumbing system based on type
+    if (formData.plumbingType === 'premium') {
+      corpsEtat.plomberie.montantHT += livingArea * 100 + sallesDeBain * 3000;
+      corpsEtat.plomberie.details.push('Plomberie premium');
+    } else if (formData.plumbingType === 'standard') {
+      corpsEtat.plomberie.montantHT += livingArea * 70 + sallesDeBain * 2000;
+      corpsEtat.plomberie.details.push('Plomberie standard');
+    } else {
+      corpsEtat.plomberie.montantHT += livingArea * 50 + sallesDeBain * 1500;
+      corpsEtat.plomberie.details.push('Plomberie basique');
+    }
+    
+    // Calculate exterior features
+    if (terrasse) {
+      corpsEtat.terrasse.montantHT += livingArea * 0.3 * 200;  // Assuming terrace is 30% of living area
+      corpsEtat.terrasse.details.push('Terrasse');
+    }
+    
+    if (piscine) {
+      corpsEtat.amenagements.montantHT += 20000;  // Base pool cost
+      corpsEtat.amenagements.details.push('Piscine');
+    }
+    
+    // Calculate windows (menuiseries extérieures)
+    let windowCoef = 1.0;
+    if (formData.windowType === 'aluminum') {
+      windowCoef = 1.5;
+    } else if (formData.windowType === 'wood') {
+      windowCoef = 1.3;
+    }
+    
+    // Calculate window area or use a default approximation
+    const windowArea = formData.windowNewArea || (livingArea * 0.15);
+    corpsEtat.menuiseriesExt.montantHT += windowArea * 600 * windowCoef;
+    corpsEtat.menuiseriesExt.details.push(`Fenêtres ${formData.windowType || 'standard'}`);
+    
+    // Calculate flooring (revêtements de sol)
+    const tileSurface = formData.tileSurface || (livingArea * 0.3);
+    const parquetSurface = formData.parquetSurface || (livingArea * 0.5);
+    const otherSurface = livingArea - tileSurface - parquetSurface;
+    
+    corpsEtat.revetements.montantHT += tileSurface * 100 + parquetSurface * 120 + otherSurface * 60;
+    corpsEtat.revetements.details.push(`${tileSurface}m² de carrelage, ${parquetSurface}m² de parquet`);
+    
+    // Calculate painting (peinture)
+    const paintSurface = formData.paintSurface || (livingArea * 2.7);  // Wall height approximation
+    corpsEtat.peinture.montantHT += paintSurface * 30;
+    corpsEtat.peinture.details.push(`${paintSurface}m² de peinture`);
+    
+    // Calculate interior doors (menuiseries intérieures)
+    const doorCount = chambres + sallesDeBain + 2;  // Approximate door count
+    let doorUnitPrice = 400;  // Standard door
+    
+    if (formData.doorType === 'premium') {
+      doorUnitPrice = 700;
+    } else if (formData.doorType === 'custom') {
+      doorUnitPrice = 1000;
+    }
+    
+    corpsEtat.menuiseriesInt.montantHT += doorCount * doorUnitPrice;
+    corpsEtat.menuiseriesInt.details.push(`${doorCount} portes intérieures ${formData.doorType || 'standard'}`);
+    
+    // Calculate partitions (cloisons)
+    corpsEtat.cloisons.montantHT += livingArea * 70;
+    corpsEtat.cloisons.details.push('Cloisons et isolation intérieure');
+    
+    // Calculate heating system (chauffage)
+    let heatingCost = livingArea * 80;  // Base heating cost
+    
+    if (formData.heatingType === 'heat_pump') {
+      heatingCost = livingArea * 150;
+      corpsEtat.chauffage.details.push('Pompe à chaleur');
+    } else if (formData.heatingType === 'solar') {
+      heatingCost = livingArea * 180;
+      corpsEtat.chauffage.details.push('Chauffage solaire');
+    } else if (formData.heatingType === 'gas') {
+      heatingCost = livingArea * 100;
+      corpsEtat.chauffage.details.push('Chauffage au gaz');
+    } else if (formData.heatingType === 'electric') {
+      heatingCost = livingArea * 80;
+      corpsEtat.chauffage.details.push('Chauffage électrique');
+    } else {
+      corpsEtat.chauffage.details.push('Système de chauffage standard');
+    }
+    
+    corpsEtat.chauffage.montantHT += heatingCost;
+  };
+  
+  // Execute the detailed corps d'état calculation
+  calculateCorpsEtat();
+  
+  // Calculate any missing corps d'état based on a percentage of base price
+  let totalCorpsEtatHT = 0;
+  
+  for (const category in corpsEtat) {
+    if (corpsEtat[category].montantHT === 0) {
+      // If not specifically calculated, use a default percentage
+      const defaultPercentages: { [key: string]: number } = {
+        terrasse: 0.04,
+        vrd: 0.06,
+        grosOeuvre: 0.25,
+        charpente: 0.08,
+        couverture: 0.07,
+        menuiseriesExt: 0.08,
+        cloisons: 0.06,
+        menuiseriesInt: 0.05,
+        electricite: 0.06,
+        plomberie: 0.06,
+        chauffage: 0.05,
+        facade: 0.04,
+        peinture: 0.03,
+        revetements: 0.05,
+        amenagements: 0.02,
+      };
+      
+      corpsEtat[category].montantHT = basePrice * (defaultPercentages[category] || 0.05);
+      corpsEtat[category].details.push(`Estimation forfaitaire`);
+    }
+    
+    // Apply regional and timeline coefficients
+    corpsEtat[category].montantHT *= regionalCoefficient * timelineCoefficient;
+    
+    // Round to nearest 100
+    corpsEtat[category].montantHT = Math.round(corpsEtat[category].montantHT / 100) * 100;
+    
+    totalCorpsEtatHT += corpsEtat[category].montantHT;
+  }
+  
+  // Fees and additional costs
+  const honorairesHT = totalCorpsEtatHT * 0.1; // 10% of construction cost
+  const taxeAmenagement = totalCorpsEtatHT * 0.03; // 3% of construction cost
+  const garantieDecennale = totalCorpsEtatHT * 0.02; // 2% of construction cost
+  const etudesGeotechniques = 2500;
+  const etudeThermique = 1500;
+  
+  // VAT
+  const vat = totalCorpsEtatHT * 0.2; // 20% VAT
+  
+  // Total costs
+  const totalHT = totalCorpsEtatHT;
+  const totalTTC = totalHT + vat;
+  
+  // Global cost including fees and studies
+  const coutGlobalHT = totalHT + honorairesHT + taxeAmenagement + garantieDecennale + etudesGeotechniques + etudeThermique;
+  const coutGlobalTTC = coutGlobalHT * 1.2; // Add 20% VAT
+  
   return {
-    "Gros oeuvre": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.3)),
-      details: [
-        `Type de mur: ${wallType || 'Non spécifié'}`,
-        `Fondations: ${fondationType || 'Standard'}`,
-        `Élévation: ${structureMurs || 'Standard'}`
-      ]
-    },
-    "Charpente": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.15)),
-      details: [
-        `Type de toit: ${roofType || 'Non spécifié'}`,
-        `Charpente: ${typeCouverture ? 'Spéciale' : 'Traditionnelle'}`
-      ]
-    },
-    "Couverture": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.1)),
-      details: [
-        `Type de couverture: ${typeCouverture || 'Tuiles céramiques'}`
-      ]
-    },
-    "Menuiseries Extérieures": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.1)),
-      details: [
-        `Type de menuiseries: ${typeMenuiseries || formData.windowType || 'PVC double vitrage'}`
-      ]
-    },
-    "Isolation/Étanchéité": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.08)),
-      details: [
-        `Type d'isolation: ${typeIsolation || 'Standard'}`,
-        `Ventilation: ${typeVentilation || 'VMC simple flux'}`
-      ]
-    },
-    "Électricité": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.07)),
-      details: [
-        `Type d'installation: ${domotique ? 'Avec domotique' : 'Standard'}`,
-        `Alarme: ${alarme ? 'Incluse' : 'Non incluse'}`
-      ]
-    },
-    "Plomberie/Sanitaires": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.08)),
-      details: [
-        `Salles de bain: ${sallesDeBainValue}`,
-        `Type d'équipements: ${niveauFinition === 'luxe' ? 'Haut de gamme' : niveauFinition === 'premium' ? 'Qualité supérieure' : 'Standard'}`
-      ]
-    },
-    "Chauffage/Climatisation": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.06)),
-      details: [
-        `Type d'énergie: ${typeEnergie || 'Gaz'}`,
-        `Climatisation: ${climatisation ? 'Incluse' : 'Non incluse'}`
-      ]
-    },
-    "Plâtrerie": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.05)),
-      details: [
-        `Cloisons et plafonds`,
-        `Isolation intérieure`
-      ]
-    },
-    "Menuiseries Intérieures": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.04)),
-      details: [
-        `Portes intérieures`,
-        `Placards et rangements`,
-        `Escalier: ${étagesValue > 1 ? 'Inclus' : 'Non applicable'}`
-      ]
-    },
-    "Revêtements sols": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.05)),
-      details: [
-        `Type de sol: ${flooringType || 'Standard'}`
-      ]
-    },
-    "Revêtements murs": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.03)),
-      details: [
-        `Type de revêtement: ${wallCovering || 'Peinture'}`
-      ]
-    },
-    "Équipements cuisine": {
-      montantHT: parseToNumber(formatNumber(constructionCost * 0.04)),
-      details: [
-        `Type de cuisine: ${kitchenType || 'Standard'}`,
-        `Niveau d'équipement: ${niveauFinition === 'luxe' ? 'Haut de gamme' : niveauFinition === 'premium' ? 'Qualité supérieure' : 'Standard'}`
-      ]
-    },
-    "Aménagements extérieurs": {
-      montantHT: parseToNumber(formatNumber(landscapingCost)),
-      details: [
-        `Type d'aménagement: ${landscapingType || aménagementPaysager || 'Non spécifié'}`,
-        `Terrasse: ${terrasse ? 'Incluse' : 'Non incluse'}`,
-        `Piscine: ${piscine || pool ? 'Incluse' : 'Non incluse'}`
-      ]
-    },
-    "Honoraires architecte": {
-      montantHT: parseToNumber(formatNumber(architectFees)),
-      details: [
-        `Honoraires de l'architecte (10% du coût de construction)`
-      ]
-    },
-    "Taxes et permis": {
-      montantHT: parseToNumber(formatNumber(permitFees)),
-      details: [
-        `Taxes et permis de construire (5% du coût de construction)`
-      ]
-    },
-    "TVA": {
-      montantHT: parseToNumber(formatNumber(vat)),
-      details: [
-        `TVA (20%)`
-      ]
-    },
-    totalHT: parseToNumber(formatNumber(totalCost - vat)),
-    totalTTC: parseToNumber(formatNumber(totalCost)),
+    totalHT,
+    totalTTC,
+    vat,
+    coutGlobalHT,
+    coutGlobalTTC,
+    honorairesHT,
+    taxeAmenagement,
+    garantieDecennale,
+    etudesGeotechniques,
+    etudeThermique,
+    corpsEtat,
   };
 };

@@ -1,165 +1,140 @@
 
-export * from './formTypes';
+import { z } from "zod";
+import { RoofingSchema, InsulationSchema, FacadeSchema, MenuiseriesExtSchema } from "./envelopeTypes";
 
-// Define all the properties that can be part of the form data
+// Forme interface for base form data
 export interface FormData {
-  // Client information
   clientType?: string;
-  contactName?: string;
-  email?: string;
-  phone?: string;
-  message?: string;
-  firstName?: string;
-  lastName?: string;
-  
-  // Project details
   projectType?: string;
+  landIncluded?: string;
+  
+  // Professional project fields
   activity?: string;
   startDate?: string;
   endDate?: string;
-  estimationType?: string;
-  termsAccepted?: boolean;
-  landIncluded?: string; // Added this property for terrain inclusion
+  budget?: number;
   
   // Construction details
-  surface?: string | number;
-  levels?: string | number;
-  units?: string | number;
-  roomCount?: string | number;
-  city?: string;
+  constructionStyle?: string;
+  landSurface?: number;
+  livingArea?: number;
+  floors?: number;
+  basement?: boolean;
+  garage?: boolean;
+  floorCount?: number;
   
-  // Terrain
-  terrainType?: string;
-  terrainSurface?: string | number;
-  terrainAccess?: string;
-  landPrice?: string | number;
-  hasLand?: boolean;
-  waterConnection?: boolean;
-  electricityConnection?: boolean;
-  gasConnection?: boolean;
-  sewerConnection?: boolean;
-  fiberConnection?: boolean;
-  needsSepticTank?: boolean;
-  floodRisk?: boolean;
-  claySoil?: boolean;
-  rockySoil?: boolean;
-  wetlandZone?: boolean;
-  heritageZone?: boolean;
+  // Rooms
+  bedrooms?: number;
+  bathrooms?: number;
   
-  // Gros oeuvre
-  foundationType?: string;
-  soilType?: string;
+  // Wall & Foundation
   wallType?: string;
-  wallThickness?: string | number;
-  hasBasement?: boolean;
-  basementType?: string;
-  floorType?: string;
-  slopedLand?: boolean;
-  difficultAccess?: boolean;
-  needsDemolition?: boolean;
-  needsWaterManagement?: boolean;
+  foundationType?: string;
   
-  // Charpente
+  // Roof
   roofType?: string;
-  
-  // Combles
   atticType?: string;
   
-  // Couverture
+  // Envelope details
   roofingType?: string;
-  
-  // Façade
-  facadeMaterial?: string;
-  stonePercentage?: string | number;
-  plasterPercentage?: string | number;
-  brickPercentage?: string | number;
-  metalCladdingPercentage?: string | number;
-  woodCladdingPercentage?: string | number;
-  stoneCladdingPercentage?: string | number;
-  
-  // Menuiseries extérieures
-  windowType?: string;
-  shutterType?: string;
-  windowRenovationArea?: string | number;
-  windowNewArea?: string | number;
-  
-  // Isolation
   insulationType?: string;
+  facadeType?: string;
+  stonePercentage?: number;
+  plasterPercentage?: number;
+  brickPercentage?: number;
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
+  windowType?: string;
+  windowRenovationArea?: number;
+  windowNewArea?: number;
   
-  // Électricité
+  // Technical systems
   electricalType?: string;
-  
-  // Plomberie
   plumbingType?: string;
-  
-  // Chauffage et climatisation
   heatingType?: string;
-  energySource?: string;
-  hasAirConditioning?: boolean;
   
-  // Plâtrerie
+  // Interior finishes
   plasteringType?: string;
-  
-  // Menuiseries intérieures
   doorType?: string;
-  interiorDoorsType?: string;
-  interiorFittings?: string | string[];
-  
-  // Carrelage
-  floorTileType?: string;
-  wallTileType?: string;
-  floorTilePercentage?: string | number;
-  
-  // Parquet
-  parquetType?: string;
-  parquetPercentage?: string | number;
-  softFloorType?: string;
-  softFloorPercentage?: string | number;
   flooringType?: string;
+  tileSurface?: number;
+  parquetSurface?: number;
+  paintSurface?: number;
   
-  // Peinture
-  paintType?: string;
-  basicPaintPercentage?: string | number;
-  decorativePaintPercentage?: string | number;
-  wallpaperPercentage?: string | number;
-  woodCladPercentage?: string | number;
-  stoneCladPercentage?: string | number;
-  
-  // Cuisine et salle de bain
-  kitchenType?: string;
-  kitchenBudget?: string | number;
-  bathroomType?: string;
-  bathroomBudget?: string | number;
-  bathroomCount?: number;
-  
-  // Features
-  includeOptions?: boolean;
-  includeCuisine?: boolean;
-  includeBathroom?: boolean;
-  includeEcoSolutions?: boolean;
-  includeRenewableEnergy?: boolean;
-  includeLandscaping?: boolean;
+  // Exterior features
+  pool?: boolean;
+  terrace?: boolean;
+  outdoorKitchen?: boolean;
   
   // Special features
-  solarPanelType?: string;
-  solarPanelSurface?: string | number;
-  rainwaterHarvesting?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  gardenSurface?: string | number;
-  pool?: boolean;
-  landscapingType?: string;
-  landscapingBudget?: string | number;
-  outdoorKitchen?: boolean;
-  windTurbineType?: string;
-  greywaterRecycling?: boolean;
-  terrace?: boolean;
+  smartHome?: boolean;
+  solarPanels?: boolean;
+  fancyKitchen?: boolean;
   
-  // Other
-  finishLevel?: string;
-  budget?: string | number;
-  renovationType?: string;
-  renovationAreas?: string[];
-  exteriorFeatures?: string[];
-  constructionType?: string;
-  cityTaxRate?: number;
+  // Finishing level
+  finishingLevel?: string;
+  
+  // Contact details
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  message?: string;
+  termsAccepted?: boolean;
+  
+  // Additional properties for calculation
+  niveaux?: number;
+  étages?: number;
+  combles?: number;
+  sousSOl?: boolean;
+  chambres?: number;
+  sallesDeBain?: number;
+  cuisine?: string;
+  salon?: boolean;
+  salleManger?: boolean;
+  bureau?: boolean;
+  fondationType?: string;
+  structureMurs?: string;
+  typeCouverture?: string;
+  typeMenuiseries?: string;
+  typeIsolation?: string;
+  typeVentilation?: string;
+  typeEnergie?: string;
+  domotique?: boolean;
+  alarme?: boolean;
+  climatisation?: boolean;
+  aspCentralisée?: boolean;
+  terrasse?: boolean;
+  balcon?: boolean;
+  piscine?: boolean;
+  poolHouse?: boolean;
+  aménagementPaysager?: boolean;
+  clôture?: boolean;
+  portail?: boolean;
+  carport?: boolean;
+  niveauFinition?: string;
+  budgetMaxi?: number;
+  délaiSouhaité?: string;
+  contraintesParticulières?: string;
+  wallCovering?: string;
+  zipCode?: string;
+  timeline?: string;
+  additionalDetails?: string;
+  
+  // Estimation type
+  estimationType?: string;
 }
+
+export * from './formTypes';
+export * from './clientTypes';
+export * from './envelopeTypes';
+export * from './constructionTypes';
+export * from './roomsTypes';
+export * from './interiorTypes';
+export * from './specialFeaturesTypes';
+export * from './renovationTypes';
+export * from './validationSchemas';
+export * from './baseTypes';
+export * from './clientTypeForm';

@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Droplet, Cloud, CloudDrizzle, Tool } from 'lucide-react';
+import { Droplet, Cloud, CloudDrizzle, Wrench } from 'lucide-react';
 
 const PlomberieForm: React.FC<BaseFormProps> = ({
   formData,
@@ -91,7 +92,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('renovation')}
             >
               <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <Tool className="h-10 w-10 text-blue-500 mb-3" />
+                <Wrench className="h-10 w-10 text-blue-500 mb-3" />
                 <RadioGroupItem value="renovation" id="plumbing-renovation" className="mx-auto mb-2" />
                 <Label htmlFor="plumbing-renovation" className="font-medium">Rénovation</Label>
                 <p className="text-xs text-gray-500 mt-2">

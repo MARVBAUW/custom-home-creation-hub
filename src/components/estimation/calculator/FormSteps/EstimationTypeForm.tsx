@@ -1,11 +1,11 @@
+
 import React from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Calculator, ClipboardList } from 'lucide-react';
+import { Calculator, BarChart, FileText } from 'lucide-react';
 
 const EstimationTypeForm: React.FC<BaseFormProps> = ({
   formData,
@@ -13,27 +13,20 @@ const EstimationTypeForm: React.FC<BaseFormProps> = ({
   goToNextStep,
   goToPreviousStep,
   animationDirection,
-  defaultValues
+  defaultValues,
+  onSubmit
 }) => {
   const [estimationType, setEstimationType] = React.useState<string>(
-    defaultValues?.estimationType || formData.estimationType || 'basic'
-  );
-  
-  const [termsAccepted, setTermsAccepted] = React.useState<boolean>(
-    defaultValues?.termsAccepted || formData.termsAccepted || false
+    defaultValues?.estimationType || formData.estimationType || 'standard'
   );
 
-  const handleSubmit = () => {
-    const data = {
-      estimationType,
-      termsAccepted
-    };
+  const handleContinue = () => {
+    const data = { estimationType };
     
-    updateFormData(data);
-    
-    if (props.onSubmit) {
-      props.onSubmit(data);
+    if (onSubmit) {
+      onSubmit(data);
     } else {
+      updateFormData(data);
       goToNextStep();
     }
   };
@@ -44,23 +37,37 @@ const EstimationTypeForm: React.FC<BaseFormProps> = ({
     }`}>
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium mb-4">Type d'estimation</h3>
+          <h3 className="text-lg font-medium mb-4">Type d'estimation souhaitée</h3>
           
           <RadioGroup 
             value={estimationType} 
             onValueChange={setEstimationType}
-            className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-3"
           >
             <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${estimationType === 'basic' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setEstimationType('basic')}
+              className={`cursor-pointer transition-all hover:shadow-md ${estimationType === 'quick' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setEstimationType('quick')}
             >
-              <CardContent className="pt-6 pb-6 text-center">
-                <Calculator className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-                <RadioGroupItem value="basic" id="estimation-basic" className="mx-auto mb-2" />
-                <Label htmlFor="estimation-basic" className="font-medium">Estimation rapide</Label>
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <Calculator className="h-10 w-10 text-blue-500 mb-3" />
+                <RadioGroupItem value="quick" id="estimation-quick" className="mx-auto mb-2" />
+                <Label htmlFor="estimation-quick" className="font-medium">Rapide</Label>
                 <p className="text-xs text-gray-500 mt-2">
-                  Basée sur des ratios moyens par mètre carré
+                  Estimation approximative en quelques questions
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${estimationType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setEstimationType('standard')}
+            >
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <BarChart className="h-10 w-10 text-blue-500 mb-3" />
+                <RadioGroupItem value="standard" id="estimation-standard" className="mx-auto mb-2" />
+                <Label htmlFor="estimation-standard" className="font-medium">Standard</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Estimation détaillée avec ventilation des coûts
                 </p>
               </CardContent>
             </Card>
@@ -69,39 +76,23 @@ const EstimationTypeForm: React.FC<BaseFormProps> = ({
               className={`cursor-pointer transition-all hover:shadow-md ${estimationType === 'detailed' ? 'border-blue-500 bg-blue-50' : ''}`}
               onClick={() => setEstimationType('detailed')}
             >
-              <CardContent className="pt-6 pb-6 text-center">
-                <ClipboardList className="h-8 w-8 text-blue-500 mx-auto mb-3" />
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <FileText className="h-10 w-10 text-blue-500 mb-3" />
                 <RadioGroupItem value="detailed" id="estimation-detailed" className="mx-auto mb-2" />
-                <Label htmlFor="estimation-detailed" className="font-medium">Estimation détaillée</Label>
+                <Label htmlFor="estimation-detailed" className="font-medium">Détaillée</Label>
                 <p className="text-xs text-gray-500 mt-2">
-                  Par corps d'état avec options
+                  Estimation complète par corps d'état avec un rapport détaillé
                 </p>
               </CardContent>
             </Card>
           </RadioGroup>
         </div>
         
-        <div className="flex items-start space-x-3 pt-4">
-          <Checkbox 
-            id="terms" 
-            checked={termsAccepted}
-            onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
-          />
-          <div>
-            <Label htmlFor="terms" className="text-sm">
-              J'accepte que mes données soient utilisées pour établir cette estimation
-            </Label>
-          </div>
-        </div>
-        
         <div className="flex justify-between pt-4">
           <Button variant="outline" onClick={goToPreviousStep}>
             Précédent
           </Button>
-          <Button 
-            onClick={handleSubmit}
-            disabled={!termsAccepted}
-          >
+          <Button onClick={handleContinue}>
             Continuer
           </Button>
         </div>

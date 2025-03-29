@@ -1,10 +1,11 @@
+
 import React from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Shield, ShieldCheck, Award, Leaf, Tool } from 'lucide-react';
+import { Shield, ShieldCheck, Award, Leaf, Wrench } from 'lucide-react';
 
 const IsolationForm: React.FC<BaseFormProps> = ({
   formData,
@@ -104,7 +105,7 @@ const IsolationForm: React.FC<BaseFormProps> = ({
               onClick={() => setInsulationType('renovation')}
             >
               <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <Tool className="h-10 w-10 text-orange-500 mb-3" />
+                <Wrench className="h-10 w-10 text-orange-500 mb-3" />
                 <RadioGroupItem value="renovation" id="isolation-renovation" className="sr-only" />
                 <Label htmlFor="isolation-renovation" className="font-medium">Rénovation standard</Label>
                 <p className="text-xs text-gray-500 mt-2">

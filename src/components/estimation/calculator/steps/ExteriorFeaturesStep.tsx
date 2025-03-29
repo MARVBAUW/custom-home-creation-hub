@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Pool, Utensils, Flower, Home } from 'lucide-react';
+import { Waves, Utensils, Flower, Home } from 'lucide-react';
 
 interface ExteriorFeaturesStepProps {
   formData: FormData;
@@ -56,7 +56,7 @@ const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
                 />
                 <div>
                   <Label htmlFor="pool" className="text-base font-medium flex items-center">
-                    <Pool className="h-4 w-4 text-blue-400 mr-2" />
+                    <Waves className="h-4 w-4 text-blue-400 mr-2" />
                     Piscine
                   </Label>
                   <p className="text-sm text-gray-500 mt-1">
