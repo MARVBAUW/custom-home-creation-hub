@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FormData } from '../types';
 import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Cpu, Bell, Vacuum, Thermometer } from 'lucide-react';
+import { Home, AlertTriangle, Zap, Wind, VacuumCleaner } from 'lucide-react';
 
 interface SpecialFeaturesStepProps {
   formData: FormData;
@@ -14,142 +14,141 @@ interface SpecialFeaturesStepProps {
   goToPreviousStep: () => void;
 }
 
-const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({
-  formData,
-  updateFormData,
+const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({ 
+  formData, 
+  updateFormData, 
   goToNextStep,
-  goToPreviousStep
+  goToPreviousStep 
 }) => {
-  // Initialize with form data or defaults
-  const [domotic, setDomotic] = React.useState<boolean>(
-    formData.domotic || false
-  );
-  
-  const [alarm, setAlarm] = React.useState<boolean>(
-    formData.alarm || false
-  );
-  
-  const [centralVacuum, setCentralVacuum] = React.useState<boolean>(
-    formData.centralVacuum || false
-  );
-  
-  const [hasAirConditioning, setHasAirConditioning] = React.useState<boolean>(
-    formData.hasAirConditioning || false
-  );
+  // Initialize state with form data or defaults
+  const [domotic, setDomotic] = useState<boolean>(formData.domotic || false);
+  const [alarm, setAlarm] = useState<boolean>(formData.alarm || false);
+  const [centralVacuum, setCentralVacuum] = useState<boolean>(formData.centralVacuum || false);
+  const [smartHome, setSmartHome] = useState<boolean>(formData.smartHome || false);
+  const [solarPanels, setSolarPanels] = useState<boolean>(formData.solarPanels || false);
 
   const handleSubmit = () => {
-    updateFormData({ 
+    updateFormData({
       domotic,
       alarm,
       centralVacuum,
-      hasAirConditioning
+      smartHome,
+      solarPanels,
     });
     goToNextStep();
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-4">Équipements spéciaux</h3>
-        
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Card className="shadow-sm">
-            <CardContent className="pt-6 pb-6">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="domotic" 
-                  checked={domotic}
-                  onCheckedChange={(checked) => setDomotic(checked as boolean)}
-                />
-                <div>
-                  <Label htmlFor="domotic" className="text-base font-medium flex items-center">
-                    <Cpu className="h-4 w-4 text-blue-400 mr-2" />
-                    Domotique
-                  </Label>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Système de contrôle intelligent de la maison
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      <Card>
+        <CardContent className="pt-6 pb-6">
+          <h3 className="text-lg font-medium mb-6">Équipements spéciaux</h3>
           
-          <Card className="shadow-sm">
-            <CardContent className="pt-6 pb-6">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="alarm" 
-                  checked={alarm}
-                  onCheckedChange={(checked) => setAlarm(checked as boolean)}
-                />
-                <div>
-                  <Label htmlFor="alarm" className="text-base font-medium flex items-center">
-                    <Bell className="h-4 w-4 text-red-400 mr-2" />
-                    Système d'alarme
-                  </Label>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Surveillance et sécurité
-                  </p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-md">
+              <Checkbox 
+                id="domotic"
+                checked={domotic}
+                onCheckedChange={(checked) => setDomotic(checked as boolean)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="domotic" className="text-base font-medium flex items-center">
+                  <Home className="h-4 w-4 text-blue-500 mr-2" />
+                  Domotique
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Système de contrôle intelligent pour votre maison (portes, éclairage, chauffage)
+                </p>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-sm">
-            <CardContent className="pt-6 pb-6">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="central-vacuum" 
-                  checked={centralVacuum}
-                  onCheckedChange={(checked) => setCentralVacuum(checked as boolean)}
-                />
-                <div>
-                  <Label htmlFor="central-vacuum" className="text-base font-medium flex items-center">
-                    <Vacuum className="h-4 w-4 text-gray-400 mr-2" />
-                    Aspiration centralisée
-                  </Label>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Système d'aspiration intégré
-                  </p>
-                </div>
+            </div>
+            
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-md">
+              <Checkbox 
+                id="alarm"
+                checked={alarm}
+                onCheckedChange={(checked) => setAlarm(checked as boolean)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="alarm" className="text-base font-medium flex items-center">
+                  <AlertTriangle className="h-4 w-4 text-blue-500 mr-2" />
+                  Système d'alarme
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Alarme anti-intrusion avec détecteurs de mouvement et sirène
+                </p>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-sm">
-            <CardContent className="pt-6 pb-6">
-              <div className="flex items-start space-x-3">
-                <Checkbox 
-                  id="air-conditioning" 
-                  checked={hasAirConditioning}
-                  onCheckedChange={(checked) => setHasAirConditioning(checked as boolean)}
-                />
-                <div>
-                  <Label htmlFor="air-conditioning" className="text-base font-medium flex items-center">
-                    <Thermometer className="h-4 w-4 text-blue-400 mr-2" />
-                    Climatisation
-                  </Label>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Système de climatisation
-                  </p>
-                </div>
+            </div>
+            
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-md">
+              <Checkbox 
+                id="central-vacuum"
+                checked={centralVacuum}
+                onCheckedChange={(checked) => setCentralVacuum(checked as boolean)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="central-vacuum" className="text-base font-medium flex items-center">
+                  <VacuumCleaner className="h-4 w-4 text-blue-500 mr-2" />
+                  Aspiration centralisée
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Système d'aspiration intégré aux murs avec prises dans chaque pièce
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+            </div>
+            
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-md">
+              <Checkbox 
+                id="smart-home"
+                checked={smartHome}
+                onCheckedChange={(checked) => setSmartHome(checked as boolean)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="smart-home" className="text-base font-medium flex items-center">
+                  <Zap className="h-4 w-4 text-blue-500 mr-2" />
+                  Habitat connecté
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Équipements connectés (thermostats, détecteurs de fumée, caméras)
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-md">
+              <Checkbox 
+                id="solar-panels"
+                checked={solarPanels}
+                onCheckedChange={(checked) => setSolarPanels(checked as boolean)}
+                className="mt-1"
+              />
+              <div className="space-y-1">
+                <Label htmlFor="solar-panels" className="text-base font-medium flex items-center">
+                  <Wind className="h-4 w-4 text-blue-500 mr-2" />
+                  Panneaux solaires
+                </Label>
+                <p className="text-sm text-gray-500">
+                  Production d'électricité ou d'eau chaude par panneaux solaires
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
       
-      <div className="flex justify-between pt-4">
-        <Button 
-          type="button" 
-          variant="outline" 
+      <div className="flex justify-between">
+        <Button
+          type="button"
+          variant="outline"
           onClick={goToPreviousStep}
         >
           Précédent
         </Button>
         
-        <Button 
-          type="button" 
+        <Button
+          type="button"
           onClick={handleSubmit}
         >
           Continuer

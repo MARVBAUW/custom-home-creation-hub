@@ -9,6 +9,7 @@ const ConstructionDetailsForm: React.FC<BaseFormProps> = (props) => {
     formData={props.formData} 
     updateFormData={props.updateFormData} 
     goToNextStep={props.goToNextStep} 
+    goToPreviousStep={props.goToPreviousStep}
   />;
 };
 

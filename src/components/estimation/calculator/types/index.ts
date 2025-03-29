@@ -40,10 +40,18 @@ export interface FormData {
   
   // Facade
   facadeType?: string;
+  stonePercentage?: number;
+  plasterPercentage?: number;
+  brickPercentage?: number;
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
   
   // Menuiseries extérieures
   windowType?: string;
   doorType?: string;
+  windowRenovationArea?: number;
+  windowNewArea?: number;
   
   // Electricité
   electricalType?: string;
@@ -57,7 +65,7 @@ export interface FormData {
   
   // Platrerie
   plasteringType?: string;
-  interiorFittings?: string;
+  interiorFittings?: string[];
   
   // Menuiseries intérieures
   interiorDoorsType?: string;
@@ -96,6 +104,21 @@ export interface FormData {
   domotic?: boolean;
   alarm?: boolean;
   centralVacuum?: boolean;
+  smartHome?: boolean;
+  solarPanels?: boolean;
+  exteriorFeatures?: string[];
+  solarPanelType?: string;
+  solarPanelSurface?: number;
+  windTurbineType?: string;
+  
+  // Eco solutions
+  rainwaterHarvesting?: boolean;
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  
+  // Landscaping
+  landscapingType?: string;
+  gardenSurface?: number;
   
   // Exterior features
   pool?: boolean;
@@ -108,13 +131,30 @@ export interface FormData {
   email?: string;
   phone?: string;
   city?: string;
+  message?: string;
+  termsAccepted?: boolean;
   
   // Budget
   budget?: number;
   
   // Additional fields for calculations
   finishLevel?: string;
+  finishingLevel?: string;
   hasLand?: boolean;
+  
+  // Step navigation fields
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  includeLandscaping?: boolean;
+  includeOptions?: boolean;
+  includeCuisine?: boolean;
+  includeBathroom?: boolean;
+  estimationType?: string;
+  
+  // Professional project fields
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
   
   // French property equivalents
   // Structure

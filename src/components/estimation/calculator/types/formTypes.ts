@@ -73,6 +73,14 @@ export interface ContactDetailsStepProps {
   goToPreviousStep: () => void;
 }
 
+export interface EstimationResultsProps {
+  estimation: number | null;
+  formData: FormData;
+  goToPreviousStep: () => void;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+}
+
 export interface ResultsFormProps {
   formData: FormData;
   estimationResult: number | null;
