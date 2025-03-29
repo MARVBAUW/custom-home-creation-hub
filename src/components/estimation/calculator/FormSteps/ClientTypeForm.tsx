@@ -34,13 +34,13 @@ const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
   const form = useForm<z.infer<typeof clientTypeSchema>>({
     resolver: zodResolver(clientTypeSchema),
     defaultValues: {
-      clientType: defaultValues.clientType as "individual" | "professional" | undefined,
+      clientType: (defaultValues.clientType as "individual" | "professional") || undefined,
     },
   });
 
   // Fonction de soumission du formulaire
   const handleSubmit = (values: z.infer<typeof clientTypeSchema>) => {
-    onSubmit(values);
+    onSubmit({ clientType: values.clientType });
   };
 
   return (
