@@ -10,7 +10,7 @@ import {
   Calculator, 
   ArrowRight, 
   Check,
-  CircleQuestion,
+  HelpCircle,
   Plus,
   Minus,
   Edit
