@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -8,19 +7,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { PlomberieFormProps } from '../types/formTypes';
 
 const formSchema = z.object({
   plumbingType: z.string().min(1, { message: 'Veuillez sélectionner une option' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-type PlomberieFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
 
 const PlomberieForm: React.FC<PlomberieFormProps> = ({
   defaultValues,
@@ -31,7 +24,7 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      plumbingType: defaultValues.plumbingType || '',
+      plumbingType: defaultValues?.plumbingType || '',
     },
   });
 
@@ -45,7 +38,7 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <FormField
             control={form.control}
             name="plumbingType"

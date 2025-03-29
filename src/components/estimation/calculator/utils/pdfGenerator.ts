@@ -1,351 +1,148 @@
-
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
-// Import the existing formatPrice utility to avoid duplication
-import { formatPrice as formatCurrency } from './index';
 
-// Function to generate the PDF document
-export const generatePDF = (formData: FormData, estimation: any) => {
-  // Initialize jsPDF
+// Function to generate PDF
+export const generatePDF = (formData: FormData, estimationData: any) => {
   const doc = new jsPDF();
-
-  // Define document margins
-  const margin = {
-    top: 20,
-    right: 20,
-    bottom: 20,
-    left: 20
-  };
-
-  // Add Progineer logo header
-  const addHeader = (doc: jsPDF) => {
-    doc.setFontSize(18);
-    doc.setTextColor(212, 175, 55); // Gold color
-    doc.text("PROGINEER", margin.left, margin.top);
-    
-    doc.setFontSize(12);
-    doc.setTextColor(100);
-    doc.text("Maîtrise d'œuvre & Architecture", margin.left, margin.top + 7);
-    
-    doc.setFontSize(10);
-    doc.setDrawColor(212, 175, 55);
-    doc.line(margin.left, margin.top + 10, doc.internal.pageSize.getWidth() - margin.right, margin.top + 10);
-  };
-
-  // Function to add a footer to each page
-  const addFooter = (doc: jsPDF, pageNumber: number, totalPages: number) => {
-    doc.setFontSize(8);
-    doc.setTextColor(100);
-    doc.text(`PROGINEER - Estimation de projet - Page ${pageNumber}/${totalPages}`, margin.left, doc.internal.pageSize.height - margin.bottom);
-    doc.text("www.progineer.fr | contact@progineer.fr | 04 XX XX XX XX", doc.internal.pageSize.getWidth() - margin.right, doc.internal.pageSize.height - margin.bottom, { align: 'right' });
-    
-    doc.setDrawColor(212, 175, 55);
-    doc.line(margin.left, doc.internal.pageSize.height - margin.bottom - 5, doc.internal.pageSize.getWidth() - margin.right, doc.internal.pageSize.height - margin.bottom - 5);
-  };
-
-  // Add header to the first page
-  addHeader(doc);
+  const pdfName = `Estimation-${formData.projectType}-${new Date().toLocaleDateString()}.pdf`;
   
-  // Title of the document
-  doc.setFontSize(16);
+  // Set document properties
+  doc.setProperties({
+    title: 'Estimation Détaillée',
+    subject: 'Estimation de projet de construction ou rénovation',
+    author: 'Progineer',
+    keywords: 'estimation, construction, rénovation'
+  });
+  
+  // Add header
+  const logoWidth = 50;
+  const logoHeight = 20;
+  doc.addImage('/images/logo-progineer.png', 'PNG', 14, 10, logoWidth, logoHeight);
+  
+  // Add document title
+  doc.setFontSize(22);
   doc.setTextColor(40);
   doc.setFont('helvetica', 'bold');
-  const titleText = "Estimation Détaillée de Projet";
-  const titleWidth = doc.getTextWidth(titleText);
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const titleX = (pageWidth - titleWidth) / 2;
-  doc.text(titleText, titleX, margin.top + 25);
-
-  // Subtitle with project type
-  doc.setFontSize(12);
+  doc.text('Estimation Détaillée', 105, 20, { align: 'center' });
+  
+  // Add project details
+  doc.setFontSize(14);
   doc.setFont('helvetica', 'normal');
-  const projectType = formData.projectType || 'Construction';
-  const subtitleText = `${projectType} - ${formData.city || 'Non spécifié'}`;
-  const subtitleWidth = doc.getTextWidth(subtitleText);
-  const subtitleX = (pageWidth - subtitleWidth) / 2;
-  doc.text(subtitleText, subtitleX, margin.top + 35);
-
-  // Reference number and date
-  doc.setFontSize(10);
-  const today = new Date().toLocaleDateString('fr-FR');
-  const refNumber = `REF-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`;
+  doc.text(`Projet: ${formData.projectType || 'N/A'}`, 14, 40);
+  doc.text(`Surface: ${formData.surface || 'N/A'} m²`, 14, 48);
+  doc.text(`Ville: ${formData.city || 'N/A'}`, 14, 56);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 64);
   
-  doc.text(`Référence: ${refNumber}`, margin.left, margin.top + 50);
-  doc.text(`Date: ${today}`, margin.left, margin.top + 58);
+  // Define table columns
+  const columns = [
+    { header: 'Poste', dataKey: 'poste' },
+    { header: 'Montant HT (€)', dataKey: 'montantHT' },
+    { header: 'Détails', dataKey: 'details' }
+  ];
   
-  // Client information if available
-  let clientInfoY = margin.top + 70;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text("Informations Client", margin.left, clientInfoY);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
+  // Prepare table rows
+  const tableRows = Object.entries(estimationData.corpsEtat).map(([poste, details]: [string, any]) => ({
+    poste: poste,
+    montantHT: details.montantHT ? details.montantHT.toFixed(2) : '0.00',
+    details: details.details ? details.details.join(', ') : ''
+  }));
   
-  clientInfoY += 10;
-  if (formData.firstName || formData.lastName) {
-    doc.text(`Nom: ${formData.firstName || ''} ${formData.lastName || ''}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.email) {
-    doc.text(`Email: ${formData.email}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.phone) {
-    doc.text(`Téléphone: ${formData.phone}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.clientType) {
-    doc.text(`Type de client: ${formData.clientType}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-
-  // Project details
-  clientInfoY += 5;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text("Détails du Projet", margin.left, clientInfoY);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  
-  clientInfoY += 10;
-  doc.text(`Type de projet: ${formData.projectType || 'Non spécifié'}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  if (formData.surface) {
-    doc.text(`Surface: ${formData.surface} m²`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.city) {
-    doc.text(`Localisation: ${formData.city}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.finishLevel) {
-    doc.text(`Niveau de finition: ${formData.finishLevel}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-  
-  if (formData.constructionType) {
-    doc.text(`Type de construction: ${formData.constructionType}`, margin.left, clientInfoY);
-    clientInfoY += 7;
-  }
-
-  // Summary of the estimation
-  clientInfoY += 7;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.text("Récapitulatif de l'Estimation", margin.left, clientInfoY);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  
-  clientInfoY += 10;
-  doc.text(`Coût total HT: ${formatCurrency(estimation.totalHT)}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  doc.text(`TVA (20%): ${formatCurrency(estimation.vat || estimation.totalHT * 0.2)}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  doc.text(`Coût total TTC: ${formatCurrency(estimation.totalTTC)}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  doc.text(`Honoraires MOE: ${formatCurrency(estimation.honorairesHT)}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  doc.text(`Taxe d'aménagement: ${formatCurrency(estimation.taxeAmenagement)}`, margin.left, clientInfoY);
-  clientInfoY += 7;
-  
-  doc.text(`Coût global (hors terrain): ${formatCurrency(estimation.coutGlobalTTC)}`, margin.left, clientInfoY);
-  clientInfoY += 10;
-  
-  // Land price and notary fees - This is the part that was missing
-  if (formData.landPrice && formData.landPrice > 0) {
-    doc.setFillColor(245, 245, 245);
-    doc.rect(margin.left, clientInfoY, pageWidth - margin.left - margin.right, 25, 'F');
-    
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    doc.text("Terrain et Frais Associés", margin.left + 4, clientInfoY + 7);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    
-    doc.text(`Prix du terrain: ${formatCurrency(formData.landPrice)}`, margin.left + 4, clientInfoY + 14);
-    
-    const notaryFees = formData.landPrice * 0.08; // Assuming 8% notary fees
-    doc.text(`Frais de notaire (8%): ${formatCurrency(notaryFees)}`, margin.left + 4, clientInfoY + 21);
-    
-    clientInfoY += 30;
-    
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    const totalWithLand = estimation.coutGlobalTTC + formData.landPrice + notaryFees;
-    doc.text(`Coût global avec terrain: ${formatCurrency(totalWithLand)}`, margin.left, clientInfoY);
-    clientInfoY += 10;
-  }
-
-  // Add a new page for the detailed breakdown
-  doc.addPage();
-  addHeader(doc);
-  
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text("Détail par Corps d'État", margin.left, margin.top + 20);
-  doc.setFont('helvetica', 'normal');
-
-  // Set up data for the table
-  const tableData = [];
-  let totalAmount = 0;
-
-  // Iterate through corps d'état to build the table data
-  if (estimation.corpsEtat) {
-    for (const [name, data] of Object.entries(estimation.corpsEtat as Record<string, any>)) {
-      const amount = data.montantHT;
-      totalAmount += amount;
-      const percentage = ((amount / estimation.totalHT) * 100).toFixed(1);
-      
-      tableData.push([
-        name,
-        `${formatCurrency(amount)}`,
-        `${percentage}%`,
-        data.details ? data.details.join(', ') : ''
-      ]);
-    }
-  }
-
-  // Add auto table
+  // Add table to the document
   (doc as any).autoTable({
-    startY: margin.top + 30,
-    head: [['Corps d\'État', 'Montant HT', 'Pourcentage', 'Détails']],
-    body: tableData,
-    headStyles: { 
-      fillColor: [212, 175, 55],
-      textColor: [255, 255, 255],
+    columns: columns,
+    body: tableRows,
+    startY: 70,
+    styles: {
+      font: 'helvetica',
+      fontSize: 10,
+      textColor: 40,
+      columnWidth: 'auto',
+      overflow: 'linebreak',
+      tableWidth: 'auto'
+    },
+    headerStyles: {
+      fillColor: [230, 230, 230],
+      textColor: 40,
       fontStyle: 'bold'
     },
-    alternateRowStyles: {
-      fillColor: [245, 245, 245]
+    bodyStyles: {
+      fillColor: [255, 255, 255]
     },
     columnStyles: {
-      0: { fontStyle: 'bold' },
-      1: { halign: 'right' },
-      2: { halign: 'center' }
-    },
-    margin: margin,
-    didDrawPage: function(data: any) {
-      // Add footer to each page
-      const pageInfo = doc.internal.getCurrentPageInfo ? 
-        doc.internal.getCurrentPageInfo() : 
-        { pageNumber: doc.getNumberOfPages ? doc.getNumberOfPages() : 2 };
-      
-      addFooter(doc, pageInfo.pageNumber, 2);
+      poste: { fontStyle: 'bold' }
     }
   });
-
-  // Annexes costs on the same page if there's room, or on a new page
-  const finalY = (doc as any).lastAutoTable.finalY + 20;
   
-  if (finalY > doc.internal.pageSize.getHeight() - 100) {
-    doc.addPage();
-    addHeader(doc);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text("Coûts Annexes", margin.left, margin.top + 20);
-    doc.setFont('helvetica', 'normal');
-    
-    const annexTableY = margin.top + 30;
-    
-    // Table with annexes costs
-    const annexData = [
-      ['Honoraires MOE', formatCurrency(estimation.honorairesHT)],
-      ['Taxe d\'aménagement', formatCurrency(estimation.taxeAmenagement)],
-      ['Études géotechniques', formatCurrency(estimation.etudesGeotechniques || 0)],
-      ['Étude thermique', formatCurrency(estimation.etudeThermique || 0)],
-      ['Garantie décennale', formatCurrency(estimation.garantieDecennale || 0)]
-    ];
-    
-    // Add land price and notary fees to annex costs if present
-    if (formData.landPrice && formData.landPrice > 0) {
-      annexData.push(['Prix du terrain', formatCurrency(formData.landPrice)]);
-      const notaryFees = formData.landPrice * 0.08;
-      annexData.push(['Frais de notaire (8%)', formatCurrency(notaryFees)]);
-    }
-    
-    (doc as any).autoTable({
-      startY: annexTableY,
-      head: [['Description', 'Montant']],
-      body: annexData,
-      headStyles: { 
-        fillColor: [212, 175, 55],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold'
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245]
-      },
-      columnStyles: {
-        0: { fontStyle: 'bold' },
-        1: { halign: 'right' }
-      },
-      margin: margin
-    });
-  } else {
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text("Coûts Annexes", margin.left, finalY);
-    doc.setFont('helvetica', 'normal');
-    
-    // Table with annexes costs
-    const annexData = [
-      ['Honoraires MOE', formatCurrency(estimation.honorairesHT)],
-      ['Taxe d\'aménagement', formatCurrency(estimation.taxeAmenagement)],
-      ['Études géotechniques', formatCurrency(estimation.etudesGeotechniques || 0)],
-      ['Étude thermique', formatCurrency(estimation.etudeThermique || 0)],
-      ['Garantie décennale', formatCurrency(estimation.garantieDecennale || 0)]
-    ];
-    
-    // Add land price and notary fees to annex costs if present
-    if (formData.landPrice && formData.landPrice > 0) {
-      annexData.push(['Prix du terrain', formatCurrency(formData.landPrice)]);
-      const notaryFees = formData.landPrice * 0.08;
-      annexData.push(['Frais de notaire (8%)', formatCurrency(notaryFees)]);
-    }
-    
-    (doc as any).autoTable({
-      startY: finalY + 10,
-      head: [['Description', 'Montant']],
-      body: annexData,
-      headStyles: { 
-        fillColor: [212, 175, 55],
-        textColor: [255, 255, 255],
-        fontStyle: 'bold'
-      },
-      alternateRowStyles: {
-        fillColor: [245, 245, 245]
-      },
-      columnStyles: {
-        0: { fontStyle: 'bold' },
-        1: { halign: 'right' }
-      },
-      margin: margin
-    });
+  // Calculate the y position after the table
+  let finalY = (doc as any).autoTable.previous.finalY || 70;
+  
+  // Add totals
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Total HT: ${estimationData.totalHT.toFixed(2)} €`, 14, finalY + 15);
+  doc.text(`TVA (20%): ${estimationData.vat.toFixed(2)} €`, 14, finalY + 23);
+  doc.text(`Total TTC: ${estimationData.totalTTC.toFixed(2)} €`, 14, finalY + 31);
+  
+  if (formData.landPrice) {
+    doc.text(`Prix du terrain: ${estimationData.terrainPrice.toFixed(2)} €`, 14, finalY + 39);
+    doc.text(`Frais de notaire (estimation): ${estimationData.fraisNotaire.toFixed(2)} €`, 14, finalY + 47);
+    doc.text(`Coût total avec terrain: ${estimationData.coutTotalAvecTerrain.toFixed(2)} €`, 14, finalY + 55);
   }
-
-  // Add footer to the first page
-  const totalPages = doc.getNumberOfPages ? doc.getNumberOfPages() : 2;
-  addFooter(doc, 1, totalPages);
-
-  // Final disclaimer
-  doc.setFontSize(8);
-  doc.setTextColor(100);
-  doc.text("Cette estimation est fournie à titre indicatif et pourrait varier selon les spécificités de votre projet.", margin.left, doc.internal.pageSize.height - margin.bottom - 12, { maxWidth: pageWidth - margin.left - margin.right });
-  doc.text("Elle sera affinée lors d'un rendez-vous avec nos experts Progineer.", margin.left, doc.internal.pageSize.height - margin.bottom - 8, { maxWidth: pageWidth - margin.left - margin.right });
-
-  // Save the PDF with a meaningful filename
-  const pdfName = `Estimation_${projectType}_${formData.surface || ''}m2_${today.replace(/\//g, '-')}.pdf`;
+  
+  // Add a new page for additional details
+  doc.addPage();
+  
+  // Add "Additional Details" title
+  doc.setFontSize(18);
+  doc.setTextColor(40);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Détails Supplémentaires', 105, 20, { align: 'center' });
+  
+  // Add "Coûts Globaux Estimés" section
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Coûts Globaux Estimés', 14, 35);
+  
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
+  doc.text(`Honoraires (10%): ${estimationData.honorairesHT.toFixed(2)} €`, 14, 45);
+  doc.text(`Taxe d'aménagement (3%): ${estimationData.taxeAmenagement.toFixed(2)} €`, 14, 53);
+  doc.text(`Garantie décennale (1%): ${estimationData.garantieDecennale.toFixed(2)} €`, 14, 61);
+  doc.text(`Études géotechniques (0.5%): ${estimationData.etudesGeotechniques.toFixed(2)} €`, 14, 69);
+  doc.text(`Étude thermique (0.5%): ${estimationData.etudeThermique.toFixed(2)} €`, 14, 77);
+  doc.text(`Coût global HT (estimé): ${estimationData.coutGlobalHT.toFixed(2)} €`, 14, 85);
+  doc.text(`Coût global TTC (estimé): ${estimationData.coutGlobalTTC.toFixed(2)} €`, 14, 93);
+  
+  // Add "Disclaimer" section
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Disclaimer', 14, 110);
+  
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  const disclaimerText = `Cette estimation est fournie à titre indicatif et est basée sur les informations que vous avez fournies. Les coûts réels peuvent varier en fonction des spécificités du projet, des matériaux choisis et des conditions du marché. Pour une estimation précise, veuillez consulter un expert Progineer.`;
+  const textLines = doc.splitTextToSize(disclaimerText, 190);
+  doc.text(textLines, 14, 120);
+  
+  // Footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor(40);
+    doc.setFont('helvetica', 'normal');
+    
+    // Add page number
+    const pageText = `Page ${i} sur ${pageCount}`;
+    doc.text(pageText, 190, doc.internal.pageSize.height - 10, { align: 'right' });
+    
+    // Add company info
+    const companyInfo = 'Progineer - Estimation de projet';
+    doc.text(companyInfo, 14, doc.internal.pageSize.height - 10);
+  }
+  
+  // Save the PDF
   doc.save(pdfName);
   
   return pdfName;

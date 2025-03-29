@@ -59,6 +59,9 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
         honorairesHT: estimation.totalHT * 0.1,
         coutGlobalHT: estimation.totalHT * 1.15,
         coutGlobalTTC: estimation.totalHT * 1.15 * 1.2,
+        terrainPrice: formData.landPrice || 0,
+        fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
+        coutTotalAvecTerrain: estimation.totalTTC + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0),
         // Convert array format to corpsEtat object format needed for PDF
         corpsEtat: tableData.reduce((acc, item) => ({
           ...acc,

@@ -1,27 +1,20 @@
-
 import React from 'react';
-import { FormData } from '../types';
+import { TerrainFormProps } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MapPin, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-
-interface TerrainFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
+import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 
 const TerrainForm: React.FC<TerrainFormProps> = ({ 
   formData, 
   updateFormData, 
   goToNextStep,
-  goToPreviousStep
+  goToPreviousStep,
+  animationDirection
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,16 +22,16 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="h-5 w-5 text-progineer-gold" />
-              <h3 className="text-xl font-semibold">Terrain</h3>
-            </div>
+    <AnimatedStepTransition direction={animationDirection}>
+      <form onSubmit={handleSubmit}>
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <MapPin className="h-5 w-5 text-progineer-gold" />
+                <h3 className="text-xl font-semibold">Terrain</h3>
+              </div>
 
-            <div className="space-y-4">
               <div>
                 <Label htmlFor="terrainSurface">Surface du terrain (m²)</Label>
                 <Input 
@@ -202,29 +195,29 @@ const TerrainForm: React.FC<TerrainFormProps> = ({
                 </div>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={goToPreviousStep}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Précédent
-        </Button>
-        <Button
-          type="submit"
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        >
-          Suivant
-          <ArrowRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Précédent
+          </Button>
+          <Button
+            type="submit"
+            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+          >
+            Suivant
+            <ArrowRightIcon className="w-4 h-4" />
+          </Button>
+        </div>
+      </form>
+    </AnimatedStepTransition>
   );
 };
 

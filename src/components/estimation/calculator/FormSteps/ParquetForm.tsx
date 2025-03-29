@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -9,6 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { ParquetFormProps } from '../types/formTypes';
 
 const formSchema = z.object({
   parquetType: z.string().min(1, { message: 'Veuillez sélectionner un type de parquet' }),
@@ -19,13 +19,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type ParquetFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
-
 const ParquetForm: React.FC<ParquetFormProps> = ({
   defaultValues,
   onSubmit,
@@ -35,10 +28,10 @@ const ParquetForm: React.FC<ParquetFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      parquetType: defaultValues.parquetType || '',
-      parquetPercentage: defaultValues.parquetPercentage || '30',
-      softFloorType: defaultValues.softFloorType || '',
-      softFloorPercentage: defaultValues.softFloorPercentage || '10',
+      parquetType: defaultValues?.parquetType || '',
+      parquetPercentage: defaultValues?.parquetPercentage?.toString() || '30',
+      softFloorType: defaultValues?.softFloorType || '',
+      softFloorPercentage: defaultValues?.softFloorPercentage?.toString() || '10',
     },
   });
 
@@ -52,7 +45,7 @@ const ParquetForm: React.FC<ParquetFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <FormField
             control={form.control}
             name="parquetType"

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -8,6 +7,7 @@ import { Slider } from '@/components/ui/slider';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { PeintureFormProps } from '../types/formTypes';
 
 const formSchema = z.object({
   basicPaintPercentage: z.string(),
@@ -29,13 +29,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type PeintureFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
-
 const PeintureForm: React.FC<PeintureFormProps> = ({
   defaultValues,
   onSubmit,
@@ -45,11 +38,11 @@ const PeintureForm: React.FC<PeintureFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      basicPaintPercentage: defaultValues.basicPaintPercentage || '50',
-      decorativePaintPercentage: defaultValues.decorativePaintPercentage || '20',
-      wallpaperPercentage: defaultValues.wallpaperPercentage || '10',
-      woodCladPercentage: defaultValues.woodCladPercentage || '10',
-      stoneCladPercentage: defaultValues.stoneCladPercentage || '10',
+      basicPaintPercentage: defaultValues?.basicPaintPercentage?.toString() || '50',
+      decorativePaintPercentage: defaultValues?.decorativePaintPercentage?.toString() || '20',
+      wallpaperPercentage: defaultValues?.wallpaperPercentage?.toString() || '10',
+      woodCladPercentage: defaultValues?.woodCladPercentage?.toString() || '10',
+      stoneCladPercentage: defaultValues?.stoneCladPercentage?.toString() || '10',
     },
   });
 
@@ -75,7 +68,7 @@ const PeintureForm: React.FC<PeintureFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <div className="bg-muted/30 p-4 rounded-lg mb-4">
             <p className="text-sm font-medium">Total des revêtements: {totalPercentage}%</p>
             <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mt-2">

@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { FormData } from '../types';
+import { ProjectDetailsFormProps } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,19 +7,14 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Building, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-
-interface ProjectDetailsFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
+import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 
 const ProjectDetailsForm: React.FC<ProjectDetailsFormProps> = ({ 
   formData, 
   updateFormData, 
   goToNextStep,
-  goToPreviousStep
+  goToPreviousStep,
+  animationDirection
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,14 +22,15 @@ const ProjectDetailsForm: React.FC<ProjectDetailsFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Building className="h-5 w-5 text-progineer-gold" />
-              <h3 className="text-xl font-semibold">Détails du Projet</h3>
-            </div>
+    <AnimatedStepTransition direction={animationDirection}>
+      <form onSubmit={handleSubmit}>
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Building className="h-5 w-5 text-progineer-gold" />
+                <h3 className="text-xl font-semibold">Détails du Projet</h3>
+              </div>
 
             <div className="space-y-4">
               <div>
@@ -166,25 +161,26 @@ const ProjectDetailsForm: React.FC<ProjectDetailsFormProps> = ({
         </CardContent>
       </Card>
 
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={goToPreviousStep}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Précédent
-        </Button>
-        <Button
-          type="submit"
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        >
-          Suivant
-          <ArrowRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
-    </form>
+        <div className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeftIcon className="w-4 h-4" />
+            Précédent
+          </Button>
+          <Button
+            type="submit"
+            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+          >
+            Suivant
+            <ArrowRightIcon className="w-4 h-4" />
+          </Button>
+        </div>
+      </form>
+    </AnimatedStepTransition>
   );
 };
 

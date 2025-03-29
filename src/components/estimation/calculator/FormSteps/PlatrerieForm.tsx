@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -8,19 +7,13 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { PlatrerieFormProps } from '../types/formTypes';
 
 const formSchema = z.object({
   plasteringType: z.string().min(1, { message: 'Veuillez sélectionner une option' }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
-type PlatrerieFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
 
 const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
   defaultValues,
@@ -31,7 +24,7 @@ const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      plasteringType: defaultValues.plasteringType || '',
+      plasteringType: defaultValues?.plasteringType || '',
     },
   });
 
@@ -45,7 +38,7 @@ const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <FormField
             control={form.control}
             name="plasteringType"

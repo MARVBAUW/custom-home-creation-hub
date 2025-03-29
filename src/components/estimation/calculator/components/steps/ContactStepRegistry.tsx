@@ -12,7 +12,7 @@ export const createContactStepRegistry = (
 ): StepComponentRegistry => {
   // 'contact' is now a valid key in StepComponentRegistry
   return {
-    contact: (props: FormStepProps) => (
+    contact: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <ContactForm
         formData={formData}
         updateFormData={(data) => onContactSubmit({
