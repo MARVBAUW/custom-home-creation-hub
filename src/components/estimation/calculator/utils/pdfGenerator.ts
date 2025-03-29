@@ -4,12 +4,12 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
 
-// Define extended types for jsPDF with autoTable 
+// Define types for jsPDF with autoTable 
 // This correctly handles the TypeScript integration with the jsPDF-autotable plugin
 interface PageInfo {
   pageNumber: number;
   pageContext: any;
-  objId?: number;
+  objId: number; // Changed from optional to required to match jsPDF PageInfo
 }
 
 // Add autoTable to jsPDF

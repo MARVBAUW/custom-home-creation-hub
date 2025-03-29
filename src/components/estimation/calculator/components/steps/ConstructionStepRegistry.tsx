@@ -10,75 +10,80 @@ import ComblesForm from '../../FormSteps/ComblesForm';
 export const createConstructionStepRegistry = (
   formData: FormData,
   onConstructionDetailsSubmit: (data: any) => void,
-  onTerrainSubmit: (data: any) => void,
-  onGrosOeuvreSubmit: (data: any) => void,
-  onCharpenteSubmit: (data: any) => void,
-  onComblesSubmit: (data: any) => void,
+  onTerrainSubmit: (data: { terrainType: string }) => void,
+  onGrosOeuvreSubmit: (data: { wallType: string }) => void,
+  onCharpenteSubmit: (data: { roofType: string }) => void,
+  onComblesSubmit: (data: { atticType: string }) => void,
   goToPreviousStep: () => void
 ) => {
   return {
-    3: (props: { animationDirection: 'forward' | 'backward' }) => {
-      const { animationDirection } = props;
-      
+    5: (props: { 
+      animationDirection: 'forward' | 'backward';
+      goToPreviousStep: () => void; 
+    }) => {
       return (
         <ConstructionDetailsForm
           formData={formData}
           updateFormData={onConstructionDetailsSubmit}
-          goToNextStep={() => {}} // Will be handled by the submission
+          goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
-          animationDirection={animationDirection}
+          animationDirection={props.animationDirection}
         />
       );
     },
-    4: (props: { animationDirection: 'forward' | 'backward' }) => {
-      const { animationDirection } = props;
-      
+    6: (props: { 
+      animationDirection: 'forward' | 'backward';
+      goToPreviousStep: () => void; 
+    }) => {
       return (
         <TerrainForm
           formData={formData}
-          updateFormData={onTerrainSubmit}
-          goToNextStep={() => {}} // Will be handled by the submission
+          updateFormData={(data) => onTerrainSubmit(data as { terrainType: string })}
+          goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
-          animationDirection={animationDirection}
+          animationDirection={props.animationDirection}
         />
       );
     },
-    5: (props: { animationDirection: 'forward' | 'backward' }) => {
-      const { animationDirection } = props;
-      
+    7: (props: { 
+      animationDirection: 'forward' | 'backward';
+      goToPreviousStep: () => void; 
+    }) => {
       return (
         <GrosOeuvreForm
           formData={formData}
-          updateFormData={onGrosOeuvreSubmit}
-          goToNextStep={() => {}} // Will be handled by the submission
+          updateFormData={(data) => onGrosOeuvreSubmit(data as { wallType: string })}
+          goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
-          animationDirection={animationDirection}
+          animationDirection={props.animationDirection}
         />
       );
     },
-    6: (props: { animationDirection: 'forward' | 'backward' }) => {
-      const { animationDirection } = props;
-      
+    8: (props: { 
+      animationDirection: 'forward' | 'backward';
+      goToPreviousStep: () => void; 
+    }) => {
       return (
         <CharpenteForm
           formData={formData}
-          updateFormData={onCharpenteSubmit}
-          goToNextStep={() => {}} // Will be handled by the submission
+          updateFormData={(data) => onCharpenteSubmit(data as { roofType: string })}
+          goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
-          animationDirection={animationDirection}
+          animationDirection={props.animationDirection}
         />
       );
     },
-    7: (props: { animationDirection: 'forward' | 'backward' }) => {
-      const { animationDirection } = props;
-      
+    9: (props: { 
+      animationDirection: 'forward' | 'backward';
+      goToPreviousStep: () => void; 
+    }) => {
       return (
         <ComblesForm
           formData={formData}
-          updateFormData={onComblesSubmit}
-          goToNextStep={() => {}} // Will be handled by the submission
+          updateFormData={(data) => onComblesSubmit(data as { atticType: string })}
+          goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
-          animationDirection={animationDirection}
+          animationDirection={props.animationDirection}
         />
       );
     },
