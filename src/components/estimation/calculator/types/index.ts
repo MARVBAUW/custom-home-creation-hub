@@ -8,12 +8,12 @@ export interface FormData {
   landIncluded?: string;
   
   // Estimation type/mode
-  estimationType?: 'simple' | 'standard' | 'detailed' | 'quick' | string;
+  estimationType?: 'simple' | 'standard' | 'detailed' | 'quick' | 'basic' | 'Rapide 5 mins (Précision à + ou - 10%)' | 'Précise 15 mins (précision à + ou- 5%)' | string;
   
   // Terrain details
   terrainType?: string;
   terrainSurface?: number;
-  terrainAccess?: string; // Added terrainAccess property
+  terrainAccess?: string;
   landPrice?: number;
   
   // Construction details
@@ -21,7 +21,8 @@ export interface FormData {
   constructionStyle?: string;
   levels?: number | string;
   surface?: number;
-  floors?: number | string; // Added floors property
+  rooms?: number | string;
+  units?: number | string;
   basement?: boolean;
   garage?: boolean;
   bedrooms?: number;
