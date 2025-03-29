@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Window, DoorClosed } from 'lucide-react';
+import { Maximize2, DoorClosed } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 interface WindowsDoorsStepProps {
@@ -68,7 +68,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="bois" id="bois-remplacement" {...register('windowType')} />
                     <Label htmlFor="bois-remplacement" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-amber-700" />
+                        <Maximize2 className="h-4 w-4 text-amber-700" />
                         <span>Bois</span>
                       </div>
                       <img 
@@ -83,7 +83,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="pvc" id="pvc-remplacement" {...register('windowType')} />
                     <Label htmlFor="pvc-remplacement" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-gray-500" />
+                        <Maximize2 className="h-4 w-4 text-gray-500" />
                         <span>PVC</span>
                       </div>
                       <img 
@@ -98,7 +98,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="alu" id="alu-remplacement" {...register('windowType')} />
                     <Label htmlFor="alu-remplacement" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-gray-700" />
+                        <Maximize2 className="h-4 w-4 text-gray-700" />
                         <span>Aluminium</span>
                       </div>
                       <img 
@@ -113,7 +113,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="mixte" id="mixte-remplacement" {...register('windowType')} />
                     <Label htmlFor="mixte-remplacement" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-blue-700" />
+                        <Maximize2 className="h-4 w-4 text-blue-700" />
                         <span>Mixte bois-alu</span>
                       </div>
                       <img 
@@ -128,7 +128,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="pvc_colore" id="pvc_colore-remplacement" {...register('windowType')} />
                     <Label htmlFor="pvc_colore-remplacement" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-green-500" />
+                        <Maximize2 className="h-4 w-4 text-green-500" />
                         <span>PVC coloré</span>
                       </div>
                       <img 
@@ -172,7 +172,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="bois" id="bois-ajout" {...register('windowType')} />
                     <Label htmlFor="bois-ajout" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-amber-700" />
+                        <Maximize2 className="h-4 w-4 text-amber-700" />
                         <span>Bois</span>
                       </div>
                       <img 
@@ -187,7 +187,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="pvc" id="pvc-ajout" {...register('windowType')} />
                     <Label htmlFor="pvc-ajout" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-gray-500" />
+                        <Maximize2 className="h-4 w-4 text-gray-500" />
                         <span>PVC</span>
                       </div>
                       <img 
@@ -202,7 +202,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="alu" id="alu-ajout" {...register('windowType')} />
                     <Label htmlFor="alu-ajout" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-gray-700" />
+                        <Maximize2 className="h-4 w-4 text-gray-700" />
                         <span>Aluminium</span>
                       </div>
                       <img 
@@ -217,7 +217,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="mixte" id="mixte-ajout" {...register('windowType')} />
                     <Label htmlFor="mixte-ajout" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-blue-700" />
+                        <Maximize2 className="h-4 w-4 text-blue-700" />
                         <span>Mixte bois-alu</span>
                       </div>
                       <img 
@@ -232,7 +232,7 @@ const WindowsDoorsStep: React.FC<WindowsDoorsStepProps> = ({
                     <RadioGroupItem value="pvc_colore" id="pvc_colore-ajout" {...register('windowType')} />
                     <Label htmlFor="pvc_colore-ajout" className="flex flex-col cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Window className="h-4 w-4 text-green-500" />
+                        <Maximize2 className="h-4 w-4 text-green-500" />
                         <span>PVC coloré</span>
                       </div>
                       <img 
