@@ -3,7 +3,7 @@ import React from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoIcon } from 'lucide-react';
-import WorkEstimationForm from './WorkEstimationForm';
+import ConversationalForm from './ConversationalForm';
 
 const EstimationCalculator: React.FC = () => {
   const { toast } = useToast();
@@ -12,8 +12,8 @@ const EstimationCalculator: React.FC = () => {
     // Message informant l'utilisateur du nouveau formulaire d'estimation
     setTimeout(() => {
       toast({
-        title: "Formulaire d'estimation détaillé",
-        description: "Notre formulaire d'estimation complet vous permet d'obtenir un devis précis pour votre projet.",
+        title: "Nouveau formulaire d'estimation conversationnel",
+        description: "Obtenez une estimation en discutant simplement avec notre assistant virtuel.",
         duration: 5000,
       });
     }, 1000);
@@ -27,13 +27,13 @@ const EstimationCalculator: React.FC = () => {
           Estimation de votre projet
         </CardTitle>
         <CardDescription>
-          Complétez le formulaire ci-dessous pour obtenir une estimation détaillée de votre projet de construction ou rénovation.
+          Discutez avec notre assistant virtuel pour obtenir une estimation rapide de votre projet de construction ou rénovation.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="relative">
-          {/* Formulaire d'estimation complet */}
-          <WorkEstimationForm />
+          {/* Formulaire conversationnel */}
+          <ConversationalForm />
           
           <div className="text-xs text-gray-500 mt-4 text-center">
             * Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.
