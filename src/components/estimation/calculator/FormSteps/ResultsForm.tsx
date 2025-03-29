@@ -23,6 +23,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
         // Add a small delay to improve user experience
         setTimeout(() => {
           const result = calculateEstimation(formData);
+          console.log("Résultat du calcul:", result);
           setCalculation(result);
           setIsCalculating(false);
         }, 1500);
