@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import { useEstimationSteps } from './hooks/useEstimationSteps';
@@ -33,7 +34,7 @@ const EstimationWizard = () => {
     setStep 
   } = useEstimationSteps(formData);
 
-  // Calculer l'estimation lorsque les données du formulaire changent
+  // Calculer l'estimation lorsque l'étape des résultats est atteinte
   useEffect(() => {
     if (step === totalSteps - 1) {
       calculateEstimationResult();
@@ -43,7 +44,7 @@ const EstimationWizard = () => {
   const calculateEstimationResult = () => {
     setIsCalculating(true);
     console.log("Starting estimation calculation...");
-    console.log("Form data:", formData);
+    console.log("Form data for calculation:", formData);
     
     // Simuler un temps de calcul pour l'expérience utilisateur
     setTimeout(() => {
@@ -52,18 +53,18 @@ const EstimationWizard = () => {
         const result = getSafeEstimation(formData);
         console.log("Résultat du calcul d'estimation:", result);
         setEstimationResult(result);
+        setIsCalculating(false);
       } catch (error) {
         console.error("Erreur lors du calcul de l'estimation:", error);
         setEstimationResult(50000); // Valeur par défaut en cas d'erreur
+        setIsCalculating(false);
         toast({
           title: "Erreur de calcul",
           description: "Une erreur est survenue lors du calcul de l'estimation. Une valeur approximative a été utilisée.",
           variant: "destructive",
         });
-      } finally {
-        setIsCalculating(false);
       }
-    }, 1500);
+    }, 1000);
   };
 
   const handleClientTypeSubmit = (data: { clientType: string }) => {
@@ -199,6 +200,7 @@ const EstimationWizard = () => {
             estimation={estimationResult}
             formData={formData}
             goToPreviousStep={goToPreviousStep}
+            isLoading={isCalculating}
           />
         );
       default:

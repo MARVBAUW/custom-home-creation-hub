@@ -41,7 +41,7 @@ export const useClientInfoSubmissions = (
 
   // Soumission du formulaire de type d'estimation
   const onEstimationTypeSubmit = (data: { 
-    estimationType: string;
+    estimationType: 'simple' | 'standard' | 'detailed' | 'quick' | string;
     termsAccepted: boolean;
   }) => {
     updateFormData({
