@@ -10,24 +10,20 @@ import { ArrowLeft, ArrowRight, Briefcase } from "lucide-react";
 import { motion } from 'framer-motion';
 import { ProfessionalProjectSchema } from '../types';
 import { slideVariants } from '../animations';
-
-type ProfessionalProjectFormProps = {
-  defaultValues: {
-    activity: string;
-    projectType: string;
-    startDate: string;
-    endDate: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
+import { ProfessionalProjectFormProps } from '../types/formTypes';
 
 const ProfessionalProjectForm: React.FC<ProfessionalProjectFormProps> = ({
-  defaultValues,
-  onSubmit,
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  defaultValues = {
+    activity: "",
+    projectType: "",
+    startDate: "",
+    endDate: "",
+  }
 }) => {
   const form = useForm({
     resolver: zodResolver(ProfessionalProjectSchema),
@@ -38,6 +34,11 @@ const ProfessionalProjectForm: React.FC<ProfessionalProjectFormProps> = ({
       endDate: defaultValues.endDate || "",
     },
   });
+
+  const onSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
 
   return (
     <motion.div

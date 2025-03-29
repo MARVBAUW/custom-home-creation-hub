@@ -60,7 +60,11 @@ export const createTechnicalStepRegistry = (
         animationDirection={props.animationDirection}
         defaultValues={{
           heatingType: formData.heatingType || '',
-          hasAirConditioning: formData.hasAirConditioning ? "true" : "false"
+          hasAirConditioning: formData.hasAirConditioning !== undefined 
+            ? (typeof formData.hasAirConditioning === 'boolean' 
+              ? (formData.hasAirConditioning ? "true" : "false")
+              : formData.hasAirConditioning)
+            : "false"
         }}
       />
     ),
