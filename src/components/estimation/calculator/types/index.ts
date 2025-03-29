@@ -32,10 +32,33 @@ export interface FormData {
   // Terrain
   terrainType?: string;
   terrainAccess?: string;
+  terrainSurface?: number;
+  landPrice?: number;
+  hasLand?: boolean;
+  waterConnection?: boolean;
+  electricityConnection?: boolean;
+  gasConnection?: boolean;
+  sewerConnection?: boolean;
+  fiberConnection?: boolean;
+  needsSepticTank?: boolean;
+  floodRisk?: boolean;
+  claySoil?: boolean;
+  rockySoil?: boolean;
+  wetlandZone?: boolean;
+  heritageZone?: boolean;
   
   // Gros oeuvre
   wallType?: string;
   foundationType?: string;
+  soilType?: string;
+  wallThickness?: number;
+  hasBasement?: boolean;
+  basementType?: string;
+  floorType?: string;
+  slopedLand?: boolean;
+  difficultAccess?: boolean;
+  needsDemolition?: boolean;
+  needsWaterManagement?: boolean;
   
   // Charpente et combles
   roofType?: string;
@@ -54,6 +77,8 @@ export interface FormData {
   metalCladdingPercentage?: number;
   woodCladdingPercentage?: number;
   stoneCladdingPercentage?: number;
+  stoneCladPercentage?: number;
+  windowRenovationArea?: number;
   
   // Menuiseries extérieures
   windowType?: string;
@@ -70,16 +95,21 @@ export interface FormData {
   
   // Menuiseries intérieures
   interiorDoorsType?: string;
+  doorType?: string;
   
   // Revêtements
   tileType?: string;
-  floorTilePercentage?: number;
-  parquetPercentage?: number;
-  softFloorPercentage?: number;
+  floorTileType?: string;
+  wallTileType?: string;
+  floorTilePercentage?: number | string;
+  parquetPercentage?: number | string;
+  softFloorPercentage?: number | string;
   parquetType?: string;
   softFloorType?: string;
+  flooringType?: string;
   
   // Peinture
+  paintType?: string;
   basicPaintPercentage?: number | string;
   decorativePaintPercentage?: number | string;
   wallpaperPercentage?: number | string;
@@ -88,6 +118,7 @@ export interface FormData {
   
   // Aménagements extérieurs
   gardenArea?: number;
+  gardenSurface?: number;
   terrace?: boolean;
   swimmingPool?: boolean;
   garage?: boolean;
@@ -118,6 +149,25 @@ export interface FormData {
   includeOptions?: boolean;
   includeCuisine?: boolean;
   includeBathroom?: boolean;
+  
+  // Solutions environnementales
+  energyType?: string;
+  solutionType?: string;
+  solarPanelSurface?: number;
+  ecoFriendlyInsulation?: boolean;
+  
+  // Type de construction et finitions
+  constructionType?: string;
+  constructionMode?: string;
+  finishLevel?: string;
+  
+  // Pour la rénovation
+  renovationType?: string;
+  renovationAreas?: string[];
+  
+  // Informations fiscales
+  cityTaxRate?: number;
 }
 
 export * from './formTypes';
+export * from './validationSchemas';
