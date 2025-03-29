@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Loader2, Calculator, ExternalLink, Download, Save, MessageSquare, X, ChevronRight, ChevronDown, PlusCircle, Check } from 'lucide-react';
@@ -233,7 +232,7 @@ const AIEnhancedEstimator: React.FC = () => {
           setShowSummary(true);
           
           // Message de confirmation
-          const estimationMessage = {
+          const estimationMessage: Message = {
             id: `assistant-estimation-${Date.now()}`,
             content: `J'ai calculé une estimation pour votre projet. Le coût estimé est d'environ ${totalEstimation.toLocaleString('fr-FR')} €. Vous pouvez voir les détails dans l'onglet Résumé.`,
             sender: 'assistant',
