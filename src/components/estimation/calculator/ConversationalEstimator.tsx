@@ -1,102 +1,45 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import { v4 as uuidv4 } from 'uuid';
 import MessageDisplay from './components/conversational/MessageDisplay';
 import InputArea from './components/conversational/InputArea';
-import MessageProcessor from './components/conversational/MessageProcessor';
 import { Message, ConversationalProps } from './components/conversational/types';
 
 const ConversationalEstimator: React.FC<ConversationalProps> = (props) => {
-  const {
-    onClientTypeSubmit,
-    onProfessionalProjectSubmit,
-    onIndividualProjectSubmit,
-    onEstimationTypeSubmit,
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit,
-    onCouvertureSubmit,
-    onIsolationSubmit,
-    onFacadeSubmit,
-    onMenuiseriesExtSubmit,
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit,
-    onPlatrerieSubmit,
-    onMenuiseriesIntSubmit,
-    onCarrelageSubmit,
-    onParquetSubmit,
-    onPeintureSubmit,
-    onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit,
-    onOptionsSubmit,
-    onCuisineSubmit,
-    onSalleDeBainSubmit,
-    onDemolitionSubmit,
-    onGrosOeuvreRenovSubmit,
-    onCharpenteRenovSubmit,
-    onCouvertureRenovSubmit,
-    onFacadeRenovSubmit,
-    onContactSubmit,
-    formData,
-    step,
-    onStepChange
-  } = props;
-
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'system',
-      content: 'Bonjour ! Je suis votre assistant d'estimation de projet Progineer. Quel type de projet souhaitez-vous estimer ?',
-      options: ['Construction neuve', 'Rénovation', 'Extension']
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Maintenir la position de défilement lors de l'ajout de nouveaux messages
+  // Initial welcome message
   useEffect(() => {
-    if (messagesEndRef.current) {
-      const chatContainer = chatContainerRef.current;
-      const shouldScroll = 
-        chatContainer && 
-        chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight < 100;
-      
-      if (shouldScroll) {
-        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-      }
+    if (messages.length === 0) {
+      const welcomeMessage: Message = {
+        id: uuidv4(),
+        type: 'system',
+        content: "Bonjour ! Je suis votre assistant virtuel pour vous aider à estimer votre projet de construction ou rénovation. Comment puis-je vous aider aujourd'hui ?",
+        options: [
+          "Je souhaite estimer un projet de construction neuve",
+          "Je voudrais estimer une rénovation",
+          "J'ai besoin d'estimer une extension"
+        ]
+      };
+      setMessages([welcomeMessage]);
     }
+  }, [messages.length]);
+
+  // Auto-scroll to bottom of messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const addSystemMessage = (content: string, options: string[] = []) => {
-    const newSystemMessage: Message = {
-      id: Date.now().toString(),
-      type: 'system',
-      content,
-      options
-    };
-    
-    setMessages(prev => [...prev, newSystemMessage]);
-  };
-
-  const messageProcessorProps = {
-    ...props,
-    addSystemMessage
-  };
-
-  const { processUserInput } = MessageProcessor(messageProcessorProps);
-
+  // Handle sending a new message
   const handleSendMessage = () => {
-    if (!userInput.trim()) return;
-    
-    // Ajouter le message de l'utilisateur
+    if (userInput.trim() === '') return;
+
+    // Add user message
     const newUserMessage: Message = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       type: 'user',
       content: userInput
     };
@@ -104,32 +47,117 @@ const ConversationalEstimator: React.FC<ConversationalProps> = (props) => {
     setMessages(prev => [...prev, newUserMessage]);
     setUserInput('');
     setLoading(true);
-    
-    // Simuler un délai de réponse du système
+
+    // Simulate response delay
     setTimeout(() => {
       processUserInput(userInput);
       setLoading(false);
-    }, 500);
+    }, 1000);
   };
 
+  // Process user input and determine next steps
+  const processUserInput = (input: string) => {
+    // Simple keyword matching for demo purposes
+    if (input.toLowerCase().includes('construction') || 
+        input.toLowerCase().includes('neuve')) {
+      askForClientType();
+    } else if (input.toLowerCase().includes('rénovation')) {
+      askForRenovationType();
+    } else if (input.toLowerCase().includes('extension')) {
+      askForExtensionDetails();
+    } else {
+      provideGeneralHelp();
+    }
+  };
+
+  // Handle pre-defined option selection
   const handleOptionClick = (option: string) => {
-    // Ajouter l'option sélectionnée comme message de l'utilisateur
     const newUserMessage: Message = {
-      id: Date.now().toString(),
+      id: uuidv4(),
       type: 'user',
       content: option
     };
     
     setMessages(prev => [...prev, newUserMessage]);
     setLoading(true);
-    
-    // Simuler un délai de réponse du système
+
+    // Simulate response delay
     setTimeout(() => {
-      processUserInput(option);
+      if (option.includes('construction neuve')) {
+        askForClientType();
+      } else if (option.includes('rénovation')) {
+        askForRenovationType();
+      } else if (option.includes('extension')) {
+        askForExtensionDetails();
+      } else if (option.includes('particulier')) {
+        askForProjectType("particulier");
+        props.onClientTypeSubmit({ clientType: "particulier" });
+      } else if (option.includes('professionnel')) {
+        askForProjectType("professionnel");
+        props.onClientTypeSubmit({ clientType: "professionnel" });
+      } else {
+        provideGeneralHelp();
+      }
       setLoading(false);
-    }, 500);
+    }, 1000);
   };
 
+  // Message generation functions
+  const askForClientType = () => {
+    const message: Message = {
+      id: uuidv4(),
+      type: 'system',
+      content: "Êtes-vous un particulier ou un professionnel ?",
+      options: ["Je suis un particulier", "Je suis un professionnel"]
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
+  const askForProjectType = (clientType: string) => {
+    const message: Message = {
+      id: uuidv4(),
+      type: 'system',
+      content: `En tant que ${clientType}, quel type de projet souhaitez-vous estimer ?`,
+      options: ["Maison individuelle", "Immeuble collectif", "Local commercial", "Bâtiment industriel"]
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
+  const askForRenovationType = () => {
+    const message: Message = {
+      id: uuidv4(),
+      type: 'system',
+      content: "Quel type de rénovation souhaitez-vous réaliser ?",
+      options: ["Rénovation complète", "Rénovation énergétique", "Rénovation partielle"]
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
+  const askForExtensionDetails = () => {
+    const message: Message = {
+      id: uuidv4(),
+      type: 'system',
+      content: "Quelle est la surface approximative de votre extension ?",
+      options: ["Moins de 20m²", "Entre 20 et 40m²", "Plus de 40m²"]
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
+  const provideGeneralHelp = () => {
+    const message: Message = {
+      id: uuidv4(),
+      type: 'system',
+      content: "Je peux vous aider à estimer différents types de projets. Veuillez choisir une option ci-dessous :",
+      options: [
+        "Je souhaite estimer un projet de construction neuve",
+        "Je voudrais estimer une rénovation",
+        "J'ai besoin d'estimer une extension"
+      ]
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
+  // Handle keyboard events
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -138,32 +166,21 @@ const ConversationalEstimator: React.FC<ConversationalProps> = (props) => {
   };
 
   return (
-    <Card className="rounded-lg overflow-hidden shadow-md">
-      <CardContent className="p-0">
-        <div className="flex flex-col h-[500px]">
-          {/* Zone des messages */}
-          <div 
-            className="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-900" 
-            ref={chatContainerRef}
-          >
-            <MessageDisplay 
-              messages={messages} 
-              loading={loading} 
-              onOptionClick={handleOptionClick} 
-              messagesEndRef={messagesEndRef} 
-            />
-          </div>
-          
-          {/* Zone de saisie */}
-          <InputArea 
-            userInput={userInput} 
-            setUserInput={setUserInput} 
-            handleSendMessage={handleSendMessage} 
-            handleKeyPress={handleKeyPress} 
-          />
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex flex-col h-[500px] border rounded-lg overflow-hidden">
+      <MessageDisplay 
+        messages={messages} 
+        loading={loading} 
+        onOptionClick={handleOptionClick} 
+        messagesEndRef={messagesEndRef} 
+      />
+      
+      <InputArea 
+        userInput={userInput} 
+        setUserInput={setUserInput} 
+        handleSendMessage={handleSendMessage} 
+        handleKeyPress={handleKeyPress} 
+      />
+    </div>
   );
 };
 
