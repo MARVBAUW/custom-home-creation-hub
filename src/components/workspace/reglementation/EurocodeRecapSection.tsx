@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
-import { Calculator, BookOpen, Ruler, Columns, Atom, Download } from 'lucide-react';
+import { Calculator, BookOpen, Ruler, Columns, Atom, Download, ExternalLink } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { LoadCombinationsCalculator } from '../calculators/eurocode';
+import { LoadCombinationsCalculator, ClimateCalculator, BeamCalculator } from '../calculators/eurocode';
 
 export const EurocodeRecapSection = () => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -30,7 +30,7 @@ export const EurocodeRecapSection = () => {
     'ec1-climate': {
       title: 'Calcul des charges climatiques',
       description: 'Calculateur des charges de neige et de vent selon l\'EC1',
-      content: 'Interface de calcul permettant de déterminer les charges de neige et de vent en fonction de la zone géographique, l\'altitude, la topographie et la géométrie du bâtiment.'
+      content: <ClimateCalculator />
     },
     'ec1-combinations': {
       title: 'Combinaisons d\'actions',
@@ -40,7 +40,7 @@ export const EurocodeRecapSection = () => {
     'ec2-beams': {
       title: 'Dimensionnement de poutres',
       description: 'Calculateur de sections de poutres en béton armé',
-      content: 'Outil de calcul du ferraillage nécessaire pour une poutre en béton armé soumise à de la flexion simple ou composée selon l\'Eurocode 2.'
+      content: <BeamCalculator />
     }
   };
 
