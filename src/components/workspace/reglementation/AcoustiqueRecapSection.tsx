@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { DTU } from './dtu/types';
 import { Volume, Home, Store, Headphones, Building, School, ExternalLink, BookOpen, Download, Calculator } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,9 @@ import { acoustiqueData } from './data/acoustique';
 import { acoustiqueDTUs } from './data/dtu/acoustique';
 import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const AcoustiqueRecapSection = () => {
   const [acoustiqueTab, setAcoustiqueTab] = useState("logement");
@@ -18,6 +21,32 @@ export const AcoustiqueRecapSection = () => {
   const [isDTUDialogOpen, setIsDTUDialogOpen] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [openCalculator, setOpenCalculator] = useState<string | null>(null);
+
+  // Form states for the acoustic calculators
+  const [isolementData, setIsolementData] = useState({
+    localEmission: 'sejour',
+    localReception: 'chambre',
+    surfaceSeparation: 10,
+    volumeReception: 30,
+    isolementParoi: 52,
+    transmissionsLaterales: 'faibles'
+  });
+
+  const [impactData, setImpactData] = useState({
+    typePlancher: 'beton',
+    epaisseur: 20,
+    revetement: 'carrelage',
+    faux_plafond: false
+  });
+
+  const [reverberationData, setReverberationData] = useState({
+    volume: 100,
+    surface: 120,
+    type: 'classe',
+    alpha_murs: 0.1,
+    alpha_plafond: 0.2,
+    alpha_sol: 0.05
+  });
 
   const handleOpenDTU = (dtu: DTU) => {
     setSelectedDTU(dtu);
@@ -38,21 +67,430 @@ export const AcoustiqueRecapSection = () => {
     setOpenCalculator(id);
   };
 
+  // Calculate isolement acoustique
+  const calculateIsolement = () => {
+    // Simple formula based on EN 12354
+    const Dnt = isolementData.isolementParoi;
+    
+    // Transmission latérale adjustment
+    let k_tl = 0;
+    if (isolementData.transmissionsLaterales === 'faibles') k_tl = 0;
+    else if (isolementData.transmissionsLaterales === 'moyennes') k_tl = 3;
+    else if (isolementData.transmissionsLaterales === 'fortes') k_tl = 5;
+    
+    // Volume adjustment
+    const volumeFactor = 10 * Math.log10(0.32 * isolementData.volumeReception / isolementData.surfaceSeparation);
+    
+    // Final DnT,A (simplified approximation)
+    const DnTA = Dnt - k_tl + volumeFactor;
+    
+    return Math.round(DnTA);
+  };
+
+  // Calculate impact noise level
+  const calculateImpact = () => {
+    // Base values for different floor types (simplified)
+    const baseValues = {
+      'beton': 78,
+      'bois': 85
+    };
+    
+    // Revetement improvement (simplified)
+    const revetementImprovements = {
+      'carrelage': 0,
+      'parquet': 5,
+      'pvc': 8,
+      'moquette': 18
+    };
+    
+    // Thickness improvement (simplified)
+    const thicknessImprovement = Math.log10(impactData.epaisseur) * 5;
+    
+    // Suspended ceiling improvement
+    const ceilingImprovement = impactData.faux_plafond ? 6 : 0;
+    
+    // Calculate L'nT,w (simplified approximation)
+    const LnTw = baseValues[impactData.typePlancher as keyof typeof baseValues] - 
+                revetementImprovements[impactData.revetement as keyof typeof revetementImprovements] - 
+                thicknessImprovement - 
+                ceilingImprovement;
+    
+    return Math.round(LnTw);
+  };
+
+  // Calculate reverberation time
+  const calculateReverberation = () => {
+    // Sabine formula: T = 0.16 * V / A
+    // Where: 
+    // - T is the reverberation time in seconds
+    // - V is the volume of the room in m³
+    // - A is the equivalent absorption area in m²
+    
+    // Calculate the equivalent absorption area
+    const wallsArea = reverberationData.surface * 0.65; // Estimation of walls area
+    const ceilingArea = reverberationData.volume / reverberationData.surface; // Approximate ceiling area
+    const floorArea = ceilingArea; // Floor area same as ceiling
+    
+    const totalAbsorption = 
+      (wallsArea * reverberationData.alpha_murs) + 
+      (ceilingArea * reverberationData.alpha_plafond) + 
+      (floorArea * reverberationData.alpha_sol);
+    
+    // Calculate reverberation time
+    const TR = 0.16 * reverberationData.volume / totalAbsorption;
+    
+    return TR.toFixed(2);
+  };
+
   const calculators = {
     'acoustique-isolement': {
       title: 'Isolement aux bruits aériens',
       description: 'Calcul d\'isolement acoustique entre locaux',
-      content: 'Ce calculateur permet d\'estimer l\'isolement acoustique standardisé DnT,A entre deux locaux en fonction des parois de séparation, des transmissions latérales et des éléments constructifs utilisés.'
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="localEmission">Local d'émission</Label>
+                <Select 
+                  value={isolementData.localEmission}
+                  onValueChange={val => setIsolementData({...isolementData, localEmission: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un local" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sejour">Séjour</SelectItem>
+                    <SelectItem value="cuisine">Cuisine</SelectItem>
+                    <SelectItem value="chambre">Chambre</SelectItem>
+                    <SelectItem value="sdb">Salle de bain</SelectItem>
+                    <SelectItem value="circulations">Circulations</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="localReception">Local de réception</Label>
+                <Select 
+                  value={isolementData.localReception}
+                  onValueChange={val => setIsolementData({...isolementData, localReception: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un local" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="sejour">Séjour</SelectItem>
+                    <SelectItem value="cuisine">Cuisine</SelectItem>
+                    <SelectItem value="chambre">Chambre</SelectItem>
+                    <SelectItem value="sdb">Salle de bain</SelectItem>
+                    <SelectItem value="circulations">Circulations</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="isolementParoi">Indice d'affaiblissement Rw de la paroi (dB)</Label>
+                <Input
+                  id="isolementParoi"
+                  type="number"
+                  value={isolementData.isolementParoi}
+                  onChange={e => setIsolementData({...isolementData, isolementParoi: parseInt(e.target.value)})}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="surfaceSeparation">Surface de la paroi séparative (m²)</Label>
+                <Input
+                  id="surfaceSeparation"
+                  type="number"
+                  value={isolementData.surfaceSeparation}
+                  onChange={e => setIsolementData({...isolementData, surfaceSeparation: parseInt(e.target.value)})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="volumeReception">Volume du local de réception (m³)</Label>
+                <Input
+                  id="volumeReception"
+                  type="number"
+                  value={isolementData.volumeReception}
+                  onChange={e => setIsolementData({...isolementData, volumeReception: parseInt(e.target.value)})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="transmissionsLaterales">Transmissions latérales</Label>
+                <Select 
+                  value={isolementData.transmissionsLaterales}
+                  onValueChange={val => setIsolementData({...isolementData, transmissionsLaterales: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Niveau de transmissions" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="faibles">Faibles</SelectItem>
+                    <SelectItem value="moyennes">Moyennes</SelectItem>
+                    <SelectItem value="fortes">Fortes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-100">
+            <h3 className="text-lg font-medium mb-4">Résultat du calcul</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Isolement standardisé DnT,A</p>
+                <p className="text-3xl font-bold text-indigo-600">{calculateIsolement()} dB</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Exigence réglementaire</p>
+                <p className="text-3xl font-bold text-indigo-600">53 dB</p>
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <p className={`text-sm ${calculateIsolement() >= 53 ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                {calculateIsolement() >= 53 ? '✓ Conforme à la réglementation' : '✗ Non conforme à la réglementation'}
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-xs text-gray-500">
+            <p>Note: Ce calcul est une estimation simplifiée basée sur la norme EN 12354.</p>
+            <p>Pour un calcul précis, consultez un bureau d'études en acoustique.</p>
+          </div>
+        </div>
+      )
     },
     'acoustique-impact': {
       title: 'Bruits d\'impact',
       description: 'Calcul de niveau de bruit d\'impact',
-      content: 'Cet outil permet d\'évaluer l\'isolement aux bruits d\'impact d\'un plancher en fonction de sa composition et des revêtements appliqués.'
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="typePlancher">Type de plancher</Label>
+                <Select 
+                  value={impactData.typePlancher}
+                  onValueChange={val => setImpactData({...impactData, typePlancher: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="beton">Béton</SelectItem>
+                    <SelectItem value="bois">Bois</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="epaisseur">Épaisseur du plancher (cm)</Label>
+                <Input
+                  id="epaisseur"
+                  type="number"
+                  value={impactData.epaisseur}
+                  onChange={e => setImpactData({...impactData, epaisseur: parseInt(e.target.value)})}
+                  min="5"
+                  max="50"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="revetement">Revêtement de sol</Label>
+                <Select 
+                  value={impactData.revetement}
+                  onValueChange={val => setImpactData({...impactData, revetement: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un revêtement" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="carrelage">Carrelage</SelectItem>
+                    <SelectItem value="parquet">Parquet</SelectItem>
+                    <SelectItem value="pvc">Sol PVC</SelectItem>
+                    <SelectItem value="moquette">Moquette</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="flex items-center space-x-2 pt-6">
+                <input
+                  type="checkbox"
+                  id="faux_plafond"
+                  checked={impactData.faux_plafond}
+                  onChange={e => setImpactData({...impactData, faux_plafond: e.target.checked})}
+                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                />
+                <Label htmlFor="faux_plafond">Faux-plafond acoustique dans le local de réception</Label>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-100">
+            <h3 className="text-lg font-medium mb-4">Résultat du calcul</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Niveau de bruit d'impact L'nT,w</p>
+                <p className="text-3xl font-bold text-indigo-600">{calculateImpact()} dB</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Exigence réglementaire</p>
+                <p className="text-3xl font-bold text-indigo-600">≤ 58 dB</p>
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <p className={`text-sm ${calculateImpact() <= 58 ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                {calculateImpact() <= 58 ? '✓ Conforme à la réglementation' : '✗ Non conforme à la réglementation'}
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-xs text-gray-500">
+            <p>Note: Ce calcul est une estimation simplifiée.</p>
+            <p>Pour un calcul précis, des mesures sur site sont nécessaires.</p>
+          </div>
+        </div>
+      )
     },
     'acoustique-reverberation': {
       title: 'Temps de réverbération',
       description: 'Calcul du temps de réverbération d\'un local',
-      content: 'Calculez le temps de réverbération d\'un local en fonction de son volume, de sa géométrie et des matériaux de revêtement utilisés sur les différentes surfaces.'
+      content: (
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="type">Type de local</Label>
+                <Select 
+                  value={reverberationData.type}
+                  onValueChange={val => setReverberationData({...reverberationData, type: val})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choisir un type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="classe">Salle de classe</SelectItem>
+                    <SelectItem value="bureau">Bureau</SelectItem>
+                    <SelectItem value="restaurant">Restaurant</SelectItem>
+                    <SelectItem value="salle_reunion">Salle de réunion</SelectItem>
+                    <SelectItem value="autre">Autre</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="volume">Volume du local (m³)</Label>
+                <Input
+                  id="volume"
+                  type="number"
+                  value={reverberationData.volume}
+                  onChange={e => setReverberationData({...reverberationData, volume: parseInt(e.target.value)})}
+                  min="10"
+                  max="1000"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="surface">Surface au sol (m²)</Label>
+                <Input
+                  id="surface"
+                  type="number"
+                  value={reverberationData.surface}
+                  onChange={e => setReverberationData({...reverberationData, surface: parseInt(e.target.value)})}
+                  min="5"
+                  max="500"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Label className="block mb-2">Coefficients d'absorption (α)</Label>
+                
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Label htmlFor="alpha_murs" className="text-sm">Murs</Label>
+                    <Input
+                      id="alpha_murs"
+                      type="number"
+                      value={reverberationData.alpha_murs}
+                      onChange={e => setReverberationData({...reverberationData, alpha_murs: parseFloat(e.target.value)})}
+                      min="0.01"
+                      max="1"
+                      step="0.01"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <Label htmlFor="alpha_plafond" className="text-sm">Plafond</Label>
+                    <Input
+                      id="alpha_plafond"
+                      type="number"
+                      value={reverberationData.alpha_plafond}
+                      onChange={e => setReverberationData({...reverberationData, alpha_plafond: parseFloat(e.target.value)})}
+                      min="0.01"
+                      max="1"
+                      step="0.01"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2">
+                    <Label htmlFor="alpha_sol" className="text-sm">Sol</Label>
+                    <Input
+                      id="alpha_sol"
+                      type="number"
+                      value={reverberationData.alpha_sol}
+                      onChange={e => setReverberationData({...reverberationData, alpha_sol: parseFloat(e.target.value)})}
+                      min="0.01"
+                      max="1"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-indigo-50 p-6 rounded-lg border border-indigo-100">
+            <h3 className="text-lg font-medium mb-4">Résultat du calcul</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Temps de réverbération Tr</p>
+                <p className="text-3xl font-bold text-indigo-600">{calculateReverberation()} s</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border border-indigo-100">
+                <p className="text-sm text-gray-500">Valeur cible</p>
+                <p className="text-3xl font-bold text-indigo-600">
+                  {reverberationData.type === 'classe' ? '≤ 0.6 s' : 
+                   reverberationData.type === 'bureau' ? '≤ 0.8 s' : 
+                   reverberationData.type === 'restaurant' ? '≤ 1.2 s' : 
+                   '0.4 - 0.8 s'}
+                </p>
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <p className="text-sm text-gray-600 font-medium">
+                Formule utilisée: <span className="font-mono">Tr = 0.16 × V / A</span> (Formule de Sabine)
+              </p>
+            </div>
+          </div>
+          
+          <div className="text-xs text-gray-500">
+            <p>Note: Ce calcul est basé sur la formule de Sabine et donne une approximation du temps de réverbération.</p>
+            <p>Pour une évaluation précise, des mesures sur site sont recommandées.</p>
+          </div>
+        </div>
+      )
     }
   };
 
@@ -350,24 +788,14 @@ export const AcoustiqueRecapSection = () => {
               {openCalculator && calculators[openCalculator as keyof typeof calculators]?.title}
             </DialogTitle>
             <DialogDescription>
-              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.description}
+              {openCalculator && typeof calculators[openCalculator as keyof typeof calculators]?.description === 'string' 
+                ? calculators[openCalculator as keyof typeof calculators]?.description 
+                : ''}
             </DialogDescription>
           </DialogHeader>
           
-          <div className="mt-4 p-4 border rounded-md bg-gray-50">
-            <p className="text-center text-gray-500">
-              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.content}
-            </p>
-            <div className="flex justify-center mt-6">
-              <p className="text-sm text-blue-600">
-                Calculateur interactif en cours de chargement...
-              </p>
-            </div>
-            <div className="flex justify-center mt-8">
-              <Button onClick={() => setOpenCalculator(null)}>
-                Fermer
-              </Button>
-            </div>
+          <div className="mt-4">
+            {openCalculator && calculators[openCalculator as keyof typeof calculators]?.content}
           </div>
         </DialogContent>
       </Dialog>

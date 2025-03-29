@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import LoadCombinationsCalculator from '../calculators/eurocode/LoadCombinationsCalculator';
 
 export const EurocodeRecapSection = () => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -34,7 +35,7 @@ export const EurocodeRecapSection = () => {
     'ec1-combinations': {
       title: 'Combinaisons d\'actions',
       description: 'Générateur de combinaisons d\'actions selon l\'EC0',
-      content: 'Générateur automatique des combinaisons d\'actions ELU et ELS à partir des charges permanentes et variables définies par l\'utilisateur.'
+      content: <LoadCombinationsCalculator />
     },
     'ec2-beams': {
       title: 'Dimensionnement de poutres',
@@ -133,7 +134,7 @@ export const EurocodeRecapSection = () => {
               </CardContent>
               <CardFooter className="flex gap-2 flex-col sm:flex-row">
                 <Button 
-                  variant="outline" 
+                  variant="primary" 
                   className="w-full"
                   onClick={() => handleOpenCalculator('ec1-combinations')}
                 >
@@ -486,31 +487,43 @@ export const EurocodeRecapSection = () => {
       </Tabs>
 
       {/* Calculator Dialogs */}
-      <Dialog open={!!openCalculator} onOpenChange={() => setOpenCalculator(null)}>
+      <Dialog open={!!openCalculator && openCalculator !== 'ec1-combinations'} onOpenChange={() => setOpenCalculator(null)}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
               {openCalculator && calculators[openCalculator as keyof typeof calculators]?.title}
             </DialogTitle>
             <DialogDescription>
-              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.description}
+              {openCalculator && typeof calculators[openCalculator as keyof typeof calculators]?.description === 'string' 
+                ? calculators[openCalculator as keyof typeof calculators]?.description 
+                : ''}
             </DialogDescription>
           </DialogHeader>
           
           <div className="mt-4 p-4 border rounded-md bg-gray-50">
-            <p className="text-center text-gray-500">
-              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.content}
-            </p>
-            <div className="flex justify-center mt-6">
-              <p className="text-sm text-blue-600">
-                Calculateur interactif en cours de chargement...
-              </p>
-            </div>
-            <div className="flex justify-center mt-8">
-              <Button onClick={() => setOpenCalculator(null)}>
-                Fermer
-              </Button>
-            </div>
+            {openCalculator && typeof calculators[openCalculator as keyof typeof calculators]?.content === 'string' ? (
+              <>
+                <p className="text-center text-gray-500">
+                  {calculators[openCalculator as keyof typeof calculators]?.content}
+                </p>
+                <div className="flex justify-center mt-6">
+                  <p className="text-sm text-blue-600">
+                    Calculateur interactif en cours de chargement...
+                  </p>
+                </div>
+                <div className="flex justify-center mt-8">
+                  <Button onClick={() => setOpenCalculator(null)}>
+                    Fermer
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="flex justify-center mt-8">
+                <Button onClick={() => setOpenCalculator(null)}>
+                  Fermer
+                </Button>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
