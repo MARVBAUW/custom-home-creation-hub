@@ -51,7 +51,26 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
   // Fonction pour générer le PDF
   const handleGeneratePDF = () => {
     try {
-      const pdfName = generatePDF(formData, estimation);
+      // Prepare combined estimation data with all necessary fields for PDF generation
+      const estimationData = {
+        ...estimation,
+        // Add calculated fields
+        vat: estimation.totalHT * 0.2,
+        honorairesHT: estimation.totalHT * 0.1,
+        coutGlobalHT: estimation.totalHT * 1.15,
+        coutGlobalTTC: estimation.totalHT * 1.15 * 1.2,
+        // Convert array format to corpsEtat object format needed for PDF
+        corpsEtat: tableData.reduce((acc, item) => ({
+          ...acc,
+          [item.label]: {
+            montantHT: item.amount,
+            details: [formData.projectType || '', `Surface: ${formData.surface || 0} m²`].filter(Boolean)
+          }
+        }), {})
+      };
+      
+      const pdfName = generatePDF(formData, estimationData);
+      
       toast({
         title: "PDF téléchargé",
         description: `Votre estimation détaillée a été téléchargée sous le nom "${pdfName}"`,

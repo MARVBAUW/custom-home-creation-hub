@@ -2,7 +2,8 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
-import { formatPrice } from './index';
+// Import the existing formatPrice utility to avoid duplication
+import { formatPrice as formatCurrency } from './index';
 
 // Function to generate the PDF document
 export const generatePDF = (formData: FormData, estimation: any) => {
@@ -143,22 +144,22 @@ export const generatePDF = (formData: FormData, estimation: any) => {
   doc.setFontSize(10);
   
   clientInfoY += 10;
-  doc.text(`Coût total HT: ${formatPrice(estimation.totalHT)}`, margin.left, clientInfoY);
+  doc.text(`Coût total HT: ${formatCurrency(estimation.totalHT)}`, margin.left, clientInfoY);
   clientInfoY += 7;
   
-  doc.text(`TVA (20%): ${formatPrice(estimation.vat || estimation.totalHT * 0.2)}`, margin.left, clientInfoY);
+  doc.text(`TVA (20%): ${formatCurrency(estimation.vat || estimation.totalHT * 0.2)}`, margin.left, clientInfoY);
   clientInfoY += 7;
   
-  doc.text(`Coût total TTC: ${formatPrice(estimation.totalTTC)}`, margin.left, clientInfoY);
+  doc.text(`Coût total TTC: ${formatCurrency(estimation.totalTTC)}`, margin.left, clientInfoY);
   clientInfoY += 7;
   
-  doc.text(`Honoraires MOE: ${formatPrice(estimation.honorairesHT)}`, margin.left, clientInfoY);
+  doc.text(`Honoraires MOE: ${formatCurrency(estimation.honorairesHT)}`, margin.left, clientInfoY);
   clientInfoY += 7;
   
-  doc.text(`Taxe d'aménagement: ${formatPrice(estimation.taxeAmenagement)}`, margin.left, clientInfoY);
+  doc.text(`Taxe d'aménagement: ${formatCurrency(estimation.taxeAmenagement)}`, margin.left, clientInfoY);
   clientInfoY += 7;
   
-  doc.text(`Coût global (hors terrain): ${formatPrice(estimation.coutGlobalTTC)}`, margin.left, clientInfoY);
+  doc.text(`Coût global (hors terrain): ${formatCurrency(estimation.coutGlobalTTC)}`, margin.left, clientInfoY);
   clientInfoY += 10;
   
   // Land price and notary fees - This is the part that was missing
@@ -172,17 +173,17 @@ export const generatePDF = (formData: FormData, estimation: any) => {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     
-    doc.text(`Prix du terrain: ${formatPrice(formData.landPrice)}`, margin.left + 4, clientInfoY + 14);
+    doc.text(`Prix du terrain: ${formatCurrency(formData.landPrice)}`, margin.left + 4, clientInfoY + 14);
     
     const notaryFees = formData.landPrice * 0.08; // Assuming 8% notary fees
-    doc.text(`Frais de notaire (8%): ${formatPrice(notaryFees)}`, margin.left + 4, clientInfoY + 21);
+    doc.text(`Frais de notaire (8%): ${formatCurrency(notaryFees)}`, margin.left + 4, clientInfoY + 21);
     
     clientInfoY += 30;
     
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     const totalWithLand = estimation.coutGlobalTTC + formData.landPrice + notaryFees;
-    doc.text(`Coût global avec terrain: ${formatPrice(totalWithLand)}`, margin.left, clientInfoY);
+    doc.text(`Coût global avec terrain: ${formatCurrency(totalWithLand)}`, margin.left, clientInfoY);
     clientInfoY += 10;
   }
 
@@ -208,7 +209,7 @@ export const generatePDF = (formData: FormData, estimation: any) => {
       
       tableData.push([
         name,
-        `${formatPrice(amount)}`,
+        `${formatCurrency(amount)}`,
         `${percentage}%`,
         data.details ? data.details.join(', ') : ''
       ]);
@@ -236,7 +237,11 @@ export const generatePDF = (formData: FormData, estimation: any) => {
     margin: margin,
     didDrawPage: function(data: any) {
       // Add footer to each page
-      addFooter(doc, doc.internal.getCurrentPageInfo().pageNumber, 2);
+      const pageInfo = doc.internal.getCurrentPageInfo ? 
+        doc.internal.getCurrentPageInfo() : 
+        { pageNumber: doc.getNumberOfPages ? doc.getNumberOfPages() : 2 };
+      
+      addFooter(doc, pageInfo.pageNumber, 2);
     }
   });
 
@@ -255,18 +260,18 @@ export const generatePDF = (formData: FormData, estimation: any) => {
     
     // Table with annexes costs
     const annexData = [
-      ['Honoraires MOE', formatPrice(estimation.honorairesHT)],
-      ['Taxe d\'aménagement', formatPrice(estimation.taxeAmenagement)],
-      ['Études géotechniques', formatPrice(estimation.etudesGeotechniques || 0)],
-      ['Étude thermique', formatPrice(estimation.etudeThermique || 0)],
-      ['Garantie décennale', formatPrice(estimation.garantieDecennale || 0)]
+      ['Honoraires MOE', formatCurrency(estimation.honorairesHT)],
+      ['Taxe d\'aménagement', formatCurrency(estimation.taxeAmenagement)],
+      ['Études géotechniques', formatCurrency(estimation.etudesGeotechniques || 0)],
+      ['Étude thermique', formatCurrency(estimation.etudeThermique || 0)],
+      ['Garantie décennale', formatCurrency(estimation.garantieDecennale || 0)]
     ];
     
     // Add land price and notary fees to annex costs if present
     if (formData.landPrice && formData.landPrice > 0) {
-      annexData.push(['Prix du terrain', formatPrice(formData.landPrice)]);
+      annexData.push(['Prix du terrain', formatCurrency(formData.landPrice)]);
       const notaryFees = formData.landPrice * 0.08;
-      annexData.push(['Frais de notaire (8%)', formatPrice(notaryFees)]);
+      annexData.push(['Frais de notaire (8%)', formatCurrency(notaryFees)]);
     }
     
     (doc as any).autoTable({
@@ -295,18 +300,18 @@ export const generatePDF = (formData: FormData, estimation: any) => {
     
     // Table with annexes costs
     const annexData = [
-      ['Honoraires MOE', formatPrice(estimation.honorairesHT)],
-      ['Taxe d\'aménagement', formatPrice(estimation.taxeAmenagement)],
-      ['Études géotechniques', formatPrice(estimation.etudesGeotechniques || 0)],
-      ['Étude thermique', formatPrice(estimation.etudeThermique || 0)],
-      ['Garantie décennale', formatPrice(estimation.garantieDecennale || 0)]
+      ['Honoraires MOE', formatCurrency(estimation.honorairesHT)],
+      ['Taxe d\'aménagement', formatCurrency(estimation.taxeAmenagement)],
+      ['Études géotechniques', formatCurrency(estimation.etudesGeotechniques || 0)],
+      ['Étude thermique', formatCurrency(estimation.etudeThermique || 0)],
+      ['Garantie décennale', formatCurrency(estimation.garantieDecennale || 0)]
     ];
     
     // Add land price and notary fees to annex costs if present
     if (formData.landPrice && formData.landPrice > 0) {
-      annexData.push(['Prix du terrain', formatPrice(formData.landPrice)]);
+      annexData.push(['Prix du terrain', formatCurrency(formData.landPrice)]);
       const notaryFees = formData.landPrice * 0.08;
-      annexData.push(['Frais de notaire (8%)', formatPrice(notaryFees)]);
+      annexData.push(['Frais de notaire (8%)', formatCurrency(notaryFees)]);
     }
     
     (doc as any).autoTable({
@@ -330,7 +335,8 @@ export const generatePDF = (formData: FormData, estimation: any) => {
   }
 
   // Add footer to the first page
-  addFooter(doc, 1, doc.internal.getNumberOfPages());
+  const totalPages = doc.getNumberOfPages ? doc.getNumberOfPages() : 2;
+  addFooter(doc, 1, totalPages);
 
   // Final disclaimer
   doc.setFontSize(8);
@@ -343,17 +349,4 @@ export const generatePDF = (formData: FormData, estimation: any) => {
   doc.save(pdfName);
   
   return pdfName;
-};
-
-// Add a helper function to format prices
-export const formatPrice = (price: number | string) => {
-  if (typeof price === 'string') {
-    price = parseFloat(price);
-  }
-  return new Intl.NumberFormat('fr-FR', { 
-    style: 'currency', 
-    currency: 'EUR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0 
-  }).format(price || 0);
 };

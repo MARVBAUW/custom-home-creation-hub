@@ -42,6 +42,10 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
     garantieDecennale: (estimationResult || 0) * 0.01,
     etudesGeotechniques: (estimationResult || 0) * 0.005,
     etudeThermique: (estimationResult || 0) * 0.005,
+    // Include land price and notary fees
+    terrainPrice: formData.landPrice || 0,
+    fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
+    coutTotalAvecTerrain: (estimationResult || 0) * 1.2 + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0),
     corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
       ...acc,
       [cat.category]: {

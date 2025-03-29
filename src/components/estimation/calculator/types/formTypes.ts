@@ -1,90 +1,150 @@
 
-import { ReactNode } from 'react';
 import { FormData } from './index';
 
-// Base interface for all form step components
+// Base form step props that all form step components should extend
 export interface BaseFormStepProps {
-  animationDirection: 'forward' | 'backward';
-  goToPreviousStep?: () => void;
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
 
-// Interface for form steps with default values and submit handler
-export interface FormStepProps<T = any> extends BaseFormStepProps {
-  defaultValues?: T;
-  onSubmit?: (data: T) => void;
-}
-
-// Form component interfaces - all inheriting from BaseFormStepProps for consistency
+// Client type form props
 export interface ClientTypeFormProps extends BaseFormStepProps {
   defaultValues?: { clientType: string };
   onSubmit?: (data: { clientType: string }) => void;
 }
-export interface ProjectDetailsFormProps extends BaseFormStepProps {}
-export interface TerrainFormProps extends BaseFormStepProps {}
-export interface GrosOeuvreFormProps extends BaseFormStepProps {}
+
+// Project details form props
+export interface ProjectDetailsFormProps extends BaseFormStepProps {
+  defaultValues?: { projectType: string; surface: number };
+  onSubmit?: (data: { projectType: string; surface: number }) => void;
+}
+
+// Professional project form props
+export interface ProfessionalProjectFormProps extends BaseFormStepProps {
+  defaultValues?: { activity: string; projectType: string; startDate: string; endDate: string };
+  onSubmit?: (data: any) => void;
+}
+
+// Individual project form props
+export interface IndividualProjectFormProps extends BaseFormStepProps {
+  defaultValues?: { projectType: string };
+  onSubmit?: (data: { projectType: string }) => void;
+}
+
+// Estimation type form props
+export interface EstimationTypeFormProps extends BaseFormStepProps {
+  defaultValues?: { estimationType: string; termsAccepted: boolean };
+  onSubmit?: (data: any) => void;
+}
+
+// Terrain form props
+export interface TerrainFormProps extends BaseFormStepProps {
+  defaultValues?: { terrainType: string; terrainAccess: string };
+  onSubmit?: (data: any) => void;
+}
+
+// Gros oeuvre form props
+export interface GrosOeuvreFormProps extends BaseFormStepProps {
+  defaultValues?: { wallType: string };
+  onSubmit?: (data: any) => void;
+}
+
+// Charpente form props
 export interface CharpenteFormProps extends BaseFormStepProps {
   defaultValues?: { roofType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Comble form props
 export interface CombleFormProps extends BaseFormStepProps {
   defaultValues?: { atticType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Couverture form props
 export interface CouvertureFormProps extends BaseFormStepProps {
   defaultValues?: { roofingType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Facade form props
 export interface FacadeFormProps extends BaseFormStepProps {
-  formData: FormData;
+  defaultValues?: { facadeMaterial: string };
+  onSubmit?: (data: any) => void;
 }
-export interface MenuiseriesExtFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    windowType?: string;
-    windowRenovationArea?: string;
-    windowNewArea?: string;
+
+// Facade renovation form props
+export interface FacadeRenovFormProps extends BaseFormStepProps {
+  defaultValues?: { 
+    metalCladdingPercentage: number; 
+    woodCladdingPercentage: number; 
+    stoneCladdingPercentage: number 
   };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Menuiseries extérieures form props
+export interface MenuiseriesExtFormProps extends BaseFormStepProps {
+  defaultValues?: { windowType: string };
+  onSubmit?: (data: any) => void;
+}
+
+// Isolation form props
 export interface IsolationFormProps extends BaseFormStepProps {
   defaultValues?: { insulationType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Electricité form props
 export interface ElectriciteFormProps extends BaseFormStepProps {
   defaultValues?: { electricalType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Plomberie form props
 export interface PlomberieFormProps extends BaseFormStepProps {
   defaultValues?: { plumbingType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Chauffage form props
 export interface ChauffageFormProps extends BaseFormStepProps {
   defaultValues?: { heatingType: string; hasAirConditioning: boolean };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Plâtrerie form props
 export interface PlatrerieFormProps extends BaseFormStepProps {
   defaultValues?: { plasteringType: string };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Menuiseries intérieures form props
 export interface MenuiseriesIntFormProps extends BaseFormStepProps {
-  defaultValues?: { doorType: string; interiorFittings: string[] };
-  formData: FormData;
+  defaultValues?: { interiorDoorsType: string };
+  onSubmit?: (data: any) => void;
 }
+
+// Carrelage form props
 export interface CarrelageFormProps extends BaseFormStepProps {
-  defaultValues?: { floorTileType: string; wallTileType: string; floorTilePercentage: number };
-  formData: FormData;
+  defaultValues?: { tileType: string };
+  onSubmit?: (data: any) => void;
 }
+
+// Parquet form props
 export interface ParquetFormProps extends BaseFormStepProps {
-  defaultValues?: { 
-    parquetType: string; 
+  defaultValues?: {
+    floorTilePercentage: number;
     parquetPercentage: number;
-    softFloorType: string;
     softFloorPercentage: number;
   };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
+
+// Peinture form props
 export interface PeintureFormProps extends BaseFormStepProps {
   defaultValues?: {
     basicPaintPercentage: number;
@@ -93,48 +153,48 @@ export interface PeintureFormProps extends BaseFormStepProps {
     woodCladPercentage: number;
     stoneCladPercentage: number;
   };
-  formData: FormData;
+  onSubmit?: (data: any) => void;
 }
-export interface ContactFormProps extends BaseFormStepProps {
-  animationDirection: 'forward' | 'backward';
-}
+
+// Aménagement extérieur form props
 export interface AmenagementExtFormProps extends BaseFormStepProps {
-  animationDirection: 'forward' | 'backward';
+  defaultValues?: { exteriorFeatures: string[] };
+  onSubmit?: (data: any) => void;
 }
+
+// Construction details form props
 export interface ConstructionDetailsFormProps extends BaseFormStepProps {
-  formData: FormData;
+  defaultValues?: {
+    constructionType: string;
+    constructionMode: string;
+  };
+  onSubmit?: (data: any) => void;
 }
-export interface ResultsFormProps extends BaseFormStepProps {
-  estimationResult: number;
+
+// Contact form props
+export interface ContactFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
+  onSubmit?: (data: any) => void;
+}
+
+// Results form props
+export interface ResultsFormProps {
+  formData: FormData;
+  estimationResult: number | null;
   categoriesAmounts: { category: string; amount: number; }[];
-  animationDirection: 'forward' | 'backward';
+  goToPreviousStep: () => void;
+  animationDirection?: 'forward' | 'backward';
 }
 
-// Additional interfaces for professional and individual project forms
-export interface ProfessionalProjectFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    activity: string;
-    projectType: string;
-    startDate: string;
-    endDate: string;
-  };
-  onSubmit?: (data: any) => void;
+// Message processor props
+export interface MessageProcessorProps {
+  message: string;
   formData: FormData;
-}
-
-export interface IndividualProjectFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    projectType: string;
-  };
-  onSubmit?: (data: {projectType: string}) => void;
-  formData: FormData;
-}
-
-export interface EstimationTypeFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    estimationType: string;
-    termsAccepted: boolean;
-  };
-  onSubmit?: (data: any) => void;
-  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
 }
