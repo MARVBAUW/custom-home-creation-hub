@@ -66,15 +66,15 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     
     // Configuration du tableau
     const columnStyles = {
-      0: { fontStyle: 'bold' as const },
-      1: { halign: 'right' as const }
+      0: { fontStyle: 'bold' },
+      1: { halign: 'right' }
     };
     
     const headStyles = {
-      fillColor: [242, 242, 242],
-      textColor: [51, 51, 51],
-      fontStyle: 'bold' as const,
-      halign: 'center' as const
+      fillColor: [242, 242, 242, 0], // Added a fourth value to ensure it's a valid Color
+      textColor: [51, 51, 51, 0],    // Added a fourth value to ensure it's a valid Color
+      fontStyle: 'bold',
+      halign: 'center'
     };
     
     // Préparation des données pour le tableau
@@ -103,7 +103,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     }
     
     // Footer
-    const pageCount = doc.internal.pages.length - 1;
+    const pageCount = doc.getNumberOfPages();
     for(let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(10);
