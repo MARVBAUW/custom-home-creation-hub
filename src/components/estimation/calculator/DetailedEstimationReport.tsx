@@ -71,8 +71,8 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     };
     
     const headStyles = {
-      fillColor: [242, 242, 242, 0] as [number, number, number, number],
-      textColor: [51, 51, 51, 0] as [number, number, number, number],
+      fillColor: [242, 242, 242] as [number, number, number],
+      textColor: [51, 51, 51] as [number, number, number],
       fontStyle: 'bold' as 'bold',
       halign: 'center' as 'center'
     };
@@ -103,7 +103,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     }
     
     // Footer
-    const pageCount = doc.getNumberOfPages();
+    const pageCount = (doc as any).getNumberOfPages();
     for(let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(10);
