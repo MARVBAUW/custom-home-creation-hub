@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calculator, BookOpen, Ruler, Columns, Atom, Download } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -134,7 +133,7 @@ export const EurocodeRecapSection = () => {
               </CardContent>
               <CardFooter className="flex gap-2 flex-col sm:flex-row">
                 <Button 
-                  variant="primary" 
+                  variant="default" 
                   className="w-full"
                   onClick={() => handleOpenCalculator('ec1-combinations')}
                 >

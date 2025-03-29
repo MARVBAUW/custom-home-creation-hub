@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Plus, Download, FileText, Calculator } from 'lucide-react';
+import { X, Plus, Download, FileText, Calculator, ExternalLink } from 'lucide-react';
 import { toast } from "sonner";
 
 interface Load {
