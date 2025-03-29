@@ -22,7 +22,7 @@ export const createTechnicalStepRegistry = (
     const electricalType = data.electricalType;
     
     // Validate that electricalType is one of the expected values
-    const validElectricalTypes = ['basic', 'standard', 'premium', 'smart_home'];
+    const validElectricalTypes = ['basic', 'standard', 'premium', 'smart_home', 'non_concerne'];
     const validElectricalType = validElectricalTypes.includes(electricalType as string) 
       ? electricalType 
       : 'standard';
@@ -45,7 +45,7 @@ export const createTechnicalStepRegistry = (
     const plumbingType = data.plumbingType;
     
     // Validate that plumbingType is one of the expected values
-    const validPlumbingTypes = ['basic', 'standard', 'premium'];
+    const validPlumbingTypes = ['basic', 'standard', 'premium', 'non_concerne'];
     const validPlumbingType = validPlumbingTypes.includes(plumbingType as string)
       ? plumbingType
       : 'standard';
@@ -68,7 +68,7 @@ export const createTechnicalStepRegistry = (
     const heatingType = data.heatingType;
     
     // Validate that heatingType is one of the expected values
-    const validHeatingTypes = ['standard', 'floorHeating', 'heatPump'];
+    const validHeatingTypes = ['standard', 'eco', 'economic', 'no_preference', 'non_concerne'];
     const validHeatingType = validHeatingTypes.includes(heatingType as string)
       ? heatingType
       : 'standard';
