@@ -4,7 +4,7 @@ import { ensureNumber } from '../../utils/typeConversions';
 
 export const useInteriorSubmissions = () => {
   // Function to handle platrerie submission
-  const handlePlatrerieSubmit = (data: { plasteringType: string }) => {
+  const handlePlatrerieSubmit = (data: any) => {
     return {
       plasteringType: data.plasteringType,
       interiorFittings: data.interiorFittings || 'standard'

@@ -18,7 +18,7 @@ export const useConstructionSubmissions = () => {
   };
 
   // Function to handle terrain details submission
-  const handleTerrainSubmit = (data: { terrainType: string }) => {
+  const handleTerrainSubmit = (data: any) => {
     return {
       terrainType: data.terrainType,
       terrainSurface: ensureNumber(data.terrainSurface),
@@ -27,7 +27,7 @@ export const useConstructionSubmissions = () => {
   };
 
   // Function to handle gros œuvre submission
-  const handleGrosOeuvreSubmit = (data: { wallType: string }) => {
+  const handleGrosOeuvreSubmit = (data: any) => {
     return {
       wallType: data.wallType,
       foundationType: data.foundationType,

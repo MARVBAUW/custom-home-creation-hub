@@ -2,6 +2,7 @@
 import React from 'react';
 import { FormData } from '../../types';
 import { ExtractedInfo, analyzeUserIntent } from '../../utils/conversationalUtils';
+import { ensureNumber } from '../../utils/typeConversions';
 
 interface MessageProcessorProps {
   onUserInput: (input: string) => void;
@@ -48,7 +49,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Récupérer la surface si elle est mentionnée
     if (analysis.entities.surface) {
-      newData.surface = analysis.entities.surface.toString();
+      newData.surface = ensureNumber(analysis.entities.surface);
       hasUpdates = true;
     }
     
@@ -60,7 +61,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Récupérer le nombre de chambres si mentionné
     if (analysis.entities.rooms) {
-      newData.roomCount = analysis.entities.rooms.toString();
+      newData.roomCount = ensureNumber(analysis.entities.rooms);
       hasUpdates = true;
     }
     
@@ -89,7 +90,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
       newData.hasLand = analysis.entities.has_terrain;
       
       if (analysis.entities.terrain_price) {
-        newData.landPrice = analysis.entities.terrain_price.toString();
+        newData.landPrice = ensureNumber(analysis.entities.terrain_price);
       }
       
       hasUpdates = true;
@@ -97,7 +98,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Récupérer le budget s'il est mentionné
     if (analysis.entities.budget) {
-      newData.budget = analysis.entities.budget.toString();
+      newData.budget = ensureNumber(analysis.entities.budget);
       hasUpdates = true;
     }
     

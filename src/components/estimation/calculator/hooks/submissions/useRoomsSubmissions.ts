@@ -1,4 +1,3 @@
-
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
 
@@ -34,3 +33,4 @@ export const useRoomsSubmissions = () => {
     handleLivingRoomDetailsSubmit,
   };
 };
+

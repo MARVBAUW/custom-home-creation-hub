@@ -12,21 +12,21 @@ export interface FormData {
   activity?: string;
   startDate?: string;
   endDate?: string;
-  budget?: number;
+  budget?: number | string;
   
   // Construction details
   constructionStyle?: string;
   constructionType?: string;
-  landSurface?: number;
-  livingArea?: number;
-  floors?: number;
+  landSurface?: number | string;
+  livingArea?: number | string;
+  floors?: number | string;
   basement?: boolean;
   garage?: boolean;
-  floorCount?: number;
+  floorCount?: number | string;
   
   // Rooms
-  bedrooms?: number;
-  bathrooms?: number;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
   
   // Wall & Foundation
   wallType?: string;
@@ -40,15 +40,15 @@ export interface FormData {
   roofingType?: string;
   insulationType?: string;
   facadeType?: string;
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
+  stonePercentage?: number | string;
+  plasterPercentage?: number | string;
+  brickPercentage?: number | string;
+  metalCladdingPercentage?: number | string;
+  woodCladdingPercentage?: number | string;
+  stoneCladdingPercentage?: number | string;
   windowType?: string;
-  windowRenovationArea?: number;
-  windowNewArea?: number;
+  windowRenovationArea?: number | string;
+  windowNewArea?: number | string;
   
   // Technical systems
   electricalType?: string;
@@ -60,28 +60,28 @@ export interface FormData {
   plasteringType?: string;
   doorType?: string;
   flooringType?: string;
-  tileSurface?: number;
-  parquetSurface?: number;
-  paintSurface?: number;
+  tileSurface?: number | string;
+  parquetSurface?: number | string;
+  paintSurface?: number | string;
   interiorDoorsType?: string;
   interiorFittings?: string;
   
   // Floor and Wall tiles
   floorTileType?: string;
   wallTileType?: string;
-  floorTilePercentage?: number;
+  floorTilePercentage?: number | string;
   
   // Parquet and soft floors
   parquetType?: string;
-  parquetPercentage?: number;
+  parquetPercentage?: number | string;
   softFloorType?: string;
-  softFloorPercentage?: number;
+  softFloorPercentage?: number | string;
   
   // Paint and wall coverings
   paintType?: string;
-  basicPaintPercentage?: number;
-  decorativePaintPercentage?: number;
-  wallpaperPercentage?: number;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
   wallCovering?: string;
   
   // Exterior features
@@ -94,7 +94,7 @@ export interface FormData {
   smartHome?: boolean;
   solarPanels?: boolean;
   solarPanelType?: string;
-  solarPanelSurface?: number;
+  solarPanelSurface?: number | string;
   windTurbineType?: string;
   fancyKitchen?: boolean;
   rainwaterHarvesting?: boolean;
@@ -103,12 +103,12 @@ export interface FormData {
   
   // Landscaping
   landscapingType?: string;
-  gardenSurface?: number;
+  gardenSurface?: number | string;
   exteriorFeatures?: string[];
   
   // Room details
-  roomCount?: number;
-  bathroomCount?: number;
+  roomCount?: number | string;
+  bathroomCount?: number | string;
   bathroomType?: string;
   kitchenType?: string;
   bathroomBudget?: number | string;
@@ -128,15 +128,15 @@ export interface FormData {
   
   // Terrain details
   terrainType?: string;
-  terrainSurface?: number;
+  terrainSurface?: number | string;
   hasLand?: boolean;
-  landPrice?: number;
+  landPrice?: number | string;
   
   // Building details
-  levels?: number;
-  niveaux?: number; // French variant
-  étages?: number; // French variant
-  combles?: number | boolean;
+  levels?: number | string;
+  niveaux?: number | string; // French variant
+  étages?: number | string; // French variant
+  combles?: number | string | boolean;
   sousSOl?: boolean;
   surface?: number | string;
   
@@ -156,8 +156,8 @@ export interface FormData {
   estimationType?: string;
   
   // French variants for rooms
-  chambres?: number;
-  sallesDeBain?: number;
+  chambres?: number | string;
+  sallesDeBain?: number | string;
   cuisine?: string;
   salon?: boolean;
   salleManger?: boolean;
@@ -191,7 +191,7 @@ export interface FormData {
   niveauFinition?: string;
   
   // French variants for client preferences
-  budgetMaxi?: number;
+  budgetMaxi?: number | string;
   délaiSouhaité?: string;
   contraintesParticulières?: string;
 }
