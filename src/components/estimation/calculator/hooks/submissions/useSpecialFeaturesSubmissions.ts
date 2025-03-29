@@ -2,67 +2,83 @@
 import { FormData } from '../../types';
 
 export const useSpecialFeaturesSubmissions = (
+  formData: FormData,
   updateFormData: (data: Partial<FormData>) => void,
-  setStep: (step: number) => void
+  goToNextStep: () => void
 ) => {
-const onEnergiesRenouvelablesSubmit = (data: {
-  solarPanelType: string;
-  windTurbineType: string;
-}) => {
-  const updatedData: Partial<FormData> = {
-    solarPanelType: data.solarPanelType,
-    windTurbineType: data.windTurbineType
+  // Function to handle renewable energy features submission
+  const onRenewableEnergySubmit = (data: Partial<FormData>) => {
+    // Update formData with renewable energy features
+    updateFormData({
+      solarPanelType: data.solarPanelType,
+      solarPanelSurface: data.solarPanelSurface,
+      windTurbineType: data.windTurbineType,
+    });
+    
+    // Go to next step
+    goToNextStep();
   };
   
-  updateFormData(updatedData);
-  setStep(23); // Solutions environnementales
-};
-
-const onSolutionsEnvironSubmit = (data: {
-  rainwaterHarvesting: boolean;
-  greywaterRecycling: boolean;
-}) => {
-  const updatedData: Partial<FormData> = {
-    rainwaterHarvesting: data.rainwaterHarvesting,
-    greywaterRecycling: data.greywaterRecycling
+  // Function to handle eco solutions submission
+  const onEcoSolutionsSubmit = (data: Partial<FormData>) => {
+    // Update formData with eco solutions
+    updateFormData({
+      rainwaterHarvesting: data.rainwaterHarvesting,
+      greywaterRecycling: data.greywaterRecycling,
+      ecoFriendlyInsulation: data.ecoFriendlyInsulation,
+    });
+    
+    // Go to next step
+    goToNextStep();
   };
   
-  updateFormData(updatedData);
-  setStep(24); // Aménagement paysager
-};
-
-const onAmenagementPaysagerSubmit = (data: {
-  landscapingType: string;
-  landscapingBudget: string;
-}) => {
-  const updatedData: Partial<FormData> = {
-    landscapingType: data.landscapingType,
-    landscapingBudget: data.landscapingBudget
+  // Function to handle landscaping submission
+  const onLandscapingSubmit = (data: Partial<FormData>) => {
+    // Update formData with landscaping information
+    const updatedData: Partial<FormData> = {
+      landscapingType: data.landscapingType,
+      gardenSurface: data.gardenSurface,
+      pool: data.pool,
+      outdoorKitchen: data.outdoorKitchen,
+    };
+    
+    // Only include landscapingBudget if it exists in FormData interface
+    if (data.landscapingBudget !== undefined) {
+      // TypeScript workaround: using type assertion to allow dynamic property assignment
+      (updatedData as any).landscapingBudget = data.landscapingBudget;
+    }
+    
+    // Update formData
+    updateFormData(updatedData);
+    
+    // Go to next step
+    goToNextStep();
   };
   
-  updateFormData(updatedData);
-  setStep(24); // Options
-};
-
-const onOptionsSubmit = (data: {
-  pool: boolean;
-  outdoorKitchen: boolean;
-  terrace: boolean;
-}) => {
-  const updatedData: Partial<FormData> = {
-    pool: data.pool,
-    outdoorKitchen: data.outdoorKitchen,
-    terrace: data.terrace
+  // Function to handle exterior options submission
+  const onExteriorOptionsSubmit = (data: Partial<FormData>) => {
+    // Update formData with exterior options
+    const updatedData: Partial<FormData> = {
+      exteriorFeatures: data.exteriorFeatures,
+    };
+    
+    // Only include terrace if it exists in FormData interface
+    if (data.terrace !== undefined) {
+      // TypeScript workaround: using type assertion to allow dynamic property assignment
+      (updatedData as any).terrace = data.terrace;
+    }
+    
+    // Update formData
+    updateFormData(updatedData);
+    
+    // Go to next step
+    goToNextStep();
   };
   
-  updateFormData(updatedData);
-  setStep(25); // Cuisine
-};
-
-return {
-  onEnergiesRenouvelablesSubmit,
-  onSolutionsEnvironSubmit,
-  onAmenagementPaysagerSubmit,
-  onOptionsSubmit
-};
+  return {
+    onRenewableEnergySubmit,
+    onEcoSolutionsSubmit,
+    onLandscapingSubmit,
+    onExteriorOptionsSubmit,
+  };
 };

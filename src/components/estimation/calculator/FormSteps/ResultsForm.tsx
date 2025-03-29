@@ -1,177 +1,212 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Download, Printer, Share2 } from 'lucide-react';
-import { formatCurrency, ensureNumber } from '../utils/typeConversions';
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, Calculator, Download, Printer } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { calculateDetailedEstimation } from '../calculations/detailedEstimation';
 import { ResultsFormProps } from '../types/formTypes';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+import Chart from 'chart.js/auto';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import EstimationReport from '../EstimationReport';
 
-const ResultsForm: React.FC<ResultsFormProps> = ({ 
-  estimationResult, 
-  formData, 
-  categoriesAmounts, 
+const ResultsForm: React.FC<ResultsFormProps> = ({
+  estimationResult,
+  formData,
+  categoriesAmounts,
   goToPreviousStep,
-  animationDirection 
+  animationDirection
 }) => {
-  // Ensure we have numbers for all calculations
-  const result = ensureNumber(estimationResult);
-  const surface = ensureNumber(formData.surface);
+  const [chartInstance, setChartInstance] = React.useState<Chart | null>(null);
+  const chartRef = React.useRef<HTMLCanvasElement>(null);
   
-  // Apply VAT
-  const tva = result * 0.2;
-  const totalTTC = result + tva;
+  React.useEffect(() => {
+    if (chartRef.current && categoriesAmounts.length > 0) {
+      // Destroy any existing chart
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+      
+      // Create a new chart
+      const ctx = chartRef.current.getContext('2d');
+      if (ctx) {
+        const newChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: categoriesAmounts.map(item => item.category),
+            datasets: [
+              {
+                data: categoriesAmounts.map(item => item.amount),
+                backgroundColor: [
+                  '#D1AC00', '#B69200', '#9C8700', '#826C00', '#685200',
+                  '#4E3800', '#341E00', '#735F1F', '#978032', '#BB9F44'
+                ],
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#333'
+                }
+              }
+            }
+          }
+        });
+        setChartInstance(newChart);
+      }
+    }
+    
+    return () => {
+      // Cleanup on component unmount
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+    };
+  }, [categoriesAmounts]);
   
-  // Calculate price per square meter
-  const pricePerSqm = surface > 0 ? result / surface : 0;
-  
-  // Handle print action
-  const handlePrint = () => {
+  const handlePrintEstimation = () => {
     window.print();
   };
   
-  // Handle download action (placeholder)
-  const handleDownload = () => {
-    alert('Téléchargement du rapport d\'estimation...');
-    // In a real implementation, this would generate and download a PDF
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    
+    // Add title
+    doc.setFontSize(20);
+    doc.text('Estimation de projet de construction', 20, 20);
+    
+    // Add project type
+    doc.setFontSize(16);
+    doc.text(`Type de projet: ${formData.projectType || 'Non spécifié'}`, 20, 35);
+    
+    // Add project details
+    doc.setFontSize(12);
+    doc.text(`Surface: ${formData.surface || 'Non spécifiée'} m²`, 20, 45);
+    doc.text(`Ville: ${formData.city || 'Non spécifiée'}`, 20, 52);
+    
+    // Add estimation result
+    doc.setFontSize(16);
+    doc.text(`Estimation totale: ${estimationResult?.toLocaleString() || '0'} €`, 20, 65);
+    
+    // Add categories table
+    const tableData = categoriesAmounts.map(item => [
+      item.category,
+      `${Math.round(item.amount).toLocaleString()} €`
+    ]);
+    
+    // @ts-ignore
+    doc.autoTable({
+      head: [['Catégorie', 'Montant (€)']],
+      body: tableData,
+      startY: 75,
+      styles: { fontSize: 10, cellPadding: 2 },
+      headStyles: { fillColor: [209, 172, 0] }
+    });
+    
+    // Save document
+    doc.save('estimation-projet-construction.pdf');
   };
   
-  // Handle share action (placeholder)
-  const handleShare = () => {
-    alert('Partage du rapport d\'estimation...');
-    // In a real implementation, this would open a share dialog
-  };
-
+  // Calculating detailed estimation
+  const detailedEstimation = calculateDetailedEstimation(formData);
+  
   return (
-    <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
-      <Card className="overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-progineer-gold to-amber-500 text-white">
-          <CardTitle className="text-center text-2xl font-bold">Résultats de votre estimation</CardTitle>
-        </CardHeader>
+    <motion.div
+      initial={{ opacity: 0, x: animationDirection === 'forward' ? 20 : -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: animationDirection === 'forward' ? -20 : 20 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="p-6 results-container">
+        <div className="text-center mb-6">
+          <Calculator className="h-12 w-12 mx-auto text-progineer-gold" />
+          <h2 className="text-2xl font-bold mt-3">Résultats de votre estimation</h2>
+          <p className="text-muted-foreground">
+            Voici le détail de l'estimation pour votre projet
+          </p>
+        </div>
         
-        <CardContent className="p-6 space-y-6">
-          <div className="text-center mb-8">
-            <h3 className="text-lg font-medium text-gray-500">Coût estimatif de votre projet</h3>
-            <div className="text-4xl font-bold text-progineer-gold mt-2">
-              {formatCurrency(result)}
-              <span className="text-sm font-normal text-gray-500 ml-1">HT</span>
-            </div>
-            <div className="text-xl font-semibold mt-1">
-              {formatCurrency(totalTTC)}
-              <span className="text-sm font-normal text-gray-500 ml-1">TTC</span>
-            </div>
-            {surface > 0 && (
-              <div className="text-sm text-gray-500 mt-2">
-                Soit environ {formatCurrency(pricePerSqm)} HT/m²
-              </div>
-            )}
-          </div>
+        <Tabs defaultValue="summary" className="w-full">
+          <TabsList className="grid grid-cols-3">
+            <TabsTrigger value="summary">Résumé</TabsTrigger>
+            <TabsTrigger value="detailed">Détaillé</TabsTrigger>
+            <TabsTrigger value="charts">Graphique</TabsTrigger>
+          </TabsList>
           
-          <div className="divide-y">
-            <h4 className="font-semibold text-lg pb-2">Répartition par corps d'état</h4>
-            
-            {categoriesAmounts.map((category, index) => (
-              <div key={index} className="py-3 flex justify-between items-center">
-                <span className="text-gray-700">{category.category}</span>
-                <span className="font-medium">{formatCurrency(category.amount)}</span>
-              </div>
-            ))}
-            
-            <div className="py-3 flex justify-between items-center font-semibold">
-              <span>TVA (20%)</span>
-              <span>{formatCurrency(tva)}</span>
+          <TabsContent value="summary" className="p-4">
+            <div className="text-center mb-4">
+              <h3 className="text-3xl font-bold text-progineer-gold">
+                {estimationResult?.toLocaleString()} €
+              </h3>
+              <p className="text-sm text-muted-foreground">Estimation TTC</p>
             </div>
             
-            <div className="py-3 flex justify-between items-center font-bold text-lg">
-              <span>Total TTC</span>
-              <span>{formatCurrency(totalTTC)}</span>
+            <div className="grid gap-4 mb-6">
+              {categoriesAmounts.map((item, index) => (
+                <div key={index} className="flex justify-between items-center border-b pb-2">
+                  <span>{item.category}</span>
+                  <span className="font-medium">{Math.round(item.amount).toLocaleString()} €</span>
+                </div>
+              ))}
             </div>
-          </div>
+          </TabsContent>
           
-          <div className="bg-gray-50 p-4 rounded-lg mt-6">
-            <h4 className="font-semibold mb-2">Informations sur votre projet</h4>
-            <ul className="space-y-1 text-sm">
-              <li><span className="font-medium">Type de projet :</span> {formData.projectType}</li>
-              {formData.surface && <li><span className="font-medium">Surface :</span> {formData.surface} m²</li>}
-              {formData.levels && <li><span className="font-medium">Nombre de niveaux :</span> {formData.levels}</li>}
-              {formData.city && <li><span className="font-medium">Localisation :</span> {formData.city}</li>}
-            </ul>
-          </div>
-          
-          <div className="mt-8">
-            <h4 className="font-semibold mb-4">Rapport d'estimation détaillé</h4>
-            
-            <EstimationReport 
-              estimation={{
-                totalHT: result,
-                totalTTC: totalTTC,
-                vat: tva,
-                coutGlobalHT: result * 1.1,
-                coutGlobalTTC: result * 1.1 * 1.2,
-                honorairesHT: result * 0.1,
-                taxeAmenagement: result * 0.03,
-                garantieDecennale: result * 0.01,
-                etudesGeotechniques: result * 0.005,
-                etudeThermique: result * 0.005,
-                corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
-                  ...acc,
-                  [cat.category]: {
-                    montantHT: cat.amount,
-                    details: [
-                      formData.projectType ? `Type de projet: ${formData.projectType}` : '',
-                      formData.surface ? `Surface concernée: ${formData.surface} m²` : '',
-                    ].filter(Boolean)
-                  }
-                }), {})
-              }} 
+          <TabsContent value="detailed" className="p-4">
+            <EstimationReport
+              estimation={detailedEstimation}
               formData={formData}
               includeTerrainPrice={!!formData.landPrice}
-              estimationResult={result}
             />
-          </div>
-        </CardContent>
+          </TabsContent>
+          
+          <TabsContent value="charts" className="p-4 text-center">
+            <div className="max-w-md mx-auto">
+              <canvas ref={chartRef} height="300"></canvas>
+            </div>
+          </TabsContent>
+        </Tabs>
         
-        <CardFooter className="flex flex-col sm:flex-row gap-3 bg-gray-50 p-4">
-          <Button 
+        <div className="flex flex-col sm:flex-row gap-2 justify-between mt-6">
+          <Button
+            type="button" 
             variant="outline" 
-            className="w-full sm:w-auto" 
             onClick={goToPreviousStep}
+            className="flex items-center gap-2"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeftIcon className="h-4 w-4" />
             Retour
           </Button>
           
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto sm:ml-auto">
-            <Button 
-              variant="outline" 
-              className="w-full sm:w-auto" 
-              onClick={handlePrint}
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handlePrintEstimation}
+              className="flex items-center gap-2"
             >
-              <Printer className="mr-2 h-4 w-4" />
+              <Printer className="h-4 w-4" />
               Imprimer
             </Button>
             
-            <Button 
-              variant="outline" 
-              className="w-full sm:w-auto" 
-              onClick={handleDownload}
+            <Button
+              type="button"
+              onClick={handleDownloadPDF}
+              className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
             >
-              <Download className="mr-2 h-4 w-4" />
-              Télécharger
-            </Button>
-            
-            <Button 
-              variant="default" 
-              className="w-full sm:w-auto" 
-              onClick={handleShare}
-            >
-              <Share2 className="mr-2 h-4 w-4" />
-              Partager
+              <Download className="h-4 w-4" />
+              Télécharger PDF
             </Button>
           </div>
-        </CardFooter>
+        </div>
       </Card>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 import { TVA_RATE, DEFAULT_TAXE_AMENAGEMENT } from './constants';
 import { parseToNumber } from '../utils/typeConversions';
@@ -305,7 +304,9 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   
   // Calcul de la taxe d'aménagement
   const tauxTaxeAmenagement = cityTaxRateValue ? cityTaxRateValue / 100 : DEFAULT_TAXE_AMENAGEMENT;
-  const taxeAmenagement = surfaceValue * 767 * tauxTaxeAmenagement; // 767€ est la valeur forfaitaire au m²
+  // Convert surfaceValue to number if it's a string
+  const surfaceValueAsNumber = typeof surfaceValue === 'string' ? parseFloat(surfaceValue) : surfaceValue;
+  const taxeAmenagement = surfaceValueAsNumber * 767 * tauxTaxeAmenagement; // 767€ est la valeur forfaitaire au m²
   
   // Études géotechniques
   const etudesGeotechniques = Math.min(3000 + (surfaceValue * 10), 8000);

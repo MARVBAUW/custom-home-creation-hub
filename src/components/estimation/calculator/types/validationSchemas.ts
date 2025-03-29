@@ -163,6 +163,8 @@ export const AmenagementExtSchema = z.object({
   gardenSurface: z.string().optional(),
   pool: z.boolean().optional(),
   outdoorKitchen: z.boolean().optional(),
+  landscapingBudget: z.string().optional(),
+  terrace: z.boolean().optional(),
 });
 
 // Schema for contact

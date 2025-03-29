@@ -146,9 +146,11 @@ export interface FormData {
   gardenSurface?: string | number;
   pool?: boolean;
   landscapingType?: string;
+  landscapingBudget?: string | number;
   outdoorKitchen?: boolean;
   windTurbineType?: string;
   greywaterRecycling?: boolean;
+  terrace?: boolean;
   
   // Other
   finishLevel?: string;

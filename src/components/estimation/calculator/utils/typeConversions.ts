@@ -1,119 +1,56 @@
 
 /**
- * Safely parses a value to a number
- * If the value is a string, it attempts to convert it to a number
- * If the value is already a number, it returns it
- * If the value is not a valid number, it returns the fallback value or 0
+ * Safely converts any value to a number.
+ * Returns the default value if conversion fails.
  */
-export const parseToNumber = (value: string | number | undefined | null, fallback: number = 0): number => {
-  if (value === undefined || value === null) {
-    return fallback;
-  }
-  
-  if (typeof value === 'number') {
-    return value;
+export const parseToNumber = (value: any, defaultValue: number = 0): number => {
+  if (value === undefined || value === null || value === '') {
+    return defaultValue;
   }
   
   const parsed = Number(value);
-  return isNaN(parsed) ? fallback : parsed;
+  return isNaN(parsed) ? defaultValue : parsed;
 };
 
 /**
- * Safely retrieves a value as string
- * If the value is undefined or null, it returns an empty string
- * If the value is a number, it converts it to a string
- */
-export const asString = (value: string | number | undefined | null): string => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-  
-  return String(value);
-};
-
-/**
- * Convert a number or string to string for form inputs
- * This avoids "uncontrolled to controlled" warnings
+ * Safely converts a number or undefined value to a string for form inputs.
+ * Returns an empty string if value is null or undefined.
  */
 export const toFormValue = (value: string | number | undefined | null): string => {
   if (value === undefined || value === null) {
     return '';
   }
-  
   return String(value);
 };
 
 /**
- * Ensures a value is of type number for calculations
+ * Safely converts a boolean to a string representation for form values.
  */
-export const ensureNumber = (value: string | number | undefined | null): number => {
-  if (value === undefined || value === null) {
-    return 0;
-  }
-  
-  if (typeof value === 'number') {
-    return value;
-  }
-  
-  const parsedValue = parseFloat(value);
-  return isNaN(parsedValue) ? 0 : parsedValue;
+export const booleanToString = (value: boolean | undefined): 'yes' | 'no' | '' => {
+  if (value === undefined) return '';
+  return value ? 'yes' : 'no';
 };
 
 /**
- * Safely adds two values that might be strings or numbers
+ * Converts a string representation back to a boolean.
  */
-export const safeAdd = (a: string | number | undefined | null, b: string | number | undefined | null): number => {
-  return ensureNumber(a) + ensureNumber(b);
+export const stringToBoolean = (value: string | undefined): boolean | undefined => {
+  if (value === undefined || value === '') return undefined;
+  return value === 'yes';
 };
 
 /**
- * Safely multiplies two values that might be strings or numbers
+ * Safely converts an array to a serialized string.
  */
-export const safeMultiply = (a: string | number | undefined | null, b: string | number | undefined | null): number => {
-  return ensureNumber(a) * ensureNumber(b);
+export const arrayToString = (array: any[] | undefined): string => {
+  if (!array || !Array.isArray(array)) return '';
+  return array.join(',');
 };
 
 /**
- * Safely converts a string or number to a number for use in calculations
+ * Safely converts a serialized string back to an array.
  */
-export const toCalculationValue = (value: string | number | undefined | null): number => {
-  return ensureNumber(value);
-};
-
-/**
- * Safely converts a value to string for API submissions
- */
-export const toApiString = (value: string | number | undefined | null): string => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-  
-  return String(value);
-};
-
-/**
- * Safely gets a percentage value (0-100) and converts it to a decimal (0-1)
- */
-export const percentToDecimal = (value: string | number | undefined | null): number => {
-  const num = ensureNumber(value);
-  return num > 1 ? num / 100 : num;
-};
-
-/**
- * Formats a number as currency (EUR)
- */
-export const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-};
-
-/**
- * Formats a number with thousand separators
- */
-export const formatNumber = (value: number): string => {
-  return new Intl.NumberFormat('fr-FR').format(value);
+export const stringToArray = (str: string | undefined): string[] => {
+  if (!str) return [];
+  return str.split(',').filter(Boolean);
 };
