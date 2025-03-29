@@ -7,6 +7,12 @@ import { SearchFilterSection } from './reglementation/SearchFilterSection';
 import { ArticleList } from './reglementation/ArticleList';
 import WorkspaceArticleDetail from './WorkspaceArticleDetail';
 import { DTURecapSection } from './reglementation/DTURecapSection';
+import { IncendieRecapSection } from './reglementation/IncendieRecapSection';
+import { AccessibiliteRecapSection } from './reglementation/AccessibiliteRecapSection';
+import { UrbanismeRecapSection } from './reglementation/UrbanismeRecapSection';
+import { EurocodeRecapSection } from './reglementation/EurocodeRecapSection';
+import { AcoustiqueRecapSection } from './reglementation/AcoustiqueRecapSection';
+import { ThermiqueRecapSection } from './reglementation/ThermiqueRecapSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, FileCheck, Flame, Accessibility, Building, Calculator, Volume, Thermometer } from 'lucide-react';
 
@@ -96,46 +102,27 @@ const WorkspaceReglementation = () => {
         </TabsContent>
         
         <TabsContent value="incendie" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Sécurité Incendie est en cours de développement. 
-            Elle contiendra des informations sur les réglementations incendie pour les ERP, 
-            logements, parkings et autres bâtiments.
-          </p>
+          <IncendieRecapSection />
         </TabsContent>
         
         <TabsContent value="accessibilite" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Accessibilité est en cours de développement.
-            Elle contiendra toutes les normes d'accessibilité pour différents types de bâtiments.
-          </p>
+          <AccessibiliteRecapSection />
         </TabsContent>
         
         <TabsContent value="urbanisme" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Urbanisme est en cours de développement.
-            Elle contiendra les règles d'urbanisme, PLU, et autres réglementations liées à l'aménagement du territoire.
-          </p>
+          <UrbanismeRecapSection />
         </TabsContent>
         
         <TabsContent value="eurocode" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Eurocodes est en cours de développement.
-            Elle contiendra des outils de calcul et de dimensionnement selon les normes européennes.
-          </p>
+          <EurocodeRecapSection />
         </TabsContent>
         
         <TabsContent value="acoustique" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Acoustique est en cours de développement.
-            Elle contiendra les normes et calculs relatifs à l'isolation phonique et acoustique des bâtiments.
-          </p>
+          <AcoustiqueRecapSection />
         </TabsContent>
         
         <TabsContent value="thermique" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            La section Thermique est en cours de développement.
-            Elle contiendra les normes RE2020, RT2012 et autres réglementations thermiques.
-          </p>
+          <ThermiqueRecapSection />
         </TabsContent>
       </Tabs>
       
