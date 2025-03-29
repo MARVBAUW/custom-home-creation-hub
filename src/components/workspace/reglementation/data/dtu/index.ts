@@ -14,6 +14,7 @@ import { incendieDTUs } from './incendie';
 import { accessibiliteDTUs } from './accessibilite';
 import { urbanismeDTUs } from './urbanisme';
 import { thermiqueDTUs } from './thermique';
+import { acoustiqueDTUs } from './acoustique';
 
 // Export all DTUs combined
 export const dtuRecaps: DTU[] = [
@@ -30,5 +31,6 @@ export const dtuRecaps: DTU[] = [
   ...incendieDTUs,
   ...accessibiliteDTUs,
   ...urbanismeDTUs,
-  ...thermiqueDTUs
+  ...thermiqueDTUs,
+  ...acoustiqueDTUs
 ];

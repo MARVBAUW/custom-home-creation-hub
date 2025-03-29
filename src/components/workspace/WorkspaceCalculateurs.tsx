@@ -2,14 +2,15 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Home, ChartBar, Wallet, ArrowRightLeft, Building, DollarSign, PercentIcon } from 'lucide-react';
-import { useToast } from "@/components/ui/use-toast";
+import { Calculator, Home, ChartBar, Wallet, ArrowRightLeft, Building, DollarSign, PercentIcon, Volume2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 import SurfaceCalculator from './calculators/SurfaceCalculator';
 import RentabilityCalculator from './calculators/RentabilityCalculator';
 import LoanCalculator from './calculators/LoanCalculator';
 import LoanComparisonCalculator from './calculators/LoanComparisonCalculator';
 import TaxCalculator from './calculators/TaxCalculator';
 import YieldCalculator from './calculators/YieldCalculator';
+import AcousticCalculator from './calculators/AcousticCalculator';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
@@ -27,7 +28,7 @@ const WorkspaceCalculateurs = () => {
       </div>
 
       <Tabs defaultValue="surface" value={activeCalculator} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="bg-khaki-50 p-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-6">
+        <TabsList className="bg-khaki-50 p-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-6">
           <TabsTrigger value="surface" className="data-[state=active]:bg-white">
             <Home className="h-4 w-4 mr-2" />
             Surface habitable
@@ -51,6 +52,10 @@ const WorkspaceCalculateurs = () => {
           <TabsTrigger value="yield" className="data-[state=active]:bg-white">
             <PercentIcon className="h-4 w-4 mr-2" />
             Rendement brut/net
+          </TabsTrigger>
+          <TabsTrigger value="acoustic" className="data-[state=active]:bg-white">
+            <Volume2 className="h-4 w-4 mr-2" />
+            Acoustique
           </TabsTrigger>
         </TabsList>
         
@@ -76,6 +81,10 @@ const WorkspaceCalculateurs = () => {
         
         <TabsContent value="yield">
           <YieldCalculator />
+        </TabsContent>
+        
+        <TabsContent value="acoustic">
+          <AcousticCalculator />
         </TabsContent>
       </Tabs>
       
