@@ -19,6 +19,21 @@ interface EstimationResultsProps {
   isLoading?: boolean;
 }
 
+// Define interface for annexFees object to fix TypeScript errors
+interface AnnexFees {
+  honorairesHT: number;
+  honorairesTTC: number;
+  taxeAmenagement: number;
+  dommageOuvrage: number;
+  etudeThermique: number;
+  etudeGeotechnique: number;
+  fraisGeometre: number;
+  raccordements: number;
+  fraisNotaire: number;
+  totalFees: number;
+  [key: string]: number; // Allow for additional numeric properties
+}
+
 const EstimationResults: React.FC<EstimationResultsProps> = ({ 
   estimation, 
   formData,
@@ -31,15 +46,26 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1', '#a4de6c', '#d0ed57', '#83a6ed', '#8dd1e1'];
   
   // Calculer les frais annexes basés sur l'estimation
-  const calculateAnnexFees = (estimate: number, isRenovation: boolean = false) => {
-    if (!estimate) return {};
+  const calculateAnnexFees = (estimate: number, isRenovation: boolean = false): AnnexFees => {
+    if (!estimate) return {
+      honorairesHT: 0,
+      honorairesTTC: 0,
+      taxeAmenagement: 0,
+      dommageOuvrage: 0,
+      etudeThermique: 0,
+      etudeGeotechnique: 0,
+      fraisGeometre: 0,
+      raccordements: 0,
+      fraisNotaire: 0,
+      totalFees: 0
+    };
     
     const surfaceM2 = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 100);
     
     // Calculer les frais en fonction du type de projet
     const isConstruction = formData.projectType === 'construction' || formData.projectType === 'extension';
     
-    const fees = {
+    const fees: AnnexFees = {
       honorairesHT: estimate * 0.12, // 12% pour les honoraires de maîtrise d'œuvre
       honorairesTTC: estimate * 0.12 * 1.2, // avec TVA
       taxeAmenagement: isRenovation ? 0 : estimate * 0.05, // 5% uniquement pour construction neuve
@@ -49,6 +75,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
       fraisGeometre: isConstruction ? 2000 : 1000,
       raccordements: isConstruction ? 5000 : 0, // Raccordements aux réseaux (eau, électricité, etc.)
       fraisNotaire: 0, // Calculé séparément si terrain fourni
+      totalFees: 0 // Will be calculated below
     };
     
     // Calculer les frais de notaire si un prix de terrain est fourni
@@ -58,12 +85,15 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
     }
     
     // Total des frais annexes
-    const totalFees = Object.values(fees).reduce((sum: number, fee: number) => sum + fee, 0);
+    fees.totalFees = Object.values(fees).reduce((sum: number, fee: number) => {
+      // Exclude totalFees itself from the calculation
+      if (fee !== fees.totalFees) {
+        return sum + fee;
+      }
+      return sum;
+    }, 0);
     
-    return {
-      ...fees,
-      totalFees
-    };
+    return fees;
   };
   
   // Générer les catégories basées sur l'estimation
@@ -103,7 +133,18 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   };
   
   const categories = generateCategories();
-  const annexFees = estimation ? calculateAnnexFees(estimation, formData.projectType === 'renovation' || formData.projectType === 'division') : {};
+  const annexFees: AnnexFees = estimation ? calculateAnnexFees(estimation, formData.projectType === 'renovation' || formData.projectType === 'division') : {
+    honorairesHT: 0,
+    honorairesTTC: 0,
+    taxeAmenagement: 0,
+    dommageOuvrage: 0,
+    etudeThermique: 0,
+    etudeGeotechnique: 0,
+    fraisGeometre: 0,
+    raccordements: 0,
+    fraisNotaire: 0,
+    totalFees: 0
+  };
   
   // Simulation d'emprunt
   const calculateLoan = (amount: number, years: number = 20, rate: number = 4.1) => {
@@ -124,7 +165,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   };
   
   // Calcul du prêt basé sur l'estimation + frais annexes
-  const totalProjectCost = estimation ? estimation + (annexFees.totalFees || 0) : 0;
+  const totalProjectCost = estimation ? estimation + annexFees.totalFees : 0;
   const loanDetails = calculateLoan(totalProjectCost);
   
   // Données pour le graphique de simulation d'emprunt
