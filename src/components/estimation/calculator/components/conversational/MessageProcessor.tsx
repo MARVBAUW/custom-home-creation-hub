@@ -1,6 +1,12 @@
 
 import React from 'react';
-import { MessageProcessorProps } from '../../types';
+import { FormData } from '../../types';
+
+export interface MessageProcessorProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+}
 
 const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
   const { onUserInput, formData, updateFormData } = props;
@@ -30,9 +36,9 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     onUserInput(input);
   };
 
-  return (
-    <>{/* This component doesn't render anything itself, it just processes logic */}</>
-  );
+  return {
+    processUserInput
+  };
 };
 
 export default MessageProcessor;

@@ -87,3 +87,29 @@ export interface ResultsFormProps extends BaseFormStepProps {
   estimationResult: number;
   categoriesAmounts: { category: string; amount: number; }[];
 }
+
+// Additional interfaces for professional and individual project forms
+export interface ProfessionalProjectFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    activity: string;
+    projectType: string;
+    startDate: string;
+    endDate: string;
+  };
+  onSubmit?: (data: any) => void;
+}
+
+export interface IndividualProjectFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    projectType: string;
+  };
+  onSubmit?: (data: {projectType: string}) => void;
+}
+
+export interface EstimationTypeFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    estimationType: string;
+    termsAccepted: boolean;
+  };
+  onSubmit?: (data: any) => void;
+}
