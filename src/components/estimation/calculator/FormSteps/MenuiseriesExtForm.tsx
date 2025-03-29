@@ -186,4 +186,24 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
   );
 };
 
+// Window type options data
+const windowTypeOptions = [
+  { id: "bois", label: "Bois", description: "Menuiseries en bois traditionnel" },
+  { id: "pvc", label: "PVC", description: "Menuiseries en PVC moderne" },
+  { id: "alu", label: "Aluminium", description: "Menuiseries en aluminium" },
+  { id: "mixte", label: "Mixte Bois/Alu", description: "Menuiseries mixtes bois et aluminium" },
+  { id: "pvcColore", label: "PVC Coloré", description: "Menuiseries PVC avec finition colorée" },
+  { id: "sansAvis", label: "Sans avis", description: "Pas de préférence spécifique" }
+];
+
+// Shutter type options data
+const shutterTypeOptions = [
+  { id: "voletRoulant", label: "Volets roulants", description: "Volets roulants électriques ou manuels" },
+  { id: "voletBattant", label: "Volets battants", description: "Volets traditionnels à battants" },
+  { id: "voletCoulissant", label: "Volets coulissants", description: "Volets qui coulissent le long de la façade" },
+  { id: "sansVolet", label: "Sans volets", description: "Pas de volets" },
+  { id: "storeInterieur", label: "Stores intérieurs", description: "Stores montés à l'intérieur" },
+  { id: "sansAvis", label: "Sans avis", description: "Pas de préférence particulière" }
+];
+
 export default MenuiseriesExtForm;

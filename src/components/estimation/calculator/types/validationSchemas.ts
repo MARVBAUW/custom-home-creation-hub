@@ -53,6 +53,17 @@ export const TerrainSchema = z.object({
   terrainSurface: z.string().optional(),
   landPrice: z.string().optional(),
   terrainAccess: z.string().optional(),
+  waterConnection: z.boolean().optional(),
+  electricityConnection: z.boolean().optional(),
+  gasConnection: z.boolean().optional(),
+  sewerConnection: z.boolean().optional(),
+  fiberConnection: z.boolean().optional(),
+  needsSepticTank: z.boolean().optional(),
+  floodRisk: z.boolean().optional(),
+  claySoil: z.boolean().optional(),
+  rockySoil: z.boolean().optional(),
+  wetlandZone: z.boolean().optional(),
+  heritageZone: z.boolean().optional(),
 });
 
 // Schema for gros oeuvre

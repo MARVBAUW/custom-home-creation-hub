@@ -42,3 +42,37 @@ export const toFormValue = (value: string | number | undefined | null): string =
   
   return String(value);
 };
+
+/**
+ * Ensures a value is of type number for calculations
+ */
+export const ensureNumber = (value: string | number | undefined | null): number => {
+  if (value === undefined || value === null) {
+    return 0;
+  }
+  
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  const parsedValue = parseFloat(value);
+  return isNaN(parsedValue) ? 0 : parsedValue;
+};
+
+/**
+ * Safely adds two values that might be strings or numbers
+ */
+export const safeAdd = (a: string | number | undefined | null, b: string | number | undefined | null): number => {
+  return ensureNumber(a) + ensureNumber(b);
+};
+
+/**
+ * Safely converts a value to string for API submissions
+ */
+export const toApiString = (value: string | number | undefined | null): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  
+  return String(value);
+};

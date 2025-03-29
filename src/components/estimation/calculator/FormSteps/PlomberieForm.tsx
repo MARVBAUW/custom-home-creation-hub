@@ -5,11 +5,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, ArrowRight, Droplet } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
 import { slideVariants } from '../animations';
 import { PlomberieSchema } from '../types/validationSchemas';
-import { PlomberieFormProps } from '../types/formTypes';
+import { FormData } from '../types';
+
+export interface PlomberieFormProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+}
 
 const PlomberieForm: React.FC<PlomberieFormProps> = ({
   formData,
@@ -26,18 +35,20 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
     },
   });
 
-  const onSubmit = (data: any) => {
-    updateFormData(data);
+  const onSubmit = (data: { plumbingType: string }) => {
+    updateFormData({
+      plumbingType: data.plumbingType
+    });
     goToNextStep();
   };
 
-  const plumbingTypeOptions = [
-    { id: "standard", label: "Standard", description: "Installation de plomberie traditionnelle" },
-    { id: "premium", label: "Premium", description: "Installation de qualité supérieure" },
-    { id: "economique", label: "Économique", description: "Installation à coût réduit" },
-    { id: "intelligente", label: "Intelligente", description: "Avec systèmes connectés" },
-    { id: "ecologique", label: "Écologique", description: "Économie d'eau et matériaux durables" },
-    { id: "sansAvis", label: "Sans avis", description: "Pas de préférence spécifique" }
+  const plumbingOptions = [
+    { id: "standard", label: "Plomberie standard", description: "Installations sans options premium" },
+    { id: "premium", label: "Plomberie premium", description: "Installations haut de gamme" },
+    { id: "remplacement", label: "Remplacement simple", description: "Uniquement remplacer des éléments existants" },
+    { id: "renovation", label: "Rénovation complète", description: "Refaire entièrement l'installation" },
+    { id: "extension", label: "Extension réseau", description: "Ajouter des points d'eau supplémentaires" },
+    { id: "sansAvis", label: "Sans avis", description: "Pas de préférence particulière" }
   ];
 
   return (
@@ -51,34 +62,28 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Droplet className="h-5 w-5 text-progineer-gold" />
-            <h2 className="text-2xl font-semibold">Plomberie</h2>
-          </div>
+          <h2 className="text-2xl font-semibold text-center mb-6">Plomberie</h2>
           
           <FormField
             control={form.control}
             name="plumbingType"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>Type d'installation de plomberie</FormLabel>
+                <FormLabel>Type de plomberie souhaitée</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                    className="grid grid-cols-2 gap-4"
                   >
-                    {plumbingTypeOptions.map((option) => (
+                    {plumbingOptions.map((option) => (
                       <FormItem key={option.id} className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value={option.id} />
                         </FormControl>
-                        <div className="space-y-0.5">
-                          <FormLabel className="font-medium">
-                            {option.label}
-                          </FormLabel>
-                          <p className="text-sm text-gray-500">{option.description}</p>
-                        </div>
+                        <FormLabel className="font-normal">
+                          {option.label}
+                        </FormLabel>
                       </FormItem>
                     ))}
                   </RadioGroup>
