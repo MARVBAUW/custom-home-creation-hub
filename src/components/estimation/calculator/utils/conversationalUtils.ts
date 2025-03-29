@@ -33,6 +33,13 @@ export interface ExtractedInfo {
     features?: string[];
     email?: string;
     phone?: string;
+    rooms?: number;
+    floors?: number;
+    style?: string;
+    energy_efficiency?: boolean;
+    ecological?: boolean;
+    special_features?: string[];
+    exterior_features?: string[];
   };
 }
 
@@ -44,11 +51,11 @@ const INTENT_PATTERNS = {
   budget: /prix|coût|cout|budget|montant|euros|€|financement|prêt|emprunt/i,
   quality: /qualité|finition|gamme|standing|luxe|premium|basique|standard|niveau/i,
   terrain: /terrain|parcelle|lot|foncier|sol/i,
-  materials: /matériau|béton|bois|brique|parpaing|acier|paille|pierre|structure|mur|charpente|toiture/i,
+  materials: /matériau|béton|bois|brique|parpaing|acier|paille|pierre|structure|mur|charpente|toiture|bardage/i,
   timeline: /délai|temps|durée|mois|année|planning|calendrier|quand|combien de temps/i,
-  features: /cuisine|salle de bain|chambre|salon|bureau|garage|piscine|terrasse|jardin|balcon|équipement/i,
+  features: /cuisine|salle de bain|chambre|salon|bureau|garage|piscine|terrasse|jardin|balcon|équipement|escalier|insert/i,
   contact: /email|mail|e-mail|courriel|téléphone|contacter|contact|appeler/i,
-  help: /aide|aidez|question|comment|expliquer|assistance|guide|pouvez-vous/i
+  help: /aide|aidez|question|comment|expliquer|assistance|guide|pouvez-vous|oriente|orienter/i
 };
 
 // Fonction principale d'analyse d'intention
@@ -73,6 +80,12 @@ export const analyzeUserIntent = (input: string): ExtractedInfo => {
         result.confidence = confidence;
       }
     }
+  }
+  
+  // Vérifier si l'utilisateur est bloqué et demande de l'orientation
+  if (input.match(/non ou alors oriente moi|bloqué|coincé|orientation|guide|quoi faire maintenant|et maintenant|que faire/i)) {
+    result.intent = 'help';
+    result.confidence = 0.9;
   }
   
   // Maintenant, extraire les entités spécifiques
@@ -114,6 +127,40 @@ const extractEntities = (input: string, result: ExtractedInfo) => {
     result.entities.surface = parseInt(surfaceMatch[1]);
   }
   
+  // Extraire le nombre d'étages
+  if (input.match(/r\+1|r\s*\+\s*1|étage|étages|premier étage|un étage/i)) {
+    result.entities.floors = 2; // rez-de-chaussée + 1 étage = 2 niveaux
+  } else if (input.match(/r\+2|r\s*\+\s*2|deux étages|2 étages/i)) {
+    result.entities.floors = 3;
+  } else if (input.match(/plain[ -]pied|rez[ -]de[ -]chaussée/i)) {
+    result.entities.floors = 1;
+  }
+  
+  // Extraire le style architectural
+  if (input.match(/provençal|provencal|traditionnel|méditerranéen/i)) {
+    result.entities.style = 'Provençal/Traditionnel';
+  } else if (input.match(/moderne|contemporain/i)) {
+    result.entities.style = 'Moderne/Contemporain';
+  } else if (input.match(/design|minimaliste/i)) {
+    result.entities.style = 'Design/Minimaliste';
+  }
+  
+  // Extraire le nombre de chambres
+  const roomsMatch = input.match(/(\d+)[\s]*(chambres?)/i);
+  if (roomsMatch) {
+    result.entities.rooms = parseInt(roomsMatch[1]);
+  }
+  
+  // Extraire les caractéristiques énergétiques
+  if (input.match(/économ|econom|peu de consommation|basse consommation|consomme (peu|moins)|efficacité énergétique/i)) {
+    result.entities.energy_efficiency = true;
+  }
+  
+  // Extraire les aspects écologiques
+  if (input.match(/écologi|ecologi|développement durable|durable|bio|naturel|environnement|vert/i)) {
+    result.entities.ecological = true;
+  }
+  
   // Extraire le budget
   const budgetMatch = input.match(/(\d+)[\s]*(€|euros|k€|k euros)/i);
   if (budgetMatch) {
@@ -132,6 +179,8 @@ const extractEntities = (input: string, result: ExtractedInfo) => {
     result.entities.quality = 'Standard (qualité moyenne)';
   } else if (input.match(/basique|simple|entrée[\s-]*de[\s-]*gamme|économique/i)) {
     result.entities.quality = 'Basique (entrée de gamme)';
+  } else if (input.match(/qualité|belle finition|bien fini|bonne qualité/i)) {
+    result.entities.quality = 'Premium (haut de gamme)';
   }
   
   // Extraire les informations sur le terrain
@@ -162,9 +211,39 @@ const extractEntities = (input: string, result: ExtractedInfo) => {
   if (input.match(/parpaing/i)) materialMatches.push('Parpaings');
   if (input.match(/acier|métal|metal/i)) materialMatches.push('Métal');
   if (input.match(/pierre/i)) materialMatches.push('Pierre');
+  if (input.match(/bardage/i)) materialMatches.push('Bardage');
+  if (input.match(/alu|aluminium/i)) materialMatches.push('Aluminium');
   
   if (materialMatches.length > 0) {
     result.entities.materials = materialMatches;
+  }
+  
+  // Extraire les caractéristiques spéciales
+  const featuresMatches = [];
+  if (input.match(/insert|cheminée|foyer/i)) featuresMatches.push('Insert/Cheminée');
+  if (input.match(/escalier suspendu/i)) featuresMatches.push('Escalier suspendu');
+  if (input.match(/cuisine ouverte|cuisine américaine/i)) featuresMatches.push('Cuisine ouverte');
+  if (input.match(/domotique|smart home|connecté/i)) featuresMatches.push('Domotique');
+  if (input.match(/panneaux solaires|photovoltaïque/i)) featuresMatches.push('Panneaux solaires');
+  if (input.match(/récupération d'eau|eau de pluie/i)) featuresMatches.push('Récupération d\'eau');
+  if (input.match(/pompe à chaleur|pac/i)) featuresMatches.push('Pompe à chaleur');
+  if (input.match(/grande baie vitrée|baie vitrée|grandes fenêtres|surface vitrée/i)) featuresMatches.push('Grandes baies vitrées');
+  
+  if (featuresMatches.length > 0) {
+    result.entities.special_features = featuresMatches;
+  }
+  
+  // Extraire les caractéristiques extérieures
+  const exteriorMatches = [];
+  if (input.match(/piscine/i)) exteriorMatches.push('Piscine');
+  if (input.match(/terrasse/i)) exteriorMatches.push('Terrasse');
+  if (input.match(/jardin/i)) exteriorMatches.push('Jardin');
+  if (input.match(/garage/i)) exteriorMatches.push('Garage');
+  if (input.match(/carport/i)) exteriorMatches.push('Carport');
+  if (input.match(/pool house/i)) exteriorMatches.push('Pool house');
+  
+  if (exteriorMatches.length > 0) {
+    result.entities.exterior_features = exteriorMatches;
   }
   
   // Extraire l'email
@@ -195,6 +274,52 @@ export const generateSmartResponse = (
     quality: Boolean(currentFormData.finishLevel),
     terrain: currentFormData.hasLand !== undefined,
   };
+  
+  // Si nous avons beaucoup d'informations mais que nous sommes bloqués
+  if (Object.keys(entities).length > 3 && intent === 'help') {
+    // Vérifier les informations manquantes essentielles
+    const missingEssentials = [];
+    if (!knownInfo.location) missingEssentials.push("la ville ou région où se situe votre projet");
+    if (!knownInfo.terrain) missingEssentials.push("si vous disposez déjà d'un terrain");
+    if (!currentFormData.email) missingEssentials.push("votre email de contact");
+    
+    if (missingEssentials.length > 0) {
+      return `Merci pour toutes ces informations détaillées ! Pour finaliser votre estimation, j'aurais besoin de savoir ${missingEssentials.join(', ')}. Pouvez-vous me préciser ces points ?`;
+    } else {
+      return "Je crois avoir suffisamment d'informations pour calculer une estimation précise de votre projet. Souhaitez-vous que je procède à l'estimation maintenant ?";
+    }
+  }
+  
+  // Si beaucoup d'informations détaillées déjà fournies, faire un résumé et orienter
+  if (entities.surface && entities.rooms && entities.special_features && entities.floors) {
+    const qualityLevel = entities.quality || "de qualité";
+    const styleText = entities.style ? `de style ${entities.style}` : "";
+    const energyText = entities.energy_efficiency ? "à basse consommation énergétique" : "";
+    const ecoText = entities.ecological ? "écologique" : "";
+    
+    // Construction du résumé
+    let summary = `J'ai bien noté votre projet de maison ${qualityLevel} ${styleText} ${energyText} ${ecoText} de ${entities.surface} m² avec ${entities.rooms} chambres sur ${entities.floors === 1 ? 'plain-pied' : entities.floors + ' niveaux'}.`;
+    
+    // Ajouter les spécificités
+    if (entities.special_features) {
+      summary += ` Vous souhaitez des équipements spécifiques comme ${entities.special_features.join(', ')}.`;
+    }
+    
+    if (entities.exterior_features) {
+      summary += ` À l'extérieur, vous prévoyez ${entities.exterior_features.join(', ')}.`;
+    }
+    
+    // Questions pour compléter
+    if (!knownInfo.location) {
+      return `${summary}\n\nPour avancer dans l'estimation, j'aurais besoin de savoir dans quelle ville ou région se situe votre projet ?`;
+    } else if (!knownInfo.terrain) {
+      return `${summary}\n\nAvez-vous déjà un terrain pour ce projet ? Si oui, connaissez-vous son prix d'acquisition ?`;
+    } else if (!currentFormData.email) {
+      return `${summary}\n\nPour finaliser votre estimation personnalisée, pourriez-vous me communiquer votre email de contact ?`;
+    } else {
+      return `${summary}\n\nJe dispose maintenant de toutes les informations nécessaires. Souhaitez-vous que je calcule votre estimation détaillée ?`;
+    }
+  }
   
   // Réponses possibles selon l'intention
   switch (intent) {
@@ -253,6 +378,13 @@ export const generateSmartResponse = (
         return "Avez-vous une préférence pour certains matériaux de construction ?";
       }
       
+    case 'features':
+      if (entities.special_features && entities.special_features.length > 0) {
+        return `J'ai bien noté les équipements spécifiques que vous souhaitez : ${entities.special_features.join(', ')}. Avez-vous d'autres besoins particuliers pour votre projet ?`;
+      } else {
+        return "Avez-vous des besoins spécifiques comme une cuisine ouverte, un insert, des grandes baies vitrées ou d'autres éléments importants pour vous ?";
+      }
+      
     case 'timeline':
       return "La durée des travaux dépendra de plusieurs facteurs, notamment la complexité du projet, sa taille et les finitions choisies. Pour un projet comme le vôtre, comptez en général entre 8 et 14 mois.";
       
@@ -266,20 +398,20 @@ export const generateSmartResponse = (
       }
       
     case 'help':
-      return "Je suis là pour vous aider à estimer le coût de votre projet. Dites-moi simplement le type de projet, la surface, l'emplacement et vos préférences en termes de finition. Plus vous me donnez de détails, plus l'estimation sera précise.";
+      return "Je suis là pour vous guider dans votre projet. Souhaitez-vous me parler de la localisation, de la surface envisagée, du style architectural ou du budget ? Ou préférez-vous que je vous pose des questions plus précises pour avancer ?";
       
     default:
       // Si nous avons déjà les informations essentielles, proposer de calculer l'estimation
       if (knownInfo.project_type && knownInfo.surface && (knownInfo.location || knownInfo.quality)) {
         return "Je pense avoir suffisamment d'informations pour calculer une première estimation. Souhaitez-vous que je procède au calcul maintenant ?";
       } else {
-        return "Pouvez-vous me donner plus de détails sur votre projet ? J'ai besoin de connaître au minimum le type de projet, sa surface et son emplacement.";
+        return "Pour avancer dans l'estimation de votre projet, pourriez-vous me préciser plus d'informations comme la surface, la localisation ou le style de construction envisagé ?";
       }
   }
 };
 
 // Suggérer des questions pertinentes en fonction du contexte actuel
-export const generateSuggestions = (formData: FormData): string[] => {
+export const generateSuggestions = (formData: FormData, lastIntent?: string): string[] => {
   const suggestions: string[] = [];
   
   // Suggestions basées sur ce qui manque dans les données du formulaire
@@ -296,9 +428,9 @@ export const generateSuggestions = (formData: FormData): string[] => {
     suggestions.push("Environ 90m²");
     suggestions.push("Entre 100 et 150m²");
   } else if (!formData.finishLevel) {
-    suggestions.push("Finition haut de gamme");
-    suggestions.push("Qualité standard");
-    suggestions.push("Basique, pour maîtriser le budget");
+    suggestions.push("Je veux des finitions haut de gamme");
+    suggestions.push("Je préfère une qualité standard");
+    suggestions.push("Qualité standard mais bonnes performances énergétiques");
   } else if (formData.hasLand === undefined) {
     suggestions.push("J'ai déjà un terrain");
     suggestions.push("Je n'ai pas encore de terrain");
@@ -311,6 +443,21 @@ export const generateSuggestions = (formData: FormData): string[] => {
     suggestions.push("Calculer mon estimation");
     suggestions.push("J'ai d'autres questions");
     suggestions.push("Merci pour votre aide");
+  }
+  
+  // Ajouter des suggestions adaptées au dernier sujet abordé
+  if (lastIntent === 'materials') {
+    suggestions.push("Je veux une maison en bois");
+    suggestions.push("Je préfère une construction traditionnelle");
+    suggestions.push("J'aimerais un bardage bois pour la façade");
+  } else if (lastIntent === 'features') {
+    suggestions.push("Je veux une cuisine ouverte");
+    suggestions.push("J'aimerais 3 chambres avec salle de bain");
+    suggestions.push("Je souhaite un grand salon lumineux");
+  } else if (lastIntent === 'help') {
+    suggestions.push("Parlons de la localisation");
+    suggestions.push("Quelles questions me reste-t-il à répondre?");
+    suggestions.push("Je veux voir une estimation");
   }
   
   return suggestions.slice(0, 3); // Limiter à 3 suggestions

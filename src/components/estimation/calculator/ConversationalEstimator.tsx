@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -23,6 +23,7 @@ import { FormData } from './types';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { analyzeUserIntent, generateSmartResponse, generateSuggestions } from './utils/conversationalUtils';
 
 // Types pour les messages
 type MessageType = 'bot' | 'user' | 'system' | 'error' | 'info';
@@ -107,21 +108,15 @@ const SMART_RESPONSES = {
   unknown: [
     "Je n'ai pas bien compris. Pourriez-vous reformuler ou préciser votre question ?",
     "Pardonnez-moi, mais je n'ai pas saisi votre demande. Pouvez-vous préciser ?"
+  ],
+  help_suggestions: [
+    "Je vois que vous avez besoin d'aide. Voici les informations dont j'ai encore besoin pour finaliser votre estimation:",
+    "Pour avancer, j'aurais besoin de quelques précisions. Pouvez-vous me renseigner sur:"
+  ],
+  loop_detected: [
+    "Je constate que nous tournons un peu en rond. Essayons d'avancer différemment. Pouvez-vous me préciser:",
+    "Changeons d'approche pour mieux avancer. Pourriez-vous me donner plus de détails sur:"
   ]
-};
-
-// Expressions régulières pour identifier les mots-clés
-const KEYWORDS = {
-  construction: /constructi|maison|bâtir|bâtiment|immeubl|neuf/i,
-  renovation: /rénov|réhabilit|restaur|remise|ancien/i,
-  extension: /extens|agrandis|ajout|annexe|surélév/i,
-  surface: /surface|m2|m²|mètre|metre|superficie|taille/i,
-  price: /prix|coût|cout|budget|montant|euros|€/i,
-  location: /ville|région|région|departement|où|localisation|localité/i,
-  material: /matéri|béton|bois|brique|parpaing|acier|paille|pierre/i,
-  timeline: /délai|temps|durée|mois|année|planning|calendrier|quand/i,
-  quality: /qualité|finition|gamme|standing|luxe|premium|basique|standard/i,
-  terrain: /terrain|parcelle|lot|foncier|sol/i
 };
 
 const ConversationalEstimator: React.FC = () => {
@@ -135,9 +130,12 @@ const ConversationalEstimator: React.FC = () => {
   const [showLandPriceInput, setShowLandPriceInput] = useState(false);
   const [landPrice, setLandPrice] = useState<number>(0);
   const [includeTerrainPrice, setIncludeTerrainPrice] = useState(false);
+  const [lastIntent, setLastIntent] = useState<string | undefined>(undefined);
+  const [loopCounter, setLoopCounter] = useState(0);
+  const [previousResponses, setPreviousResponses] = useState<Set<string>>(new Set());
 
   const { toast } = useToast();
-  const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Initialiser la conversation
   useEffect(() => {
@@ -148,7 +146,12 @@ const ConversationalEstimator: React.FC = () => {
       // Première question après un court délai
       setTimeout(() => {
         const initialQuestion = getRandomResponse('construction_type');
-        addBotMessage(initialQuestion);
+        const suggestions = [
+          "Je veux construire une maison", 
+          "Je souhaite rénover mon appartement", 
+          "J'envisage une extension"
+        ];
+        addBotMessage(initialQuestion, undefined, suggestions);
         setCurrentContext('project_type');
       }, 1500);
     }
@@ -170,6 +173,59 @@ const ConversationalEstimator: React.FC = () => {
   const addBotMessage = (content: string, formData?: Partial<FormData>, suggestions?: string[]) => {
     setIsTyping(true);
     
+    // Vérifier si ce message est identique à un message récent (pour éviter les boucles)
+    if (previousResponses.has(content)) {
+      setLoopCounter(prev => prev + 1);
+    } else {
+      // Ajouter à l'historique et réinitialiser le compteur de boucle
+      setPreviousResponses(prev => {
+        const newSet = new Set(prev);
+        newSet.add(content);
+        // Limiter la taille de l'ensemble pour ne pas qu'il grossisse indéfiniment
+        if (newSet.size > 10) {
+          const oldestItem = Array.from(newSet)[0];
+          newSet.delete(oldestItem);
+        }
+        return newSet;
+      });
+      setLoopCounter(0);
+    }
+    
+    // Si on détecte une boucle (3 messages identiques), changer de stratégie
+    if (loopCounter >= 2) {
+      const helpMessage = SMART_RESPONSES.loop_detected[0];
+      const missingFields = [];
+      
+      if (!formData?.projectType) missingFields.push("Le type de projet (construction, rénovation, extension)");
+      if (!formData?.city) missingFields.push("La localisation du projet (ville ou région)");
+      if (!formData?.surface) missingFields.push("La surface habitable envisagée (en m²)");
+      if (!formData?.hasLand !== undefined) missingFields.push("Si vous possédez déjà un terrain");
+      if (!formData?.email) missingFields.push("Votre email pour vous envoyer l'estimation");
+      
+      let newContent = `${helpMessage}\n\n${missingFields.join('\n- ')}`;
+      
+      if (missingFields.length === 0) {
+        newContent = "Merci pour toutes ces informations ! Je pense avoir tout ce qu'il me faut pour calculer une estimation précise. Souhaitez-vous que je procède au calcul maintenant ?";
+      }
+      
+      setTimeout(() => {
+        const newMessage: Message = {
+          id: `bot-${Date.now()}`,
+          type: 'bot',
+          content: newContent,
+          timestamp: new Date(),
+          formData,
+          suggestions: generateSuggestions(formData as FormData, lastIntent)
+        };
+        
+        setMessages(prev => [...prev, newMessage]);
+        setIsTyping(false);
+        setLoopCounter(0);
+      }, 800);
+      
+      return;
+    }
+    
     setTimeout(() => {
       const newMessage: Message = {
         id: `bot-${Date.now()}`,
@@ -177,7 +233,7 @@ const ConversationalEstimator: React.FC = () => {
         content,
         timestamp: new Date(),
         formData,
-        suggestions
+        suggestions: suggestions || generateSuggestions(formData as FormData, lastIntent)
       };
       
       setMessages(prev => [...prev, newMessage]);
@@ -219,143 +275,111 @@ const ConversationalEstimator: React.FC = () => {
   const processUserInput = (input: string) => {
     setIsTyping(true);
     
-    // Mise à jour du contexte et des données du formulaire en fonction de l'entrée
-    let updatedFormData: Partial<FormData> = { ...formData };
-    let newContext = currentContext;
-    let nextMessage = "";
+    // Analyser l'intention et les entités de l'entrée utilisateur
+    const analysis = analyzeUserIntent(input);
+    setLastIntent(analysis.intent);
+    console.log("Analyse de l'intention:", analysis);
     
-    // Analyser l'entrée pour en extraire des informations pertinentes
-    if (currentContext === 'project_type' || input.match(KEYWORDS.construction) || input.match(KEYWORDS.renovation) || input.match(KEYWORDS.extension)) {
-      // Déterminer le type de projet
-      if (input.match(/neuve|neuf|nouvel/i) || input.match(KEYWORDS.construction)) {
-        updatedFormData.projectType = 'Construction neuve';
-      } else if (input.match(KEYWORDS.renovation)) {
-        updatedFormData.projectType = 'Rénovation';
-      } else if (input.match(KEYWORDS.extension)) {
-        updatedFormData.projectType = 'Extension';
-      }
-      
-      if (updatedFormData.projectType && currentContext === 'project_type') {
-        nextMessage = `Excellent ! Je note qu'il s'agit d'un projet de ${updatedFormData.projectType}. ${getRandomResponse('location_query')}`;
-        newContext = 'location';
-      }
+    // Mise à jour du contexte et des données du formulaire en fonction de l'analyse
+    let updatedFormData: Partial<FormData> = { ...formData };
+    
+    // Traiter le type de projet
+    if (analysis.entities.project_type) {
+      updatedFormData.projectType = analysis.entities.project_type;
     }
     
-    // Extraire les informations de localisation
-    if (currentContext === 'location' || input.match(KEYWORDS.location)) {
+    // Traiter la surface
+    if (analysis.entities.surface) {
+      updatedFormData.surface = analysis.entities.surface;
+    }
+    
+    // Traiter la localisation (pour l'instant simpliste)
+    if (analysis.entities.location) {
+      updatedFormData.city = analysis.entities.location;
+      // Rechercher une correspondance dans CITIES_DATA
       const cityMatch = CITIES_DATA.find(city => 
-        input.toLowerCase().includes(city.name.toLowerCase())
+        analysis.entities.location?.toLowerCase().includes(city.name.toLowerCase())
       );
-      
       if (cityMatch) {
         updatedFormData.city = cityMatch.name;
         updatedFormData.cityTaxRate = cityMatch.taxeRate;
-        
-        if (currentContext === 'location') {
-          nextMessage = `${cityMatch.name}, parfait ! La taxe d'aménagement locale est d'environ ${cityMatch.taxeRate}%. ${getRandomResponse('surface_query')}`;
-          newContext = 'dimensions';
-        }
       }
     }
     
-    // Extraire les informations de surface
-    if (currentContext === 'dimensions' || input.match(KEYWORDS.surface)) {
-      const surfaceMatch = input.match(/(\d+)\s*(m²|m2)/);
-      if (surfaceMatch) {
-        const surface = parseInt(surfaceMatch[1]);
-        updatedFormData.surface = surface;
-        
-        if (currentContext === 'dimensions') {
-          nextMessage = `${surface} m², c'est noté. ${getRandomResponse('quality_level')}`;
-          newContext = 'finishes';
-        }
+    // Traiter la qualité/finition
+    if (analysis.entities.quality) {
+      updatedFormData.finishLevel = analysis.entities.quality;
+    }
+    
+    // Traiter les informations de terrain
+    if (analysis.entities.has_terrain !== undefined) {
+      updatedFormData.hasLand = analysis.entities.has_terrain;
+      if (analysis.entities.terrain_price) {
+        updatedFormData.landPrice = analysis.entities.terrain_price;
+        setLandPrice(analysis.entities.terrain_price);
+      } else if (analysis.entities.has_terrain && !updatedFormData.landPrice) {
+        setShowLandPriceInput(true);
       }
     }
     
-    // Extraire les informations de qualité/finition
-    if (currentContext === 'finishes' || input.match(KEYWORDS.quality)) {
-      if (input.match(/premium|haut de gamme|luxe|qualité supérieure/i)) {
-        updatedFormData.finishLevel = 'Premium (haut de gamme)';
-      } else if (input.match(/standard|moyen|normale|milieu de gamme/i)) {
-        updatedFormData.finishLevel = 'Standard (qualité moyenne)';
-      } else if (input.match(/basique|simple|entrée de gamme|économique/i)) {
-        updatedFormData.finishLevel = 'Basique (entrée de gamme)';
-      }
-      
-      if (updatedFormData.finishLevel && currentContext === 'finishes') {
-        nextMessage = `J'ai bien noté que vous souhaitez une finition de niveau ${updatedFormData.finishLevel}. ${getRandomResponse('terrain_question')}`;
-        newContext = 'terrain';
-      }
+    // Traiter les informations de style
+    if (analysis.entities.style) {
+      updatedFormData.style = analysis.entities.style;
     }
     
-    // Extraire les informations de terrain
-    if (currentContext === 'terrain' || input.match(KEYWORDS.terrain)) {
-      if (input.match(/oui|déjà|possède|dispose|acquis/i)) {
-        updatedFormData.hasLand = true;
-        
-        // Essayer d'extraire le prix du terrain
-        const priceMatch = input.match(/(\d+)\s*(€|euros|k€|k euros)/i);
-        if (priceMatch) {
-          let price = parseInt(priceMatch[1].replace(/\s/g, ''));
-          // Vérifier si le prix est en milliers (k€)
-          if (priceMatch[2].toLowerCase().includes('k')) {
-            price *= 1000;
-          }
-          updatedFormData.landPrice = price;
-          setLandPrice(price);
-        } else {
-          // Si pas de prix mentionné mais terrain confirmé
-          setShowLandPriceInput(true);
-        }
-      } else if (input.match(/non|pas encore|sans|aucun/i)) {
-        updatedFormData.hasLand = false;
-      }
-      
-      if (updatedFormData.hasLand !== undefined && currentContext === 'terrain') {
-        if (Object.keys(updatedFormData).length >= 5) {
-          // Si on a suffisamment d'informations pour faire une estimation
-          nextMessage = getRandomResponse('thank_you');
-          newContext = 'estimation';
-        } else {
-          // Demander des informations supplémentaires
-          nextMessage = `Merci pour cette information concernant le terrain. ${getRandomResponse('contact_info')}`;
-          newContext = 'contact';
-        }
-      }
+    // Traiter les étages
+    if (analysis.entities.floors) {
+      updatedFormData.floors = analysis.entities.floors;
     }
     
-    // Extraire l'email si dans le contexte contact
-    if (currentContext === 'contact') {
-      const emailMatch = input.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/);
-      if (emailMatch) {
-        updatedFormData.email = emailMatch[0];
-        nextMessage = getRandomResponse('thank_you');
-        newContext = 'estimation';
-      }
+    // Traiter le nombre de chambres
+    if (analysis.entities.rooms) {
+      updatedFormData.rooms = analysis.entities.rooms;
     }
     
-    // Mise à jour du contexte et des données du formulaire
-    setCurrentContext(newContext);
+    // Traiter l'efficacité énergétique
+    if (analysis.entities.energy_efficiency) {
+      updatedFormData.energyEfficiency = true;
+    }
+    
+    // Traiter l'aspect écologique
+    if (analysis.entities.ecological) {
+      updatedFormData.ecological = true;
+    }
+    
+    // Traiter les caractéristiques spéciales
+    if (analysis.entities.special_features) {
+      updatedFormData.specialFeatures = analysis.entities.special_features;
+    }
+    
+    // Traiter les caractéristiques extérieures
+    if (analysis.entities.exterior_features) {
+      updatedFormData.exteriorFeatures = analysis.entities.exterior_features;
+    }
+    
+    // Traiter l'email de contact
+    if (analysis.entities.email) {
+      updatedFormData.email = analysis.entities.email;
+    }
+    
+    // Mise à jour des données du formulaire
     setFormData(prev => ({ ...prev, ...updatedFormData }));
     
-    // Si aucune réponse spécifique n'a été définie, essayer une réponse générique
-    if (!nextMessage) {
-      if (Object.keys(updatedFormData).length === 0) {
-        // Si aucune information n'a été extraite, donner une réponse générique
-        nextMessage = getRandomResponse('unknown');
-      } else {
-        // Si des informations ont été extraites mais pas suffisamment pour passer à l'étape suivante
-        nextMessage = "J'ai enregistré ces informations. Pouvez-vous m'en dire plus sur votre projet ?";
-      }
-    }
+    // Générer une réponse intelligente basée sur l'analyse
+    const smartResponse = generateSmartResponse(analysis, { ...formData, ...updatedFormData });
     
-    // Si nous sommes dans le contexte d'estimation et avons collecté assez d'informations
-    if (newContext === 'estimation' && Object.keys(formData).length >= 4) {
+    // Si nous avons collecté suffisamment d'informations et l'utilisateur demande l'estimation
+    if (
+      (input.match(/calcul|estim|combien|prix|devis/i) || 
+       (analysis.intent === 'help' && Object.keys(formData).length >= 4)) && 
+      formData.projectType && 
+      formData.surface
+    ) {
       calculateEstimation();
     } else {
-      // Envoyer la réponse au bout d'un délai
+      // Envoyer la réponse intelligente
       setTimeout(() => {
-        addBotMessage(nextMessage, updatedFormData);
+        addBotMessage(smartResponse, updatedFormData);
         setIsTyping(false);
       }, 1000);
     }
@@ -404,7 +428,14 @@ Cette estimation comprend :
 
 Consultez l'onglet "Rapport détaillé" pour visualiser la répartition des coûts et télécharger votre estimation au format PDF.`;
         
-        addBotMessage(resultMessage);
+        // Ajouter des suggestions post-estimation
+        const postEstimationSuggestions = [
+          "Télécharger le rapport détaillé",
+          "Comment puis-je ajuster mon budget ?",
+          "Je souhaite être contacté par un expert"
+        ];
+        
+        addBotMessage(resultMessage, undefined, postEstimationSuggestions);
         setActiveTab('report');
         
         // Si on n'a pas encore le prix du terrain et c'est une construction neuve
@@ -477,6 +508,8 @@ Consultez l'onglet "Rapport détaillé" pour visualiser la répartition des coû
       setShowLandPriceInput(false);
       setLandPrice(0);
       setIncludeTerrainPrice(false);
+      setPreviousResponses(new Set());
+      setLoopCounter(0);
       
       toast({
         title: "Conversation réinitialisée",
@@ -566,11 +599,11 @@ Consultez l'onglet "Rapport détaillé" pour visualiser la répartition des coû
                         <div className="text-sm whitespace-pre-line">{message.content}</div>
                       )}
                       
-                      {message.suggestions && message.suggestions.length > 0 && (
+                      {message.suggestions && message.suggestions.length > 0 && message.type === 'bot' && (
                         <div className="mt-2 flex flex-wrap gap-1">
                           {message.suggestions.map((suggestion, index) => (
                             <Button
-                              key={index}
+                              key={`${message.id}-suggestion-${index}`}
                               variant="outline"
                               size="sm"
                               className="text-xs py-1 h-auto"
@@ -687,6 +720,41 @@ Consultez l'onglet "Rapport détaillé" pour visualiser la répartition des coû
                     
                     <div className="text-gray-600">Finition</div>
                     <div>{formData.finishLevel || "Standard"}</div>
+                    
+                    {formData.rooms && (
+                      <>
+                        <div className="text-gray-600">Chambres</div>
+                        <div>{formData.rooms}</div>
+                      </>
+                    )}
+                    
+                    {formData.style && (
+                      <>
+                        <div className="text-gray-600">Style</div>
+                        <div>{formData.style}</div>
+                      </>
+                    )}
+                    
+                    {formData.floors && (
+                      <>
+                        <div className="text-gray-600">Niveaux</div>
+                        <div>{formData.floors === 1 ? 'Plain-pied' : `${formData.floors} niveaux`}</div>
+                      </>
+                    )}
+                    
+                    {formData.specialFeatures && formData.specialFeatures.length > 0 && (
+                      <>
+                        <div className="text-gray-600">Caractéristiques</div>
+                        <div>{formData.specialFeatures.join(', ')}</div>
+                      </>
+                    )}
+                    
+                    {formData.exteriorFeatures && formData.exteriorFeatures.length > 0 && (
+                      <>
+                        <div className="text-gray-600">Extérieur</div>
+                        <div>{formData.exteriorFeatures.join(', ')}</div>
+                      </>
+                    )}
                   </div>
                 </div>
                 

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from './types';
 import { useToast } from '@/hooks/use-toast';
@@ -126,7 +125,7 @@ const ProfessionalQuoteReport: React.FC<ProfessionalQuoteReportProps> = ({
           <div className="bg-stone-50 p-6 border-b print:bg-white">
             <div className="flex justify-center mb-6">
               <div className="h-12">
-                <Logo variant="standard" />
+                <Logo variant="full" />
               </div>
             </div>
             
