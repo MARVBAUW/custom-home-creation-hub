@@ -3,1156 +3,1054 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Building, 
-  Calculator, 
-  ChevronRight, 
   Home, 
-  Ruler, 
+  ArrowRight, 
+  ArrowLeft, 
+  Construction, 
+  Layers, 
+  Thermometer, 
+  Grid, 
+  Droplet, 
   Hammer, 
-  Wrench, 
-  Send,
+  Leaf, 
+  PencilRuler, 
+  Calculator, 
+  Mail, 
+  Phone,
+  User,
   Euro,
-  Layers,
-  Paintbrush,
-  Construction,
-  Shuffle,
-  LightbulbIcon,
-  ShowerHead,
-  Shovel
+  Check
 } from 'lucide-react';
 
-// Schéma de validation pour le formulaire
-const estimationSchema = z.object({
-  // Informations générales
-  projectType: z.enum(['construction', 'renovation', 'extension'], {
-    required_error: "Veuillez sélectionner un type de projet",
-  }),
+// Schéma de validation Zod pour le formulaire
+const formSchema = z.object({
+  clientType: z.enum(["particulier", "professionnel"]),
+  projectType: z.enum(["construction", "renovation"]),
   surface: z.string().min(1, "Veuillez indiquer la surface"),
   levels: z.string().min(1, "Veuillez indiquer le nombre de niveaux"),
-  
-  // Gros œuvre
-  wallType: z.enum(['brique', 'parpaing', 'pierre', 'beton', 'autre'], {
-    required_error: "Veuillez sélectionner un type de mur",
-  }).optional(),
-  foundationType: z.enum(['traditionnelle', 'radier', 'micropieux', 'autre'], {
-    required_error: "Veuillez sélectionner un type de fondation",
-  }).optional(),
-  
-  // Charpente
-  roofType: z.enum(['traditionnelle', 'industrielle', 'terrasse', 'autre'], {
-    required_error: "Veuillez sélectionner un type de charpente",
-  }).optional(),
-  
-  // Couverture
-  roofingType: z.enum(['tuiles', 'zinc', 'bac_acier', 'autres'], {
-    required_error: "Veuillez sélectionner un type de couverture",
-  }).optional(),
-  
-  // Menuiseries
-  windowType: z.enum(['pvc', 'alu', 'bois', 'mixte'], {
-    required_error: "Veuillez sélectionner un type de menuiserie",
-  }).optional(),
-  
-  // Plâtrerie
-  plasteringType: z.enum(['plaque_platre', 'traditionnel', 'mixte'], {
-    required_error: "Veuillez sélectionner un type de plâtrerie",
-  }).optional(),
-  insulationType: z.enum(['standard', 'renforcee', 'haute_performance'], {
-    required_error: "Veuillez sélectionner un type d'isolation",
-  }).optional(),
-  
-  // Revêtements de sol
-  flooringType: z.enum(['carrelage', 'parquet', 'stratifie', 'mixte'], {
-    required_error: "Veuillez sélectionner un type de sol",
-  }).optional(),
-  
-  // Carrelage
-  tileSurface: z.string().optional(),
-  
-  // Peinture
-  wallFinishType: z.enum(['peinture_mate', 'peinture_satinee', 'papier_peint', 'autre'], {
-    required_error: "Veuillez sélectionner un type de finition murale",
-  }).optional(),
-  
-  // Electricité
-  electricalLevel: z.enum(['basique', 'standard', 'avance', 'domotique'], {
-    required_error: "Veuillez sélectionner un niveau d'installation électrique",
-  }).optional(),
-  
-  // Plomberie
-  plumbingLevel: z.enum(['basique', 'standard', 'premium'], {
-    required_error: "Veuillez sélectionner un niveau d'installation de plomberie",
-  }).optional(),
-  
-  // Chauffage
-  heatingType: z.enum(['electrique', 'gaz', 'pompe_chaleur', 'poele', 'autre'], {
-    required_error: "Veuillez sélectionner un type de chauffage",
-  }).optional(),
-  
-  // Options complémentaires
-  hasVentilation: z.boolean().default(false),
-  hasDemolition: z.boolean().default(false),
-  hasLandscaping: z.boolean().default(false),
-  demolitionPercentage: z.string().optional(),
-  vrdPercentage: z.string().optional(),
-  
-  // Informations de contact
-  firstName: z.string().min(1, "Veuillez indiquer votre prénom"),
-  lastName: z.string().min(1, "Veuillez indiquer votre nom"),
-  email: z.string().email("Veuillez indiquer un email valide"),
-  phone: z.string().min(10, "Veuillez indiquer un numéro de téléphone valide"),
-  
-  // Commentaires
-  comments: z.string().optional(),
+  units: z.string().optional(),
+  terrainType: z.enum(["plat", "pente", "avec_denivelation"]).optional(),
+  wallType: z.enum(["parpaings", "briques", "pierres", "béton", "bois"]).optional(),
+  roofType: z.enum(["toitureAccessible", "toitureInaccessible", "charpenteIndustrielle", "charpenteTraditionnelle"]).optional(),
+  atticType: z.enum(["amenageable", "perdu"]).optional(),
+  roofingType: z.enum(["tuilePlate", "tuileRonde", "ardoise", "zinc", "chaume", "bacAcier", "bitume", "vegetalisee", "gravillonnee"]).optional(),
+  insulationType: z.enum(["interieure", "exterieure", "mixte"]).optional(),
+  windowType: z.enum(["pvc", "bois", "aluminium"]).optional(),
+  electricalType: z.enum(["standard", "domotique", "smart"]).optional(),
+  plumbingType: z.enum(["standard", "premium"]).optional(),
+  heatingType: z.enum(["gaz", "pompe-chaleur", "electrique", "geothermie"]).optional(),
+  hasAirConditioning: z.enum(["yes", "no"]).optional(),
+  plasteringType: z.enum(["standard", "decoratif"]).optional(),
+  doorType: z.enum(["standard", "premium"]).optional(),
+  floorTileType: z.enum(["standard", "premium"]).optional(),
+  wallTileType: z.enum(["standard", "premium"]).optional(),
+  floorTilePercentage: z.string().optional(),
+  parquetType: z.enum(["stratifie", "contrecolle", "massif"]).optional(),
+  parquetPercentage: z.string().optional(),
+  kitchenType: z.enum(["standard", "equipee", "surmesure"]).optional(),
+  bathroomType: z.enum(["standard", "premium"]).optional(),
+  bathroomCount: z.string().optional(),
+  firstName: z.string().min(1, "Prénom requis"),
+  lastName: z.string().min(1, "Nom requis"),
+  email: z.string().email("Email invalide").min(1, "Email requis"),
+  phone: z.string().min(1, "Téléphone requis"),
+  details: z.string().optional()
 });
 
-type EstimationFormValues = z.infer<typeof estimationSchema>;
+type FormValues = z.infer<typeof formSchema>;
 
 const WorkEstimationForm: React.FC = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [step, setStep] = useState(1);
   const [estimationResult, setEstimationResult] = useState<number | null>(null);
-  const [estimationBreakdown, setEstimationBreakdown] = useState<{[key: string]: number}>({});
-  const [isCalculating, setIsCalculating] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [progress, setProgress] = useState(20);
   const { toast } = useToast();
   
-  const { register, handleSubmit, control, watch, setValue, formState: { errors, isValid } } = useForm<EstimationFormValues>({
-    resolver: zodResolver(estimationSchema),
-    mode: "onChange",
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      projectType: 'construction',
-      surface: '',
-      levels: '1',
-      wallType: 'parpaing',
-      foundationType: 'traditionnelle',
-      roofType: 'traditionnelle',
-      roofingType: 'tuiles',
-      windowType: 'pvc',
-      plasteringType: 'plaque_platre',
-      insulationType: 'standard',
-      flooringType: 'carrelage',
-      tileSurface: '0',
-      wallFinishType: 'peinture_mate',
-      electricalLevel: 'standard',
-      plumbingLevel: 'standard',
-      heatingType: 'electrique',
-      hasVentilation: true,
-      hasDemolition: false,
-      hasLandscaping: false,
-      demolitionPercentage: '0',
-      vrdPercentage: '0',
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      comments: '',
+      clientType: "particulier",
+      projectType: "construction",
+      surface: "",
+      levels: "1",
+      units: "1",
+      floorTilePercentage: "0",
+      parquetPercentage: "0",
+      bathroomCount: "1"
     }
   });
   
-  // Surveiller le type de projet pour afficher les champs appropriés
-  const projectType = watch('projectType');
-  const surface = watch('surface');
-  const hasDemolition = watch('hasDemolition');
-  const hasLandscaping = watch('hasLandscaping');
-  const demolitionPercentage = watch('demolitionPercentage');
-  const vrdPercentage = watch('vrdPercentage');
+  const watchClientType = form.watch("clientType");
+  const watchProjectType = form.watch("projectType");
   
-  // Mise à jour des pourcentages lors du changement de switch
-  React.useEffect(() => {
-    if (!hasDemolition) {
-      setValue('demolitionPercentage', '0');
-    } else if (demolitionPercentage === '0') {
-      setValue('demolitionPercentage', '10');
+  const totalSteps = 5;
+
+  const goToNextStep = () => {
+    if (step < totalSteps) {
+      setStep(prev => prev + 1);
+      setProgress((step + 1) * (100 / totalSteps));
     }
-    
-    if (!hasLandscaping) {
-      setValue('vrdPercentage', '0');
-    } else if (vrdPercentage === '0') {
-      setValue('vrdPercentage', '10');
+  };
+
+  const goToPreviousStep = () => {
+    if (step > 1) {
+      setStep(prev => prev - 1);
+      setProgress((step - 1) * (100 / totalSteps));
     }
-  }, [hasDemolition, hasLandscaping, setValue, demolitionPercentage, vrdPercentage]);
-  
-  // Navigation entre les étapes
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 6));
-  const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
-  
-  // Calcul de l'estimation
-  const calculateEstimation = async (data: EstimationFormValues) => {
-    setIsCalculating(true);
-    
-    // Simulation d'un calcul basé sur les données du formulaire
-    const basePrice = {
-      construction: 1200,
-      renovation: 850,
-      extension: 1000
-    }[data.projectType];
-    
-    const surfaceValue = parseFloat(data.surface) || 0;
-    const levelsValue = parseInt(data.levels) || 1;
-    
-    // Facteurs multiplicateurs basés sur les choix
-    // Gros oeuvre
-    const wallFactor = {
-      brique: 1.1,
-      parpaing: 1.0,
-      pierre: 1.3,
-      beton: 1.2,
-      autre: 1.15
-    }[data.wallType || 'parpaing'];
-    
-    const foundationFactor = {
-      traditionnelle: 1.0,
-      radier: 1.1,
-      micropieux: 1.4,
-      autre: 1.2
-    }[data.foundationType || 'traditionnelle'];
-    
-    // Toiture et charpente
-    const roofFactor = {
-      traditionnelle: 1.2,
-      industrielle: 1.0,
-      terrasse: 1.1,
-      autre: 1.15
-    }[data.roofType || 'traditionnelle'];
-    
-    const roofingFactor = {
-      tuiles: 1.0,
-      zinc: 1.3,
-      bac_acier: 0.9,
-      autres: 1.1
-    }[data.roofingType || 'tuiles'];
-    
-    // Menuiseries
-    const windowFactor = {
-      pvc: 1.0,
-      alu: 1.2,
-      bois: 1.3,
-      mixte: 1.15
-    }[data.windowType || 'pvc'];
-    
-    // Plâtrerie et isolation
-    const plasteringFactor = {
-      plaque_platre: 1.0,
-      traditionnel: 1.2,
-      mixte: 1.1
-    }[data.plasteringType || 'plaque_platre'];
-    
-    const insulationFactor = {
-      standard: 1.0,
-      renforcee: 1.2,
-      haute_performance: 1.4
-    }[data.insulationType || 'standard'];
-    
-    // Revêtements de sol
-    const flooringFactor = {
-      carrelage: 1.0,
-      parquet: 1.2,
-      stratifie: 0.9,
-      mixte: 1.1
-    }[data.flooringType || 'carrelage'];
-    
-    // Peinture et finitions
-    const wallFinishFactor = {
-      peinture_mate: 1.0,
-      peinture_satinee: 1.1,
-      papier_peint: 1.2,
-      autre: 1.15
-    }[data.wallFinishType || 'peinture_mate'];
-    
-    // Installations électriques
-    const electricalFactor = {
-      basique: 0.8,
-      standard: 1.0,
-      avance: 1.2,
-      domotique: 1.5
-    }[data.electricalLevel || 'standard'];
-    
-    // Plomberie et chauffage
-    const plumbingFactor = {
-      basique: 0.8,
-      standard: 1.0,
-      premium: 1.3
-    }[data.plumbingLevel || 'standard'];
-    
-    const heatingFactor = {
-      electrique: 0.9,
-      gaz: 1.0,
-      pompe_chaleur: 1.5,
-      poele: 0.8,
-      autre: 1.1
-    }[data.heatingType || 'electrique'];
-    
-    // Options supplémentaires (ventilation)
-    const ventilationCost = data.hasVentilation ? 35 * surfaceValue : 0;
-    
-    // Calcul des coûts par poste
-    const grossOeuvrePrice = basePrice * 0.28 * surfaceValue * wallFactor * foundationFactor * Math.sqrt(levelsValue);
-    const toiturePrice = basePrice * 0.12 * surfaceValue * roofFactor * roofingFactor;
-    const menuiseriesPrice = basePrice * 0.10 * surfaceValue * windowFactor;
-    const platreriePrice = basePrice * 0.10 * surfaceValue * plasteringFactor * insulationFactor;
-    const revSolPrice = basePrice * 0.08 * surfaceValue * flooringFactor;
-    const peinturePrice = basePrice * 0.07 * surfaceValue * wallFinishFactor;
-    const electricitePrice = basePrice * 0.06 * surfaceValue * electricalFactor;
-    const plomberiePrice = basePrice * 0.09 * surfaceValue * plumbingFactor;
-    const chauffagePrice = basePrice * 0.10 * surfaceValue * heatingFactor + ventilationCost;
-    
-    // Options de démolition et VRD si activées
-    const demolitionValue = parseFloat(data.demolitionPercentage) / 100 || 0;
-    const vrdValue = parseFloat(data.vrdPercentage) / 100 || 0;
-    
-    const demolitionPrice = data.hasDemolition ? 
-      demolitionValue * surfaceValue * 250 : 0;
-      
-    const vrdPrice = data.hasLandscaping ? 
-      vrdValue * surfaceValue * 150 : 0;
-    
-    // Somme de tous les postes
-    const totalPrice = grossOeuvrePrice + toiturePrice + menuiseriesPrice + 
-      platreriePrice + revSolPrice + peinturePrice + electricitePrice + 
-      plomberiePrice + chauffagePrice + demolitionPrice + vrdPrice;
-    
-    // Stockage du détail pour affichage
-    const breakdown = {
-      'Gros œuvre': Math.round(grossOeuvrePrice),
-      'Toiture et charpente': Math.round(toiturePrice),
-      'Menuiseries': Math.round(menuiseriesPrice),
-      'Plâtrerie et isolation': Math.round(platreriePrice),
-      'Revêtements de sol': Math.round(revSolPrice),
-      'Peinture et finitions': Math.round(peinturePrice),
-      'Électricité': Math.round(electricitePrice),
-      'Plomberie': Math.round(plomberiePrice),
-      'Chauffage et ventilation': Math.round(chauffagePrice)
+  };
+
+  const calculateEstimation = (data: FormValues): number => {
+    // Base des coûts (en euros par m²)
+    const baseCostPerSqm = {
+      construction: {
+        standard: 1500,
+        premium: 2200
+      },
+      renovation: {
+        standard: 800,
+        premium: 1400
+      }
     };
+
+    // Facteurs multiplicateurs pour différentes options
+    const factors = {
+      // Types de murs
+      wallType: {
+        parpaings: 1.0,
+        briques: 1.15,
+        pierres: 1.3,
+        béton: 1.1,
+        bois: 1.2
+      },
+      // Types de toiture
+      roofType: {
+        toitureAccessible: 1.15,
+        toitureInaccessible: 1.0,
+        charpenteIndustrielle: 1.05,
+        charpenteTraditionnelle: 1.2
+      },
+      // Types de combles
+      atticType: {
+        amenageable: 1.15,
+        perdu: 1.0
+      },
+      // Types de menuiseries
+      windowType: {
+        pvc: 1.0,
+        bois: 1.2,
+        aluminium: 1.3
+      },
+      // Types de chauffage
+      heatingType: {
+        gaz: 1.0,
+        "pompe-chaleur": 1.25,
+        electrique: 0.9,
+        geothermie: 1.4
+      },
+      // Climatisation
+      hasAirConditioning: {
+        yes: 1.15,
+        no: 1.0
+      },
+      // Types de parquet
+      parquetType: {
+        stratifie: 1.0,
+        contrecolle: 1.2,
+        massif: 1.5
+      },
+      // Types de cuisine
+      kitchenType: {
+        standard: 1.0,
+        equipee: 1.2,
+        surmesure: 1.4
+      }
+    };
+
+    // Déterminer si premium ou standard
+    const category = data.bathroomType === "premium" || data.doorType === "premium" ? "premium" : "standard";
     
-    if (demolitionPrice > 0) {
-      breakdown['Démolition'] = Math.round(demolitionPrice);
+    // Base de calcul
+    let baseCalculation: number;
+    
+    if (data.projectType === "construction") {
+      baseCalculation = parseInt(data.surface) * baseCostPerSqm.construction[category];
+    } else {
+      baseCalculation = parseInt(data.surface) * baseCostPerSqm.renovation[category];
     }
     
-    if (vrdPrice > 0) {
-      breakdown['VRD et aménagements extérieurs'] = Math.round(vrdPrice);
+    // Appliquer les facteurs
+    let finalEstimation = baseCalculation;
+    
+    if (data.wallType) {
+      finalEstimation *= factors.wallType[data.wallType];
     }
     
-    setEstimationBreakdown(breakdown);
-    
-    // TVA et total TTC
-    const tva = totalPrice * 0.2;
-    const totalTTC = totalPrice + tva;
-    
-    // Simulation d'un délai réseau
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setEstimationResult(Math.round(totalTTC));
-    setIsCalculating(false);
-    
-    toast({
-      title: "Estimation réalisée",
-      description: "Votre estimation a été calculée avec succès.",
-      duration: 5000,
-    });
-  };
-  
-  const onSubmit = (data: EstimationFormValues) => {
-    console.log("Données du formulaire:", data);
-    calculateEstimation(data);
-    nextStep();
-  };
-  
-  const formattedPrice = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
-  };
-  
-  const renderProgressBar = () => {
-    const progress = ((currentStep - 1) / 5) * 100;
-    return (
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-        <div 
-          className="bg-khaki-600 h-2.5 rounded-full transition-all duration-300" 
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
-    );
-  };
-  
-  const getStepTitle = () => {
-    switch(currentStep) {
-      case 1: return "Informations générales";
-      case 2: return "Structure et gros œuvre";
-      case 3: return "Second œuvre et revêtements";
-      case 4: return "Équipements techniques";
-      case 5: return "Options et coordonnées";
-      case 6: return "Résultat de l'estimation";
-      default: return "Étape";
+    if (data.roofType) {
+      finalEstimation *= factors.roofType[data.roofType];
     }
+    
+    if (data.atticType) {
+      finalEstimation *= factors.atticType[data.atticType];
+    }
+    
+    if (data.windowType) {
+      finalEstimation *= factors.windowType[data.windowType];
+    }
+    
+    if (data.heatingType) {
+      finalEstimation *= factors.heatingType[data.heatingType];
+    }
+    
+    if (data.hasAirConditioning) {
+      finalEstimation *= factors.hasAirConditioning[data.hasAirConditioning];
+    }
+    
+    if (data.parquetType) {
+      finalEstimation *= 1 + ((factors.parquetType[data.parquetType] - 1) * (parseInt(data.parquetPercentage || "0") / 100));
+    }
+    
+    if (data.kitchenType) {
+      finalEstimation *= factors.kitchenType[data.kitchenType];
+    }
+    
+    // Ajouts pour les niveaux supplémentaires
+    if (parseInt(data.levels) > 1) {
+      finalEstimation *= (1 + (parseInt(data.levels) - 1) * 0.2);
+    }
+    
+    // Ajout pour chaque salle de bain supplémentaire
+    if (parseInt(data.bathroomCount || "1") > 1) {
+      finalEstimation += (parseInt(data.bathroomCount || "1") - 1) * 8000;
+    }
+    
+    return Math.round(finalEstimation);
   };
-  
-  return (
-    <Card className="w-full shadow-lg border-gray-200">
-      <CardHeader>
-        <CardTitle className="text-2xl flex items-center gap-2">
-          <Calculator className="h-6 w-6 text-khaki-600" />
-          {getStepTitle()}
-        </CardTitle>
-        <CardDescription>
-          {currentStep < 6 ? "Complétez les informations ci-dessous pour obtenir une estimation précise de votre projet" 
-           : "Voici le détail de votre estimation basée sur les informations fournies"}
-        </CardDescription>
-        {currentStep < 6 && renderProgressBar()}
-      </CardHeader>
+
+  const onSubmit = (data: FormValues) => {
+    if (step < totalSteps) {
+      goToNextStep();
+    } else {
+      // Calculer l'estimation
+      const estimation = calculateEstimation(data);
+      setEstimationResult(estimation);
+      setShowResult(true);
       
-      <CardContent>
-        <form id="estimationForm" onSubmit={handleSubmit(onSubmit)}>
-          {/* Étape 1: Informations générales */}
-          {currentStep === 1 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Building className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Informations générales du projet</h3>
+      toast({
+        title: "Estimation générée avec succès !",
+        description: `Votre estimation de projet s'élève à environ ${estimation.toLocaleString('fr-FR')} €`,
+      });
+      
+      // Ici, vous pourriez aussi envoyer les données du formulaire à votre backend
+      console.log("Données du formulaire:", data);
+    }
+  };
+  
+  const getButtonText = () => {
+    return step === totalSteps ? "Obtenir mon estimation" : "Continuer";
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Progression */}
+      <div className="space-y-2">
+        <div className="flex justify-between text-sm text-muted-foreground">
+          <span>Étape {step} sur {totalSteps}</span>
+          <span>{progress}%</span>
+        </div>
+        <Progress value={progress} className="h-2" />
+      </div>
+      
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        {/* Étape 1: Informations générales */}
+        {step === 1 && (
+          <div className="space-y-6 transition-opacity duration-300">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold flex items-center justify-center gap-2">
+                <User className="h-6 w-6 text-progineer-gold" />
+                Informations générales
+              </h2>
+              <p className="text-muted-foreground">Définissez votre projet</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Label>Type de client</Label>
+                <RadioGroup 
+                  defaultValue={form.getValues("clientType")}
+                  onValueChange={(value) => form.setValue("clientType", value as "particulier" | "professionnel")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className={`flex flex-col items-center space-y-2 rounded-md border p-4 hover:bg-accent cursor-pointer ${form.watch("clientType") === "particulier" ? "bg-accent/50 border-primary" : ""}`}>
+                    <RadioGroupItem value="particulier" id="particulier" className="sr-only" />
+                    <Label htmlFor="particulier" className="cursor-pointer flex flex-col items-center gap-2">
+                      <Home className="h-8 w-8 text-progineer-gold" />
+                      <span className="font-medium">Particulier</span>
+                    </Label>
+                  </div>
+                  
+                  <div className={`flex flex-col items-center space-y-2 rounded-md border p-4 hover:bg-accent cursor-pointer ${form.watch("clientType") === "professionnel" ? "bg-accent/50 border-primary" : ""}`}>
+                    <RadioGroupItem value="professionnel" id="professionnel" className="sr-only" />
+                    <Label htmlFor="professionnel" className="cursor-pointer flex flex-col items-center gap-2">
+                      <Building className="h-8 w-8 text-progineer-gold" />
+                      <span className="font-medium">Professionnel</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label>Type de projet</Label>
+                <RadioGroup 
+                  defaultValue={form.getValues("projectType")}
+                  onValueChange={(value) => form.setValue("projectType", value as "construction" | "renovation")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className={`flex flex-col items-center space-y-2 rounded-md border p-4 hover:bg-accent cursor-pointer ${form.watch("projectType") === "construction" ? "bg-accent/50 border-primary" : ""}`}>
+                    <RadioGroupItem value="construction" id="construction" className="sr-only" />
+                    <Label htmlFor="construction" className="cursor-pointer flex flex-col items-center gap-2">
+                      <Building className="h-8 w-8 text-progineer-gold" />
+                      <span className="font-medium">Construction neuve</span>
+                    </Label>
+                  </div>
+                  
+                  <div className={`flex flex-col items-center space-y-2 rounded-md border p-4 hover:bg-accent cursor-pointer ${form.watch("projectType") === "renovation" ? "bg-accent/50 border-primary" : ""}`}>
+                    <RadioGroupItem value="renovation" id="renovation" className="sr-only" />
+                    <Label htmlFor="renovation" className="cursor-pointer flex flex-col items-center gap-2">
+                      <Hammer className="h-8 w-8 text-progineer-gold" />
+                      <span className="font-medium">Rénovation</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="projectType">Type de projet</Label>
-                  <Select 
-                    onValueChange={(value) => register('projectType').onChange({ target: { value } })}
-                    defaultValue={watch('projectType')}
-                  >
-                    <SelectTrigger id="projectType">
-                      <SelectValue placeholder="Sélectionnez un type de projet" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="construction">Construction neuve</SelectItem>
-                      <SelectItem value="renovation">Rénovation</SelectItem>
-                      <SelectItem value="extension">Extension</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.projectType && (
-                    <p className="text-sm text-red-500">{errors.projectType.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="surface">Surface habitable (m²)</Label>
+                  <Label htmlFor="surface">Surface (m²)</Label>
                   <Input
                     id="surface"
-                    type="number"
                     placeholder="Ex: 120"
-                    {...register('surface')}
+                    type="number"
+                    {...form.register("surface")}
                   />
-                  {errors.surface && (
-                    <p className="text-sm text-red-500">{errors.surface.message}</p>
+                  {form.formState.errors.surface && (
+                    <p className="text-sm text-red-500">{form.formState.errors.surface.message}</p>
                   )}
                 </div>
                 
                 <div className="space-y-2">
                   <Label htmlFor="levels">Nombre de niveaux</Label>
-                  <Select 
-                    onValueChange={(value) => register('levels').onChange({ target: { value } })}
-                    defaultValue={watch('levels')}
+                  <Select
+                    onValueChange={(value) => form.setValue("levels", value)}
+                    defaultValue={form.getValues("levels")}
                   >
-                    <SelectTrigger id="levels">
-                      <SelectValue placeholder="Sélectionnez le nombre de niveaux" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">1 niveau (Plain-pied)</SelectItem>
-                      <SelectItem value="2">2 niveaux (R+1)</SelectItem>
-                      <SelectItem value="3">3 niveaux (R+2)</SelectItem>
+                      <SelectItem value="1">1 niveau</SelectItem>
+                      <SelectItem value="2">2 niveaux</SelectItem>
+                      <SelectItem value="3">3 niveaux</SelectItem>
                       <SelectItem value="4">4 niveaux ou plus</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.levels && (
-                    <p className="text-sm text-red-500">{errors.levels.message}</p>
-                  )}
-                </div>
-                
-                {projectType === 'renovation' && (
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="hasDemolition" className="cursor-pointer">Travaux de démolition nécessaires</Label>
-                      <Switch 
-                        id="hasDemolition" 
-                        checked={watch('hasDemolition')}
-                        onCheckedChange={(checked) => register('hasDemolition').onChange({ target: { value: checked } })}
-                      />
-                    </div>
-                    
-                    {hasDemolition && (
-                      <div className="pt-2">
-                        <Label htmlFor="demolitionPercentage" className="text-sm">
-                          Pourcentage de démolition : {demolitionPercentage}%
-                        </Label>
-                        <Slider
-                          id="demolitionPercentage"
-                          min={0}
-                          max={100}
-                          step={5}
-                          value={[parseInt(demolitionPercentage) || 0]}
-                          onValueChange={(value) => setValue('demolitionPercentage', value[0].toString())}
-                          className="mt-2"
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-4 bg-khaki-50 border border-khaki-200 rounded-md">
-                <div className="flex items-start gap-3">
-                  <Home className="h-5 w-5 text-khaki-700 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-khaki-800">Projet de {projectType === 'construction' ? 'construction neuve' : projectType === 'renovation' ? 'rénovation' : 'extension'}</h4>
-                    <p className="text-sm text-khaki-700 mt-1">
-                      {projectType === 'construction' ? 
-                        "Une construction neuve nécessite un terrain et des démarches administratives spécifiques (permis de construire, etc.)." :
-                        projectType === 'renovation' ? 
-                        "La rénovation concerne des travaux sur un bâtiment existant pour l'améliorer ou le remettre à neuf." :
-                        "L'extension consiste à agrandir une construction existante."}
-                    </p>
-                    {surface && <p className="text-sm font-medium text-khaki-800 mt-1">Surface prévue: {surface} m²</p>}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          
-          {/* Étape 2: Gros œuvre et structure */}
-          {currentStep === 2 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Construction className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Structure et gros œuvre</h3>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="wallType">Type de murs</Label>
-                  <Select 
-                    onValueChange={(value) => register('wallType').onChange({ target: { value } })}
-                    defaultValue={watch('wallType')}
-                  >
-                    <SelectTrigger id="wallType">
-                      <SelectValue placeholder="Sélectionnez un type de mur" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="brique">Brique</SelectItem>
-                      <SelectItem value="parpaing">Parpaing</SelectItem>
-                      <SelectItem value="pierre">Pierre</SelectItem>
-                      <SelectItem value="beton">Béton</SelectItem>
-                      <SelectItem value="autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.wallType && (
-                    <p className="text-sm text-red-500">{errors.wallType.message}</p>
-                  )}
-                </div>
-                
-                {projectType !== 'renovation' && (
-                  <div className="space-y-2">
-                    <Label htmlFor="foundationType">Type de fondation</Label>
-                    <Select 
-                      onValueChange={(value) => register('foundationType').onChange({ target: { value } })}
-                      defaultValue={watch('foundationType')}
-                    >
-                      <SelectTrigger id="foundationType">
-                        <SelectValue placeholder="Sélectionnez un type de fondation" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="traditionnelle">Traditionnelle (semelles filantes)</SelectItem>
-                        <SelectItem value="radier">Radier</SelectItem>
-                        <SelectItem value="micropieux">Micropieux</SelectItem>
-                        <SelectItem value="autre">Autre</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.foundationType && (
-                      <p className="text-sm text-red-500">{errors.foundationType.message}</p>
-                    )}
-                  </div>
-                )}
-                
-                <div className="space-y-2">
-                  <Label htmlFor="roofType">Type de charpente</Label>
-                  <Select 
-                    onValueChange={(value) => register('roofType').onChange({ target: { value } })}
-                    defaultValue={watch('roofType')}
-                  >
-                    <SelectTrigger id="roofType">
-                      <SelectValue placeholder="Sélectionnez un type de charpente" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="traditionnelle">Traditionnelle</SelectItem>
-                      <SelectItem value="industrielle">Industrielle (fermettes)</SelectItem>
-                      <SelectItem value="terrasse">Toit terrasse</SelectItem>
-                      <SelectItem value="autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.roofType && (
-                    <p className="text-sm text-red-500">{errors.roofType.message}</p>
-                  )}
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="roofingType">Type de couverture</Label>
-                  <Select 
-                    onValueChange={(value) => register('roofingType').onChange({ target: { value } })}
-                    defaultValue={watch('roofingType')}
-                  >
-                    <SelectTrigger id="roofingType">
-                      <SelectValue placeholder="Sélectionnez un type de couverture" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="tuiles">Tuiles</SelectItem>
-                      <SelectItem value="zinc">Zinc</SelectItem>
-                      <SelectItem value="bac_acier">Bac acier</SelectItem>
-                      <SelectItem value="autres">Autres</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.roofingType && (
-                    <p className="text-sm text-red-500">{errors.roofingType.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="windowType">Type de menuiseries extérieures</Label>
-                  <Select 
-                    onValueChange={(value) => register('windowType').onChange({ target: { value } })}
-                    defaultValue={watch('windowType')}
-                  >
-                    <SelectTrigger id="windowType">
-                      <SelectValue placeholder="Sélectionnez un type de menuiserie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pvc">PVC</SelectItem>
-                      <SelectItem value="alu">Aluminium</SelectItem>
-                      <SelectItem value="bois">Bois</SelectItem>
-                      <SelectItem value="mixte">Mixte</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.windowType && (
-                    <p className="text-sm text-red-500">{errors.windowType.message}</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-md mt-4">
-                <div className="flex items-start gap-3">
-                  <Ruler className="h-5 w-5 text-blue-700 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-blue-800">Conseils pour le gros œuvre</h4>
-                    <p className="text-sm text-blue-700 mt-1">
-                      Le choix des matériaux de structure impacte fortement le budget, mais aussi les performances thermiques et phoniques de votre construction. 
-                      Les fondations doivent être adaptées à la nature du terrain et au type de construction.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          
-          {/* Étape 3: Second œuvre et revêtements */}
-          {currentStep === 3 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Layers className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Second œuvre et revêtements</h3>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="plasteringType">Type de plâtrerie</Label>
-                  <Select 
-                    onValueChange={(value) => register('plasteringType').onChange({ target: { value } })}
-                    defaultValue={watch('plasteringType')}
-                  >
-                    <SelectTrigger id="plasteringType">
-                      <SelectValue placeholder="Sélectionnez un type de plâtrerie" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="plaque_platre">Plaques de plâtre</SelectItem>
-                      <SelectItem value="traditionnel">Plâtre traditionnel</SelectItem>
-                      <SelectItem value="mixte">Mixte</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.plasteringType && (
-                    <p className="text-sm text-red-500">{errors.plasteringType.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="insulationType">Type d'isolation</Label>
-                  <Select 
-                    onValueChange={(value) => register('insulationType').onChange({ target: { value } })}
-                    defaultValue={watch('insulationType')}
-                  >
-                    <SelectTrigger id="insulationType">
-                      <SelectValue placeholder="Sélectionnez un type d'isolation" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="standard">Standard (RT2012)</SelectItem>
-                      <SelectItem value="renforcee">Renforcée (BBC)</SelectItem>
-                      <SelectItem value="haute_performance">Haute performance (Passive)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.insulationType && (
-                    <p className="text-sm text-red-500">{errors.insulationType.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="flooringType">Type de revêtement de sol principal</Label>
-                  <Select 
-                    onValueChange={(value) => register('flooringType').onChange({ target: { value } })}
-                    defaultValue={watch('flooringType')}
-                  >
-                    <SelectTrigger id="flooringType">
-                      <SelectValue placeholder="Sélectionnez un type de sol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="carrelage">Carrelage</SelectItem>
-                      <SelectItem value="parquet">Parquet</SelectItem>
-                      <SelectItem value="stratifie">Stratifié</SelectItem>
-                      <SelectItem value="mixte">Mixte</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.flooringType && (
-                    <p className="text-sm text-red-500">{errors.flooringType.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="wallFinishType">Type de finition murale</Label>
-                  <Select 
-                    onValueChange={(value) => register('wallFinishType').onChange({ target: { value } })}
-                    defaultValue={watch('wallFinishType')}
-                  >
-                    <SelectTrigger id="wallFinishType">
-                      <SelectValue placeholder="Sélectionnez un type de finition" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="peinture_mate">Peinture mate</SelectItem>
-                      <SelectItem value="peinture_satinee">Peinture satinée</SelectItem>
-                      <SelectItem value="papier_peint">Papier peint</SelectItem>
-                      <SelectItem value="autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.wallFinishType && (
-                    <p className="text-sm text-red-500">{errors.wallFinishType.message}</p>
-                  )}
-                </div>
-              </div>
-              
-              {watch('flooringType') === 'carrelage' && (
-                <div className="pt-2">
-                  <Label htmlFor="tileSurface" className="text-sm">
-                    Surface approximative à carreler (en % de la surface totale) : {watch('tileSurface') || 0}%
-                  </Label>
-                  <Slider
-                    id="tileSurface"
-                    min={0}
-                    max={100}
-                    step={10}
-                    value={[parseInt(watch('tileSurface') || '0')]}
-                    onValueChange={(value) => setValue('tileSurface', value[0].toString())}
-                    className="mt-2"
+                  <Label htmlFor="units">Nombre de logements</Label>
+                  <Input
+                    id="units"
+                    placeholder="Ex: 1"
+                    type="number"
+                    {...form.register("units")}
                   />
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Étape 2: Structure */}
+        {step === 2 && (
+          <div className="space-y-6 transition-opacity duration-300">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold flex items-center justify-center gap-2">
+                <Construction className="h-6 w-6 text-progineer-gold" />
+                Structure et enveloppe
+              </h2>
+              <p className="text-muted-foreground">Définissez les éléments structurels</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="terrainType">Type de terrain</Label>
+                <Select
+                  onValueChange={(value) => form.setValue("terrainType", value as any)}
+                  defaultValue={form.getValues("terrainType")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="plat">Terrain plat</SelectItem>
+                    <SelectItem value="pente">Terrain en pente</SelectItem>
+                    <SelectItem value="avec_denivelation">Terrain avec dénivellation</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               
-              <div className="p-4 bg-khaki-50 border border-khaki-200 rounded-md mt-4">
-                <div className="flex items-start gap-3">
-                  <Paintbrush className="h-5 w-5 text-khaki-700 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-khaki-800">Finitions et matériaux</h4>
-                    <p className="text-sm text-khaki-700 mt-1">
-                      Les finitions représentent environ 25-30% du budget total, mais sont les éléments les plus visibles au quotidien. 
-                      Une bonne isolation permet de réaliser des économies d'énergie importantes sur le long terme.
-                    </p>
+              <div>
+                <Label htmlFor="wallType">Type de murs</Label>
+                <Select
+                  onValueChange={(value) => form.setValue("wallType", value as any)}
+                  defaultValue={form.getValues("wallType")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="parpaings">Parpaings</SelectItem>
+                    <SelectItem value="briques">Briques</SelectItem>
+                    <SelectItem value="pierres">Pierres</SelectItem>
+                    <SelectItem value="béton">Béton</SelectItem>
+                    <SelectItem value="bois">Ossature bois</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Label htmlFor="roofType">Type de toiture</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("roofType", value as any)}
+                  defaultValue={form.getValues("roofType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="toitureAccessible" id="toitureAccessible" className="sr-only" />
+                    <Label htmlFor="toitureAccessible" className="cursor-pointer">
+                      <span className="font-medium">Toiture terrasse accessible</span>
+                      <p className="text-sm text-muted-foreground">Terrasse accessible sur le toit</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="toitureInaccessible" id="toitureInaccessible" className="sr-only" />
+                    <Label htmlFor="toitureInaccessible" className="cursor-pointer">
+                      <span className="font-medium">Toiture terrasse inaccessible</span>
+                      <p className="text-sm text-muted-foreground">Toiture plate non accessible</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="charpenteIndustrielle" id="charpenteIndustrielle" className="sr-only" />
+                    <Label htmlFor="charpenteIndustrielle" className="cursor-pointer">
+                      <span className="font-medium">Charpente industrielle</span>
+                      <p className="text-sm text-muted-foreground">Charpente à fermettes</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="charpenteTraditionnelle" id="charpenteTraditionnelle" className="sr-only" />
+                    <Label htmlFor="charpenteTraditionnelle" className="cursor-pointer">
+                      <span className="font-medium">Charpente traditionnelle</span>
+                      <p className="text-sm text-muted-foreground">Charpente artisanale en bois</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label htmlFor="atticType">Type de combles</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("atticType", value as any)}
+                  defaultValue={form.getValues("atticType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="amenageable" id="amenageable" className="sr-only" />
+                    <Label htmlFor="amenageable" className="cursor-pointer">
+                      <span className="font-medium">Combles aménageables</span>
+                      <p className="text-sm text-muted-foreground">Combles qui peuvent être transformés en espace habitable</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="perdu" id="perdu" className="sr-only" />
+                    <Label htmlFor="perdu" className="cursor-pointer">
+                      <span className="font-medium">Combles perdus</span>
+                      <p className="text-sm text-muted-foreground">Combles non aménageables</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label htmlFor="insulationType">Type d'isolation</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("insulationType", value as any)}
+                  defaultValue={form.getValues("insulationType")}
+                  className="grid grid-cols-3 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="interieure" id="interieure" className="sr-only" />
+                    <Label htmlFor="interieure" className="cursor-pointer">
+                      <span className="font-medium">Isolation intérieure</span>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="exterieure" id="exterieure" className="sr-only" />
+                    <Label htmlFor="exterieure" className="cursor-pointer">
+                      <span className="font-medium">Isolation extérieure</span>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="mixte" id="mixte" className="sr-only" />
+                    <Label htmlFor="mixte" className="cursor-pointer">
+                      <span className="font-medium">Isolation mixte</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label htmlFor="windowType">Type de menuiseries</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("windowType", value as any)}
+                  defaultValue={form.getValues("windowType")}
+                  className="grid grid-cols-3 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="pvc" id="pvc" className="sr-only" />
+                    <Label htmlFor="pvc" className="cursor-pointer">
+                      <span className="font-medium">PVC</span>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="bois" id="bois" className="sr-only" />
+                    <Label htmlFor="bois" className="cursor-pointer">
+                      <span className="font-medium">Bois</span>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="aluminium" id="aluminium" className="sr-only" />
+                    <Label htmlFor="aluminium" className="cursor-pointer">
+                      <span className="font-medium">Aluminium</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Étape 3: Second oeuvre */}
+        {step === 3 && (
+          <div className="space-y-6 transition-opacity duration-300">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold flex items-center justify-center gap-2">
+                <Layers className="h-6 w-6 text-progineer-gold" />
+                Second Œuvre
+              </h2>
+              <p className="text-muted-foreground">Définissez les finitions intérieures</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="plasteringType">Type de plâtrerie</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("plasteringType", value as any)}
+                  defaultValue={form.getValues("plasteringType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="standard" id="plasteringStandard" className="sr-only" />
+                    <Label htmlFor="plasteringStandard" className="cursor-pointer">
+                      <span className="font-medium">Standard</span>
+                      <p className="text-sm text-muted-foreground">Plaques de plâtre standards</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="decoratif" id="plasteringDecoratif" className="sr-only" />
+                    <Label htmlFor="plasteringDecoratif" className="cursor-pointer">
+                      <span className="font-medium">Décoratif</span>
+                      <p className="text-sm text-muted-foreground">Finitions décoratives en plâtre</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label htmlFor="doorType">Type de portes intérieures</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("doorType", value as any)}
+                  defaultValue={form.getValues("doorType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="standard" id="doorStandard" className="sr-only" />
+                    <Label htmlFor="doorStandard" className="cursor-pointer">
+                      <span className="font-medium">Standard</span>
+                      <p className="text-sm text-muted-foreground">Portes alvéolaires</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="premium" id="doorPremium" className="sr-only" />
+                    <Label htmlFor="doorPremium" className="cursor-pointer">
+                      <span className="font-medium">Premium</span>
+                      <p className="text-sm text-muted-foreground">Portes postformées ou acoustiques</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Revêtements de sol</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="floorTileType">Carrelage</Label>
+                      <span className="text-sm text-muted-foreground">{form.watch("floorTilePercentage") || "0"}%</span>
+                    </div>
+                    <Select
+                      onValueChange={(value) => form.setValue("floorTileType", value as any)}
+                      defaultValue={form.getValues("floorTileType")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Type de carrelage" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="standard">Standard</SelectItem>
+                        <SelectItem value="premium">Premium</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Slider
+                      defaultValue={[parseInt(form.getValues("floorTilePercentage") || "0")]}
+                      max={100}
+                      step={10}
+                      onValueChange={(value) => form.setValue("floorTilePercentage", value[0].toString())}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <Label htmlFor="parquetType">Parquet</Label>
+                      <span className="text-sm text-muted-foreground">{form.watch("parquetPercentage") || "0"}%</span>
+                    </div>
+                    <Select
+                      onValueChange={(value) => form.setValue("parquetType", value as any)}
+                      defaultValue={form.getValues("parquetType")}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Type de parquet" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="stratifie">Stratifié</SelectItem>
+                        <SelectItem value="contrecolle">Contrecollé</SelectItem>
+                        <SelectItem value="massif">Massif</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Slider
+                      defaultValue={[parseInt(form.getValues("parquetPercentage") || "0")]}
+                      max={100}
+                      step={10}
+                      onValueChange={(value) => form.setValue("parquetPercentage", value[0].toString())}
+                    />
                   </div>
                 </div>
               </div>
-            </motion.div>
-          )}
-          
-          {/* Étape 4: Équipements techniques */}
-          {currentStep === 4 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Wrench className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Équipements techniques</h3>
+              
+              <div>
+                <Label htmlFor="wallTileType">Type de faïence</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("wallTileType", value as any)}
+                  defaultValue={form.getValues("wallTileType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="standard" id="wallTileStandard" className="sr-only" />
+                    <Label htmlFor="wallTileStandard" className="cursor-pointer">
+                      <span className="font-medium">Standard</span>
+                      <p className="text-sm text-muted-foreground">Faïence basique</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="premium" id="wallTilePremium" className="sr-only" />
+                    <Label htmlFor="wallTilePremium" className="cursor-pointer">
+                      <span className="font-medium">Premium</span>
+                      <p className="text-sm text-muted-foreground">Faïence décorative</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Étape 4: Équipements techniques */}
+        {step === 4 && (
+          <div className="space-y-6 transition-opacity duration-300">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold flex items-center justify-center gap-2">
+                <Thermometer className="h-6 w-6 text-progineer-gold" />
+                Équipements techniques
+              </h2>
+              <p className="text-muted-foreground">Définissez les installations techniques</p>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="electricalType">Type d'installation électrique</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("electricalType", value as any)}
+                  defaultValue={form.getValues("electricalType")}
+                  className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="standard" id="electricalStandard" className="sr-only" />
+                    <Label htmlFor="electricalStandard" className="cursor-pointer">
+                      <span className="font-medium">Standard</span>
+                      <p className="text-sm text-muted-foreground">Installation basique aux normes</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="domotique" id="electricalDomotique" className="sr-only" />
+                    <Label htmlFor="electricalDomotique" className="cursor-pointer">
+                      <span className="font-medium">Domotique</span>
+                      <p className="text-sm text-muted-foreground">Installation avec système domotique</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="smart" id="electricalSmart" className="sr-only" />
+                    <Label htmlFor="electricalSmart" className="cursor-pointer">
+                      <span className="font-medium">Smart Home</span>
+                      <p className="text-sm text-muted-foreground">Maison connectée complète</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="plumbingType">Type d'installation plomberie</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("plumbingType", value as any)}
+                  defaultValue={form.getValues("plumbingType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="standard" id="plumbingStandard" className="sr-only" />
+                    <Label htmlFor="plumbingStandard" className="cursor-pointer">
+                      <span className="font-medium">Standard</span>
+                      <p className="text-sm text-muted-foreground">Installation standard en PER</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="premium" id="plumbingPremium" className="sr-only" />
+                    <Label htmlFor="plumbingPremium" className="cursor-pointer">
+                      <span className="font-medium">Premium</span>
+                      <p className="text-sm text-muted-foreground">Installation premium avec multicouche</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label htmlFor="heatingType">Type de chauffage</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("heatingType", value as any)}
+                  defaultValue={form.getValues("heatingType")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="gaz" id="gaz" className="sr-only" />
+                    <Label htmlFor="gaz" className="cursor-pointer">
+                      <span className="font-medium">Gaz</span>
+                      <p className="text-sm text-muted-foreground">Chaudière à condensation</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="pompe-chaleur" id="pompe-chaleur" className="sr-only" />
+                    <Label htmlFor="pompe-chaleur" className="cursor-pointer">
+                      <span className="font-medium">Pompe à chaleur</span>
+                      <p className="text-sm text-muted-foreground">Système air-eau</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="electrique" id="electrique" className="sr-only" />
+                    <Label htmlFor="electrique" className="cursor-pointer">
+                      <span className="font-medium">Électrique</span>
+                      <p className="text-sm text-muted-foreground">Radiateurs à inertie</p>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="geothermie" id="geothermie" className="sr-only" />
+                    <Label htmlFor="geothermie" className="cursor-pointer">
+                      <span className="font-medium">Géothermie</span>
+                      <p className="text-sm text-muted-foreground">Chauffage par le sol</p>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              
+              <div>
+                <Label>Climatisation</Label>
+                <RadioGroup 
+                  onValueChange={(value) => form.setValue("hasAirConditioning", value as any)}
+                  defaultValue={form.getValues("hasAirConditioning")}
+                  className="grid grid-cols-2 gap-4 pt-2"
+                >
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="yes" id="acYes" className="sr-only" />
+                    <Label htmlFor="acYes" className="cursor-pointer">
+                      <span className="font-medium">Avec climatisation</span>
+                    </Label>
+                  </div>
+                  
+                  <div className="rounded-md border p-4 hover:bg-accent cursor-pointer">
+                    <RadioGroupItem value="no" id="acNo" className="sr-only" />
+                    <Label htmlFor="acNo" className="cursor-pointer">
+                      <span className="font-medium">Sans climatisation</span>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Étape 5: Options et Coordonnées */}
+        {step === 5 && (
+          <div className="space-y-6 transition-opacity duration-300">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-semibold flex items-center justify-center gap-2">
+                <User className="h-6 w-6 text-progineer-gold" />
+                Pièces spécifiques et contact
+              </h2>
+              <p className="text-muted-foreground">Précisez vos besoins et coordonnées</p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="electricalLevel">Niveau d'installation électrique</Label>
-                  <Select 
-                    onValueChange={(value) => register('electricalLevel').onChange({ target: { value } })}
-                    defaultValue={watch('electricalLevel')}
+                  <Label htmlFor="kitchenType">Type de cuisine</Label>
+                  <Select
+                    onValueChange={(value) => form.setValue("kitchenType", value as any)}
+                    defaultValue={form.getValues("kitchenType")}
                   >
-                    <SelectTrigger id="electricalLevel">
-                      <SelectValue placeholder="Sélectionnez un niveau d'installation" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="basique">Basique</SelectItem>
-                      <SelectItem value="standard">Standard</SelectItem>
-                      <SelectItem value="avance">Avancé (domotique partielle)</SelectItem>
-                      <SelectItem value="domotique">Domotique complète</SelectItem>
+                      <SelectItem value="standard">Standard (non équipée)</SelectItem>
+                      <SelectItem value="equipee">Équipée</SelectItem>
+                      <SelectItem value="surmesure">Sur mesure</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.electricalLevel && (
-                    <p className="text-sm text-red-500">{errors.electricalLevel.message}</p>
-                  )}
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="plumbingLevel">Niveau d'installation plomberie</Label>
-                  <Select 
-                    onValueChange={(value) => register('plumbingLevel').onChange({ target: { value } })}
-                    defaultValue={watch('plumbingLevel')}
+                  <Label htmlFor="bathroomType">Type de salle de bain</Label>
+                  <Select
+                    onValueChange={(value) => form.setValue("bathroomType", value as any)}
+                    defaultValue={form.getValues("bathroomType")}
                   >
-                    <SelectTrigger id="plumbingLevel">
-                      <SelectValue placeholder="Sélectionnez un niveau d'installation" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="basique">Basique</SelectItem>
                       <SelectItem value="standard">Standard</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
                     </SelectContent>
                   </Select>
-                  {errors.plumbingLevel && (
-                    <p className="text-sm text-red-500">{errors.plumbingLevel.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="heatingType">Type de chauffage</Label>
-                  <Select 
-                    onValueChange={(value) => register('heatingType').onChange({ target: { value } })}
-                    defaultValue={watch('heatingType')}
-                  >
-                    <SelectTrigger id="heatingType">
-                      <SelectValue placeholder="Sélectionnez un type de chauffage" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="electrique">Électrique</SelectItem>
-                      <SelectItem value="gaz">Gaz</SelectItem>
-                      <SelectItem value="pompe_chaleur">Pompe à chaleur</SelectItem>
-                      <SelectItem value="poele">Poêle à bois/granulés</SelectItem>
-                      <SelectItem value="autre">Autre</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {errors.heatingType && (
-                    <p className="text-sm text-red-500">{errors.heatingType.message}</p>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between space-x-2 p-3 border rounded-md">
-                  <Label htmlFor="hasVentilation" className="cursor-pointer flex-1">
-                    <div className="font-medium">Ventilation mécanique contrôlée (VMC)</div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Installation d'une VMC double flux pour un meilleur renouvellement d'air
-                    </p>
-                  </Label>
-                  <Switch 
-                    id="hasVentilation" 
-                    checked={watch('hasVentilation')}
-                    onCheckedChange={(checked) => register('hasVentilation').onChange({ target: { value: checked } })}
-                  />
                 </div>
               </div>
               
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-md mt-4">
-                <div className="flex items-start gap-3">
-                  <LightbulbIcon className="h-5 w-5 text-blue-700 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-blue-800">Économies d'énergie</h4>
-                    <p className="text-sm text-blue-700 mt-1">
-                      Le choix du système de chauffage et de ventilation a un impact significatif sur la consommation énergétique et le confort de votre habitation.
-                      Les systèmes modernes comme les pompes à chaleur ou la VMC double flux représentent un investissement initial plus important mais permettent des économies à long terme.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
-          
-          {/* Étape 5: Options et coordonnées */}
-          {currentStep === 5 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Shuffle className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Options complémentaires</h3>
+              <div className="space-y-2">
+                <Label htmlFor="bathroomCount">Nombre de salles de bain</Label>
+                <Select
+                  onValueChange={(value) => form.setValue("bathroomCount", value)}
+                  defaultValue={form.getValues("bathroomCount")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 salle de bain</SelectItem>
+                    <SelectItem value="2">2 salles de bain</SelectItem>
+                    <SelectItem value="3">3 salles de bain</SelectItem>
+                    <SelectItem value="4">4 salles de bain ou plus</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
-              <div className="space-y-4 mb-6">
-                {!hasDemolition && (
-                  <div className="flex items-center justify-between space-x-2 p-3 border rounded-md">
-                    <Label htmlFor="hasLandscaping" className="cursor-pointer flex-1">
-                      <div className="font-medium">Aménagements extérieurs (VRD)</div>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Terrassement, voirie, réseaux divers, espaces verts
-                      </p>
-                    </Label>
-                    <Switch 
-                      id="hasLandscaping" 
-                      checked={watch('hasLandscaping')}
-                      onCheckedChange={(checked) => register('hasLandscaping').onChange({ target: { value: checked } })}
-                    />
-                  </div>
-                )}
-                
-                {hasLandscaping && (
-                  <div className="pt-2 pb-4">
-                    <Label htmlFor="vrdPercentage" className="text-sm">
-                      Importance des travaux VRD (en % du budget total) : {vrdPercentage}%
-                    </Label>
-                    <Slider
-                      id="vrdPercentage"
-                      min={0}
-                      max={30}
-                      step={5}
-                      value={[parseInt(vrdPercentage) || 0]}
-                      onValueChange={(value) => setValue('vrdPercentage', value[0].toString())}
-                      className="mt-2"
-                    />
-                  </div>
-                )}
-              </div>
-              
-              <div className="flex items-center gap-2 mb-4">
-                <ShowerHead className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Vos coordonnées</h3>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom</Label>
-                  <Input
-                    id="firstName"
-                    type="text"
-                    placeholder="Votre prénom"
-                    {...register('firstName')}
-                  />
-                  {errors.firstName && (
-                    <p className="text-sm text-red-500">{errors.firstName.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom</Label>
-                  <Input
-                    id="lastName"
-                    type="text"
-                    placeholder="Votre nom"
-                    {...register('lastName')}
-                  />
-                  {errors.lastName && (
-                    <p className="text-sm text-red-500">{errors.lastName.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="votre.email@exemple.com"
-                    {...register('email')}
-                  />
-                  {errors.email && (
-                    <p className="text-sm text-red-500">{errors.email.message}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Téléphone</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="Votre numéro de téléphone"
-                    {...register('phone')}
-                  />
-                  {errors.phone && (
-                    <p className="text-sm text-red-500">{errors.phone.message}</p>
-                  )}
-                </div>
-              </div>
-              
-              <div className="space-y-2 pt-2">
-                <Label htmlFor="comments">Commentaires ou précisions sur votre projet</Label>
+              <div className="space-y-2">
+                <Label htmlFor="details">Détails supplémentaires</Label>
                 <Textarea
-                  id="comments"
-                  placeholder="Ajoutez des détails supplémentaires sur votre projet si nécessaire"
-                  className="h-32"
-                  {...register('comments')}
+                  id="details"
+                  placeholder="Décrivez les spécificités supplémentaires de votre projet"
+                  {...form.register("details")}
+                  className="min-h-[100px]"
                 />
               </div>
               
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-md">
-                <div className="flex items-start gap-3">
-                  <Send className="h-5 w-5 text-blue-700 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-blue-800">Finalisation de votre demande</h4>
-                    <p className="text-sm text-blue-700 mt-1">
-                      En soumettant ce formulaire, vous recevrez une estimation détaillée de votre projet directement par email.
-                      Un de nos experts pourra vous contacter pour affiner cette estimation selon vos besoins spécifiques.
-                    </p>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">
+                    Prénom <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="firstName"
+                    placeholder="Votre prénom"
+                    {...form.register("firstName")}
+                  />
+                  {form.formState.errors.firstName && (
+                    <p className="text-sm text-red-500">{form.formState.errors.firstName.message}</p>
+                  )}
                 </div>
-              </div>
-            </motion.div>
-          )}
-          
-          {/* Étape 6: Résultat de l'estimation */}
-          {currentStep === 6 && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-6"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <Euro className="h-5 w-5 text-khaki-600" />
-                <h3 className="text-xl font-medium">Résultat de votre estimation</h3>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">
+                    Nom <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="lastName"
+                    placeholder="Votre nom"
+                    {...form.register("lastName")}
+                  />
+                  {form.formState.errors.lastName && (
+                    <p className="text-sm text-red-500">{form.formState.errors.lastName.message}</p>
+                  )}
+                </div>
               </div>
               
-              {isCalculating ? (
-                <div className="flex flex-col items-center justify-center py-10">
-                  <div className="w-16 h-16 border-4 border-khaki-200 border-t-khaki-600 rounded-full animate-spin mb-4"></div>
-                  <p className="text-lg font-medium text-khaki-700">Calcul de votre estimation en cours...</p>
-                  <p className="text-sm text-gray-500 mt-2">Cela peut prendre quelques instants</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">
+                    Email <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="votre@email.com"
+                    {...form.register("email")}
+                  />
+                  {form.formState.errors.email && (
+                    <p className="text-sm text-red-500">{form.formState.errors.email.message}</p>
+                  )}
                 </div>
-              ) : estimationResult ? (
-                <div className="p-6 border-2 border-green-200 bg-green-50 rounded-lg">
-                  <div className="flex flex-col items-center text-center mb-6">
-                    <p className="text-lg text-green-700 mb-2">Le montant estimé de votre projet est de :</p>
-                    <div className="text-4xl font-bold text-green-800">
-                      {formattedPrice(estimationResult)}
-                    </div>
-                    <p className="text-sm text-green-600 mt-3">
-                      Cette estimation inclut la TVA à 20% et est basée sur les informations que vous avez fournies.
-                    </p>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div className="p-3 border border-green-200 rounded-md bg-white">
-                      <h4 className="font-medium text-green-800">Répartition estimée</h4>
-                      <ul className="mt-2 space-y-1 text-sm">
-                        {Object.entries(estimationBreakdown).map(([poste, montant]) => (
-                          <li key={poste} className="flex justify-between">
-                            <span>{poste}</span>
-                            <span className="font-medium">{formattedPrice(montant)}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    
-                    <div className="p-3 border border-green-200 rounded-md bg-white">
-                      <h4 className="font-medium text-green-800">Prochaines étapes</h4>
-                      <ul className="mt-2 space-y-2 text-sm">
-                        <li className="flex items-start gap-2">
-                          <ChevronRight className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span>Un récapitulatif détaillé vous a été envoyé par email</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <ChevronRight className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span>Un expert Progineer vous contactera sous 48h pour affiner cette estimation</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <ChevronRight className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span>Nous vous proposerons un rendez-vous sur site pour évaluer précisément votre projet</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <Button 
-                      type="button" 
-                      variant="outline"
-                      className="bg-white hover:bg-gray-50"
-                      onClick={() => setCurrentStep(1)}
-                    >
-                      Nouvelle estimation
-                    </Button>
-                  </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="phone">
+                    Téléphone <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="phone"
+                    placeholder="Votre numéro de téléphone"
+                    {...form.register("phone")}
+                  />
+                  {form.formState.errors.phone && (
+                    <p className="text-sm text-red-500">{form.formState.errors.phone.message}</p>
+                  )}
                 </div>
-              ) : (
-                <div className="p-6 border border-yellow-200 bg-yellow-50 rounded-lg text-center">
-                  <p className="text-yellow-700">Veuillez compléter le formulaire pour obtenir votre estimation</p>
-                </div>
-              )}
-            </motion.div>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox id="terms" required />
+                <Label htmlFor="terms" className="text-sm">
+                  J'accepte que ces informations soient utilisées pour me recontacter concernant mon projet
+                </Label>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Navigation entre les étapes */}
+        <div className="flex justify-between pt-6">
+          {step > 1 ? (
+            <Button 
+              type="button" 
+              variant="outline"
+              onClick={goToPreviousStep}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Précédent
+            </Button>
+          ) : (
+            <div></div>
           )}
-        </form>
-      </CardContent>
-      
-      <CardFooter className="flex justify-between flex-wrap gap-3 pt-6">
-        {currentStep > 1 && currentStep < 6 && (
-          <Button 
-            type="button" 
-            variant="outline"
-            onClick={prevStep}
-          >
-            Étape précédente
-          </Button>
-        )}
-        
-        {currentStep < 5 && (
-          <Button 
-            type="button"
-            className="ml-auto bg-khaki-600 hover:bg-khaki-700 text-white"
-            onClick={nextStep}
-          >
-            Étape suivante
-          </Button>
-        )}
-        
-        {currentStep === 5 && (
+          
           <Button 
             type="submit"
-            form="estimationForm"
-            className="ml-auto bg-khaki-600 hover:bg-khaki-700 text-white"
-            disabled={!isValid}
+            className="bg-progineer-gold hover:bg-progineer-gold/90 flex items-center gap-2"
           >
-            Obtenir mon estimation
+            {getButtonText()}
+            {step < totalSteps && <ArrowRight className="h-4 w-4" />}
+            {step === totalSteps && <Calculator className="h-4 w-4" />}
           </Button>
-        )}
-      </CardFooter>
-    </Card>
+        </div>
+      </form>
+      
+      {/* Affichage du résultat */}
+      {showResult && estimationResult && (
+        <Card className="mt-8 p-6 bg-green-50 border-green-200">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+              <Check className="h-8 w-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-green-800">Estimation générée avec succès</h2>
+            <p className="text-green-700">Votre projet est estimé à environ:</p>
+            <div className="flex items-center text-4xl font-bold text-green-900">
+              <Euro className="h-6 w-6 mr-2" />
+              {estimationResult.toLocaleString('fr-FR')} €
+            </div>
+            <p className="text-sm text-green-600 max-w-md mx-auto">
+              Cette estimation est fournie à titre indicatif. Un devis précis nécessite une étude approfondie de votre projet.
+              Nos équipes vous contacteront rapidement pour affiner cette estimation.
+            </p>
+            <div className="pt-4 flex gap-4">
+              <Button 
+                variant="outline"
+                className="border-green-300 text-green-700 hover:bg-green-100"
+                onClick={() => setStep(1)}
+              >
+                Nouveau projet
+              </Button>
+              <Button 
+                className="bg-progineer-gold hover:bg-progineer-gold/90"
+              >
+                Prendre rendez-vous
+              </Button>
+            </div>
+          </div>
+        </Card>
+      )}
+    </div>
   );
 };
 
