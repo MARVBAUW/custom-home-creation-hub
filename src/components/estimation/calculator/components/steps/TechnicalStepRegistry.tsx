@@ -12,47 +12,50 @@ export const createTechnicalStepRegistry = (
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
   // Handle the electricalType submission
-  const onElectriciteSubmit = (data: { electricalType: string }) => {
+  const onElectriciteSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
-    const validElectricalType = ['basic', 'standard', 'premium', 'smart_home'].includes(data.electricalType) 
-      ? data.electricalType 
+    const electricalType = data.electricalType;
+    const validElectricalType = ['basic', 'standard', 'premium', 'smart_home'].includes(electricalType as string) 
+      ? electricalType 
       : 'standard';
     
     // Update with validated data
     updateFormData({
-      electricalType: validElectricalType
+      electricalType: validElectricalType as string
     });
     
     goToNextStep();
   };
 
   // Handle the plumbingType submission
-  const onPlomberieSubmit = (data: { plumbingType: string }) => {
+  const onPlomberieSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
-    const validPlumbingType = ['basic', 'standard', 'premium'].includes(data.plumbingType)
-      ? data.plumbingType
+    const plumbingType = data.plumbingType;
+    const validPlumbingType = ['basic', 'standard', 'premium'].includes(plumbingType as string)
+      ? plumbingType
       : 'standard';
     
     // Update with validated data
     updateFormData({
-      plumbingType: validPlumbingType
+      plumbingType: validPlumbingType as string
     });
     
     goToNextStep();
   };
 
   // Handle the heating and air conditioning submission
-  const onChauffageSubmit = (data: { heatingType: string, hasAirConditioning: boolean }) => {
+  const onChauffageSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
-    const validHeatingType = ['standard', 'floorHeating', 'heatPump'].includes(data.heatingType)
-      ? data.heatingType
+    const heatingType = data.heatingType;
+    const validHeatingType = ['standard', 'floorHeating', 'heatPump'].includes(heatingType as string)
+      ? heatingType
       : 'standard';
     
     const hasAirConditioning = !!data.hasAirConditioning;
     
     // Update with validated data
     updateFormData({
-      heatingType: validHeatingType,
+      heatingType: validHeatingType as string,
       hasAirConditioning: hasAirConditioning
     });
     

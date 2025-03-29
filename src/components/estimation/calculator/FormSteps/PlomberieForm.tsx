@@ -1,11 +1,11 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Droplet, Cloud, CloudDrizzle, Wrench } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Droplet, Cloud, CloudDrizzle } from 'lucide-react';
 
 const PlomberieForm: React.FC<BaseFormProps> = ({
   formData,
@@ -16,101 +16,69 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
   defaultValues,
   onSubmit
 }) => {
-  const [plumbingType, setPlumbingType] = React.useState<string>(
+  const [plumbingType, setPlumbingType] = useState<string>(
     defaultValues?.plumbingType || formData.plumbingType || 'standard'
   );
 
-  const handleContinue = () => {
+  const handleSubmit = () => {
+    // Create the data object to pass to the submit handler
     const data = { plumbingType };
     
     if (onSubmit) {
       onSubmit(data);
     } else {
-      updateFormData(data);
+      updateFormData({ plumbingType });
+      goToNextStep();
     }
-    
-    goToNextStep();
   };
 
   return (
-    <div className={`transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
-    }`}>
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-medium mb-4">Type d'installation de plomberie</h3>
-          
-          <RadioGroup 
-            value={plumbingType} 
-            onValueChange={setPlumbingType}
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-          >
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'basic' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPlumbingType('basic')}
-            >
-              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <Droplet className="h-10 w-10 text-blue-500 mb-3" />
-                <RadioGroupItem value="basic" id="plumbing-basic" className="mx-auto mb-2" />
-                <Label htmlFor="plumbing-basic" className="font-medium">Basique</Label>
-                <p className="text-xs text-gray-500 mt-2">
-                  Installation simple avec équipements standards
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPlumbingType('standard')}
-            >
-              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <Cloud className="h-10 w-10 text-blue-500 mb-3" />
-                <RadioGroupItem value="standard" id="plumbing-standard" className="mx-auto mb-2" />
-                <Label htmlFor="plumbing-standard" className="font-medium">Standard</Label>
-                <p className="text-xs text-gray-500 mt-2">
-                  Installation de qualité avec équipements modernes
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPlumbingType('premium')}
-            >
-              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <CloudDrizzle className="h-10 w-10 text-blue-500 mb-3" />
-                <RadioGroupItem value="premium" id="plumbing-premium" className="mx-auto mb-2" />
-                <Label htmlFor="plumbing-premium" className="font-medium">Premium</Label>
-                <p className="text-xs text-gray-500 mt-2">
-                  Installation haut de gamme avec équipements de qualité supérieure
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'renovation' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPlumbingType('renovation')}
-            >
-              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-                <Wrench className="h-10 w-10 text-blue-500 mb-3" />
-                <RadioGroupItem value="renovation" id="plumbing-renovation" className="mx-auto mb-2" />
-                <Label htmlFor="plumbing-renovation" className="font-medium">Rénovation</Label>
-                <p className="text-xs text-gray-500 mt-2">
-                  Mise à niveau d'une installation existante
-                </p>
-              </CardContent>
-            </Card>
-          </RadioGroup>
-        </div>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold">Type d'installation de plomberie</h2>
+      <p className="text-muted-foreground">Sélectionnez le type d'installation de plomberie que vous souhaitez pour votre projet.</p>
+      
+      <RadioGroup value={plumbingType} onValueChange={setPlumbingType} className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'basic' ? 'border-blue-500 bg-blue-50' : ''}`}>
+          <CardContent className="pt-6 flex flex-col items-center text-center">
+            <Droplet className="h-12 w-12 text-blue-500 mb-4" />
+            <div className="space-x-2">
+              <RadioGroupItem value="basic" id="plumbing-basic" />
+              <Label htmlFor="plumbing-basic">Basique</Label>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Installation de plomberie standard avec le minimum requis</p>
+          </CardContent>
+        </Card>
         
-        <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={goToPreviousStep}>
-            Précédent
-          </Button>
-          <Button onClick={handleContinue}>
-            Continuer
-          </Button>
-        </div>
+        <Card className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}>
+          <CardContent className="pt-6 flex flex-col items-center text-center">
+            <Cloud className="h-12 w-12 text-blue-500 mb-4" />
+            <div className="space-x-2">
+              <RadioGroupItem value="standard" id="plumbing-standard" />
+              <Label htmlFor="plumbing-standard">Standard</Label>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Installation de plomberie confortable avec des options supplémentaires</p>
+          </CardContent>
+        </Card>
+        
+        <Card className={`cursor-pointer transition-all hover:shadow-md ${plumbingType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}>
+          <CardContent className="pt-6 flex flex-col items-center text-center">
+            <CloudDrizzle className="h-12 w-12 text-blue-500 mb-4" />
+            <div className="space-x-2">
+              <RadioGroupItem value="premium" id="plumbing-premium" />
+              <Label htmlFor="plumbing-premium">Premium</Label>
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Installation de plomberie haut de gamme avec éléments de qualité supérieure</p>
+          </CardContent>
+        </Card>
+      </RadioGroup>
+      
+      <div className="flex justify-between mt-8">
+        <Button type="button" variant="outline" onClick={goToPreviousStep}>
+          Précédent
+        </Button>
+        <Button type="button" onClick={handleSubmit}>
+          Suivant
+        </Button>
       </div>
     </div>
   );
