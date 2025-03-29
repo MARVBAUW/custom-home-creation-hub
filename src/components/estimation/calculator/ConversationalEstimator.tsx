@@ -43,7 +43,7 @@ const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = (props) 
         handleKeyPress={handleKeyPress} 
       />
       
-      {/* Indicateur de progression optionnel */}
+      {/* Indicateur de progression */}
       {conversationState.formProgress > 0 && (
         <div className="p-2 bg-gray-100 border-t">
           <div className="w-full h-1.5 bg-gray-200 rounded-full">

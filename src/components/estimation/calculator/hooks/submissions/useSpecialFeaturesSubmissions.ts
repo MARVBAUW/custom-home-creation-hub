@@ -1,101 +1,59 @@
-
 import { FormData } from '../../types';
 
-export const useSpecialFeaturesSubmissions = (updateFormData: (data: Partial<FormData>) => void) => {
-  // Gestion de la soumission du formulaire des énergies renouvelables
-  const handleEnergiesRenouvelablesSubmit = (data: {
-    energyType: string;
-    solarPanelSurface?: string;
-  }) => {
-    updateFormData({
-      energyType: data.energyType,
-      solarPanelSurface: data.solarPanelSurface ? Number(data.solarPanelSurface) : undefined,
-    });
-  };
+export const useSpecialFeaturesSubmissions = (
+  updateFormData: (data: Partial<FormData>) => void,
+  setStep: (step: number) => void
+) => {
+const onEnergiesRenouvelablesSubmit = (data: {
+  solarPanelType: string;
+  windTurbineType: string;
+}) => {
+  updateFormData({
+    solarPanelType: data.solarPanelType,
+    windTurbineType: data.windTurbineType
+  });
+  setStep(23); // Solutions environnementales
+};
 
-  // Gestion de la soumission du formulaire des solutions environnementales
-  const handleSolutionsEnvironSubmit = (data: {
-    solutionType: string;
-    ecoFriendlyInsulation: boolean;
-  }) => {
-    updateFormData({
-      solutionType: data.solutionType,
-      ecoFriendlyInsulation: data.ecoFriendlyInsulation,
-    });
-  };
+const onSolutionsEnvironSubmit = (data: {
+  rainwaterHarvesting: boolean;
+  greywaterRecycling: boolean;
+}) => {
+  updateFormData({
+    rainwaterHarvesting: data.rainwaterHarvesting,
+    greywaterRecycling: data.greywaterRecycling
+  });
+  setStep(24); // Aménagement paysager
+};
 
-  // Gestion de la soumission du formulaire d'aménagement paysager
-  const handleAmenagementPaysagerSubmit = (data: {
-    gardenArea: string | number;
-    garden: boolean;
-    irrigation: boolean;
-  }) => {
-    updateFormData({
-      gardenArea: data.gardenArea,
-      garden: data.garden,
-      irrigation: data.irrigation,
-    });
-  };
+const onAmenagementPaysagerSubmit = (data: {
+  landscapingType: string;
+  landscapingBudget: string;
+}) => {
+  updateFormData({
+    landscapingType: data.landscapingType,
+    landscapingBudget: data.landscapingBudget
+  });
+  setStep(24); // Options
+};
 
-  // Gestion de la soumission du formulaire des options
-  const handleOptionsSubmit = (data: {
-    terrace: boolean;
-    terraceType?: string;
-    terraceArea?: string | number;
-    swimmingPool: boolean;
-    poolType?: string;
-    garage: boolean;
-    garageSize?: string;
-    carport: boolean;
-    fence: boolean;
-    gate: boolean;
-    outdoorLighting: boolean;
-    outdoorKitchen?: boolean;
-    pergola?: boolean;
-    exteriorFeatures?: string[];
-  }) => {
-    updateFormData({
-      terrace: data.terrace,
-      terraceType: data.terraceType,
-      terraceArea: data.terraceArea,
-      swimmingPool: data.swimmingPool,
-      poolType: data.poolType,
-      garage: data.garage,
-      garageSize: data.garageSize,
-      carport: data.carport,
-      fence: data.fence,
-      gate: data.gate,
-      outdoorLighting: data.outdoorLighting,
-      outdoorKitchen: data.outdoorKitchen,
-      pergola: data.pergola,
-      exteriorFeatures: data.exteriorFeatures
-    });
-  };
+const onOptionsSubmit = (data: {
+  pool: boolean;
+  outdoorKitchen: boolean;
+  terrace: boolean;
+}) => {
+  updateFormData({
+    pool: data.pool,
+    outdoorKitchen: data.outdoorKitchen,
+    terrace: data.terrace
+  });
+  setStep(25); // Cuisine
+};
 
-  // Gestion de la soumission du formulaire de cuisine
-  const handleCuisineSubmit = (data: { kitchenType: string }) => {
-    updateFormData({
-      kitchenType: data.kitchenType,
-    });
-  };
-
-  // Gestion de la soumission du formulaire de salle de bain
-  const handleSalleDeBainSubmit = (data: {
-    bathroomType: string;
-    bathroomCount: string;
-  }) => {
-    updateFormData({
-      bathroomType: data.bathroomType,
-      bathroomCount: data.bathroomCount
-    });
-  };
-
-  return {
-    handleEnergiesRenouvelablesSubmit,
-    handleSolutionsEnvironSubmit,
-    handleAmenagementPaysagerSubmit,
-    handleOptionsSubmit,
-    handleCuisineSubmit,
-    handleSalleDeBainSubmit,
-  };
+return {
+  onEnergiesRenouvelablesSubmit,
+  onSolutionsEnvironSubmit,
+  onAmenagementPaysagerSubmit,
+  onOptionsSubmit
+};
 };

@@ -3,13 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { FormData } from '../types';
 import { analyzeUserIntent, ExtractedInfo, IntentType } from '../utils/conversationalUtils';
-
-export interface Message {
-  id: string;
-  type: 'system' | 'user' | 'assistant' | 'loading';
-  content: string;
-  options?: string[];
-}
+import { Message, ConversationState } from '../components/conversational/types';
 
 export interface ConversationalEstimatorProps {
   onUserInput: (input: string) => void;
@@ -25,16 +19,11 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [conversationState, setConversationState] = useState<{
-    currentIntent: IntentType;
-    lastUpdatedFields: string[];
-    formProgress: number;
-    pendingQuestions: string[];
-  }>({
-    currentIntent: 'unknown',
-    lastUpdatedFields: [],
-    formProgress: 0,
-    pendingQuestions: []
+  const [conversationState, setConversationState] = useState<ConversationState>({
+    currentStep: 'welcome',
+    askedQuestions: [],
+    completedFields: [],
+    formProgress: 0
   });
 
   // Initial welcome message
@@ -82,6 +71,34 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
     setMessages(prev => [...prev, newMessage]);
   };
 
+  // Marquer une question comme posée pour éviter les répétitions
+  const markQuestionAsAsked = (questionId: string) => {
+    setConversationState(prev => ({
+      ...prev,
+      askedQuestions: [...prev.askedQuestions, questionId]
+    }));
+  };
+
+  // Vérifier si une question a déjà été posée
+  const hasQuestionBeenAsked = (questionId: string): boolean => {
+    return conversationState.askedQuestions.includes(questionId);
+  };
+
+  // Mettre à jour les champs complétés et la progression
+  const updateCompletedFields = (field: string) => {
+    if (!conversationState.completedFields.includes(field)) {
+      const updatedFields = [...conversationState.completedFields, field];
+      const totalRequiredFields = 7; // projectType, surface, city, levels, finishLevel, hasLand, email
+      const progress = Math.min(Math.round((updatedFields.length / totalRequiredFields) * 100), 100);
+      
+      setConversationState(prev => ({
+        ...prev,
+        completedFields: updatedFields,
+        formProgress: progress
+      }));
+    }
+  };
+
   // Gérer la progression du formulaire
   const updateFormProgress = (intent: IntentType, extractedInfo: ExtractedInfo) => {
     // Mettre à jour les données du formulaire en fonction des informations extraites
@@ -112,7 +129,7 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
     }
 
     if (extractedInfo.entities.rooms && !formData.roomCount) {
-      newFormData.roomCount = extractedInfo.entities.rooms;
+      newFormData.roomCount = extractedInfo.entities.rooms.toString();
       updatedFields.push('roomCount');
     }
 
@@ -139,13 +156,13 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
       updatedFields.push('hasLand');
       
       if (extractedInfo.entities.terrain_price) {
-        newFormData.landPrice = extractedInfo.entities.terrain_price;
+        newFormData.landPrice = extractedInfo.entities.terrain_price.toString();
         updatedFields.push('landPrice');
       }
     }
 
     if (extractedInfo.entities.budget && !formData.budget) {
-      newFormData.budget = extractedInfo.entities.budget;
+      newFormData.budget = extractedInfo.entities.budget.toString();
       updatedFields.push('budget');
     }
 
@@ -180,17 +197,59 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
     // Mettre à jour conversationState et formData si des modifications ont été faites
     if (updatedFields.length > 0) {
       updateFormData(newFormData);
+      
+      // Marquer les champs comme complétés pour la progression
+      updatedFields.forEach(field => updateCompletedFields(field));
+      
+      // Mettre à jour l'état de la conversation
       setConversationState(prev => ({
         ...prev,
-        currentIntent: intent,
-        lastUpdatedFields: [...prev.lastUpdatedFields, ...updatedFields],
-        formProgress: Math.min(prev.formProgress + updatedFields.length * 10, 100)
+        currentStep: determineNextStep(prev.currentStep, updatedFields)
       }));
 
       return updatedFields;
     }
 
     return [];
+  };
+
+  // Déterminer la prochaine étape de la conversation
+  const determineNextStep = (currentStep: string, updatedFields: string[]): string => {
+    // Priorité des questions
+    const stepOrder = [
+      'welcome',
+      'projectType',
+      'surface',
+      'location',
+      'levels',
+      'rooms',
+      'finishLevel',
+      'hasLand',
+      'wallType',
+      'email',
+      'confirmation'
+    ];
+    
+    // Si un champ a été mis à jour, passez à l'étape suivante
+    if (updatedFields.length > 0) {
+      const currentIndex = stepOrder.indexOf(currentStep);
+      if (currentIndex >= 0 && currentIndex < stepOrder.length - 1) {
+        return stepOrder[currentIndex + 1];
+      }
+    }
+    
+    // Si aucun champ n'a été mis à jour, déterminer quelle question poser ensuite
+    if (!formData.projectType) return 'projectType';
+    if (!formData.surface) return 'surface';
+    if (!formData.city) return 'location';
+    if (!formData.levels) return 'levels';
+    if (!formData.roomCount) return 'rooms';
+    if (!formData.finishLevel) return 'finishLevel';
+    if (formData.hasLand === undefined) return 'hasLand';
+    if (!formData.wallType) return 'wallType';
+    if (!formData.email) return 'email';
+    
+    return 'confirmation';
   };
 
   // Déterminer si nous avons suffisamment d'informations pour procéder à l'estimation
@@ -206,35 +265,59 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
 
   // Générer la prochaine question à poser
   const generateNextQuestion = (): string => {
-    if (!formData.projectType) {
-      return "Quel type de projet souhaitez-vous estimer ? Une construction neuve, une rénovation ou une extension ?";
+    // Vérifier l'étape actuelle pour déterminer la question
+    switch (conversationState.currentStep) {
+      case 'welcome':
+        return "Quel type de projet souhaitez-vous estimer ? Une construction neuve, une rénovation ou une extension ?";
+      
+      case 'projectType':
+        return "Quel type de projet souhaitez-vous estimer ? Une construction neuve, une rénovation ou une extension ?";
+      
+      case 'surface':
+        markQuestionAsAsked('surface');
+        return "Quelle surface approximative en m² envisagez-vous pour votre projet ?";
+      
+      case 'location':
+        markQuestionAsAsked('location');
+        return "Dans quelle ville ou région se situe votre projet ?";
+      
+      case 'levels':
+        markQuestionAsAsked('levels');
+        return "Combien de niveaux souhaitez-vous pour votre construction ? Un plain-pied ou plusieurs étages ?";
+      
+      case 'rooms':
+        markQuestionAsAsked('rooms');
+        return "Combien de chambres souhaitez-vous dans votre logement ?";
+      
+      case 'finishLevel':
+        markQuestionAsAsked('finishLevel');
+        return "Quel niveau de finition recherchez-vous ? Premium (haut de gamme), standard ou basique ?";
+      
+      case 'hasLand':
+        markQuestionAsAsked('hasLand');
+        return "Disposez-vous déjà d'un terrain pour votre projet ?";
+      
+      case 'wallType':
+        markQuestionAsAsked('wallType');
+        return "Quel type de matériaux préférez-vous pour les murs ? (Béton, briques, parpaings, bois ou ossature métallique)";
+      
+      case 'email':
+        markQuestionAsAsked('email');
+        return "Pour finaliser votre estimation personnalisée, pourriez-vous me communiquer votre email de contact ?";
+      
+      case 'confirmation':
+        return "Je pense avoir suffisamment d'informations pour calculer une estimation de votre projet. Souhaitez-vous que je procède à l'estimation maintenant ?";
+      
+      default:
+        // Fallback question
+        if (!formData.projectType) {
+          return "Quel type de projet souhaitez-vous estimer ? Une construction neuve, une rénovation ou une extension ?";
+        } else if (!formData.surface) {
+          return "Quelle surface approximative en m² envisagez-vous pour votre projet ?";
+        } else {
+          return "Avez-vous d'autres informations à ajouter pour votre projet ?";
+        }
     }
-    
-    if (!formData.surface) {
-      return "Quelle surface approximative en m² envisagez-vous pour votre projet ?";
-    }
-    
-    if (!formData.city) {
-      return "Dans quelle ville ou région se situe votre projet ?";
-    }
-    
-    if (!formData.levels) {
-      return "Combien de niveaux souhaitez-vous pour votre construction ? Un plain-pied ou plusieurs étages ?";
-    }
-    
-    if (!formData.finishLevel) {
-      return "Quel niveau de finition recherchez-vous ? Premium (haut de gamme), standard ou basique ?";
-    }
-    
-    if (formData.hasLand === undefined) {
-      return "Disposez-vous déjà d'un terrain pour votre projet ?";
-    }
-    
-    if (!formData.email) {
-      return "Pour finaliser votre estimation personnalisée, pourriez-vous me communiquer votre email de contact ?";
-    }
-    
-    return "Je pense avoir suffisamment d'informations pour calculer une estimation de votre projet. Souhaitez-vous que je procède à l'estimation maintenant ?";
   };
 
   // Handle sending a new message
@@ -274,11 +357,12 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
     
     if (updatedFields.length > 0) {
       // Confirmer les informations récupérées
-      const fieldDescriptions = {
+      const fieldDescriptions: {[key: string]: string} = {
         projectType: "type de projet",
         surface: "surface",
         city: "localisation",
         levels: "nombre de niveaux",
+        roomCount: "nombre de chambres",
         finishLevel: "niveau de finition",
         hasLand: "possession d'un terrain",
         landPrice: "prix du terrain",
@@ -289,7 +373,7 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
       };
       
       const updateDescriptions = updatedFields.map(field => 
-        `votre ${fieldDescriptions[field as keyof typeof fieldDescriptions] || field}`
+        `votre ${fieldDescriptions[field] || field}`
       );
       
       if (updateDescriptions.length === 1) {
@@ -298,30 +382,27 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
         const lastField = updateDescriptions.pop();
         response = `Merci, j'ai bien noté ${updateDescriptions.join(', ')} et ${lastField}. `;
       }
-      
-      // Ajouter la prochaine question
-      response += generateNextQuestion();
     } else if (analysis.intent === 'help') {
-      response = "Je suis là pour vous aider à estimer votre projet. " + generateNextQuestion();
+      response = "Je suis là pour vous aider à estimer votre projet. ";
     } else if (analysis.confidence < 0.4) {
       // Si l'intention n'est pas claire
-      response = "Je n'ai pas bien compris votre demande. " + generateNextQuestion();
-    } else {
-      // Réponse basée sur l'intention
-      response = generateNextQuestion();
+      response = "Je n'ai pas bien compris votre demande. ";
     }
     
-    // Rendre le bot plus humain avec des transitions aléatoires
-    const transitions = [
-      "Très bien ! ",
-      "Je comprends. ",
-      "D'accord. ",
-      "Parfait. ",
-      "Excellent. ",
-      ""
-    ];
+    // Ajouter la prochaine question à poser
+    response += generateNextQuestion();
     
-    if (!response.startsWith("Merci") && !response.startsWith("Je n'ai pas")) {
+    // Rendre le bot plus humain avec des transitions aléatoires
+    if (!response.startsWith("Merci") && !response.startsWith("Je n'ai pas") && response.indexOf(generateNextQuestion()) === 0) {
+      const transitions = [
+        "Très bien ! ",
+        "Je comprends. ",
+        "D'accord. ",
+        "Parfait. ",
+        "Excellent. ",
+        ""
+      ];
+      
       const transition = transitions[Math.floor(Math.random() * transitions.length)];
       response = transition + response;
     }
@@ -329,16 +410,29 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
     // Ajouter des options de réponse si pertinent
     let options: string[] | undefined;
     
-    if (!formData.projectType) {
-      options = ["Construction neuve", "Rénovation", "Extension"];
-    } else if (!formData.levels) {
-      options = ["Plain-pied", "2 niveaux (R+1)", "3 niveaux (R+2)"];
-    } else if (!formData.finishLevel) {
-      options = ["Finition standard", "Finition premium", "Finition basique"];
-    } else if (formData.hasLand === undefined) {
-      options = ["J'ai déjà un terrain", "Je n'ai pas encore de terrain"];
-    } else if (canProceedToEstimation() && response.includes("procède à l'estimation")) {
-      options = ["Oui, calculez mon estimation", "Non, j'ai d'autres informations à ajouter"];
+    // Déterminer les options en fonction de l'étape actuelle
+    switch (conversationState.currentStep) {
+      case 'projectType':
+        options = ["Construction neuve", "Rénovation", "Extension"];
+        break;
+      case 'levels':
+        options = ["Plain-pied", "2 niveaux (R+1)", "3 niveaux (R+2)"];
+        break;
+      case 'rooms':
+        options = ["1 chambre", "2 chambres", "3 chambres", "4 chambres ou plus"];
+        break;
+      case 'finishLevel':
+        options = ["Finition standard", "Finition premium", "Finition basique"];
+        break;
+      case 'hasLand':
+        options = ["J'ai déjà un terrain", "Je n'ai pas encore de terrain"];
+        break;
+      case 'wallType':
+        options = ["Béton", "Briques", "Parpaings", "Bois", "Ossature métallique"];
+        break;
+      case 'confirmation':
+        options = ["Oui, calculez mon estimation", "Non, j'ai d'autres informations à ajouter"];
+        break;
     }
     
     // Ajouter la réponse du bot
@@ -356,26 +450,61 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
       // Logique spécifique en fonction de l'option choisie
       if (option.toLowerCase().includes('construction')) {
         updateFormData({ projectType: 'construction' });
+        setConversationState(prev => ({ ...prev, currentStep: 'surface' }));
       } else if (option.toLowerCase().includes('rénovation')) {
         updateFormData({ projectType: 'renovation' });
+        setConversationState(prev => ({ ...prev, currentStep: 'surface' }));
       } else if (option.toLowerCase().includes('extension')) {
         updateFormData({ projectType: 'extension' });
+        setConversationState(prev => ({ ...prev, currentStep: 'surface' }));
       } else if (option.toLowerCase().includes('plain-pied')) {
         updateFormData({ levels: '1 niveau (plain-pied)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'rooms' }));
       } else if (option.toLowerCase().includes('2 niveaux')) {
         updateFormData({ levels: '2 niveaux (R+1)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'rooms' }));
       } else if (option.toLowerCase().includes('3 niveaux')) {
         updateFormData({ levels: '3 niveaux (R+2)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'rooms' }));
+      } else if (option.toLowerCase().includes('chambre')) {
+        const count = option.match(/(\d+)/);
+        if (count) {
+          updateFormData({ roomCount: count[0] });
+          setConversationState(prev => ({ ...prev, currentStep: 'finishLevel' }));
+        } else if (option.toLowerCase().includes('ou plus')) {
+          updateFormData({ roomCount: '4' });
+          setConversationState(prev => ({ ...prev, currentStep: 'finishLevel' }));
+        }
       } else if (option.toLowerCase().includes('finition standard')) {
         updateFormData({ finishLevel: 'Standard (qualité moyenne)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'hasLand' }));
       } else if (option.toLowerCase().includes('finition premium')) {
         updateFormData({ finishLevel: 'Premium (haut de gamme)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'hasLand' }));
       } else if (option.toLowerCase().includes('finition basique')) {
         updateFormData({ finishLevel: 'Basique (entrée de gamme)' });
+        setConversationState(prev => ({ ...prev, currentStep: 'hasLand' }));
       } else if (option.toLowerCase().includes("j'ai déjà un terrain")) {
         updateFormData({ hasLand: true });
+        setConversationState(prev => ({ ...prev, currentStep: 'wallType' }));
       } else if (option.toLowerCase().includes("je n'ai pas encore de terrain")) {
         updateFormData({ hasLand: false });
+        setConversationState(prev => ({ ...prev, currentStep: 'wallType' }));
+      } else if (option.toLowerCase().includes('béton')) {
+        updateFormData({ wallType: 'Béton' });
+        setConversationState(prev => ({ ...prev, currentStep: 'email' }));
+      } else if (option.toLowerCase().includes('briques')) {
+        updateFormData({ wallType: 'Briques' });
+        setConversationState(prev => ({ ...prev, currentStep: 'email' }));
+      } else if (option.toLowerCase().includes('parpaings')) {
+        updateFormData({ wallType: 'Parpaings' });
+        setConversationState(prev => ({ ...prev, currentStep: 'email' }));
+      } else if (option.toLowerCase().includes('bois')) {
+        updateFormData({ wallType: 'Bois' });
+        setConversationState(prev => ({ ...prev, currentStep: 'email' }));
+      } else if (option.toLowerCase().includes('ossature métallique')) {
+        updateFormData({ wallType: 'Ossature métallique' });
+        setConversationState(prev => ({ ...prev, currentStep: 'email' }));
       } else if (option.toLowerCase().includes('oui, calculez mon estimation')) {
         handleStartEstimation();
         setLoading(false);
@@ -393,16 +522,36 @@ export const useConversationalEstimator = (props: ConversationalEstimatorProps) 
       
       // Déterminer les options à afficher
       let options: string[] | undefined;
-      if (!formData.projectType) {
-        options = ["Construction neuve", "Rénovation", "Extension"];
-      } else if (!formData.levels) {
-        options = ["Plain-pied", "2 niveaux (R+1)", "3 niveaux (R+2)"];
-      } else if (!formData.finishLevel) {
-        options = ["Finition standard", "Finition premium", "Finition basique"];
-      } else if (formData.hasLand === undefined) {
-        options = ["J'ai déjà un terrain", "Je n'ai pas encore de terrain"];
-      } else if (canProceedToEstimation()) {
-        options = ["Oui, calculez mon estimation", "Non, j'ai d'autres informations à ajouter"];
+      
+      // Déterminer les options en fonction de l'étape actuelle
+      switch (conversationState.currentStep) {
+        case 'projectType':
+          options = ["Construction neuve", "Rénovation", "Extension"];
+          break;
+        case 'surface':
+          // Pas d'options pour la surface, entrée libre
+          break;
+        case 'location':
+          // Pas d'options pour la localisation, entrée libre
+          break;
+        case 'levels':
+          options = ["Plain-pied", "2 niveaux (R+1)", "3 niveaux (R+2)"];
+          break;
+        case 'rooms':
+          options = ["1 chambre", "2 chambres", "3 chambres", "4 chambres ou plus"];
+          break;
+        case 'finishLevel':
+          options = ["Finition standard", "Finition premium", "Finition basique"];
+          break;
+        case 'hasLand':
+          options = ["J'ai déjà un terrain", "Je n'ai pas encore de terrain"];
+          break;
+        case 'wallType':
+          options = ["Béton", "Briques", "Parpaings", "Bois", "Ossature métallique"];
+          break;
+        case 'confirmation':
+          options = ["Oui, calculez mon estimation", "Non, j'ai d'autres informations à ajouter"];
+          break;
       }
       
       addAssistantMessage(nextQuestion, options);

@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MessageProcessorProps } from './types';
 import { ExtractedInfo, analyzeUserIntent } from '../../utils/conversationalUtils';
 
@@ -23,7 +23,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
 
   // Extraire et mettre à jour les données du formulaire
   const extractAndUpdateFormData = (analysis: ExtractedInfo) => {
-    const newData: Partial<Record<keyof FormData, any>> = {};
+    const newData: Partial<FormData> = {};
     let hasUpdates = false;
     
     // Récupérer le type de projet s'il est mentionné
@@ -54,7 +54,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Récupérer le nombre de chambres si mentionné
     if (analysis.entities.rooms) {
-      newData.roomCount = analysis.entities.rooms;
+      newData.roomCount = analysis.entities.rooms.toString();
       hasUpdates = true;
     }
     
@@ -83,7 +83,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
       newData.hasLand = analysis.entities.has_terrain;
       
       if (analysis.entities.terrain_price) {
-        newData.landPrice = analysis.entities.terrain_price;
+        newData.landPrice = analysis.entities.terrain_price.toString();
       }
       
       hasUpdates = true;
@@ -91,7 +91,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Récupérer le budget s'il est mentionné
     if (analysis.entities.budget) {
-      newData.budget = analysis.entities.budget;
+      newData.budget = analysis.entities.budget.toString();
       hasUpdates = true;
     }
     

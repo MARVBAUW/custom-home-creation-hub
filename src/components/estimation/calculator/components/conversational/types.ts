@@ -35,3 +35,11 @@ export interface MessageProcessorProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
 }
+
+// The state of the conversation to track progress
+export interface ConversationState {
+  currentStep: string;
+  askedQuestions: string[];
+  completedFields: string[];
+  formProgress: number;
+}

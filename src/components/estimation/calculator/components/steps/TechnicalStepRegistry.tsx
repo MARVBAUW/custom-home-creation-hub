@@ -1,12 +1,10 @@
 
-import React from 'react';
-import { StepComponentRegistry, FormStepProps } from './StepComponents';
-import ElectriciteForm from '../../FormSteps/ElectriciteForm';
 import PlomberieForm from '../../FormSteps/PlomberieForm';
+import ElectriciteForm from '../../FormSteps/ElectriciteForm';
 import ChauffageForm from '../../FormSteps/ChauffageForm';
 import { FormData } from '../../types';
+import { StepComponentRegistry } from './StepComponents';
 
-// Registry pour les étapes techniques (étapes 14-16)
 export const createTechnicalStepRegistry = (
   formData: FormData,
   onElectriciteSubmit: (data: { electricalType: string }) => void,
@@ -15,43 +13,41 @@ export const createTechnicalStepRegistry = (
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
   return {
-    14: (props: FormStepProps) => (
+    14: (props) => (
       <ElectriciteForm
-        defaultValues={{
-          electricalType: formData.electricalType || ''
-        }}
-        onSubmit={(data) => onElectriciteSubmit({
-          electricalType: data.electricalType || ''
-        })}
+        formData={formData}
+        updateFormData={onElectriciteSubmit}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{ electricalType: formData.electricalType || 'standard' }}
+        onSubmit={onElectriciteSubmit}
       />
     ),
-    15: (props: FormStepProps) => (
+    15: (props) => (
       <PlomberieForm
-        defaultValues={{
-          plumbingType: formData.plumbingType || ''
-        }}
-        onSubmit={(data) => onPlomberieSubmit({
-          plumbingType: data.plumbingType || ''
-        })}
+        formData={formData}
+        updateFormData={onPlomberieSubmit}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{ plumbingType: formData.plumbingType || 'standard' }}
+        onSubmit={onPlomberieSubmit}
       />
     ),
-    16: (props: FormStepProps) => (
+    16: (props) => (
       <ChauffageForm
-        defaultValues={{
-          heatingType: formData.heatingType || '',
-          hasAirConditioning: formData.hasAirConditioning || ''
-        }}
-        onSubmit={(data) => onChauffageSubmit({
-          heatingType: data.heatingType || '',
-          hasAirConditioning: data.hasAirConditioning || false
-        })}
+        formData={formData}
+        updateFormData={onChauffageSubmit}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{ 
+          heatingType: formData.heatingType || 'pompe', 
+          hasAirConditioning: formData.hasAirConditioning || true 
+        }}
+        onSubmit={onChauffageSubmit}
       />
-    ),
+    )
   };
 };

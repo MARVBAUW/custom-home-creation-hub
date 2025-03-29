@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
-import { useEstimationCalculator } from './useEstimationCalculator';
+import { useEstimationCalculator } from './hooks/useEstimationCalculator';
 import { FormProvider } from 'react-hook-form';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
@@ -20,39 +20,8 @@ const WorkEstimationForm: React.FC = () => {
     animationDirection,
     goToNextStep,
     goToPreviousStep,
-    onClientTypeSubmit,
-    onProfessionalProjectSubmit,
-    onIndividualProjectSubmit,
-    onEstimationTypeSubmit,
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit,
-    onCouvertureSubmit,
-    onIsolationSubmit,
-    onFacadeSubmit,
-    onMenuiseriesExtSubmit,
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit,
-    onPlatrerieSubmit,
-    onMenuiseriesIntSubmit,
-    onCarrelageSubmit,
-    onParquetSubmit,
-    onPeintureSubmit,
-    onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit,
-    onOptionsSubmit,
-    onCuisineSubmit,
-    onSalleDeBainSubmit,
-    onDemolitionSubmit,
-    onGrosOeuvreRenovSubmit,
-    onCharpenteRenovSubmit,
-    onCouvertureRenovSubmit,
-    onFacadeRenovSubmit,
-    onContactSubmit
+    updateFormData,
+    setStep
   } = useEstimationCalculator();
   
   const { methods } = useEstimationForm();
@@ -87,48 +56,27 @@ const WorkEstimationForm: React.FC = () => {
     }
   };
 
+  // Function to handle client type submission from conversational estimator
+  const onClientTypeSubmit = (data: {clientType: string}) => {
+    updateFormData({ clientType: data.clientType });
+  };
+
+  // Process user input from conversational estimator
+  const processUserInput = (input: string) => {
+    console.log('Input processed:', input);
+  };
+
   return (
     <FormProvider {...methods}>
       <div className="w-full" ref={formWrapper}>
         <Card className="border-0 shadow-none">
           <div className="overflow-hidden">
             <ConversationalEstimator 
-              onClientTypeSubmit={onClientTypeSubmit}
-              onProfessionalProjectSubmit={onProfessionalProjectSubmit}
-              onIndividualProjectSubmit={onIndividualProjectSubmit}
-              onEstimationTypeSubmit={onEstimationTypeSubmit}
-              onConstructionDetailsSubmit={onConstructionDetailsSubmit}
-              onTerrainSubmit={onTerrainSubmit}
-              onGrosOeuvreSubmit={onGrosOeuvreSubmit}
-              onCharpenteSubmit={onCharpenteSubmit}
-              onComblesSubmit={onComblesSubmit}
-              onCouvertureSubmit={onCouvertureSubmit}
-              onIsolationSubmit={onIsolationSubmit}
-              onFacadeSubmit={onFacadeSubmit}
-              onMenuiseriesExtSubmit={onMenuiseriesExtSubmit}
-              onElectriciteSubmit={onElectriciteSubmit}
-              onPlomberieSubmit={onPlomberieSubmit}
-              onChauffageSubmit={onChauffageSubmit}
-              onPlatrerieSubmit={onPlatrerieSubmit}
-              onMenuiseriesIntSubmit={onMenuiseriesIntSubmit}
-              onCarrelageSubmit={onCarrelageSubmit}
-              onParquetSubmit={onParquetSubmit}
-              onPeintureSubmit={onPeintureSubmit}
-              onEnergiesRenouvelablesSubmit={onEnergiesRenouvelablesSubmit}
-              onSolutionsEnvironSubmit={onSolutionsEnvironSubmit}
-              onAmenagementPaysagerSubmit={onAmenagementPaysagerSubmit}
-              onOptionsSubmit={onOptionsSubmit}
-              onCuisineSubmit={onCuisineSubmit}
-              onSalleDeBainSubmit={onSalleDeBainSubmit}
-              onDemolitionSubmit={onDemolitionSubmit}
-              onGrosOeuvreRenovSubmit={onGrosOeuvreRenovSubmit}
-              onCharpenteRenovSubmit={onCharpenteRenovSubmit}
-              onCouvertureRenovSubmit={onCouvertureRenovSubmit}
-              onFacadeRenovSubmit={onFacadeRenovSubmit}
-              onContactSubmit={onContactSubmit}
+              onUserInput={processUserInput}
               formData={formData}
-              step={step}
-              onStepChange={handleFormChange}
+              updateFormData={updateFormData}
+              onClientTypeSubmit={onClientTypeSubmit}
+              goToStep={setStep}
             />
           </div>
         </Card>
