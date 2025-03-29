@@ -7,37 +7,58 @@ import {
 import { ensureNumber } from './utils/typeConversions';
 
 export const calculateEstimation = (formData: FormData): number => {
+  // Log the incoming form data for debugging
+  console.log("Formulaire pour calcul:", formData);
+  
   // Determine which estimation method to use based on estimationType
   const mode = formData.estimationType || 'simple';
-  console.log("Calculating estimation with mode:", mode);
-  console.log("Form data for calculation:", formData);
+  console.log("Mode de calcul:", mode);
   
   try {
+    // For detailed or standard estimation
     if (mode === 'detailed' || mode === 'standard') {
-      // Extract just the number from the detailed calculation result
-      const detailedResult = calculateDetailedEstimation(formData);
-      console.log("Detailed calculation result:", detailedResult);
-      
-      if (typeof detailedResult === 'object' && 'totalEstimation' in detailedResult) {
-        return ensureNumber(detailedResult.totalEstimation);
+      try {
+        const detailedResult = calculateDetailedEstimation(formData);
+        console.log("Résultat du calcul détaillé:", detailedResult);
+        
+        if (typeof detailedResult === 'object' && 'totalEstimation' in detailedResult) {
+          return ensureNumber(detailedResult.totalEstimation);
+        }
+        
+        // If the result doesn't have the expected structure, use basic calculation
+        console.log("Structure de résultat inattendue, utilisation du calcul basique");
+        return calculateBasicEstimation(formData);
+      } catch (error) {
+        console.error("Erreur dans le calcul détaillé:", error);
+        return calculateBasicEstimation(formData);
       }
-      // Fallback to a basic calculation if object doesn't have totalEstimation
-      return calculateBasicEstimation(formData);
     }
     
-    // Use simple estimation for 'simple' or 'quick' modes
-    const simpleResult = calculateSimpleEstimation(formData);
-    console.log("Simple calculation result:", simpleResult);
-    return ensureNumber(simpleResult);
+    // For simple or quick estimation
+    if (mode === 'simple' || mode === 'quick' || mode === 'basic') {
+      try {
+        const simpleResult = calculateSimpleEstimation(formData);
+        console.log("Résultat du calcul simple:", simpleResult);
+        return ensureNumber(simpleResult);
+      } catch (error) {
+        console.error("Erreur dans le calcul simple:", error);
+        return calculateBasicEstimation(formData);
+      }
+    }
+    
+    // Default calculation if no mode matches
+    console.log("Mode non reconnu, utilisation du calcul basique");
+    return calculateBasicEstimation(formData);
   } catch (error) {
-    console.error("Error in calculation:", error);
-    // Return a fallback value if calculation fails
+    console.error("Erreur générale dans le calcul:", error);
+    // Return a fallback value if all calculations fail
     return calculateBasicEstimation(formData);
   }
 };
 
 // Basic estimation function as fallback
 const calculateBasicEstimation = (formData: FormData): number => {
+  console.log("Exécution du calcul basique");
   let cost = 0;
   
   // Get base cost by surface
@@ -73,6 +94,7 @@ const calculateBasicEstimation = (formData: FormData): number => {
     cost += ensureNumber(formData.landPrice);
   }
   
+  console.log("Coût basique calculé:", cost);
   return Math.round(cost);
 };
 
