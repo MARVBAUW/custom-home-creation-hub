@@ -9,13 +9,9 @@ import { FormData } from '../../types';
 export const createTechnicalStepRegistry = (
   formData: FormData,
   updateFormData: (data: Partial<FormData>) => void,
-  goToPreviousStep: () => void
+  goToPreviousStep: () => void,
+  goToNextStep: () => void
 ): StepComponentRegistry => {
-  // Define the function for moving to the next step
-  const goToNextStep = () => {
-    console.log('Going to next step');
-  };
-
   // Handle the electricalType submission
   const onElectriciteSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
@@ -88,6 +84,23 @@ export const createTechnicalStepRegistry = (
     
     // Continue to the next step
     goToNextStep();
+  };
+
+  // Déterminer l'étape suivante selon les conditions du formulaire
+  const determineNextStep = (currentStep: number) => {
+    console.log("Determining next step from:", currentStep, "Project type:", formData.projectType);
+    
+    // Exemple de logique de branchement selon le type de projet
+    if (formData.projectType === "renovation" || formData.projectType === "division") {
+      if (currentStep === 16) { // Si on est à l'étape du chauffage
+        return 17; // Aller à l'étape de plâtrerie
+      }
+    } else if (formData.projectType === "construction" || formData.projectType === "extension") {
+      // Autre logique pour construction/extension
+    }
+    
+    // Logique par défaut - aller à l'étape suivante
+    return currentStep + 1;
   };
 
   return {

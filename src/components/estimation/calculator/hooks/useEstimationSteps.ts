@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { FormData } from '../types';
+import { determineNextStep, determinePreviousStep } from '../utils/navigationPathUtils';
 
 export const useEstimationSteps = (formData: FormData) => {
   const [step, setStep] = useState(0);
@@ -8,71 +9,42 @@ export const useEstimationSteps = (formData: FormData) => {
   
   // Déterminer le nombre total d'étapes en fonction du type de projet
   const determineStepCount = () => {
-    let baseSteps = 20; // Client type + Project details + Terrain + 15 corps d'état + Contact + Results
+    let baseSteps = 11; // Étapes minimales
+    
+    // Ajuster selon le type de client
+    if (formData.clientType === 'professional') {
+      baseSteps = 20; // Professionnel a plus d'étapes
+    } else if (formData.clientType === 'individual') {
+      baseSteps = 19; // Particulier a moins d'étapes
+    }
     
     // Ajuster en fonction du type de projet
-    if (formData.projectType?.toLowerCase().includes('rénov')) {
-      baseSteps = 18; // Moins d'étapes pour rénovation
-    } else if (formData.projectType?.toLowerCase().includes('aménagement')) {
-      baseSteps = 15; // Encore moins pour aménagement
+    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+      baseSteps += 9; // Étapes supplémentaires pour rénovation/division
+    } else if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+      baseSteps += 7; // Étapes supplémentaires pour construction/extension
     }
+    
+    // Ajouter des étapes pour les options choisies
+    if (formData.includeEcoSolutions) baseSteps += 1;
+    if (formData.includeRenewableEnergy) baseSteps += 1;
+    if (formData.includeLandscaping) baseSteps += 1;
+    if (formData.includeOptions) baseSteps += 1;
+    if (formData.includeCuisine) baseSteps += 1;
+    if (formData.includeBathroom) baseSteps += 1;
     
     return baseSteps;
   };
   
   const totalSteps = determineStepCount();
   
-  // Déterminer les étapes à afficher en fonction des choix précédents
-  const determineVisibleSteps = () => {
-    const steps = {
-      clientType: 0,
-      projectDetails: 1,
-      terrain: 2,
-      grosOeuvre: 3,
-      charpente: 4,
-      couverture: 5,
-      facade: 6,
-      menuiseriesExt: 7,
-      isolation: 8,
-      electricite: 9,
-      plomberie: 10,
-      chauffage: 11,
-      platrerie: 12,
-      menuiseriesInt: 13,
-      carrelage: 14,
-      parquet: 15,
-      peinture: 16,
-      amenagementExt: 17,
-      contact: 18,
-      results: 19
-    };
-    
-    // Ajuster les étapes en fonction du type de projet
-    if (formData.projectType?.toLowerCase().includes('rénov')) {
-      // Pour rénovation, on a moins d'étapes
-      return {
-        ...steps,
-        // Réorganiser les indices pour rénovation
-      };
-    } else if (formData.projectType?.toLowerCase().includes('aménagement')) {
-      // Pour aménagement, encore moins d'étapes
-      return {
-        ...steps,
-        // Réorganiser les indices pour aménagement
-      };
-    }
-    
-    return steps;
-  };
-  
-  const visibleSteps = determineVisibleSteps();
-  
   // Fonction pour aller à l'étape suivante avec animation
   const goToNextStep = () => {
     if (step < totalSteps - 1) {
       setAnimationDirection('forward');
       setTimeout(() => {
-        setStep(step + 1);
+        const nextStep = determineNextStep(step, formData);
+        setStep(nextStep);
       }, 300);
     }
   };
@@ -82,7 +54,8 @@ export const useEstimationSteps = (formData: FormData) => {
     if (step > 0) {
       setAnimationDirection('backward');
       setTimeout(() => {
-        setStep(step - 1);
+        const prevStep = determinePreviousStep(step, formData);
+        setStep(prevStep);
       }, 300);
     }
   };
@@ -95,6 +68,14 @@ export const useEstimationSteps = (formData: FormData) => {
     
     return () => clearTimeout(timer);
   }, [step]);
+  
+  // Déterminer les étapes visibles en fonction des choix
+  const visibleSteps = {
+    clientType: 0,
+    projectDetails: formData.clientType === 'professional' ? 2 : 3,
+    terrain: 5,
+    // ... autres étapes
+  };
   
   return {
     step,
