@@ -33,20 +33,37 @@ export interface FormData {
   hasLand?: boolean;
   landPrice?: string | number;
   terrainType?: string;
+  terrainSurface?: number; // Added missing property
+  terrainAccess?: string; // Added missing property
+  
+  // Connections and utility services
+  waterConnection?: boolean; // Added missing property
+  electricityConnection?: boolean; // Added missing property
+  gasConnection?: boolean; // Added missing property
+  sewerConnection?: boolean; // Added missing property
+  fiberConnection?: boolean; // Added missing property
+  needsSepticTank?: boolean; // Added missing property
+  
+  // Terrain conditions
+  floodRisk?: boolean; // Added missing property
+  claySoil?: boolean; // Added missing property
+  rockySoil?: boolean; // Added missing property
+  wetlandZone?: boolean; // Added missing property
+  heritageZone?: boolean; // Added missing property
   
   // Construction details
   wallType?: string;
-  foundationType?: string;
-  soilType?: string;
-  wallThickness?: string;
-  hasBasement?: boolean;
-  basementType?: string;
+  foundationType?: string; // Added missing property
+  soilType?: string; // Added missing property
+  wallThickness?: string | number; // Added missing property
+  hasBasement?: boolean; // Added missing property
+  basementType?: string; // Added missing property
   flooringType?: string;
-  floorType?: string;
-  slopedLand?: boolean;
-  difficultAccess?: boolean;
-  needsDemolition?: boolean;
-  needsWaterManagement?: boolean;
+  floorType?: string; // Added missing property
+  slopedLand?: boolean; // Added missing property
+  difficultAccess?: boolean; // Added missing property
+  needsDemolition?: boolean; // Added missing property
+  needsWaterManagement?: boolean; // Added missing property
   
   // Roof and structure
   roofType?: string;
@@ -60,9 +77,10 @@ export interface FormData {
   // Windows and doors
   windowType?: string;
   shutterType?: string;
-  windowRenovationArea?: string;
-  windowNewArea?: string;
+  windowRenovationArea?: string | number;
+  windowNewArea?: string | number;
   interiorDoorsType?: string;
+  doorType?: string; // Added missing property
   
   // Technical systems
   electricalType?: string;
@@ -73,8 +91,20 @@ export interface FormData {
   // Interior finishes
   plasteringType?: string;
   floorTileType?: string;
+  wallTileType?: string; // Added missing property
   parquetType?: string;
   paintType?: string;
+  
+  // Paint and finish percentages
+  parquetPercentage?: number; // Added missing property
+  softFloorType?: string; // Added missing property
+  softFloorPercentage?: number; // Added missing property
+  basicPaintPercentage?: number; // Added missing property
+  decorativePaintPercentage?: number; // Added missing property
+  wallpaperPercentage?: number; // Added missing property
+  woodCladPercentage?: number; // Added missing property
+  stoneCladPercentage?: number; // Added missing property
+  metalCladdingPercentage?: number; // Added missing property
   
   // Exterior features
   landscapingType?: string;
@@ -99,6 +129,14 @@ export interface FormData {
   solarPanelSurface?: number;
   ecoFriendlyInsulation?: boolean;
   gardenSurface?: number;
+  
+  // Feature toggles
+  includeEcoSolutions?: boolean; // Added missing property
+  includeRenewableEnergy?: boolean; // Added missing property
+  includeLandscaping?: boolean; // Added missing property
+  includeOptions?: boolean; // Added missing property
+  includeCuisine?: boolean; // Added missing property
+  includeBathroom?: boolean; // Added missing property
   
   // Renovation specific
   renovationType?: string;

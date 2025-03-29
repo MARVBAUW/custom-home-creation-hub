@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
@@ -105,7 +106,7 @@ const GrosOeuvreForm: React.FC<GrosOeuvreFormProps> = ({
                   id="wallThickness" 
                   type="number" 
                   value={formData.wallThickness || ''} 
-                  onChange={(e) => updateFormData({ wallThickness: Number(e.target.value) })}
+                  onChange={(e) => updateFormData({ wallThickness: e.target.value })}
                   placeholder="Ex: 20"
                 />
               </div>

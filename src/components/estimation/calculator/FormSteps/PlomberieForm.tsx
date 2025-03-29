@@ -1,153 +1,112 @@
 
 import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { PlomberieFormProps } from '../types/formTypes';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ArrowLeft, ArrowRight, Droplet } from "lucide-react";
+import { motion } from 'framer-motion';
+import { slideVariants } from '../animations';
 import { PlomberieSchema } from '../types/validationSchemas';
-
-type FormValues = z.infer<typeof PlomberieSchema>;
+import { PlomberieFormProps } from '../types/formTypes';
 
 const PlomberieForm: React.FC<PlomberieFormProps> = ({
   formData,
   updateFormData,
-  defaultValues,
   goToNextStep,
   goToPreviousStep,
   animationDirection,
+  defaultValues = {}
 }) => {
-  const form = useForm<FormValues>({
+  const form = useForm({
     resolver: zodResolver(PlomberieSchema),
     defaultValues: {
-      plumbingType: formData?.plumbingType || defaultValues?.plumbingType || '',
+      plumbingType: formData?.plumbingType || defaultValues?.plumbingType || "",
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    updateFormData?.(values);
-    if (goToNextStep) goToNextStep();
+  const onSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
   };
 
-  return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Plomberie</h2>
-        <p className="text-muted-foreground text-sm">
-          Sélectionnez le type d'installation de plomberie pour votre projet
-        </p>
-      </div>
+  const plumbingTypeOptions = [
+    { id: "standard", label: "Standard", description: "Installation de plomberie traditionnelle" },
+    { id: "premium", label: "Premium", description: "Installation de qualité supérieure" },
+    { id: "economique", label: "Économique", description: "Installation à coût réduit" },
+    { id: "intelligente", label: "Intelligente", description: "Avec systèmes connectés" },
+    { id: "ecologique", label: "Écologique", description: "Économie d'eau et matériaux durables" },
+    { id: "sansAvis", label: "Sans avis", description: "Pas de préférence spécifique" }
+  ];
 
+  return (
+    <motion.div
+      key="step-plomberie"
+      custom={animationDirection}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={slideVariants}
+    >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="flex items-center gap-2 mb-6">
+            <Droplet className="h-5 w-5 text-progineer-gold" />
+            <h2 className="text-2xl font-semibold">Plomberie</h2>
+          </div>
+          
           <FormField
             control={form.control}
             name="plumbingType"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>Type de plomberie</FormLabel>
+                <FormLabel>Type d'installation de plomberie</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     className="grid grid-cols-1 md:grid-cols-2 gap-4"
                   >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="standard" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/plomberie-standard.jpg"
-                          alt="Plomberie standard"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Standard</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation standard avec tuyauterie conventionnelle
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="premium" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/plomberie-premium.jpg"
-                          alt="Plomberie premium"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Premium</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation haut de gamme avec systèmes économiseurs d'eau
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="eco" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/plomberie-eco.jpg"
-                          alt="Plomberie écologique"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Écologique</div>
-                        <p className="text-sm text-muted-foreground">
-                          Système avec récupération d'eau de pluie et recyclage
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="basic" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/plomberie-basique.jpg"
-                          alt="Plomberie basique"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Basique</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation simple pour les besoins essentiels
-                        </p>
-                      </div>
-                    </FormItem>
+                    {plumbingTypeOptions.map((option) => (
+                      <FormItem key={option.id} className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={option.id} />
+                        </FormControl>
+                        <div className="space-y-0.5">
+                          <FormLabel className="font-medium">
+                            {option.label}
+                          </FormLabel>
+                          <p className="text-sm text-gray-500">{option.description}</p>
+                        </div>
+                      </FormItem>
+                    ))}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <div className="flex justify-between pt-4">
+          
+          <div className="pt-4 flex flex-col md:flex-row gap-4 items-center justify-between">
             <Button 
-              type="button"
-              variant="outline"
+              type="button" 
+              variant="outline" 
               onClick={goToPreviousStep}
-              className="flex items-center gap-2"
+              className="w-full md:w-auto group hover:border-progineer-gold/80"
             >
-              <ArrowLeft size={16} />
-              Précédent
+              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
+              Étape précédente
             </Button>
-            <Button type="submit" className="flex items-center gap-2">
-              Continuer
-              <ArrowRight size={16} />
+            
+            <Button type="submit" className="w-full md:w-auto group hover:bg-progineer-gold/90 bg-progineer-gold transition-all duration-300">
+              Continuer 
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>
         </form>
       </Form>
-    </AnimatedStepTransition>
+    </motion.div>
   );
 };
 

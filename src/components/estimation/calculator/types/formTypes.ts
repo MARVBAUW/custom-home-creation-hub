@@ -222,3 +222,30 @@ export interface FacadeRenovFormProps extends BaseFormStepProps {
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
 }
+
+export interface ResultsFormProps {
+  estimationResult: number | null;
+  formData: FormData;
+  categoriesAmounts: Array<{category: string; amount: number}>;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+}
+
+export interface EstimationReportProps {
+  estimation: {
+    totalHT: number;
+    totalTTC: number;
+    vat: number;
+    corpsEtat: Record<string, { montantHT: number; details: string[] }>;
+    honorairesHT: number;
+    honorairesTTC: number;
+    taxeAmenagement: number;
+    garantieDecennale: number;
+    etudesGeotechniques: number;
+    etudeThermique: number;
+    coutGlobalHT: number;
+    coutGlobalTTC: number;
+  };
+  formData: FormData;
+  includeTerrainPrice: boolean;
+}

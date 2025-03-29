@@ -30,3 +30,15 @@ export const asString = (value: string | number | undefined | null): string => {
   
   return String(value);
 };
+
+/**
+ * Convert a number or string to string for form inputs
+ * This avoids "uncontrolled to controlled" warnings
+ */
+export const toFormValue = (value: string | number | undefined | null): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  
+  return String(value);
+};
