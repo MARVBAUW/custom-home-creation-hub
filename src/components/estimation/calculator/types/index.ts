@@ -8,7 +8,7 @@ export interface FormData {
   landIncluded?: string;
   
   // Estimation type/mode
-  estimationType?: 'simple' | 'detailed';
+  estimationType?: 'simple' | 'standard' | 'detailed' | 'quick' | string;
   
   // Terrain details
   terrainType?: string;
@@ -152,7 +152,6 @@ export interface FormData {
   includeOptions?: boolean;
   includeCuisine?: boolean;
   includeBathroom?: boolean;
-  estimationType?: string;
   
   // Professional project fields
   activity?: string;
