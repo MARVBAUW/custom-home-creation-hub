@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -744,4 +745,95 @@ const LoadCombinationsCalculator = () => {
                         <TableHeader>
                           <TableRow>
                             <TableHead>Combinaison</TableHead>
-                            <TableHead>Formule</TableHead
+                            <TableHead>Formule</TableHead>
+                            <TableHead className="text-right">Résultat (kN/m²)</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {combinations
+                            .filter(c => c.type === 'ELS' && c.elsCategory === 'quasi-permanent')
+                            .map(combination => (
+                            <TableRow key={combination.id}>
+                              <TableCell className="font-medium">{combination.name}</TableCell>
+                              <TableCell>{combination.formula}</TableCell>
+                              <TableCell className="text-right">{combination.result.toFixed(2)}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="help" className="space-y-6">
+            <div className="prose dark:prose-invert max-w-none">
+              <h3>Guide d'utilisation</h3>
+              <p>Ce calculateur permet de générer automatiquement les combinaisons d'actions selon l'Eurocode 0 (EN 1990).</p>
+              
+              <h4>Étape 1: Définition des charges</h4>
+              <p>
+                Commencez par définir les charges permanentes (G) et variables (Q) à considérer dans votre calcul.
+                Pour chaque charge variable, vous pouvez sélectionner sa catégorie d'utilisation, ce qui définira
+                automatiquement les coefficients ψ correspondants.
+              </p>
+              
+              <h4>Étape 2: Génération des combinaisons</h4>
+              <p>
+                Une fois vos charges définies, cliquez sur "Générer les combinaisons" pour calculer:
+              </p>
+              <ul>
+                <li>Les combinaisons ELU (1.35G + 1.5Q)</li>
+                <li>Les combinaisons ELS Caractéristiques (G + Q)</li>
+                <li>Les combinaisons ELS Fréquentes (G + ψ₁Q₁ + ψ₂Q₂)</li>
+                <li>La combinaison ELS Quasi-permanente (G + ψ₂Q)</li>
+              </ul>
+              
+              <h4>Étape 3: Export et utilisation</h4>
+              <p>
+                Vous pouvez exporter les résultats au format PDF ou CSV pour les intégrer dans vos notes de calcul
+                ou les partager avec vos collaborateurs.
+              </p>
+              
+              <h3>Rappel des coefficients selon l'Eurocode</h3>
+              <h4>Coefficients partiels pour les ELU (approche fondamentale)</h4>
+              <ul>
+                <li>γG = 1.35 pour les actions permanentes défavorables</li>
+                <li>γQ = 1.50 pour les actions variables défavorables</li>
+              </ul>
+              
+              <h4>Coefficients ψ pour les combinaisons:</h4>
+              <p>
+                Les coefficients ψ sont automatiquement définis selon l'Eurocode 0 en fonction de la catégorie d'utilisation
+                sélectionnée pour chaque charge variable. Vous pouvez également personnaliser ces valeurs si nécessaire.
+              </p>
+              
+              <div className="bg-muted p-4 rounded-md mt-4">
+                <h4 className="text-sm font-medium">À propos</h4>
+                <p className="text-sm text-muted-foreground">
+                  Ce calculateur est fourni à titre indicatif et ne remplace pas l'expertise d'un ingénieur structure.
+                  Vérifiez toujours les résultats selon les annexes nationales applicables à votre projet.
+                </p>
+                <div className="mt-2">
+                  <a 
+                    href="https://www.eurocodes.fr/fr/eurocode0/annexe-nationale-nf-en-1990-an" 
+                    target="_blank"
+                    rel="noopener noreferrer" 
+                    className="text-sm flex items-center text-blue-600 hover:underline"
+                  >
+                    <ExternalLink className="h-3 w-3 mr-1" />
+                    Documentation Eurocode 0
+                  </a>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default LoadCombinationsCalculator;
