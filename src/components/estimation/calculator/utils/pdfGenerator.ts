@@ -1,150 +1,157 @@
+// Import section with jsPDF correctly imported
 
-import jsPDF from 'jspdf';
+import { jsPDF as JSPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
 
-// Function to generate PDF
-export const generatePDF = (formData: FormData, estimationData: any) => {
-  const doc = new jsPDF();
-  const pdfName = `Estimation-${formData.projectType}-${new Date().toLocaleDateString()}.pdf`;
-  
-  // Set document properties
-  doc.setProperties({
-    title: 'Estimation Détaillée',
-    subject: 'Estimation de projet de construction ou rénovation',
-    author: 'Progineer',
-    keywords: 'estimation, construction, rénovation'
-  });
-  
-  // Add header
-  const logoWidth = 50;
-  const logoHeight = 20;
-  doc.addImage('/images/logo-progineer.png', 'PNG', 14, 10, logoWidth, logoHeight);
-  
-  // Add document title
-  doc.setFontSize(22);
-  doc.setTextColor(40);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Estimation Détaillée', 105, 20, { align: 'center' });
-  
-  // Add project details
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Projet: ${formData.projectType || 'N/A'}`, 14, 40);
-  doc.text(`Surface: ${formData.surface || 'N/A'} m²`, 14, 48);
-  doc.text(`Ville: ${formData.city || 'N/A'}`, 14, 56);
-  doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 64);
-  
-  // Define table columns
-  const columns = [
-    { header: 'Poste', dataKey: 'poste' },
-    { header: 'Montant HT (€)', dataKey: 'montantHT' },
-    { header: 'Détails', dataKey: 'details' }
-  ];
-  
-  // Prepare table rows
-  const tableRows = Object.entries(estimationData.corpsEtat).map(([poste, details]: [string, any]) => ({
-    poste: poste,
-    montantHT: details.montantHT ? details.montantHT.toFixed(2) : '0.00',
-    details: details.details ? details.details.join(', ') : ''
-  }));
-  
-  // Add table to the document
-  (doc as any).autoTable({
-    columns: columns,
-    body: tableRows,
-    startY: 70,
-    styles: {
-      font: 'helvetica',
-      fontSize: 10,
-      textColor: 40,
-      columnWidth: 'auto',
-      overflow: 'linebreak',
-      tableWidth: 'auto'
-    },
-    headerStyles: {
-      fillColor: [230, 230, 230],
-      textColor: 40,
-      fontStyle: 'bold'
-    },
-    bodyStyles: {
-      fillColor: [255, 255, 255]
-    },
-    columnStyles: {
-      poste: { fontStyle: 'bold' }
-    }
-  });
-  
-  // Calculate the y position after the table
-  let finalY = (doc as any).autoTable.previous.finalY || 70;
-  
-  // Add totals
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`Total HT: ${estimationData.totalHT.toFixed(2)} €`, 14, finalY + 15);
-  doc.text(`TVA (20%): ${estimationData.vat.toFixed(2)} €`, 14, finalY + 23);
-  doc.text(`Total TTC: ${estimationData.totalTTC.toFixed(2)} €`, 14, finalY + 31);
-  
-  if (formData.landPrice) {
-    doc.text(`Prix du terrain: ${estimationData.terrainPrice.toFixed(2)} €`, 14, finalY + 39);
-    doc.text(`Frais de notaire (estimation): ${estimationData.fraisNotaire.toFixed(2)} €`, 14, finalY + 47);
-    doc.text(`Coût total avec terrain: ${estimationData.coutTotalAvecTerrain.toFixed(2)} €`, 14, finalY + 55);
-  }
-  
-  // Add a new page for additional details
-  doc.addPage();
-  
-  // Add "Additional Details" title
-  doc.setFontSize(18);
-  doc.setTextColor(40);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Détails Supplémentaires', 105, 20, { align: 'center' });
-  
-  // Add "Coûts Globaux Estimés" section
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Coûts Globaux Estimés', 14, 35);
-  
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'normal');
-  doc.text(`Honoraires (10%): ${estimationData.honorairesHT.toFixed(2)} €`, 14, 45);
-  doc.text(`Taxe d'aménagement (3%): ${estimationData.taxeAmenagement.toFixed(2)} €`, 14, 53);
-  doc.text(`Garantie décennale (1%): ${estimationData.garantieDecennale.toFixed(2)} €`, 14, 61);
-  doc.text(`Études géotechniques (0.5%): ${estimationData.etudesGeotechniques.toFixed(2)} €`, 14, 69);
-  doc.text(`Étude thermique (0.5%): ${estimationData.etudeThermique.toFixed(2)} €`, 14, 77);
-  doc.text(`Coût global HT (estimé): ${estimationData.coutGlobalHT.toFixed(2)} €`, 14, 85);
-  doc.text(`Coût global TTC (estimé): ${estimationData.coutGlobalTTC.toFixed(2)} €`, 14, 93);
-  
-  // Add "Disclaimer" section
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('Disclaimer', 14, 110);
-  
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  const disclaimerText = `Cette estimation est fournie à titre indicatif et est basée sur les informations que vous avez fournies. Les coûts réels peuvent varier en fonction des spécificités du projet, des matériaux choisis et des conditions du marché. Pour une estimation précise, veuillez consulter un expert Progineer.`;
-  const textLines = doc.splitTextToSize(disclaimerText, 190);
-  doc.text(textLines, 14, 120);
-  
-  // Footer
-  const pageCount = doc.internal.getNumberOfPages();
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(10);
+// Define the extended jsPDF type
+interface ExtendedJSPDF extends JSPDF {
+  getNumberOfPages: () => number;
+  getCurrentPageInfo: () => {
+    pageNumber: number;
+    pageContext: any;
+  };
+}
+
+// Function to generate the PDF document
+export const generateEstimationPDF = (formData: FormData, estimationResult: number | null, includeTerrainPrice: boolean = false) => {
+  // Initialize jsPDF
+  const doc = new JSPDF() as ExtendedJSPDF;
+
+  // Define header
+  const header = (doc: ExtendedJSPDF) => {
+    doc.setFontSize(20);
     doc.setTextColor(40);
-    doc.setFont('helvetica', 'normal');
-    
-    // Add page number
-    const pageText = `Page ${i} sur ${pageCount}`;
-    doc.text(pageText, 190, doc.internal.pageSize.height - 10, { align: 'right' });
-    
-    // Add company info
-    const companyInfo = 'Progineer - Estimation de projet';
-    doc.text(companyInfo, 14, doc.internal.pageSize.height - 10);
+    doc.setFont('helvetica', 'bold');
+    doc.text("Estimation de Projet", 15, 25);
+  };
+
+  // Define footer
+  const footer = (doc: ExtendedJSPDF) => {
+    const pageCount = doc.getNumberOfPages();
+
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setTextColor(40);
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.getWidth() - 35, doc.internal.pageSize.getHeight() - 10);
+    }
+  };
+
+  // Function to add a page with header and footer
+  const addPage = (doc: ExtendedJSPDF) => {
+    doc.addPage();
+    header(doc);
+    footer(doc);
+  };
+
+  // Title
+  header(doc);
+
+  // General Information
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'normal');
+  doc.text("Informations Générales", 15, 40);
+
+  let y = 50;
+  const lineHeight = 10;
+
+  // Function to add information to the PDF
+  const addInfo = (label: string, value: any) => {
+    if (value !== undefined && value !== null && value !== '') {
+      doc.setFontSize(12);
+      doc.text(`${label}: ${value}`, 15, y);
+      y += lineHeight;
+    }
+  };
+
+  addInfo("Type de client", formData.clientType);
+  addInfo("Type de projet", formData.projectType);
+  addInfo("Type d'estimation", formData.estimationType);
+
+  if (formData.surface) {
+    addInfo("Surface", `${formData.surface} m²`);
   }
-  
-  // Save the PDF
-  doc.save(pdfName);
-  
-  return pdfName;
+
+  if (includeTerrainPrice && formData.landPrice) {
+    addInfo("Prix du terrain", `${formData.landPrice} €`);
+  }
+
+  y += 10;
+
+  // Construction Details
+  doc.setFontSize(16);
+  doc.text("Détails de Construction", 15, y);
+  y += lineHeight + 5;
+
+  addInfo("Type de terrain", formData.terrainType);
+  addInfo("Structure des murs", formData.wallType);
+  addInfo("Type de toiture", formData.roofType);
+  addInfo("Type de combles", formData.atticType);
+
+  y += 10;
+
+  // Contact Information
+  doc.setFontSize(16);
+  doc.text("Informations de Contact", 15, y);
+  y += lineHeight + 5;
+
+  addInfo("Nom", formData.firstName);
+  addInfo("Prénom", formData.lastName);
+  addInfo("Email", formData.email);
+  addInfo("Téléphone", formData.phone);
+
+  // Add a new page for the estimation result
+  addPage(doc);
+
+  // Estimation Result
+  doc.setFontSize(20);
+  doc.setFont('helvetica', 'bold');
+  doc.text("Résultat de l'Estimation", 15, 40);
+
+  y = 50;
+
+  if (estimationResult !== null) {
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Estimation Totale: ${estimationResult.toFixed(2)} €`, 15, y);
+    y += lineHeight;
+  } else {
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal');
+    doc.text("Estimation non disponible.", 15, y);
+    y += lineHeight;
+  }
+
+  // AutoTable example - Detailed costs
+  const detailedCosts = [
+    { item: 'Terrassement', cost: estimationResult ? (estimationResult * 0.1).toFixed(2) : 'N/A' },
+    { item: 'Fondations', cost: estimationResult ? (estimationResult * 0.15).toFixed(2) : 'N/A' },
+    { item: 'Murs', cost: estimationResult ? (estimationResult * 0.2).toFixed(2) : 'N/A' },
+    { item: 'Toiture', cost: estimationResult ? (estimationResult * 0.15).toFixed(2) : 'N/A' },
+    { item: 'Menuiseries', cost: estimationResult ? (estimationResult * 0.1).toFixed(2) : 'N/A' },
+    { item: 'Second oeuvre', cost: estimationResult ? (estimationResult * 0.3).toFixed(2) : 'N/A' },
+  ];
+
+  (doc as ExtendedJSPDF).autoTable({
+    head: [['Poste', 'Coût (€)']],
+    body: detailedCosts.map(item => [item.item, item.cost]),
+    startY: y + 10,
+    margin: { left: 15 },
+    styles: {
+      fontSize: 12,
+      cellPadding: 5,
+    },
+    headStyles: {
+      fillColor: [41, 128, 185],
+      textColor: 255,
+      fontStyle: 'bold',
+      fontSize: 13,
+    },
+  });
+
+  footer(doc);
+
+  // Generate the PDF file
+  return doc.output('datauristring');
 };

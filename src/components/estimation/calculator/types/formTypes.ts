@@ -1,7 +1,7 @@
 
 import { FormData } from './index';
 
-// Base form step props that all form step components should extend
+// All form step components should extend BaseFormStepProps
 export interface BaseFormStepProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
