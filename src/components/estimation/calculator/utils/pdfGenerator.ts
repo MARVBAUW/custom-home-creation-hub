@@ -9,7 +9,7 @@ import { FormData } from '../types';
 type PageInfo = {
   pageNumber: number;
   pageContext: any;
-  objId: number;
+  objId?: number; // Make objId optional to fix type error
 };
 
 interface ExtendedJSPDF extends JSPDF {
@@ -18,7 +18,7 @@ interface ExtendedJSPDF extends JSPDF {
   autoTable: (options: any) => any;
 }
 
-// Function to generate the PDF document - making sure we export with both names for backward compatibility
+// Function to generate the PDF document
 export const generateEstimationPDF = (formData: FormData, estimationResult: number | null, includeTerrainPrice: boolean = false) => {
   // Initialize jsPDF
   const doc = new JSPDF() as ExtendedJSPDF;
@@ -138,7 +138,6 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
     { item: 'Second oeuvre', cost: estimationResult ? (estimationResult * 0.3).toFixed(2) : 'N/A' },
   ];
 
-  // @ts-ignore - handle autoTable typing issues
   doc.autoTable({
     head: [['Poste', 'Coût (€)']],
     body: detailedCosts.map(item => [item.item, item.cost]),
@@ -164,5 +163,5 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
   return pdfName;
 };
 
-// Export with the name that's being imported in other files
+// Export with both names for backward compatibility
 export const generatePDF = generateEstimationPDF;

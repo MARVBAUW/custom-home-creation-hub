@@ -196,7 +196,7 @@ export interface ResultsFormProps {
   estimationResult: number | null;
   categoriesAmounts: { category: string; amount: number; }[];
   goToPreviousStep: () => void;
-  animationDirection?: 'forward' | 'backward';
+  animationDirection: 'forward' | 'backward';
 }
 
 // Message processor props

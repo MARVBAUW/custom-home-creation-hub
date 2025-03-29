@@ -1,80 +1,86 @@
 
 import React from 'react';
-import { StepComponentRegistry } from './StepComponents';
+import { FormData } from '../../types';
 import ConstructionDetailsForm from '../../FormSteps/ConstructionDetailsForm';
 import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
 import CharpenteForm from '../../FormSteps/CharpenteForm';
-import CombleForm from '../../FormSteps/CombleForm';
-import { FormData, BaseFormStepProps } from '../../types';
+import ComblesForm from '../../FormSteps/ComblesForm';
 
-// Registry for construction steps (steps 5-9)
 export const createConstructionStepRegistry = (
   formData: FormData,
   onConstructionDetailsSubmit: (data: any) => void,
-  onTerrainSubmit: (data: { terrainType: string }) => void,
-  onGrosOeuvreSubmit: (data: { wallType: string }) => void,
-  onCharpenteSubmit: (data: { roofType: string }) => void,
-  onComblesSubmit: (data: { atticType: string }) => void,
+  onTerrainSubmit: (data: any) => void,
+  onGrosOeuvreSubmit: (data: any) => void,
+  onCharpenteSubmit: (data: any) => void,
+  onComblesSubmit: (data: any) => void,
   goToPreviousStep: () => void
-): StepComponentRegistry => {
+) => {
   return {
-    5: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
-      <ConstructionDetailsForm
-        formData={formData}
-        updateFormData={(data) => onConstructionDetailsSubmit({
-          surface: data.surface ? Number(data.surface) : 0,
-          levels: data.levels ? Number(data.levels) : 0,
-          units: data.units ? Number(data.units) : 0
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    6: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
-      <TerrainForm
-        formData={formData}
-        updateFormData={(data) => onTerrainSubmit({
-          terrainType: data.terrainType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    7: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
-      <GrosOeuvreForm
-        formData={formData}
-        updateFormData={(data) => onGrosOeuvreSubmit({
-          wallType: data.wallType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    8: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
-      <CharpenteForm
-        formData={formData}
-        updateFormData={(data) => onCharpenteSubmit({
-          roofType: data.roofType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    9: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
-      <CombleForm
-        formData={formData}
-        updateFormData={(data) => onComblesSubmit({
-          atticType: data.atticType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
+    3: (props: { animationDirection: 'forward' | 'backward' }) => {
+      const { animationDirection } = props;
+      
+      return (
+        <ConstructionDetailsForm
+          formData={formData}
+          updateFormData={onConstructionDetailsSubmit}
+          goToNextStep={() => {}} // Will be handled by the submission
+          goToPreviousStep={goToPreviousStep}
+          animationDirection={animationDirection}
+        />
+      );
+    },
+    4: (props: { animationDirection: 'forward' | 'backward' }) => {
+      const { animationDirection } = props;
+      
+      return (
+        <TerrainForm
+          formData={formData}
+          updateFormData={onTerrainSubmit}
+          goToNextStep={() => {}} // Will be handled by the submission
+          goToPreviousStep={goToPreviousStep}
+          animationDirection={animationDirection}
+        />
+      );
+    },
+    5: (props: { animationDirection: 'forward' | 'backward' }) => {
+      const { animationDirection } = props;
+      
+      return (
+        <GrosOeuvreForm
+          formData={formData}
+          updateFormData={onGrosOeuvreSubmit}
+          goToNextStep={() => {}} // Will be handled by the submission
+          goToPreviousStep={goToPreviousStep}
+          animationDirection={animationDirection}
+        />
+      );
+    },
+    6: (props: { animationDirection: 'forward' | 'backward' }) => {
+      const { animationDirection } = props;
+      
+      return (
+        <CharpenteForm
+          formData={formData}
+          updateFormData={onCharpenteSubmit}
+          goToNextStep={() => {}} // Will be handled by the submission
+          goToPreviousStep={goToPreviousStep}
+          animationDirection={animationDirection}
+        />
+      );
+    },
+    7: (props: { animationDirection: 'forward' | 'backward' }) => {
+      const { animationDirection } = props;
+      
+      return (
+        <ComblesForm
+          formData={formData}
+          updateFormData={onComblesSubmit}
+          goToNextStep={() => {}} // Will be handled by the submission
+          goToPreviousStep={goToPreviousStep}
+          animationDirection={animationDirection}
+        />
+      );
+    },
   };
 };
