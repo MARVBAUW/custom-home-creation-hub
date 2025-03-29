@@ -1,85 +1,78 @@
 
 import { FormData } from '../../types';
 
-export const useInteriorSubmissions = (
-  updateFormData: (data: Partial<FormData>) => void,
-  goToNextStep: () => void
-) => {
-  // Soumission du formulaire de plâtrerie
-  const onPlatrerieSubmit = (data: {
-    plasteringType: string;
-  }) => {
+export const useInteriorSubmissions = (updateFormData: (data: Partial<FormData>) => void) => {
+  // Gestion de la soumission du formulaire de plâtrerie
+  const handlePlatrerieSubmit = (data: { plasteringType: string }) => {
     updateFormData({
       plasteringType: data.plasteringType,
     });
-    goToNextStep(); // Passer à l'étape menuiseries intérieures (18)
   };
 
-  // Soumission du formulaire de menuiseries intérieures
-  const onMenuiseriesIntSubmit = (data: {
+  // Gestion de la soumission du formulaire de menuiseries intérieures
+  const handleMenuiseriesIntSubmit = (data: {
+    interiorDoorsType: string;
     doorType: string;
-    interiorFittings: string[];
   }) => {
     updateFormData({
+      interiorDoorsType: data.interiorDoorsType,
       doorType: data.doorType,
-      interiorFittings: data.interiorFittings,
+      interiorFittings: data.interiorDoorsType === 'custom' ? 'custom' : 'standard',
     });
-    goToNextStep(); // Passer à l'étape carrelage (19)
   };
 
-  // Soumission du formulaire de carrelage
-  const onCarrelageSubmit = (data: {
+  // Gestion de la soumission du formulaire de carrelage
+  const handleCarrelageSubmit = (data: {
     floorTileType: string;
     wallTileType: string;
-    floorTilePercentage: string;
+    floorTilePercentage: string | number;
   }) => {
     updateFormData({
       floorTileType: data.floorTileType,
       wallTileType: data.wallTileType,
-      floorTilePercentage: Number(data.floorTilePercentage),
+      floorTilePercentage: data.floorTilePercentage,
     });
-    goToNextStep(); // Passer à l'étape parquet (20)
   };
 
-  // Soumission du formulaire de parquet
-  const onParquetSubmit = (data: {
+  // Gestion de la soumission du formulaire de parquet
+  const handleParquetSubmit = (data: {
     parquetType: string;
-    parquetPercentage: string;
     softFloorType: string;
-    softFloorPercentage: string;
+    parquetPercentage: string | number;
+    softFloorPercentage: string | number;
   }) => {
     updateFormData({
       parquetType: data.parquetType,
-      parquetPercentage: Number(data.parquetPercentage),
       softFloorType: data.softFloorType,
-      softFloorPercentage: Number(data.softFloorPercentage),
+      parquetPercentage: data.parquetPercentage,
+      softFloorPercentage: data.softFloorPercentage,
     });
-    goToNextStep(); // Passer à l'étape peinture (21)
   };
 
-  // Soumission du formulaire de peinture
-  const onPeintureSubmit = (data: {
-    basicPaintPercentage: string;
-    decorativePaintPercentage: string;
-    wallpaperPercentage: string;
-    woodCladPercentage: string;
-    stoneCladPercentage: string;
+  // Gestion de la soumission du formulaire de peinture
+  const handlePeintureSubmit = (data: {
+    paintType: string;
+    basicPaintPercentage: string | number;
+    decorativePaintPercentage: string | number;
+    wallpaperPercentage: string | number;
+    woodCladPercentage: string | number;
+    stoneCladPercentage: string | number;
   }) => {
     updateFormData({
-      basicPaintPercentage: Number(data.basicPaintPercentage),
-      decorativePaintPercentage: Number(data.decorativePaintPercentage),
-      wallpaperPercentage: Number(data.wallpaperPercentage),
-      woodCladPercentage: Number(data.woodCladPercentage),
-      stoneCladPercentage: Number(data.stoneCladPercentage),
+      paintType: data.paintType,
+      basicPaintPercentage: data.basicPaintPercentage,
+      decorativePaintPercentage: data.decorativePaintPercentage,
+      wallpaperPercentage: data.wallpaperPercentage,
+      woodCladPercentage: data.woodCladPercentage,
+      stoneCladPercentage: data.stoneCladPercentage,
     });
-    goToNextStep(); // Passer à l'étape cuisines (22)
   };
 
   return {
-    onPlatrerieSubmit,
-    onMenuiseriesIntSubmit,
-    onCarrelageSubmit,
-    onParquetSubmit,
-    onPeintureSubmit
+    handlePlatrerieSubmit,
+    handleMenuiseriesIntSubmit,
+    handleCarrelageSubmit,
+    handleParquetSubmit,
+    handlePeintureSubmit,
   };
 };

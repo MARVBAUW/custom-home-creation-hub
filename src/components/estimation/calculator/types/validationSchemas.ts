@@ -38,4 +38,36 @@ export const ConstructionDetailsSchema = z.object({
 export const MenuiseriesExtSchema = z.object({
   windowType: z.string().min(1, "Veuillez sélectionner un type de fenêtre"),
   shutterType: z.string().min(1, "Veuillez sélectionner un type de volet"),
+  windowRenovationArea: z.string().optional(),
+  windowNewArea: z.string().optional(),
+});
+
+// Schema for plumbing
+export const PlomberieSchema = z.object({
+  plumbingType: z.string().min(1, "Veuillez sélectionner un type de plomberie"),
+});
+
+// Schema for charpente
+export const CharpenteSchema = z.object({
+  roofType: z.string().min(1, "Veuillez sélectionner un type de charpente"),
+});
+
+// Schema for isolation
+export const IsolationSchema = z.object({
+  insulationType: z.string().min(1, "Veuillez sélectionner un type d'isolation"),
+});
+
+// Schema for électricité
+export const ElectriciteSchema = z.object({
+  electricalType: z.string().min(1, "Veuillez sélectionner un type d'installation électrique"),
+});
+
+// Schema for couverture
+export const CouvertureSchema = z.object({
+  roofingType: z.string().min(1, "Veuillez sélectionner un type de couverture"),
+});
+
+// Schema for platrerie
+export const PlatrerieSchema = z.object({
+  plasteringType: z.string().min(1, "Veuillez sélectionner un type de plâtrerie"),
 });

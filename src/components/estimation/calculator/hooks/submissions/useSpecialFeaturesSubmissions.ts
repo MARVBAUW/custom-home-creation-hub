@@ -1,112 +1,101 @@
 
 import { FormData } from '../../types';
 
-export const useSpecialFeaturesSubmissions = (
-  formData: FormData,
-  updateFormData: (data: Partial<FormData>) => void,
-  setStep: (step: number) => void
-) => {
-  // Soumission du formulaire d'énergies renouvelables
-  const onEnergiesRenouvelablesSubmit = (data: {
+export const useSpecialFeaturesSubmissions = (updateFormData: (data: Partial<FormData>) => void) => {
+  // Gestion de la soumission du formulaire des énergies renouvelables
+  const handleEnergiesRenouvelablesSubmit = (data: {
     energyType: string;
+    solarPanelSurface?: string;
   }) => {
     updateFormData({
       energyType: data.energyType,
+      solarPanelSurface: data.solarPanelSurface ? Number(data.solarPanelSurface) : undefined,
     });
-    
-    // Déterminer l'étape suivante en fonction du projet
-    // Si cuisine équipée est sélectionnée
-    if (formData.includeCuisine) {
-      setStep(27); // Aller à l'étape cuisine
-    } 
-    // Si salle de bain est sélectionnée
-    else if (formData.includeBathroom) {
-      setStep(28); // Aller à l'étape salle de bain
-    }
-    // Sinon, on finalise
-    else {
-      setStep(36); // Aller à la dernière étape (contact)
-    }
   };
 
-  // Soumission du formulaire de solutions environnementales
-  const onSolutionsEnvironSubmit = (data: {
+  // Gestion de la soumission du formulaire des solutions environnementales
+  const handleSolutionsEnvironSubmit = (data: {
     solutionType: string;
+    ecoFriendlyInsulation: boolean;
   }) => {
     updateFormData({
       solutionType: data.solutionType,
+      ecoFriendlyInsulation: data.ecoFriendlyInsulation,
     });
-    
-    // Logique similaire pour déterminer l'étape suivante
-    if (formData.includeCuisine) {
-      setStep(27);
-    } else if (formData.includeBathroom) {
-      setStep(28);
-    } else {
-      setStep(36);
-    }
   };
 
-  // Soumission du formulaire d'aménagements paysagers
-  const onAmenagementPaysagerSubmit = (data: {
-    landscapeLevel: string;
-    fencingLength: string;
-    gateLength: string;
-    terraceArea: string;
-    landscapeArea: string;
+  // Gestion de la soumission du formulaire d'aménagement paysager
+  const handleAmenagementPaysagerSubmit = (data: {
+    gardenArea: string | number;
+    garden: boolean;
+    irrigation: boolean;
   }) => {
     updateFormData({
-      landscapeLevel: data.landscapeLevel,
-      fencingLength: data.fencingLength,
-      gateLength: data.gateLength,
+      gardenArea: data.gardenArea,
+      garden: data.garden,
+      irrigation: data.irrigation,
+    });
+  };
+
+  // Gestion de la soumission du formulaire des options
+  const handleOptionsSubmit = (data: {
+    terrace: boolean;
+    terraceType?: string;
+    terraceArea?: string | number;
+    swimmingPool: boolean;
+    poolType?: string;
+    garage: boolean;
+    garageSize?: string;
+    carport: boolean;
+    fence: boolean;
+    gate: boolean;
+    outdoorLighting: boolean;
+    outdoorKitchen?: boolean;
+    pergola?: boolean;
+    exteriorFeatures?: string[];
+  }) => {
+    updateFormData({
+      terrace: data.terrace,
+      terraceType: data.terraceType,
       terraceArea: data.terraceArea,
-      landscapeArea: data.landscapeArea,
+      swimmingPool: data.swimmingPool,
+      poolType: data.poolType,
+      garage: data.garage,
+      garageSize: data.garageSize,
+      carport: data.carport,
+      fence: data.fence,
+      gate: data.gate,
+      outdoorLighting: data.outdoorLighting,
+      outdoorKitchen: data.outdoorKitchen,
+      pergola: data.pergola,
+      exteriorFeatures: data.exteriorFeatures
     });
-    
-    // Déterminer l'étape suivante
-    if (formData.includeOptions) {
-      setStep(26); // Aller à l'étape options (piscine, jacuzzi, carport)
-    } else if (formData.includeCuisine) {
-      setStep(27);
-    } else if (formData.includeBathroom) {
-      setStep(28);
-    } else {
-      setStep(36);
-    }
   };
 
-  // Soumission du formulaire d'options
-  const onOptionsSubmit = (data: {
-    carport: string;
-    pool: string;
-    poolArea: string;
-    poolHeating: string;
-    jacuzzi: string;
-    jacuzziArea: string;
+  // Gestion de la soumission du formulaire de cuisine
+  const handleCuisineSubmit = (data: { kitchenType: string }) => {
+    updateFormData({
+      kitchenType: data.kitchenType,
+    });
+  };
+
+  // Gestion de la soumission du formulaire de salle de bain
+  const handleSalleDeBainSubmit = (data: {
+    bathroomType: string;
+    bathroomCount: string;
   }) => {
     updateFormData({
-      carport: data.carport,
-      pool: data.pool,
-      poolArea: data.poolArea,
-      poolHeating: data.poolHeating,
-      jacuzzi: data.jacuzzi,
-      jacuzziArea: data.jacuzziArea,
+      bathroomType: data.bathroomType,
+      bathroomCount: data.bathroomCount
     });
-    
-    // Déterminer l'étape suivante
-    if (formData.includeCuisine) {
-      setStep(27);
-    } else if (formData.includeBathroom) {
-      setStep(28);
-    } else {
-      setStep(36);
-    }
   };
 
   return {
-    onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit,
-    onOptionsSubmit
+    handleEnergiesRenouvelablesSubmit,
+    handleSolutionsEnvironSubmit,
+    handleAmenagementPaysagerSubmit,
+    handleOptionsSubmit,
+    handleCuisineSubmit,
+    handleSalleDeBainSubmit,
   };
 };

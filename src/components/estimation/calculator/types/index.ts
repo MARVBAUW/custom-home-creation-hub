@@ -25,15 +25,15 @@ export interface FormData {
   // Informations projet commun
   projectType?: string;
   estimationType?: string;
-  surface?: number;
-  levels?: number;
-  units?: number;
+  surface?: number | string;
+  levels?: number | string;
+  units?: number | string;
   
   // Terrain
   terrainType?: string;
   terrainAccess?: string;
-  terrainSurface?: number;
-  landPrice?: number;
+  terrainSurface?: number | string;
+  landPrice?: number | string;
   hasLand?: boolean;
   waterConnection?: boolean;
   electricityConnection?: boolean;
@@ -51,7 +51,7 @@ export interface FormData {
   wallType?: string;
   foundationType?: string;
   soilType?: string;
-  wallThickness?: number;
+  wallThickness?: number | string;
   hasBasement?: boolean;
   basementType?: string;
   floorType?: string;
@@ -74,11 +74,11 @@ export interface FormData {
   facadeMaterial?: string;
   
   // Façade rénovation
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
-  stoneCladPercentage?: number;
-  windowRenovationArea?: number;
+  metalCladdingPercentage?: number | string;
+  woodCladdingPercentage?: number | string;
+  stoneCladdingPercentage?: number | string;
+  windowRenovationArea?: number | string;
+  windowNewArea?: number | string;
   
   // Menuiseries extérieures
   windowType?: string;
@@ -96,6 +96,7 @@ export interface FormData {
   // Menuiseries intérieures
   interiorDoorsType?: string;
   doorType?: string;
+  interiorFittings?: string;
   
   // Revêtements
   tileType?: string;
@@ -117,8 +118,8 @@ export interface FormData {
   stoneCladPercentage?: number | string;
   
   // Aménagements extérieurs
-  gardenArea?: number;
-  gardenSurface?: number;
+  gardenArea?: number | string;
+  gardenSurface?: number | string;
   terrace?: boolean;
   swimmingPool?: boolean;
   garage?: boolean;
@@ -128,7 +129,7 @@ export interface FormData {
   gate?: boolean;
   garden?: boolean;
   terraceType?: string;
-  terraceArea?: number;
+  terraceArea?: number | string;
   poolType?: string;
   garageSize?: string;
   outdoorLighting?: boolean;
@@ -153,7 +154,7 @@ export interface FormData {
   // Solutions environnementales
   energyType?: string;
   solutionType?: string;
-  solarPanelSurface?: number;
+  solarPanelSurface?: number | string;
   ecoFriendlyInsulation?: boolean;
   
   // Type de construction et finitions
@@ -166,7 +167,7 @@ export interface FormData {
   renovationAreas?: string[];
   
   // Informations fiscales
-  cityTaxRate?: number;
+  cityTaxRate?: number | string;
 }
 
 export * from './formTypes';

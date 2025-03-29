@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -6,27 +7,31 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { PlomberieFormProps } from '../types/formTypes';
+import { PlomberieSchema } from '../types/validationSchemas';
 
-const formSchema = z.object({
-  plumbingType: z.string().min(1, { message: 'Veuillez sélectionner une option' }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof PlomberieSchema>;
 
 const PlomberieForm: React.FC<PlomberieFormProps> = ({
+  formData,
+  updateFormData,
   defaultValues,
-  onSubmit,
+  goToNextStep,
   goToPreviousStep,
   animationDirection,
 }) => {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(PlomberieSchema),
     defaultValues: {
-      plumbingType: defaultValues?.plumbingType || '',
+      plumbingType: formData?.plumbingType || defaultValues?.plumbingType || '',
     },
   });
+
+  const onSubmit = (values: FormValues) => {
+    updateFormData?.(values);
+    if (goToNextStep) goToNextStep();
+  };
 
   return (
     <AnimatedStepTransition direction={animationDirection}>
@@ -38,7 +43,7 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="plumbingType"
@@ -135,7 +140,10 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
               <ArrowLeft size={16} />
               Précédent
             </Button>
-            <Button type="submit">Continuer</Button>
+            <Button type="submit" className="flex items-center gap-2">
+              Continuer
+              <ArrowRight size={16} />
+            </Button>
           </div>
         </form>
       </Form>

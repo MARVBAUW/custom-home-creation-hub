@@ -2,40 +2,38 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { motion } from 'framer-motion';
 import { slideVariants } from '../animations';
-import { MenuiseriesExtSchema } from '../types';
-
-type MenuiseriesExtFormProps = {
-  defaultValues: {
-    windowType?: string;
-    windowRenovationArea?: string;
-    windowNewArea?: string;
-  };
-  onSubmit: (data: z.infer<typeof MenuiseriesExtSchema>) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
+import { MenuiseriesExtSchema } from '../types/validationSchemas';
+import { MenuiseriesExtFormProps } from '../types/formTypes';
+import { Input } from '@/components/ui/input';
 
 const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
-  defaultValues,
-  onSubmit,
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  defaultValues = {}
 }) => {
-  const form = useForm<z.infer<typeof MenuiseriesExtSchema>>({
+  const form = useForm({
     resolver: zodResolver(MenuiseriesExtSchema),
     defaultValues: {
-      windowType: defaultValues.windowType || "",
-      windowRenovationArea: defaultValues.windowRenovationArea || "",
-      windowNewArea: defaultValues.windowNewArea || "",
+      windowType: formData?.windowType || defaultValues?.windowType || "",
+      shutterType: formData?.shutterType || defaultValues?.shutterType || "",
+      windowRenovationArea: formData?.windowRenovationArea?.toString() || "",
+      windowNewArea: formData?.windowNewArea?.toString() || "",
     },
   });
+
+  const onSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
 
   const windowTypeOptions = [
     { id: "bois", label: "Bois", description: "Menuiseries en bois traditionnel" },
@@ -44,6 +42,15 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
     { id: "mixte", label: "Mixte Bois/Alu", description: "Menuiseries mixtes bois et aluminium" },
     { id: "pvcColore", label: "PVC Coloré", description: "Menuiseries PVC avec finition colorée" },
     { id: "sansAvis", label: "Sans avis", description: "Pas de préférence spécifique" }
+  ];
+
+  const shutterTypeOptions = [
+    { id: "voletRoulant", label: "Volets roulants", description: "Volets roulants électriques ou manuels" },
+    { id: "voletBattant", label: "Volets battants", description: "Volets traditionnels à battants" },
+    { id: "voletCoulissant", label: "Volets coulissants", description: "Volets qui coulissent le long de la façade" },
+    { id: "sansVolet", label: "Sans volets", description: "Pas de volets" },
+    { id: "storeInterieur", label: "Stores intérieurs", description: "Stores montés à l'intérieur" },
+    { id: "sansAvis", label: "Sans avis", description: "Pas de préférence particulière" }
   ];
 
   return (
@@ -87,6 +94,35 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
               </FormItem>
             )}
           />
+          
+          <FormField
+            control={form.control}
+            name="shutterType"
+            render={({ field }) => (
+              <FormItem className="space-y-3">
+                <FormLabel>Type de volets</FormLabel>
+                <FormControl>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    className="grid grid-cols-2 gap-4"
+                  >
+                    {shutterTypeOptions.map((option) => (
+                      <FormItem key={option.id} className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value={option.id} />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {option.label}
+                        </FormLabel>
+                      </FormItem>
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <FormField
@@ -96,7 +132,7 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
                 <FormItem>
                   <FormLabel>Surface rénovation (m²)</FormLabel>
                   <FormControl>
-                    <input 
+                    <Input 
                       type="number" 
                       {...field} 
                       className="w-full border rounded p-2" 
@@ -115,7 +151,7 @@ const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
                 <FormItem>
                   <FormLabel>Surface nouvelle (m²)</FormLabel>
                   <FormControl>
-                    <input 
+                    <Input 
                       type="number" 
                       {...field} 
                       className="w-full border rounded p-2" 

@@ -1,11 +1,15 @@
+
 import { FormData } from './index';
 
 // Base props for all form steps
 export interface BaseFormStepProps {
+  formData?: FormData;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToPreviousStep: () => void;
+  goToNextStep?: () => void;
+  animationDirection: 'forward' | 'backward';
   defaultValues?: any;
   onSubmit?: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
 }
 
 // Form props for different steps
@@ -46,8 +50,8 @@ export interface CharpenteFormProps extends BaseFormStepProps {
 }
 
 export interface ContactFormProps extends BaseFormStepProps {
-  formData?: FormData;
-  updateFormData?: (data: Partial<FormData>) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
   goToNextStep?: () => void;
 }
 
@@ -106,13 +110,9 @@ export interface PlomberieFormProps extends BaseFormStepProps {
 }
 
 export interface ChauffageFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    heatingType?: string;
-    hasAirConditioning?: boolean | string;
-  };
-  formData?: FormData;
-  updateFormData?: (data: Partial<FormData>) => void;
-  goToNextStep?: () => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
 }
 
 export interface PlatrerieFormProps extends BaseFormStepProps {
