@@ -64,17 +64,17 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
     doc.text(`Localisation: ${formData.city || 'Non spécifiée'}`, 14, 42);
     doc.text(`Finition: ${formData.finishLevel || 'Standard'}`, 14, 48);
     
-    // Configuration du tableau
+    // Configuration du tableau avec les types corrects pour jsPDF-autotable
     const columnStyles = {
-      0: { fontStyle: 'bold' },
-      1: { halign: 'right' }
+      0: { fontStyle: 'bold' as 'bold' },
+      1: { halign: 'right' as 'right' }
     };
     
     const headStyles = {
-      fillColor: [242, 242, 242, 0], // Added a fourth value to ensure it's a valid Color
-      textColor: [51, 51, 51, 0],    // Added a fourth value to ensure it's a valid Color
-      fontStyle: 'bold',
-      halign: 'center'
+      fillColor: [242, 242, 242, 0] as [number, number, number, number],
+      textColor: [51, 51, 51, 0] as [number, number, number, number],
+      fontStyle: 'bold' as 'bold',
+      halign: 'center' as 'center'
     };
     
     // Préparation des données pour le tableau
