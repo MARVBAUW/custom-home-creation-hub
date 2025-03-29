@@ -7,12 +7,19 @@ import {
 import { ensureNumber } from './utils/typeConversions';
 
 export const calculateEstimation = (formData: FormData): number => {
-  // Utiliser l'estimation détaillée si le mode détaillé est activé ou par défaut
-  if (formData.estimationMode === 'detailed') {
-    return calculateDetailedEstimation(formData);
+  // Determine which estimation method to use
+  // Use 'detailed' mode by default if not specified
+  const mode = formData.estimationType || 'simple';
+  
+  if (mode === 'detailed') {
+    // Extract just the number from the detailed calculation result
+    const detailedResult = calculateDetailedEstimation(formData);
+    return typeof detailedResult === 'object' && 'totalEstimation' in detailedResult 
+      ? detailedResult.totalEstimation 
+      : 0;
   }
   
-  // Sinon, utiliser l'estimation simple
+  // Fall back to simple estimation
   return calculateSimpleEstimation(formData);
 };
 

@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 import { ensureNumber } from '../utils/typeConversions';
 
@@ -280,9 +279,8 @@ export const calculateDetailedEstimation = (formData: FormData) => {
 };
 
 /**
- * Calcule une estimation simplifiée du projet de construction
- * @param formData Données du formulaire
- * @returns Total de l'estimation en euros
+ * Function kept for backward compatibility
+ * @deprecated Use calculateDetailedEstimation instead
  */
 export const calculateEstimation = (formData: FormData): number => {
   // Obtenir l'estimation détaillée

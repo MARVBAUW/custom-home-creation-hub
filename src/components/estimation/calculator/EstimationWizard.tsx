@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import { useEstimationSteps } from './hooks/useEstimationSteps';
 import { FormData } from './types';
 import { Card } from '@/components/ui/card';
-import { calculateEstimation } from './calculationUtils';
+import { calculateEstimation, getSafeEstimation } from './calculationUtils';
 import { useToast } from "@/components/ui/use-toast";
 
 // Import des composants d'étape
@@ -43,21 +42,16 @@ const EstimationWizard = () => {
 
   const calculateEstimationResult = () => {
     setIsCalculating(true);
+    console.log("Starting estimation calculation...");
+    console.log("Form data:", formData);
     
     // Simuler un temps de calcul pour l'expérience utilisateur
     setTimeout(() => {
       try {
-        // Utiliser la fonction de calcul pour obtenir une estimation
-        const result = calculateEstimation(formData);
+        // Utiliser la fonction getSafeEstimation pour une meilleure gestion des erreurs
+        const result = getSafeEstimation(formData);
         console.log("Résultat du calcul d'estimation:", result);
-        
-        // S'assurer que le résultat est un nombre valide
-        if (isNaN(result) || result === 0) {
-          setEstimationResult(50000); // Valeur par défaut si le calcul échoue
-          console.log("Utilisation d'une valeur d'estimation par défaut");
-        } else {
-          setEstimationResult(result);
-        }
+        setEstimationResult(result);
       } catch (error) {
         console.error("Erreur lors du calcul de l'estimation:", error);
         setEstimationResult(50000); // Valeur par défaut en cas d'erreur

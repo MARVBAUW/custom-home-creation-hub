@@ -7,6 +7,9 @@ export interface FormData {
   projectType?: string;
   landIncluded?: string;
   
+  // Estimation type/mode
+  estimationType?: 'simple' | 'detailed';
+  
   // Terrain details
   terrainType?: string;
   terrainSurface?: number;
