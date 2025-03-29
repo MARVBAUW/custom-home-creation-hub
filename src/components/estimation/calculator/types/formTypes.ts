@@ -8,6 +8,7 @@ export interface BaseFormStepProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
 }
 
 // Form step props for components that use defaultValues and onSubmit pattern
@@ -43,6 +44,15 @@ export interface IndividualProjectFormProps extends BaseFormStepProps {
 // Estimation type form props
 export interface EstimationTypeFormProps extends BaseFormStepProps {
   defaultValues?: { estimationType: string; termsAccepted: boolean };
+  onSubmit?: (data: any) => void;
+}
+
+// Construction details form props
+export interface ConstructionDetailsFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    constructionType: string;
+    constructionMode: string;
+  };
   onSubmit?: (data: any) => void;
 }
 
@@ -170,15 +180,6 @@ export interface AmenagementExtFormProps extends BaseFormStepProps {
   onSubmit?: (data: any) => void;
 }
 
-// Construction details form props
-export interface ConstructionDetailsFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    constructionType: string;
-    constructionMode: string;
-  };
-  onSubmit?: (data: any) => void;
-}
-
 // Contact form props
 export interface ContactFormProps extends BaseFormStepProps {
   defaultValues?: {
@@ -186,6 +187,9 @@ export interface ContactFormProps extends BaseFormStepProps {
     lastName: string;
     email: string;
     phone: string;
+    message?: string;
+    city?: string;
+    termsAccepted?: boolean;
   };
   onSubmit?: (data: any) => void;
 }
