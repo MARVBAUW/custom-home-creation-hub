@@ -49,3 +49,10 @@ export interface PeintureFormProps extends FormDataStepProps {}
 export interface ContactFormProps extends FormDataStepProps {}
 export interface AmenagementExtFormProps extends FormDataStepProps {}
 export interface ClientTypeFormProps extends FormDataStepProps {}
+export interface ResultsFormProps {
+  estimationResult: number;
+  formData: FormData;
+  categoriesAmounts: { category: string; amount: number; }[];
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+}

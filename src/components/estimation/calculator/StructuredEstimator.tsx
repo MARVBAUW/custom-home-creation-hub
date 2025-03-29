@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -308,6 +307,7 @@ const StructuredEstimator = () => {
       <div className="w-full">
         {/* Affichage du résultat final ou des étapes du formulaire */}
         {step === totalSteps - 1 && estimationResult ? (
+          
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="estimation">Estimation Détaillée</TabsTrigger>

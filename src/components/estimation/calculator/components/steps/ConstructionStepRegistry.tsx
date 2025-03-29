@@ -6,7 +6,7 @@ import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
 import CharpenteForm from '../../FormSteps/CharpenteForm';
 import CombleForm from '../../FormSteps/CombleForm';
-import { FormData } from '../../types';
+import { FormData, FormDataStepProps } from '../../types';
 
 // Registry for construction steps (steps 5-9)
 export const createConstructionStepRegistry = (
@@ -21,52 +21,57 @@ export const createConstructionStepRegistry = (
   return {
     5: (props: FormStepProps) => (
       <ConstructionDetailsForm
-        defaultValues={{
-          surface: formData.surface,
-          levels: formData.levels,
-          units: formData.units,
-        }}
-        onSubmit={onConstructionDetailsSubmit}
+        formData={formData}
+        updateFormData={(data) => onConstructionDetailsSubmit({
+          surface: data.surface ? String(data.surface) : '',
+          levels: data.levels ? String(data.levels) : '',
+          units: data.units ? String(data.units) : ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     6: (props: FormStepProps) => (
       <TerrainForm
-        defaultValues={{
-          terrainType: formData.terrainType,
-        }}
-        onSubmit={onTerrainSubmit}
+        formData={formData}
+        updateFormData={(data) => onTerrainSubmit({
+          terrainType: data.terrainType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     7: (props: FormStepProps) => (
       <GrosOeuvreForm
-        defaultValues={{
-          wallType: formData.wallType,
-        }}
-        onSubmit={onGrosOeuvreSubmit}
+        formData={formData}
+        updateFormData={(data) => onGrosOeuvreSubmit({
+          wallType: data.wallType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     8: (props: FormStepProps) => (
       <CharpenteForm
-        defaultValues={{
-          roofType: formData.roofType,
-        }}
-        onSubmit={onCharpenteSubmit}
+        formData={formData}
+        updateFormData={(data) => onCharpenteSubmit({
+          roofType: data.roofType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     9: (props: FormStepProps) => (
       <CombleForm
-        defaultValues={{
-          atticType: formData.atticType,
-        }}
-        onSubmit={onComblesSubmit}
+        formData={formData}
+        updateFormData={(data) => onComblesSubmit({
+          atticType: data.atticType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />

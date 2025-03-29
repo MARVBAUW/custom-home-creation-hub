@@ -4,7 +4,7 @@ import { FormData } from '../types';
 
 export const useEstimationSteps = (formData: FormData) => {
   const [step, setStep] = useState(0);
-  const [animationDirection, setAnimationDirection] = useState<'next' | 'prev' | null>(null);
+  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   
   // Déterminer le nombre total d'étapes en fonction du type de projet
   const determineStepCount = () => {
@@ -70,7 +70,7 @@ export const useEstimationSteps = (formData: FormData) => {
   // Fonction pour aller à l'étape suivante avec animation
   const goToNextStep = () => {
     if (step < totalSteps - 1) {
-      setAnimationDirection('next');
+      setAnimationDirection('forward');
       setTimeout(() => {
         setStep(step + 1);
       }, 300);
@@ -80,7 +80,7 @@ export const useEstimationSteps = (formData: FormData) => {
   // Fonction pour aller à l'étape précédente avec animation
   const goToPreviousStep = () => {
     if (step > 0) {
-      setAnimationDirection('prev');
+      setAnimationDirection('backward');
       setTimeout(() => {
         setStep(step - 1);
       }, 300);
@@ -90,7 +90,7 @@ export const useEstimationSteps = (formData: FormData) => {
   // Réinitialiser l'animation après chaque changement d'étape
   useEffect(() => {
     const timer = setTimeout(() => {
-      setAnimationDirection(null);
+      setAnimationDirection('forward');
     }, 300);
     
     return () => clearTimeout(timer);

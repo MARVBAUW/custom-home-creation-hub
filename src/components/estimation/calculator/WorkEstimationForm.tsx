@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -93,8 +92,8 @@ const WorkEstimationForm: React.FC = () => {
     },
   });
 
-  // Define step mappings as an array instead of object
-  const stepMappings = [
+  // Define step mappings as an array of objects
+  const stepMappingsArray = [
     { id: 'clientType', step: 1 },
     { id: 'projectDetails', step: 2 },
     { id: 'terrain', step: 3 },
@@ -262,7 +261,7 @@ const WorkEstimationForm: React.FC = () => {
             totalSteps={totalSteps}
             animationDirection={animationDirection}
             formData={formData}
-            visibleSteps={visibleSteps}
+            visibleSteps={stepMappingsArray}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
             onClientTypeSubmit={onClientTypeSubmit}
