@@ -7,7 +7,7 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Building, Home, Store, School } from 'lucide-react';
+import { Building, Home, Store, School, Wheelchair } from 'lucide-react';
 
 export const AccessibiliteRecapSection = () => {
   const { 
@@ -32,7 +32,7 @@ export const AccessibiliteRecapSection = () => {
     <div className="space-y-6">
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
         <h3 className="text-blue-800 font-medium flex items-center gap-2 mb-2">
-          <Accessibility className="h-5 w-5" />
+          <Wheelchair className="h-5 w-5" />
           Réglementation Accessibilité
         </h3>
         <p className="text-blue-700 text-sm">

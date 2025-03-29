@@ -7,7 +7,7 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Building, Home, ParkingCircle } from 'lucide-react';
+import { Building, Home, ParkingCircle, Flame } from 'lucide-react';
 
 export const IncendieRecapSection = () => {
   const { 

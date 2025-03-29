@@ -1,7 +1,7 @@
 
-import { DTU } from '../../dtu/types';
+import { DTU } from '../../../dtu/types';
 
-export const incendieDTUs: DTU[] = [
+export const erpDTUs: DTU[] = [
   {
     id: "dtu-securite-erp-1",
     title: "Réglementation Incendie - ERP Type M (Magasins)",
@@ -128,135 +128,6 @@ export const incendieDTUs: DTU[] = [
       {
         title: "Moyens de secours",
         content: "Extincteurs appropriés aux risques, notamment 6L eau pulvérisée + additif dans les cuisines, complétés par des couvertures anti-feu."
-      }
-    ]
-  },
-  {
-    id: "dtu-securite-logement-1",
-    title: "Réglementation Incendie - Habitation Collective",
-    category: "Incendie Logement",
-    description: "Dispositions applicables aux bâtiments d'habitation collectifs, selon leur classification",
-    lastUpdate: "Mai 2023",
-    rules: [
-      {
-        title: "Classification",
-        content: "1ère famille : individuels R+1 max, 2ème famille : R+3 max, 3ème famille : R+7 max ou h≤28m, 4ème famille : h>28m et ≤50m",
-        type: "standard"
-      },
-      {
-        title: "Encloisonnement escalier",
-        content: "Pour la 3ème famille, escaliers encloisonnés toute hauteur avec parois CF 1h et portes PF 1/2h à fermeture automatique",
-        type: "warning"
-      },
-      {
-        title: "Désenfumage",
-        content: "Obligatoire pour les circulations horizontales de la 3ème famille. Exutoire de 1m² minimum en partie haute de l'escalier pour la 4ème famille",
-        type: "standard"
-      },
-      {
-        title: "Résistance au feu",
-        content: "Structure SF 1/2h pour 1ère et 2ème famille, SF 1h pour 3ème famille, SF 1h30 pour 4ème famille",
-        type: "tip"
-      }
-    ],
-    sections: [
-      {
-        title: "Façades",
-        content: "Règle du C+D applicable à partir de la 3ème famille : somme C+D ≥ 1m, avec C la distance verticale entre baies superposées et D la saillie horizontale."
-      },
-      {
-        title: "Locaux à risques",
-        content: "Locaux poubelles, caves et celliers isolés des autres parties par des parois CF 1h et portes CF 1/2h. Parcs de stationnement avec dispositions spécifiques."
-      },
-      {
-        title: "Gaines techniques",
-        content: "Gaines techniques avec parois CF 1/2h et trappes PF 1/2h. Distance minimale de 3 cm entre conduits et matériaux combustibles."
-      }
-    ]
-  },
-  {
-    id: "dtu-securite-logement-2",
-    title: "Réglementation Incendie - Habitation Individuelle",
-    category: "Incendie Logement",
-    description: "Dispositions applicables aux maisons individuelles isolées ou jumelées",
-    lastUpdate: "Avril 2023",
-    rules: [
-      {
-        title: "Détection",
-        content: "Détecteurs Avertisseurs Autonomes de Fumée (DAAF) obligatoires à chaque niveau, de préférence dans les circulations et chambres",
-        type: "standard"
-      },
-      {
-        title: "Garage intégré",
-        content: "Parois et plafond du garage intégré à l'habitation au moins CF 1/2h, porte intérieure PF 1/2h et ferme-porte obligatoire",
-        type: "warning"
-      },
-      {
-        title: "Conduit de fumée",
-        content: "Distance de sécurité de 16 cm minimum entre la paroi extérieure du conduit de fumée et tout matériau combustible",
-        type: "tip"
-      },
-      {
-        title: "Combles",
-        content: "Écran de sous-toiture au moins classé M1 (difficilement inflammable) recommandé, recoupement des combles tous les 25m",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Installations électriques",
-        content: "Conformes à la NF C 15-100. Protection des circuits par disjoncteur différentiel 30mA. Tableau électrique accessible et identifié."
-      },
-      {
-        title: "Chauffage et production ECS",
-        content: "Appareils conformes aux normes et correctement ventilés. Alimentation des chaudières par conduits fixes. Stockage de combustible isolé."
-      },
-      {
-        title: "Protection des vides sanitaires",
-        content: "Recoupés tous les 25m par des séparations CF 1/4h si accessibles, et cloisonnés en limite de propriété dans le cas de maisons jumelées."
-      }
-    ]
-  },
-  {
-    id: "dtu-securite-parking-1",
-    title: "Réglementation Incendie - Parcs de stationnement couverts",
-    category: "Incendie Parking",
-    description: "Dispositions applicables aux parcs de stationnement couverts, selon la réglementation en vigueur",
-    lastUpdate: "Juin 2023",
-    rules: [
-      {
-        title: "Classement",
-        content: "PS pour les parcs > 100 m² classés ERP ou > 250 m² en habitation. Au-delà de 6000 m² : compartiments de 3000 m² maximum reliés par des sas CF 1h",
-        type: "standard"
-      },
-      {
-        title: "Résistance au feu",
-        content: "Structure minimum SF 1h, SF 1h30 si hauteur > 28m. Planchers séparatifs CF 1h30. Couverture incombustible",
-        type: "standard"
-      },
-      {
-        title: "Évacuation",
-        content: "Deux issues minimum par niveau. Distance maximale à parcourir pour atteindre une issue : 40 m si choix, 25 m en cul-de-sac",
-        type: "warning"
-      },
-      {
-        title: "Ventilation",
-        content: "Débit d'extraction min. 600 m³/h par véhicule en ventilation permanente, 900 m³/h en cas d'incendie. 50% des amenées d'air en partie basse",
-        type: "tip"
-      }
-    ],
-    sections: [
-      {
-        title: "Installations électriques",
-        content: "Conformes à la NF C 15-100. Canalisations électriques protégées mécaniquement. Éclairage normal : 50 lux minimum et 100 lux aux entrées/sorties piétons."
-      },
-      {
-        title: "Moyens de secours",
-        content: "Extincteurs portatifs 6 kg poudre BC ou ABC tous les 20m. Colonnes sèches si plus de 3 niveaux sous le niveau de référence ou plus de 4 au-dessus."
-      },
-      {
-        title: "Véhicules électriques",
-        content: "Points de charge limités à 20% des places. Câbles d'alimentation résistants au feu (CR1). Coupure d'urgence générale obligatoire."
       }
     ]
   }

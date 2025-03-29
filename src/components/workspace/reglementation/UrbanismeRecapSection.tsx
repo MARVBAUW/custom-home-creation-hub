@@ -7,7 +7,7 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, Map, Clock, Ruler } from 'lucide-react';
+import { FileText, Map, Clock, Ruler, BuildingIcon } from 'lucide-react';
 
 export const UrbanismeRecapSection = () => {
   const { 
@@ -32,7 +32,7 @@ export const UrbanismeRecapSection = () => {
     <div className="space-y-6">
       <div className="bg-green-50 p-4 rounded-lg border border-green-200 mb-6">
         <h3 className="text-green-800 font-medium flex items-center gap-2 mb-2">
-          <Building className="h-5 w-5" />
+          <BuildingIcon className="h-5 w-5" />
           Réglementation Urbanisme
         </h3>
         <p className="text-green-700 text-sm">
