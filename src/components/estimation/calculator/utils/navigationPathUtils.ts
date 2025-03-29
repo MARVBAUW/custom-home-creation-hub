@@ -115,6 +115,7 @@ export const recalculateEstimation = (formData: FormData): number => {
   
   // Calculer la base selon la surface
   if (formData.surface) {
+    // Convertir la surface en nombre si c'est une chaîne
     const surface = typeof formData.surface === 'string' ? 
       parseFloat(formData.surface) : formData.surface;
       
@@ -138,36 +139,48 @@ export const recalculateEstimation = (formData: FormData): number => {
   
   // Électricité
   if (formData.electricalType === 'basic') {
-    montantTotal += parseFloat(formData.surface || '0') * 100;
+    // Convertir la surface en nombre si c'est une chaîne
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 100;
   } else if (formData.electricalType === 'standard') {
-    montantTotal += parseFloat(formData.surface || '0') * 125;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 125;
   } else if (formData.electricalType === 'premium') {
-    montantTotal += parseFloat(formData.surface || '0') * 155;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 155;
   } else if (formData.electricalType === 'smart_home') {
-    montantTotal += parseFloat(formData.surface || '0') * 190;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 190;
   }
   
   // Plomberie
   if (formData.plumbingType === 'basic') {
-    montantTotal += parseFloat(formData.surface || '0') * 80;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 80;
   } else if (formData.plumbingType === 'standard') {
-    montantTotal += parseFloat(formData.surface || '0') * 100;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 100;
   } else if (formData.plumbingType === 'premium') {
-    montantTotal += parseFloat(formData.surface || '0') * 125;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 125;
   }
   
   // Chauffage
   if (formData.heatingType === 'standard') {
-    montantTotal += parseFloat(formData.surface || '0') * 60;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 60;
   } else if (formData.heatingType === 'eco') {
-    montantTotal += parseFloat(formData.surface || '0') * 120;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 120;
   } else if (formData.heatingType === 'economic') {
-    montantTotal += parseFloat(formData.surface || '0') * 45;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 45;
   }
   
   // Climatisation
   if (formData.hasAirConditioning) {
-    montantTotal += parseFloat(formData.surface || '0') * 65;
+    const surfaceValue = parseFloat(typeof formData.surface === 'string' ? formData.surface : String(formData.surface || '0'));
+    montantTotal += surfaceValue * 65;
   }
   
   // Options supplémentaires selon le questionnaire

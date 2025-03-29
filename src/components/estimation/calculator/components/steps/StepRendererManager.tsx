@@ -108,11 +108,12 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     goToPreviousStep
   );
 
-  // Use the updateFormData from props directly
+  // Fix: Add the missing goToNextStep parameter to createTechnicalStepRegistry
   const technicalStepRegistry = createTechnicalStepRegistry(
     formData,
     updateFormData,
-    goToPreviousStep
+    goToPreviousStep,
+    goToNextStep // Add the missing argument
   );
 
   const interiorStepRegistry = createInteriorStepRegistry(
