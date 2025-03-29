@@ -36,9 +36,8 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     onUserInput(input);
   };
 
-  return {
-    processUserInput
-  };
+  // Ce composant ne rend rien visuellement, il gère seulement la logique
+  return <>{/* Processeur de messages - ne contient que de la logique */}</>;
 };
 
 export default MessageProcessor;
