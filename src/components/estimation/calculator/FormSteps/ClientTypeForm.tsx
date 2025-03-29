@@ -1,118 +1,76 @@
 
 import React from 'react';
+import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Card, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Form } from "@/components/ui/form";
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-import { User, Building } from 'lucide-react';
-
-// Schema de validation pour le type de client
-const clientTypeSchema = z.object({
-  clientType: z.enum(["individual", "professional"], {
-    required_error: "Veuillez sélectionner un type de client",
-  }),
-});
+import { Label } from "@/components/ui/label";
+import { User, Building2, ArrowRightIcon } from 'lucide-react';
 
 interface ClientTypeFormProps {
-  onSubmit: (data: { clientType: string }) => void;
-  animationDirection: 'forward' | 'backward';
-  defaultValues?: {
-    clientType?: string;
-  };
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
 }
 
-const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
-  onSubmit,
-  animationDirection,
-  defaultValues = {}
+const ClientTypeForm: React.FC<ClientTypeFormProps> = ({ 
+  formData, 
+  updateFormData, 
+  goToNextStep
 }) => {
-  // Initialisation du formulaire avec react-hook-form
-  const form = useForm<z.infer<typeof clientTypeSchema>>({
-    resolver: zodResolver(clientTypeSchema),
-    defaultValues: {
-      clientType: (defaultValues.clientType as "individual" | "professional") || undefined,
-    },
-  });
-
-  // Fonction de soumission du formulaire
-  const handleSubmit = (values: z.infer<typeof clientTypeSchema>) => {
-    onSubmit({ clientType: values.clientType });
+  const handleContinue = (clientType: string) => {
+    updateFormData({ clientType });
+    goToNextStep();
   };
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-medium">Vous êtes...</h3>
-          <p className="text-sm text-gray-500">
-            Sélectionnez votre profil pour adapter l'estimation à vos besoins spécifiques.
-          </p>
-        </div>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="clientType"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                    >
-                      <FormItem className="flex flex-col items-center">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="individual"
-                            className="peer sr-only"
-                          />
-                        </FormControl>
-                        <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-6 hover:border-blue-200 hover:bg-blue-50 peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 w-full cursor-pointer transition-all">
-                          <User className="h-10 w-10 mb-3 text-blue-600" />
-                          <div className="text-center">
-                            <span className="text-lg font-medium">Particulier</span>
-                            <p className="text-sm text-gray-500 mt-1">
-                              Je souhaite construire ou rénover ma maison
-                            </p>
-                          </div>
-                        </FormLabel>
-                      </FormItem>
-
-                      <FormItem className="flex flex-col items-center">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="professional"
-                            className="peer sr-only"
-                          />
-                        </FormControl>
-                        <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-6 hover:border-blue-200 hover:bg-blue-50 peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 w-full cursor-pointer transition-all">
-                          <Building className="h-10 w-10 mb-3 text-blue-600" />
-                          <div className="text-center">
-                            <span className="text-lg font-medium">Professionnel</span>
-                            <p className="text-sm text-gray-500 mt-1">
-                              Je représente une entreprise ou une organisation
-                            </p>
-                          </div>
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button type="submit" className="w-full">Continuer</Button>
-          </form>
-        </Form>
+    <div className="space-y-6">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">Bienvenue sur notre estimateur de projet</h2>
+        <p className="text-gray-600 mt-2">
+          Obtenez une estimation détaillée et personnalisée pour votre projet de construction ou rénovation
+        </p>
       </div>
-    </AnimatedStepTransition>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card 
+          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'individual' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
+          onClick={() => handleContinue('individual')}
+        >
+          <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+            <User className="h-12 w-12 text-progineer-gold mb-4" />
+            <h3 className="text-lg font-medium mb-2">Particulier</h3>
+            <p className="text-sm text-gray-500">
+              Vous êtes un particulier et souhaitez estimer un projet personnel
+            </p>
+          </CardContent>
+        </Card>
+        
+        <Card 
+          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'professional' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
+          onClick={() => handleContinue('professional')}
+        >
+          <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+            <Building2 className="h-12 w-12 text-progineer-gold mb-4" />
+            <h3 className="text-lg font-medium mb-2">Professionnel</h3>
+            <p className="text-sm text-gray-500">
+              Vous êtes un professionnel et souhaitez estimer un projet pour un client
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="mt-6 text-center">
+        <Button
+          onClick={goToNextStep}
+          disabled={!formData.clientType}
+          className="bg-progineer-gold hover:bg-progineer-gold/90"
+        >
+          Commencer l'estimation
+          <ArrowRightIcon className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+    </div>
   );
 };
 

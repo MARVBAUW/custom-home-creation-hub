@@ -1,66 +1,111 @@
 
-import { useState } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useState, useCallback } from 'react';
 import { FormData } from '../types';
-import { calculateEstimation } from '../calculationUtils';
 
 export const useEstimationResult = (formData: FormData) => {
   const [estimationResult, setEstimationResult] = useState<number | null>(null);
   const [showResultDialog, setShowResultDialog] = useState(false);
-  const { toast } = useToast();
-
-  const finalizeEstimation = async () => {
-    try {
-      // Vérifier si l'email est renseigné
-      if (!formData.email) {
-        toast({
-          title: "Email manquant",
-          description: "Veuillez fournir une adresse email pour recevoir votre estimation.",
-          variant: "destructive",
-          duration: 5000,
-        });
-        return;
-      }
-
-      // Calculer l'estimation sur la base des données du formulaire
-      const estimation = calculateEstimation(formData);
-      setEstimationResult(estimation);
-      
-      // Simuler un envoi de formulaire vers un backend
-      console.log("Données de formulaire pour l'estimation:", formData);
-      
-      // Afficher le résultat
-      setShowResultDialog(true);
-      
-      // Notifier l'utilisateur
-      toast({
-        title: "Estimation complétée",
-        description: "Votre estimation a été calculée avec succès. Vous allez recevoir un récapitulatif détaillé.",
-        duration: 5000,
-      });
-
-      // Simulation d'envoi des données au backend
-      console.log("Montant estimé:", estimation, "€");
-      console.log("Prénom:", formData.firstName);
-      console.log("Nom:", formData.lastName);
-      console.log("Email:", formData.email);
-      console.log("Téléphone:", formData.phone);
-      
-      // TODO: Envoyer les données au backend réel
-      // Cette partie devrait être implémentée avec un appel API réel
-      
-    } catch (error) {
-      console.error("Erreur lors du calcul de l'estimation:", error);
-      
-      toast({
-        title: "Erreur lors de l'estimation",
-        description: "Un problème est survenu lors du calcul. Veuillez réessayer.",
-        variant: "destructive",
-        duration: 5000,
-      });
+  
+  // Fonction pour calculer l'estimation finale
+  const calculateEstimation = useCallback(() => {
+    // Prix de base au m²
+    let basePricePerSqm = 0;
+    
+    // Déterminer le prix de base selon le type de projet
+    if (formData.projectType?.toLowerCase().includes('construction')) {
+      basePricePerSqm = 1800; // Construction neuve
+    } else if (formData.projectType?.toLowerCase().includes('extension')) {
+      basePricePerSqm = 2000; // Extension
+    } else if (formData.projectType?.toLowerCase().includes('rénovation lourde')) {
+      basePricePerSqm = 1500; // Rénovation lourde
+    } else if (formData.projectType?.toLowerCase().includes('rénovation légère')) {
+      basePricePerSqm = 800; // Rénovation légère
+    } else if (formData.projectType?.toLowerCase().includes('réaménagement')) {
+      basePricePerSqm = 600; // Réaménagement
+    } else {
+      basePricePerSqm = 1800; // Valeur par défaut
     }
-  };
-
+    
+    // Ajustement selon la surface
+    const surface = formData.surface || 100;
+    let surfaceMultiplier = 1;
+    
+    if (surface < 50) {
+      surfaceMultiplier = 1.2; // Petites surfaces plus chères au m²
+    } else if (surface > 200) {
+      surfaceMultiplier = 0.9; // Grandes surfaces moins chères au m²
+    }
+    
+    // Ajustement selon le niveau de finition
+    let finishMultiplier = 1;
+    
+    if (formData.finishLevel === 'Basique') {
+      finishMultiplier = 0.85;
+    } else if (formData.finishLevel === 'Standard') {
+      finishMultiplier = 1;
+    } else if (formData.finishLevel === 'Premium') {
+      finishMultiplier = 1.2;
+    } else if (formData.finishLevel === 'Luxe') {
+      finishMultiplier = 1.5;
+    }
+    
+    // Ajustement selon les contraintes du terrain
+    let terrainMultiplier = 1;
+    
+    if (formData.terrainType === 'pentu') {
+      terrainMultiplier *= 1.1;
+    } else if (formData.terrainType === 'tres-pentu') {
+      terrainMultiplier *= 1.2;
+    }
+    
+    if (formData.difficultAccess || formData.terrainAccess === 'difficile') {
+      terrainMultiplier *= 1.05;
+    } else if (formData.terrainAccess === 'tres-difficile') {
+      terrainMultiplier *= 1.1;
+    }
+    
+    // Ajustements spécifiques
+    let specificMultiplier = 1;
+    
+    // Sous-sol
+    if (formData.hasBasement) {
+      specificMultiplier *= 1.15;
+    }
+    
+    // Nombre de niveaux
+    if (formData.levels && formData.levels > 1) {
+      specificMultiplier *= (1 + ((formData.levels - 1) * 0.05));
+    }
+    
+    // Types de matériaux
+    if (formData.wallType === 'pierre' || formData.wallType === 'brique') {
+      specificMultiplier *= 1.1;
+    } else if (formData.wallType === 'beton-cellulaire') {
+      specificMultiplier *= 0.95;
+    }
+    
+    // Contraintes géotechniques
+    if (formData.claySoil || formData.wetlandZone) {
+      specificMultiplier *= 1.1;
+    }
+    
+    if (formData.rockySoil) {
+      specificMultiplier *= 1.15;
+    }
+    
+    // Calcul du prix total
+    const totalEstimation = Math.round(basePricePerSqm * surface * surfaceMultiplier * finishMultiplier * terrainMultiplier * specificMultiplier);
+    
+    return totalEstimation;
+  }, [formData]);
+  
+  // Fonction pour finaliser l'estimation
+  const finalizeEstimation = useCallback(() => {
+    const result = calculateEstimation();
+    setEstimationResult(result);
+    setShowResultDialog(true);
+  }, [calculateEstimation]);
+  
   return {
     estimationResult,
     showResultDialog,

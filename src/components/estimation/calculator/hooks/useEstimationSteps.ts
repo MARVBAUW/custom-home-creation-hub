@@ -1,42 +1,107 @@
 
 import { useState, useEffect } from 'react';
 import { FormData } from '../types';
-import { stepDefinitions } from '../steps/stepDefinitions';
 
 export const useEstimationSteps = (formData: FormData) => {
-  const [visibleSteps, setVisibleSteps] = useState<any[]>([]);
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
-
-  useEffect(() => {
-    // Filtrer les étapes visibles en fonction des données du formulaire
-    const filteredSteps = stepDefinitions.filter(
-      (step) => !step.skipCondition(formData)
-    );
+  const [step, setStep] = useState(0);
+  const [animationDirection, setAnimationDirection] = useState<'next' | 'prev' | null>(null);
+  
+  // Déterminer le nombre total d'étapes en fonction du type de projet
+  const determineStepCount = () => {
+    let baseSteps = 20; // Client type + Project details + Terrain + 15 corps d'état + Contact + Results
     
-    setVisibleSteps(filteredSteps);
-  }, [formData]);
-
-  // Calculate total steps based on visible steps
-  const totalSteps = visibleSteps.length || 5; // Fallback to 5 if visibleSteps is empty
-
-  // Navigation functions
+    // Ajuster en fonction du type de projet
+    if (formData.projectType?.toLowerCase().includes('rénov')) {
+      baseSteps = 18; // Moins d'étapes pour rénovation
+    } else if (formData.projectType?.toLowerCase().includes('aménagement')) {
+      baseSteps = 15; // Encore moins pour aménagement
+    }
+    
+    return baseSteps;
+  };
+  
+  const totalSteps = determineStepCount();
+  
+  // Déterminer les étapes à afficher en fonction des choix précédents
+  const determineVisibleSteps = () => {
+    const steps = {
+      clientType: 0,
+      projectDetails: 1,
+      terrain: 2,
+      grosOeuvre: 3,
+      charpente: 4,
+      couverture: 5,
+      facade: 6,
+      menuiseriesExt: 7,
+      isolation: 8,
+      electricite: 9,
+      plomberie: 10,
+      chauffage: 11,
+      platrerie: 12,
+      menuiseriesInt: 13,
+      carrelage: 14,
+      parquet: 15,
+      peinture: 16,
+      amenagementExt: 17,
+      contact: 18,
+      results: 19
+    };
+    
+    // Ajuster les étapes en fonction du type de projet
+    if (formData.projectType?.toLowerCase().includes('rénov')) {
+      // Pour rénovation, on a moins d'étapes
+      return {
+        ...steps,
+        // Réorganiser les indices pour rénovation
+      };
+    } else if (formData.projectType?.toLowerCase().includes('aménagement')) {
+      // Pour aménagement, encore moins d'étapes
+      return {
+        ...steps,
+        // Réorganiser les indices pour aménagement
+      };
+    }
+    
+    return steps;
+  };
+  
+  const visibleSteps = determineVisibleSteps();
+  
+  // Fonction pour aller à l'étape suivante avec animation
   const goToNextStep = () => {
-    setAnimationDirection('forward');
-    setCurrentStep((prev) => Math.min(prev + 1, totalSteps));
+    if (step < totalSteps - 1) {
+      setAnimationDirection('next');
+      setTimeout(() => {
+        setStep(step + 1);
+      }, 300);
+    }
   };
-
+  
+  // Fonction pour aller à l'étape précédente avec animation
   const goToPreviousStep = () => {
-    setAnimationDirection('backward');
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+    if (step > 0) {
+      setAnimationDirection('prev');
+      setTimeout(() => {
+        setStep(step - 1);
+      }, 300);
+    }
   };
-
-  return { 
-    visibleSteps,
-    step: currentStep,
-    setStep: setCurrentStep,
+  
+  // Réinitialiser l'animation après chaque changement d'étape
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimationDirection(null);
+    }, 300);
+    
+    return () => clearTimeout(timer);
+  }, [step]);
+  
+  return {
+    step,
+    setStep,
     totalSteps,
     animationDirection,
+    visibleSteps,
     goToNextStep,
     goToPreviousStep
   };

@@ -1,15 +1,10 @@
 
-export * from './useEstimationForm';
-export * from './useEstimationResult';
-export * from './useEstimationSteps';
-export * from './useFormSubmissions';
+// Export tous les hooks pour faciliter l'importation
+export { useEstimationCalculator } from '../useEstimationCalculator';
+export { useEstimationForm } from './useEstimationForm';
+export { useEstimationResult } from './useEstimationResult';
+export { useEstimationSteps } from './useEstimationSteps';
+export { useFormSubmissions } from './useFormSubmissions';
 
-// Export all submission hooks
-export * from './submissions/useClientInfoSubmissions';
-export * from './submissions/useConstructionSubmissions';
-export * from './submissions/useEnvelopeSubmissions';
-export * from './submissions/useTechnicalSubmissions';
-export * from './submissions/useInteriorSubmissions';
-export * from './submissions/useSpecialFeaturesSubmissions';
-export * from './submissions/useRoomsSubmissions';
-export * from './submissions/useRenovationSubmissions';
+// Export les types si nécessaire
+export type { FormData } from './useEstimationForm';

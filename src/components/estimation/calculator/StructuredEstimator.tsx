@@ -1,323 +1,352 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React, { useState, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
-import { InfoIcon, ArrowRight, Calculator, PlusCircle, CheckCircle2, Download } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useEstimationCalculator } from './useEstimationCalculator';
+import { FormProvider } from 'react-hook-form';
+import { useEstimationForm } from './hooks/useEstimationForm';
+import EstimationReport from './EstimationReport';
+import DetailedEstimationReport from './DetailedEstimationReport';
+import ProfessionalQuoteReport from './ProfessionalQuoteReport';
+import EstimationSummaryReport from './EstimationSummaryReport';
+import { ArrowLeftIcon, ArrowRightIcon, CheckCircle, Save } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { corpsEtatQuestions } from './data/corpsEtatQuestions';
-import { calculateDetailedEstimation } from './calculations/detailedEstimation';
-import { FormData } from './types';
+import { useNavigate } from 'react-router-dom';
 
-// Définition des corps d'état
-const corpsEtatList = [
-  { id: "gros_oeuvre", label: "Gros Œuvre", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "charpente_toiture", label: "Charpente & Toiture", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "facade_isolation", label: "Façade & Isolation", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "menuiseries", label: "Menuiseries", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "electricite", label: "Électricité", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "plomberie_chauffage", label: "Plomberie & Chauffage", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "cloisons_platrerie", label: "Cloisons & Plâtrerie", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "revetements", label: "Revêtements", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "cuisine_sdb", label: "Cuisine & SDB", icon: <PlusCircle className="h-4 w-4" /> },
-  { id: "amenagements_exterieurs", label: "Aménagements Extérieurs", icon: <PlusCircle className="h-4 w-4" /> },
-];
+// Import des formulaires pour chaque corps d'état
+import ClientTypeForm from './FormSteps/ClientTypeForm';
+import ProjectDetailsForm from './FormSteps/ProjectDetailsForm';
+import TerrainForm from './FormSteps/TerrainForm';
+import GrosOeuvreForm from './FormSteps/GrosOeuvreForm';
+import CharpenteForm from './FormSteps/CharpenteForm';
+import CouvertureForm from './FormSteps/CouvertureForm';
+import FacadeForm from './FormSteps/FacadeForm';
+import MenuiseriesExtForm from './FormSteps/MenuiseriesExtForm';
+import IsolationForm from './FormSteps/IsolationForm';
+import ElectriciteForm from './FormSteps/ElectriciteForm';
+import PlomberieForm from './FormSteps/PlomberieForm';
+import ChauffageForm from './FormSteps/ChauffageForm';
+import PlatrerieForm from './FormSteps/PlatrerieForm';
+import MenuiseriesIntForm from './FormSteps/MenuiseriesIntForm';
+import CarrelageForm from './FormSteps/CarrelageForm';
+import ParquetForm from './FormSteps/ParquetForm';
+import PeintureForm from './FormSteps/PeintureForm';
+import AmenagementExtForm from './FormSteps/AmenagementExtForm';
+import ContactForm from './FormSteps/ContactForm';
+import ResultsForm from './FormSteps/ResultsForm';
 
-// Composant principal d'estimation structurée
-const StructuredEstimator: React.FC = () => {
+const StructuredEstimator = () => {
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<FormData>({});
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [estimationResult, setEstimationResult] = useState<any>(null);
-  const [activeCorpsEtat, setActiveCorpsEtat] = useState("gros_oeuvre");
-  const [completedSections, setCompletedSections] = useState<string[]>([]);
-
-  // Gérer les changements de réponses
-  const handleAnswerChange = (questionId: string, value: string) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: value
+  const navigate = useNavigate();
+  const printRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState("estimation");
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [email, setEmail] = useState("");
+  
+  // Utiliser le hook pour gérer les différentes étapes
+  const {
+    step,
+    setStep,
+    totalSteps,
+    formData,
+    estimationResult,
+    showResultDialog,
+    animationDirection,
+    updateFormData,
+    goToNextStep,
+    goToPreviousStep
+  } = useEstimationCalculator();
+  
+  const { methods } = useEstimationForm();
+  
+  // Simuler des catégories d'estimation basées sur les données du formulaire
+  const categoriesAmounts = [
+    { category: 'Terrassement', amount: estimationResult ? estimationResult * 0.05 : 0 },
+    { category: 'Fondations', amount: estimationResult ? estimationResult * 0.08 : 0 },
+    { category: 'Élévation des murs', amount: estimationResult ? estimationResult * 0.12 : 0 },
+    { category: 'Charpente', amount: estimationResult ? estimationResult * 0.1 : 0 },
+    { category: 'Couverture', amount: estimationResult ? estimationResult * 0.08 : 0 },
+    { category: 'Menuiseries extérieures', amount: estimationResult ? estimationResult * 0.07 : 0 },
+    { category: 'Isolation', amount: estimationResult ? estimationResult * 0.06 : 0 },
+    { category: 'Plomberie', amount: estimationResult ? estimationResult * 0.05 : 0 },
+    { category: 'Électricité', amount: estimationResult ? estimationResult * 0.05 : 0 },
+    { category: 'Chauffage', amount: estimationResult ? estimationResult * 0.06 : 0 },
+    { category: 'Revêtements de sol', amount: estimationResult ? estimationResult * 0.06 : 0 },
+    { category: 'Revêtements muraux', amount: estimationResult ? estimationResult * 0.04 : 0 },
+    { category: 'Peinture', amount: estimationResult ? estimationResult * 0.03 : 0 },
+    { category: 'Aménagements extérieurs', amount: estimationResult ? estimationResult * 0.05 : 0 },
+    { category: 'Frais annexes', amount: estimationResult ? estimationResult * 0.03 : 0 },
+    { category: 'Honoraires architecte', amount: estimationResult ? estimationResult * 0.03 : 0 },
+    { category: 'Taxe aménagement', amount: estimationResult ? estimationResult * 0.02 : 0 },
+    { category: 'Études géotechniques', amount: estimationResult ? estimationResult * 0.01 : 0 },
+    { category: 'Étude thermique', amount: estimationResult ? estimationResult * 0.01 : 0 },
+    { category: 'Garantie décennale', amount: estimationResult ? estimationResult * 0.01 : 0 },
+  ];
+  
+  // Gérer le changement d'étape en fonction du corps d'état actuel
+  const getStepContent = () => {
+    switch (step) {
+      case 0:
+        return <ClientTypeForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} />;
+      case 1:
+        return <ProjectDetailsForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 2:
+        return <TerrainForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 3:
+        return <GrosOeuvreForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 4:
+        return <CharpenteForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 5:
+        return <CouvertureForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 6:
+        return <FacadeForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 7:
+        return <MenuiseriesExtForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 8:
+        return <IsolationForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 9:
+        return <ElectriciteForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 10:
+        return <PlomberieForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 11:
+        return <ChauffageForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 12:
+        return <PlatrerieForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 13:
+        return <MenuiseriesIntForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 14:
+        return <CarrelageForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 15:
+        return <ParquetForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 16:
+        return <PeintureForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 17:
+        return <AmenagementExtForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 18:
+        return <ContactForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} goToPreviousStep={goToPreviousStep} />;
+      case 19:
+        return <ResultsForm 
+          estimationResult={estimationResult} 
+          formData={formData} 
+          categoriesAmounts={categoriesAmounts}
+          goToPreviousStep={goToPreviousStep} 
+        />;
+      default:
+        return <ClientTypeForm formData={formData} updateFormData={updateFormData} goToNextStep={goToNextStep} />;
+    }
+  };
+  
+  // Gérer l'impression du document
+  const handlePrint = () => {
+    if (printRef.current) {
+      // Logique pour déclencher l'impression du navigateur
+      window.print();
+      
+      toast({
+        title: "Impression lancée",
+        description: "Le rapport d'estimation est en cours d'impression",
+      });
+    }
+  };
+  
+  // Gérer la sauvegarde de l'estimation
+  const handleSaveEstimation = () => {
+    setShowSaveDialog(true);
+  };
+  
+  // Confirmer la sauvegarde et rediriger vers la création de compte
+  const handleConfirmSave = () => {
+    // Sauvegarder les données dans le localStorage pour les récupérer après création de compte
+    localStorage.setItem('savedEstimation', JSON.stringify({
+      projectName: projectName,
+      email: email,
+      formData: formData,
+      estimationResult: estimationResult,
+      date: new Date().toISOString()
     }));
-  };
-
-  // Marquer une section comme complétée
-  const markSectionCompleted = (sectionId: string) => {
-    if (!completedSections.includes(sectionId)) {
-      setCompletedSections(prev => [...prev, sectionId]);
-    }
-  };
-
-  // Passer à la section suivante
-  const goToNextSection = () => {
-    const currentIndex = corpsEtatList.findIndex(ce => ce.id === activeCorpsEtat);
-    if (currentIndex < corpsEtatList.length - 1) {
-      markSectionCompleted(activeCorpsEtat);
-      setActiveCorpsEtat(corpsEtatList[currentIndex + 1].id);
-    } else {
-      // Toutes les sections sont complétées
-      calculateEstimation();
-    }
-  };
-
-  // Calculer l'estimation
-  const calculateEstimation = () => {
-    // Mettre à jour le formData avec les réponses
-    const updatedFormData = { ...formData, ...answers };
-    setFormData(updatedFormData);
-    
-    // Calculer l'estimation détaillée
-    const result = calculateDetailedEstimation(updatedFormData);
-    setEstimationResult(result);
     
     toast({
-      title: "Estimation calculée",
-      description: `Votre projet est estimé à environ ${Math.round(result.totalTTC).toLocaleString('fr-FR')} €`,
-      duration: 5000,
+      title: "Estimation sauvegardée",
+      description: "Vous allez être redirigé vers la création de compte",
     });
-  };
-
-  // Rendu des questions pour le corps d'état actif
-  const renderQuestions = () => {
-    const questions = corpsEtatQuestions[activeCorpsEtat] || [];
     
-    return questions.map(question => (
-      <div key={question.id} className="mb-6">
-        <Label className="text-base font-medium mb-2">{question.question}</Label>
-        {question.helpText && (
-          <p className="text-sm text-gray-500 mb-2">{question.helpText}</p>
-        )}
-        
-        <RadioGroup 
-          value={answers[question.id] || ""} 
-          onValueChange={(value) => handleAnswerChange(question.id, value)}
-          className="mt-2"
-        >
-          {question.options && question.options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2">
-              <RadioGroupItem value={option} id={`${question.id}-${index}`} />
-              <Label htmlFor={`${question.id}-${index}`}>{option}</Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </div>
-    ));
+    // Rediriger vers la page d'inscription
+    setTimeout(() => {
+      navigate('/auth/signup');
+    }, 1500);
   };
-
-  // Vérifier si toutes les questions de la section actuelle sont répondues
-  const isCurrentSectionComplete = () => {
-    const questions = corpsEtatQuestions[activeCorpsEtat] || [];
-    return questions.every(q => answers[q.id]);
-  };
-
-  // Progression globale en pourcentage
-  const calculateProgress = () => {
-    const totalQuestions = Object.values(corpsEtatQuestions).reduce(
-      (sum, questions) => sum + questions.length, 0
-    );
-    const answeredQuestions = Object.keys(answers).length;
-    return Math.round((answeredQuestions / totalQuestions) * 100);
-  };
-
-  // Afficher le résultat de l'estimation
-  const renderEstimationResult = () => {
-    if (!estimationResult) return null;
-    
-    return (
-      <div className="space-y-4">
-        <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-semibold text-green-800">Estimation de votre projet</h3>
-            <div className="text-2xl font-bold text-green-700">
-              {Math.round(estimationResult.totalTTC).toLocaleString('fr-FR')} €
-            </div>
-          </div>
-          <p className="text-sm text-green-600">Cette estimation est basée sur vos réponses au questionnaire.</p>
-        </div>
-        
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="breakdown">
-            <AccordionTrigger>Détail par corps d'état</AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-2">
-                {estimationResult.corpsEtat && Object.entries(estimationResult.corpsEtat).map(([name, data]: [string, any]) => (
-                  <div key={name} className="flex justify-between border-b pb-2">
-                    <span>{name}</span>
-                    <span className="font-medium">{Math.round(data.montantHT).toLocaleString('fr-FR')} € HT</span>
-                  </div>
-                ))}
-                <div className="flex justify-between pt-2 font-bold">
-                  <span>Total HT</span>
-                  <span>{Math.round(estimationResult.totalHT).toLocaleString('fr-FR')} €</span>
-                </div>
-                <div className="flex justify-between pt-1">
-                  <span>TVA ({Math.round(estimationResult.vat * 100)}%)</span>
-                  <span>{Math.round(estimationResult.totalTTC - estimationResult.totalHT).toLocaleString('fr-FR')} €</span>
-                </div>
-                <div className="flex justify-between pt-2 text-lg font-bold text-green-700">
-                  <span>Total TTC</span>
-                  <span>{Math.round(estimationResult.totalTTC).toLocaleString('fr-FR')} €</span>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="details">
-            <AccordionTrigger>Frais annexes</AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-2">
-                <div className="flex justify-between border-b pb-2">
-                  <span>Honoraires de maîtrise d'œuvre</span>
-                  <span className="font-medium">{Math.round(estimationResult.honorairesHT).toLocaleString('fr-FR')} € HT</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span>Études géotechniques</span>
-                  <span className="font-medium">{Math.round(estimationResult.etudesGeotechniques).toLocaleString('fr-FR')} € HT</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span>Étude thermique</span>
-                  <span className="font-medium">{Math.round(estimationResult.etudeThermique).toLocaleString('fr-FR')} € HT</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span>Garantie décennale</span>
-                  <span className="font-medium">{Math.round(estimationResult.garantieDecennale).toLocaleString('fr-FR')} € HT</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span>Taxe d'aménagement</span>
-                  <span className="font-medium">{Math.round(estimationResult.taxeAmenagement).toLocaleString('fr-FR')} €</span>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-          
-          <AccordionItem value="total">
-            <AccordionTrigger>Coût global du projet</AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-2">
-                <div className="flex justify-between border-b pb-2">
-                  <span>Coût des travaux TTC</span>
-                  <span className="font-medium">{Math.round(estimationResult.totalTTC).toLocaleString('fr-FR')} €</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span>Frais annexes TTC</span>
-                  <span className="font-medium">
-                    {Math.round(estimationResult.coutGlobalTTC - estimationResult.totalTTC).toLocaleString('fr-FR')} €
-                  </span>
-                </div>
-                <div className="flex justify-between pt-2 text-lg font-bold text-green-700">
-                  <span>Coût global TTC</span>
-                  <span>{Math.round(estimationResult.coutGlobalTTC).toLocaleString('fr-FR')} €</span>
-                </div>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-        
-        <div className="flex flex-wrap gap-2 mt-4">
-          <Button className="flex items-center gap-1">
-            <Download className="h-4 w-4" />
-            Télécharger le devis détaillé
-          </Button>
-          <Button variant="outline" className="flex items-center gap-1" onClick={() => {
-            toast({
-              title: "Demande envoyée",
-              description: "Un expert vous contactera prochainement pour affiner votre projet",
-            });
-          }}>
-            <InfoIcon className="h-4 w-4" />
-            Contacter un expert
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
+  
+  // Progression de l'étape actuelle
+  const stepProgress = ((step + 1) / totalSteps) * 100;
+  
   return (
-    <Card className="shadow-lg border-gray-200">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="text-2xl font-bold">Estimation de travaux détaillée</CardTitle>
-            <CardDescription>
-              Répondez aux questions pour chaque corps d'état pour obtenir une estimation précise
-            </CardDescription>
-          </div>
-          {calculateProgress() > 0 && (
-            <Badge variant="outline" className="px-2 py-1">
-              <span className="mr-1">Progression:</span>
-              <span className="font-medium">{calculateProgress()}%</span>
-            </Badge>
-          )}
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
-          <div 
-            className="bg-blue-600 h-2.5 rounded-full" 
-            style={{ width: `${calculateProgress()}%` }}
-          ></div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-4">
-        {estimationResult ? (
-          renderEstimationResult()
-        ) : (
-          <Tabs value={activeCorpsEtat} onValueChange={setActiveCorpsEtat} className="w-full">
-            <TabsList className="flex flex-nowrap overflow-x-auto pb-2 mb-4 w-full">
-              {corpsEtatList.map((corpsEtat) => (
-                <TabsTrigger 
-                  key={corpsEtat.id} 
-                  value={corpsEtat.id}
-                  className="whitespace-nowrap flex items-center gap-1"
-                >
-                  {corpsEtat.icon}
-                  {corpsEtat.label}
-                  {completedSections.includes(corpsEtat.id) && (
-                    <CheckCircle2 className="h-3 w-3 text-green-500 ml-1" />
-                  )}
-                </TabsTrigger>
-              ))}
+    <FormProvider {...methods}>
+      <div className="w-full">
+        {/* Affichage du résultat final ou des étapes du formulaire */}
+        {step === totalSteps - 1 && estimationResult ? (
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="estimation">Estimation Détaillée</TabsTrigger>
+              <TabsTrigger value="summary">Résumé</TabsTrigger>
+              <TabsTrigger value="quote">Devis Professionnel</TabsTrigger>
             </TabsList>
-
-            {corpsEtatList.map((corpsEtat) => (
-              <TabsContent key={corpsEtat.id} value={corpsEtat.id} className="m-0">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-medium">{corpsEtat.label}</h3>
-                  {renderQuestions()}
-                  
-                  <div className="flex justify-end pt-4">
-                    <Button 
-                      onClick={goToNextSection} 
-                      disabled={!isCurrentSectionComplete()}
-                      className="flex items-center gap-1"
-                    >
-                      {corpsEtatList.findIndex(ce => ce.id === activeCorpsEtat) === corpsEtatList.length - 1 ? (
-                        <>
-                          <Calculator className="h-4 w-4" />
-                          Calculer l'estimation
-                        </>
-                      ) : (
-                        <>
-                          Section suivante
-                          <ArrowRight className="h-4 w-4" />
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-            ))}
+            
+            <div className="flex justify-end gap-2 my-4">
+              <Button variant="outline" onClick={handleSaveEstimation} className="flex items-center gap-2">
+                <Save className="w-4 h-4" />
+                Sauvegarder Projet
+              </Button>
+              <Button variant="outline" onClick={() => goToPreviousStep()}>
+                Modifier mon estimation
+              </Button>
+            </div>
+            
+            <TabsContent value="estimation" className="mt-0">
+              <div ref={printRef}>
+                <EstimationReport 
+                  estimation={{
+                    totalHT: estimationResult || 0,
+                    totalTTC: (estimationResult || 0) * 1.2,
+                    vat: (estimationResult || 0) * 0.2,
+                    coutGlobalHT: (estimationResult || 0) * 1.15,
+                    coutGlobalTTC: (estimationResult || 0) * 1.15 * 1.2,
+                    honorairesHT: (estimationResult || 0) * 0.1,
+                    taxeAmenagement: (estimationResult || 0) * 0.03,
+                    garantieDecennale: (estimationResult || 0) * 0.01,
+                    etudesGeotechniques: (estimationResult || 0) * 0.005,
+                    etudeThermique: (estimationResult || 0) * 0.005,
+                    corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
+                      ...acc,
+                      [cat.category]: {
+                        montantHT: cat.amount,
+                        details: [
+                          formData.projectType ? `Type de projet: ${formData.projectType}` : '',
+                          formData.surface ? `Surface concernée: ${formData.surface} m²` : '',
+                        ].filter(Boolean)
+                      }
+                    }), {})
+                  }} 
+                  formData={formData}
+                  includeTerrainPrice={!!formData.landPrice} 
+                />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="summary" className="mt-0">
+              <EstimationSummaryReport 
+                formData={formData}
+                estimationResult={estimationResult}
+                categoriesAmounts={categoriesAmounts}
+              />
+            </TabsContent>
+            
+            <TabsContent value="quote" className="mt-0">
+              <ProfessionalQuoteReport 
+                formData={formData}
+                estimationResult={estimationResult}
+                onPrint={handlePrint}
+              />
+            </TabsContent>
           </Tabs>
+        ) : (
+          <Card className="p-6">
+            {/* Barre de progression */}
+            <div className="w-full h-2 bg-gray-200 rounded-full mb-6">
+              <div 
+                className="h-2 bg-progineer-gold rounded-full transition-all duration-300"
+                style={{ width: `${stepProgress}%` }}
+              ></div>
+            </div>
+            
+            {/* Étape actuelle */}
+            <div className="text-sm text-gray-500 mb-2">
+              Étape {step + 1} sur {totalSteps}
+            </div>
+            
+            {/* Contenu de l'étape actuelle */}
+            <div className={`transform transition-all duration-300 ${animationDirection === 'next' ? 'translate-x-0 opacity-100' : animationDirection === 'prev' ? 'translate-x-0 opacity-100' : ''}`}>
+              {getStepContent()}
+            </div>
+            
+            {/* Boutons de navigation (sauf pour les premières et dernières étapes qui ont leurs propres boutons) */}
+            {step > 0 && step < totalSteps - 2 && (
+              <div className="flex justify-between mt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={goToPreviousStep}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeftIcon className="w-4 h-4" />
+                  Précédent
+                </Button>
+                <Button
+                  type="button"
+                  onClick={goToNextStep}
+                  className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+                >
+                  Suivant
+                  <ArrowRightIcon className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+          </Card>
         )}
-      </CardContent>
-      
-      <CardFooter className="bg-gray-50 border-t p-4 text-sm text-center text-gray-500">
-        Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.
-      </CardFooter>
-    </Card>
+        
+        {/* Dialog pour sauvegarder l'estimation */}
+        <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Sauvegarder votre estimation</DialogTitle>
+              <DialogDescription>
+                Donnez un nom à votre projet et renseignez votre email pour créer un compte et sauvegarder votre estimation.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="projectName" className="text-right">
+                  Nom du projet
+                </Label>
+                <Input
+                  id="projectName"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  className="col-span-3"
+                  placeholder="Maison rue des Lilas"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="email" className="text-right">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="col-span-3"
+                  placeholder="votre@email.com"
+                  type="email"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowSaveDialog(false)}>
+                Annuler
+              </Button>
+              <Button type="button" onClick={handleConfirmSave} className="bg-progineer-gold hover:bg-progineer-gold/90">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                Sauvegarder et créer un compte
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </FormProvider>
   );
 };
 

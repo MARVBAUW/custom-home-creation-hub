@@ -1,177 +1,230 @@
 
 import React from 'react';
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, ArrowRight, Globe2 } from "lucide-react";
-import { motion } from 'framer-motion';
-import { slideVariants } from '../animations';
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MapPin, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
-const TerrainSchema = z.object({
-  terrainType: z.string().min(1, "Veuillez sélectionner un type de terrain"),
-});
-
-type TerrainFormProps = {
-  defaultValues: {
-    terrainType: string;
-  };
-  onSubmit: (data: any) => void;
+interface TerrainFormProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
   goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
+}
 
-const TerrainForm: React.FC<TerrainFormProps> = ({
-  defaultValues,
-  onSubmit,
-  goToPreviousStep,
-  animationDirection
+const TerrainForm: React.FC<TerrainFormProps> = ({ 
+  formData, 
+  updateFormData, 
+  goToNextStep,
+  goToPreviousStep
 }) => {
-  const form = useForm({
-    resolver: zodResolver(TerrainSchema),
-    defaultValues: {
-      terrainType: defaultValues.terrainType || "",
-    },
-  });
-
-  const terrainOptions = [
-    {
-      id: "plat",
-      label: "Terrain plat",
-      description: "Terrain avec un relief plat, sans pente significative",
-      image: "/images/terrain-plat.jpg"
-    },
-    {
-      id: "legere_pente",
-      label: "Légère pente",
-      description: "Terrain avec une pente légère nécessitant des aménagements spécifiques",
-      image: "/images/terrain-pente-legere.jpg"
-    },
-    {
-      id: "forte_pente",
-      label: "Forte pente",
-      description: "Terrain avec une pente importante nécessitant des travaux conséquents",
-      image: "/images/terrain-pente-forte.jpg"
-    },
-    {
-      id: "argileux",
-      label: "Terrain argileux",
-      description: "Sol principalement composé d'argile, nécessitant des fondations adaptées",
-      image: "/images/terrain-argileux.jpg"
-    },
-    {
-      id: "sableux",
-      label: "Terrain sableux",
-      description: "Sol principalement composé de sable, nécessitant un traitement spécifique",
-      image: "/images/terrain-sableux.jpg"
-    },
-    {
-      id: "rocheux",
-      label: "Terrain rocheux",
-      description: "Sol avec présence importante de roches, nécessitant des travaux particuliers",
-      image: "/images/terrain-rocheux.jpg"
-    },
-    {
-      id: "sans_avis",
-      label: "Sans avis",
-      description: "Je n'ai pas de préférence ou je ne connais pas le type de terrain",
-      image: "/images/terrain-indetermine.jpg"
-    }
-  ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    goToNextStep();
+  };
 
   return (
-    <motion.div
-      key="step-terrain"
-      custom={animationDirection}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={slideVariants}
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center">
-            <Globe2 className="mr-2 text-progineer-gold" />
-            Type de terrain
-          </h2>
-          
-          <FormField
-            control={form.control}
-            name="terrainType"
-            render={({ field }) => (
-              <FormItem className="space-y-6">
-                <FormLabel className="text-base">Choisissez le type de terrain</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    {terrainOptions.map((option) => (
-                      <div key={option.id} className="relative">
-                        <RadioGroupItem
-                          value={option.id}
-                          id={option.id}
-                          className="peer sr-only"
-                        />
-                        <label
-                          htmlFor={option.id}
-                          className="flex flex-col items-start border rounded-lg p-4 cursor-pointer transition-all peer-checked:border-progineer-gold peer-checked:bg-progineer-gold/10 peer-focus:ring-2 peer-focus:ring-progineer-gold/30 hover:border-gray-300"
-                        >
-                          {option.image && (
-                            <div className="w-full h-32 mb-3 overflow-hidden rounded">
-                              <img 
-                                src={option.image} 
-                                alt={option.label} 
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  // Fallback pour les images qui ne se chargent pas
-                                  e.currentTarget.src = "/placeholder.svg";
-                                }}
-                              />
-                            </div>
-                          )}
-                          <div className="text-left">
-                            <div className="text-base font-medium">
-                              {option.label}
-                            </div>
-                            {option.description && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {option.description}
-                              </p>
-                            )}
-                          </div>
-                        </label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="pt-4 flex flex-col md:flex-row gap-4 items-center justify-between">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goToPreviousStep}
-              className="w-full md:w-auto group hover:border-progineer-gold/80"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
-              Étape précédente
-            </Button>
-            
-            <Button type="submit" className="w-full md:w-auto group hover:bg-progineer-gold/90 bg-progineer-gold transition-all duration-300">
-              Continuer 
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+    <form onSubmit={handleSubmit}>
+      <Card className="mb-6">
+        <CardContent className="pt-6">
+          <div className="space-y-6">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="h-5 w-5 text-progineer-gold" />
+              <h3 className="text-xl font-semibold">Terrain</h3>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="terrainSurface">Surface du terrain (m²)</Label>
+                <Input 
+                  id="terrainSurface" 
+                  type="number" 
+                  value={formData.terrainSurface || ''} 
+                  onChange={(e) => updateFormData({ terrainSurface: Number(e.target.value) })}
+                  placeholder="Ex: 500"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="landPrice">Prix du terrain (€)</Label>
+                <div className="flex items-center gap-2">
+                  <Input 
+                    id="landPrice" 
+                    type="number" 
+                    value={formData.landPrice || ''} 
+                    onChange={(e) => updateFormData({ landPrice: Number(e.target.value) })}
+                    placeholder="Ex: 100000"
+                  />
+                  <div className="text-xs text-gray-500 italic mt-1">
+                    Optionnel, pour calculer le coût total avec terrain
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="terrainType">Type de terrain</Label>
+                <Select 
+                  value={formData.terrainType || ''} 
+                  onValueChange={(value) => updateFormData({ terrainType: value })}
+                >
+                  <SelectTrigger id="terrainType">
+                    <SelectValue placeholder="Sélectionnez le type de terrain" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="plat">Plat</SelectItem>
+                    <SelectItem value="pentu">En pente</SelectItem>
+                    <SelectItem value="tres-pentu">Très pentu</SelectItem>
+                    <SelectItem value="irregulier">Irrégulier</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="terrainAccess">Accès au terrain</Label>
+                <Select 
+                  value={formData.terrainAccess || ''} 
+                  onValueChange={(value) => updateFormData({ terrainAccess: value })}
+                >
+                  <SelectTrigger id="terrainAccess">
+                    <SelectValue placeholder="Sélectionnez le type d'accès" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="facile">Facile</SelectItem>
+                    <SelectItem value="moyen">Moyen</SelectItem>
+                    <SelectItem value="difficile">Difficile</SelectItem>
+                    <SelectItem value="tres-difficile">Très difficile</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label>Viabilisation</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="waterConnection" 
+                      checked={formData.waterConnection || false}
+                      onCheckedChange={(checked) => updateFormData({ waterConnection: checked === true })}
+                    />
+                    <Label htmlFor="waterConnection" className="text-sm cursor-pointer">Raccordement eau</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="electricityConnection" 
+                      checked={formData.electricityConnection || false}
+                      onCheckedChange={(checked) => updateFormData({ electricityConnection: checked === true })}
+                    />
+                    <Label htmlFor="electricityConnection" className="text-sm cursor-pointer">Raccordement électricité</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="gasConnection" 
+                      checked={formData.gasConnection || false}
+                      onCheckedChange={(checked) => updateFormData({ gasConnection: checked === true })}
+                    />
+                    <Label htmlFor="gasConnection" className="text-sm cursor-pointer">Raccordement gaz</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="sewerConnection" 
+                      checked={formData.sewerConnection || false}
+                      onCheckedChange={(checked) => updateFormData({ sewerConnection: checked === true })}
+                    />
+                    <Label htmlFor="sewerConnection" className="text-sm cursor-pointer">Raccordement tout-à-l'égout</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="fiberConnection" 
+                      checked={formData.fiberConnection || false}
+                      onCheckedChange={(checked) => updateFormData({ fiberConnection: checked === true })}
+                    />
+                    <Label htmlFor="fiberConnection" className="text-sm cursor-pointer">Raccordement fibre/télécom</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="needsSepticTank" 
+                      checked={formData.needsSepticTank || false}
+                      onCheckedChange={(checked) => updateFormData({ needsSepticTank: checked === true })}
+                    />
+                    <Label htmlFor="needsSepticTank" className="text-sm cursor-pointer">Fosse septique nécessaire</Label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <Label>Contraintes particulières</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="floodRisk" 
+                      checked={formData.floodRisk || false}
+                      onCheckedChange={(checked) => updateFormData({ floodRisk: checked === true })}
+                    />
+                    <Label htmlFor="floodRisk" className="text-sm cursor-pointer">Zone inondable</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="claySoil" 
+                      checked={formData.claySoil || false}
+                      onCheckedChange={(checked) => updateFormData({ claySoil: checked === true })}
+                    />
+                    <Label htmlFor="claySoil" className="text-sm cursor-pointer">Sol argileux</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="rockySoil" 
+                      checked={formData.rockySoil || false}
+                      onCheckedChange={(checked) => updateFormData({ rockySoil: checked === true })}
+                    />
+                    <Label htmlFor="rockySoil" className="text-sm cursor-pointer">Sol rocheux</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="wetlandZone" 
+                      checked={formData.wetlandZone || false}
+                      onCheckedChange={(checked) => updateFormData({ wetlandZone: checked === true })}
+                    />
+                    <Label htmlFor="wetlandZone" className="text-sm cursor-pointer">Zone humide</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="heritageZone" 
+                      checked={formData.heritageZone || false}
+                      onCheckedChange={(checked) => updateFormData({ heritageZone: checked === true })}
+                    />
+                    <Label htmlFor="heritageZone" className="text-sm cursor-pointer">Zone patrimoniale/protégée</Label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </form>
-      </Form>
-    </motion.div>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={goToPreviousStep}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          Précédent
+        </Button>
+        <Button
+          type="submit"
+          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+        >
+          Suivant
+          <ArrowRightIcon className="w-4 h-4" />
+        </Button>
+      </div>
+    </form>
   );
 };
 

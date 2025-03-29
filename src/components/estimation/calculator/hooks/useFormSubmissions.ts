@@ -1,14 +1,5 @@
 
-import { useToast } from "@/components/ui/use-toast";
 import { FormData } from '../types';
-import { useClientInfoSubmissions } from './submissions/useClientInfoSubmissions';
-import { useConstructionSubmissions } from './submissions/useConstructionSubmissions';
-import { useEnvelopeSubmissions } from './submissions/useEnvelopeSubmissions';
-import { useTechnicalSubmissions } from './submissions/useTechnicalSubmissions';
-import { useInteriorSubmissions } from './submissions/useInteriorSubmissions';
-import { useSpecialFeaturesSubmissions } from './submissions/useSpecialFeaturesSubmissions';
-import { useRoomsSubmissions } from './submissions/useRoomsSubmissions';
-import { useRenovationSubmissions } from './submissions/useRenovationSubmissions';
 
 export const useFormSubmissions = (
   formData: FormData, 
@@ -17,81 +8,212 @@ export const useFormSubmissions = (
   goToNextStep: () => void,
   finalizeEstimation: () => void
 ) => {
-  const { toast } = useToast();
+  // Fonction pour gérer le passage à l'étape suivante après mise à jour des données
+  const handleSubmitAndContinue = (data: Partial<FormData>) => {
+    updateFormData(data);
+    goToNextStep();
+  };
 
-  // Initialiser les hooks de soumission spécifiques
-  const clientInfoSubmissions = useClientInfoSubmissions(updateFormData, setStep);
-  const constructionSubmissions = useConstructionSubmissions(updateFormData, goToNextStep);
-  const envelopeSubmissions = useEnvelopeSubmissions(updateFormData, goToNextStep);
-  const technicalSubmissions = useTechnicalSubmissions(updateFormData, goToNextStep);
-  const interiorSubmissions = useInteriorSubmissions(updateFormData, goToNextStep);
-  const specialFeaturesSubmissions = useSpecialFeaturesSubmissions(formData, updateFormData, setStep);
-  const roomsSubmissions = useRoomsSubmissions(updateFormData, setStep);
-  const renovationSubmissions = useRenovationSubmissions(updateFormData, goToNextStep);
+  // Soumission du formulaire de type de client
+  const onClientTypeSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
 
-  // Soumission du formulaire de coordonnées et calcul de l'estimation
-  const onContactSubmit = (data: { 
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-  }) => {
-    clientInfoSubmissions.onContactSubmit(data);
-    
-    // Calculer l'estimation
+  // Soumission pour projets professionnels
+  const onProfessionalProjectSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission pour projets particuliers
+  const onIndividualProjectSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission pour le type d'estimation
+  const onEstimationTypeSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des détails de construction
+  const onConstructionDetailsSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le terrain
+  const onTerrainSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le gros œuvre
+  const onGrosOeuvreSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la charpente
+  const onCharpenteSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les combles
+  const onComblesSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la couverture
+  const onCouvertureSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur l'isolation
+  const onIsolationSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la façade
+  const onFacadeSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les menuiseries extérieures
+  const onMenuiseriesExtSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur l'électricité
+  const onElectriciteSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la plomberie
+  const onPlomberieSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le chauffage
+  const onChauffageSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la plâtrerie
+  const onPlatrerieSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les menuiseries intérieures
+  const onMenuiseriesIntSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le carrelage
+  const onCarrelageSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le parquet
+  const onParquetSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la peinture
+  const onPeintureSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les énergies renouvelables
+  const onEnergiesRenouvelablesSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les solutions environnementales
+  const onSolutionsEnvironSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur l'aménagement paysager
+  const onAmenagementPaysagerSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur les options
+  const onOptionsSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la cuisine
+  const onCuisineSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la salle de bain
+  const onSalleDeBainSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la démolition
+  const onDemolitionSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur le gros œuvre en rénovation
+  const onGrosOeuvreRenovSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la charpente en rénovation
+  const onCharpenteRenovSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la couverture en rénovation
+  const onCouvertureRenovSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission des informations sur la façade en rénovation
+  const onFacadeRenovSubmit = (data: Partial<FormData>) => {
+    handleSubmitAndContinue(data);
+  };
+
+  // Soumission du formulaire de contact et finalisation de l'estimation
+  const onContactSubmit = (data: Partial<FormData>) => {
+    updateFormData(data);
     finalizeEstimation();
+    setStep(19); // Aller à l'étape des résultats
   };
 
   return {
-    // Client info submissions
-    onClientTypeSubmit: clientInfoSubmissions.onClientTypeSubmit,
-    onProfessionalProjectSubmit: clientInfoSubmissions.onProfessionalProjectSubmit,
-    onIndividualProjectSubmit: clientInfoSubmissions.onIndividualProjectSubmit,
-    onEstimationTypeSubmit: clientInfoSubmissions.onEstimationTypeSubmit,
-    
-    // Construction submissions
-    onConstructionDetailsSubmit: constructionSubmissions.onConstructionDetailsSubmit,
-    onTerrainSubmit: constructionSubmissions.onTerrainSubmit,
-    onGrosOeuvreSubmit: constructionSubmissions.onGrosOeuvreSubmit,
-    onCharpenteSubmit: constructionSubmissions.onCharpenteSubmit,
-    onComblesSubmit: constructionSubmissions.onComblesSubmit,
-    
-    // Envelope submissions
-    onCouvertureSubmit: envelopeSubmissions.onCouvertureSubmit,
-    onIsolationSubmit: envelopeSubmissions.onIsolationSubmit,
-    onFacadeSubmit: envelopeSubmissions.onFacadeSubmit,
-    onMenuiseriesExtSubmit: envelopeSubmissions.onMenuiseriesExtSubmit,
-    
-    // Technical submissions
-    onElectriciteSubmit: technicalSubmissions.onElectriciteSubmit,
-    onPlomberieSubmit: technicalSubmissions.onPlomberieSubmit,
-    onChauffageSubmit: technicalSubmissions.onChauffageSubmit,
-    
-    // Interior submissions
-    onPlatrerieSubmit: interiorSubmissions.onPlatrerieSubmit,
-    onMenuiseriesIntSubmit: interiorSubmissions.onMenuiseriesIntSubmit,
-    onCarrelageSubmit: interiorSubmissions.onCarrelageSubmit,
-    onParquetSubmit: interiorSubmissions.onParquetSubmit,
-    onPeintureSubmit: interiorSubmissions.onPeintureSubmit,
-    
-    // Special features submissions
-    onEnergiesRenouvelablesSubmit: specialFeaturesSubmissions.onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit: specialFeaturesSubmissions.onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit: specialFeaturesSubmissions.onAmenagementPaysagerSubmit,
-    onOptionsSubmit: specialFeaturesSubmissions.onOptionsSubmit,
-    
-    // Rooms submissions
-    onCuisineSubmit: roomsSubmissions.onCuisineSubmit,
-    onSalleDeBainSubmit: roomsSubmissions.onSalleDeBainSubmit,
-    
-    // Renovation submissions
-    onDemolitionSubmit: renovationSubmissions.onDemolitionSubmit,
-    onGrosOeuvreRenovSubmit: renovationSubmissions.onGrosOeuvreRenovSubmit,
-    onCharpenteRenovSubmit: renovationSubmissions.onCharpenteRenovSubmit,
-    onCouvertureRenovSubmit: renovationSubmissions.onCouvertureRenovSubmit,
-    onFacadeRenovSubmit: renovationSubmissions.onFacadeRenovSubmit,
-    
-    // Contact submission (custom implementation with finalization)
+    onClientTypeSubmit,
+    onProfessionalProjectSubmit,
+    onIndividualProjectSubmit,
+    onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
+    onTerrainSubmit,
+    onGrosOeuvreSubmit,
+    onCharpenteSubmit,
+    onComblesSubmit,
+    onCouvertureSubmit,
+    onIsolationSubmit,
+    onFacadeSubmit,
+    onMenuiseriesExtSubmit,
+    onElectriciteSubmit,
+    onPlomberieSubmit,
+    onChauffageSubmit,
+    onPlatrerieSubmit,
+    onMenuiseriesIntSubmit,
+    onCarrelageSubmit,
+    onParquetSubmit,
+    onPeintureSubmit,
+    onEnergiesRenouvelablesSubmit,
+    onSolutionsEnvironSubmit,
+    onAmenagementPaysagerSubmit,
+    onOptionsSubmit,
+    onCuisineSubmit,
+    onSalleDeBainSubmit,
+    onDemolitionSubmit,
+    onGrosOeuvreRenovSubmit,
+    onCharpenteRenovSubmit,
+    onCouvertureRenovSubmit,
+    onFacadeRenovSubmit,
     onContactSubmit
   };
 };
