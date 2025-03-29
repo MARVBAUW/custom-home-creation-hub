@@ -8,7 +8,7 @@ import ParquetForm from '../../FormSteps/ParquetForm';
 import PeintureForm from '../../FormSteps/PeintureForm';
 import { FormData } from '../../types';
 
-// Registry for interior steps (steps 17-21)
+// Registry for interior finishings steps
 export const createInteriorStepRegistry = (
   formData: FormData,
   onPlatrerieSubmit: (data: { plasteringType: string }) => void,
@@ -35,7 +35,7 @@ export const createInteriorStepRegistry = (
         formData={formData}
         updateFormData={(data) => onMenuiseriesIntSubmit({
           doorType: data.doorType || '',
-          interiorFittings: Array.isArray(data.interiorFittings) ? data.interiorFittings : []
+          interiorDoorsType: data.interiorDoorsType || ''
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -48,7 +48,7 @@ export const createInteriorStepRegistry = (
         updateFormData={(data) => onCarrelageSubmit({
           floorTileType: data.floorTileType || '',
           wallTileType: data.wallTileType || '',
-          floorTilePercentage: data.floorTilePercentage !== undefined ? Number(data.floorTilePercentage) : 0
+          floorTilePercentage: data.floorTilePercentage || 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -60,9 +60,9 @@ export const createInteriorStepRegistry = (
         formData={formData}
         updateFormData={(data) => onParquetSubmit({
           parquetType: data.parquetType || '',
-          parquetPercentage: data.parquetPercentage !== undefined ? Number(data.parquetPercentage) : 0,
+          parquetPercentage: data.parquetPercentage || 0,
           softFloorType: data.softFloorType || '',
-          softFloorPercentage: data.softFloorPercentage !== undefined ? Number(data.softFloorPercentage) : 0
+          softFloorPercentage: data.softFloorPercentage || 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -73,11 +73,10 @@ export const createInteriorStepRegistry = (
       <PeintureForm
         formData={formData}
         updateFormData={(data) => onPeintureSubmit({
-          basicPaintPercentage: data.basicPaintPercentage !== undefined ? Number(data.basicPaintPercentage) : 0,
-          decorativePaintPercentage: data.decorativePaintPercentage !== undefined ? Number(data.decorativePaintPercentage) : 0,
-          wallpaperPercentage: data.wallpaperPercentage !== undefined ? Number(data.wallpaperPercentage) : 0,
-          woodCladPercentage: data.woodCladPercentage !== undefined ? Number(data.woodCladPercentage) : 0,
-          stoneCladPercentage: data.stoneCladPercentage !== undefined ? Number(data.stoneCladPercentage) : 0
+          paintType: data.paintType || '',
+          basicPaintPercentage: data.basicPaintPercentage || 0,
+          decorativePaintPercentage: data.decorativePaintPercentage || 0,
+          wallpaperPercentage: data.wallpaperPercentage || 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}

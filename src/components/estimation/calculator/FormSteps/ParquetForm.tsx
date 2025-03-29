@@ -1,65 +1,49 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ParquetSchema } from '../types/validationSchemas';
-import { ParquetFormProps } from '../types/formTypes';
-import { toFormValue } from '../utils/typeConversions';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 
-const parquetOptions = [
-  { value: 'standard', label: 'Standard' },
-  { value: 'premium', label: 'Premium' },
-  { value: 'luxury', label: 'Luxe' },
-  { value: 'solid_wood', label: 'Bois massif' },
-  { value: 'engineered', label: 'Contrecollé' }
-];
-
-const softFloorOptions = [
-  { value: 'vinyl', label: 'PVC/Vinyle' },
-  { value: 'laminate', label: 'Stratifié' },
-  { value: 'carpet', label: 'Moquette' },
-  { value: 'linoleum', label: 'Linoléum' }
-];
-
-const ParquetForm: React.FC<ParquetFormProps> = ({
+const ParquetForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection,
+  defaultValues,
   onSubmit
 }) => {
-  const { register, handleSubmit, formState: { errors }, control, watch } = useForm({
-    resolver: zodResolver(ParquetSchema),
-    defaultValues: {
-      parquetType: formData.parquetType || '',
-      parquetPercentage: toFormValue(formData.parquetPercentage) || '50',
-      softFloorType: formData.softFloorType || '',
-      softFloorPercentage: toFormValue(formData.softFloorPercentage) || '50'
-    }
-  });
+  const [parquetType, setParquetType] = React.useState<string>(
+    defaultValues?.parquetType || formData.parquetType || 'standard'
+  );
+  
+  const [parquetPercentage, setParquetPercentage] = React.useState<number>(
+    defaultValues?.parquetPercentage || formData.parquetPercentage as number || 50
+  );
+  
+  const [softFloorType, setSoftFloorType] = React.useState<string>(
+    defaultValues?.softFloorType || formData.softFloorType || 'vinyl'
+  );
+  
+  const [softFloorPercentage, setSoftFloorPercentage] = React.useState<number>(
+    defaultValues?.softFloorPercentage || formData.softFloorPercentage as number || 0
+  );
 
-  const parquetPercentage = watch('parquetPercentage');
-  const softFloorPercentage = 100 - Number(parquetPercentage || 0);
-
-  const submitHandler = (data: any) => {
-    // Calculate the complementary percentage
-    const updatedData = {
-      ...data,
-      softFloorPercentage: String(100 - Number(data.parquetPercentage))
+  const handleSubmit = () => {
+    const data = {
+      parquetType,
+      parquetPercentage,
+      softFloorType,
+      softFloorPercentage
     };
     
-    updateFormData(updatedData);
-    
     if (onSubmit) {
-      onSubmit(updatedData);
+      onSubmit(data);
     } else {
+      updateFormData(data);
       goToNextStep();
     }
   };
@@ -68,97 +52,141 @@ const ParquetForm: React.FC<ParquetFormProps> = ({
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Parquet & Sol Souple</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="parquetType">Type de parquet</Label>
-              <Controller
-                name="parquetType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de parquet" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {parquetOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Parquet et revêtements de sol souples</h3>
+          
+          <div className="space-y-6">
+            <div>
+              <Label className="text-base">Type de parquet</Label>
+              <RadioGroup 
+                value={parquetType} 
+                onValueChange={setParquetType}
+                className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setParquetType('standard')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="standard" id="parquet-standard" className="mx-auto mb-2" />
+                    <Label htmlFor="parquet-standard">Stratifié</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'engineered' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setParquetType('engineered')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="engineered" id="parquet-engineered" className="mx-auto mb-2" />
+                    <Label htmlFor="parquet-engineered">Contrecollé</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'solid' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setParquetType('solid')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="solid" id="parquet-solid" className="mx-auto mb-2" />
+                    <Label htmlFor="parquet-solid">Massif</Label>
+                  </CardContent>
+                </Card>
+              </RadioGroup>
             </div>
             
             <div className="space-y-2">
               <div className="flex justify-between">
-                <Label htmlFor="parquetPercentage">Pourcentage de parquet</Label>
-                <span>{parquetPercentage || 0}%</span>
+                <Label>Pourcentage de parquet</Label>
+                <span className="text-sm font-medium">{parquetPercentage}%</span>
               </div>
-              <Controller
-                name="parquetPercentage"
-                control={control}
-                render={({ field }) => (
-                  <Slider
-                    defaultValue={[Number(field.value) || 50]}
-                    max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
-                  />
-                )}
+              <Slider
+                value={[parquetPercentage]}
+                min={0}
+                max={100}
+                step={5}
+                onValueChange={(value) => setParquetPercentage(value[0])}
+                className="mt-2"
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="softFloorType">Type de sol souple</Label>
-              <Controller
-                name="softFloorType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de sol souple" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {softFloorOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
+            <div>
+              <Label className="text-base">Type de sol souple</Label>
+              <RadioGroup 
+                value={softFloorType} 
+                onValueChange={setSoftFloorType}
+                className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${softFloorType === 'vinyl' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setSoftFloorType('vinyl')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="vinyl" id="soft-vinyl" className="mx-auto mb-2" />
+                    <Label htmlFor="soft-vinyl">PVC/Vinyle</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${softFloorType === 'carpet' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setSoftFloorType('carpet')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="carpet" id="soft-carpet" className="mx-auto mb-2" />
+                    <Label htmlFor="soft-carpet">Moquette</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${softFloorType === 'linoleum' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setSoftFloorType('linoleum')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="linoleum" id="soft-linoleum" className="mx-auto mb-2" />
+                    <Label htmlFor="soft-linoleum">Linoléum</Label>
+                  </CardContent>
+                </Card>
+              </RadioGroup>
             </div>
             
             <div className="space-y-2">
               <div className="flex justify-between">
                 <Label>Pourcentage de sol souple</Label>
-                <span>{softFloorPercentage}%</span>
+                <span className="text-sm font-medium">{softFloorPercentage}%</span>
               </div>
-              <div className="h-5 w-full bg-gray-200 rounded">
-                <div 
-                  className="h-5 bg-gray-400 rounded" 
-                  style={{ width: `${softFloorPercentage}%` }}
-                ></div>
-              </div>
-              <p className="text-xs text-gray-500">
-                (Calculé automatiquement comme le complément à 100% du parquet)
-              </p>
+              <Slider
+                value={[softFloorPercentage]}
+                min={0}
+                max={100}
+                step={5}
+                onValueChange={(value) => {
+                  setSoftFloorPercentage(value[0]);
+                  // Adjust parquet percentage to maintain total of 100%
+                  setParquetPercentage(100 - value[0]);
+                }}
+                className="mt-2"
+              />
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              Précédent
-            </Button>
-            <Button type="submit">
-              Suivant
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </div>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={goToPreviousStep}
+          >
+            Précédent
+          </Button>
+          <Button 
+            type="button" 
+            onClick={handleSubmit}
+          >
+            Continuer
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

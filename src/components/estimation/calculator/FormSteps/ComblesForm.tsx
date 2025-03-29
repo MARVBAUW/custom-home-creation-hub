@@ -1,104 +1,107 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ComblesSchema } from '../types/validationSchemas';
-import { ComblesFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Home, Square, CheckSquare, Layout } from 'lucide-react';
 
-const atticOptions = [
-  { value: 'lost', label: 'Perdus' },
-  { value: 'convertible', label: 'Aménageables' },
-  { value: 'converted', label: 'Aménagés' },
-  { value: 'roof_terrace', label: 'Toit terrasse' }
-];
-
-const ComblesForm: React.FC<ComblesFormProps> = ({
+const ComblesForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection,
-  onSubmit
+  animationDirection
 }) => {
-  const { handleSubmit, formState: { errors }, control } = useForm({
-    resolver: zodResolver(ComblesSchema),
-    defaultValues: {
-      atticType: formData.atticType || ''
-    }
-  });
+  const [atticType, setAtticType] = React.useState<string>(
+    formData.atticType || 'lost'
+  );
 
-  const submitHandler = (data: any) => {
-    updateFormData(data);
-    
-    if (onSubmit) {
-      onSubmit(data);
-    } else {
-      goToNextStep();
-    }
+  const handleSubmit = () => {
+    updateFormData({
+      atticType
+    });
+    goToNextStep();
   };
 
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Type de combles</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="atticType">Type de combles</Label>
-              <Controller
-                name="atticType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de combles" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {atticOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.atticType && (
-                <p className="text-sm text-red-500">{errors.atticType.message?.toString()}</p>
-              )}
-            </div>
-            
-            <div className="mt-4 space-y-2">
-              <p className="text-sm text-gray-500">
-                <strong>Perdus</strong> : Combles non accessibles ou non utilisables comme espace de vie.
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium mb-4">Type de combles</h3>
+        
+        <RadioGroup 
+          value={atticType} 
+          onValueChange={setAtticType}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+        >
+          <Card 
+            className={`cursor-pointer transition-all hover:shadow-md ${atticType === 'lost' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setAtticType('lost')}
+          >
+            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+              <Square className="h-8 w-8 text-blue-500 mb-3" />
+              <RadioGroupItem value="lost" id="attic-lost" className="sr-only" />
+              <Label htmlFor="attic-lost" className="font-medium">Combles perdus</Label>
+              <p className="text-xs text-gray-500 mt-2">
+                Espace sous toiture non aménagé, utilisé uniquement pour l'isolation
               </p>
-              <p className="text-sm text-gray-500">
-                <strong>Aménageables</strong> : Combles avec potentiel d'aménagement mais actuellement non aménagés.
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all hover:shadow-md ${atticType === 'convertible' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setAtticType('convertible')}
+          >
+            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+              <CheckSquare className="h-8 w-8 text-blue-500 mb-3" />
+              <RadioGroupItem value="convertible" id="attic-convertible" className="sr-only" />
+              <Label htmlFor="attic-convertible" className="font-medium">Combles aménageables</Label>
+              <p className="text-xs text-gray-500 mt-2">
+                Espace pouvant être transformé en pièce habitable ultérieurement
               </p>
-              <p className="text-sm text-gray-500">
-                <strong>Aménagés</strong> : Combles déjà transformés en espace habitable.
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all hover:shadow-md ${atticType === 'converted' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setAtticType('converted')}
+          >
+            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+              <Home className="h-8 w-8 text-blue-500 mb-3" />
+              <RadioGroupItem value="converted" id="attic-converted" className="sr-only" />
+              <Label htmlFor="attic-converted" className="font-medium">Combles aménagés</Label>
+              <p className="text-xs text-gray-500 mt-2">
+                Espace sous toiture transformé en pièce habitable (chambre, bureau, etc.)
               </p>
-              <p className="text-sm text-gray-500">
-                <strong>Toit terrasse</strong> : Surface plane utilisable comme espace extérieur.
+            </CardContent>
+          </Card>
+          
+          <Card 
+            className={`cursor-pointer transition-all hover:shadow-md ${atticType === 'roof_terrace' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setAtticType('roof_terrace')}
+          >
+            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+              <Layout className="h-8 w-8 text-blue-500 mb-3" />
+              <RadioGroupItem value="roof_terrace" id="attic-roof-terrace" className="sr-only" />
+              <Label htmlFor="attic-roof-terrace" className="font-medium">Toit terrasse</Label>
+              <p className="text-xs text-gray-500 mt-2">
+                Toiture plate accessible et aménagée en terrasse
               </p>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              Précédent
-            </Button>
-            <Button type="submit">
-              Suivant
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+            </CardContent>
+          </Card>
+        </RadioGroup>
+        
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
+            Continuer
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

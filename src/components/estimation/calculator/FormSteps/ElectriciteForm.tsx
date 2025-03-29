@@ -1,152 +1,125 @@
-
 import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Zap, ZapOff, Battery, Smartphone } from 'lucide-react';
 
-const formSchema = z.object({
-  electricalType: z.string().min(1, { message: 'Veuillez sélectionner une option' }),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
-type ElectriciteFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
-
-const ElectriciteForm: React.FC<ElectriciteFormProps> = ({
-  defaultValues,
-  onSubmit,
+const ElectriciteForm: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
   animationDirection,
+  defaultValues,
+  onSubmit
 }) => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      electricalType: defaultValues.electricalType || '',
-    },
-  });
+  const [electricalType, setElectricalType] = React.useState<string>(
+    defaultValues?.electricalType || formData.electricalType || 'standard'
+  );
+
+  const handleContinue = () => {
+    const data = { electricalType };
+    
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      updateFormData(data);
+    }
+    
+    goToNextStep();
+  };
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Électricité</h2>
-        <p className="text-muted-foreground text-sm">
-          Choisissez le type d'installation électrique pour votre projet
-        </p>
-      </div>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="electricalType"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Type d'installation</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="standard" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/electricite-standard.jpg"
-                          alt="Installation standard"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Standard</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation de base avec prises et interrupteurs standards
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="premium" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/electricite-premium.jpg"
-                          alt="Installation premium"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Premium</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation haut de gamme avec domotique et smart home
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="economy" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/electricite-economic.jpg"
-                          alt="Installation économique"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Économique</div>
-                        <p className="text-sm text-muted-foreground">
-                          Installation basique avec équipements essentiels
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="smart" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/electricite-domotique.jpg"
-                          alt="Domotique"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Domotique complète</div>
-                        <p className="text-sm text-muted-foreground">
-                          Système complet de contrôle intelligent de la maison
-                        </p>
-                      </div>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-between pt-4">
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Installation électrique</h3>
+          
+          <RadioGroup 
+            value={electricalType} 
+            onValueChange={setElectricalType}
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'basic' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('basic')}
             >
-              <ArrowLeft size={16} />
-              Précédent
-            </Button>
-            <Button type="submit">Continuer</Button>
-          </div>
-        </form>
-      </Form>
-    </AnimatedStepTransition>
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <Zap className="h-10 w-10 text-amber-500 mb-3" />
+                <RadioGroupItem value="basic" id="electrical-basic" className="mx-auto mb-2" />
+                <Label htmlFor="electrical-basic" className="font-medium">Basique</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Installation électrique simple et fonctionnelle
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('standard')}
+            >
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <ZapOff className="h-10 w-10 text-blue-500 mb-3" />
+                <RadioGroupItem value="standard" id="electrical-standard" className="mx-auto mb-2" />
+                <Label htmlFor="electrical-standard" className="font-medium">Standard</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Installation électrique de qualité standard avec plus de prises
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('premium')}
+            >
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <Battery className="h-10 w-10 text-green-500 mb-3" />
+                <RadioGroupItem value="premium" id="electrical-premium" className="mx-auto mb-2" />
+                <Label htmlFor="electrical-premium" className="font-medium">Premium</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Installation électrique de haute qualité avec options avancées
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'smart_home' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('smart_home')}
+            >
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <Smartphone className="h-10 w-10 text-purple-500 mb-3" />
+                <RadioGroupItem value="smart_home" id="electrical-smart" className="mx-auto mb-2" />
+                <Label htmlFor="electrical-smart" className="font-medium">Domotique</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Installation électrique connectée avec système domotique
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
+          >
+            Précédent
+          </Button>
+          
+          <Button
+            type="button"
+            onClick={handleContinue}
+          >
+            Continuer
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

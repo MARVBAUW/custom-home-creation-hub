@@ -1,288 +1,182 @@
-
 import React from 'react';
-import { Button } from "@/components/ui/button";
+import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Trees, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
+import { Button } from "@/components/ui/button";
+import { Pool, Utensils, Flower, Home } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface AmenagementExtFormProps {
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-const AmenagementExtForm: React.FC<AmenagementExtFormProps> = ({ 
-  defaultValues = {},
-  onSubmit,
+const AmenagementExtForm: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  defaultValues
 }) => {
-  const [formData, setFormData] = React.useState({
-    gardenArea: defaultValues.gardenArea || '',
-    terrace: defaultValues.terrace || false,
-    swimmingPool: defaultValues.swimmingPool || false,
-    garage: defaultValues.garage || false,
-    carport: defaultValues.carport || false,
-    driveway: defaultValues.driveway || false,
-    fence: defaultValues.fence || false,
-    gate: defaultValues.gate || false,
-    garden: defaultValues.garden || false,
-    terraceType: defaultValues.terraceType || '',
-    terraceArea: defaultValues.terraceArea || '',
-    poolType: defaultValues.poolType || '',
-    garageSize: defaultValues.garageSize || '',
-    outdoorLighting: defaultValues.outdoorLighting || false,
-    irrigation: defaultValues.irrigation || false,
-    outdoorKitchen: defaultValues.outdoorKitchen || false,
-    pergola: defaultValues.pergola || false
-  });
-
-  const updateField = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (onSubmit) {
-      onSubmit(formData);
+  // Initialize with form data or defaults
+  const [pool, setPool] = React.useState<boolean>(
+    formData.pool || defaultValues?.pool || false
+  );
+  
+  const [terrace, setTerrace] = React.useState<boolean>(
+    formData.terrace || defaultValues?.terrace || false
+  );
+  
+  const [outdoorKitchen, setOutdoorKitchen] = React.useState<boolean>(
+    formData.outdoorKitchen || defaultValues?.outdoorKitchen || false
+  );
+  
+  const [landscapingType, setLandscapingType] = React.useState<string>(
+    formData.landscapingType || defaultValues?.landscapingType || ''
+  );
+  
+  const [gardenSurface, setGardenSurface] = React.useState<string>(
+    formData.gardenSurface?.toString() || defaultValues?.gardenSurface?.toString() || ''
+  );
+  
+  const handleSubmit = () => {
+    const data = {
+      pool,
+      terrace,
+      outdoorKitchen,
+      landscapingType,
+      gardenSurface: gardenSurface !== '' ? Number(gardenSurface) : undefined
+    };
+    
+    updateFormData(data);
+    
+    if (typeof props.onSubmit === 'function') {
+      props.onSubmit(data);
+    } else {
+      goToNextStep();
     }
   };
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <form onSubmit={handleSubmit}>
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Trees className="h-5 w-5 text-progineer-gold" />
-                <h3 className="text-xl font-semibold">Aménagements Extérieurs</h3>
-              </div>
-
-              <div className="space-y-4">
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <h3 className="text-xl font-medium">Aménagements extérieurs</h3>
+        <p className="text-gray-500">
+          Sélectionnez les aménagements extérieurs que vous souhaitez inclure dans votre projet.
+        </p>
+        
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="garden-surface">Surface du jardin (m²)</Label>
+            <Input
+              id="garden-surface"
+              type="number"
+              placeholder="Ex: 500"
+              value={gardenSurface}
+              onChange={(e) => setGardenSurface(e.target.value)}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="landscaping-type">Type d'aménagement paysager</Label>
+            <Select 
+              value={landscapingType} 
+              onValueChange={setLandscapingType}
+            >
+              <SelectTrigger id="landscaping-type">
+                <SelectValue placeholder="Sélectionnez un type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="minimal">Minimal (pelouse simple)</SelectItem>
+                <SelectItem value="standard">Standard (pelouse, arbustes)</SelectItem>
+                <SelectItem value="elaborate">Élaboré (jardin paysager)</SelectItem>
+                <SelectItem value="luxury">Luxe (jardin d'architecte)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <Card className="shadow-sm">
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-start space-x-3">
+                <Checkbox 
+                  id="pool" 
+                  checked={pool}
+                  onCheckedChange={(checked) => setPool(checked as boolean)}
+                />
                 <div>
-                  <Label htmlFor="gardenArea">Surface du jardin (m²)</Label>
-                  <Input 
-                    id="gardenArea" 
-                    type="number" 
-                    value={formData.gardenArea} 
-                    onChange={(e) => updateField('gardenArea', Number(e.target.value))}
-                    placeholder="Ex: 200"
-                  />
-                </div>
-
-                <div>
-                  <Label>Aménagements extérieurs souhaités</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="terrace" 
-                        checked={formData.terrace}
-                        onCheckedChange={(checked) => updateField('terrace', checked === true)}
-                      />
-                      <Label htmlFor="terrace" className="text-sm cursor-pointer">Terrasse</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="swimmingPool" 
-                        checked={formData.swimmingPool}
-                        onCheckedChange={(checked) => updateField('swimmingPool', checked === true)}
-                      />
-                      <Label htmlFor="swimmingPool" className="text-sm cursor-pointer">Piscine</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="garage" 
-                        checked={formData.garage}
-                        onCheckedChange={(checked) => updateField('garage', checked === true)}
-                      />
-                      <Label htmlFor="garage" className="text-sm cursor-pointer">Garage</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="carport" 
-                        checked={formData.carport}
-                        onCheckedChange={(checked) => updateField('carport', checked === true)}
-                      />
-                      <Label htmlFor="carport" className="text-sm cursor-pointer">Carport</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="driveway" 
-                        checked={formData.driveway}
-                        onCheckedChange={(checked) => updateField('driveway', checked === true)}
-                      />
-                      <Label htmlFor="driveway" className="text-sm cursor-pointer">Allée</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="fence" 
-                        checked={formData.fence}
-                        onCheckedChange={(checked) => updateField('fence', checked === true)}
-                      />
-                      <Label htmlFor="fence" className="text-sm cursor-pointer">Clôture</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="gate" 
-                        checked={formData.gate}
-                        onCheckedChange={(checked) => updateField('gate', checked === true)}
-                      />
-                      <Label htmlFor="gate" className="text-sm cursor-pointer">Portail</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="garden" 
-                        checked={formData.garden}
-                        onCheckedChange={(checked) => updateField('garden', checked === true)}
-                      />
-                      <Label htmlFor="garden" className="text-sm cursor-pointer">Jardin paysager</Label>
-                    </div>
-                  </div>
-                </div>
-
-                {formData.terrace && (
-                  <div>
-                    <Label htmlFor="terraceType">Type de terrasse</Label>
-                    <Select 
-                      value={formData.terraceType} 
-                      onValueChange={(value) => updateField('terraceType', value)}
-                    >
-                      <SelectTrigger id="terraceType">
-                        <SelectValue placeholder="Sélectionnez le type de terrasse" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="bois">Bois</SelectItem>
-                        <SelectItem value="composite">Composite</SelectItem>
-                        <SelectItem value="carrelage">Carrelage</SelectItem>
-                        <SelectItem value="pierre">Pierre naturelle</SelectItem>
-                        <SelectItem value="beton">Béton</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {formData.terrace && (
-                  <div>
-                    <Label htmlFor="terraceArea">Surface de la terrasse (m²)</Label>
-                    <Input 
-                      id="terraceArea" 
-                      type="number" 
-                      value={formData.terraceArea} 
-                      onChange={(e) => updateField('terraceArea', Number(e.target.value))}
-                      placeholder="Ex: 20"
-                    />
-                  </div>
-                )}
-
-                {formData.swimmingPool && (
-                  <div>
-                    <Label htmlFor="poolType">Type de piscine</Label>
-                    <Select 
-                      value={formData.poolType} 
-                      onValueChange={(value) => updateField('poolType', value)}
-                    >
-                      <SelectTrigger id="poolType">
-                        <SelectValue placeholder="Sélectionnez le type de piscine" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="traditionnelle">Traditionnelle (béton)</SelectItem>
-                        <SelectItem value="coque">Coque polyester</SelectItem>
-                        <SelectItem value="kit">Kit à monter</SelectItem>
-                        <SelectItem value="semi-enterree">Semi-enterrée</SelectItem>
-                        <SelectItem value="hors-sol">Hors-sol</SelectItem>
-                        <SelectItem value="naturelle">Naturelle / Biologique</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                {formData.garage && (
-                  <div>
-                    <Label htmlFor="garageSize">Taille du garage</Label>
-                    <Select 
-                      value={formData.garageSize} 
-                      onValueChange={(value) => updateField('garageSize', value)}
-                    >
-                      <SelectTrigger id="garageSize">
-                        <SelectValue placeholder="Sélectionnez la taille du garage" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1-vehicule">1 véhicule</SelectItem>
-                        <SelectItem value="2-vehicules">2 véhicules</SelectItem>
-                        <SelectItem value="3-vehicules-plus">3 véhicules ou plus</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                <div>
-                  <Label>Autres équipements</Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="outdoorLighting" 
-                        checked={formData.outdoorLighting}
-                        onCheckedChange={(checked) => updateField('outdoorLighting', checked === true)}
-                      />
-                      <Label htmlFor="outdoorLighting" className="text-sm cursor-pointer">Éclairage extérieur</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="irrigation" 
-                        checked={formData.irrigation}
-                        onCheckedChange={(checked) => updateField('irrigation', checked === true)}
-                      />
-                      <Label htmlFor="irrigation" className="text-sm cursor-pointer">Système d'irrigation</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="outdoorKitchen" 
-                        checked={formData.outdoorKitchen}
-                        onCheckedChange={(checked) => updateField('outdoorKitchen', checked === true)}
-                      />
-                      <Label htmlFor="outdoorKitchen" className="text-sm cursor-pointer">Cuisine extérieure</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox 
-                        id="pergola" 
-                        checked={formData.pergola}
-                        onCheckedChange={(checked) => updateField('pergola', checked === true)}
-                      />
-                      <Label htmlFor="pergola" className="text-sm cursor-pointer">Pergola</Label>
-                    </div>
-                  </div>
+                  <Label htmlFor="pool" className="text-base font-medium flex items-center">
+                    <Pool className="h-4 w-4 text-blue-400 mr-2" />
+                    Piscine
+                  </Label>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Piscine extérieure
+                  </p>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-sm">
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-start space-x-3">
+                <Checkbox 
+                  id="terrace" 
+                  checked={terrace}
+                  onCheckedChange={(checked) => setTerrace(checked as boolean)}
+                />
+                <div>
+                  <Label htmlFor="terrace" className="text-base font-medium flex items-center">
+                    <Home className="h-4 w-4 text-gray-400 mr-2" />
+                    Terrasse
+                  </Label>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Terrasse aménagée
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-sm">
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-start space-x-3">
+                <Checkbox 
+                  id="outdoor-kitchen" 
+                  checked={outdoorKitchen}
+                  onCheckedChange={(checked) => setOutdoorKitchen(checked as boolean)}
+                />
+                <div>
+                  <Label htmlFor="outdoor-kitchen" className="text-base font-medium flex items-center">
+                    <Utensils className="h-4 w-4 text-amber-400 mr-2" />
+                    Cuisine extérieure
+                  </Label>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Cuisine d'été ou barbecue fixe
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button 
+            variant="outline" 
             onClick={goToPreviousStep}
-            className="flex items-center gap-2"
           >
-            <ArrowLeftIcon className="w-4 h-4" />
             Précédent
           </Button>
-          <Button
-            type="submit"
-            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+          
+          <Button 
+            onClick={handleSubmit}
           >
-            Suivant
-            <ArrowRightIcon className="w-4 h-4" />
+            Continuer
           </Button>
         </div>
-      </form>
-    </AnimatedStepTransition>
+      </div>
+    </div>
   );
 };
 

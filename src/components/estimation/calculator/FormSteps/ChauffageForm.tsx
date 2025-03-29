@@ -1,119 +1,152 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { ChauffageSchema } from '../types/validationSchemas';
-import { ChauffageFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Flame, Wind, Sun, Thermometer, Snowflake } from 'lucide-react';
 
-const heatingOptions = [
-  { value: 'electric', label: 'Électrique' },
-  { value: 'gas', label: 'Gaz' },
-  { value: 'heat_pump', label: 'Pompe à chaleur' },
-  { value: 'solar', label: 'Solaire' },
-  { value: 'wood', label: 'Bois (poêle, chaudière)' },
-  { value: 'fuel', label: 'Fioul' },
-  { value: 'pellets', label: 'Granulés' },
-  { value: 'geothermal', label: 'Géothermie' }
-];
-
-const ChauffageForm: React.FC<ChauffageFormProps> = ({
+const ChauffageForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection,
+  defaultValues,
   onSubmit
 }) => {
-  const { handleSubmit, formState: { errors }, control } = useForm({
-    resolver: zodResolver(ChauffageSchema),
-    defaultValues: {
-      heatingType: formData.heatingType || 'pompe',
-      hasAirConditioning: formData.hasAirConditioning || false
-    }
-  });
+  const [heatingType, setHeatingType] = React.useState<string>(
+    defaultValues?.heatingType || formData.heatingType || 'pompe'
+  );
+  
+  const [hasAirConditioning, setHasAirConditioning] = React.useState<boolean>(
+    defaultValues?.hasAirConditioning !== undefined 
+      ? defaultValues.hasAirConditioning 
+      : formData.hasAirConditioning || false
+  );
 
-  const submitHandler = (data: any) => {
-    updateFormData(data);
+  const handleSubmit = () => {
+    const data = {
+      heatingType,
+      hasAirConditioning
+    };
     
     if (onSubmit) {
       onSubmit(data);
     } else {
-      goToNextStep();
+      updateFormData(data);
     }
+    
+    goToNextStep();
   };
 
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Chauffage & Climatisation</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="heatingType">Type de chauffage</Label>
-              <Controller
-                name="heatingType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de chauffage" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {heatingOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.heatingType && (
-                <p className="text-sm text-red-500">{errors.heatingType.message?.toString()}</p>
-              )}
-            </div>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Système de chauffage</h3>
+          
+          <RadioGroup 
+            value={heatingType} 
+            onValueChange={setHeatingType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'pompe' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('pompe')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wind className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="pompe" id="heating-pompe" className="mx-auto mb-1" />
+                <Label htmlFor="heating-pompe" className="font-medium">Pompe à chaleur</Label>
+              </CardContent>
+            </Card>
             
-            <div className="flex items-center space-x-2 pt-4">
-              <Controller
-                name="hasAirConditioning"
-                control={control}
-                render={({ field }) => (
-                  <Checkbox 
-                    id="hasAirConditioning" 
-                    checked={field.value} 
-                    onCheckedChange={field.onChange} 
-                  />
-                )}
-              />
-              <Label htmlFor="hasAirConditioning">Climatisation</Label>
-            </div>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'gaz' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('gaz')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Flame className="h-8 w-8 text-orange-500 mb-2" />
+                <RadioGroupItem value="gaz" id="heating-gaz" className="mx-auto mb-1" />
+                <Label htmlFor="heating-gaz" className="font-medium">Chaudière gaz</Label>
+              </CardContent>
+            </Card>
             
-            <div className="mt-4 space-y-2">
-              <p className="text-sm text-gray-500">
-                La climatisation peut augmenter le coût du projet d'environ 5-15%, selon la surface à climatiser et le type de système choisi.
-              </p>
-              <p className="text-sm text-gray-500">
-                Les pompes à chaleur réversibles peuvent assurer à la fois le chauffage et la climatisation, avec un meilleur rendement énergétique.
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'electrique' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('electrique')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Thermometer className="h-8 w-8 text-red-500 mb-2" />
+                <RadioGroupItem value="electrique" id="heating-electrique" className="mx-auto mb-1" />
+                <Label htmlFor="heating-electrique" className="font-medium">Chauffage électrique</Label>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'solaire' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('solaire')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Sun className="h-8 w-8 text-yellow-500 mb-2" />
+                <RadioGroupItem value="solaire" id="heating-solaire" className="mx-auto mb-1" />
+                <Label htmlFor="heating-solaire" className="font-medium">Chauffage solaire</Label>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'bois' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('bois')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Flame className="h-8 w-8 text-amber-700 mb-2" />
+                <RadioGroupItem value="bois" id="heating-bois" className="mx-auto mb-1" />
+                <Label htmlFor="heating-bois" className="font-medium">Poêle à bois/granulés</Label>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
+        
+        <div className="mt-6">
+          <div className="flex items-start space-x-3">
+            <Checkbox 
+              id="air-conditioning" 
+              checked={hasAirConditioning}
+              onCheckedChange={(checked) => setHasAirConditioning(checked as boolean)}
+            />
+            <div>
+              <Label htmlFor="air-conditioning" className="text-base font-medium flex items-center">
+                <Snowflake className="h-4 w-4 text-blue-400 mr-2" />
+                Climatisation
+              </Label>
+              <p className="text-sm text-gray-500 mt-1">
+                Inclure un système de climatisation
               </p>
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              Précédent
-            </Button>
-            <Button type="submit">
-              Suivant
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </div>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={goToPreviousStep}
+          >
+            Précédent
+          </Button>
+          
+          <Button 
+            type="button"
+            onClick={handleSubmit}
+          >
+            Continuer
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,179 +1,190 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PeintureSchema } from '../types/validationSchemas';
-import { PeintureFormProps } from '../types/formTypes';
-import { toFormValue } from '../utils/typeConversions';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { Paintbrush, Droplet, FileText, AlignLeft } from 'lucide-react';
 
-const PeintureForm: React.FC<PeintureFormProps> = ({
+const PeintureForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection,
-  onSubmit
+  animationDirection
 }) => {
-  const { handleSubmit, formState: { errors }, control, watch } = useForm({
-    resolver: zodResolver(PeintureSchema),
-    defaultValues: {
-      basicPaintPercentage: toFormValue(formData.basicPaintPercentage) || '70',
-      decorativePaintPercentage: toFormValue(formData.decorativePaintPercentage) || '10',
-      wallpaperPercentage: toFormValue(formData.wallpaperPercentage) || '10',
-      woodCladPercentage: toFormValue(formData.woodCladPercentage) || '5',
-      stoneCladPercentage: toFormValue(formData.stoneCladPercentage) || '5'
-    }
-  });
+  const [paintType, setPaintType] = React.useState<string>(formData.paintType || 'standard');
+  const [basicPaintPercentage, setBasicPaintPercentage] = React.useState<number>(
+    formData.basicPaintPercentage !== undefined ? Number(formData.basicPaintPercentage) : 70
+  );
+  const [decorativePaintPercentage, setDecorativePaintPercentage] = React.useState<number>(
+    formData.decorativePaintPercentage !== undefined ? Number(formData.decorativePaintPercentage) : 20
+  );
+  const [wallpaperPercentage, setWallpaperPercentage] = React.useState<number>(
+    formData.wallpaperPercentage !== undefined ? Number(formData.wallpaperPercentage) : 10
+  );
 
-  const basicPaintPct = Number(watch('basicPaintPercentage') || 0);
-  const decorativePaintPct = Number(watch('decorativePaintPercentage') || 0);
-  const wallpaperPct = Number(watch('wallpaperPercentage') || 0);
-  const woodCladPct = Number(watch('woodCladPercentage') || 0);
-  const stoneCladPct = Number(watch('stoneCladPercentage') || 0);
-  
-  const totalPct = basicPaintPct + decorativePaintPct + wallpaperPct + woodCladPct + stoneCladPct;
-  const isValidTotal = totalPct === 100;
-
-  const submitHandler = (data: any) => {
-    updateFormData(data);
-    
-    if (onSubmit) {
-      onSubmit(data);
-    } else {
-      goToNextStep();
-    }
+  const handleSubmit = () => {
+    updateFormData({
+      paintType,
+      basicPaintPercentage,
+      decorativePaintPercentage,
+      wallpaperPercentage
+    });
+    goToNextStep();
   };
 
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Peinture & Revêtements Muraux</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <CardContent className="space-y-4">
-            <div className="mb-4">
-              <div className="bg-gray-100 p-3 rounded-lg">
-                <div className="font-medium">Total des pourcentages : {totalPct}%</div>
-                {!isValidTotal && (
-                  <p className="text-red-500 text-sm mt-1">
-                    La somme des pourcentages doit être égale à 100%
-                  </p>
-                )}
-              </div>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Peinture et revêtements muraux</h3>
+          
+          <div className="space-y-4">
+            <div>
+              <Label>Type de peinture</Label>
+              <RadioGroup 
+                value={paintType} 
+                onValueChange={setPaintType}
+                className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setPaintType('standard')}
+                >
+                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                    <Paintbrush className="h-8 w-8 text-blue-500 mb-2" />
+                    <RadioGroupItem value="standard" id="paint-standard" className="mx-auto mb-1" />
+                    <Label htmlFor="paint-standard" className="font-medium">Standard</Label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Peinture acrylique classique
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setPaintType('premium')}
+                >
+                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                    <Droplet className="h-8 w-8 text-blue-500 mb-2" />
+                    <RadioGroupItem value="premium" id="paint-premium" className="mx-auto mb-1" />
+                    <Label htmlFor="paint-premium" className="font-medium">Premium</Label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Peinture haute qualité, lessivable
+                    </p>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'eco' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setPaintType('eco')}
+                >
+                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                    <AlignLeft className="h-8 w-8 text-blue-500 mb-2" />
+                    <RadioGroupItem value="eco" id="paint-eco" className="mx-auto mb-1" />
+                    <Label htmlFor="paint-eco" className="font-medium">Écologique</Label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Peinture naturelle, sans COV
+                    </p>
+                  </CardContent>
+                </Card>
+              </RadioGroup>
             </div>
             
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="basicPaintPercentage">Peinture standard</Label>
-                <span>{basicPaintPct}%</span>
-              </div>
-              <Controller
-                name="basicPaintPercentage"
-                control={control}
-                render={({ field }) => (
+            <div className="space-y-6 mt-6">
+              <h4 className="text-md font-medium">Répartition des revêtements muraux</h4>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="basic-paint">Peinture standard</Label>
+                    <span className="text-sm text-gray-500">{basicPaintPercentage}%</span>
+                  </div>
                   <Slider
-                    defaultValue={[Number(field.value) || 70]}
+                    id="basic-paint"
+                    min={0}
                     max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
+                    step={5}
+                    value={[basicPaintPercentage]}
+                    onValueChange={(value) => {
+                      const newValue = value[0];
+                      setBasicPaintPercentage(newValue);
+                      // Adjust other percentages to maintain total of 100%
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / (decorativePaintPercentage + wallpaperPercentage);
+                      setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
+                      setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
+                    }}
                   />
-                )}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="decorativePaintPercentage">Peinture décorative</Label>
-                <span>{decorativePaintPct}%</span>
-              </div>
-              <Controller
-                name="decorativePaintPercentage"
-                control={control}
-                render={({ field }) => (
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="decorative-paint">Peinture décorative</Label>
+                    <span className="text-sm text-gray-500">{decorativePaintPercentage}%</span>
+                  </div>
                   <Slider
-                    defaultValue={[Number(field.value) || 10]}
+                    id="decorative-paint"
+                    min={0}
                     max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
+                    step={5}
+                    value={[decorativePaintPercentage]}
+                    onValueChange={(value) => {
+                      const newValue = value[0];
+                      setDecorativePaintPercentage(newValue);
+                      // Adjust other percentages to maintain total of 100%
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / (basicPaintPercentage + wallpaperPercentage);
+                      setBasicPaintPercentage(Math.round(basicPaintPercentage * ratio));
+                      setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
+                    }}
                   />
-                )}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="wallpaperPercentage">Papier peint</Label>
-                <span>{wallpaperPct}%</span>
-              </div>
-              <Controller
-                name="wallpaperPercentage"
-                control={control}
-                render={({ field }) => (
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <Label htmlFor="wallpaper">Papier peint</Label>
+                    <span className="text-sm text-gray-500">{wallpaperPercentage}%</span>
+                  </div>
                   <Slider
-                    defaultValue={[Number(field.value) || 10]}
+                    id="wallpaper"
+                    min={0}
                     max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
+                    step={5}
+                    value={[wallpaperPercentage]}
+                    onValueChange={(value) => {
+                      const newValue = value[0];
+                      setWallpaperPercentage(newValue);
+                      // Adjust other percentages to maintain total of 100%
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / (basicPaintPercentage + decorativePaintPercentage);
+                      setBasicPaintPercentage(Math.round(basicPaintPercentage * ratio));
+                      setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
+                    }}
                   />
-                )}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="woodCladPercentage">Lambris bois</Label>
-                <span>{woodCladPct}%</span>
+                </div>
               </div>
-              <Controller
-                name="woodCladPercentage"
-                control={control}
-                render={({ field }) => (
-                  <Slider
-                    defaultValue={[Number(field.value) || 5]}
-                    max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
-                  />
-                )}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="stoneCladPercentage">Parement pierre</Label>
-                <span>{stoneCladPct}%</span>
+              
+              <div className="text-sm text-gray-500 mt-2">
+                Total: {basicPaintPercentage + decorativePaintPercentage + wallpaperPercentage}%
               </div>
-              <Controller
-                name="stoneCladPercentage"
-                control={control}
-                render={({ field }) => (
-                  <Slider
-                    defaultValue={[Number(field.value) || 5]}
-                    max={100}
-                    step={1}
-                    onValueChange={(vals) => field.onChange(String(vals[0]))}
-                  />
-                )}
-              />
             </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              Précédent
-            </Button>
-            <Button type="submit" disabled={!isValidTotal}>
-              Suivant
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </div>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
+            Suivant
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

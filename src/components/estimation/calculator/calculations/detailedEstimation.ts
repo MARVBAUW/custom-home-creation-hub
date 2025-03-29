@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { FormData } from '../types';
 import { parseToNumber } from '../utils/typeConversions';
 
 interface EstimationDetails {
@@ -44,7 +44,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     wallType, // "concrete" | "brick" | "wood"
     roofType, // "tile" | "slate" | "metal"
     basement, // "yes" | "no"
-    garage, // "yes" | "no"
+    garage: hasGarage, // "yes" | "no" - renamed to avoid redeclaration
     floorCount,
 
     // Special Features
@@ -120,7 +120,6 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     aménagementPaysager,
     clôture,
     portail,
-    garage,
     carport,
     
     // Qualité de finition
@@ -229,7 +228,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     constructionCost += 400 * surfaceValue * 0.5; // 50% of main surface for finished attic
   }
 
-  if (garage === 'yes') {
+  if (hasGarage === 'yes') {
     constructionCost += 300 * (surfaceValue * 0.2); // 20% of main surface for garage
   }
   
@@ -295,7 +294,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     "Menuiseries Extérieures": {
       montantHT: parseToNumber(formatNumber(constructionCost * 0.1)),
       details: [
-        `Type de menuiseries: ${typeMenuiseries || windowType || 'PVC double vitrage'}`
+        `Type de menuiseries: ${typeMenuiseries || formData.windowType || 'PVC double vitrage'}`
       ]
     },
     "Isolation/Étanchéité": {

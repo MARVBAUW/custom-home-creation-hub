@@ -1,3 +1,4 @@
+
 export * from './formTypes';
 
 // Define all the properties that can be part of the form data
@@ -18,6 +19,7 @@ export interface FormData {
   endDate?: string;
   estimationType?: string;
   termsAccepted?: boolean;
+  landIncluded?: string; // Added this property for terrain inclusion
   
   // Construction details
   surface?: string | number;

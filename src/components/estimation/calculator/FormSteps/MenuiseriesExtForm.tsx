@@ -1,145 +1,137 @@
-
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { MenuiseriesExtSchema } from '../types/validationSchemas';
-import { MenuiseriesExtFormProps } from '../types/formTypes';
-import { toFormValue } from '../utils/typeConversions';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Square, Minimize2, Layers } from 'lucide-react';
 
-const windowOptions = [
-  { value: 'pvc', label: 'PVC' },
-  { value: 'aluminum', label: 'Aluminium' },
-  { value: 'wood', label: 'Bois' },
-  { value: 'mixed', label: 'Mixte (bois/alu)' },
-  { value: 'steel', label: 'Acier' }
-];
-
-const shutterOptions = [
-  { value: 'roller', label: 'Volets roulants' },
-  { value: 'folding', label: 'Volets battants' },
-  { value: 'sliding', label: 'Volets coulissants' },
-  { value: 'none', label: 'Pas de volets' }
-];
-
-const MenuiseriesExtForm: React.FC<MenuiseriesExtFormProps> = ({
+const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection,
-  onSubmit
+  animationDirection
 }) => {
-  const { register, handleSubmit, formState: { errors }, control } = useForm({
-    resolver: zodResolver(MenuiseriesExtSchema),
-    defaultValues: {
-      windowType: formData.windowType || '',
-      shutterType: formData.shutterType || '',
-      windowRenovationArea: toFormValue(formData.windowRenovationArea),
-      windowNewArea: toFormValue(formData.windowNewArea)
-    }
-  });
+  const [windowType, setWindowType] = React.useState<string>(
+    formData.windowType || 'pvc'
+  );
+  
+  const [windowRenovationArea, setWindowRenovationArea] = React.useState<string>(
+    formData.windowRenovationArea?.toString() || '0'
+  );
+  
+  const [windowNewArea, setWindowNewArea] = React.useState<string>(
+    formData.windowNewArea?.toString() || '0'
+  );
 
-  const submitHandler = (data: any) => {
-    updateFormData(data);
-    
-    if (onSubmit) {
-      onSubmit(data);
-    } else {
-      goToNextStep();
-    }
+  const handleSubmit = () => {
+    updateFormData({
+      windowType,
+      windowRenovationArea: windowRenovationArea !== '' ? Number(windowRenovationArea) : 0,
+      windowNewArea: windowNewArea !== '' ? Number(windowNewArea) : 0
+    });
+    goToNextStep();
   };
 
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Menuiseries Extérieures</CardTitle>
-        </CardHeader>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="windowType">Type de fenêtres</Label>
-              <Controller
-                name="windowType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de fenêtres" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {windowOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.windowType && (
-                <p className="text-sm text-red-500">{errors.windowType.message?.toString()}</p>
-              )}
-            </div>
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium mb-4">Menuiseries Extérieures</h3>
+        
+        <div>
+          <Label className="mb-2 block">Type de menuiseries</Label>
+          <RadioGroup 
+            value={windowType} 
+            onValueChange={setWindowType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'pvc' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWindowType('pvc')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Square className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="pvc" id="window-pvc" className="sr-only" />
+                <Label htmlFor="window-pvc" className="font-medium">PVC</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Bon rapport qualité/prix
+                </p>
+              </CardContent>
+            </Card>
             
-            <div className="space-y-2">
-              <Label htmlFor="shutterType">Type de volets</Label>
-              <Controller
-                name="shutterType"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionnez un type de volets" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {shutterOptions.map(option => (
-                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.shutterType && (
-                <p className="text-sm text-red-500">{errors.shutterType.message?.toString()}</p>
-              )}
-            </div>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'aluminum' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWindowType('aluminum')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Minimize2 className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="aluminum" id="window-aluminum" className="sr-only" />
+                <Label htmlFor="window-aluminum" className="font-medium">Aluminium</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Finesse et durabilité
+                </p>
+              </CardContent>
+            </Card>
             
-            <div className="space-y-2">
-              <Label htmlFor="windowRenovationArea">Surface fenêtres rénovation (m²)</Label>
-              <Input
-                id="windowRenovationArea"
-                type="number"
-                placeholder="Ex: 15"
-                {...register("windowRenovationArea")}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="windowNewArea">Surface fenêtres neuves (m²)</Label>
-              <Input
-                id="windowNewArea"
-                type="number"
-                placeholder="Ex: 25"
-                {...register("windowNewArea")}
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between">
-            <Button type="button" variant="outline" onClick={goToPreviousStep}>
-              Précédent
-            </Button>
-            <Button type="submit">
-              Suivant
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'mixed' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWindowType('mixed')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Layers className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="mixed" id="window-mixed" className="sr-only" />
+                <Label htmlFor="window-mixed" className="font-medium">Mixte (bois/alu)</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Esthétique et performance
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="window-renovation">Surface à rénover (m²)</Label>
+            <Input
+              id="window-renovation"
+              type="number"
+              placeholder="0"
+              value={windowRenovationArea}
+              onChange={(e) => setWindowRenovationArea(e.target.value)}
+            />
+            <p className="text-xs text-gray-500">
+              Surface de menuiseries à remplacer
+            </p>
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="window-new">Surface à créer (m²)</Label>
+            <Input
+              id="window-new"
+              type="number"
+              placeholder="0"
+              value={windowNewArea}
+              onChange={(e) => setWindowNewArea(e.target.value)}
+            />
+            <p className="text-xs text-gray-500">
+              Surface de nouvelles menuiseries
+            </p>
+          </div>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
+            Continuer
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

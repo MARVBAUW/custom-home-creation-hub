@@ -1,213 +1,240 @@
-
 import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Door, DoorOpen, LayoutGrid } from 'lucide-react';
 
-const formSchema = z.object({
-  doorType: z.string().min(1, { message: 'Veuillez sélectionner un type de porte' }),
-  interiorFittings: z.array(z.string()).optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
-type MenuiseriesIntFormProps = {
-  defaultValues: Partial<FormValues>;
-  onSubmit: (values: FormValues) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-};
-
-const interiorFittingOptions = [
-  { id: 'dressing', label: 'Dressing sur mesure' },
-  { id: 'placards', label: 'Placards intégrés' },
-  { id: 'escalier', label: 'Escalier intérieur' },
-  { id: 'portes-coulissantes', label: 'Portes coulissantes' },
-  { id: 'verriere', label: 'Verrière intérieure' },
-  { id: 'mezzanine', label: 'Mezzanine' },
-];
-
-const MenuiseriesIntForm: React.FC<MenuiseriesIntFormProps> = ({
-  defaultValues,
-  onSubmit,
+const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
   animationDirection,
+  defaultValues,
+  onSubmit
 }) => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      doorType: defaultValues.doorType || '',
-      interiorFittings: defaultValues.interiorFittings || [],
-    },
-  });
+  const [doorType, setDoorType] = React.useState<string>(
+    defaultValues?.doorType || formData.doorType || 'standard'
+  );
+  
+  const [interiorDoorsType, setInteriorDoorsType] = React.useState<string>(
+    defaultValues?.interiorDoorsType || formData.interiorDoorsType || 'standard'
+  );
+  
+  const [selectedFittings, setSelectedFittings] = React.useState<string[]>(
+    formData.interiorFittings as string[] || []
+  );
+
+  const handleFittingChange = (fitting: string) => {
+    setSelectedFittings(prev => {
+      if (prev.includes(fitting)) {
+        return prev.filter(item => item !== fitting);
+      } else {
+        return [...prev, fitting];
+      }
+    });
+  };
+
+  const handleSubmit = () => {
+    const data = {
+      doorType,
+      interiorDoorsType,
+      interiorFittings: selectedFittings
+    };
+    
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      updateFormData(data);
+      goToNextStep();
+    }
+  };
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Menuiseries intérieures</h2>
-        <p className="text-muted-foreground text-sm">
-          Choisissez le type de portes et les aménagements intérieurs
-        </p>
-      </div>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="doorType"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Type de portes intérieures</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="standard" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/porte-standard.jpg"
-                          alt="Portes standard"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Standard</div>
-                        <p className="text-sm text-muted-foreground">
-                          Portes alvéolaires avec finition simple
-                        </p>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-4">Menuiseries intérieures</h3>
+          
+          <div className="space-y-4">
+            <div>
+              <Label className="block mb-2">Type de portes intérieures</Label>
+              <RadioGroup 
+                value={doorType} 
+                onValueChange={setDoorType}
+                className="grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setDoorType('standard')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <Door className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                    <RadioGroupItem value="standard" id="door-standard" className="sr-only" />
+                    <Label htmlFor="door-standard">Standard</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setDoorType('premium')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <DoorOpen className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                    <RadioGroupItem value="premium" id="door-premium" className="sr-only" />
+                    <Label htmlFor="door-premium">Premium</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'design' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setDoorType('design')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <LayoutGrid className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                    <RadioGroupItem value="design" id="door-design" className="sr-only" />
+                    <Label htmlFor="door-design">Design</Label>
+                  </CardContent>
+                </Card>
+              </RadioGroup>
+            </div>
+            
+            <div>
+              <Label className="block mb-2">Matériau des portes</Label>
+              <RadioGroup 
+                value={interiorDoorsType} 
+                onValueChange={setInteriorDoorsType}
+                className="grid grid-cols-1 gap-2 sm:grid-cols-3"
+              >
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${interiorDoorsType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setInteriorDoorsType('standard')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="standard" id="material-standard" className="sr-only" />
+                    <Label htmlFor="material-standard">Mélaminé</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${interiorDoorsType === 'wood' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setInteriorDoorsType('wood')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="wood" id="material-wood" className="sr-only" />
+                    <Label htmlFor="material-wood">Bois massif</Label>
+                  </CardContent>
+                </Card>
+                
+                <Card 
+                  className={`cursor-pointer transition-all hover:shadow-md ${interiorDoorsType === 'glass' ? 'border-blue-500 bg-blue-50' : ''}`}
+                  onClick={() => setInteriorDoorsType('glass')}
+                >
+                  <CardContent className="pt-4 pb-4 text-center">
+                    <RadioGroupItem value="glass" id="material-glass" className="sr-only" />
+                    <Label htmlFor="material-glass">Vitrées</Label>
+                  </CardContent>
+                </Card>
+              </RadioGroup>
+            </div>
+            
+            <div>
+              <Label className="block mb-2">Aménagements intérieurs</Label>
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <Card className="shadow-sm">
+                  <CardContent className="pt-4 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="fitting-wardrobe" 
+                        checked={selectedFittings.includes('built_in_wardrobe')}
+                        onCheckedChange={() => handleFittingChange('built_in_wardrobe')}
+                      />
+                      <div>
+                        <Label htmlFor="fitting-wardrobe" className="text-base font-medium">
+                          Placards intégrés
+                        </Label>
                       </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="premium" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/porte-premium.jpg"
-                          alt="Portes premium"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Premium</div>
-                        <p className="text-sm text-muted-foreground">
-                          Portes en bois massif avec finition haut de gamme
-                        </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="shadow-sm">
+                  <CardContent className="pt-4 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="fitting-closet" 
+                        checked={selectedFittings.includes('walk_in_closet')}
+                        onCheckedChange={() => handleFittingChange('walk_in_closet')}
+                      />
+                      <div>
+                        <Label htmlFor="fitting-closet" className="text-base font-medium">
+                          Dressing
+                        </Label>
                       </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="design" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/porte-design.jpg"
-                          alt="Portes design"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Design</div>
-                        <p className="text-sm text-muted-foreground">
-                          Portes contemporaines avec inserts vitrés
-                        </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="shadow-sm">
+                  <CardContent className="pt-4 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="fitting-fireplace" 
+                        checked={selectedFittings.includes('fireplace')}
+                        onCheckedChange={() => handleFittingChange('fireplace')}
+                      />
+                      <div>
+                        <Label htmlFor="fitting-fireplace" className="text-base font-medium">
+                          Cheminée
+                        </Label>
                       </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="coulissantes" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/porte-coulissante.jpg"
-                          alt="Portes coulissantes"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Coulissantes</div>
-                        <p className="text-sm text-muted-foreground">
-                          Portes à galandage ou applique pour gain de place
-                        </p>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="shadow-sm">
+                  <CardContent className="pt-4 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox 
+                        id="fitting-stairs" 
+                        checked={selectedFittings.includes('stairs')}
+                        onCheckedChange={() => handleFittingChange('stairs')}
+                      />
+                      <div>
+                        <Label htmlFor="fitting-stairs" className="text-base font-medium">
+                          Escalier
+                        </Label>
                       </div>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="interiorFittings"
-            render={() => (
-              <FormItem>
-                <div className="mb-4">
-                  <FormLabel>Aménagements intérieurs (optionnel)</FormLabel>
-                  <p className="text-sm text-muted-foreground">
-                    Sélectionnez les aménagements que vous souhaitez intégrer
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {interiorFittingOptions.map((option) => (
-                    <FormField
-                      key={option.id}
-                      control={form.control}
-                      name="interiorFittings"
-                      render={({ field }) => {
-                        return (
-                          <FormItem
-                            key={option.id}
-                            className="flex flex-row items-start space-x-3 space-y-0 border border-input rounded-lg p-4"
-                          >
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value?.includes(option.id)}
-                                onCheckedChange={(checked) => {
-                                  const currentValue = field.value || [];
-                                  return checked
-                                    ? field.onChange([...currentValue, option.id])
-                                    : field.onChange(
-                                        currentValue.filter((value) => value !== option.id)
-                                      );
-                                }}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="cursor-pointer">{option.label}</FormLabel>
-                            </div>
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  ))}
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-between pt-4">
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft size={16} />
-              Précédent
-            </Button>
-            <Button type="submit">Continuer</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
-        </form>
-      </Form>
-    </AnimatedStepTransition>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
+          >
+            Précédent
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSubmit}
+          >
+            Continuer
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

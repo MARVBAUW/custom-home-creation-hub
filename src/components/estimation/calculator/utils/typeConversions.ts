@@ -1,61 +1,30 @@
 
 /**
- * Safely converts any value to a number.
- * Returns the default value if conversion fails.
+ * Parse a string or number to a number value
  */
-export const parseToNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === undefined || value === null || value === '') {
-    return defaultValue;
+export const parseToNumber = (value: string | number | undefined): number => {
+  if (value === undefined || value === '') {
+    return 0;
   }
   
-  const parsed = Number(value);
-  return isNaN(parsed) ? defaultValue : parsed;
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  // Remove non-numeric characters (except decimal point)
+  const cleanedValue = value.toString().replace(/[^\d.-]/g, '');
+  const result = parseFloat(cleanedValue);
+  
+  return isNaN(result) ? 0 : result;
 };
 
 /**
- * Alias for parseToNumber - added for compatibility
+ * Convert a value to a form value
  */
-export const ensureNumber = parseToNumber;
-
-/**
- * Safely converts a number or undefined value to a string for form inputs.
- * Returns an empty string if value is null or undefined.
- */
-export const toFormValue = (value: string | number | undefined | null): string => {
+export const toFormValue = (value: any): string => {
   if (value === undefined || value === null) {
     return '';
   }
-  return String(value);
-};
-
-/**
- * Safely converts a boolean to a string representation for form values.
- */
-export const booleanToString = (value: boolean | undefined): 'yes' | 'no' | '' => {
-  if (value === undefined) return '';
-  return value ? 'yes' : 'no';
-};
-
-/**
- * Converts a string representation back to a boolean.
- */
-export const stringToBoolean = (value: string | undefined): boolean | undefined => {
-  if (value === undefined || value === '') return undefined;
-  return value === 'yes';
-};
-
-/**
- * Safely converts an array to a serialized string.
- */
-export const arrayToString = (array: any[] | undefined): string => {
-  if (!array || !Array.isArray(array)) return '';
-  return array.join(',');
-};
-
-/**
- * Safely converts a serialized string back to an array.
- */
-export const stringToArray = (str: string | undefined): string[] => {
-  if (!str) return [];
-  return str.split(',').filter(Boolean);
+  
+  return value.toString();
 };
