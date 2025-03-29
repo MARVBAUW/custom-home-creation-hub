@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -21,9 +22,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 const ParquetForm: React.FC<ParquetFormProps> = ({
   defaultValues,
-  onSubmit,
+  updateFormData,
   goToPreviousStep,
   animationDirection,
+  goToNextStep,
 }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -35,6 +37,11 @@ const ParquetForm: React.FC<ParquetFormProps> = ({
     },
   });
 
+  const handleSubmit = (values: FormValues) => {
+    updateFormData(values);
+    goToNextStep();
+  };
+
   return (
     <AnimatedStepTransition direction={animationDirection}>
       <div className="mb-6">
@@ -45,7 +52,7 @@ const ParquetForm: React.FC<ParquetFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
             name="parquetType"

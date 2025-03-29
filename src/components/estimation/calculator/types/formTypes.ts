@@ -181,6 +181,33 @@ export interface ResultsFormProps {
   animationDirection: 'forward' | 'backward';
 }
 
+// Props for ResultsSummary component
+export interface ResultsSummaryProps {
+  formData: FormData;
+  estimationResult: number | null;
+  onBack: () => void;
+}
+
+// Props for FormNavigation component
+export interface FormNavigationProps {
+  step: number;
+  totalSteps: number;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+}
+
+// Props for Conversational component
+export interface ConversationalProps {
+  step: number;
+  formData: FormData;
+  animationDirection: 'forward' | 'backward';
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  onComplete: () => void;
+  estimationData: any;
+}
+
 // Message processor props
 export interface MessageProcessorProps {
   message: string;
