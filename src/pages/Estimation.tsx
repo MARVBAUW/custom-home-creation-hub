@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { Card, CardContent } from "@/components/ui/card";
 import WorkEstimationForm from '@/components/estimation/calculator/WorkEstimationForm';
 import EstimationPageData from '@/components/estimation/EstimationPageData';
+import { estimationFormData } from '@/components/estimation/calculator/types/estimationData';
 
 /**
  * Page d'estimation de projet
@@ -64,7 +65,7 @@ const Estimation = () => {
               
               <Card className="shadow-md mx-auto max-w-4xl">
                 <CardContent className="p-4 sm:p-6">
-                  <WorkEstimationForm />
+                  <WorkEstimationForm formData={estimationFormData} />
                 </CardContent>
               </Card>
             </div>

@@ -5,11 +5,6 @@ import ElectriciteForm from '../../FormSteps/ElectriciteForm';
 import PlomberieForm from '../../FormSteps/PlomberieForm';
 import ChauffageForm from '../../FormSteps/ChauffageForm';
 import { FormData } from '../../types';
-import {
-  ElectriciteFormProps,
-  PlomberieFormProps,
-  ChauffageFormProps
-} from '../../types/formTypes';
 
 // Registry for technical steps (steps 14-16)
 export const createTechnicalStepRegistry = (
@@ -53,7 +48,9 @@ export const createTechnicalStepRegistry = (
         formData={formData}
         updateFormData={(data) => onChauffageSubmit({
           heatingType: data.heatingType || '',
-          hasAirConditioning: data.hasAirConditioning || false
+          hasAirConditioning: data.hasAirConditioning !== undefined 
+            ? data.hasAirConditioning
+            : false
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -62,9 +59,9 @@ export const createTechnicalStepRegistry = (
           heatingType: formData.heatingType || '',
           hasAirConditioning: formData.hasAirConditioning !== undefined 
             ? (typeof formData.hasAirConditioning === 'boolean' 
-              ? (formData.hasAirConditioning ? "true" : "false")
-              : formData.hasAirConditioning)
-            : "false"
+              ? formData.hasAirConditioning
+              : formData.hasAirConditioning === "true")
+            : false
         }}
       />
     ),
