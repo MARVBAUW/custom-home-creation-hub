@@ -1,11 +1,35 @@
 
-import React from 'react';
-import { Thermometer, Sun, Home, BarChart3, Leaf } from 'lucide-react';
+import React, { useState } from 'react';
+import { thermiqueDTUs } from './data/dtu/thermique';
+import { SearchAndFilterBar } from './dtu/SearchAndFilterBar';
+import { DTUGridList } from './dtu/DTUGridList';
+import { DTUDetailDialog } from './dtu/DTUDetailDialog';
+import { useDTUSearch } from './dtu/useDTUSearch';
+import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Thermometer, Sun, Home, BarChart3, Leaf } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export const ThermiqueRecapSection = () => {
+  const { 
+    searchTerm, 
+    setSearchTerm, 
+    categoryFilter, 
+    setCategoryFilter, 
+    categories, 
+    filteredDTUs 
+  } = useDTUSearch(thermiqueDTUs);
+  
+  const [selectedDTU, setSelectedDTU] = useState<DTU | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [thermiqueTab, setThermiqueTab] = useState("re2020");
+  
+  const handleDTUClick = (dtu: DTU) => {
+    setSelectedDTU(dtu);
+    setIsDetailOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-teal-50 p-4 rounded-lg border border-teal-200 mb-6">
@@ -19,7 +43,15 @@ export const ThermiqueRecapSection = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="re2020">
+      <SearchAndFilterBar 
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        categories={categories}
+      />
+
+      <Tabs value={thermiqueTab} onValueChange={setThermiqueTab} className="mt-6">
         <TabsList className="mb-6 bg-teal-50">
           <TabsTrigger value="re2020" className="data-[state=active]:bg-white">
             <Leaf className="h-4 w-4 mr-2" />
@@ -40,6 +72,12 @@ export const ThermiqueRecapSection = () => {
         </TabsList>
 
         <TabsContent value="re2020" className="space-y-6">
+          <DTUGridList 
+            dtus={filteredDTUs.filter(dtu => dtu.id.includes('re2020'))} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
@@ -110,73 +148,145 @@ export const ThermiqueRecapSection = () => {
               </CardFooter>
             </Card>
           </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Solutions techniques RE2020</CardTitle>
-              <CardDescription>
-                Tableau comparatif des solutions constructives
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2 font-medium">Solution constructive</th>
-                      <th className="text-left py-2 font-medium">Impact carbone</th>
-                      <th className="text-left py-2 font-medium">Performance thermique</th>
-                      <th className="text-left py-2 font-medium">Confort d'été</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-2">Béton + ITE (R=4)</td>
-                      <td className="py-2">Moyen</td>
-                      <td className="py-2">Bon</td>
-                      <td className="py-2">Très bon</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2">Ossature bois + LM (R=5)</td>
-                      <td className="py-2">Très bon</td>
-                      <td className="py-2">Très bon</td>
-                      <td className="py-2">Moyen</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2">Brique + ITE (R=4.5)</td>
-                      <td className="py-2">Bon</td>
-                      <td className="py-2">Très bon</td>
-                      <td className="py-2">Bon</td>
-                    </tr>
-                    <tr className="border-b">
-                      <td className="py-2">Bloc béton isolant</td>
-                      <td className="py-2">Bon</td>
-                      <td className="py-2">Bon</td>
-                      <td className="py-2">Bon</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="rt2012" className="space-y-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              Cette section sur la RT2012 est en cours de développement.
-              Elle contiendra prochainement les exigences, le calcul du Bbio, Cep, Tic,
-              et autres éléments de la RT2012, toujours applicable pour certains projets.
-            </p>
+          <DTUGridList 
+            dtus={filteredDTUs.filter(dtu => dtu.id.includes('rt2012'))} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>RT2012 - Principaux indicateurs</CardTitle>
+                <CardDescription>
+                  Pour les bâtiments neufs jusqu'en 2021
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <h4 className="font-medium text-sm">Exigences de résultat :</h4>
+                <ul className="text-sm list-disc pl-5 space-y-1">
+                  <li><strong>Bbio :</strong> Besoins bioclimatiques du bâti ≤ Bbiomax</li>
+                  <li><strong>Cep :</strong> Consommation en énergie primaire ≤ Cepmax (50 kWhEP/m²/an modulé)</li>
+                  <li><strong>Tic :</strong> Température intérieure conventionnelle ≤ Ticréf</li>
+                </ul>
+                <h4 className="font-medium text-sm mt-3">Exigences de moyens :</h4>
+                <ul className="text-sm list-disc pl-5 space-y-1">
+                  <li><strong>Étanchéité à l'air :</strong> Q4Pa-surf ≤ 0,6 m³/(h.m²) pour l'individuel</li>
+                  <li><strong>Énergies renouvelables :</strong> Obligation de recours aux ENR</li>
+                  <li><strong>Surface vitrée :</strong> ≥ 1/6 de la surface habitable</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <Sun className="mr-2 h-4 w-4" />
+                  Consulter la documentation
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Applications par typologie</CardTitle>
+                <CardDescription>
+                  Variations selon le type de bâtiment
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Maisons individuelles</h4>
+                    <p className="text-xs text-gray-600">Test d'étanchéité à l'air obligatoire, perméabilité ≤ 0,6 m³/(h.m²)</p>
+                  </div>
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Logements collectifs</h4>
+                    <p className="text-xs text-gray-600">Perméabilité ≤ 1,0 m³/(h.m²), test obligatoire ou démarche qualité</p>
+                  </div>
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Tertiaire</h4>
+                    <p className="text-xs text-gray-600">Modulation du Cepmax selon l'usage, éclairage pris en compte</p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  Comparer avec RE2020
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </TabsContent>
 
         <TabsContent value="renovation" className="space-y-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              Cette section sur la réglementation thermique pour la rénovation est en cours de développement.
-              Elle contiendra prochainement les exigences pour les rénovations globales et élément par élément.
-            </p>
+          <DTUGridList 
+            dtus={filteredDTUs.filter(dtu => dtu.id.includes('renovation'))} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Dispositifs d'aides à la rénovation</CardTitle>
+                <CardDescription>
+                  Aides financières pour les travaux d'amélioration énergétique
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <h4 className="font-medium text-sm">Principales aides :</h4>
+                <ul className="text-sm list-disc pl-5 space-y-1">
+                  <li><strong>MaPrimeRénov' :</strong> Aide principale selon revenus et gain énergétique</li>
+                  <li><strong>CEE :</strong> Certificats d'Économies d'Énergie (primes énergie)</li>
+                  <li><strong>Éco-PTZ :</strong> Prêt à taux zéro jusqu'à 50 000€ sur 20 ans</li>
+                  <li><strong>TVA à 5,5% :</strong> Pour travaux d'amélioration énergétique</li>
+                </ul>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <Home className="mr-2 h-4 w-4" />
+                  Calculer mes aides
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance minimale des produits</CardTitle>
+                <CardDescription>
+                  Critères techniques pour éligibilité aux aides
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3 text-sm">
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Isolation thermique</h4>
+                    <p className="text-xs">Murs : R ≥ 3,7 m².K/W</p>
+                    <p className="text-xs">Toiture : R ≥ 7,0 m².K/W</p>
+                    <p className="text-xs">Planchers bas : R ≥ 3,0 m².K/W</p>
+                  </div>
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Menuiseries</h4>
+                    <p className="text-xs">Fenêtres : Uw ≤ 1,3 W/m².K et Sw ≥ 0,3</p>
+                    <p className="text-xs">Portes : Ud ≤ 1,7 W/m².K</p>
+                  </div>
+                  <div className="bg-teal-50 p-3 rounded-md">
+                    <h4 className="font-medium text-sm">Chauffage et ECS</h4>
+                    <p className="text-xs">PAC air/eau : ETAS ≥ 126% (chauffage)</p>
+                    <p className="text-xs">Chaudière à granulés : η ≥ 90% et émissions limitées</p>
+                    <p className="text-xs">Chauffe-eau thermodynamique : COP ≥ 2,9</p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" className="w-full">
+                  <Thermometer className="mr-2 h-4 w-4" />
+                  Consulter tous les critères
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
         </TabsContent>
 
@@ -247,6 +357,13 @@ export const ThermiqueRecapSection = () => {
           </div>
         </TabsContent>
       </Tabs>
+      
+      <DTUDetailDialog 
+        dtu={selectedDTU} 
+        isOpen={isDetailOpen} 
+        onOpenChange={setIsDetailOpen} 
+        searchTerm={searchTerm}
+      />
     </div>
   );
 };
