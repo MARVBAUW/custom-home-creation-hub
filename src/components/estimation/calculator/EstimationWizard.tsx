@@ -1,14 +1,13 @@
 
-import React, { useMemo } from 'react';
-import { useFormWizard } from './hooks/useFormWizard';
-import { calculateDetailedEstimation } from './calculations/detailedEstimation';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Calculator, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useEstimationForm } from './hooks/useEstimationForm';
+import { useEstimationSteps } from './hooks/useEstimationSteps';
+import { FormData } from './types';
+import { Card } from '@/components/ui/card';
+import { calculateEstimation } from './calculationUtils';
+import { useToast } from "@/components/ui/use-toast";
 
-// Import form steps
+// Import des composants d'étape
 import ClientTypeStep from './steps/ClientTypeStep';
 import ProjectTypeStep from './steps/ProjectTypeStep';
 import TerrainDetailsStep from './steps/TerrainDetailsStep';
@@ -20,181 +19,214 @@ import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
 import ContactDetailsStep from './steps/ContactDetailsStep';
 import EstimationResults from './steps/EstimationResults';
 
-// Type pour les données du formulaire
-import { FormData } from './types';
-
-const formSteps = [
-  {
-    id: 'client-type',
-    title: 'Type de client',
-    description: 'Êtes-vous un particulier ou un professionnel?',
-  },
-  {
-    id: 'project-type',
-    title: 'Type de projet',
-    description: 'Quel type de projet souhaitez-vous réaliser?',
-  },
-  {
-    id: 'terrain-details',
-    title: 'Détails du terrain',
-    description: 'Informations sur votre terrain',
-    condition: (formData: FormData) => formData.landIncluded === 'yes'
-  },
-  {
-    id: 'construction-details',
-    title: 'Détails de construction',
-    description: 'Structure et caractéristiques principales',
-  },
-  {
-    id: 'rooms-details',
-    title: 'Pièces et niveaux',
-    description: 'Configuration des espaces',
-  },
-  {
-    id: 'finish-details',
-    title: 'Finitions',
-    description: 'Niveau de qualité et matériaux',
-  },
-  {
-    id: 'special-features',
-    title: 'Équipements spéciaux',
-    description: 'Technologies et équipements',
-    isOptional: true,
-  },
-  {
-    id: 'exterior-features',
-    title: 'Extérieurs',
-    description: 'Aménagements extérieurs',
-    isOptional: true,
-  },
-  {
-    id: 'contact-details',
-    title: 'Vos coordonnées',
-    description: 'Pour recevoir votre estimation détaillée',
-  },
-];
-
 const EstimationWizard = () => {
-  const {
-    formData,
-    currentStep,
-    currentStepIndex,
-    totalSteps,
-    progress,
+  const { toast } = useToast();
+  const { formData, updateFormData } = useEstimationForm();
+  const [estimationResult, setEstimationResult] = useState<number | null>(null);
+  const [isCalculating, setIsCalculating] = useState(false);
+  
+  const { 
+    step, 
+    totalSteps, 
+    goToNextStep, 
+    goToPreviousStep, 
     animationDirection,
-    updateFormData,
-    goToNextStep,
-    goToPreviousStep
-  } = useFormWizard(formSteps, {
-    clientType: 'individual',
-    projectType: 'construction',
-    landIncluded: 'yes',
-  });
+    setStep 
+  } = useEstimationSteps(formData);
 
-  const estimationResult = useMemo(() => {
-    if (currentStepIndex === totalSteps - 1) {
-      return calculateDetailedEstimation(formData);
+  // Calculer l'estimation lorsque les données du formulaire changent
+  useEffect(() => {
+    if (step === totalSteps - 1) {
+      calculateEstimationResult();
     }
-    return null;
-  }, [currentStepIndex, formData, totalSteps]);
+  }, [step, totalSteps]);
+
+  const calculateEstimationResult = () => {
+    setIsCalculating(true);
+    
+    // Simuler un temps de calcul pour l'expérience utilisateur
+    setTimeout(() => {
+      try {
+        // Utiliser la fonction de calcul pour obtenir une estimation
+        const result = calculateEstimation(formData);
+        setEstimationResult(result);
+      } catch (error) {
+        console.error("Erreur lors du calcul de l'estimation:", error);
+        toast({
+          title: "Erreur de calcul",
+          description: "Une erreur est survenue lors du calcul de l'estimation. Veuillez réessayer.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsCalculating(false);
+      }
+    }, 1500);
+  };
+
+  const handleClientTypeSubmit = (data: { clientType: string }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleProjectTypeSubmit = (data: { projectType: string, landIncluded?: string }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleTerrainDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleConstructionDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleRoomsDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleFinishDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleSpecialFeaturesSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleExteriorFeaturesSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
+  const handleContactDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
 
   const renderStep = () => {
-    const commonProps = {
-      formData,
-      updateFormData,
-      goToNextStep,
-    };
-
-    switch (currentStep.id) {
-      case 'client-type':
-        return <ClientTypeStep {...commonProps} />;
-      case 'project-type':
-        return <ProjectTypeStep {...commonProps} />;
-      case 'terrain-details':
-        return <TerrainDetailsStep {...commonProps} />;
-      case 'construction-details':
-        return <ConstructionDetailsStep {...commonProps} />;
-      case 'rooms-details':
-        return <RoomsDetailsStep {...commonProps} />;
-      case 'finish-details':
-        return <FinishDetailsStep {...commonProps} />;
-      case 'special-features':
-        return <SpecialFeaturesStep {...commonProps} />;
-      case 'exterior-features':
-        return <ExteriorFeaturesStep {...commonProps} />;
-      case 'contact-details':
-        return <ContactDetailsStep {...commonProps} />;
+    switch (step) {
+      case 0:
+        return (
+          <ClientTypeStep 
+            formData={formData}
+            updateFormData={handleClientTypeSubmit}
+            goToNextStep={goToNextStep}
+          />
+        );
+      case 1:
+        return (
+          <ProjectTypeStep 
+            formData={formData}
+            updateFormData={handleProjectTypeSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 2:
+        return (
+          <TerrainDetailsStep 
+            formData={formData}
+            updateFormData={handleTerrainDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 3:
+        return (
+          <ConstructionDetailsStep 
+            formData={formData}
+            updateFormData={handleConstructionDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 4:
+        return (
+          <RoomsDetailsStep 
+            formData={formData}
+            updateFormData={handleRoomsDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 5:
+        return (
+          <FinishDetailsStep 
+            formData={formData}
+            updateFormData={handleFinishDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 6:
+        return (
+          <SpecialFeaturesStep 
+            formData={formData}
+            updateFormData={handleSpecialFeaturesSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 7:
+        return (
+          <ExteriorFeaturesStep 
+            formData={formData}
+            updateFormData={handleExteriorFeaturesSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 8:
+        return (
+          <ContactDetailsStep 
+            formData={formData}
+            updateFormData={handleContactDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 9:
+        return (
+          <EstimationResults 
+            estimation={estimationResult}
+            formData={formData}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
       default:
-        return <div>Étape non définie</div>;
+        return null;
     }
   };
 
+  // Calculer la progression en pourcentage
+  const progress = ((step + 1) / totalSteps) * 100;
+
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold">
-            {currentStep.title}
-          </CardTitle>
-          <div className="text-sm text-muted-foreground">
-            Étape {currentStepIndex + 1} sur {totalSteps}
-          </div>
-        </div>
-        <Progress value={progress} className="h-2" />
-        {currentStep.description && (
-          <p className="text-sm text-muted-foreground mt-2">{currentStep.description}</p>
-        )}
-      </CardHeader>
-
-      <CardContent>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep.id}
-            initial={{ 
-              x: animationDirection === 'forward' ? 15 : -15, 
-              opacity: 0 
-            }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ 
-              x: animationDirection === 'forward' ? -15 : 15, 
-              opacity: 0 
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            {currentStepIndex === totalSteps ? (
-              <EstimationResults 
-                estimation={estimationResult} 
-                formData={formData} 
-              />
-            ) : (
-              renderStep()
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </CardContent>
-
-      <CardFooter className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={goToPreviousStep}
-          disabled={currentStepIndex === 0}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Précédent
-        </Button>
-
-        {currentStepIndex < totalSteps - 1 ? (
-          <Button onClick={goToNextStep}>
-            {currentStep.isOptional ? 'Passer' : 'Suivant'}
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
-          <Button onClick={goToNextStep} className="bg-green-600 hover:bg-green-700">
-            <Calculator className="mr-2 h-4 w-4" />
-            Calculer l'estimation
-          </Button>
-        )}
-      </CardFooter>
+    <Card className="p-6 shadow-xl overflow-hidden">
+      {/* Barre de progression */}
+      <div className="w-full h-2 bg-gray-200 rounded-full mb-6">
+        <div 
+          className="h-2 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transition-all duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      
+      {/* Indicateur d'étape */}
+      <div className="text-sm text-gray-500 mb-4">
+        Étape {step + 1} sur {totalSteps}
+      </div>
+      
+      {/* Contenu de l'étape actuelle avec animation */}
+      <div className={`transform transition-all duration-300 ${
+        animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
+      }`}>
+        {renderStep()}
+      </div>
     </Card>
   );
 };

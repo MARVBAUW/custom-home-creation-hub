@@ -16,6 +16,7 @@ export interface FormData {
   
   // Construction details
   constructionStyle?: string;
+  constructionType?: string;
   landSurface?: number;
   livingArea?: number;
   floors?: number;
@@ -53,6 +54,7 @@ export interface FormData {
   electricalType?: string;
   plumbingType?: string;
   heatingType?: string;
+  hasAirConditioning?: boolean;
   
   // Interior finishes
   plasteringType?: string;
@@ -61,6 +63,25 @@ export interface FormData {
   tileSurface?: number;
   parquetSurface?: number;
   paintSurface?: number;
+  interiorDoorsType?: string;
+  
+  // Floor and Wall tiles
+  floorTileType?: string;
+  wallTileType?: string;
+  floorTilePercentage?: number;
+  
+  // Parquet and soft floors
+  parquetType?: string;
+  parquetPercentage?: number;
+  softFloorType?: string;
+  softFloorPercentage?: number;
+  
+  // Paint and wall coverings
+  paintType?: string;
+  basicPaintPercentage?: number;
+  decorativePaintPercentage?: number;
+  wallpaperPercentage?: number;
+  wallCovering?: string;
   
   // Exterior features
   pool?: boolean;
@@ -70,10 +91,46 @@ export interface FormData {
   // Special features
   smartHome?: boolean;
   solarPanels?: boolean;
+  solarPanelType?: string;
+  solarPanelSurface?: number;
+  windTurbineType?: string;
   fancyKitchen?: boolean;
+  rainwaterHarvesting?: boolean;
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
   
-  // Finishing level
+  // Landscaping
+  landscapingType?: string;
+  gardenSurface?: number;
+  exteriorFeatures?: string[];
+  
+  // Room details
+  roomCount?: number;
+  bathroomCount?: number;
+  bathroomType?: string;
+  kitchenType?: string;
+  
+  // Step control flags
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  includeLandscaping?: boolean;
+  includeOptions?: boolean;
+  includeCuisine?: boolean;
+  includeBathroom?: boolean;
+  
+  // Finish level
   finishingLevel?: string;
+  finishLevel?: string; // Alias pour finishingLevel pour compatibilité
+  
+  // Terrain details
+  terrainType?: string;
+  terrainSurface?: number;
+  hasLand?: boolean;
+  landPrice?: number;
+  
+  // Building details
+  levels?: number;
+  surface?: number | string;
   
   // Contact details
   firstName?: string;
@@ -83,42 +140,6 @@ export interface FormData {
   city?: string;
   message?: string;
   termsAccepted?: boolean;
-  
-  // Additional properties for calculation
-  niveaux?: number;
-  étages?: number;
-  combles?: number;
-  sousSOl?: boolean;
-  chambres?: number;
-  sallesDeBain?: number;
-  cuisine?: string;
-  salon?: boolean;
-  salleManger?: boolean;
-  bureau?: boolean;
-  fondationType?: string;
-  structureMurs?: string;
-  typeCouverture?: string;
-  typeMenuiseries?: string;
-  typeIsolation?: string;
-  typeVentilation?: string;
-  typeEnergie?: string;
-  domotique?: boolean;
-  alarme?: boolean;
-  climatisation?: boolean;
-  aspCentralisée?: boolean;
-  terrasse?: boolean;
-  balcon?: boolean;
-  piscine?: boolean;
-  poolHouse?: boolean;
-  aménagementPaysager?: boolean;
-  clôture?: boolean;
-  portail?: boolean;
-  carport?: boolean;
-  niveauFinition?: string;
-  budgetMaxi?: number;
-  délaiSouhaité?: string;
-  contraintesParticulières?: string;
-  wallCovering?: string;
   zipCode?: string;
   timeline?: string;
   additionalDetails?: string;
@@ -135,6 +156,9 @@ export * from './roomsTypes';
 export * from './interiorTypes';
 export * from './specialFeaturesTypes';
 export * from './renovationTypes';
-export * from './validationSchemas';
 export * from './baseTypes';
 export * from './clientTypeForm';
+
+// Re-export validation schemas without causing ambiguity
+import * as ValidationSchemas from './validationSchemas';
+export { ValidationSchemas };

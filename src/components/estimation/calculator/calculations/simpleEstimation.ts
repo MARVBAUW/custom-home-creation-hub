@@ -1,59 +1,53 @@
 
 import { FormData } from '../types';
-import { parseToNumber } from '../utils/typeConversions';
 
-// Simple estimation calculation
+// Fonction simple de calcul d'estimation
 export const calculateEstimation = (formData: FormData): number => {
-  const {
-    projectType,
-    surface,
-    finishLevel,
-    terrainType,
-    landPrice,
-    landIncluded,
-  } = formData;
-
-  // Parse surface to number
-  const surfaceValue = parseToNumber(surface);
-  const landPriceValue = parseToNumber(landPrice);
-
-  // Base cost per square meter
-  let baseCostPerSqMeter = 1500; // Default for construction
-
-  // Adjust based on project type
-  if (projectType === 'renovation') {
-    baseCostPerSqMeter = 1200;
-  } else if (projectType === 'extension') {
-    baseCostPerSqMeter = 1800;
-  } else if (projectType === 'design') {
-    baseCostPerSqMeter = 300;
+  // Prix de base par m²
+  let basePricePerSqm = 1500;
+  
+  // Récupérer les principales données
+  const surface = formData.surface ? 
+    (typeof formData.surface === 'string' ? parseFloat(formData.surface) : formData.surface) : 100;
+  const finishLevel = formData.finishLevel || formData.finishingLevel;
+  const terrainType = formData.terrainType;
+  const landPrice = formData.landPrice ? 
+    (typeof formData.landPrice === 'string' ? parseFloat(formData.landPrice) : formData.landPrice) : 0;
+  
+  // Ajuster le prix au m² selon le type de projet
+  if (formData.projectType === 'neuf') {
+    basePricePerSqm = 1800;
+  } else if (formData.projectType === 'renovation') {
+    basePricePerSqm = 1200;
+  } else if (formData.projectType === 'extension') {
+    basePricePerSqm = 1500;
   }
-
-  // Adjust based on finish level
-  if (finishLevel === 'premium') {
-    baseCostPerSqMeter *= 1.2;
-  } else if (finishLevel === 'luxe') {
-    baseCostPerSqMeter *= 1.4;
+  
+  // Ajuster selon le niveau de finition
+  if (finishLevel === 'Premium (haut de gamme)') {
+    basePricePerSqm *= 1.5;
+  } else if (finishLevel === 'Standard (milieu de gamme)') {
+    basePricePerSqm *= 1.2;
+  } else if (finishLevel === 'Basique (entrée de gamme)') {
+    basePricePerSqm *= 0.9;
   }
-
-  // Adjust based on terrain type
-  let terrainMultiplier = 1;
-  if (terrainType === 'sloping') {
-    terrainMultiplier = 1.1;
-  } else if (terrainType === 'wooded') {
-    terrainMultiplier = 1.15;
+  
+  // Calculer le coût de la construction
+  let constructionCost = surface * basePricePerSqm;
+  
+  // Ajouter des coûts supplémentaires pour les options
+  if (formData.pool) constructionCost += 25000;
+  if (formData.terrace) constructionCost += 10000;
+  if (formData.smartHome) constructionCost += 15000;
+  if (formData.solarPanels) constructionCost += 20000;
+  if (formData.outdoorKitchen) constructionCost += 15000;
+  
+  // Coût total avec terrain si applicable
+  let totalCost = constructionCost;
+  if (landPrice > 0) {
+    totalCost += landPrice;
   }
-
-  // Calculate base construction cost
-  let totalCost = baseCostPerSqMeter * surfaceValue * terrainMultiplier;
-
-  // Add land price if included
-  if (landIncluded === 'yes' && landPriceValue > 0) {
-    totalCost += landPriceValue;
-  }
-
-  // Add 20% VAT
-  totalCost *= 1.2;
-
-  return Math.round(totalCost);
+  
+  // Arrondir au millier près
+  return Math.round(totalCost / 1000) * 1000;
 };

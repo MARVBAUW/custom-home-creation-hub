@@ -1,76 +1,102 @@
 
-import { FormData } from './index';
-import { ReactNode } from 'react';
+import { FormData } from '.';
 
+// Interface de base pour tous les formulaires
 export interface BaseFormProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
 }
 
-// All form components now extend BaseFormProps
-export type ClientTypeFormProps = BaseFormProps;
-export type ProfessionalProjectFormProps = BaseFormProps;
-export type IndividualProjectFormProps = BaseFormProps;
-export type EstimationTypeFormProps = BaseFormProps;
-export type ConstructionDetailsFormProps = BaseFormProps;
-export type TerrainFormProps = BaseFormProps;
-export type GrosOeuvreFormProps = BaseFormProps;
-export type CharpenteFormProps = BaseFormProps;
-export type ComblesFormProps = BaseFormProps;
-export type CouvertureFormProps = BaseFormProps;
-export type FacadeFormProps = BaseFormProps;
-export type MenuiseriesExtFormProps = BaseFormProps;
-export type IsolationFormProps = BaseFormProps;
-export type ElectriciteFormProps = BaseFormProps;
-export type PlomberieFormProps = BaseFormProps;
-export type ChauffageFormProps = BaseFormProps;
-export type PlatrerieFormProps = BaseFormProps;
-export type MenuiseriesIntFormProps = BaseFormProps;
-export type CarrelageFormProps = BaseFormProps;
-export type ParquetFormProps = BaseFormProps;
-export type PeintureFormProps = BaseFormProps;
-export type AmenagementExtFormProps = BaseFormProps;
-export type ContactFormProps = BaseFormProps;
-
-export interface BaseFormStepProps {
-  step: number;
-  totalSteps: number;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
+// Interface pour les formulaires avec valeurs par défaut et soumission
+export interface FormWithDefaultsProps extends BaseFormProps {
+  defaultValues: any;
+  onSubmit: (data: any) => void;
 }
 
-export interface ResultsFormProps {
-  estimationResult: number | null;
-  formData: FormData;
-  categoriesAmounts: Array<{category: string; amount: number}>;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
+// Interface spécifique pour chaque étape du formulaire
+export interface ClientTypeFormProps extends BaseFormProps {}
 
-export interface EstimationReportProps {
-  estimation: {
-    totalHT: number;
-    totalTTC: number;
-    vat: number;
-    coutGlobalHT: number;
-    coutGlobalTTC: number;
-    honorairesHT: number;
-    taxeAmenagement: number;
-    garantieDecennale: number;
-    etudesGeotechniques: number;
-    etudeThermique: number;
-    corpsEtat: Record<string, {
-      montantHT: number;
-      details: string[];
-    }>;
+export interface ProfessionalProjectFormProps extends BaseFormProps {
+  defaultValues: {
+    activity: string;
+    projectType: string;
+    startDate: string;
+    endDate: string;
   };
-  formData: FormData;
-  includeTerrainPrice: boolean;
-  estimationResult?: number;
+  onSubmit: (data: any) => void;
+}
+
+export interface IndividualProjectFormProps extends BaseFormProps {
+  defaultValues: {
+    projectType: string;
+  };
+  onSubmit: (data: { projectType: string }) => void;
+}
+
+export interface EstimationTypeFormProps extends BaseFormProps {
+  defaultValues: {
+    estimationType: string;
+    termsAccepted: boolean;
+  };
+  onSubmit: (data: any) => void;
+}
+
+export interface ProjectDetailsFormProps extends BaseFormProps {}
+
+export interface TerrainFormProps extends BaseFormProps {}
+
+export interface ConstructionDetailsFormProps extends BaseFormProps {}
+
+export interface CharpenteFormProps extends BaseFormProps {}
+
+export interface CouvertureFormProps extends BaseFormProps {}
+
+export interface FacadeFormProps extends BaseFormProps {}
+
+export interface MenuiseriesExtFormProps extends BaseFormProps {}
+
+export interface IsolationFormProps extends BaseFormProps {}
+
+export interface ElectriciteFormProps extends BaseFormProps {
+  defaultValues: {
+    electricalType: string;
+  };
+  onSubmit: (data: { electricalType: string }) => void;
+}
+
+export interface PlomberieFormProps extends BaseFormProps {}
+
+export interface ChauffageFormProps extends BaseFormProps {}
+
+export interface PlatrerieFormProps extends BaseFormProps {}
+
+export interface MenuiseriesIntFormProps extends BaseFormProps {}
+
+export interface CarrelageFormProps extends BaseFormProps {}
+
+export interface ParquetFormProps extends BaseFormProps {}
+
+export interface PeintureFormProps extends BaseFormProps {}
+
+export interface AmenagementExtFormProps extends BaseFormProps {}
+
+export interface ContactFormProps extends BaseFormProps {
+  defaultValues: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    city: string;
+    message: string;
+    termsAccepted: boolean;
+  };
+  onSubmit: (data: any) => void;
+}
+
+export interface ResultsFormProps extends BaseFormProps {
+  estimationResult: number;
+  categoriesAmounts?: Array<{ category: string; amount: number; details?: string }>;
 }

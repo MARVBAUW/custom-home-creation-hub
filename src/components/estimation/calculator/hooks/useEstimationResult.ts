@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { FormData } from '../types';
 
@@ -14,41 +15,61 @@ export const useEstimationResult = (formData: FormData) => {
   return estimationResult;
 };
 
-// Fix type conversion issues in the file by ensuring consistent types
+// Fonction de calcul améliorée pour gérer les différents types et convertir correctement
 const calculateEstimationResult = (formData: FormData) => {
-  let totalCost = 50000; // Base cost
+  let totalCost = 50000; // Coût de base
 
-  // Fix number/string comparison issues
-  if (formData.surface && typeof formData.surface === 'string') {
-    const surfaceValue = parseFloat(formData.surface);
+  // Ajuster en fonction de la surface
+  if (formData.surface) {
+    const surfaceValue = typeof formData.surface === 'string' 
+      ? parseFloat(formData.surface) 
+      : formData.surface;
     
-    if (surfaceValue < 50) {
-      totalCost += 20000; // small project
-    }
-    else if (surfaceValue > 200) {
-      totalCost += 80000; // large project
-    } else {
-      totalCost += 50000; // medium project
+    if (!isNaN(surfaceValue)) {
+      if (surfaceValue < 50) {
+        totalCost += 20000; // petit projet
+      }
+      else if (surfaceValue > 200) {
+        totalCost += 80000; // grand projet
+      } else {
+        totalCost += 50000; // projet moyen
+      }
+      
+      // Ajouter un coût au m²
+      totalCost += surfaceValue * 1000;
     }
   }
   
+  // Ajuster selon le type de projet
   if (formData.projectType === 'renovation') {
-    totalCost *= 1.2; // Renovation costs more
+    totalCost *= 1.2; // Rénovation coûte plus cher
   }
 
-  if (formData.finishLevel === 'Premium (haut de gamme)') {
-    totalCost *= 1.5; // High-end finish
-  } else if (formData.finishLevel === 'Basique (entrée de gamme)') {
-    totalCost *= 0.8; // Basic finish
+  // Ajuster selon le niveau de finition
+  const finishLevel = formData.finishLevel || formData.finishingLevel;
+  if (finishLevel === 'Premium (haut de gamme)') {
+    totalCost *= 1.5; // Finition haut de gamme
+  } else if (finishLevel === 'Basique (entrée de gamme)') {
+    totalCost *= 0.8; // Finition basique
   }
   
-  // Fix string-to-number conversions
-  if (formData.landPrice && typeof formData.landPrice === 'string') {
-    const landPriceValue = parseFloat(formData.landPrice);
-    if (landPriceValue > 0) {
+  // Ajouter le prix du terrain si disponible
+  if (formData.landPrice) {
+    const landPriceValue = typeof formData.landPrice === 'string' 
+      ? parseFloat(formData.landPrice) 
+      : formData.landPrice;
+    
+    if (!isNaN(landPriceValue) && landPriceValue > 0) {
       totalCost += landPriceValue;
     }
   }
+
+  // Ajouter des coûts pour les options spéciales
+  if (formData.pool) totalCost += 25000;
+  if (formData.terrace) totalCost += 10000;
+  if (formData.smartHome) totalCost += 15000;
+  if (formData.solarPanels) totalCost += 20000;
+  if (formData.outdoorKitchen) totalCost += 15000;
 
   return totalCost;
 };
