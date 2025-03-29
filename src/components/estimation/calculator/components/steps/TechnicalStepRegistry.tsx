@@ -6,7 +6,7 @@ import PlomberieForm from '../../FormSteps/PlomberieForm';
 import ChauffageForm from '../../FormSteps/ChauffageForm';
 import { FormData } from '../../types';
 
-// Registry for technical steps (steps 14-16)
+// Registry pour les étapes techniques (étapes 14-16)
 export const createTechnicalStepRegistry = (
   formData: FormData,
   onElectriciteSubmit: (data: { electricalType: string }) => void,
@@ -24,6 +24,9 @@ export const createTechnicalStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          electricalType: formData.electricalType || ''
+        }}
       />
     ),
     15: (props: FormStepProps) => (
@@ -35,6 +38,9 @@ export const createTechnicalStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          plumbingType: formData.plumbingType || ''
+        }}
       />
     ),
     16: (props: FormStepProps) => (
@@ -47,6 +53,10 @@ export const createTechnicalStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          heatingType: formData.heatingType || '',
+          hasAirConditioning: formData.hasAirConditioning || false
+        }}
       />
     ),
   };

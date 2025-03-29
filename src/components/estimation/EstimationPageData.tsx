@@ -40,7 +40,29 @@ export const getEstimationStructuredData = () => {
         "price": "0",
         "priceCurrency": "EUR",
         "description": "Estimation gratuite sans engagement"
-      }
+      },
+      "availableService": [
+        {
+          "@type": "Service",
+          "name": "Estimation détaillée construction neuve",
+          "description": "Calcul de budget pour votre projet de construction neuve en PACA"
+        },
+        {
+          "@type": "Service",
+          "name": "Estimation détaillée rénovation",
+          "description": "Calcul de budget pour votre projet de rénovation en PACA"
+        },
+        {
+          "@type": "Service",
+          "name": "Estimation détaillée extension",
+          "description": "Calcul de budget pour votre projet d'extension en PACA"
+        },
+        {
+          "@type": "Service",
+          "name": "Conseils construction maison",
+          "description": "Conseils personnalisés pour votre projet de construction"
+        }
+      ]
     },
     "speakable": {
       "@type": "SpeakableSpecification",
@@ -62,6 +84,23 @@ export const getEstimationStructuredData = () => {
           "item": "https://progineer.fr/estimation"
         }
       ]
+    },
+    "potentialAction": {
+      "@type": "ConsumeAction",
+      "actionStatus": "ActiveActionStatus",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://progineer.fr/estimation",
+        "inLanguage": "fr-FR",
+        "actionPlatform": [
+          "http://schema.org/DesktopWebPlatform",
+          "http://schema.org/MobileWebPlatform"
+        ]
+      },
+      "object": {
+        "@type": "Service",
+        "name": "Estimation gratuite en ligne"
+      }
     }
   };
 };

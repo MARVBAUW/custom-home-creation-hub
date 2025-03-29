@@ -19,15 +19,34 @@ export const createContactStepRegistry = (
         <ContactForm
           formData={formData}
           updateFormData={(data) => {
-            // Prepare data for submission
-            onContactSubmit(data);
+            // Préparation des données de contact pour soumission
+            const contactData = {
+              firstName: data.firstName || '',
+              lastName: data.lastName || '',
+              email: data.email || '',
+              phone: data.phone || '',
+              message: data.message || '',
+              city: data.city || formData.city || '',
+              termsAccepted: data.termsAccepted || false
+            };
+            
+            onContactSubmit(contactData);
           }}
           goToNextStep={() => {
-            // Contact is usually the last step, might not need to go next
-            console.log("Contact form completed");
+            // L'étape de contact est généralement la dernière, affichage des résultats
+            console.log("Formulaire de contact complété, génération du devis estimatif");
           }}
           goToPreviousStep={goToPreviousStep}
           animationDirection={animationDirection}
+          defaultValues={{
+            firstName: formData.firstName || '',
+            lastName: formData.lastName || '',
+            email: formData.email || '',
+            phone: formData.phone || '',
+            message: formData.message || '',
+            city: formData.city || '',
+            termsAccepted: formData.termsAccepted || false
+          }}
         />
       );
     },
