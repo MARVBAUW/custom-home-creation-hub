@@ -1,3 +1,4 @@
+
 import { FormData } from '../types';
 
 // Types pour l'analyse des intentions
@@ -227,7 +228,7 @@ export const generateSmartResponse = (
       
     case 'quality':
       if (entities.quality) {
-        return `J'ai noté que vous souhaitez une finition de niveau ${entities.quality}. ${!knownInfo.terrain ? 'Disposez-vous déjà d'un terrain pour ce projet ?' : 'Merci pour cette précision.'}`;
+        return `J'ai noté que vous souhaitez une finition de niveau ${entities.quality}. ${!knownInfo.terrain ? 'Disposez-vous déjà d\'un terrain pour ce projet ?' : 'Merci pour cette précision.'}`;
       } else {
         return "Quel niveau de finition recherchez-vous ? Premium (haut de gamme), standard (qualité moyenne) ou basique (entrée de gamme) ?";
       }
