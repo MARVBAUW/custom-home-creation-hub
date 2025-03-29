@@ -13,7 +13,8 @@ const ComblesForm: React.FC<CombleFormProps> = ({
   updateFormData, 
   goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  defaultValues
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ const ComblesForm: React.FC<CombleFormProps> = ({
               <div>
                 <Label>Type de combles</Label>
                 <RadioGroup 
-                  value={formData.atticType || ''} 
+                  value={formData.atticType || defaultValues?.atticType || ''} 
                   onValueChange={(value) => updateFormData({ atticType: value })}
                   className="mt-2 space-y-2"
                 >

@@ -9,12 +9,14 @@ import { FormData } from '../types';
 interface PageInfo {
   pageNumber: number;
   pageContext: any;
+  objId?: number;
 }
 
 // Add autoTable to jsPDF
 declare module 'jspdf' {
   interface jsPDF {
     autoTable: (options: any) => any;
+    getCurrentPageInfo: () => PageInfo;
   }
 }
 
