@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 
 // Types pour l'analyse des intentions

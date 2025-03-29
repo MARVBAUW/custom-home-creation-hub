@@ -10,7 +10,8 @@ import {
   Bot, 
   Calculator, 
   Info,
-  Undo
+  Undo,
+  FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from "@/components/ui/textarea";
