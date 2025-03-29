@@ -45,7 +45,7 @@ export const useClientInfoSubmissions = (
 
   // Soumission du formulaire de type d'estimation
   const onEstimationTypeSubmit = (data: { 
-    estimationType: 'simple' | 'standard' | 'detailed' | 'quick' | 'basic' | string;
+    estimationType: string;
     termsAccepted: boolean;
   }) => {
     console.log("Type d'estimation soumis:", data);
@@ -58,42 +58,59 @@ export const useClientInfoSubmissions = (
 
   // Soumission du formulaire de détails de construction
   const onConstructionDetailsSubmit = (data: {
-    constructionType: string;
-    surface: number | string;
-    levels: number | string;
-    rooms: number | string;
-    units: number | string;
-    bedrooms: number | string;
-    bathrooms: number | string;
+    surface: string;
+    levels: string;
+    units: string;
   }) => {
     console.log("Détails de construction soumis:", data);
     updateFormData({
-      constructionType: data.constructionType,
       surface: ensureNumber(data.surface),
       levels: ensureNumber(data.levels),
-      rooms: ensureNumber(data.rooms),
-      units: ensureNumber(data.units),
-      bedrooms: ensureNumber(data.bedrooms),
-      bathrooms: ensureNumber(data.bathrooms)
+      units: ensureNumber(data.units)
     });
     setStep(6); // Type de terrain
   };
 
-  // Soumission du formulaire de type de terrain
-  const onTerrainSubmit = (data: {
-    terrainType: string;
-    terrainAccess: string;
-    landIncluded: string;
-    landPrice?: number | string;
-  }) => {
+  // Soumission du formulaire de terrain
+  const onTerrainSubmit = (data: { terrainType: string }) => {
     console.log("Terrain soumis:", data);
+    updateFormData({ terrainType: data.terrainType });
+    setStep(7); // Démolition
+  };
+  
+  // Soumission du formulaire de démolition
+  const onDemolitionSubmit = (data: { 
+    demolitionType: string;
+    existingSurface?: string;
+  }) => {
+    console.log("Démolition soumise:", data);
     updateFormData({
-      terrainType: data.terrainType,
-      terrainAccess: data.terrainAccess,
-      landIncluded: data.landIncluded,
-      landPrice: data.landPrice ? ensureNumber(data.landPrice) : undefined
+      demolitionType: data.demolitionType,
+      existingSurface: data.existingSurface ? ensureNumber(data.existingSurface) : undefined
     });
-    setStep(7); // Structure des murs
+    setStep(8); // Gros œuvre
+  };
+  
+  // Soumission du formulaire de gros œuvre
+  const onGrosOeuvreSubmit = (data: { wallType: string }) => {
+    console.log("Gros œuvre soumis:", data);
+    updateFormData({ wallType: data.wallType });
+    setStep(9); // Charpente
+  };
+  
+  // Soumission du formulaire de charpente
+  const onCharpenteSubmit = (data: { roofType: string }) => {
+    console.log("Charpente soumise:", data);
+    updateFormData({ roofType: data.roofType });
+    setStep(10); // Combles
+  };
+  
+  // Soumission du formulaire de combles
+  const onComblesSubmit = (data: { atticType: string }) => {
+    console.log("Combles soumis:", data);
+    updateFormData({ atticType: data.atticType });
+    // Cette étape est la dernière - afficher les résultats
+    setStep(99); // Afficher les résultats
   };
 
   // Soumission du formulaire de coordonnées et calcul de l'estimation
@@ -125,6 +142,10 @@ export const useClientInfoSubmissions = (
     onEstimationTypeSubmit,
     onConstructionDetailsSubmit,
     onTerrainSubmit,
+    onDemolitionSubmit,
+    onGrosOeuvreSubmit,
+    onCharpenteSubmit,
+    onComblesSubmit,
     onContactSubmit
   };
 };

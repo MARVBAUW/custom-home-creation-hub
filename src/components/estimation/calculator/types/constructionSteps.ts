@@ -2,14 +2,14 @@
 // Contains definitions for construction and terrain related steps
 import { z } from "zod";
 
-// For the Construction Extension form (page #5)
-export const ConstructionExtensionSchema = z.object({
+// Pour le formulaire de construction (page #5)
+export const ConstructionDetailsSchema = z.object({
   surface: z.string().min(1, "Veuillez indiquer la surface de votre projet"),
   levels: z.string().min(1, "Veuillez indiquer le nombre de niveaux"),
   units: z.string().min(1, "Veuillez indiquer le nombre de logements"),
 });
 
-// For the Terrain form (page #6)
+// Pour le formulaire de terrain (page #6)
 export const TerrainSchema = z.object({
   terrainType: z.enum([
     "ROCHEUX", 
@@ -24,21 +24,21 @@ export const TerrainSchema = z.object({
   }),
 });
 
-// For the Demolition form (page #7)
+// Pour le formulaire de démolition (page #7)
 export const DemolitionSchema = z.object({
   demolitionType: z.enum([
     "PAS DE DEMOLITION TERRAIN VIERGE",
-    "DEMOLITION DES EXISTANTS  25%",
-    "DEMOLITION DES EXISTANTS  50%",
-    "DEMOLITION DES EXISTANTS  75%",
-    "DEMOLITION DES EXISTANTS  100%"
+    "DEMOLITION DES EXISTANTS 25%",
+    "DEMOLITION DES EXISTANTS 50%",
+    "DEMOLITION DES EXISTANTS 75%",
+    "DEMOLITION DES EXISTANTS 100%"
   ], {
     required_error: "Veuillez sélectionner un type de démolition",
   }),
   existingSurface: z.string().optional(),
 });
 
-// For the Gros Oeuvre form (page #8)
+// Pour le formulaire de gros œuvre (page #8)
 export const GrosOeuvreSchema = z.object({
   wallType: z.enum([
     "BRIQUES",
@@ -53,7 +53,7 @@ export const GrosOeuvreSchema = z.object({
   }),
 });
 
-// For the Charpente form (page #9)
+// Pour le formulaire de charpente (page #9)
 export const CharpenteSchema = z.object({
   roofType: z.enum([
     "TOITURE TERRASSE ACCESSIBLE",
@@ -65,7 +65,7 @@ export const CharpenteSchema = z.object({
   }),
 });
 
-// For the Comble form (page #10)
+// Pour le formulaire de comble (page #10)
 export const CombleSchema = z.object({
   atticType: z.enum([
     "COMBLES AMENAGEABLES",

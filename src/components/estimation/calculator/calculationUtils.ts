@@ -1,106 +1,147 @@
 
 import { FormData } from './types';
-import { 
-  calculateDetailedEstimation, 
-  calculateSimpleEstimation 
-} from './calculations';
 import { ensureNumber } from './utils/typeConversions';
 
+// Prix standards par type et par m²
+const PRICE_RATES = {
+  // Types de construction (par m²)
+  CONSTRUCTION: {
+    BASE: 1800,
+    TRADITIONAL: 1900,
+    CONTEMPORARY: 2100,
+    ECOLOGICAL: 2300
+  },
+  // Types de terrain (coûts additionnels par m²)
+  TERRAIN: {
+    ROCHEUX: 260,
+    ARGILEUX: 200,
+    ACCIDENTE: 230,
+    PENTUE: 240,
+    VIABILISE: 120,
+    PLAT: 150,
+    SANS_OBJET: 100
+  },
+  // Types de murs (par m²)
+  MURS: {
+    BRIQUES: 590,
+    PARPAING: 580, 
+    POROTHERME: 430,
+    PIERRE: 730,
+    BETON: 500,
+    BETON_CELLULAIRE: 430,
+    SANS_AVIS: 550
+  },
+  // Types de charpente (par m²)
+  CHARPENTE: {
+    TOITURE_TERRASSE_ACCESSIBLE: 150,
+    TOITURE_TERRASSE_INACCESSIBLE: 130,
+    CHARPENTE_INDUSTRIELLE: 110,
+    CHARPENTE_TRADITIONNELLE: 140
+  },
+  // Types de combles (par m²)
+  COMBLES: {
+    AMENAGEABLES: 70,
+    PERDUS: 50
+  },
+  // Taux de démolition (% du coût total)
+  DEMOLITION: {
+    AUCUNE: 0,
+    DEMOLITION_25: 0.25,
+    DEMOLITION_50: 0.5,
+    DEMOLITION_75: 0.75,
+    DEMOLITION_100: 1
+  }
+};
+
+/**
+ * Calcule l'estimation simplifiée basée sur les paramètres de base
+ */
 export const calculateEstimation = (formData: FormData): number => {
-  // Log the incoming form data for debugging
-  console.log("Formulaire pour calcul:", formData);
+  console.log("Calcul d'estimation avec les données:", formData);
   
-  // Determine which estimation method to use based on estimationType
-  // Match the original form options: "Rapide 5 mins" or "Précise 15 mins"
-  const mode = formData.estimationType || 'simple';
-  console.log("Mode de calcul:", mode);
+  // Extraire et normaliser les valeurs de base
+  const surface = ensureNumber(formData.surface) || 100;
+  const levels = ensureNumber(formData.levels) || 1;
   
-  try {
-    // For detailed or standard estimation (précise 15 mins)
-    if (mode === 'detailed' || mode === 'standard' || mode.includes('Précise')) {
-      try {
-        const detailedResult = calculateDetailedEstimation(formData);
-        console.log("Résultat du calcul détaillé:", detailedResult);
-        
-        if (typeof detailedResult === 'object' && 'totalEstimation' in detailedResult) {
-          return ensureNumber(detailedResult.totalEstimation);
-        }
-        
-        // If the result doesn't have the expected structure, use basic calculation
-        console.log("Structure de résultat inattendue, utilisation du calcul basique");
-        return calculateBasicEstimation(formData);
-      } catch (error) {
-        console.error("Erreur dans le calcul détaillé:", error);
-        return calculateBasicEstimation(formData);
-      }
-    }
-    
-    // For simple or quick estimation (rapide 5 mins)
-    if (mode === 'simple' || mode === 'quick' || mode === 'basic' || mode.includes('Rapide')) {
-      try {
-        const simpleResult = calculateSimpleEstimation(formData);
-        console.log("Résultat du calcul simple:", simpleResult);
-        return ensureNumber(simpleResult);
-      } catch (error) {
-        console.error("Erreur dans le calcul simple:", error);
-        return calculateBasicEstimation(formData);
-      }
-    }
-    
-    // Default calculation if no mode matches
-    console.log("Mode non reconnu, utilisation du calcul basique");
-    return calculateBasicEstimation(formData);
-  } catch (error) {
-    console.error("Erreur générale dans le calcul:", error);
-    // Return a fallback value if all calculations fail
-    return calculateBasicEstimation(formData);
-  }
-};
-
-// Basic estimation function as fallback
-const calculateBasicEstimation = (formData: FormData): number => {
-  console.log("Exécution du calcul basique");
-  let cost = 0;
-  
-  // Get base cost by surface
-  const surface = ensureNumber(formData.surface);
-  if (surface > 0) {
-    // Basic price per m²
-    let pricePerM2 = 1500; // Default price per m²
-    
-    // Adjust price based on construction type
-    if (formData.constructionType === 'traditional') {
-      pricePerM2 = 1600;
-    } else if (formData.constructionType === 'contemporary') {
-      pricePerM2 = 1800;
-    } else if (formData.constructionType === 'eco') {
-      pricePerM2 = 2000;
-    }
-    
-    cost = surface * pricePerM2;
-  } else {
-    // Default cost if no surface provided
-    cost = 150000;
+  // Déterminer le prix de base par m² selon le type de projet
+  let basePrice = PRICE_RATES.CONSTRUCTION.BASE;
+  if (formData.constructionType === 'traditional') {
+    basePrice = PRICE_RATES.CONSTRUCTION.TRADITIONAL;
+  } else if (formData.constructionType === 'contemporary') {
+    basePrice = PRICE_RATES.CONSTRUCTION.CONTEMPORARY;
+  } else if (formData.constructionType === 'ecological') {
+    basePrice = PRICE_RATES.CONSTRUCTION.ECOLOGICAL;
   }
   
-  // Adjust based on project type
+  // Calculer le coût de base de la construction
+  let totalCost = basePrice * surface;
+  
+  // Ajustement pour le nombre de niveaux (surcoût de 20% par niveau supplémentaire)
+  if (levels > 1) {
+    totalCost *= (1 + (levels - 1) * 0.2);
+  }
+  
+  // Ajustement pour le type de terrain
+  if (formData.terrainType) {
+    const terrainType = formData.terrainType.replace(/\s+/g, '_').toUpperCase();
+    const terrainRate = PRICE_RATES.TERRAIN[terrainType as keyof typeof PRICE_RATES.TERRAIN] || 100;
+    totalCost += terrainRate * surface;
+  }
+  
+  // Ajustement pour le type de mur
+  if (formData.wallType) {
+    const wallType = formData.wallType.replace(/\s+/g, '_').toUpperCase();
+    const wallRate = PRICE_RATES.MURS[wallType as keyof typeof PRICE_RATES.MURS] || 550;
+    totalCost += wallRate * surface;
+  }
+  
+  // Ajustement pour le type de charpente
+  if (formData.roofType) {
+    const roofType = formData.roofType.replace(/\s+/g, '_').toUpperCase();
+    const roofRate = PRICE_RATES.CHARPENTE[roofType as keyof typeof PRICE_RATES.CHARPENTE] || 120;
+    totalCost += roofRate * surface;
+  }
+  
+  // Ajustement pour le type de comble
+  if (formData.atticType) {
+    const atticType = formData.atticType.replace(/\s+/g, '_').toUpperCase();
+    const atticRate = PRICE_RATES.COMBLES[atticType as keyof typeof PRICE_RATES.COMBLES] || 50;
+    totalCost += atticRate * surface;
+  }
+  
+  // Ajustement pour la démolition
+  if (formData.demolitionType && formData.demolitionType !== "PAS DE DEMOLITION TERRAIN VIERGE") {
+    const demolitionSurface = ensureNumber(formData.existingSurface) || surface;
+    let demolitionRate = 0;
+    
+    if (formData.demolitionType === "DEMOLITION DES EXISTANTS 25%") {
+      demolitionRate = PRICE_RATES.DEMOLITION.DEMOLITION_25;
+    } else if (formData.demolitionType === "DEMOLITION DES EXISTANTS 50%") {
+      demolitionRate = PRICE_RATES.DEMOLITION.DEMOLITION_50;
+    } else if (formData.demolitionType === "DEMOLITION DES EXISTANTS 75%") {
+      demolitionRate = PRICE_RATES.DEMOLITION.DEMOLITION_75;
+    } else if (formData.demolitionType === "DEMOLITION DES EXISTANTS 100%") {
+      demolitionRate = PRICE_RATES.DEMOLITION.DEMOLITION_100;
+    }
+    
+    totalCost += 185 * demolitionSurface * demolitionRate;
+  }
+  
+  // Ajustement selon le type de projet
   if (formData.projectType === 'renovation') {
-    cost *= 0.7; // Renovation is typically cheaper than new construction
+    totalCost *= 0.85; // La rénovation coûte généralement moins cher que la construction neuve
   } else if (formData.projectType === 'extension') {
-    cost *= 1.1; // Extensions can be more complex and thus more expensive
+    totalCost *= 1.1; // Les extensions peuvent être plus complexes
   }
   
-  // Add terrain cost if applicable
-  if (formData.landPrice && formData.landIncluded === 'yes') {
-    cost += ensureNumber(formData.landPrice);
-  }
-  
-  console.log("Coût basique calculé:", cost);
-  return Math.round(cost);
+  // Arrondir et retourner le coût total
+  return Math.round(totalCost);
 };
 
-// Fonction utilitaire pour obtenir une estimation par défaut si le calcul échoue
-export const getSafeEstimation = (formData: FormData, fallbackValue: number = 50000): number => {
+/**
+ * Fonction utilitaire pour obtenir une estimation sécurisée
+ */
+export const getSafeEstimation = (formData: FormData, fallbackValue: number = 100000): number => {
   try {
     const result = calculateEstimation(formData);
     return isNaN(result) || result <= 0 ? fallbackValue : result;
