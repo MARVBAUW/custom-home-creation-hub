@@ -6,6 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Grid, Square, CheckSquare, Award, Circle } from 'lucide-react';
+import { FormData } from '../types';
 
 const CarrelageForm: React.FC<BaseFormProps> = ({
   formData,
@@ -28,8 +29,9 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
     defaultValues?.floorTilePercentage || formData.floorTilePercentage || 50
   );
 
+  // Inside the handleSubmit function, ensure data is compatible with FormData
   const handleSubmit = () => {
-    const data = {
+    const data: Partial<FormData> = {
       floorTileType,
       wallTileType,
       floorTilePercentage

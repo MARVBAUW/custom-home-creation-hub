@@ -278,6 +278,37 @@ export const calculateDetailedEstimation = (formData: FormData) => {
   };
 };
 
+const calculateBaseEstimation = (formData: FormData): number => {
+  let baseEstimation = 100000;
+
+  if (typeof formData.surface === 'number' && formData.surface > 200) {
+    
+  } else if (typeof formData.surface === 'string') {
+    const surfaceNum = parseFloat(formData.surface);
+    if (!isNaN(surfaceNum) && surfaceNum > 200) {
+      
+    }
+  }
+
+  return baseEstimation;
+}
+
+const applyConstructionTypeModifiers = (base: number, formData: FormData): number => {
+  let result = base;
+  
+  if (formData.constructionType) {
+    if (formData.constructionType === 'modern') {
+      result *= 1.2; // Modern construction costs more
+    } else if (formData.constructionType === 'traditional') {
+      result *= 1.1; // Traditional construction has a moderate increase
+    } else if (formData.constructionType === 'eco') {
+      result *= 1.25; // Eco-friendly construction costs more
+    }
+  }
+  
+  return result;
+}
+
 /**
  * Function kept for backward compatibility
  * @deprecated Use calculateDetailedEstimation instead

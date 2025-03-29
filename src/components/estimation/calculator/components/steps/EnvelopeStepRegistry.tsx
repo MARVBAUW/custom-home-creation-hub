@@ -1,13 +1,11 @@
-
 import React from 'react';
-import { StepComponentRegistry, FormStepProps } from './StepComponents';
+import { FormData } from '../../types';
 import CouvertureForm from '../../FormSteps/CouvertureForm';
 import IsolationForm from '../../FormSteps/IsolationForm';
 import FacadeForm from '../../FormSteps/FacadeForm';
 import MenuiseriesExtForm from '../../FormSteps/MenuiseriesExtForm';
-import { FormData } from '../../types';
+import { StepComponentRegistry } from './StepComponents';
 
-// Registry for envelope steps (steps 10-13)
 export const createEnvelopeStepRegistry = (
   formData: FormData,
   onCouvertureSubmit: (data: { roofingType: string }) => void,
@@ -17,55 +15,50 @@ export const createEnvelopeStepRegistry = (
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
   return {
-    10: (props: FormStepProps) => (
+    12: (props) => (
       <CouvertureForm
+        {...props}
         formData={formData}
-        updateFormData={(data) => onCouvertureSubmit({
-          roofingType: data.roofingType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
+        onSubmit={onCouvertureSubmit}
+        defaultValues={{ roofingType: formData.roofingType }}
       />
     ),
-    11: (props: FormStepProps) => (
-      <FacadeForm
-        formData={formData}
-        updateFormData={(data) => onFacadeSubmit({
-          stonePercentage: data.stonePercentage !== undefined ? Number(data.stonePercentage) : 0,
-          plasterPercentage: data.plasterPercentage !== undefined ? Number(data.plasterPercentage) : 0,
-          brickPercentage: data.brickPercentage !== undefined ? Number(data.brickPercentage) : 0,
-          metalCladdingPercentage: data.metalCladdingPercentage !== undefined ? Number(data.metalCladdingPercentage) : 0,
-          woodCladdingPercentage: data.woodCladdingPercentage !== undefined ? Number(data.woodCladdingPercentage) : 0,
-          stoneCladdingPercentage: data.stoneCladdingPercentage !== undefined ? Number(data.stoneCladdingPercentage) : 0
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    12: (props: FormStepProps) => (
-      <MenuiseriesExtForm
-        formData={formData}
-        updateFormData={(data) => onMenuiseriesExtSubmit({
-          windowType: data.windowType || '',
-          windowRenovationArea: data.windowRenovationArea !== undefined ? Number(data.windowRenovationArea) : 0,
-          windowNewArea: data.windowNewArea !== undefined ? Number(data.windowNewArea) : 0
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    13: (props: FormStepProps) => (
+    13: (props) => (
       <IsolationForm
+        {...props}
         formData={formData}
-        updateFormData={(data) => onIsolationSubmit({
-          insulationType: data.insulationType || ''
-        })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
+        onSubmit={onIsolationSubmit}
+        defaultValues={{ insulationType: formData.insulationType }}
+      />
+    ),
+    14: (props) => (
+      <FacadeForm
+        {...props}
+        formData={formData}
+        onSubmit={onFacadeSubmit}
+        defaultValues={{
+          stonePercentage: formData.stonePercentage,
+          plasterPercentage: formData.plasterPercentage,
+          brickPercentage: formData.brickPercentage,
+          metalCladdingPercentage: formData.metalCladdingPercentage,
+          woodCladdingPercentage: formData.woodCladdingPercentage,
+          stoneCladdingPercentage: formData.stoneCladdingPercentage
+        }}
+      />
+    ),
+    15: (props) => (
+      <MenuiseriesExtForm
+        {...props}
+        formData={formData}
+        updateFormData={(data) => {
+          const formData: Partial<FormData> = {
+            windowType: data.windowType,
+            windowRenovationArea: data.windowRenovationArea,
+            windowNewArea: data.windowNewArea
+          };
+          props.updateFormData(formData);
+          props.goToNextStep();
+        }}
       />
     ),
   };

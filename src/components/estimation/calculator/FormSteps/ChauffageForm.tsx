@@ -27,7 +27,7 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
-    const data = {
+    const data: Partial<FormData> = {
       heatingType,
       hasAirConditioning
     };

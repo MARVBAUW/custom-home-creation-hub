@@ -1,53 +1,65 @@
-
-import PlomberieForm from '../../FormSteps/PlomberieForm';
+import React from 'react';
+import { StepComponentRegistry } from './StepComponents';
 import ElectriciteForm from '../../FormSteps/ElectriciteForm';
+import PlomberieForm from '../../FormSteps/PlomberieForm';
 import ChauffageForm from '../../FormSteps/ChauffageForm';
 import { FormData } from '../../types';
-import { StepComponentRegistry } from './StepComponents';
 
 export const createTechnicalStepRegistry = (
   formData: FormData,
-  onElectriciteSubmit: (data: { electricalType: string }) => void,
-  onPlomberieSubmit: (data: { plumbingType: string }) => void,
-  onChauffageSubmit: (data: any) => void,
+  updateFormData: (data: Partial<FormData>) => void,
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
+  // Fix the electricalType submission
+  const onElectriciteSubmit = (data: { electricalType: string }) => {
+    const formData: Partial<FormData> = {
+      electricalType: data.electricalType
+    };
+    
+    updateFormData(formData);
+    goToNextStep();
+  };
+
+  // Fix the plumbingType submission
+  const onPlomberieSubmit = (data: { plumbingType: string }) => {
+    const formData: Partial<FormData> = {
+      plumbingType: data.plumbingType
+    };
+    
+    updateFormData(formData);
+    goToNextStep();
+  };
+
+  const onChauffageSubmit = (data: { heatingType: string, hasAirConditioning: boolean }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+
   return {
     14: (props) => (
       <ElectriciteForm
-        formData={formData}
-        updateFormData={onElectriciteSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{ electricalType: formData.electricalType || 'standard' }}
+        {...props}
+        defaultValues={{ electricalType: formData.electricalType }}
         onSubmit={onElectriciteSubmit}
       />
     ),
     15: (props) => (
       <PlomberieForm
-        formData={formData}
-        updateFormData={onPlomberieSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{ plumbingType: formData.plumbingType || 'standard' }}
+        {...props}
+        defaultValues={{ plumbingType: formData.plumbingType }}
         onSubmit={onPlomberieSubmit}
       />
     ),
     16: (props) => (
       <ChauffageForm
-        formData={formData}
-        updateFormData={onChauffageSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{ 
-          heatingType: formData.heatingType || 'pompe', 
-          hasAirConditioning: formData.hasAirConditioning || true 
-        }}
+        {...props}
+        defaultValues={{ heatingType: formData.heatingType, hasAirConditioning: formData.hasAirConditioning }}
         onSubmit={onChauffageSubmit}
       />
-    )
+    ),
   };
+
+  function goToNextStep() {
+    throw new Error('Function not implemented.');
+  }
 };
