@@ -46,6 +46,18 @@ export interface EstimationTypeFormProps extends BaseFormStepProps {
   onSubmit?: (data: any) => void;
 }
 
+// Construction details form props
+export interface ConstructionDetailsFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    surface: string;
+    levels: string;
+    units: string;
+    constructionType?: string;
+    constructionMode?: string;
+  };
+  onSubmit?: (data: any) => void;
+}
+
 // Terrain form props
 export interface TerrainFormProps extends BaseFormStepProps {
   defaultValues?: { terrainType: string; terrainAccess: string };
@@ -78,23 +90,24 @@ export interface CouvertureFormProps extends BaseFormStepProps {
 
 // Facade form props
 export interface FacadeFormProps extends BaseFormStepProps {
-  defaultValues?: { facadeMaterial: string };
-  onSubmit?: (data: any) => void;
-}
-
-// Facade renovation form props
-export interface FacadeRenovFormProps extends BaseFormStepProps {
   defaultValues?: { 
-    metalCladdingPercentage: number; 
-    woodCladdingPercentage: number; 
-    stoneCladdingPercentage: number 
+    stonePercentage?: number;
+    plasterPercentage?: number;
+    brickPercentage?: number;
+    metalCladdingPercentage?: number;
+    woodCladdingPercentage?: number;
+    stoneCladdingPercentage?: number;
   };
   onSubmit?: (data: any) => void;
 }
 
 // Menuiseries extérieures form props
 export interface MenuiseriesExtFormProps extends BaseFormStepProps {
-  defaultValues?: { windowType: string };
+  defaultValues?: { 
+    windowType?: string;
+    windowRenovationArea?: string;
+    windowNewArea?: string;
+  };
   onSubmit?: (data: any) => void;
 }
 
@@ -130,22 +143,29 @@ export interface PlatrerieFormProps extends BaseFormStepProps {
 
 // Menuiseries intérieures form props
 export interface MenuiseriesIntFormProps extends BaseFormStepProps {
-  defaultValues?: { interiorDoorsType: string };
+  defaultValues?: { 
+    doorType?: string;
+    interiorFittings?: string[];
+  };
   onSubmit?: (data: any) => void;
 }
 
 // Carrelage form props
 export interface CarrelageFormProps extends BaseFormStepProps {
-  defaultValues?: { tileType: string };
+  defaultValues?: { 
+    floorTileType?: string;
+    wallTileType?: string;
+    floorTilePercentage?: number;
+  };
   onSubmit?: (data: any) => void;
 }
 
 // Parquet form props
 export interface ParquetFormProps extends BaseFormStepProps {
   defaultValues?: {
-    floorTilePercentage: number;
-    parquetPercentage: number;
-    softFloorPercentage: number;
+    floorTilePercentage?: number;
+    parquetPercentage?: number;
+    softFloorPercentage?: number;
     parquetType?: string;
     softFloorType?: string;
   };
@@ -155,11 +175,11 @@ export interface ParquetFormProps extends BaseFormStepProps {
 // Peinture form props
 export interface PeintureFormProps extends BaseFormStepProps {
   defaultValues?: {
-    basicPaintPercentage: number | string;
-    decorativePaintPercentage: number | string;
-    wallpaperPercentage: number | string;
-    woodCladPercentage: number | string;
-    stoneCladPercentage: number | string;
+    basicPaintPercentage?: number | string;
+    decorativePaintPercentage?: number | string;
+    wallpaperPercentage?: number | string;
+    woodCladPercentage?: number | string;
+    stoneCladPercentage?: number | string;
   };
   onSubmit?: (data: any) => void;
 }
@@ -167,15 +187,6 @@ export interface PeintureFormProps extends BaseFormStepProps {
 // Aménagement extérieur form props
 export interface AmenagementExtFormProps extends BaseFormStepProps {
   defaultValues?: { exteriorFeatures: string[] };
-  onSubmit?: (data: any) => void;
-}
-
-// Construction details form props
-export interface ConstructionDetailsFormProps extends BaseFormStepProps {
-  defaultValues?: {
-    constructionType: string;
-    constructionMode: string;
-  };
   onSubmit?: (data: any) => void;
 }
 

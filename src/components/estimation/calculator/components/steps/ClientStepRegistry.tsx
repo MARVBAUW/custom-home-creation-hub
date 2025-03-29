@@ -6,6 +6,12 @@ import ProfessionalProjectForm from '../../FormSteps/ProfessionalProjectForm';
 import IndividualProjectForm from '../../FormSteps/IndividualProjectForm';
 import EstimationTypeForm from '../../FormSteps/EstimationTypeForm';
 import { FormData } from '../../types';
+import { 
+  ClientTypeFormProps,
+  ProfessionalProjectFormProps,
+  IndividualProjectFormProps,
+  EstimationTypeFormProps
+} from '../../types/formTypes';
 
 // Registry for client and project type steps (steps 1-4)
 export const createClientStepRegistry = (

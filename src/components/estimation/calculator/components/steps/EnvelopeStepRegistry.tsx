@@ -6,6 +6,12 @@ import IsolationForm from '../../FormSteps/IsolationForm';
 import FacadeForm from '../../FormSteps/FacadeForm';
 import MenuiseriesExtForm from '../../FormSteps/MenuiseriesExtForm';
 import { FormData } from '../../types';
+import {
+  CouvertureFormProps,
+  IsolationFormProps,
+  FacadeFormProps,
+  MenuiseriesExtFormProps
+} from '../../types/formTypes';
 
 // Registry for envelope steps (steps 10-13)
 export const createEnvelopeStepRegistry = (
@@ -26,6 +32,9 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          roofingType: formData.roofingType || ''
+        }}
       />
     ),
     11: (props: FormStepProps) => (
@@ -42,6 +51,14 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          stonePercentage: formData.stonePercentage,
+          plasterPercentage: formData.plasterPercentage,
+          brickPercentage: formData.brickPercentage,
+          metalCladdingPercentage: formData.metalCladdingPercentage,
+          woodCladdingPercentage: formData.woodCladdingPercentage,
+          stoneCladdingPercentage: formData.stoneCladdingPercentage
+        }}
       />
     ),
     12: (props: FormStepProps) => (
@@ -55,6 +72,11 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          windowType: formData.windowType,
+          windowRenovationArea: formData.windowRenovationArea?.toString(),
+          windowNewArea: formData.windowNewArea?.toString()
+        }}
       />
     ),
     13: (props: FormStepProps) => (
@@ -66,6 +88,9 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          insulationType: formData.insulationType || ''
+        }}
       />
     ),
   };

@@ -7,6 +7,13 @@ import CarrelageForm from '../../FormSteps/CarrelageForm';
 import ParquetForm from '../../FormSteps/ParquetForm';
 import PeintureForm from '../../FormSteps/PeintureForm';
 import { FormData } from '../../types';
+import {
+  PlatrerieFormProps,
+  MenuiseriesIntFormProps,
+  CarrelageFormProps,
+  ParquetFormProps,
+  PeintureFormProps
+} from '../../types/formTypes';
 
 // Registry for interior steps (steps 17-21)
 export const createInteriorStepRegistry = (
@@ -28,6 +35,9 @@ export const createInteriorStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          plasteringType: formData.plasteringType || ''
+        }}
       />
     ),
     18: (props: FormStepProps) => (
@@ -40,6 +50,10 @@ export const createInteriorStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          doorType: formData.doorType,
+          interiorFittings: formData.interiorFittings
+        }}
       />
     ),
     19: (props: FormStepProps) => (
@@ -53,6 +67,11 @@ export const createInteriorStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          floorTileType: formData.floorTileType,
+          wallTileType: formData.wallTileType,
+          floorTilePercentage: formData.floorTilePercentage
+        }}
       />
     ),
     20: (props: FormStepProps) => (
@@ -67,6 +86,13 @@ export const createInteriorStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          floorTilePercentage: formData.floorTilePercentage,
+          parquetPercentage: formData.parquetPercentage,
+          softFloorPercentage: formData.softFloorPercentage,
+          parquetType: formData.parquetType,
+          softFloorType: formData.softFloorType
+        }}
       />
     ),
     21: (props: FormStepProps) => (
@@ -82,6 +108,13 @@ export const createInteriorStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
+        defaultValues={{
+          basicPaintPercentage: formData.basicPaintPercentage,
+          decorativePaintPercentage: formData.decorativePaintPercentage,
+          wallpaperPercentage: formData.wallpaperPercentage,
+          woodCladPercentage: formData.woodCladPercentage,
+          stoneCladPercentage: formData.stoneCladPercentage
+        }}
       />
     ),
   };

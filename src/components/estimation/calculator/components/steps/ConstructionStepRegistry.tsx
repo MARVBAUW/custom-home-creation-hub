@@ -6,6 +6,13 @@ import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
 import CharpenteForm from '../../FormSteps/CharpenteForm';
 import ComblesForm from '../../FormSteps/ComblesForm';
+import { 
+  ConstructionDetailsFormProps,
+  TerrainFormProps,
+  GrosOeuvreFormProps,
+  CharpenteFormProps,
+  CombleFormProps
+} from '../../types/formTypes';
 
 export const createConstructionStepRegistry = (
   formData: FormData,
@@ -28,6 +35,11 @@ export const createConstructionStepRegistry = (
           goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
           animationDirection={props.animationDirection}
+          defaultValues={{
+            surface: formData.surface?.toString() || '',
+            levels: formData.levels?.toString() || '',
+            units: formData.units?.toString() || '',
+          }}
         />
       );
     },
@@ -42,6 +54,10 @@ export const createConstructionStepRegistry = (
           goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
           animationDirection={props.animationDirection}
+          defaultValues={{
+            terrainType: formData.terrainType || '',
+            terrainAccess: formData.terrainAccess || '',
+          }}
         />
       );
     },
@@ -56,6 +72,9 @@ export const createConstructionStepRegistry = (
           goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
           animationDirection={props.animationDirection}
+          defaultValues={{
+            wallType: formData.wallType || '',
+          }}
         />
       );
     },
@@ -70,6 +89,9 @@ export const createConstructionStepRegistry = (
           goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
           animationDirection={props.animationDirection}
+          defaultValues={{
+            roofType: formData.roofType || '',
+          }}
         />
       );
     },
@@ -84,6 +106,9 @@ export const createConstructionStepRegistry = (
           goToNextStep={() => {}}
           goToPreviousStep={goToPreviousStep}
           animationDirection={props.animationDirection}
+          defaultValues={{
+            atticType: formData.atticType || '',
+          }}
         />
       );
     },
