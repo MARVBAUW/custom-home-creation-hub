@@ -69,6 +69,19 @@ export interface FormData {
   finishLevel?: string;
   constructionType?: string;
   constructionMode?: string;
+  terrainSurface?: number;
+  terrainAccess?: string;
+  waterConnection?: boolean;
+  electricityConnection?: boolean;
+  gasConnection?: boolean;
+  sewerConnection?: boolean;
+  fiberConnection?: boolean;
+  needsSepticTank?: boolean;
+  floodRisk?: boolean;
+  claySoil?: boolean;
+  rockySoil?: boolean;
+  wetlandZone?: boolean;
+  heritageZone?: boolean;
   [key: string]: any;
 }
 
@@ -84,11 +97,4 @@ export const EstimationTypeSchema = z.object({
 });
 
 // Exporter tous les autres types depuis les fichiers individuels
-export * from './baseTypes';
-export * from './clientTypes';
-export * from './constructionTypes';
-export * from './envelopeTypes';
-export * from './interiorTypes';
-export * from './renovationTypes';
-export * from './roomsTypes';
-export * from './specialFeaturesTypes';
+export * from './formTypes';

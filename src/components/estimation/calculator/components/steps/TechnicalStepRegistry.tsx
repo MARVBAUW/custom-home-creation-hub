@@ -17,31 +17,34 @@ export const createTechnicalStepRegistry = (
   return {
     14: (props: FormStepProps) => (
       <ElectriciteForm
-        defaultValues={{
-          electricalType: formData.electricalType,
-        }}
-        onSubmit={onElectriciteSubmit}
+        formData={formData}
+        updateFormData={(data) => onElectriciteSubmit({
+          electricalType: data.electricalType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     15: (props: FormStepProps) => (
       <PlomberieForm
-        defaultValues={{
-          plumbingType: formData.plumbingType,
-        }}
-        onSubmit={onPlomberieSubmit}
+        formData={formData}
+        updateFormData={(data) => onPlomberieSubmit({
+          plumbingType: data.plumbingType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     16: (props: FormStepProps) => (
       <ChauffageForm
-        defaultValues={{
-          heatingType: formData.heatingType,
-          hasAirConditioning: formData.hasAirConditioning,
-        }}
-        onSubmit={onChauffageSubmit}
+        formData={formData}
+        updateFormData={(data) => onChauffageSubmit({
+          heatingType: data.heatingType || '',
+          hasAirConditioning: Boolean(data.hasAirConditioning)
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />

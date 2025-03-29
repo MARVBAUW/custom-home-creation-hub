@@ -95,6 +95,7 @@ const StructuredEstimator = () => {
                  formData={formData}
                  updateFormData={updateFormData}
                  goToNextStep={goToNextStep}
+                 goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 1:
@@ -254,6 +255,7 @@ const StructuredEstimator = () => {
                  formData={formData}
                  updateFormData={updateFormData}
                  goToNextStep={goToNextStep}
+                 goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
     }

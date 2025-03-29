@@ -80,6 +80,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
             formData={formData}
             updateFormData={(data) => onClientTypeSubmit(data as { clientType: string })}
             goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );

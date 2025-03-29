@@ -4,20 +4,6 @@ import { StepComponentRegistry, FormStepProps } from './StepComponents';
 import ContactForm from '../../FormSteps/ContactForm';
 import { FormData } from '../../types';
 
-// Interface for ContactForm props
-interface ContactFormProps {
-  defaultValues: {
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    email?: string;
-    message?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
 // Registry for the contact step (final step)
 export const createContactStepRegistry = (
   formData: FormData,
@@ -28,14 +14,15 @@ export const createContactStepRegistry = (
   return {
     contact: (props: FormStepProps) => (
       <ContactForm
-        defaultValues={{
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          phone: formData.phone,
-          email: formData.email,
-          message: formData.message
-        }}
-        onSubmit={onContactSubmit}
+        formData={formData}
+        updateFormData={(data) => onContactSubmit({
+          firstName: data.firstName || '',
+          lastName: data.lastName || '',
+          phone: data.phone || '',
+          email: data.email || '',
+          message: data.message || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />

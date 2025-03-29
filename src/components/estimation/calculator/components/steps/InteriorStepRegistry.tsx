@@ -21,60 +21,65 @@ export const createInteriorStepRegistry = (
   return {
     17: (props: FormStepProps) => (
       <PlatrerieForm
-        defaultValues={{
-          plasteringType: formData.plasteringType,
-        }}
-        onSubmit={onPlatrerieSubmit}
+        formData={formData}
+        updateFormData={(data) => onPlatrerieSubmit({
+          plasteringType: data.plasteringType || ''
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     18: (props: FormStepProps) => (
       <MenuiseriesIntForm
-        defaultValues={{
-          doorType: formData.doorType,
-          interiorFittings: formData.interiorFittings,
-        }}
-        onSubmit={onMenuiseriesIntSubmit}
+        formData={formData}
+        updateFormData={(data) => onMenuiseriesIntSubmit({
+          doorType: data.doorType || '',
+          interiorFittings: Array.isArray(data.interiorFittings) ? data.interiorFittings : []
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     19: (props: FormStepProps) => (
       <CarrelageForm
-        defaultValues={{
-          floorTileType: formData.floorTileType,
-          wallTileType: formData.wallTileType,
-          floorTilePercentage: formData.floorTilePercentage,
-        }}
-        onSubmit={onCarrelageSubmit}
+        formData={formData}
+        updateFormData={(data) => onCarrelageSubmit({
+          floorTileType: data.floorTileType || '',
+          wallTileType: data.wallTileType || '',
+          floorTilePercentage: data.floorTilePercentage !== undefined ? Number(data.floorTilePercentage) : 0
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     20: (props: FormStepProps) => (
       <ParquetForm
-        defaultValues={{
-          parquetType: formData.parquetType,
-          parquetPercentage: formData.parquetPercentage,
-          softFloorType: formData.softFloorType,
-          softFloorPercentage: formData.softFloorPercentage,
-        }}
-        onSubmit={onParquetSubmit}
+        formData={formData}
+        updateFormData={(data) => onParquetSubmit({
+          parquetType: data.parquetType || '',
+          parquetPercentage: data.parquetPercentage !== undefined ? Number(data.parquetPercentage) : 0,
+          softFloorType: data.softFloorType || '',
+          softFloorPercentage: data.softFloorPercentage !== undefined ? Number(data.softFloorPercentage) : 0
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />
     ),
     21: (props: FormStepProps) => (
       <PeintureForm
-        defaultValues={{
-          basicPaintPercentage: formData.basicPaintPercentage,
-          decorativePaintPercentage: formData.decorativePaintPercentage,
-          wallpaperPercentage: formData.wallpaperPercentage,
-          woodCladPercentage: formData.woodCladPercentage,
-          stoneCladPercentage: formData.stoneCladPercentage,
-        }}
-        onSubmit={onPeintureSubmit}
+        formData={formData}
+        updateFormData={(data) => onPeintureSubmit({
+          basicPaintPercentage: data.basicPaintPercentage !== undefined ? Number(data.basicPaintPercentage) : 0,
+          decorativePaintPercentage: data.decorativePaintPercentage !== undefined ? Number(data.decorativePaintPercentage) : 0,
+          wallpaperPercentage: data.wallpaperPercentage !== undefined ? Number(data.wallpaperPercentage) : 0,
+          woodCladPercentage: data.woodCladPercentage !== undefined ? Number(data.woodCladPercentage) : 0,
+          stoneCladPercentage: data.stoneCladPercentage !== undefined ? Number(data.stoneCladPercentage) : 0
+        })}
+        goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
       />

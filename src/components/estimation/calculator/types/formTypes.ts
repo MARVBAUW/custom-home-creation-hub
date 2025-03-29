@@ -19,6 +19,7 @@ export interface FormDataStepProps extends BaseFormStepProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
 }
 
 // Common interface for step registry components
@@ -29,7 +30,8 @@ export interface StepComponentProps {
   skipCondition: (formData: FormData) => boolean;
 }
 
-// Form component interfaces
+// Form component interfaces - all inheriting from FormDataStepProps for consistency
+export interface ClientTypeFormProps extends FormDataStepProps {}
 export interface ProjectDetailsFormProps extends FormDataStepProps {}
 export interface TerrainFormProps extends FormDataStepProps {}
 export interface GrosOeuvreFormProps extends FormDataStepProps {}
@@ -48,11 +50,11 @@ export interface ParquetFormProps extends FormDataStepProps {}
 export interface PeintureFormProps extends FormDataStepProps {}
 export interface ContactFormProps extends FormDataStepProps {}
 export interface AmenagementExtFormProps extends FormDataStepProps {}
+export interface ConstructionDetailsFormProps extends FormDataStepProps {}
+export interface CombleFormProps extends FormDataStepProps {}
 export interface ClientTypeFormProps extends FormDataStepProps {}
-export interface ResultsFormProps {
+export interface ResultsFormProps extends BaseFormStepProps {
   estimationResult: number;
   formData: FormData;
   categoriesAmounts: { category: string; amount: number; }[];
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
 }

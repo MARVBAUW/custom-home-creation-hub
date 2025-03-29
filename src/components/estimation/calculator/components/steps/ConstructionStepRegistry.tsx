@@ -23,9 +23,9 @@ export const createConstructionStepRegistry = (
       <ConstructionDetailsForm
         formData={formData}
         updateFormData={(data) => onConstructionDetailsSubmit({
-          surface: data.surface ? String(data.surface) : '',
-          levels: data.levels ? String(data.levels) : '',
-          units: data.units ? String(data.units) : ''
+          surface: data.surface ? Number(data.surface) : 0,
+          levels: data.levels ? Number(data.levels) : 0,
+          units: data.units ? Number(data.units) : 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}

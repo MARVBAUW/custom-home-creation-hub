@@ -1,28 +1,22 @@
 
 import React from 'react';
-import { FormData } from '../types';
+import { FormData, ClientTypeFormProps } from '../types';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { User, Building2, ArrowRightIcon } from 'lucide-react';
 
-interface ClientTypeFormProps {
-  defaultValues: {
-    clientType?: string;
-  };
-  onSubmit: (data: { clientType: string }) => void;
-  animationDirection: 'forward' | 'backward';
-}
-
 const ClientTypeForm: React.FC<ClientTypeFormProps> = ({ 
-  defaultValues,
-  onSubmit,
+  formData,
+  updateFormData,
+  goToNextStep,
   animationDirection
 }) => {
-  const [clientType, setClientType] = React.useState<string>(defaultValues.clientType || "");
+  const [clientType, setClientType] = React.useState<string>(formData.clientType || "");
 
   const handleContinue = (selectedType: string) => {
     setClientType(selectedType);
-    onSubmit({ clientType: selectedType });
+    updateFormData({ clientType: selectedType });
+    goToNextStep();
   };
 
   return (
@@ -64,7 +58,10 @@ const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
       
       <div className="mt-6 text-center">
         <Button
-          onClick={() => onSubmit({ clientType })}
+          onClick={() => {
+            updateFormData({ clientType });
+            goToNextStep();
+          }}
           disabled={!clientType}
           className="bg-progineer-gold hover:bg-progineer-gold/90"
         >
