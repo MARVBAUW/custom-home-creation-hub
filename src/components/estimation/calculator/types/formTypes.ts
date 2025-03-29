@@ -8,12 +8,7 @@ export interface BaseFormStepProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
-}
-
-// Form step props for components that use defaultValues and onSubmit pattern
-export interface FormStepProps<T = any> extends BaseFormStepProps {
-  defaultValues?: T;
-  onSubmit?: (data: T) => void;
+  defaultValues?: any;
 }
 
 // Client type form props
@@ -91,12 +86,12 @@ export interface CouvertureFormProps extends BaseFormStepProps {
 // Facade form props
 export interface FacadeFormProps extends BaseFormStepProps {
   defaultValues?: { 
-    stonePercentage?: number;
-    plasterPercentage?: number;
-    brickPercentage?: number;
-    metalCladdingPercentage?: number;
-    woodCladdingPercentage?: number;
-    stoneCladdingPercentage?: number;
+    stonePercentage?: number | string;
+    plasterPercentage?: number | string;
+    brickPercentage?: number | string;
+    metalCladdingPercentage?: number | string;
+    woodCladdingPercentage?: number | string;
+    stoneCladdingPercentage?: number | string;
   };
   onSubmit?: (data: any) => void;
 }
@@ -131,7 +126,7 @@ export interface PlomberieFormProps extends BaseFormStepProps {
 
 // Chauffage form props
 export interface ChauffageFormProps extends BaseFormStepProps {
-  defaultValues?: { heatingType: string; hasAirConditioning: boolean };
+  defaultValues?: { heatingType: string; hasAirConditioning: boolean | string };
   onSubmit?: (data: any) => void;
 }
 
@@ -155,7 +150,7 @@ export interface CarrelageFormProps extends BaseFormStepProps {
   defaultValues?: { 
     floorTileType?: string;
     wallTileType?: string;
-    floorTilePercentage?: number;
+    floorTilePercentage?: number | string;
   };
   onSubmit?: (data: any) => void;
 }
@@ -163,9 +158,9 @@ export interface CarrelageFormProps extends BaseFormStepProps {
 // Parquet form props
 export interface ParquetFormProps extends BaseFormStepProps {
   defaultValues?: {
-    floorTilePercentage?: number;
-    parquetPercentage?: number;
-    softFloorPercentage?: number;
+    floorTilePercentage?: number | string;
+    parquetPercentage?: number | string;
+    softFloorPercentage?: number | string;
     parquetType?: string;
     softFloorType?: string;
   };

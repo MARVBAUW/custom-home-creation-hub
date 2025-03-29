@@ -51,8 +51,8 @@ export const createInteriorStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          doorType: formData.doorType,
-          interiorFittings: formData.interiorFittings
+          doorType: formData.doorType || '',
+          interiorFittings: formData.interiorFittings || []
         }}
       />
     ),
@@ -68,9 +68,9 @@ export const createInteriorStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          floorTileType: formData.floorTileType,
-          wallTileType: formData.wallTileType,
-          floorTilePercentage: formData.floorTilePercentage
+          floorTileType: formData.floorTileType || '',
+          wallTileType: formData.wallTileType || '',
+          floorTilePercentage: formData.floorTilePercentage?.toString() || '0'
         }}
       />
     ),
@@ -87,11 +87,11 @@ export const createInteriorStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          floorTilePercentage: formData.floorTilePercentage,
-          parquetPercentage: formData.parquetPercentage,
-          softFloorPercentage: formData.softFloorPercentage,
-          parquetType: formData.parquetType,
-          softFloorType: formData.softFloorType
+          floorTilePercentage: formData.floorTilePercentage?.toString() || '0',
+          parquetPercentage: formData.parquetPercentage?.toString() || '0',
+          softFloorPercentage: formData.softFloorPercentage?.toString() || '0',
+          parquetType: formData.parquetType || '',
+          softFloorType: formData.softFloorType || ''
         }}
       />
     ),
@@ -109,11 +109,11 @@ export const createInteriorStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          basicPaintPercentage: formData.basicPaintPercentage,
-          decorativePaintPercentage: formData.decorativePaintPercentage,
-          wallpaperPercentage: formData.wallpaperPercentage,
-          woodCladPercentage: formData.woodCladPercentage,
-          stoneCladPercentage: formData.stoneCladPercentage
+          basicPaintPercentage: formData.basicPaintPercentage?.toString() || '0',
+          decorativePaintPercentage: formData.decorativePaintPercentage?.toString() || '0',
+          wallpaperPercentage: formData.wallpaperPercentage?.toString() || '0',
+          woodCladPercentage: formData.woodCladPercentage?.toString() || '0',
+          stoneCladPercentage: formData.stoneCladPercentage?.toString() || '0'
         }}
       />
     ),

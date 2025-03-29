@@ -52,12 +52,12 @@ export const createEnvelopeStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          stonePercentage: formData.stonePercentage,
-          plasterPercentage: formData.plasterPercentage,
-          brickPercentage: formData.brickPercentage,
-          metalCladdingPercentage: formData.metalCladdingPercentage,
-          woodCladdingPercentage: formData.woodCladdingPercentage,
-          stoneCladdingPercentage: formData.stoneCladdingPercentage
+          stonePercentage: formData.stonePercentage?.toString() || '0',
+          plasterPercentage: formData.plasterPercentage?.toString() || '0',
+          brickPercentage: formData.brickPercentage?.toString() || '0',
+          metalCladdingPercentage: formData.metalCladdingPercentage?.toString() || '0',
+          woodCladdingPercentage: formData.woodCladdingPercentage?.toString() || '0',
+          stoneCladdingPercentage: formData.stoneCladdingPercentage?.toString() || '0'
         }}
       />
     ),
@@ -73,9 +73,9 @@ export const createEnvelopeStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          windowType: formData.windowType,
-          windowRenovationArea: formData.windowRenovationArea?.toString(),
-          windowNewArea: formData.windowNewArea?.toString()
+          windowType: formData.windowType || '',
+          windowRenovationArea: formData.windowRenovationArea?.toString() || '0',
+          windowNewArea: formData.windowNewArea?.toString() || '0'
         }}
       />
     ),
