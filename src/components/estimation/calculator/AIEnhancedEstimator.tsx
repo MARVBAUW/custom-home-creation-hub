@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Loader2, Calculator, ExternalLink, Download, Save, MessageSquare, X, ChevronRight, ChevronDown, PlusCircle } from 'lucide-react';
+import { Send, Loader2, Calculator, ExternalLink, Download, Save, MessageSquare, X, ChevronRight, ChevronDown, PlusCircle, Check } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -526,27 +526,27 @@ const AIEnhancedEstimator: React.FC = () => {
                         <div className="space-y-2">
                           <div className="flex justify-between border-b pb-2">
                             <span>Coût des matériaux</span>
-                            <span className="font-medium">{Math.round(estimationResult * 0.6).toLocaleString('fr-FR')} €</span>
+                            <span className="font-medium">{Math.round(estimationResult! * 0.6).toLocaleString('fr-FR')} €</span>
                           </div>
                           <div className="flex justify-between border-b pb-2">
                             <span>Main d'œuvre</span>
-                            <span className="font-medium">{Math.round(estimationResult * 0.35).toLocaleString('fr-FR')} €</span>
+                            <span className="font-medium">{Math.round(estimationResult! * 0.35).toLocaleString('fr-FR')} €</span>
                           </div>
                           <div className="flex justify-between border-b pb-2">
                             <span>Frais d'étude</span>
-                            <span className="font-medium">{Math.round(estimationResult * 0.05).toLocaleString('fr-FR')} €</span>
+                            <span className="font-medium">{Math.round(estimationResult! * 0.05).toLocaleString('fr-FR')} €</span>
                           </div>
                           <div className="flex justify-between pt-2 font-bold">
                             <span>Total HT</span>
-                            <span>{Math.round(estimationResult / 1.2).toLocaleString('fr-FR')} €</span>
+                            <span>{Math.round(estimationResult! / 1.2).toLocaleString('fr-FR')} €</span>
                           </div>
                           <div className="flex justify-between pt-1 font-bold">
                             <span>TVA (20%)</span>
-                            <span>{Math.round(estimationResult - (estimationResult / 1.2)).toLocaleString('fr-FR')} €</span>
+                            <span>{Math.round(estimationResult! - (estimationResult! / 1.2)).toLocaleString('fr-FR')} €</span>
                           </div>
                           <div className="flex justify-between pt-2 text-lg font-bold text-green-700 dark:text-green-300">
                             <span>Total TTC</span>
-                            <span>{estimationResult.toLocaleString('fr-FR')} €</span>
+                            <span>{estimationResult!.toLocaleString('fr-FR')} €</span>
                           </div>
                         </div>
                       </AccordionContent>
@@ -582,7 +582,7 @@ const AIEnhancedEstimator: React.FC = () => {
                   </Accordion>
 
                   {renderActionButtons()}
-                </div>
+                </>
               )}
             </TabsContent>
           </Tabs>
