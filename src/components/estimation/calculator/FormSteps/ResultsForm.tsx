@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
@@ -9,13 +8,13 @@ import EstimationReport from '../EstimationReport';
 import DetailedEstimationReport from '../DetailedEstimationReport';
 import EstimationSummaryReport from '../EstimationSummaryReport';
 import ProfessionalQuoteReport from '../ProfessionalQuoteReport';
-import { generatePDF } from '../utils/pdfGenerator';
+import { generateEstimationPDF } from '../utils/pdfGenerator';
 import { useToast } from '@/hooks/use-toast';
 
 interface ResultsFormProps {
   formData: FormData;
   estimationResult: number | null;
-  categoriesAmounts: any[];
+  categoriesAmounts: { category: string; amount: number; }[];
   goToPreviousStep: () => void;
   animationDirection?: 'forward' | 'backward';
 }
@@ -66,7 +65,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   // Handle PDF download
   const handleDownloadPDF = () => {
     try {
-      const pdfName = generatePDF(formData, estimationData);
+      const pdfName = generateEstimationPDF(formData, estimationData.totalHT, !!formData.landPrice);
       toast({
         title: "PDF généré avec succès",
         description: `Votre estimation a été téléchargée sous le nom "${pdfName}"`,

@@ -1,19 +1,24 @@
-// Import section with jsPDF correctly imported
 
+// Import section with jsPDF correctly imported
 import { jsPDF as JSPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
 
-// Define the extended jsPDF type
+// Define extended types for jsPDF with autoTable 
+// This correctly handles the TypeScript integration with the jsPDF-autotable plugin
+type PageInfo = {
+  pageNumber: number;
+  pageContext: any;
+  objId: number;
+};
+
 interface ExtendedJSPDF extends JSPDF {
   getNumberOfPages: () => number;
-  getCurrentPageInfo: () => {
-    pageNumber: number;
-    pageContext: any;
-  };
+  getCurrentPageInfo: () => PageInfo;
+  autoTable: (options: any) => any;
 }
 
-// Function to generate the PDF document
+// Function to generate the PDF document - making sure we export with both names for backward compatibility
 export const generateEstimationPDF = (formData: FormData, estimationResult: number | null, includeTerrainPrice: boolean = false) => {
   // Initialize jsPDF
   const doc = new JSPDF() as ExtendedJSPDF;
@@ -133,7 +138,8 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
     { item: 'Second oeuvre', cost: estimationResult ? (estimationResult * 0.3).toFixed(2) : 'N/A' },
   ];
 
-  (doc as ExtendedJSPDF).autoTable({
+  // @ts-ignore - handle autoTable typing issues
+  doc.autoTable({
     head: [['Poste', 'Coût (€)']],
     body: detailedCosts.map(item => [item.item, item.cost]),
     startY: y + 10,
@@ -153,5 +159,10 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
   footer(doc);
 
   // Generate the PDF file
-  return doc.output('datauristring');
+  const pdfName = `estimation-projet-${new Date().toISOString().split('T')[0]}.pdf`;
+  doc.save(pdfName);
+  return pdfName;
 };
+
+// Export with the name that's being imported in other files
+export const generatePDF = generateEstimationPDF;

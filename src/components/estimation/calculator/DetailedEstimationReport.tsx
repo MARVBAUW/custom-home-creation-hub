@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from './types';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,7 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from './utils';
 import Logo from '@/components/common/Logo';
 import { Separator } from '@/components/ui/separator';
-import { generatePDF } from './utils/pdfGenerator';
+import { generateEstimationPDF } from './utils/pdfGenerator';
 
 interface EstimationReportProps {
   estimation: any;
@@ -72,7 +71,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
         }), {})
       };
       
-      const pdfName = generatePDF(formData, estimationData);
+      const pdfName = generateEstimationPDF(formData, estimationData.totalHT, includeTerrainPrice);
       
       toast({
         title: "PDF téléchargé",
