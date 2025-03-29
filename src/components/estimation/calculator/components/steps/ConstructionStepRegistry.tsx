@@ -6,7 +6,7 @@ import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
 import CharpenteForm from '../../FormSteps/CharpenteForm';
 import CombleForm from '../../FormSteps/CombleForm';
-import { FormData, FormDataStepProps } from '../../types';
+import { FormData, FormStepProps as ProjectFormStepProps } from '../../types';
 
 // Registry for construction steps (steps 5-9)
 export const createConstructionStepRegistry = (

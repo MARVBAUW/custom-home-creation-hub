@@ -19,13 +19,22 @@ export const createClientStepRegistry = (
   return {
     1: (props: FormStepProps) => (
       <ClientTypeForm
+        formData={formData}
+        updateFormData={(data) => onClientTypeSubmit({ clientType: data.clientType || '' })}
+        goToNextStep={() => {}}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
         defaultValues={{ clientType: formData.clientType }}
         onSubmit={onClientTypeSubmit}
-        animationDirection={props.animationDirection}
       />
     ),
     2: (props: FormStepProps) => (
       <ProfessionalProjectForm
+        formData={formData}
+        updateFormData={onProfessionalProjectSubmit}
+        goToNextStep={() => {}}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
         defaultValues={{
           activity: formData.activity,
           projectType: formData.projectType,
@@ -33,29 +42,33 @@ export const createClientStepRegistry = (
           endDate: formData.endDate,
         }}
         onSubmit={onProfessionalProjectSubmit}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
       />
     ),
     3: (props: FormStepProps) => (
       <IndividualProjectForm
+        formData={formData}
+        updateFormData={onIndividualProjectSubmit}
+        goToNextStep={() => {}}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
         defaultValues={{
           projectType: formData.projectType,
         }}
         onSubmit={onIndividualProjectSubmit}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
       />
     ),
     4: (props: FormStepProps) => (
       <EstimationTypeForm
+        formData={formData}
+        updateFormData={onEstimationTypeSubmit}
+        goToNextStep={() => {}}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={props.animationDirection}
         defaultValues={{
           estimationType: formData.estimationType,
           termsAccepted: formData.termsAccepted || false,
         }}
         onSubmit={onEstimationTypeSubmit}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
       />
     ),
   };

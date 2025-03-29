@@ -18,24 +18,68 @@ export interface FormStepProps<T = any> extends BaseFormStepProps {
 }
 
 // Form component interfaces - all inheriting from BaseFormStepProps for consistency
-export interface ClientTypeFormProps extends BaseFormStepProps {}
+export interface ClientTypeFormProps extends BaseFormStepProps {
+  defaultValues?: { clientType: string };
+  onSubmit?: (data: { clientType: string }) => void;
+}
 export interface ProjectDetailsFormProps extends BaseFormStepProps {}
 export interface TerrainFormProps extends BaseFormStepProps {}
 export interface GrosOeuvreFormProps extends BaseFormStepProps {}
-export interface CharpenteFormProps extends BaseFormStepProps {}
-export interface CombleFormProps extends BaseFormStepProps {}
-export interface CouvertureFormProps extends BaseFormStepProps {}
+export interface CharpenteFormProps extends BaseFormStepProps {
+  defaultValues?: { roofType: string };
+}
+export interface CombleFormProps extends BaseFormStepProps {
+  defaultValues?: { atticType: string };
+}
+export interface CouvertureFormProps extends BaseFormStepProps {
+  defaultValues?: { roofingType: string };
+}
 export interface FacadeFormProps extends BaseFormStepProps {}
-export interface MenuiseriesExtFormProps extends BaseFormStepProps {}
-export interface IsolationFormProps extends BaseFormStepProps {}
-export interface ElectriciteFormProps extends BaseFormStepProps {}
-export interface PlomberieFormProps extends BaseFormStepProps {}
-export interface ChauffageFormProps extends BaseFormStepProps {}
-export interface PlatrerieFormProps extends BaseFormStepProps {}
-export interface MenuiseriesIntFormProps extends BaseFormStepProps {}
-export interface CarrelageFormProps extends BaseFormStepProps {}
-export interface ParquetFormProps extends BaseFormStepProps {}
-export interface PeintureFormProps extends BaseFormStepProps {}
+export interface MenuiseriesExtFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    windowType?: string;
+    windowRenovationArea?: string;
+    windowNewArea?: string;
+  };
+}
+export interface IsolationFormProps extends BaseFormStepProps {
+  defaultValues?: { insulationType: string };
+}
+export interface ElectriciteFormProps extends BaseFormStepProps {
+  defaultValues?: { electricalType: string };
+}
+export interface PlomberieFormProps extends BaseFormStepProps {
+  defaultValues?: { plumbingType: string };
+}
+export interface ChauffageFormProps extends BaseFormStepProps {
+  defaultValues?: { heatingType: string; hasAirConditioning: boolean };
+}
+export interface PlatrerieFormProps extends BaseFormStepProps {
+  defaultValues?: { plasteringType: string };
+}
+export interface MenuiseriesIntFormProps extends BaseFormStepProps {
+  defaultValues?: { doorType: string; interiorFittings: string[] };
+}
+export interface CarrelageFormProps extends BaseFormStepProps {
+  defaultValues?: { floorTileType: string; wallTileType: string; floorTilePercentage: number };
+}
+export interface ParquetFormProps extends BaseFormStepProps {
+  defaultValues?: { 
+    parquetType: string; 
+    parquetPercentage: number;
+    softFloorType: string;
+    softFloorPercentage: number;
+  };
+}
+export interface PeintureFormProps extends BaseFormStepProps {
+  defaultValues?: {
+    basicPaintPercentage: number;
+    decorativePaintPercentage: number;
+    wallpaperPercentage: number;
+    woodCladPercentage: number;
+    stoneCladPercentage: number;
+  };
+}
 export interface ContactFormProps extends BaseFormStepProps {}
 export interface AmenagementExtFormProps extends BaseFormStepProps {}
 export interface ConstructionDetailsFormProps extends BaseFormStepProps {}
