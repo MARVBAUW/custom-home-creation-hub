@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Building } from "lucide-react";
 import { motion } from 'framer-motion';
-import { ConstructionDetailsSchema } from '../types';
+import { ConstructionDetailsSchema } from '../types/validationSchemas';
 import { slideVariants } from '../animations';
 
 type ConstructionDetailsFormProps = {

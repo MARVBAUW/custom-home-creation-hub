@@ -9,10 +9,12 @@ const onSalleDeBainSubmit = (data: {
   bathroomType: string;
   bathroomBudget: string;
 }) => {
-  updateFormData({
+  const updatedData: Partial<FormData> = {
     bathroomType: data.bathroomType,
     bathroomBudget: data.bathroomBudget
-  });
+  };
+  
+  updateFormData(updatedData);
   setStep(27); // Contact
 };
 
@@ -20,10 +22,12 @@ const onCuisineSubmit = (data: {
   kitchenType: string;
   kitchenBudget: string;
 }) => {
-  updateFormData({
+  const updatedData: Partial<FormData> = {
     kitchenType: data.kitchenType,
     kitchenBudget: data.kitchenBudget
-  });
+  };
+  
+  updateFormData(updatedData);
   setStep(26); // Salle de bain
 };
 

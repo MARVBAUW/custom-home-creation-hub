@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import EstimationSummaryReport from '../EstimationSummaryReport';
 import ProfessionalQuoteReport from '../ProfessionalQuoteReport';
 import { generateEstimationPDF } from '../utils/pdfGenerator';
 import { useToast } from '@/hooks/use-toast';
+import { parseToNumber } from '../utils/typeConversions';
 
 interface ResultsFormProps {
   formData: FormData;
@@ -29,22 +31,26 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   const [activeTab, setActiveTab] = useState("summary");
   const { toast } = useToast();
   
+  // Use parseToNumber to safely handle numeric conversions
+  const resultAmount = parseToNumber(estimationResult, 0);
+  const landPriceValue = parseToNumber(formData.landPrice, 0);
+  
   // Simuler les données d'estimation
   const estimationData = {
-    totalHT: estimationResult || 0,
-    totalTTC: (estimationResult || 0) * 1.2,
-    vat: (estimationResult || 0) * 0.2,
-    coutGlobalHT: (estimationResult || 0) * 1.15,
-    coutGlobalTTC: (estimationResult || 0) * 1.15 * 1.2,
-    honorairesHT: (estimationResult || 0) * 0.1,
-    taxeAmenagement: (estimationResult || 0) * 0.03,
-    garantieDecennale: (estimationResult || 0) * 0.01,
-    etudesGeotechniques: (estimationResult || 0) * 0.005,
-    etudeThermique: (estimationResult || 0) * 0.005,
+    totalHT: resultAmount,
+    totalTTC: resultAmount * 1.2,
+    vat: resultAmount * 0.2,
+    coutGlobalHT: resultAmount * 1.15,
+    coutGlobalTTC: resultAmount * 1.15 * 1.2,
+    honorairesHT: resultAmount * 0.1,
+    taxeAmenagement: resultAmount * 0.03,
+    garantieDecennale: resultAmount * 0.01,
+    etudesGeotechniques: resultAmount * 0.005,
+    etudeThermique: resultAmount * 0.005,
     // Include land price and notary fees
-    terrainPrice: formData.landPrice || 0,
-    fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
-    coutTotalAvecTerrain: (estimationResult || 0) * 1.2 + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0),
+    terrainPrice: landPriceValue,
+    fraisNotaire: landPriceValue * 0.08,
+    coutTotalAvecTerrain: resultAmount * 1.2 + landPriceValue + (landPriceValue * 0.08),
     corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
       ...acc,
       [cat.category]: {
@@ -92,7 +98,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
           </div>
           
           <div className="text-lg mb-4">
-            Montant estimatif HT : <span className="font-bold">{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(estimationResult || 0)}</span>
+            Montant estimatif HT : <span className="font-bold">{new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(resultAmount)}</span>
           </div>
           
           <div className="text-sm text-gray-600 mb-6">
@@ -148,68 +154,35 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
           <TabsTrigger value="quote">Devis</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="summary" className="mt-4">
+        <TabsContent value="summary">
           <EstimationSummaryReport 
             formData={formData}
-            estimationResult={estimationResult}
+            estimationResult={resultAmount}
             categoriesAmounts={categoriesAmounts}
           />
         </TabsContent>
         
-        <TabsContent value="details" className="mt-4">
+        <TabsContent value="details">
           <DetailedEstimationReport 
             formData={formData}
-            estimation={{
-              totalHT: estimationResult || 0,
-              totalTTC: (estimationResult || 0) * 1.2,
-              terrassement: categoriesAmounts.find(cat => cat.category === 'Terrassement')?.amount || 0,
-              fondations: categoriesAmounts.find(cat => cat.category === 'Fondations')?.amount || 0,
-              elevationMurs: categoriesAmounts.find(cat => cat.category === 'Élévation des murs')?.amount || 0,
-              charpente: categoriesAmounts.find(cat => cat.category === 'Charpente')?.amount || 0,
-              couverture: categoriesAmounts.find(cat => cat.category === 'Couverture')?.amount || 0,
-              menuiseriesExterieures: categoriesAmounts.find(cat => cat.category === 'Menuiseries extérieures')?.amount || 0,
-              isolation: categoriesAmounts.find(cat => cat.category === 'Isolation')?.amount || 0,
-              plomberie: categoriesAmounts.find(cat => cat.category === 'Plomberie')?.amount || 0,
-              electricite: categoriesAmounts.find(cat => cat.category === 'Électricité')?.amount || 0,
-              chauffage: categoriesAmounts.find(cat => cat.category === 'Chauffage')?.amount || 0,
-              revetementSol: categoriesAmounts.find(cat => cat.category === 'Revêtements de sol')?.amount || 0,
-              revetementMural: categoriesAmounts.find(cat => cat.category === 'Revêtements muraux')?.amount || 0,
-              peinture: categoriesAmounts.find(cat => cat.category === 'Peinture')?.amount || 0,
-              amenagementsExterieurs: categoriesAmounts.find(cat => cat.category === 'Aménagements extérieurs')?.amount || 0,
-              fraisAnnexes: categoriesAmounts.find(cat => cat.category === 'Frais annexes')?.amount || 0,
-              honorairesArchitecte: categoriesAmounts.find(cat => cat.category === 'Honoraires architecte')?.amount || 0,
-              taxeAmenagement: categoriesAmounts.find(cat => cat.category === 'Taxe aménagement')?.amount || 0,
-              etudesGeotechniques: categoriesAmounts.find(cat => cat.category === 'Études géotechniques')?.amount || 0,
-              etudeThermique: categoriesAmounts.find(cat => cat.category === 'Étude thermique')?.amount || 0,
-              garantieDecennale: categoriesAmounts.find(cat => cat.category === 'Garantie décennale')?.amount || 0,
-              fraisNotaire: formData.landPrice ? formData.landPrice * 0.08 : 0,
-              coutTotalAvecTerrain: (estimationResult || 0) * 1.2 + (formData.landPrice || 0) + (formData.landPrice ? formData.landPrice * 0.08 : 0)
-            }}
-            includeTerrainPrice={!!formData.landPrice}
+            estimationResult={resultAmount}
+            includeTerrainPrice={landPriceValue > 0}
           />
         </TabsContent>
         
-        <TabsContent value="charts" className="mt-4">
+        <TabsContent value="charts">
           <Card>
-            <CardContent className="pt-6">
-              <div className="flex items-center gap-2 mb-4">
-                <PieChart className="h-5 w-5 text-progineer-gold" />
-                <h3 className="text-xl font-semibold">Visualisation des coûts</h3>
-              </div>
-              
-              <EstimationReport 
-                estimation={estimationData}
-                formData={formData}
-                includeTerrainPrice={!!formData.landPrice}
-              />
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Répartition des coûts</h3>
+              <p className="text-sm text-gray-500">Graphiques en cours de chargement...</p>
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="quote" className="mt-4">
+        <TabsContent value="quote">
           <ProfessionalQuoteReport 
             formData={formData}
-            estimationResult={estimationResult}
+            estimationResult={resultAmount}
             onPrint={handlePrint}
           />
         </TabsContent>

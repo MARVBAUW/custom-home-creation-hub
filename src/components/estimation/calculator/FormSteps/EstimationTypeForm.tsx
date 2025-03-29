@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, ArrowRight, Calculator } from "lucide-react";
 import { motion } from 'framer-motion';
-import { EstimationTypeSchema } from '../types';
+import { EstimationTypeSchema } from '../types/validationSchemas';
 import { slideVariants } from '../animations';
 
 type EstimationTypeFormProps = {

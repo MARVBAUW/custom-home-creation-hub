@@ -1,7 +1,13 @@
 
 import React from 'react';
-import { MessageProcessorProps } from './types';
+import { FormData } from '../../types';
 import { ExtractedInfo, analyzeUserIntent } from '../../utils/conversationalUtils';
+
+interface MessageProcessorProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+}
 
 const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
   const { onUserInput, formData, updateFormData } = props;

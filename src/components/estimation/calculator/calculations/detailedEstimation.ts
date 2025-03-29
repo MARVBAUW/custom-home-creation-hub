@@ -1,6 +1,7 @@
 
 import { FormData } from '../types';
 import { TVA_RATE, DEFAULT_TAXE_AMENAGEMENT } from './constants';
+import { parseToNumber } from '../utils/typeConversions';
 import { 
   calculateGrosOeuvre,
   calculateToiture,
@@ -13,7 +14,7 @@ import {
 
 // Fonction pour calculer l'estimation détaillée
 export const calculateDetailedEstimation = (formData: FormData): any => {
-  // Extraction des valeurs nécessaires
+  // Extraction des valeurs nécessaires avec conversion sécurisée
   const { 
     projectType, 
     surface,
@@ -37,8 +38,8 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
     landPrice
   } = formData;
 
-  // Valeurs par défaut si non renseignées
-  const surfaceValue = surface ? Number(surface) : 100;
+  // Valeurs par défaut si non renseignées, avec conversion sécurisée
+  const surfaceValue = parseToNumber(surface, 100);
   let levelsValue = 1;
   
   // Convertir les niveaux
@@ -48,6 +49,9 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   else if (levels === '2 niveaux (R+1)') levelsValue = 2;
   else if (levels === '3 niveaux (R+2)') levelsValue = 3;
   else if (levels === '4 niveaux ou plus') levelsValue = 4;
+  
+  // Valeur par défaut pour cityTaxRate
+  const cityTaxRateValue = parseToNumber(cityTaxRate, DEFAULT_TAXE_AMENAGEMENT);
   
   // Initialisation du prix total HT
   let totalHT = 0;
@@ -256,9 +260,10 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   const cuisineSdbDetails: string[] = [];
   
   // Calcul cuisine et salle de bain
+  const bathroomCountValue = parseToNumber(bathroomCount, 1);
   const cuisineSdbResult = calculateCuisineSdb(
     kitchenType, 
-    bathroomCount, 
+    bathroomCountValue, 
     cuisineSdbDetails
   );
   
@@ -299,7 +304,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   const honorairesTTC = honorairesHT * (1 + TVA_RATE);
   
   // Calcul de la taxe d'aménagement
-  const tauxTaxeAmenagement = cityTaxRate ? cityTaxRate / 100 : DEFAULT_TAXE_AMENAGEMENT;
+  const tauxTaxeAmenagement = cityTaxRateValue ? cityTaxRateValue / 100 : DEFAULT_TAXE_AMENAGEMENT;
   const taxeAmenagement = surfaceValue * 767 * tauxTaxeAmenagement; // 767€ est la valeur forfaitaire au m²
   
   // Études géotechniques

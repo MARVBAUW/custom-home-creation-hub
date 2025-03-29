@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,21 +31,21 @@ const ProjectDetailsForm: React.FC<BaseFormStepProps> = ({
   const { control, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      surface: formData.surface?.toString() || '',
-      city: formData.city || '',
-      levels: formData.levels?.toString() || '',
-      roomCount: formData.roomCount?.toString() || '',
+      surface: formData?.surface?.toString() || '',
+      city: formData?.city || '',
+      levels: formData?.levels?.toString() || '',
+      roomCount: formData?.roomCount?.toString() || '',
     }
   });
 
   const onSubmit = (data: FormValues) => {
-    updateFormData({
+    updateFormData?.({
       surface: data.surface,
       city: data.city,
       levels: data.levels,
       roomCount: data.roomCount
     });
-    goToNextStep();
+    goToNextStep?.();
   };
 
   return (
@@ -65,7 +65,6 @@ const ProjectDetailsForm: React.FC<BaseFormStepProps> = ({
                   id="surface"
                   placeholder="Ex: 120"
                   {...field}
-                  error={errors.surface?.message}
                 />
               )}
             />
@@ -82,7 +81,6 @@ const ProjectDetailsForm: React.FC<BaseFormStepProps> = ({
                   id="city"
                   placeholder="Ex: Paris"
                   {...field}
-                  error={errors.city?.message}
                 />
               )}
             />

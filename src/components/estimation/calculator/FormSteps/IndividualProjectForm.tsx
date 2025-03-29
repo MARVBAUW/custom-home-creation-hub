@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, ArrowRight, Home } from "lucide-react";
 import { motion } from 'framer-motion';
-import { IndividualProjectSchema } from '../types';
+import { IndividualProjectSchema } from '../types/validationSchemas';
 import { slideVariants } from '../animations';
 
 type IndividualProjectFormProps = {

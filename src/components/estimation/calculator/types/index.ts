@@ -1,170 +1,109 @@
 
-// Types génériques pour toutes les interfaces
+// Main form data interface that represents all possible fields in the estimation form
 export interface FormData {
-  // Informations générales
+  // Client information
   clientType?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  message?: string;
+  budget?: string | number;
+  
+  // Project details
   projectType?: string;
   estimationType?: string;
   termsAccepted?: boolean;
-  
-  // Détails du projet
   surface?: string | number;
-  levels?: string | number;
-  units?: string | number;
-  roomCount?: string | number;
-  
-  // Localisation
   city?: string;
   cityTaxRate?: number;
-  
-  // Terrain
-  terrainType?: string;
-  hasLand?: boolean;
-  landPrice?: number | string;
-  landArea?: string | number;
-  
-  // Finition et qualité
+  levels?: string | number;
+  roomCount?: string | number;
+  units?: string | number;
   finishLevel?: string;
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
   
-  // Gros œuvre
+  // Professional project details
+  professionalProjectType?: string;
+  
+  // Land information
+  hasLand?: boolean;
+  landPrice?: string | number;
+  terrainType?: string;
+  
+  // Construction details
   wallType?: string;
   foundationType?: string;
   soilType?: string;
-  wallThickness?: number | string;
+  wallThickness?: string;
   hasBasement?: boolean;
   basementType?: string;
+  flooringType?: string;
   floorType?: string;
   slopedLand?: boolean;
   difficultAccess?: boolean;
   needsDemolition?: boolean;
   needsWaterManagement?: boolean;
   
-  // Charpente
+  // Roof and structure
   roofType?: string;
-  
-  // Combles
   atticType?: string;
-  
-  // Couverture
   roofingType?: string;
   
-  // Isolation
+  // Insulation and facade
   insulationType?: string;
-  ecoFriendlyInsulation?: boolean;
-  
-  // Façade
   facadeMaterial?: string;
-  facadeType?: string;
-  metalCladdingPercentage?: string | number;
-  woodCladdingPercentage?: string | number;
-  stoneCladdingPercentage?: string | number;
   
-  // Menuiseries extérieures
+  // Windows and doors
   windowType?: string;
   shutterType?: string;
-  windowRenovationArea?: string | number;
-  windowNewArea?: string | number;
+  windowRenovationArea?: string;
+  windowNewArea?: string;
+  interiorDoorsType?: string;
   
-  // Électricité
+  // Technical systems
   electricalType?: string;
-  
-  // Plomberie
   plumbingType?: string;
-  
-  // Chauffage
   heatingType?: string;
   hasAirConditioning?: boolean;
   
-  // Plâtrerie
+  // Interior finishes
   plasteringType?: string;
-  
-  // Menuiseries intérieures
-  doorType?: string;
-  interiorDoorsType?: string;
-  interiorFittings?: string;
-  
-  // Revêtements de sol
   floorTileType?: string;
-  wallTileType?: string;
-  floorTilePercentage?: string | number;
-  flooringType?: string;
-  
-  // Parquet
   parquetType?: string;
-  softFloorType?: string;
-  parquetPercentage?: string | number;
-  softFloorPercentage?: string | number;
-  
-  // Peinture
   paintType?: string;
-  basicPaintPercentage?: string | number;
-  decorativePaintPercentage?: string | number;
-  wallpaperPercentage?: string | number;
-  woodCladPercentage?: string | number;
-  stoneCladPercentage?: string | number;
   
-  // Cuisine
-  kitchenType?: string;
-  kitchenBudget?: string;
-  
-  // Salle de bain
-  bathroomCount?: number | string;
-  bathroomType?: string;
-  bathroomBudget?: string;
-  
-  // Environnement et énergies renouvelables
-  solarPanelType?: string;
-  windTurbineType?: string;
-  solarPanelSurface?: number | string;
-  rainwaterHarvesting?: boolean;
-  greywaterRecycling?: boolean;
-  
-  // Aménagement paysager
+  // Exterior features
   landscapingType?: string;
   landscapingBudget?: string;
-  gardenSurface?: string | number;
+  exteriorFeatures?: string[];
   
-  // Options supplémentaires
-  includeOptions?: boolean;
-  includeCuisine?: boolean;
-  includeBathroom?: boolean;
-  includeEcoSolutions?: boolean;
-  includeRenewableEnergy?: boolean;
-  includeLandscaping?: boolean;
+  // Kitchen and bathroom
+  kitchenType?: string;
+  kitchenBudget?: string;
+  bathroomType?: string;
+  bathroomBudget?: string;
+  bathroomCount?: number;
+  
+  // Special features
+  solarPanelType?: string;
+  windTurbineType?: string;
+  rainwaterHarvesting?: boolean;
+  greywaterRecycling?: boolean;
   pool?: boolean;
   outdoorKitchen?: boolean;
   terrace?: boolean;
+  solarPanelSurface?: number;
+  ecoFriendlyInsulation?: boolean;
+  gardenSurface?: number;
   
-  // Caractéristiques extérieures
-  exteriorFeatures?: string[];
-  
-  // Rénovation
+  // Renovation specific
   renovationType?: string;
   renovationAreas?: string[];
   
-  // Construction
+  // Additional properties
   constructionType?: string;
-  
-  // Planning
-  startDate?: string;
-  endDate?: string;
-  
-  // Budget
-  budget?: number | string;
-  
-  // Informations de contact
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  postalCode?: string;
-  contactMethod?: string;
-  message?: string;
-  
-  // Autres paramètres
-  [key: string]: any;
 }
-
-// Réexporter d'autres types depuis les sous-dossiers si nécessaire
-export * from './validationSchemas';
