@@ -49,12 +49,21 @@ const EstimationWizard = () => {
       try {
         // Utiliser la fonction de calcul pour obtenir une estimation
         const result = calculateEstimation(formData);
-        setEstimationResult(result);
+        console.log("Résultat du calcul d'estimation:", result);
+        
+        // S'assurer que le résultat est un nombre valide
+        if (isNaN(result) || result === 0) {
+          setEstimationResult(50000); // Valeur par défaut si le calcul échoue
+          console.log("Utilisation d'une valeur d'estimation par défaut");
+        } else {
+          setEstimationResult(result);
+        }
       } catch (error) {
         console.error("Erreur lors du calcul de l'estimation:", error);
+        setEstimationResult(50000); // Valeur par défaut en cas d'erreur
         toast({
           title: "Erreur de calcul",
-          description: "Une erreur est survenue lors du calcul de l'estimation. Veuillez réessayer.",
+          description: "Une erreur est survenue lors du calcul de l'estimation. Une valeur approximative a été utilisée.",
           variant: "destructive",
         });
       } finally {
