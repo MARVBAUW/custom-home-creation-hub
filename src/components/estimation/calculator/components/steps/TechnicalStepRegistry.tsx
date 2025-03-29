@@ -24,9 +24,6 @@ export const createTechnicalStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          electricalType: formData.electricalType || ''
-        }}
       />
     ),
     15: (props: FormStepProps) => (
@@ -38,9 +35,6 @@ export const createTechnicalStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          plumbingType: formData.plumbingType || ''
-        }}
       />
     ),
     16: (props: FormStepProps) => (
@@ -48,21 +42,11 @@ export const createTechnicalStepRegistry = (
         formData={formData}
         updateFormData={(data) => onChauffageSubmit({
           heatingType: data.heatingType || '',
-          hasAirConditioning: data.hasAirConditioning !== undefined 
-            ? data.hasAirConditioning
-            : false
+          hasAirConditioning: data.hasAirConditioning || false
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          heatingType: formData.heatingType || '',
-          hasAirConditioning: formData.hasAirConditioning !== undefined 
-            ? (typeof formData.hasAirConditioning === 'boolean' 
-              ? formData.hasAirConditioning
-              : formData.hasAirConditioning === "true")
-            : false
-        }}
       />
     ),
   };

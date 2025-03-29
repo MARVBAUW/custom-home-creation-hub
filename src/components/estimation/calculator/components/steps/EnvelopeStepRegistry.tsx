@@ -6,12 +6,6 @@ import IsolationForm from '../../FormSteps/IsolationForm';
 import FacadeForm from '../../FormSteps/FacadeForm';
 import MenuiseriesExtForm from '../../FormSteps/MenuiseriesExtForm';
 import { FormData } from '../../types';
-import {
-  CouvertureFormProps,
-  IsolationFormProps,
-  FacadeFormProps,
-  MenuiseriesExtFormProps
-} from '../../types/formTypes';
 
 // Registry for envelope steps (steps 10-13)
 export const createEnvelopeStepRegistry = (
@@ -32,9 +26,6 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          roofingType: formData.roofingType || ''
-        }}
       />
     ),
     11: (props: FormStepProps) => (
@@ -51,14 +42,6 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          stonePercentage: formData.stonePercentage?.toString() || '0',
-          plasterPercentage: formData.plasterPercentage?.toString() || '0',
-          brickPercentage: formData.brickPercentage?.toString() || '0',
-          metalCladdingPercentage: formData.metalCladdingPercentage?.toString() || '0',
-          woodCladdingPercentage: formData.woodCladdingPercentage?.toString() || '0',
-          stoneCladdingPercentage: formData.stoneCladdingPercentage?.toString() || '0'
-        }}
       />
     ),
     12: (props: FormStepProps) => (
@@ -72,11 +55,6 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          windowType: formData.windowType || '',
-          windowRenovationArea: formData.windowRenovationArea?.toString() || '0',
-          windowNewArea: formData.windowNewArea?.toString() || '0'
-        }}
       />
     ),
     13: (props: FormStepProps) => (
@@ -88,9 +66,6 @@ export const createEnvelopeStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          insulationType: formData.insulationType || ''
-        }}
       />
     ),
   };

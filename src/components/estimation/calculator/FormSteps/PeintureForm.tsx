@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -32,10 +31,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 const PeintureForm: React.FC<PeintureFormProps> = ({
   defaultValues,
-  updateFormData,
+  onSubmit,
   goToPreviousStep,
   animationDirection,
-  goToNextStep,
 }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -47,11 +45,6 @@ const PeintureForm: React.FC<PeintureFormProps> = ({
       stoneCladPercentage: defaultValues?.stoneCladPercentage?.toString() || '10',
     },
   });
-
-  const handleSubmit = (values: FormValues) => {
-    updateFormData(values);
-    goToNextStep();
-  };
 
   const basicPaintPercentage = form.watch('basicPaintPercentage');
   const decorativePaintPercentage = form.watch('decorativePaintPercentage');
@@ -75,7 +68,7 @@ const PeintureForm: React.FC<PeintureFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <div className="bg-muted/30 p-4 rounded-lg mb-4">
             <p className="text-sm font-medium">Total des revêtements: {totalPercentage}%</p>
             <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mt-2">

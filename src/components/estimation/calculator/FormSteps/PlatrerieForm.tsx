@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -18,10 +17,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
   defaultValues,
-  updateFormData,
+  onSubmit,
   goToPreviousStep,
   animationDirection,
-  goToNextStep,
 }) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -29,11 +27,6 @@ const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
       plasteringType: defaultValues?.plasteringType || '',
     },
   });
-
-  const handleSubmit = (values: FormValues) => {
-    updateFormData(values);
-    goToNextStep();
-  };
 
   return (
     <AnimatedStepTransition direction={animationDirection}>
@@ -45,7 +38,7 @@ const PlatrerieForm: React.FC<PlatrerieFormProps> = ({
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
           <FormField
             control={form.control}
             name="plasteringType"

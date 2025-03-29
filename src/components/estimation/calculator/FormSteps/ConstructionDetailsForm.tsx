@@ -1,95 +1,135 @@
 
 import React from 'react';
-import { ConstructionDetailsFormProps } from '../types/formTypes';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ArrowLeftIcon, ArrowRightIcon, BuildingIcon } from 'lucide-react';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, Building } from "lucide-react";
+import { motion } from 'framer-motion';
+import { ConstructionDetailsSchema } from '../types';
+import { slideVariants } from '../animations';
 
-const ConstructionDetailsForm: React.FC<ConstructionDetailsFormProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep,
-  goToPreviousStep,
-  animationDirection,
-  defaultValues
-}) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    goToNextStep();
+type ConstructionDetailsFormProps = {
+  defaultValues: {
+    surface: string;
+    levels: string;
+    units: string;
   };
+  onSubmit: (data: any) => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+};
+
+const ConstructionDetailsForm: React.FC<ConstructionDetailsFormProps> = ({
+  defaultValues,
+  onSubmit,
+  goToPreviousStep,
+  animationDirection
+}) => {
+  const form = useForm({
+    resolver: zodResolver(ConstructionDetailsSchema),
+    defaultValues: {
+      surface: defaultValues.surface || "",
+      levels: defaultValues.levels || "",
+      units: defaultValues.units || "",
+    },
+  });
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <form onSubmit={handleSubmit}>
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <BuildingIcon className="h-5 w-5 text-progineer-gold" />
-                <h3 className="text-xl font-semibold">Détails de construction</h3>
-              </div>
-
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="surface">Surface (m²)</Label>
-                  <Input 
-                    id="surface" 
-                    type="number"
-                    value={formData.surface || defaultValues?.surface || ''} 
-                    onChange={(e) => updateFormData({ surface: Number(e.target.value) })}
-                    placeholder="Surface en m²"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="levels">Nombre de niveaux</Label>
-                  <Input 
-                    id="levels" 
-                    type="number"
-                    value={formData.levels || defaultValues?.levels || ''} 
-                    onChange={(e) => updateFormData({ levels: Number(e.target.value) })}
-                    placeholder="Niveaux"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="units">Nombre de logements</Label>
-                  <Input 
-                    id="units" 
-                    type="number"
-                    value={formData.units || defaultValues?.units || ''} 
-                    onChange={(e) => updateFormData({ units: Number(e.target.value) })}
-                    placeholder="Logements"
-                  />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={goToPreviousStep}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeftIcon className="w-4 h-4" />
-            Précédent
-          </Button>
-          <Button
-            type="submit"
-            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-          >
-            Suivant
-            <ArrowRightIcon className="w-4 h-4" />
-          </Button>
-        </div>
-      </form>
-    </AnimatedStepTransition>
+    <motion.div
+      key="step-construction-details"
+      custom={animationDirection}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={slideVariants}
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <h2 className="text-2xl font-semibold text-center mb-6 flex items-center justify-center">
+            <Building className="mr-2 text-progineer-gold" />
+            Détails de construction
+          </h2>
+          
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="surface"
+              render={({ field }) => (
+                <FormItem className="estimation-animate-fade" style={{animationDelay: '0.1s'}}>
+                  <FormLabel>Surface approximative (m²)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      placeholder="Ex: 120" 
+                      {...field} 
+                      className="estimation-input" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="levels"
+              render={({ field }) => (
+                <FormItem className="estimation-animate-fade" style={{animationDelay: '0.2s'}}>
+                  <FormLabel>Nombre de niveaux</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      placeholder="Ex: 2" 
+                      {...field} 
+                      className="estimation-input" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="units"
+              render={({ field }) => (
+                <FormItem className="estimation-animate-fade" style={{animationDelay: '0.3s'}}>
+                  <FormLabel>Nombre de logements</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      placeholder="Ex: 1" 
+                      {...field} 
+                      className="estimation-input" 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          
+          <div className="pt-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={goToPreviousStep}
+              className="w-full md:w-auto group hover:border-progineer-gold/80"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
+              Étape précédente
+            </Button>
+            
+            <Button type="submit" className="w-full md:w-auto group hover:bg-progineer-gold/90 bg-progineer-gold transition-all duration-300">
+              Continuer 
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </motion.div>
   );
 };
 

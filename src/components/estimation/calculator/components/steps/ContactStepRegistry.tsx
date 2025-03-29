@@ -2,7 +2,6 @@
 import React from 'react';
 import { FormData } from '../../types';
 import ContactForm from '../../FormSteps/ContactForm';
-import { ContactFormProps } from '../../types/formTypes';
 
 export const createContactStepRegistry = (
   formData: FormData,
@@ -29,12 +28,6 @@ export const createContactStepRegistry = (
           }}
           goToPreviousStep={goToPreviousStep}
           animationDirection={animationDirection}
-          defaultValues={{
-            firstName: formData.firstName || '',
-            lastName: formData.lastName || '',
-            email: formData.email || '',
-            phone: formData.phone || '',
-          }}
         />
       );
     },
