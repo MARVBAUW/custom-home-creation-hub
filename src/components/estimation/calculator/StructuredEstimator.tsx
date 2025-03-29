@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from 'react-router-dom';
 
-// Import des formulaires pour chaque corps d'état
+// Import form components
 import ClientTypeForm from './FormSteps/ClientTypeForm';
 import ProjectDetailsForm from './FormSteps/ProjectDetailsForm';
 import TerrainForm from './FormSteps/TerrainForm';
@@ -37,142 +38,6 @@ import PeintureForm from './FormSteps/PeintureForm';
 import AmenagementExtForm from './FormSteps/AmenagementExtForm';
 import ContactForm from './FormSteps/ContactForm';
 import ResultsForm from './FormSteps/ResultsForm';
-
-// Define props interfaces for each form component
-interface CharpenteFormProps {
-  defaultValues: {
-    roofType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface CouvertureFormProps {
-  defaultValues: {
-    roofingType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface FacadeFormProps {
-  defaultValues: {
-    stonePercentage?: number;
-    plasterPercentage?: number;
-    brickPercentage?: number;
-    metalCladdingPercentage?: number;
-    woodCladdingPercentage?: number;
-    stoneCladdingPercentage?: number;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface MenuiseriesExtFormProps {
-  defaultValues: {
-    windowType?: string;
-    windowRenovationArea?: number;
-    windowNewArea?: number;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface IsolationFormProps {
-  defaultValues: {
-    insulationType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface ElectriciteFormProps {
-  defaultValues: {
-    electricalType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface PlomberieFormProps {
-  defaultValues: {
-    plumbingType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface ChauffageFormProps {
-  defaultValues: {
-    heatingType?: string;
-    hasAirConditioning?: boolean;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface PlatrerieFormProps {
-  defaultValues: {
-    plasteringType?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface MenuiseriesIntFormProps {
-  defaultValues: {
-    doorType?: string;
-    interiorFittings?: string;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface CarrelageFormProps {
-  defaultValues: {
-    floorTileType?: string;
-    wallTileType?: string;
-    floorTilePercentage?: number;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface ParquetFormProps {
-  defaultValues: {
-    parquetType?: string;
-    parquetPercentage?: number;
-    softFloorType?: string;
-    softFloorPercentage?: number;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
-
-interface PeintureFormProps {
-  defaultValues: {
-    basicPaintPercentage?: number;
-    decorativePaintPercentage?: number;
-    wallpaperPercentage?: number;
-    woodCladPercentage?: number;
-    stoneCladPercentage?: number;
-  };
-  onSubmit: (data: any) => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
 
 const StructuredEstimator = () => {
   const { toast } = useToast();
@@ -228,177 +93,152 @@ const StructuredEstimator = () => {
     switch (step) {
       case 0:
         return <ClientTypeForm 
-                 defaultValues={{ clientType: formData.clientType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  animationDirection={animationDirection}
                />;
       case 1:
         return <ProjectDetailsForm 
-                 defaultValues={{ 
-                   projectType: formData.projectType,
-                   surface: formData.surface,
-                   levels: formData.levels 
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 2:
         return <TerrainForm 
-                 defaultValues={{ terrainType: formData.terrainType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 3:
         return <GrosOeuvreForm 
-                 defaultValues={{ wallType: formData.wallType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 4:
         return <CharpenteForm 
-                 defaultValues={{ roofType: formData.roofType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 5:
         return <CouvertureForm 
-                 defaultValues={{ roofingType: formData.roofingType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 6:
         return <FacadeForm 
-                 defaultValues={{
-                   stonePercentage: formData.stonePercentage,
-                   plasterPercentage: formData.plasterPercentage,
-                   brickPercentage: formData.brickPercentage,
-                   metalCladdingPercentage: formData.metalCladdingPercentage,
-                   woodCladdingPercentage: formData.woodCladdingPercentage,
-                   stoneCladdingPercentage: formData.stoneCladdingPercentage
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 7:
         return <MenuiseriesExtForm 
-                 defaultValues={{
-                   windowType: formData.windowType,
-                   windowRenovationArea: formData.windowRenovationArea,
-                   windowNewArea: formData.windowNewArea
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 8:
         return <IsolationForm 
-                 defaultValues={{ insulationType: formData.insulationType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 9:
         return <ElectriciteForm 
-                 defaultValues={{ electricalType: formData.electricalType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 10:
         return <PlomberieForm 
-                 defaultValues={{ plumbingType: formData.plumbingType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 11:
         return <ChauffageForm 
-                 defaultValues={{ 
-                   heatingType: formData.heatingType,
-                   hasAirConditioning: formData.hasAirConditioning
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 12:
         return <PlatrerieForm 
-                 defaultValues={{ plasteringType: formData.plasteringType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 13:
         return <MenuiseriesIntForm 
-                 defaultValues={{
-                   doorType: formData.doorType,
-                   interiorFittings: formData.interiorFittings
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 14:
         return <CarrelageForm 
-                 defaultValues={{
-                   floorTileType: formData.floorTileType,
-                   wallTileType: formData.wallTileType,
-                   floorTilePercentage: formData.floorTilePercentage
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 15:
         return <ParquetForm 
-                 defaultValues={{
-                   parquetType: formData.parquetType,
-                   parquetPercentage: formData.parquetPercentage,
-                   softFloorType: formData.softFloorType,
-                   softFloorPercentage: formData.softFloorPercentage
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 16:
         return <PeintureForm 
-                 defaultValues={{
-                   basicPaintPercentage: formData.basicPaintPercentage,
-                   decorativePaintPercentage: formData.decorativePaintPercentage,
-                   wallpaperPercentage: formData.wallpaperPercentage,
-                   woodCladPercentage: formData.woodCladPercentage,
-                   stoneCladPercentage: formData.stoneCladPercentage
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 17:
         return <AmenagementExtForm 
-                 defaultValues={{
-                   includeLandscaping: formData.includeLandscaping
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
       case 18:
         return <ContactForm 
-                 defaultValues={{
-                   firstName: formData.firstName,
-                   lastName: formData.lastName,
-                   phone: formData.phone,
-                   email: formData.email,
-                   message: formData.message
-                 }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  goToPreviousStep={goToPreviousStep}
                  animationDirection={animationDirection}
                />;
@@ -408,11 +248,13 @@ const StructuredEstimator = () => {
                  formData={formData} 
                  categoriesAmounts={categoriesAmounts}
                  goToPreviousStep={goToPreviousStep} 
+                 animationDirection={animationDirection}
                />;
       default:
         return <ClientTypeForm 
-                 defaultValues={{ clientType: formData.clientType }}
-                 onSubmit={(data) => updateFormData(data) && goToNextStep()}
+                 formData={formData}
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
                  animationDirection={animationDirection}
                />;
     }
@@ -546,7 +388,7 @@ const StructuredEstimator = () => {
             </div>
             
             {/* Contenu de l'étape actuelle */}
-            <div className={`transform transition-all duration-300 ${animationDirection === 'next' ? 'translate-x-0 opacity-100' : animationDirection === 'prev' ? 'translate-x-0 opacity-100' : ''}`}>
+            <div className={`transform transition-all duration-300 ${animationDirection === 'forward' ? 'translate-x-0 opacity-100' : 'translate-x-0 opacity-100'}`}>
               {getStepContent()}
             </div>
             

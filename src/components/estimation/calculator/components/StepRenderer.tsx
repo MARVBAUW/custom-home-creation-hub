@@ -77,8 +77,9 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       case 1:
         return (
           <ClientTypeForm 
-            defaultValues={{ clientType: formData.clientType }}
-            onSubmit={onClientTypeSubmit} 
+            formData={formData}
+            updateFormData={(data) => onClientTypeSubmit(data as { clientType: string })}
+            goToNextStep={goToNextStep}
             animationDirection={animationDirection}
           />
         );

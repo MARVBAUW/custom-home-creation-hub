@@ -28,7 +28,7 @@ export const useTechnicalSubmissions = (
   // Soumission du formulaire de chauffage
   const onChauffageSubmit = (data: {
     heatingType: string;
-    hasAirConditioning: string;
+    hasAirConditioning: boolean;
   }) => {
     updateFormData({
       heatingType: data.heatingType,

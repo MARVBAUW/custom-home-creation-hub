@@ -35,12 +35,12 @@ export const useEnvelopeSubmissions = (
     stoneCladdingPercentage: string;
   }) => {
     updateFormData({
-      stonePercentage: data.stonePercentage,
-      plasterPercentage: data.plasterPercentage,
-      brickPercentage: data.brickPercentage,
-      metalCladdingPercentage: data.metalCladdingPercentage,
-      woodCladdingPercentage: data.woodCladdingPercentage,
-      stoneCladdingPercentage: data.stoneCladdingPercentage,
+      stonePercentage: Number(data.stonePercentage),
+      plasterPercentage: Number(data.plasterPercentage),
+      brickPercentage: Number(data.brickPercentage),
+      metalCladdingPercentage: Number(data.metalCladdingPercentage),
+      woodCladdingPercentage: Number(data.woodCladdingPercentage),
+      stoneCladdingPercentage: Number(data.stoneCladdingPercentage),
     });
     goToNextStep(); // Passer à l'étape menuiseries extérieures (13)
   };
@@ -53,8 +53,8 @@ export const useEnvelopeSubmissions = (
   }) => {
     updateFormData({
       windowType: data.windowType,
-      windowRenovationArea: data.windowRenovationArea,
-      windowNewArea: data.windowNewArea,
+      windowRenovationArea: data.windowRenovationArea ? Number(data.windowRenovationArea) : undefined,
+      windowNewArea: data.windowNewArea ? Number(data.windowNewArea) : undefined,
     });
     goToNextStep(); // Passer à l'étape électricité (14)
   };

@@ -36,7 +36,7 @@ export const useInteriorSubmissions = (
     updateFormData({
       floorTileType: data.floorTileType,
       wallTileType: data.wallTileType,
-      floorTilePercentage: data.floorTilePercentage,
+      floorTilePercentage: Number(data.floorTilePercentage),
     });
     goToNextStep(); // Passer à l'étape parquet (20)
   };
@@ -50,9 +50,9 @@ export const useInteriorSubmissions = (
   }) => {
     updateFormData({
       parquetType: data.parquetType,
-      parquetPercentage: data.parquetPercentage,
+      parquetPercentage: Number(data.parquetPercentage),
       softFloorType: data.softFloorType,
-      softFloorPercentage: data.softFloorPercentage,
+      softFloorPercentage: Number(data.softFloorPercentage),
     });
     goToNextStep(); // Passer à l'étape peinture (21)
   };
@@ -66,11 +66,11 @@ export const useInteriorSubmissions = (
     stoneCladPercentage: string;
   }) => {
     updateFormData({
-      basicPaintPercentage: data.basicPaintPercentage,
-      decorativePaintPercentage: data.decorativePaintPercentage,
-      wallpaperPercentage: data.wallpaperPercentage,
-      woodCladPercentage: data.woodCladPercentage,
-      stoneCladPercentage: data.stoneCladPercentage,
+      basicPaintPercentage: Number(data.basicPaintPercentage),
+      decorativePaintPercentage: Number(data.decorativePaintPercentage),
+      wallpaperPercentage: Number(data.wallpaperPercentage),
+      woodCladPercentage: Number(data.woodCladPercentage),
+      stoneCladPercentage: Number(data.stoneCladPercentage),
     });
     goToNextStep(); // Passer à l'étape cuisines (22)
   };

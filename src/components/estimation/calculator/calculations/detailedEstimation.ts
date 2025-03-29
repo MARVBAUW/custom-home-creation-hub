@@ -38,11 +38,13 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   } = formData;
 
   // Valeurs par défaut si non renseignées
-  const surfaceValue = parseInt(surface as string) || 100;
+  const surfaceValue = surface ? Number(surface) : 100;
   let levelsValue = 1;
   
   // Convertir les niveaux
-  if (levels === '1 niveau (plain-pied)') levelsValue = 1;
+  if (typeof levels === 'number') {
+    levelsValue = levels;
+  } else if (levels === '1 niveau (plain-pied)') levelsValue = 1;
   else if (levels === '2 niveaux (R+1)') levelsValue = 2;
   else if (levels === '3 niveaux (R+2)') levelsValue = 3;
   else if (levels === '4 niveaux ou plus') levelsValue = 4;
@@ -204,7 +206,7 @@ export const calculateDetailedEstimation = (formData: FormData): any => {
   // Calcul de l'électricité
   const electriciteResult = calculateElectricite(
     surfaceValue, 
-    hasAirConditioning === 'yes', 
+    hasAirConditioning === true, 
     electricitePlomberieDetails
   );
   

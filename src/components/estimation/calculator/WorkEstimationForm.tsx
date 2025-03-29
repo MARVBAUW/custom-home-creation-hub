@@ -93,6 +93,30 @@ const WorkEstimationForm: React.FC = () => {
     },
   });
 
+  // Define step mappings as an array instead of object
+  const stepMappings = [
+    { id: 'clientType', step: 1 },
+    { id: 'projectDetails', step: 2 },
+    { id: 'terrain', step: 3 },
+    { id: 'grosOeuvre', step: 4 },
+    { id: 'charpente', step: 5 },
+    { id: 'couverture', step: 6 },
+    { id: 'facade', step: 7 },
+    { id: 'menuiseriesExt', step: 8 },
+    { id: 'isolation', step: 9 },
+    { id: 'electricite', step: 10 },
+    { id: 'plomberie', step: 11 },
+    { id: 'chauffage', step: 12 },
+    { id: 'platrerie', step: 13 },
+    { id: 'menuiseriesInt', step: 14 },
+    { id: 'carrelage', step: 15 },
+    { id: 'parquet', step: 16 },
+    { id: 'peinture', step: 17 },
+    { id: 'finitions', step: 18 },
+    { id: 'contact', step: 19 },
+    { id: 'results', step: 20 }
+  ];
+  
   // Define visibleSteps as an array
   const { visibleSteps } = useEstimationSteps(formData);
   

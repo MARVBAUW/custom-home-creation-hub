@@ -12,9 +12,9 @@ export const useConstructionSubmissions = (
     units: string;
   }) => {
     updateFormData({
-      surface: data.surface,
-      levels: data.levels,
-      units: data.units,
+      surface: Number(data.surface),
+      levels: Number(data.levels),
+      units: Number(data.units),
     });
     goToNextStep(); // Passer à l'étape terrain (6)
   };

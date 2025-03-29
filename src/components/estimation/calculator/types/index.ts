@@ -43,7 +43,7 @@ export interface FormData {
   endDate?: string;
   hasAirConditioning?: boolean;
   doorType?: string;
-  interiorFittings?: string;
+  interiorFittings?: string[];
   floorTileType?: string;
   wallTileType?: string;
   floorTilePercentage?: number;
@@ -65,6 +65,10 @@ export interface FormData {
   windowRenovationArea?: number;
   windowNewArea?: number;
   landPrice?: number;
+  city?: string;
+  finishLevel?: string;
+  constructionType?: string;
+  constructionMode?: string;
   [key: string]: any;
 }
 
