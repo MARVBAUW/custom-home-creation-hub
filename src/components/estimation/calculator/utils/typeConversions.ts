@@ -18,3 +18,16 @@ export const ensureNumber = (value: any): number => {
   
   return 0;
 };
+
+/**
+ * Converts a value to form value (empty string if undefined)
+ * @param value Value to convert
+ * @returns String representation or empty string
+ */
+export const toFormValue = (value: any): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  
+  return String(value);
+};

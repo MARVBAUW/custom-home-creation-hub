@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Home, AlertTriangle, Zap, Wind, Vacuum } from 'lucide-react';
+import { Home, AlertTriangle, Zap, Wind, Bookmark } from 'lucide-react';
 
 interface SpecialFeaturesStepProps {
   formData: FormData;
@@ -89,7 +89,7 @@ const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({
               />
               <div className="space-y-1">
                 <Label htmlFor="central-vacuum" className="text-base font-medium flex items-center">
-                  <Vacuum className="h-4 w-4 text-blue-500 mr-2" />
+                  <Bookmark className="h-4 w-4 text-blue-500 mr-2" />
                   Aspiration centralisée
                 </Label>
                 <p className="text-sm text-gray-500">

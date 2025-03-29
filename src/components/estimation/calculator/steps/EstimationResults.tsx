@@ -10,12 +10,16 @@ interface EstimationResultsProps {
   estimation: number | null;
   formData: FormData;
   goToPreviousStep: () => void;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToNextStep?: () => void;
 }
 
 const EstimationResults: React.FC<EstimationResultsProps> = ({ 
   estimation, 
   formData,
-  goToPreviousStep
+  goToPreviousStep,
+  updateFormData,
+  goToNextStep
 }) => {
   const isLoading = !estimation;
   
