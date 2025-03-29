@@ -1,318 +1,239 @@
-
-import React, { useState } from 'react';
-import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import ProgressBar from './ProgressBar';
-import { useStepCalculation, useStepNavigation } from './hooks/steps';
-import { FormData } from './types';
-import StepRenderer from './components/StepRenderer';
-import { useEstimationSteps } from './hooks/useEstimationSteps';
-import { motion } from 'framer-motion';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
-
-// Schéma de validation pour le formulaire complet
-const formSchema = z.object({
-  // Étape 1: Informations générales
-  clientType: z.string().optional(),
-  projectType: z.string().optional(),
-  estimationType: z.string().optional(),
-  
-  // Étape 2: Construction
-  surfaceArea: z.number().min(10).optional(),
-  floors: z.number().min(1).optional(),
-  terrainType: z.string().optional(),
-  wallType: z.string().optional(),
-  roofType: z.string().optional(),
-  atticType: z.string().optional(),
-  roofingType: z.string().optional(),
-  
-  // Étape 3: Enveloppe et isolation
-  insulationType: z.string().optional(),
-  facadeMaterial: z.string().optional(),
-  windowType: z.string().optional(),
-  
-  // Étape 4: Technique
-  electricalType: z.string().optional(),
-  plumbingType: z.string().optional(),
-  heatingType: z.string().optional(),
-  plasteringType: z.string().optional(),
-  interiorDoorsType: z.string().optional(),
-  
-  // Étape 5: Finitions
-  flooringType: z.string().optional(),
-  tileType: z.string().optional(),
-  paintType: z.string().optional(),
-  
-  // Contact
-  name: z.string().min(2).optional(),
-  email: z.string().email().optional(),
-  phone: z.string().min(10).optional(),
-  message: z.string().optional(),
-}).partial();
+import { useEstimationCalculator } from './useEstimationCalculator';
+import EstimationReport from './EstimationReport';
+import { FormProvider } from 'react-hook-form';
+import { useEstimationForm } from './hooks/useEstimationForm';
+import { toArray } from './utils/dataConverters';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import ConversationalEstimator from './ConversationalEstimator';
 
 const WorkEstimationForm: React.FC = () => {
-  const { toast } = useToast();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
-  const [formData, setFormData] = useState<FormData>({});
-
-  // Initialisation du formulaire avec react-hook-form
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      clientType: undefined,
-      projectType: undefined,
-      estimationType: undefined,
-      surfaceArea: undefined,
-      floors: undefined,
-      terrainType: undefined,
-      wallType: undefined,
-      roofType: undefined,
-      atticType: undefined,
-      roofingType: undefined,
-      insulationType: undefined,
-      facadeMaterial: undefined,
-      windowType: undefined,
-      electricalType: undefined,
-      plumbingType: undefined,
-      heatingType: undefined,
-      plasteringType: undefined,
-      interiorDoorsType: undefined,
-      flooringType: undefined,
-      tileType: undefined,
-      paintType: undefined,
-      name: undefined,
-      email: undefined,
-      phone: undefined,
-      message: undefined,
-    },
-  });
-
-  // Define step mappings as an array of objects (instead of an object)
-  const stepMappingsArray = [
-    { id: 'clientType', step: 1 },
-    { id: 'projectDetails', step: 2 },
-    { id: 'terrain', step: 3 },
-    { id: 'grosOeuvre', step: 4 },
-    { id: 'charpente', step: 5 },
-    { id: 'couverture', step: 6 },
-    { id: 'facade', step: 7 },
-    { id: 'menuiseriesExt', step: 8 },
-    { id: 'isolation', step: 9 },
-    { id: 'electricite', step: 10 },
-    { id: 'plomberie', step: 11 },
-    { id: 'chauffage', step: 12 },
-    { id: 'platrerie', step: 13 },
-    { id: 'menuiseriesInt', step: 14 },
-    { id: 'carrelage', step: 15 },
-    { id: 'parquet', step: 16 },
-    { id: 'peinture', step: 17 },
-    { id: 'finitions', step: 18 },
-    { id: 'contact', step: 19 },
-    { id: 'results', step: 20 }
-  ];
-  
-  // Define visibleSteps as an array
-  const { visibleSteps } = useEstimationSteps(formData);
-  
-  // Use the array version with totalSteps
-  const { totalSteps } = useStepCalculation({ visibleSteps });
-  
-  const { goToNextStep, goToPreviousStep } = useStepNavigation({
-    currentStep,
+  const formWrapper = useRef<HTMLDivElement>(null);
+  // Utiliser le hook pour gérer les différentes étapes
+  const {
+    step,
     totalSteps,
-    setCurrentStep,
-    setAnimationDirection,
-  });
+    formData,
+    estimationResult,
+    animationDirection,
+    goToNextStep,
+    goToPreviousStep,
+    onClientTypeSubmit,
+    onProfessionalProjectSubmit,
+    onIndividualProjectSubmit,
+    onEstimationTypeSubmit,
+    onConstructionDetailsSubmit,
+    onTerrainSubmit,
+    onGrosOeuvreSubmit,
+    onCharpenteSubmit,
+    onComblesSubmit,
+    onCouvertureSubmit,
+    onIsolationSubmit,
+    onFacadeSubmit,
+    onMenuiseriesExtSubmit,
+    onElectriciteSubmit,
+    onPlomberieSubmit,
+    onChauffageSubmit,
+    onPlatrerieSubmit,
+    onMenuiseriesIntSubmit,
+    onCarrelageSubmit,
+    onParquetSubmit,
+    onPeintureSubmit,
+    onEnergiesRenouvelablesSubmit,
+    onSolutionsEnvironSubmit,
+    onAmenagementPaysagerSubmit,
+    onOptionsSubmit,
+    onCuisineSubmit,
+    onSalleDeBainSubmit,
+    onDemolitionSubmit,
+    onGrosOeuvreRenovSubmit,
+    onCharpenteRenovSubmit,
+    onCouvertureRenovSubmit,
+    onFacadeRenovSubmit,
+    onContactSubmit
+  } = useEstimationCalculator();
+  
+  const { methods } = useEstimationForm();
+  const [showSummary, setShowSummary] = useState(false);
 
-  // Fonctions de gestion pour chaque étape du formulaire
-  const onClientTypeSubmit = (data: { clientType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
+  // Définir les étapes visibles en fonction du type de projet
+  const visibleSteps = {
+    "1": "Type de client",
+    "2": "Projet professionnel",
+    "3": "Projet particulier", 
+    "4": "Type d'estimation",
+    "5": "Détails construction",
+    "6": "Terrain",
+    "7": "Gros œuvre",
+    "8": "Charpente",
+    "9": "Combles",
+    "10": "Couverture",
+    "11": "Isolation",
+    "12": "Façade",
+    "13": "Menuiseries extérieures",
+    "14": "Électricité",
+    "15": "Plomberie",
+    "16": "Chauffage",
+    "17": "Plâtrerie",
+    "18": "Menuiseries intérieures",
+    "19": "Carrelage",
+    "20": "Parquet",
+    "21": "Peinture",
+    "22": "Solutions environnementales",
+    "23": "Énergies renouvelables",
+    "24": "Aménagement paysager",
+    "25": "Options supplémentaires",
+    "26": "Cuisine",
+    "27": "Salle de bain",
+    "28": "Contact",
+    "29": "Résultats"
   };
 
-  const onProfessionalProjectSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
+  // Prevent page jumping during step transitions
+  useEffect(() => {
+    if (formWrapper.current) {
+      const scrollPosition = window.scrollY;
+      
+      // Keep same scroll position after step update
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'auto'
+        });
+      }, 10);
+    }
+  }, [step]);
 
-  const onIndividualProjectSubmit = (data: { projectType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onEstimationTypeSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onConstructionDetailsSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onTerrainSubmit = (data: { terrainType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onGrosOeuvreSubmit = (data: { wallType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onCharpenteSubmit = (data: { roofType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onComblesSubmit = (data: { atticType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onCouvertureSubmit = (data: { roofingType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onIsolationSubmit = (data: { insulationType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onFacadeSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onMenuiseriesExtSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onElectriciteSubmit = (data: { electricalType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onPlomberieSubmit = (data: { plumbingType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onChauffageSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onPlatrerieSubmit = (data: { plasteringType: string }) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onMenuiseriesIntSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onCarrelageSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onParquetSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onPeintureSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    goToNextStep();
-  };
-
-  const onContactSubmit = (data: any) => {
-    setFormData((prev) => ({ ...prev, ...data }));
-    
-    // Afficher un toast de confirmation
-    toast({
-      title: "Estimation envoyée !",
-      description: "Nous vous contacterons bientôt avec les détails de votre estimation.",
-    });
-    
-    // Réinitialiser le formulaire ou afficher les résultats
-    console.log("Données complètes du formulaire:", { ...formData, ...data });
+  const handleFormChange = (newStep: number) => {
+    // Save current scroll position
+    if (formWrapper.current) {
+      const scrollPosition = window.scrollY;
+      
+      // Stay at the same position after step update
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'auto'
+        });
+      }, 10);
+    }
   };
 
   return (
-    <Form {...form}>
-      <form className="space-y-6">
-        <Card className="p-6">
-          <div className="mb-6">
-            <ProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+    <FormProvider {...methods}>
+      <div className="w-full" ref={formWrapper}>
+        {/* Switch entre les deux modes d'estimation */}
+        <Card className="border-0 shadow-none">
+          <div className="overflow-hidden">
+            {/* Outil d'estimation conversationnel */}
+            <ConversationalEstimator 
+              onClientTypeSubmit={onClientTypeSubmit}
+              onProfessionalProjectSubmit={onProfessionalProjectSubmit}
+              onIndividualProjectSubmit={onIndividualProjectSubmit}
+              onEstimationTypeSubmit={onEstimationTypeSubmit}
+              onConstructionDetailsSubmit={onConstructionDetailsSubmit}
+              onTerrainSubmit={onTerrainSubmit}
+              onGrosOeuvreSubmit={onGrosOeuvreSubmit}
+              onCharpenteSubmit={onCharpenteSubmit}
+              onComblesSubmit={onComblesSubmit}
+              onCouvertureSubmit={onCouvertureSubmit}
+              onIsolationSubmit={onIsolationSubmit}
+              onFacadeSubmit={onFacadeSubmit}
+              onMenuiseriesExtSubmit={onMenuiseriesExtSubmit}
+              onElectriciteSubmit={onElectriciteSubmit}
+              onPlomberieSubmit={onPlomberieSubmit}
+              onChauffageSubmit={onChauffageSubmit}
+              onPlatrerieSubmit={onPlatrerieSubmit}
+              onMenuiseriesIntSubmit={onMenuiseriesIntSubmit}
+              onCarrelageSubmit={onCarrelageSubmit}
+              onParquetSubmit={onParquetSubmit}
+              onPeintureSubmit={onPeintureSubmit}
+              onEnergiesRenouvelablesSubmit={onEnergiesRenouvelablesSubmit}
+              onSolutionsEnvironSubmit={onSolutionsEnvironSubmit}
+              onAmenagementPaysagerSubmit={onAmenagementPaysagerSubmit}
+              onOptionsSubmit={onOptionsSubmit}
+              onCuisineSubmit={onCuisineSubmit}
+              onSalleDeBainSubmit={onSalleDeBainSubmit}
+              onDemolitionSubmit={onDemolitionSubmit}
+              onGrosOeuvreRenovSubmit={onGrosOeuvreRenovSubmit}
+              onCharpenteRenovSubmit={onCharpenteRenovSubmit}
+              onCouvertureRenovSubmit={onCouvertureRenovSubmit}
+              onFacadeRenovSubmit={onFacadeRenovSubmit}
+              onContactSubmit={onContactSubmit}
+              formData={formData}
+              step={step}
+              onStepChange={handleFormChange}
+            />
           </div>
+        </Card>
 
-          <StepRenderer
-            step={currentStep}
-            totalSteps={totalSteps}
-            animationDirection={animationDirection}
-            formData={formData}
-            visibleSteps={stepMappingsArray}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            onClientTypeSubmit={onClientTypeSubmit}
-            onProfessionalProjectSubmit={onProfessionalProjectSubmit}
-            onIndividualProjectSubmit={onIndividualProjectSubmit}
-            onEstimationTypeSubmit={onEstimationTypeSubmit}
-            onConstructionDetailsSubmit={onConstructionDetailsSubmit}
-            onTerrainSubmit={onTerrainSubmit}
-            onGrosOeuvreSubmit={onGrosOeuvreSubmit}
-            onCharpenteSubmit={onCharpenteSubmit}
-            onComblesSubmit={onComblesSubmit}
-            onCouvertureSubmit={onCouvertureSubmit}
-            onIsolationSubmit={onIsolationSubmit}
-            onFacadeSubmit={onFacadeSubmit}
-            onMenuiseriesExtSubmit={onMenuiseriesExtSubmit}
-            onElectriciteSubmit={onElectriciteSubmit}
-            onPlomberieSubmit={onPlomberieSubmit}
-            onChauffageSubmit={onChauffageSubmit}
-            onPlatrerieSubmit={onPlatrerieSubmit}
-            onMenuiseriesIntSubmit={onMenuiseriesIntSubmit}
-            onCarrelageSubmit={onCarrelageSubmit}
-            onParquetSubmit={onParquetSubmit}
-            onPeintureSubmit={onPeintureSubmit}
-            onContactSubmit={onContactSubmit}
-          />
-
-          <div className="flex justify-between mt-6">
-            {currentStep > 1 && (
+        {/* Affichage du résultat estimatif ou boutons de navigation */}
+        {showSummary && estimationResult ? (
+          <div className="mt-8">
+            <EstimationReport
+              estimation={{
+                totalHT: estimationResult,
+                totalTTC: estimationResult * 1.2,
+                vat: estimationResult * 0.2,
+                corpsEtat: {
+                  "Gros oeuvre": { montantHT: estimationResult * 0.3, details: ['Fondations', 'Élévation'] },
+                  "Charpente": { montantHT: estimationResult * 0.15, details: ['Charpente traditionnelle'] },
+                  "Couverture": { montantHT: estimationResult * 0.1, details: ['Tuiles céramiques'] },
+                  "Menuiseries Extérieures": { montantHT: estimationResult * 0.1, details: ['PVC double vitrage'] },
+                  "Second oeuvre": { montantHT: estimationResult * 0.35, details: ['Plomberie', 'Électricité', 'Isolation', 'Plâtrerie', 'Peinture'] }
+                },
+                honorairesHT: estimationResult * 0.12,
+                coutGlobalHT: estimationResult * 1.12,
+                coutGlobalTTC: estimationResult * 1.12 * 1.2,
+                taxeAmenagement: estimationResult * 0.05
+              }}
+              formData={formData}
+              includeTerrainPrice={formData.landIncluded === "yes"}
+            />
+            <div className="flex justify-center mt-6">
+              <Button onClick={() => setShowSummary(false)}>
+                Retour à l'estimation
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-between mt-4">
+            {step > 1 && (
               <Button 
                 type="button" 
                 variant="outline" 
                 onClick={goToPreviousStep}
                 className="flex items-center"
               >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Précédent
+                <ArrowLeftIcon className="mr-2 h-4 w-4" /> 
+                Précédent
               </Button>
             )}
-            {currentStep < totalSteps && (
+            {estimationResult > 0 && (
               <Button 
-                type="button" 
-                className="ml-auto flex items-center"
-                onClick={goToNextStep}
+                type="button"
+                onClick={() => setShowSummary(true)}
+                className="ml-auto bg-progineer-gold hover:bg-progineer-gold/90"
               >
-                Suivant <ArrowRight className="ml-2 h-4 w-4" />
+                Voir le résumé
+              </Button>
+            )}
+            {!estimationResult && step < totalSteps && (
+              <Button 
+                type="button"
+                onClick={goToNextStep}
+                className="ml-auto flex items-center bg-progineer-gold hover:bg-progineer-gold/90"
+              >
+                Suivant
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
               </Button>
             )}
           </div>
-        </Card>
-      </form>
-    </Form>
+        )}
+      </div>
+    </FormProvider>
   );
 };
 
