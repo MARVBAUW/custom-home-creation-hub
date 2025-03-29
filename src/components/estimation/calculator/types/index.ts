@@ -64,6 +64,7 @@ export interface FormData {
   parquetSurface?: number;
   paintSurface?: number;
   interiorDoorsType?: string;
+  interiorFittings?: string;
   
   // Floor and Wall tiles
   floorTileType?: string;
@@ -86,6 +87,7 @@ export interface FormData {
   // Exterior features
   pool?: boolean;
   terrace?: boolean;
+  terrasse?: boolean; // French variant
   outdoorKitchen?: boolean;
   
   // Special features
@@ -109,6 +111,8 @@ export interface FormData {
   bathroomCount?: number;
   bathroomType?: string;
   kitchenType?: string;
+  bathroomBudget?: number | string;
+  kitchenBudget?: number | string;
   
   // Step control flags
   includeEcoSolutions?: boolean;
@@ -130,6 +134,10 @@ export interface FormData {
   
   // Building details
   levels?: number;
+  niveaux?: number; // French variant
+  étages?: number; // French variant
+  combles?: number | boolean;
+  sousSOl?: boolean;
   surface?: number | string;
   
   // Contact details
@@ -146,6 +154,46 @@ export interface FormData {
   
   // Estimation type
   estimationType?: string;
+  
+  // French variants for rooms
+  chambres?: number;
+  sallesDeBain?: number;
+  cuisine?: string;
+  salon?: boolean;
+  salleManger?: boolean;
+  bureau?: boolean;
+  
+  // French variants for technical details
+  fondationType?: string;
+  structureMurs?: string;
+  typeCouverture?: string;
+  typeMenuiseries?: string;
+  typeIsolation?: string;
+  typeVentilation?: string;
+  typeEnergie?: string;
+  
+  // French variants for equipment
+  domotique?: boolean;
+  alarme?: boolean;
+  climatisation?: boolean;
+  aspCentralisée?: boolean;
+  
+  // French variants for exterior
+  balcon?: boolean;
+  piscine?: boolean;
+  poolHouse?: boolean;
+  aménagementPaysager?: boolean;
+  clôture?: boolean;
+  portail?: boolean;
+  carport?: boolean;
+  
+  // French variants for finishing
+  niveauFinition?: string;
+  
+  // French variants for client preferences
+  budgetMaxi?: number;
+  délaiSouhaité?: string;
+  contraintesParticulières?: string;
 }
 
 export * from './formTypes';

@@ -1,71 +1,54 @@
 
 import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
 
-export const useInteriorSubmissions = (updateFormData: (data: Partial<FormData>) => void) => {
-  // Gestion de la soumission du formulaire de plâtrerie
+export const useInteriorSubmissions = () => {
+  // Function to handle platrerie submission
   const handlePlatrerieSubmit = (data: { plasteringType: string }) => {
-    updateFormData({
+    return {
       plasteringType: data.plasteringType,
-    });
+      interiorFittings: data.interiorFittings || 'standard'
+    };
   };
 
-  // Gestion de la soumission du formulaire de menuiseries intérieures
-  const handleMenuiseriesIntSubmit = (data: {
-    interiorDoorsType: string;
-    doorType: string;
-  }) => {
-    updateFormData({
-      interiorDoorsType: data.interiorDoorsType,
+  // Function to handle menuiseries intérieures submission
+  const handleMenuiseriesIntSubmit = (data: any) => {
+    return {
       doorType: data.doorType,
-      interiorFittings: data.interiorDoorsType === 'custom' ? 'custom' : 'standard',
-    });
+      interiorDoorsType: data.interiorDoorsType,
+    };
   };
 
-  // Gestion de la soumission du formulaire de carrelage
-  const handleCarrelageSubmit = (data: {
-    floorTileType: string;
-    wallTileType: string;
-    floorTilePercentage: string | number;
-  }) => {
-    updateFormData({
+  // Function to handle carrelage submission
+  const handleCarrelageSubmit = (data: any) => {
+    return {
       floorTileType: data.floorTileType,
       wallTileType: data.wallTileType,
-      floorTilePercentage: data.floorTilePercentage,
-    });
+      floorTilePercentage: ensureNumber(data.floorTilePercentage),
+      tileSurface: ensureNumber(data.tileSurface),
+    };
   };
 
-  // Gestion de la soumission du formulaire de parquet
-  const handleParquetSubmit = (data: {
-    parquetType: string;
-    softFloorType: string;
-    parquetPercentage: string | number;
-    softFloorPercentage: string | number;
-  }) => {
-    updateFormData({
+  // Function to handle parquet submission
+  const handleParquetSubmit = (data: any) => {
+    return {
       parquetType: data.parquetType,
+      parquetPercentage: ensureNumber(data.parquetPercentage),
       softFloorType: data.softFloorType,
-      parquetPercentage: data.parquetPercentage,
-      softFloorPercentage: data.softFloorPercentage,
-    });
+      softFloorPercentage: ensureNumber(data.softFloorPercentage),
+      parquetSurface: ensureNumber(data.parquetSurface),
+    };
   };
 
-  // Gestion de la soumission du formulaire de peinture
-  const handlePeintureSubmit = (data: {
-    paintType: string;
-    basicPaintPercentage: string | number;
-    decorativePaintPercentage: string | number;
-    wallpaperPercentage: string | number;
-    woodCladPercentage: string | number;
-    stoneCladPercentage: string | number;
-  }) => {
-    updateFormData({
+  // Function to handle peinture submission
+  const handlePeintureSubmit = (data: any) => {
+    return {
       paintType: data.paintType,
-      basicPaintPercentage: data.basicPaintPercentage,
-      decorativePaintPercentage: data.decorativePaintPercentage,
-      wallpaperPercentage: data.wallpaperPercentage,
-      woodCladPercentage: data.woodCladPercentage,
-      stoneCladPercentage: data.stoneCladPercentage,
-    });
+      basicPaintPercentage: ensureNumber(data.basicPaintPercentage),
+      decorativePaintPercentage: ensureNumber(data.decorativePaintPercentage),
+      wallpaperPercentage: ensureNumber(data.wallpaperPercentage),
+      paintSurface: ensureNumber(data.paintSurface),
+    };
   };
 
   return {

@@ -8,7 +8,9 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   formData, 
   categoriesAmounts,
   goToPreviousStep,
-  animationDirection 
+  animationDirection,
+  updateFormData,
+  goToNextStep
 }) => {
   return <EstimationResults 
     estimation={estimationResult} 

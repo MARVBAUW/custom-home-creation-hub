@@ -1,38 +1,36 @@
 
 import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
 
-export const useRoomsSubmissions = (
-  updateFormData: (data: Partial<FormData>) => void,
-  setStep: (step: number) => void
-) => {
-  const onSalleDeBainSubmit = (data: {
-    bathroomType: string;
-    bathroomBudget: string;
-  }) => {
-    const updatedData: Partial<FormData> = {
+export const useRoomsSubmissions = () => {
+  // Function to handle bathroom details submission
+  const handleBathroomDetailsSubmit = (data: any) => {
+    return {
       bathroomType: data.bathroomType,
-      bathroomBudget: data.bathroomBudget
+      bathroomCount: ensureNumber(data.bathroomCount),
+      bathroomBudget: ensureNumber(data.bathroomBudget),
     };
-    
-    updateFormData(updatedData);
-    setStep(27); // Contact
   };
 
-  const onCuisineSubmit = (data: {
-    kitchenType: string;
-    kitchenBudget: string;
-  }) => {
-    const updatedData: Partial<FormData> = {
+  // Function to handle kitchen details submission
+  const handleKitchenDetailsSubmit = (data: any) => {
+    return {
       kitchenType: data.kitchenType,
-      kitchenBudget: data.kitchenBudget
+      kitchenBudget: ensureNumber(data.kitchenBudget),
     };
-    
-    updateFormData(updatedData);
-    setStep(26); // Salle de bain
+  };
+
+  // Function to handle living room details submission
+  const handleLivingRoomDetailsSubmit = (data: any) => {
+    return {
+      livingRoomSize: ensureNumber(data.livingRoomSize),
+      livingRoomStyle: data.livingRoomStyle,
+    };
   };
 
   return {
-    onCuisineSubmit,
-    onSalleDeBainSubmit
+    handleBathroomDetailsSubmit,
+    handleKitchenDetailsSubmit,
+    handleLivingRoomDetailsSubmit,
   };
 };

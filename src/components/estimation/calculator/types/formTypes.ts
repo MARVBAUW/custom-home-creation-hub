@@ -8,6 +8,8 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 // Interface pour les formulaires avec valeurs par défaut et soumission
@@ -20,28 +22,28 @@ export interface FormWithDefaultsProps extends BaseFormProps {
 export interface ClientTypeFormProps extends BaseFormProps {}
 
 export interface ProfessionalProjectFormProps extends BaseFormProps {
-  defaultValues: {
+  defaultValues?: {
     activity: string;
     projectType: string;
     startDate: string;
     endDate: string;
   };
-  onSubmit: (data: any) => void;
+  onSubmit?: (data: any) => void;
 }
 
 export interface IndividualProjectFormProps extends BaseFormProps {
-  defaultValues: {
+  defaultValues?: {
     projectType: string;
   };
-  onSubmit: (data: { projectType: string }) => void;
+  onSubmit?: (data: { projectType: string }) => void;
 }
 
 export interface EstimationTypeFormProps extends BaseFormProps {
-  defaultValues: {
+  defaultValues?: {
     estimationType: string;
     termsAccepted: boolean;
   };
-  onSubmit: (data: any) => void;
+  onSubmit?: (data: any) => void;
 }
 
 export interface ProjectDetailsFormProps extends BaseFormProps {}
@@ -61,10 +63,10 @@ export interface MenuiseriesExtFormProps extends BaseFormProps {}
 export interface IsolationFormProps extends BaseFormProps {}
 
 export interface ElectriciteFormProps extends BaseFormProps {
-  defaultValues: {
+  defaultValues?: {
     electricalType: string;
   };
-  onSubmit: (data: { electricalType: string }) => void;
+  onSubmit?: (data: { electricalType: string }) => void;
 }
 
 export interface PlomberieFormProps extends BaseFormProps {}
@@ -84,7 +86,7 @@ export interface PeintureFormProps extends BaseFormProps {}
 export interface AmenagementExtFormProps extends BaseFormProps {}
 
 export interface ContactFormProps extends BaseFormProps {
-  defaultValues: {
+  defaultValues?: {
     firstName: string;
     lastName: string;
     email: string;
@@ -93,10 +95,67 @@ export interface ContactFormProps extends BaseFormProps {
     message: string;
     termsAccepted: boolean;
   };
-  onSubmit: (data: any) => void;
+  onSubmit?: (data: any) => void;
 }
 
 export interface ResultsFormProps extends BaseFormProps {
   estimationResult: number;
   categoriesAmounts?: Array<{ category: string; amount: number; details?: string }>;
+}
+
+// Define props for the step components
+export interface ProjectTypeStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface TerrainDetailsStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface ConstructionDetailsStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface RoomsDetailsStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface FinishDetailsStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface SpecialFeaturesStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface ExteriorFeaturesStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
+}
+
+export interface ContactDetailsStepProps {
+  formData: FormData;
+  updateFormData: (data: any) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void;
 }

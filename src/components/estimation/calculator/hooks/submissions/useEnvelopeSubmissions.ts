@@ -1,49 +1,42 @@
 
 import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
 
-export const useEnvelopeSubmissions = (updateFormData: (data: Partial<FormData>) => void) => {
-  // Gestion de la soumission du formulaire de couverture
+export const useEnvelopeSubmissions = () => {
+  // Function to handle couverture submission
   const handleCouvertureSubmit = (data: { roofingType: string }) => {
-    updateFormData({
+    return {
       roofingType: data.roofingType,
-    });
+    };
   };
 
-  // Gestion de la soumission du formulaire d'isolation
+  // Function to handle isolation submission
   const handleIsolationSubmit = (data: { insulationType: string }) => {
-    updateFormData({
+    return {
       insulationType: data.insulationType,
-    });
+    };
   };
 
-  // Gestion de la soumission du formulaire de façade
-  const handleFacadeSubmit = (data: {
-    facadeMaterial: string;
-    metalCladdingPercentage?: string | number;
-    woodCladdingPercentage?: string | number;
-    stoneCladdingPercentage?: string | number;
-  }) => {
-    updateFormData({
-      facadeMaterial: data.facadeMaterial,
-      metalCladdingPercentage: data.metalCladdingPercentage,
-      woodCladdingPercentage: data.woodCladdingPercentage,
-      stoneCladdingPercentage: data.stoneCladdingPercentage,
-    });
+  // Function to handle facade submission
+  const handleFacadeSubmit = (data: any) => {
+    return {
+      facadeType: data.facadeType,
+      stonePercentage: ensureNumber(data.stonePercentage),
+      plasterPercentage: ensureNumber(data.plasterPercentage),
+      brickPercentage: ensureNumber(data.brickPercentage),
+      metalCladdingPercentage: 0,
+      woodCladdingPercentage: 0,
+      stoneCladdingPercentage: 0,
+    };
   };
 
-  // Gestion de la soumission du formulaire de menuiseries extérieures
-  const handleMenuiseriesExtSubmit = (data: {
-    windowType: string;
-    shutterType: string;
-    windowRenovationArea?: string | number;
-    windowNewArea?: string | number;
-  }) => {
-    updateFormData({
+  // Function to handle menuiseries extérieures submission
+  const handleMenuiseriesExtSubmit = (data: any) => {
+    return {
       windowType: data.windowType,
-      shutterType: data.shutterType,
-      windowRenovationArea: data.windowRenovationArea,
-      windowNewArea: data.windowNewArea,
-    });
+      windowRenovationArea: ensureNumber(data.windowRenovationArea),
+      windowNewArea: ensureNumber(data.windowNewArea),
+    };
   };
 
   return {

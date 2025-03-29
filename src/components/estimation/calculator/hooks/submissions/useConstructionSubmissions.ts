@@ -1,54 +1,58 @@
+
 import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
 
-export const useConstructionSubmissions = (
-  updateFormData: (data: Partial<FormData>) => void,
-  setStep: (step: number) => void
-) => {
-  // Soumission du formulaire de détails de construction
-  const onConstructionDetailsSubmit = (data: {
-    surface: string;
-    city: string;
-    levels: string;
-    roomCount: string;
-  }) => {
-    updateFormData({
-      surface: data.surface,
-      city: data.city,
-      levels: data.levels,
-      roomCount: data.roomCount
-    });
-    setStep(6); // Type de terrain
+export const useConstructionSubmissions = () => {
+  // Function to handle construction details submission
+  const handleConstructionDetailsSubmit = (data: any) => {
+    return {
+      constructionType: data.constructionType,
+      constructionStyle: data.constructionStyle,
+      levels: ensureNumber(data.levels),
+      surface: ensureNumber(data.surface),
+      basement: data.basement === 'true' || data.basement === true,
+      garage: data.garage === 'true' || data.garage === true,
+      bedrooms: ensureNumber(data.bedrooms),
+      bathrooms: ensureNumber(data.bathrooms),
+    };
   };
 
-  // Soumission du formulaire de type de terrain
-  const onTerrainSubmit = (data: { terrainType: string }) => {
-    updateFormData({ terrainType: data.terrainType });
-    setStep(7); // Structure des murs
+  // Function to handle terrain details submission
+  const handleTerrainSubmit = (data: { terrainType: string }) => {
+    return {
+      terrainType: data.terrainType,
+      terrainSurface: ensureNumber(data.terrainSurface),
+      landPrice: ensureNumber(data.landPrice),
+    };
   };
 
-  // Soumission du formulaire de structure des murs
-  const onGrosOeuvreSubmit = (data: { wallType: string }) => {
-    updateFormData({ wallType: data.wallType });
-    setStep(8); // Type de toiture
+  // Function to handle gros œuvre submission
+  const handleGrosOeuvreSubmit = (data: { wallType: string }) => {
+    return {
+      wallType: data.wallType,
+      foundationType: data.foundationType,
+    };
   };
 
-  // Soumission du formulaire de type de charpente
-  const onCharpenteSubmit = (data: { roofType: string }) => {
-    updateFormData({ roofType: data.roofType });
-    setStep(9); // Type de combles
+  // Function to handle charpente submission
+  const handleCharpenteSubmit = (data: { roofType: string }) => {
+    return {
+      roofType: data.roofType,
+    };
   };
 
-  // Soumission du formulaire de type de combles
-  const onComblesSubmit = (data: { atticType: string }) => {
-    updateFormData({ atticType: data.atticType });
-    setStep(10); // Couverture toiture
+  // Function to handle combles submission
+  const handleComblesSubmit = (data: { atticType: string }) => {
+    return {
+      atticType: data.atticType,
+    };
   };
 
   return {
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit
+    handleConstructionDetailsSubmit,
+    handleTerrainSubmit,
+    handleGrosOeuvreSubmit,
+    handleCharpenteSubmit,
+    handleComblesSubmit,
   };
 };

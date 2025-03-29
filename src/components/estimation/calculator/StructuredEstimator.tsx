@@ -249,7 +249,9 @@ const StructuredEstimator = () => {
                  categoriesAmounts={categoriesAmounts}
                  goToPreviousStep={goToPreviousStep} 
                  animationDirection={animationDirection}
-               />;
+                 updateFormData={updateFormData}
+                 goToNextStep={goToNextStep}
+           />;
       default:
         return <ClientTypeForm 
                  formData={formData}

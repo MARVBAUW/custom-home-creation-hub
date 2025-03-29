@@ -28,3 +28,20 @@ export const toFormValue = (value: any): string => {
   
   return value.toString();
 };
+
+/**
+ * Convert any value to a number before using it
+ * This is a helper function to update form submissions and avoid type errors
+ */
+export const ensureNumber = (value: any): number => {
+  if (value === undefined || value === null || value === '') {
+    return 0;
+  }
+  
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  const parsed = parseFloat(value.toString());
+  return isNaN(parsed) ? 0 : parsed;
+};
