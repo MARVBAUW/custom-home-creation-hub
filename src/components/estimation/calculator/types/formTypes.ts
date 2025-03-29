@@ -1,4 +1,3 @@
-
 import { FormData } from './index';
 
 export interface BaseFormProps {
@@ -77,8 +76,8 @@ export interface EstimationResultsProps {
   estimation: number | null;
   formData: FormData;
   goToPreviousStep: () => void;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToNextStep?: () => void;
 }
 
 export interface ResultsFormProps {

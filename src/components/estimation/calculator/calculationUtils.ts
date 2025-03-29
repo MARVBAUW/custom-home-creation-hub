@@ -3,7 +3,7 @@
 import { FormData } from './types';
 import { 
   calculateDetailedEstimation as detailedEstimation,
-  calculateEstimation as simpleEstimation
+  calculateSimpleEstimation as simpleEstimation
 } from './calculations';
 
 // Export the calculation functions for backward compatibility

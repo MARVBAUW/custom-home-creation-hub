@@ -3,5 +3,4 @@
 export { calculateDetailedEstimation } from './detailedEstimation';
 export { calculateEstimation as calculateSimpleEstimation } from './simpleEstimation';
 
-// Default export for backward compatibility
-export * from './common';
+// No default export for backward compatibility - removing the problematic line

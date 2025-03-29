@@ -9,11 +9,11 @@ export const calculateEstimation = (formData: FormData): number => {
   
   // Récupérer les principales données
   const surface = formData.surface ? 
-    (typeof formData.surface === 'string' ? parseFloat(formData.surface.toString()) : formData.surface) : 100;
-  const finishLevel = formData.finishLevel || formData.finishingLevel || 'Standard';
+    ensureNumber(formData.surface) : 100;
+  const finishLevel = formData.finishLevel || 'Standard';
   const terrainType = formData.terrainType;
   const landPrice = formData.landPrice ? 
-    (typeof formData.landPrice === 'string' ? parseFloat(formData.landPrice.toString()) : formData.landPrice) : 0;
+    ensureNumber(formData.landPrice) : 0;
   
   // Ajuster le prix au m² selon le type de projet
   if (formData.projectType === 'neuf') {
@@ -39,7 +39,7 @@ export const calculateEstimation = (formData: FormData): number => {
   // Ajouter des coûts supplémentaires pour les options
   if (formData.pool) constructionCost += 25000;
   if (formData.terrace) constructionCost += 10000;
-  if (formData.domotic || formData.smartHome) constructionCost += 15000;
+  if (formData.domotic) constructionCost += 15000;
   if (formData.solarPanels) constructionCost += 20000;
   if (formData.outdoorKitchen) constructionCost += 15000;
   
