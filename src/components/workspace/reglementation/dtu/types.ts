@@ -5,6 +5,13 @@ export interface DTURule {
   type: 'standard' | 'warning' | 'tip';
 }
 
+export interface DTUSchema {
+  id: string;
+  title: string;
+  imageUrl?: string;
+  description: string;
+}
+
 export interface DTU {
   id: string;
   title: string;
@@ -16,4 +23,6 @@ export interface DTU {
     title: string;
     content: string;
   }[];
+  schemas?: DTUSchema[];
+  selected?: boolean;
 }

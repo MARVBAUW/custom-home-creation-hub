@@ -4,130 +4,160 @@ import { DTU } from '../../dtu/types';
 export const thermiqueDTUs: DTU[] = [
   {
     id: "dtu-thermique-re2020-1",
-    title: "RE2020 - Exigences pour logements neufs",
-    category: "Thermique",
-    description: "Réglementation environnementale 2020 applicable aux constructions neuves",
-    lastUpdate: "Juillet 2023",
+    title: "RE2020 - Exigences principales",
+    category: "Thermique RE2020",
+    description: "Exigences réglementaires pour les constructions neuves selon la RE2020",
+    lastUpdate: "Janvier 2024",
     rules: [
       {
-        title: "Bbio - Besoins bioclimatiques",
-        content: "Le Bbio doit être inférieur au Bbiomax, qui dépend de la zone climatique, de l'altitude et de la surface. Réduction de 30% par rapport à la RT2012.",
+        title: "Bbio",
+        content: "Besoin bioclimatique maximal Bbiomax réduit de 30% par rapport à la RT2012, variable selon zone climatique et altitude",
         type: "standard"
       },
       {
-        title: "Cep - Consommation d'énergie primaire",
-        content: "Le Cep doit être inférieur au Cepmax (valeur moyenne autour de 75 kWhEP/m²/an). Inclut désormais l'éclairage, le chauffage, le refroidissement, l'eau chaude sanitaire et les auxiliaires.",
+        title: "Cep",
+        content: "Consommation d'énergie primaire maximale de 75 kWhEP/m².an pour les maisons individuelles (modulation selon localisation)",
         type: "standard"
       },
       {
-        title: "DH - Degrés-heures d'inconfort",
-        content: "Nouvel indicateur : le DH doit être inférieur à 1250°C.h pour garantir le confort d'été sans climatisation. Calcul basé sur une température de confort variable.",
+        title: "Ic énergie",
+        content: "Impact carbone maximal lié aux consommations d'énergie : 4 kgCO2eq/m².an en 2022, 2,5 kgCO2eq/m².an en 2031",
         type: "warning"
       },
       {
-        title: "Ic Construction - Impact carbone construction",
-        content: "Valeur seuil Ic Construction pour maisons : 640 kgCO2eq/m² à partir de 2022, puis 530 en 2025, 475 en 2028 et 415 en 2031.",
+        title: "DH",
+        content: "Degré-heure d'inconfort estival limité à 1250°C.h, avec simulation sur période canicule de référence",
         type: "tip"
       }
     ],
     sections: [
       {
-        title: "Calcul de l'impact carbone",
-        content: "L'analyse du cycle de vie (ACV) devient obligatoire et prend en compte les émissions de gaz à effet de serre sur 50 ans. Deux indicateurs sont calculés : Ic Construction (matériaux) et Ic Énergie (consommations)."
+        title: "Évolutions temporelles",
+        content: "Renforcement progressif des exigences par palier en 2025, 2028 et 2031. Durcissement progressif des exigences sur l'empreinte carbone des matériaux."
       },
       {
-        title: "Systèmes énergétiques",
-        content: "Sortie progressive du chauffage au gaz avec un seuil d'émission de gaz à effet de serre fixé à 4 kgCO2/m²/an à partir de 2022. Favorise le recours aux énergies renouvelables et aux systèmes performants."
+        title: "Attestations",
+        content: "Étude thermique et attestation RE2020 à fournir au dépôt de permis de construire et à l'achèvement des travaux. Contrôle par bureau d'études qualifié."
       },
       {
-        title: "Surfaces vitrées",
-        content: "La surface totale des baies vitrées doit être supérieure ou égale à 1/6 de la surface habitable pour garantir un éclairage naturel suffisant dans les logements."
+        title: "Méthode de calcul",
+        content: "Méthode horaire, simulation sur 8760 heures de l'année. Prise en compte fine des masques, des apports solaires et du confort d'été."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-re2020-1",
+        title: "Exigences de résultat RE2020",
+        imageUrl: "/images/schemas/re2020-exigences.png",
+        description: "Ce schéma présente les 3 indicateurs principaux à respecter dans la RE2020 : le Bbio pour la conception bioclimatique, le Cep pour la consommation d'énergie et l'Ic énergie pour l'impact carbone."
+      },
+      {
+        id: "schema-re2020-2",
+        title: "Calendrier d'application RE2020",
+        imageUrl: "/images/schemas/re2020-calendrier.png",
+        description: "Ce tableau chronologique montre l'évolution des seuils réglementaires sur la période 2022-2031, avec les différentes étapes de renforcement."
       }
     ]
   },
   {
     id: "dtu-thermique-rt2012-1",
-    title: "RT2012 - Réglementation thermique pour bâtiments existants",
-    category: "Thermique",
-    description: "Exigences thermiques pour les bâtiments existants faisant l'objet de rénovations importantes",
-    lastUpdate: "Juin 2023",
+    title: "RT2012 - Rappel des exigences",
+    category: "Thermique RT2012",
+    description: "Exigences réglementaires pour les constructions neuves selon la RT2012 (valable jusqu'en 2021)",
+    lastUpdate: "Décembre 2022",
     rules: [
       {
-        title: "RT Existant globale",
-        content: "Pour les bâtiments > 1000 m² achevés après 1948, avec rénovation > 25% de la valeur. Consommation Cep < Cepmax (80 à 195 kWhEP/m²/an selon zone climatique).",
+        title: "Bbio",
+        content: "Besoin bioclimatique limité à Bbiomax, fonction de la localisation, de l'altitude et de la surface du logement",
         type: "standard"
       },
       {
-        title: "RT Existant élément par élément",
-        content: "Pour tous les autres cas de rénovation. Performances minimales pour chaque élément remplacé ou installé (isolation, menuiseries, chauffage, etc.).",
+        title: "Cep",
+        content: "Consommation maximale de 50 kWhEP/m².an en moyenne, modulée selon la zone climatique et l'altitude",
         type: "standard"
       },
       {
-        title: "Garde-fous réglementaires",
-        content: "Résistance thermique minimale : R ≥ 4,5 m².K/W pour les combles, R ≥ 3,7 m².K/W pour les murs, R ≥ 3 m².K/W pour les planchers bas.",
-        type: "warning"
-      },
-      {
-        title: "Étude thermique obligatoire",
-        content: "Pour la RT Existant globale, une étude thermique doit être réalisée avant travaux avec le moteur de calcul Th-C-E ex, pour démontrer le respect des exigences.",
+        title: "Tic",
+        content: "Température intérieure conventionnelle en été inférieure à la température de référence Ticréf",
         type: "tip"
+      },
+      {
+        title: "Étanchéité à l'air",
+        content: "Q4Pa-surf ≤ 0,6 m³/(h.m²) pour les maisons individuelles, ≤ 1,0 m³/(h.m²) pour les logements collectifs",
+        type: "warning"
       }
     ],
     sections: [
       {
-        title: "Performance des menuiseries",
-        content: "Uw ≤ 1,3 W/m².K pour les fenêtres en zone H1 et H2, Uw ≤ 1,6 W/m².K en zone H3. Le facteur solaire Sw doit être ≥ 0,36 pour optimiser les apports solaires en hiver."
+        title: "Exigences de moyens",
+        content: "Surface minimale de baies vitrées ≥ 1/6 de la surface habitable. Traitement des ponts thermiques. Obligation d'utiliser une énergie renouvelable."
       },
       {
-        title: "Ventilation",
-        content: "Obligation de maintenir ou installer un système de ventilation. Pour la VMC simple flux, débit d'extraction entre 45 et 135 m³/h selon le type de logement. VMC double flux recommandée."
+        title: "Attestations",
+        content: "Attestation de prise en compte de la RT2012 au dépôt du permis de construire et à l'achèvement des travaux, avec test d'étanchéité à l'air obligatoire."
       },
       {
-        title: "Chauffage et ECS",
-        content: "Rendement minimal de 90% pour les chaudières, COP minimum de 3,3 pour les pompes à chaleur. Isolation des réseaux de distribution obligatoire avec classe 4 minimum."
+        title: "Labels associés",
+        content: "Label Effinergie+ : Bbiomax -20%, Cepmax -20%. Label BEPOS Effinergie : production d'énergie > consommations tous usages."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-rt2012-1",
+        title: "Zonage climatique RT2012",
+        imageUrl: "/images/schemas/rt2012-zones.png",
+        description: "Cette carte présente les 8 zones climatiques de la RT2012, qui déterminent les modulations des exigences Bbiomax et Cepmax."
       }
     ]
   },
   {
     id: "dtu-thermique-renovation-1",
-    title: "Réglementation thermique - Rénovation énergétique",
-    category: "Thermique",
-    description: "Dispositifs réglementaires et aides pour la rénovation énergétique des bâtiments",
-    lastUpdate: "Septembre 2023",
+    title: "Réglementation Thermique en Rénovation",
+    category: "Thermique Rénovation",
+    description: "Exigences pour les travaux de rénovation énergétique des bâtiments existants",
+    lastUpdate: "Février 2024",
     rules: [
       {
-        title: "DPE - Diagnostic de Performance Énergétique",
-        content: "Nouveau DPE opposable depuis juillet 2021. Calcul en énergie primaire et émissions de gaz à effet de serre. Classification de A à G.",
+        title: "Parois opaques",
+        content: "Résistance thermique minimale après travaux : Murs R ≥ 3,7 m².K/W, Toiture R ≥ 4,5 m².K/W, Planchers bas R ≥ 3,0 m².K/W",
         type: "standard"
       },
       {
-        title: "Interdiction de location",
-        content: "Logements classés G en 2025, F en 2028 et E en 2034 seront considérés comme indécents et ne pourront plus être mis en location (loi Climat et Résilience).",
+        title: "Menuiseries",
+        content: "Performance minimale pour les fenêtres : Uw ≤ 1,3 W/m².K, facteur solaire Sw ≥ 0,3 en cas de remplacement",
+        type: "standard"
+      },
+      {
+        title: "Ventilation",
+        content: "Conservation/installation d'un système de ventilation adapté lors de l'amélioration de l'étanchéité à l'air",
         type: "warning"
       },
       {
-        title: "MaPrimeRénov'",
-        content: "Aide principale pour la rénovation énergétique. Montant calculé selon revenus du foyer et gain énergétique. Cumulable avec les CEE.",
-        type: "standard"
-      },
-      {
-        title: "CEE - Certificats d'Économies d'Énergie",
-        content: "Obligation pour les fournisseurs d'énergie de promouvoir l'efficacité énergétique. Prime versée aux particuliers réalisant des travaux d'économie d'énergie.",
+        title: "Rénovation globale",
+        content: "Consommation après travaux ≤ 80 kWhEP/m².an (modulation selon zone climatique) pour rénovation globale MaPrimeRénov'",
         type: "tip"
       }
     ],
     sections: [
       {
-        title: "Qualification des professionnels",
-        content: "Label RGE (Reconnu Garant de l'Environnement) obligatoire pour que les clients puissent bénéficier des aides financières. Qualification par domaine de travaux, avec audit de chantier."
+        title: "Règles spécifiques",
+        content: "Dérogations possibles pour les bâtiments historiques, l'architecture d'intérêt, ou contraintes techniques insurmontables justifiées."
       },
       {
-        title: "Audit énergétique",
-        content: "Audit énergétique obligatoire pour la vente des logements classés F ou G depuis avril 2023, E à partir de 2025 et D à partir de 2034. Doit proposer un parcours de travaux."
+        title: "Dispositifs d'aides",
+        content: "MaPrimeRénov', CEE, Éco-PTZ, TVA à 5,5% sous condition de respect des critères de performance minimaux après travaux."
       },
       {
-        title: "Bouquet de travaux",
-        content: "Rénovation performante = rénovation qui traite les 6 postes de travaux : isolation des murs, du plancher bas, de la toiture, remplacement des menuiseries, ventilation et chauffage/ECS."
+        title: "Étude thermique",
+        content: "Audit énergétique obligatoire pour vente de logements classés F ou G à partir de 2022. Étude thermique recommandée pour orientation optimale des travaux."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-renovation-1",
+        title: "Étapes de rénovation énergétique",
+        imageUrl: "/images/schemas/renovation-etapes.png",
+        description: "Ce schéma présente les étapes clés d'une rénovation énergétique efficace : diagnostic, choix des solutions, ordre optimal des travaux."
       }
     ]
   }

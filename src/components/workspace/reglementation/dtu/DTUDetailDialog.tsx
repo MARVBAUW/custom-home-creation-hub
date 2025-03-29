@@ -1,11 +1,12 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Calendar, CheckCircle2, AlertTriangle, Lightbulb } from 'lucide-react';
 import { DTU } from './types';
+import { DTUSchemas } from './DTUSchemas';
+import { highlightSearchTerm } from './searchUtils';
 
 interface DTUDetailDialogProps {
   dtu: DTU | null;
@@ -14,9 +15,9 @@ interface DTUDetailDialogProps {
   searchTerm?: string;
 }
 
-export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({ 
-  dtu, 
-  isOpen, 
+export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({
+  dtu,
+  isOpen,
   onOpenChange,
   searchTerm = ''
 }) => {
@@ -25,78 +26,70 @@ export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({
   const getRuleIcon = (type: string) => {
     switch (type) {
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-amber-500" />;
+        return <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0" />;
       case 'tip':
-        return <Info className="h-5 w-5 text-blue-500" />;
+        return <Lightbulb className="h-4 w-4 text-blue-500 flex-shrink-0" />;
       default:
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />;
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-center gap-2 mb-2">
-            <Badge variant="outline">
+          <div className="flex justify-between items-start mb-2">
+            <Badge variant="outline" className="mb-2 bg-gray-100">
               {dtu.category}
             </Badge>
-            <span className="text-sm text-gray-500">Mise à jour: {dtu.lastUpdate}</span>
+            <div className="flex items-center text-xs text-gray-500">
+              <Calendar className="h-3 w-3 mr-1" />
+              {dtu.lastUpdate}
+            </div>
           </div>
           <DialogTitle className="text-xl">{dtu.title}</DialogTitle>
-          <DialogDescription>
-            {dtu.description}
-          </DialogDescription>
+          <p className="text-gray-600 mt-2">
+            {highlightSearchTerm(dtu.description, searchTerm)}
+          </p>
         </DialogHeader>
 
-        <Tabs defaultValue="regles" className="flex-1 overflow-hidden flex flex-col">
-          <TabsList className="grid grid-cols-2">
-            <TabsTrigger value="regles">Règles principales</TabsTrigger>
-            <TabsTrigger value="sections">Sections détaillées</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="regles" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-[60vh]">
-              <div className="space-y-4 p-1">
-                {dtu.rules.map((rule, index) => (
-                  <div 
-                    key={index} 
-                    className={`p-4 rounded-lg border ${
-                      rule.type === 'warning' 
-                        ? 'bg-amber-50 border-amber-200' 
-                        : rule.type === 'tip' 
-                          ? 'bg-blue-50 border-blue-200' 
-                          : 'bg-green-50 border-green-200'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1">
-                        {getRuleIcon(rule.type)}
-                      </div>
-                      <div>
-                        <h3 className="font-medium mb-1">{rule.title}</h3>
-                        <p className="text-sm">{rule.content}</p>
-                      </div>
+        <Separator className="my-4" />
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Règles principales</h3>
+            <ul className="space-y-4">
+              {dtu.rules.map((rule, index) => (
+                <li key={index} className={`p-4 rounded-md ${
+                  rule.type === 'warning' ? 'bg-amber-50' : 
+                  rule.type === 'tip' ? 'bg-blue-50' : 'bg-green-50'
+                }`}>
+                  <div className="flex gap-3">
+                    {getRuleIcon(rule.type)}
+                    <div>
+                      <h4 className="font-medium">{highlightSearchTerm(rule.title, searchTerm)}</h4>
+                      <p className="text-sm mt-1">{highlightSearchTerm(rule.content, searchTerm)}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </TabsContent>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {dtu.sections && dtu.sections.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Détails additionnels</h3>
+              {dtu.sections.map((section, index) => (
+                <div key={index} className="mb-4">
+                  <h4 className="font-medium mb-2">{highlightSearchTerm(section.title, searchTerm)}</h4>
+                  <p className="text-sm text-gray-700">{highlightSearchTerm(section.content, searchTerm)}</p>
+                </div>
+              ))}
+            </div>
+          )}
           
-          <TabsContent value="sections" className="flex-1 overflow-hidden">
-            <ScrollArea className="h-[60vh]">
-              <div className="space-y-6 p-1">
-                {dtu.sections.map((section, index) => (
-                  <div key={index} className="border-b pb-4 last:border-0">
-                    <h3 className="font-medium text-lg mb-2">{section.title}</h3>
-                    <p className="text-sm">{section.content}</p>
-                  </div>
-                ))}
-              </div>
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
+          {dtu.schemas && <DTUSchemas schemas={dtu.schemas} />}
+        </div>
       </DialogContent>
     </Dialog>
   );
