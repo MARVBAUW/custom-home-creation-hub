@@ -12,8 +12,8 @@ const EstimationCalculator: React.FC = () => {
     // Message informant l'utilisateur du nouveau formulaire d'estimation
     setTimeout(() => {
       toast({
-        title: "Formulaire d'estimation amélioré",
-        description: "Notre formulaire d'estimation a été amélioré pour vous offrir des résultats plus précis.",
+        title: "Formulaire d'estimation détaillé",
+        description: "Notre formulaire d'estimation complet vous permet d'obtenir un devis précis pour votre projet.",
         duration: 5000,
       });
     }, 1000);
@@ -32,7 +32,7 @@ const EstimationCalculator: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="relative">
-          {/* Nouveau formulaire d'estimation */}
+          {/* Formulaire d'estimation complet */}
           <WorkEstimationForm />
           
           <div className="text-xs text-gray-500 mt-4 text-center">
