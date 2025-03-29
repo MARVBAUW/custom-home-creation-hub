@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import { useEstimationSteps } from './hooks/useEstimationSteps';
@@ -68,13 +67,43 @@ const EstimationWizard = () => {
   };
 
   const handleClientTypeSubmit = (data: { clientType: string }) => {
+    // Si c'est un professionnel, aller à l'étape 2, sinon aller à l'étape 3 (comme dans le formulaire original)
+    updateFormData(data);
+    if (data.clientType === "professional") {
+      setStep(1);
+    } else {
+      setStep(2);
+    }
+  };
+
+  const handleProjectTypeSubmit = (data: { projectType: string, landIncluded?: string }) => {
+    // Pour tous les types de projets, passer à l'étape suivante
     updateFormData(data);
     goToNextStep();
   };
 
-  const handleProjectTypeSubmit = (data: { projectType: string, landIncluded?: string }) => {
+  const handleEstimationTypeSubmit = (data: { 
+    estimationType: string;
+    termsAccepted: boolean;
+  }) => {
+    // Gérer les différents types d'estimation comme dans le formulaire original
     updateFormData(data);
-    goToNextStep();
+    
+    // Suivre la logique du formulaire original pour les redirections
+    const projectType = formData.projectType || '';
+    
+    if ((projectType === 'construction' || projectType === 'extension') && 
+        data.estimationType.includes('Précise')) {
+      setStep(4); // CONSTRUCTION EXTENSION PRECIS
+    } else if ((projectType === 'renovation' || projectType === 'division') && 
+              data.estimationType.includes('Précise')) {
+      setStep(4); // CONSTRUCTION EXTENSION PRECIS aussi
+    } else if ((projectType === 'renovation' || projectType === 'division') && 
+              data.estimationType.includes('Rapide')) {
+      setStep(4); // CONSTRUCTION EXTENSION PRECIS aussi
+    } else {
+      goToNextStep(); // Comportement par défaut
+    }
   };
 
   const handleTerrainDetailsSubmit = (data: any) => {
@@ -133,11 +162,12 @@ const EstimationWizard = () => {
         );
       case 2:
         return (
-          <TerrainDetailsStep 
+          <ProjectTypeStep 
             formData={formData}
-            updateFormData={handleTerrainDetailsSubmit}
+            updateFormData={handleProjectTypeSubmit}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
+            isIndividual={true}
           />
         );
       case 3:
@@ -147,9 +177,19 @@ const EstimationWizard = () => {
             updateFormData={handleConstructionDetailsSubmit}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
+            estimationType={formData.estimationType}
           />
         );
       case 4:
+        return (
+          <TerrainDetailsStep 
+            formData={formData}
+            updateFormData={handleTerrainDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
+      case 5:
         return (
           <RoomsDetailsStep 
             formData={formData}
@@ -158,7 +198,7 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
           />
         );
-      case 5:
+      case 6:
         return (
           <FinishDetailsStep 
             formData={formData}
@@ -167,7 +207,7 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
           />
         );
-      case 6:
+      case 7:
         return (
           <SpecialFeaturesStep 
             formData={formData}
@@ -176,7 +216,7 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
           />
         );
-      case 7:
+      case 8:
         return (
           <ExteriorFeaturesStep 
             formData={formData}
@@ -185,7 +225,7 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
           />
         );
-      case 8:
+      case 9:
         return (
           <ContactDetailsStep 
             formData={formData}
@@ -194,7 +234,7 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
           />
         );
-      case 9:
+      case 10:
         return (
           <EstimationResults 
             estimation={estimationResult}

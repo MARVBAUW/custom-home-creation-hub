@@ -11,12 +11,13 @@ export const calculateEstimation = (formData: FormData): number => {
   console.log("Formulaire pour calcul:", formData);
   
   // Determine which estimation method to use based on estimationType
+  // Match the original form options: "Rapide 5 mins" or "Précise 15 mins"
   const mode = formData.estimationType || 'simple';
   console.log("Mode de calcul:", mode);
   
   try {
-    // For detailed or standard estimation
-    if (mode === 'detailed' || mode === 'standard') {
+    // For detailed or standard estimation (précise 15 mins)
+    if (mode === 'detailed' || mode === 'standard' || mode.includes('Précise')) {
       try {
         const detailedResult = calculateDetailedEstimation(formData);
         console.log("Résultat du calcul détaillé:", detailedResult);
@@ -34,8 +35,8 @@ export const calculateEstimation = (formData: FormData): number => {
       }
     }
     
-    // For simple or quick estimation
-    if (mode === 'simple' || mode === 'quick' || mode === 'basic') {
+    // For simple or quick estimation (rapide 5 mins)
+    if (mode === 'simple' || mode === 'quick' || mode === 'basic' || mode.includes('Rapide')) {
       try {
         const simpleResult = calculateSimpleEstimation(formData);
         console.log("Résultat du calcul simple:", simpleResult);

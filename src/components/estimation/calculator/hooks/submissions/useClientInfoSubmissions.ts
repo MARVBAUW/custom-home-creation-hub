@@ -1,5 +1,6 @@
 
 import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
 
 export const useClientInfoSubmissions = (
   updateFormData: (data: Partial<FormData>) => void,
@@ -67,11 +68,11 @@ export const useClientInfoSubmissions = (
     console.log("Détails de construction soumis:", data);
     updateFormData({
       constructionType: data.constructionType,
-      surface: data.surface,
-      floors: data.floors,
-      rooms: data.rooms,
-      bedrooms: data.bedrooms,
-      bathrooms: data.bathrooms
+      surface: ensureNumber(data.surface),
+      floors: ensureNumber(data.floors),
+      rooms: ensureNumber(data.rooms),
+      bedrooms: ensureNumber(data.bedrooms),
+      bathrooms: ensureNumber(data.bathrooms)
     });
     setStep(6); // Type de terrain
   };
@@ -88,7 +89,7 @@ export const useClientInfoSubmissions = (
       terrainType: data.terrainType,
       terrainAccess: data.terrainAccess,
       landIncluded: data.landIncluded,
-      landPrice: data.landPrice
+      landPrice: data.landPrice ? ensureNumber(data.landPrice) : undefined
     });
     setStep(7); // Structure des murs
   };
