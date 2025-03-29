@@ -12,6 +12,7 @@ export interface BaseFormProps {
   onSubmit?: (data: any) => void;
 }
 
+// All form components now extend BaseFormProps
 export type ClientTypeFormProps = BaseFormProps;
 export type ProfessionalProjectFormProps = BaseFormProps;
 export type IndividualProjectFormProps = BaseFormProps;

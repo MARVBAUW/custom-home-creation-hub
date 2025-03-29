@@ -13,6 +13,11 @@ export const parseToNumber = (value: any, defaultValue: number = 0): number => {
 };
 
 /**
+ * Alias for parseToNumber - added for compatibility
+ */
+export const ensureNumber = parseToNumber;
+
+/**
  * Safely converts a number or undefined value to a string for form inputs.
  * Returns an empty string if value is null or undefined.
  */

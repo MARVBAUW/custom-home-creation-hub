@@ -43,8 +43,7 @@ export const useSpecialFeaturesSubmissions = (
     };
     
     // Only include landscapingBudget if it exists in FormData interface
-    if (data.landscapingBudget !== undefined) {
-      // TypeScript workaround: using type assertion to allow dynamic property assignment
+    if ('landscapingBudget' in data) {
       (updatedData as any).landscapingBudget = data.landscapingBudget;
     }
     
@@ -63,8 +62,7 @@ export const useSpecialFeaturesSubmissions = (
     };
     
     // Only include terrace if it exists in FormData interface
-    if (data.terrace !== undefined) {
-      // TypeScript workaround: using type assertion to allow dynamic property assignment
+    if ('terrace' in data) {
       (updatedData as any).terrace = data.terrace;
     }
     
