@@ -24,8 +24,6 @@ export const createClientStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{ clientType: formData.clientType }}
-        onSubmit={onClientTypeSubmit}
       />
     ),
     2: (props: FormStepProps) => (
@@ -36,10 +34,10 @@ export const createClientStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          activity: formData.activity,
-          projectType: formData.projectType,
-          startDate: formData.startDate,
-          endDate: formData.endDate,
+          activity: formData.activity || '',
+          projectType: formData.projectType || '',
+          startDate: formData.startDate || '',
+          endDate: formData.endDate || '',
         }}
         onSubmit={onProfessionalProjectSubmit}
       />
@@ -52,7 +50,7 @@ export const createClientStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          projectType: formData.projectType,
+          projectType: formData.projectType || '',
         }}
         onSubmit={onIndividualProjectSubmit}
       />
@@ -65,7 +63,7 @@ export const createClientStepRegistry = (
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
         defaultValues={{
-          estimationType: formData.estimationType,
+          estimationType: formData.estimationType || '',
           termsAccepted: formData.termsAccepted || false,
         }}
         onSubmit={onEstimationTypeSubmit}

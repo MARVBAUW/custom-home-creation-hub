@@ -1,30 +1,30 @@
 
 // Import section with jsPDF correctly imported
-import { jsPDF as JSPDF } from 'jspdf';
+import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
 
 // Define extended types for jsPDF with autoTable 
 // This correctly handles the TypeScript integration with the jsPDF-autotable plugin
-type PageInfo = {
+interface PageInfo {
   pageNumber: number;
   pageContext: any;
-  objId?: number; // Make objId optional to fix type error
-};
+}
 
-interface ExtendedJSPDF extends JSPDF {
-  getNumberOfPages: () => number;
-  getCurrentPageInfo: () => PageInfo;
-  autoTable: (options: any) => any;
+// Add autoTable to jsPDF
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => any;
+  }
 }
 
 // Function to generate the PDF document
 export const generateEstimationPDF = (formData: FormData, estimationResult: number | null, includeTerrainPrice: boolean = false) => {
   // Initialize jsPDF
-  const doc = new JSPDF() as ExtendedJSPDF;
+  const doc = new jsPDF();
 
   // Define header
-  const header = (doc: ExtendedJSPDF) => {
+  const header = (doc: jsPDF) => {
     doc.setFontSize(20);
     doc.setTextColor(40);
     doc.setFont('helvetica', 'bold');
@@ -32,7 +32,7 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
   };
 
   // Define footer
-  const footer = (doc: ExtendedJSPDF) => {
+  const footer = (doc: jsPDF) => {
     const pageCount = doc.getNumberOfPages();
 
     for (let i = 1; i <= pageCount; i++) {
@@ -44,7 +44,7 @@ export const generateEstimationPDF = (formData: FormData, estimationResult: numb
   };
 
   // Function to add a page with header and footer
-  const addPage = (doc: ExtendedJSPDF) => {
+  const addPage = (doc: jsPDF) => {
     doc.addPage();
     header(doc);
     footer(doc);
