@@ -1,24 +1,34 @@
 
-// Type principal pour les données du formulaire d'estimation
+import { BaseSyntheticEvent } from 'react';
+
+// Define the comprehensive FormData type with all possible properties
 export interface FormData {
-  // Type de client
+  // Client & Project Information
   clientType?: string;
-  
-  // Type de projet
   projectType?: string;
-  
-  // Type d'estimation
-  estimationType?: 'Rapide 5 mins (Précision à + ou - 10%)' | 'Précise 15 mins (précision à + ou- 5%)' | string;
+  projectPurpose?: string;
+  estimationType?: string;
+  activity?: string;
+  landIncluded?: string;
+  budget?: number | string;
+  startDate?: string;
+  endDate?: string;
   termsAccepted?: boolean;
+  hasLand?: boolean;
   
-  // Détails de construction
-  constructionType?: string;
-  constructionStyle?: string;
+  // Construction Details
   surface?: number | string;
   levels?: number | string;
   units?: number | string;
+  constructionType?: string;
+  constructionStyle?: string;
+  gardenSurface?: number | string;
+  landPrice?: number | string;
+  terrainType?: string;
+  terrainSurface?: number | string;
+  terrainAccess?: string;
   
-  // Chambres et pièces
+  // Rooms & Layout
   roomCount?: number | string;
   bedrooms?: number | string;
   bathrooms?: number | string;
@@ -27,108 +37,91 @@ export interface FormData {
   kitchenType?: string;
   livingRoomSize?: string;
   livingRoomStyle?: string;
-  
-  // Caractéristiques spéciales
   basement?: boolean;
   garage?: boolean;
   
-  // Terrain
-  terrainType?: string;
-  terrainSurface?: number | string;
-  terrainAccess?: string;
-  landPrice?: number | string;
-  landIncluded?: string;
-  hasLand?: boolean;
-  
-  // Démolition
-  demolitionType?: string;
-  existingSurface?: number | string;
-  
-  // Gros œuvre
-  wallType?: string;
+  // Structure
   foundationType?: string;
+  wallType?: string;
+  wallThickness?: string;
+  hasBasement?: boolean;
+  basementType?: string;
+  floorType?: string;
+  slopedLand?: boolean;
+  difficultAccess?: boolean;
+  needsDemolition?: boolean;
+  needsWaterManagement?: boolean;
+  soilType?: string;
   
-  // Charpente et couverture
+  // Roof
   roofType?: string;
+  atticType?: string;
   roofingType?: string;
   
-  // Combles
-  atticType?: string;
+  // Envelope
+  stonePercentage?: number | string;
+  plasterPercentage?: number | string;
+  brickPercentage?: number | string;
+  metalCladdingPercentage?: number | string;
+  woodCladdingPercentage?: number | string;
+  stoneCladdingPercentage?: number | string;
   
-  // Isolation et façade
-  insulationType?: string;
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
-  
-  // Menuiseries
+  // Windows & Doors
   windowType?: string;
+  shutterType?: string;
   windowRenovationArea?: number | string;
   windowNewArea?: number | string;
-  
-  // Menuiseries intérieures
   doorType?: string;
   interiorDoorsType?: string;
+  interiorFittings?: string[];
   
-  // Équipements techniques
+  // Technical Systems
   electricalType?: string;
   plumbingType?: string;
   heatingType?: string;
   hasAirConditioning?: boolean;
+  insulationType?: string;
   
-  // Platerie
+  // Finishes
   plasteringType?: string;
-  
-  // Revêtements sols
-  floorTileType?: string;
-  wallTileType?: string;
-  floorTilePercentage?: number;
-  
-  // Parquet
-  parquetType?: string;
-  parquetPercentage?: number;
-  softFloorType?: string;
-  softFloorPercentage?: number;
-  
-  // Peinture
-  paintType?: string;
-  basicPaintPercentage?: number;
-  decorativePaintPercentage?: number;
-  wallpaperPercentage?: number;
-  
-  // Finitions
   finishLevel?: string;
   finishingLevel?: string;
+  paintType?: string;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
   
-  // Aménagements extérieurs
+  // Flooring
+  floorTileType?: string;
+  wallTileType?: string;
+  floorTilePercentage?: number | string;
+  parquetType?: string;
+  parquetPercentage?: number | string;
+  softFloorType?: string;
+  softFloorPercentage?: number | string;
+  
+  // Exterior & Landscaping
   landscapingType?: string;
-  gardenSurface?: number | string;
   pool?: boolean;
   terrace?: boolean;
   outdoorKitchen?: boolean;
-  exteriorFeatures?: string[];
+  landscapingBudget?: number | string;
   
-  // Énergies renouvelables
-  solarPanelType?: string;
-  solarPanelSurface?: number | string;
-  windTurbineType?: string;
-  solarPanels?: boolean;
-  
-  // Solutions écologiques
-  rainwaterHarvesting?: boolean;
-  greywaterRecycling?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  
-  // Options spéciales
+  // Special Features
   domotic?: boolean;
   alarm?: boolean;
   centralVacuum?: boolean;
   smartHome?: boolean;
+  solarPanels?: boolean;
+  solarPanelType?: string;
+  solarPanelSurface?: number | string;
+  windTurbineType?: string;
+  rainwaterHarvesting?: boolean;
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  exteriorFeatures?: string[];
   
-  // Options d'inclusion d'étapes
+  // Section Toggles
   includeEcoSolutions?: boolean;
   includeRenewableEnergy?: boolean;
   includeLandscaping?: boolean;
@@ -136,19 +129,30 @@ export interface FormData {
   includeCuisine?: boolean;
   includeBathroom?: boolean;
   
-  // Budget
-  budget?: number | string;
+  // Utilities & Connections
+  waterConnection?: boolean;
+  electricityConnection?: boolean;
+  gasConnection?: boolean;
+  sewerConnection?: boolean;
+  fiberConnection?: boolean;
+  needsSepticTank?: boolean;
+  floodRisk?: boolean;
+  claySoil?: boolean;
+  rockySoil?: boolean;
+  wetlandZone?: boolean;
+  heritageZone?: boolean;
   
-  // Données pour les professionnels
-  activity?: string;
-  startDate?: string;
-  endDate?: string;
-  
-  // Coordonnées de contact
+  // Contact Information
   firstName?: string;
   lastName?: string;
   email?: string;
   phone?: string;
   city?: string;
   message?: string;
+  
+  // Any additional custom fields
+  [key: string]: any;
 }
+
+// Export other types from the folder
+export * from './formTypes';

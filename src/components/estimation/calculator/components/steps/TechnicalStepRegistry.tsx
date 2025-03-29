@@ -13,25 +13,49 @@ export const createTechnicalStepRegistry = (
 ): StepComponentRegistry => {
   // Handle the electricalType submission
   const onElectriciteSubmit = (data: { electricalType: string }) => {
+    // Format and validate the data
+    const validElectricalType = ['basic', 'standard', 'premium', 'smart_home'].includes(data.electricalType) 
+      ? data.electricalType 
+      : 'standard';
+    
+    // Update with validated data
     updateFormData({
-      electricalType: data.electricalType
+      electricalType: validElectricalType
     });
+    
     goToNextStep();
   };
 
   // Handle the plumbingType submission
   const onPlomberieSubmit = (data: { plumbingType: string }) => {
+    // Format and validate the data
+    const validPlumbingType = ['basic', 'standard', 'premium'].includes(data.plumbingType)
+      ? data.plumbingType
+      : 'standard';
+    
+    // Update with validated data
     updateFormData({
-      plumbingType: data.plumbingType
+      plumbingType: validPlumbingType
     });
+    
     goToNextStep();
   };
 
+  // Handle the heating and air conditioning submission
   const onChauffageSubmit = (data: { heatingType: string, hasAirConditioning: boolean }) => {
+    // Format and validate the data
+    const validHeatingType = ['standard', 'floorHeating', 'heatPump'].includes(data.heatingType)
+      ? data.heatingType
+      : 'standard';
+    
+    const hasAirConditioning = !!data.hasAirConditioning;
+    
+    // Update with validated data
     updateFormData({
-      heatingType: data.heatingType,
-      hasAirConditioning: data.hasAirConditioning
+      heatingType: validHeatingType,
+      hasAirConditioning: hasAirConditioning
     });
+    
     goToNextStep();
   };
 
@@ -53,7 +77,10 @@ export const createTechnicalStepRegistry = (
     16: (props) => (
       <ChauffageForm
         {...props}
-        defaultValues={{ heatingType: formData.heatingType, hasAirConditioning: formData.hasAirConditioning }}
+        defaultValues={{ 
+          heatingType: formData.heatingType, 
+          hasAirConditioning: formData.hasAirConditioning 
+        }}
         onSubmit={onChauffageSubmit}
       />
     ),

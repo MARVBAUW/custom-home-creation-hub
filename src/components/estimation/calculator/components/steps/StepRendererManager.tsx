@@ -1,3 +1,4 @@
+
 import { StepComponentRegistry, createStepComponent, DefaultStepProps } from './StepComponents';
 import { createClientStepRegistry } from './ClientStepRegistry';
 import { createConstructionStepRegistry } from './ConstructionStepRegistry';
@@ -12,6 +13,7 @@ export interface StepRendererManagerProps {
   step: number;
   totalSteps: number;
   formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void; // Adding the missing property
   visibleSteps: any[];
   animationDirection: 'forward' | 'backward';
   goToNextStep: () => void;
@@ -51,6 +53,7 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     animationDirection,
     goToNextStep,
     goToPreviousStep,
+    updateFormData, // Use the added property 
     // Submit handlers
     onClientTypeSubmit,
     onProfessionalProjectSubmit,
@@ -105,10 +108,10 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     goToPreviousStep
   );
 
-  // Fix: Pass only the required arguments
+  // Use the updateFormData from props directly
   const technicalStepRegistry = createTechnicalStepRegistry(
     formData,
-    props.updateFormData, // Using props.updateFormData for consistency
+    updateFormData,
     goToPreviousStep
   );
 
