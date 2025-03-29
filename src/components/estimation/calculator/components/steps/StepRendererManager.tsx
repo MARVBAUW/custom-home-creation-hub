@@ -41,6 +41,7 @@ export interface StepRendererManagerProps {
   onContactSubmit: (data: any) => void;
 }
 
+// Fix the technicalStepRegistry creation
 export const useStepRendererManager = (props: StepRendererManagerProps) => {
   const {
     step,
@@ -104,11 +105,10 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     goToPreviousStep
   );
 
+  // Fix: Pass only the required arguments
   const technicalStepRegistry = createTechnicalStepRegistry(
     formData,
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit,
+    props.updateFormData, // Using props.updateFormData for consistency
     goToPreviousStep
   );
 

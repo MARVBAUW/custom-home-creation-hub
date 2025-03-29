@@ -1,19 +1,12 @@
-import React, { useState } from 'react';
-import { FormData } from '../types';
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Button } from "@/components/ui/button";
-import { Home, Building2, BedDouble, Bath, Garage } from 'lucide-react';
-
-interface ConstructionDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  estimationType?: string;
-}
+import React from 'react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input';
+import { Home, Warehouse, Building, Building2 } from 'lucide-react'; // Fixed import
+import { useForm } from 'react-hook-form';
+import { ConstructionDetailsStepProps } from '../types/formTypes';
 
 const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
   formData,
@@ -22,174 +15,135 @@ const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
   goToPreviousStep,
   estimationType
 }) => {
-  // Initialize the state with constructionType instead of constructionStyle
-  const [constructionType, setConstructionType] = useState<string>(
-    formData.constructionType || ''
-  );
-  
-  const [surface, setSurface] = useState<string>(
-    formData.surface?.toString() || ''
-  );
-  
-  const [levels, setLevels] = useState<string>(
-    formData.levels?.toString() || ''
-  );
-  
-  const [bedrooms, setBedrooms] = useState<string>(
-    formData.bedrooms?.toString() || ''
-  );
-  
-  const [bathrooms, setBathrooms] = useState<string>(
-    formData.bathrooms?.toString() || ''
-  );
-  
-  const [basement, setBasement] = useState<boolean>(
-    formData.basement || false
-  );
-  
-  const [garage, setGarage] = useState<boolean>(
-    formData.garage || false
-  );
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      constructionType: formData.constructionType,
+      surface: formData.surface,
+      levels: formData.levels,
+      bedrooms: formData.bedrooms,
+      bathrooms: formData.bathrooms
+    }
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = (data: any) => {
     updateFormData({
-      constructionType,
-      surface: surface !== '' ? Number(surface) : 0,
-      levels: levels !== '' ? Number(levels) : 0,
-      bedrooms: bedrooms !== '' ? Number(bedrooms) : 0,
-      bathrooms: bathrooms !== '' ? Number(bathrooms) : 0,
-      basement,
-      garage
+      constructionType: data.constructionType,
+      surface: data.surface,
+      levels: data.levels,
+      bedrooms: data.bedrooms,
+      bathrooms: data.bathrooms
     });
     goToNextStep();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-4">Type de construction</h3>
-        
-        <RadioGroup 
-          value={constructionType} 
-          onValueChange={setConstructionType}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-        >
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${constructionType === 'traditional' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setConstructionType('traditional')}
+    <Card className="w-full">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <CardContent className="space-y-6 pt-6">
+          {/* Construction Type */}
+          <div className="space-y-4">
+            <Label className="text-base font-semibold">Type de construction</Label>
+            <RadioGroup defaultValue={formData.constructionType} className="grid grid-cols-1 gap-4 pt-2">
+              <div className="flex items-center space-x-3 rounded-md border p-4">
+                <RadioGroupItem value="house" id="house" {...register('constructionType')} />
+                <Home className="h-5 w-5 text-gray-600" />
+                <Label htmlFor="house" className="cursor-pointer">Maison individuelle</Label>
+              </div>
+              <div className="flex items-center space-x-3 rounded-md border p-4">
+                <RadioGroupItem value="apartment" id="apartment" {...register('constructionType')} />
+                <Building className="h-5 w-5 text-gray-600" />
+                <Label htmlFor="apartment" className="cursor-pointer">Appartement</Label>
+              </div>
+              <div className="flex items-center space-x-3 rounded-md border p-4">
+                <RadioGroupItem value="building" id="building" {...register('constructionType')} />
+                <Building2 className="h-5 w-5 text-gray-600" />
+                <Label htmlFor="building" className="cursor-pointer">Immeuble</Label>
+              </div>
+              <div className="flex items-center space-x-3 rounded-md border p-4">
+                <RadioGroupItem value="commercial" id="commercial" {...register('constructionType')} />
+                <Warehouse className="h-5 w-5 text-gray-600" />
+                <Label htmlFor="commercial" className="cursor-pointer">Local commercial</Label>
+              </div>
+            </RadioGroup>
+            {errors.constructionType && (
+              <p className="text-sm text-red-500">Veuillez sélectionner un type de construction</p>
+            )}
+          </div>
+
+          {/* Surface */}
+          <div className="space-y-2">
+            <Label htmlFor="surface" className="text-base font-semibold">Surface (m²)</Label>
+            <Input
+              id="surface"
+              type="number"
+              min="0"
+              placeholder="Ex: 120"
+              {...register('surface', { required: true, min: 1 })}
+            />
+            {errors.surface && (
+              <p className="text-sm text-red-500">Veuillez entrer une surface valide</p>
+            )}
+          </div>
+
+          {/* Levels */}
+          <div className="space-y-2">
+            <Label htmlFor="levels" className="text-base font-semibold">Nombre d'étages</Label>
+            <Input
+              id="levels"
+              type="number"
+              min="1"
+              placeholder="Ex: 2"
+              {...register('levels', { required: true, min: 1 })}
+            />
+            {errors.levels && (
+              <p className="text-sm text-red-500">Veuillez entrer un nombre d'étages valide</p>
+            )}
+          </div>
+
+          {/* Additional fields for detailed estimation */}
+          {estimationType && estimationType.includes('Précise') && (
+            <>
+              {/* Bedrooms */}
+              <div className="space-y-2">
+                <Label htmlFor="bedrooms" className="text-base font-semibold">Nombre de chambres</Label>
+                <Input
+                  id="bedrooms"
+                  type="number"
+                  min="0"
+                  placeholder="Ex: 3"
+                  {...register('bedrooms', { min: 0 })}
+                />
+              </div>
+
+              {/* Bathrooms */}
+              <div className="space-y-2">
+                <Label htmlFor="bathrooms" className="text-base font-semibold">Nombre de salles de bain</Label>
+                <Input
+                  id="bathrooms"
+                  type="number"
+                  min="0"
+                  placeholder="Ex: 2"
+                  {...register('bathrooms', { min: 0 })}
+                />
+              </div>
+            </>
+          )}
+        </CardContent>
+
+        <CardFooter className="flex justify-between">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={goToPreviousStep}
           >
-            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-              <Home className="h-10 w-10 text-blue-500 mb-3" />
-              <RadioGroupItem value="traditional" id="construction-traditional" className="sr-only" />
-              <Label htmlFor="construction-traditional" className="font-medium">Traditionnelle</Label>
-              <p className="text-xs text-gray-500 mt-1">
-                Style classique et éprouvé
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${constructionType === 'contemporary' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setConstructionType('contemporary')}
-          >
-            <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-              <Building2 className="h-10 w-10 text-blue-500 mb-3" />
-              <RadioGroupItem value="contemporary" id="construction-contemporary" className="sr-only" />
-              <Label htmlFor="construction-contemporary" className="font-medium">Contemporaine</Label>
-              <p className="text-xs text-gray-500 mt-1">
-                Design moderne et épuré
-              </p>
-            </CardContent>
-          </Card>
-        </RadioGroup>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="surface">Surface (m²)</Label>
-          <Input
-            type="number"
-            id="surface"
-            value={surface}
-            onChange={(e) => setSurface(e.target.value)}
-            placeholder="Surface habitable"
-            required
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="levels">Nombre de niveaux</Label>
-          <Input
-            type="number"
-            id="levels"
-            value={levels}
-            onChange={(e) => setLevels(e.target.value)}
-            placeholder="Nombre d'étages"
-            required
-          />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="bedrooms">Nombre de chambres</Label>
-          <Input
-            type="number"
-            id="bedrooms"
-            value={bedrooms}
-            onChange={(e) => setBedrooms(e.target.value)}
-            placeholder="Nombre de chambres"
-          />
-        </div>
-        
-        <div>
-          <Label htmlFor="bathrooms">Nombre de salles de bain</Label>
-          <Input
-            type="number"
-            id="bathrooms"
-            value={bathrooms}
-            onChange={(e) => setBathrooms(e.target.value)}
-            placeholder="Nombre de salles de bain"
-          />
-        </div>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="basement"
-          checked={basement}
-          onChange={(e) => setBasement(e.target.checked)}
-          className="h-5 w-5"
-        />
-        <Label htmlFor="basement" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          Sous-sol
-        </Label>
-      </div>
-      
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id="garage"
-          checked={garage}
-          onChange={(e) => setGarage(e.target.checked)}
-          className="h-5 w-5"
-        />
-        <Label htmlFor="garage" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-          Garage
-        </Label>
-      </div>
-      
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={goToPreviousStep}>
-          Précédent
-        </Button>
-        <Button type="submit">
-          Continuer
-        </Button>
-      </div>
-    </form>
+            Précédent
+          </Button>
+          <Button type="submit">
+            Suivant
+          </Button>
+        </CardFooter>
+      </form>
+    </Card>
   );
 };
 
