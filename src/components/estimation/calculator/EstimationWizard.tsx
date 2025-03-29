@@ -32,6 +32,7 @@ const EstimationWizard = () => {
   const [estimationResult, setEstimationResult] = useState<number | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   
+  // Utiliser notre hook de navigation personnalisé
   const { 
     step, 
     totalSteps, 
@@ -74,8 +75,9 @@ const EstimationWizard = () => {
     }, 1000);
   };
 
+  // Gérer les soumissions de formulaire avec la logique de navigation appropriée
   const handleClientTypeSubmit = (data: { clientType: string }) => {
-    // Si c'est un professionnel, aller à l'étape 2, sinon aller à l'étape 3 (comme dans le formulaire original)
+    console.log("Client type submitted:", data);
     updateFormData(data);
     if (data.clientType === "professional") {
       setStep(1);
@@ -85,6 +87,7 @@ const EstimationWizard = () => {
   };
 
   const handleProjectTypeSubmit = (data: { projectType: string, landIncluded?: string }) => {
+    console.log("Project type submitted:", data);
     updateFormData(data);
     
     // Si c'est un projet de design d'espace, aller directement au formulaire de contact
@@ -99,10 +102,11 @@ const EstimationWizard = () => {
     estimationType: string;
     termsAccepted: boolean;
   }) => {
+    console.log("Estimation type submitted:", data);
     updateFormData(data);
     
     // Pour l'estimation rapide, aller directement aux prestations
-    if (data.estimationType.includes('Rapide')) {
+    if (data.estimationType && data.estimationType.includes('Rapide')) {
       setStep(4); // Page des prestations concernées
     } else {
       // Suivre la logique normale pour l'estimation précise
@@ -120,6 +124,7 @@ const EstimationWizard = () => {
   };
 
   const handleTerrainDetailsSubmit = (data: any) => {
+    console.log("Terrain details submitted:", data);
     updateFormData(data);
     
     // Différents chemins selon le type de projet
@@ -132,60 +137,72 @@ const EstimationWizard = () => {
   };
 
   const handleRenovationDemolitionSubmit = (data: any) => {
+    console.log("Renovation demolition submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleConstructionDetailsSubmit = (data: any) => {
+    console.log("Construction details submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleRoomsDetailsSubmit = (data: any) => {
+    console.log("Rooms details submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleFinishDetailsSubmit = (data: any) => {
+    console.log("Finish details submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleSpecialFeaturesSubmit = (data: any) => {
+    console.log("Special features submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleExteriorFeaturesSubmit = (data: any) => {
+    console.log("Exterior features submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
   const handleContactDetailsSubmit = (data: any) => {
+    console.log("Contact details submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
   
   const handleElectricalSubmit = (data: { electricalType: string }) => {
+    console.log("Electrical data submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
   
   const handlePlumbingSubmit = (data: { plumbingType: string }) => {
+    console.log("Plumbing data submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
   
   const handleHeatingSubmit = (data: { heatingType: string, hasAirConditioning?: boolean }) => {
+    console.log("Heating data submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
   
   const handleWindowsDoorsSubmit = (data: any) => {
+    console.log("Windows/Doors data submitted:", data);
     updateFormData(data);
     goToNextStep();
   };
 
+  // Rendre le composant approprié en fonction de l'étape actuelle
   const renderStep = () => {
     console.log("Rendering step:", step, "Project type:", formData.projectType);
     

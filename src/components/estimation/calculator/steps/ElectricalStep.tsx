@@ -27,7 +27,15 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
   });
   
   const onSubmit = (data: any) => {
+    console.log("Electrical data submitted:", data);
     updateFormData(data);
+    goToNextStep();
+  };
+
+  // Cette fonction est utilisée pour les clics directs sur les options radio
+  const handleDirectSelection = (value: string) => {
+    console.log("Direct selection of electrical type:", value);
+    updateFormData({ electricalType: value });
     goToNextStep();
   };
 
@@ -40,9 +48,14 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <Label className="text-base font-medium">Choisissez le niveau de prestation électrique</Label>
-            <RadioGroup className="grid gap-2" defaultValue={formData.electricalType}>
+            <RadioGroup className="grid gap-2" defaultValue={formData.electricalType || ""}>
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="basic" id="basic" {...register('electricalType', { required: 'Veuillez sélectionner une option' })} />
+                <RadioGroupItem 
+                  value="basic" 
+                  id="basic" 
+                  {...register('electricalType', { required: 'Veuillez sélectionner une option' })}
+                  onClick={() => handleDirectSelection('basic')}
+                />
                 <Label htmlFor="basic" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Zap className="h-5 w-5 text-blue-500" />
                   <div className="space-y-1">
@@ -53,7 +66,12 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="standard" id="standard" {...register('electricalType')} />
+                <RadioGroupItem 
+                  value="standard" 
+                  id="standard" 
+                  {...register('electricalType')}
+                  onClick={() => handleDirectSelection('standard')}
+                />
                 <Label htmlFor="standard" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Zap className="h-5 w-5 text-amber-500" />
                   <div className="space-y-1">
@@ -64,7 +82,12 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="premium" id="premium" {...register('electricalType')} />
+                <RadioGroupItem 
+                  value="premium" 
+                  id="premium" 
+                  {...register('electricalType')}
+                  onClick={() => handleDirectSelection('premium')}
+                />
                 <Label htmlFor="premium" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Zap className="h-5 w-5 text-purple-500" />
                   <div className="space-y-1">
@@ -75,7 +98,12 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="smart_home" id="smart_home" {...register('electricalType')} />
+                <RadioGroupItem 
+                  value="smart_home" 
+                  id="smart_home" 
+                  {...register('electricalType')}
+                  onClick={() => handleDirectSelection('smart_home')}
+                />
                 <Label htmlFor="smart_home" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Zap className="h-5 w-5 text-green-500" />
                   <div className="space-y-1">
@@ -86,7 +114,12 @@ const ElectricalStep: React.FC<ElectricalStepProps> = ({
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="non_concerne" id="non_concerne" {...register('electricalType')} />
+                <RadioGroupItem 
+                  value="non_concerne" 
+                  id="non_concerne" 
+                  {...register('electricalType')}
+                  onClick={() => handleDirectSelection('non_concerne')}
+                />
                 <Label htmlFor="non_concerne" className="cursor-pointer">Non concerné</Label>
               </div>
             </RadioGroup>

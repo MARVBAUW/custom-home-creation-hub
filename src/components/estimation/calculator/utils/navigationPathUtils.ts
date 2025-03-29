@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 
 /**
@@ -8,6 +7,8 @@ import { FormData } from '../types';
  * @returns Le numéro de la prochaine étape
  */
 export const determineNextStep = (currentStep: number, formData: FormData): number => {
+  console.log(`Determining next step from ${currentStep} for project type: ${formData.projectType}`);
+  
   // Chemin spécifique pour les clients professionnels
   if (formData.clientType === 'professional') {
     if (currentStep === 1) {
@@ -30,57 +31,49 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
   
   // Traitement spécial pour les projets de design d'espace
   if (formData.projectType === 'design') {
-    return 45; // Aller directement au formulaire de contact
+    return 9; // Aller directement au formulaire de contact
   }
   
   // Chemins spécifiques selon le type d'estimation
   if (currentStep === 4) {
     // Estimation rapide en 5 minutes
     if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
-      return 44; // Aller à la page des prestations concernées
+      return 7; // Aller à l'étape d'électricité
     }
   }
   
   // Chemins spécifiques selon le type de projet
   if (formData.projectType === 'construction' || formData.projectType === 'extension') {
-    // Sauter les pages spécifiques à la rénovation
-    if (currentStep === 28) {
-      return 30; // Sauter la page 29 (démolition rénovation)
-    }
-    
     // Pour l'estimation précise
     if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)') {
-      if (currentStep === 35) { // Après menuiseries extérieures
-        return 36; // Aller à l'électricité
+      if (currentStep === 7 && formData.electricalType) { // Après avoir choisi le type d'électricité
+        return 8; // Aller à la plomberie
+      }
+      if (currentStep === 8 && formData.plumbingType) { // Après avoir choisi le type de plomberie
+        return 9; // Aller au formulaire de contact
       }
     }
   } else if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-    // Pages spécifiques pour rénovation
-    if (currentStep === 28) {
-      return 29; // Aller à la page démolition
+    // Chemins pour projets de rénovation
+    if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)') {
+      if (currentStep === 7 && formData.electricalType) { // Après avoir choisi le type d'électricité
+        return 8; // Aller à la plomberie
+      }
+      if (currentStep === 8 && formData.plumbingType) { // Après avoir choisi le type de plomberie
+        return 9; // Aller au formulaire de contact
+      }
     }
   }
   
   // Gérer les sauts pour les options spécifiques
-  if (currentStep === 22 && !formData.includeEcoSolutions) {
-    if (formData.includeRenewableEnergy) {
-      return 23; // Aller aux énergies renouvelables
-    } else if (formData.includeLandscaping) {
-      return 24; // Sauter aux aménagements paysagers
-    } else if (formData.includeOptions) {
-      return 25; // Sauter aux options
-    } else if (formData.includeCuisine) {
-      return 26; // Sauter à la cuisine
-    } else if (formData.includeBathroom) {
-      return 27; // Sauter à la salle de bain
-    } else {
-      return 45; // Aller au formulaire de contact
-    }
+  if (currentStep === 8 && !formData.plumbingType) {
+    return 9; // Si pas de données de plomberie, aller au formulaire de contact
   }
   
-  // Gestion de la fin du formulaire après toutes les pages techniques
-  if (currentStep === 43) { // Après peinture
-    return 45; // Aller au formulaire de contact
+  // En cas de données manquantes à une étape, ne pas avancer
+  if (currentStep === 7 && !formData.electricalType) {
+    console.log("Electrical type is missing, staying at step 7");
+    return 7; // Rester sur l'étape électricité
   }
   
   // Par défaut, aller à l'étape suivante
@@ -111,23 +104,8 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
     }
   }
   
-  // Chemins spécifiques selon le type de projet
-  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
-    // Éviter de revenir aux pages spécifiques de rénovation
-    if (currentStep === 30) {
-      return 28; // Sauter la page 29 (démolition rénovation)
-    }
-  }
-  
-  // Gérer les sauts inverses pour les options spécifiques
-  if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-    if (currentStep === 23 && !formData.includeEcoSolutions) {
-      return 21; // Revenir avant les solutions écologiques
-    }
-  }
-  
   // Par défaut, aller à l'étape précédente
-  return Math.max(currentStep - 1, 1); // Ne pas descendre en-dessous de 1
+  return Math.max(currentStep - 1, 0); // Ne pas descendre en-dessous de 0
 };
 
 /**
@@ -136,6 +114,7 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
  * @returns Le montant estimé calculé
  */
 export const recalculateEstimation = (formData: FormData): number => {
+  
   let montantTotal = 0;
   
   // Calculer la base selon la surface
@@ -238,26 +217,53 @@ export const recalculateEstimation = (formData: FormData): number => {
   }
   
   // Menuiseries extérieures
-  if (formData.windowType === 'bois' && formData.windowRenovationArea) {
-    const area = typeof formData.windowRenovationArea === 'string' ? 
-      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
-    montantTotal += area * 650;
-  } else if (formData.windowType === 'pvc' && formData.windowRenovationArea) {
-    const area = typeof formData.windowRenovationArea === 'string' ? 
-      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
-    montantTotal += area * 390;
-  } else if (formData.windowType === 'alu' && formData.windowRenovationArea) {
-    const area = typeof formData.windowRenovationArea === 'string' ? 
-      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
-    montantTotal += area * 620;
-  } else if (formData.windowType === 'mixte' && formData.windowRenovationArea) {
-    const area = typeof formData.windowRenovationArea === 'string' ? 
-      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
-    montantTotal += area * 690;
-  } else if (formData.windowType === 'pvc_colore' && formData.windowRenovationArea) {
-    const area = typeof formData.windowRenovationArea === 'string' ? 
-      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
-    montantTotal += area * 410;
+  // Différencier entre construction (ajout) et rénovation (remplacement)
+  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+    // Pour construction, on utilise windowNewArea
+    if (formData.windowType === 'bois' && formData.windowNewArea) {
+      const area = typeof formData.windowNewArea === 'string' ? 
+        parseFloat(formData.windowNewArea) : formData.windowNewArea;
+      if (!isNaN(area)) montantTotal += area * 650;
+    } else if (formData.windowType === 'pvc' && formData.windowNewArea) {
+      const area = typeof formData.windowNewArea === 'string' ? 
+        parseFloat(formData.windowNewArea) : formData.windowNewArea;
+      if (!isNaN(area)) montantTotal += area * 390;
+    } else if (formData.windowType === 'alu' && formData.windowNewArea) {
+      const area = typeof formData.windowNewArea === 'string' ? 
+        parseFloat(formData.windowNewArea) : formData.windowNewArea;
+      if (!isNaN(area)) montantTotal += area * 620;
+    } else if (formData.windowType === 'mixte' && formData.windowNewArea) {
+      const area = typeof formData.windowNewArea === 'string' ? 
+        parseFloat(formData.windowNewArea) : formData.windowNewArea;
+      if (!isNaN(area)) montantTotal += area * 690;
+    } else if (formData.windowType === 'pvc_colore' && formData.windowNewArea) {
+      const area = typeof formData.windowNewArea === 'string' ? 
+        parseFloat(formData.windowNewArea) : formData.windowNewArea;
+      if (!isNaN(area)) montantTotal += area * 410;
+    }
+  } else {
+    // Pour rénovation, on utilise windowRenovationArea
+    if (formData.windowType === 'bois' && formData.windowRenovationArea) {
+      const area = typeof formData.windowRenovationArea === 'string' ? 
+        parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+      if (!isNaN(area)) montantTotal += area * 650;
+    } else if (formData.windowType === 'pvc' && formData.windowRenovationArea) {
+      const area = typeof formData.windowRenovationArea === 'string' ? 
+        parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+      if (!isNaN(area)) montantTotal += area * 390;
+    } else if (formData.windowType === 'alu' && formData.windowRenovationArea) {
+      const area = typeof formData.windowRenovationArea === 'string' ? 
+        parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+      if (!isNaN(area)) montantTotal += area * 620;
+    } else if (formData.windowType === 'mixte' && formData.windowRenovationArea) {
+      const area = typeof formData.windowRenovationArea === 'string' ? 
+        parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+      if (!isNaN(area)) montantTotal += area * 690;
+    } else if (formData.windowType === 'pvc_colore' && formData.windowRenovationArea) {
+      const area = typeof formData.windowRenovationArea === 'string' ? 
+        parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+      if (!isNaN(area)) montantTotal += area * 410;
+    }
   }
   
   // Options supplémentaires selon le questionnaire

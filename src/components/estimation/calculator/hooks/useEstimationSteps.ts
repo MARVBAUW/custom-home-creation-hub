@@ -43,7 +43,9 @@ export const useEstimationSteps = (formData: FormData) => {
     if (step < totalSteps - 1) {
       setAnimationDirection('forward');
       setTimeout(() => {
+        // Recalculer l'étape suivante en fonction des données du formulaire
         const nextStep = determineNextStep(step, formData);
+        console.log(`Navigation: Current step ${step} -> Next step ${nextStep}`);
         setStep(nextStep);
       }, 300);
     }
@@ -54,7 +56,9 @@ export const useEstimationSteps = (formData: FormData) => {
     if (step > 0) {
       setAnimationDirection('backward');
       setTimeout(() => {
+        // Recalculer l'étape précédente en fonction des données du formulaire
         const prevStep = determinePreviousStep(step, formData);
+        console.log(`Navigation: Current step ${step} -> Previous step ${prevStep}`);
         setStep(prevStep);
       }, 300);
     }
