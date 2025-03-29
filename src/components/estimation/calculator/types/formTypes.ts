@@ -128,7 +128,7 @@ export interface PlomberieFormProps extends BaseFormStepProps {
 
 // Chauffage form props
 export interface ChauffageFormProps extends BaseFormStepProps {
-  defaultValues?: { heatingType: string; hasAirConditioning: boolean };
+  defaultValues?: { heatingType: string; hasAirConditioning: boolean | string };
   onSubmit?: (data: any) => void;
 }
 
