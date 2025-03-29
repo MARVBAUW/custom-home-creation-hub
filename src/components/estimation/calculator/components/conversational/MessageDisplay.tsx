@@ -1,66 +1,92 @@
 
-import React, { useRef, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Message } from './types';
+import React from 'react';
+import { MessageDisplayProps } from './types';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Bot, User, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface MessageDisplayProps {
-  messages: Message[];
-  loading: boolean;
-  onOptionClick: (option: string) => void;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
-}
-
-const MessageDisplay: React.FC<MessageDisplayProps> = ({ 
-  messages, 
-  loading, 
-  onOptionClick, 
-  messagesEndRef 
+const MessageDisplay: React.FC<MessageDisplayProps> = ({
+  messages,
+  loading,
+  onOptionClick,
+  messagesEndRef
 }) => {
   return (
-    <div className="flex-1 p-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
-      {messages.map(message => (
-        <div key={message.id} className={`mb-4 ${message.type === 'user' ? 'flex justify-end' : ''}`}>
-          <div className={`
-            max-w-[80%] p-3 rounded-lg 
-            ${message.type === 'user' 
-              ? 'bg-progineer-gold/80 text-white ml-auto' 
-              : 'bg-white dark:bg-gray-800 shadow-sm'
-            }
-          `}>
-            <p className="text-sm">{message.content}</p>
-            
-            {message.options && message.options.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {message.options.map(option => (
-                  <Button
-                    key={option}
-                    variant="outline"
-                    size="sm"
-                    className="text-xs bg-white hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600"
-                    onClick={() => onOptionClick(option)}
-                  >
-                    {option}
-                  </Button>
-                ))}
+    <div className="flex-grow overflow-auto p-4 bg-gray-50">
+      <AnimatePresence>
+        {messages.map((message) => (
+          <motion.div
+            key={message.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className={`mb-4 ${message.type === 'user' ? 'flex justify-end' : 'flex justify-start'}`}
+          >
+            {message.type === 'system' || message.type === 'assistant' ? (
+              <div className="flex max-w-[80%]">
+                <div className="bg-khaki-600 text-white h-8 w-8 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                  <Bot size={18} />
+                </div>
+                <div className="flex flex-col">
+                  <Card className="p-3 bg-white shadow-sm border-gray-200">
+                    <p className="text-sm whitespace-pre-line">{message.content}</p>
+                  </Card>
+                  
+                  {message.options && message.options.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {message.options.map((option, index) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onOptionClick(option)}
+                          className="text-xs bg-white hover:bg-gray-100"
+                        >
+                          {option}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-      ))}
-      
-      {loading && (
-        <div className="mb-4">
-          <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm inline-block">
-            <div className="flex space-x-2">
-              <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              <div className="w-2 h-2 bg-gray-300 dark:bg-gray-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+            ) : message.type === 'user' ? (
+              <div className="flex max-w-[80%]">
+                <Card className="p-3 bg-khaki-100 shadow-sm border-gray-200 mr-2">
+                  <p className="text-sm">{message.content}</p>
+                </Card>
+                <div className="bg-gray-500 text-white h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0">
+                  <User size={18} />
+                </div>
+              </div>
+            ) : null}
+          </motion.div>
+        ))}
+        
+        {loading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-start mb-4"
+          >
+            <div className="flex max-w-[80%]">
+              <div className="bg-khaki-600 text-white h-8 w-8 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
+                <Bot size={18} />
+              </div>
+              <Card className="p-3 bg-white shadow-sm border-gray-200">
+                <div className="flex items-center">
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  <p className="text-sm text-gray-500">En train d'écrire...</p>
+                </div>
+              </Card>
             </div>
-          </div>
-        </div>
-      )}
-      
-      <div ref={messagesEndRef} />
+          </motion.div>
+        )}
+        
+        <div ref={messagesEndRef} />
+      </AnimatePresence>
     </div>
   );
 };

@@ -1,68 +1,36 @@
 
-// Types communs pour l'ensemble du formulaire d'estimation
-
+// Types génériques pour toutes les interfaces
 export interface FormData {
-  // Informations client
+  // Informations générales
   clientType?: string;
-  name?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  email?: string;
-  address?: string;
-  postalCode?: string;
-  city?: string;
-  message?: string;
-  agreeTerms?: boolean;
-  newsletter?: boolean;
-  termsAccepted?: boolean;
-  
-  // Informations projet professionnel
-  activity?: string;
-  startDate?: string;
-  endDate?: string;
-  
-  // Informations projet commun
   projectType?: string;
   estimationType?: string;
-  surface?: number | string;
-  levels?: number | string;
-  units?: number | string;
+  termsAccepted?: boolean;
+  
+  // Détails du projet
+  surface?: string | number;
+  levels?: string;
+  units?: string | number;
+  roomCount?: number;
+  
+  // Localisation
+  city?: string;
+  cityTaxRate?: number;
   
   // Terrain
   terrainType?: string;
-  terrainAccess?: string;
-  terrainSurface?: number | string;
-  landPrice?: number | string;
   hasLand?: boolean;
-  waterConnection?: boolean;
-  electricityConnection?: boolean;
-  gasConnection?: boolean;
-  sewerConnection?: boolean;
-  fiberConnection?: boolean;
-  needsSepticTank?: boolean;
-  floodRisk?: boolean;
-  claySoil?: boolean;
-  rockySoil?: boolean;
-  wetlandZone?: boolean;
-  heritageZone?: boolean;
+  landPrice?: number;
+  landArea?: string | number;
   
-  // Gros oeuvre
+  // Finition et qualité
+  finishLevel?: string;
+  
+  // Gros œuvre
   wallType?: string;
-  foundationType?: string;
-  soilType?: string;
-  wallThickness?: number | string;
-  hasBasement?: boolean;
-  basementType?: string;
-  floorType?: string;
-  slopedLand?: boolean;
-  difficultAccess?: boolean;
-  needsDemolition?: boolean;
-  needsWaterManagement?: boolean;
   
-  // Charpente et combles
+  // Charpente
   roofType?: string;
-  atticType?: string;
   
   // Couverture
   roofingType?: string;
@@ -72,103 +40,93 @@ export interface FormData {
   
   // Façade
   facadeMaterial?: string;
-  
-  // Façade rénovation
-  metalCladdingPercentage?: number | string;
-  woodCladdingPercentage?: number | string;
-  stoneCladdingPercentage?: number | string;
-  windowRenovationArea?: number | string;
-  windowNewArea?: number | string;
+  metalCladdingPercentage?: string | number;
+  woodCladdingPercentage?: string | number;
+  stoneCladdingPercentage?: string | number;
   
   // Menuiseries extérieures
   windowType?: string;
   shutterType?: string;
+  windowRenovationArea?: string | number;
+  windowNewArea?: string | number;
   
-  // Techniques
+  // Électricité
   electricalType?: string;
+  
+  // Plomberie
   plumbingType?: string;
+  
+  // Chauffage
   heatingType?: string;
-  hasAirConditioning?: boolean | string;
+  hasAirConditioning?: boolean;
   
   // Plâtrerie
   plasteringType?: string;
   
   // Menuiseries intérieures
-  interiorDoorsType?: string;
   doorType?: string;
+  interiorDoorsType?: string;
   interiorFittings?: string;
   
-  // Revêtements
-  tileType?: string;
+  // Revêtements de sol
   floorTileType?: string;
   wallTileType?: string;
-  floorTilePercentage?: number | string;
-  parquetPercentage?: number | string;
-  softFloorPercentage?: number | string;
+  floorTilePercentage?: string | number;
+  
+  // Parquet
   parquetType?: string;
   softFloorType?: string;
-  flooringType?: string;
+  parquetPercentage?: string | number;
+  softFloorPercentage?: string | number;
   
   // Peinture
   paintType?: string;
-  basicPaintPercentage?: number | string;
-  decorativePaintPercentage?: number | string;
-  wallpaperPercentage?: number | string;
-  woodCladPercentage?: number | string;
-  stoneCladPercentage?: number | string;
+  basicPaintPercentage?: string | number;
+  decorativePaintPercentage?: string | number;
+  wallpaperPercentage?: string | number;
+  woodCladPercentage?: string | number;
+  stoneCladPercentage?: string | number;
   
-  // Aménagements extérieurs
-  gardenArea?: number | string;
-  gardenSurface?: number | string;
-  terrace?: boolean;
-  swimmingPool?: boolean;
-  garage?: boolean;
-  carport?: boolean;
-  driveway?: boolean;
-  fence?: boolean;
-  gate?: boolean;
-  garden?: boolean;
-  terraceType?: string;
-  terraceArea?: number | string;
-  poolType?: string;
-  garageSize?: string;
-  outdoorLighting?: boolean;
-  irrigation?: boolean;
-  outdoorKitchen?: boolean;
-  pergola?: boolean;
-  exteriorFeatures?: string[];
-
-  // Pièces spécifiques
+  // Cuisine
   kitchenType?: string;
-  bathroomType?: string;
-  bathroomCount?: string;
   
-  // Options écologiques et énergies renouvelables
-  includeEcoSolutions?: boolean;
-  includeRenewableEnergy?: boolean;
-  includeLandscaping?: boolean;
+  // Salle de bain
+  bathroomCount?: number;
+  
+  // Options supplémentaires
   includeOptions?: boolean;
   includeCuisine?: boolean;
   includeBathroom?: boolean;
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  includeLandscaping?: boolean;
   
-  // Solutions environnementales
-  energyType?: string;
-  solutionType?: string;
-  solarPanelSurface?: number | string;
-  ecoFriendlyInsulation?: boolean;
+  // Caractéristiques extérieures
+  exteriorFeatures?: string[];
   
-  // Type de construction et finitions
-  constructionType?: string;
-  constructionMode?: string;
-  finishLevel?: string;
-  
-  // Pour la rénovation
+  // Rénovation
   renovationType?: string;
   renovationAreas?: string[];
   
-  // Informations fiscales
-  cityTaxRate?: number | string;
+  // Planning
+  startDate?: string;
+  endDate?: string;
+  
+  // Budget
+  budget?: number;
+  
+  // Informations de contact
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  postalCode?: string;
+  contactMethod?: string;
+  
+  // Autres paramètres
+  [key: string]: any;
 }
 
-export * from './formTypes';
+// Réexporter d'autres types depuis les sous-dossiers si nécessaire
 export * from './validationSchemas';

@@ -1,43 +1,121 @@
 
-import React from 'react';
-import { FormData } from '../../types';
-
-export interface MessageProcessorProps {
-  onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-}
+import React, { useEffect } from 'react';
+import { MessageProcessorProps } from './types';
+import { ExtractedInfo, analyzeUserIntent } from '../../utils/conversationalUtils';
 
 const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
   const { onUserInput, formData, updateFormData } = props;
 
+  // Traitement des entrées utilisateur
   const processUserInput = (input: string) => {
-    // This function would contain the logic for processing user input
-    // and determining how to update the form data based on the natural language input
+    console.log('Traitement de l\'entrée utilisateur:', input);
     
-    console.log('Processing input:', input);
+    // Analyser l'intention de l'utilisateur
+    const analysis = analyzeUserIntent(input);
+    console.log('Analyse:', analysis);
     
-    // Example simple processing - extract surface value if mentioned
-    const surfaceMatch = input.match(/(\d+)\s*m²/);
-    if (surfaceMatch) {
-      const surface = parseInt(surfaceMatch[1], 10);
-      updateFormData({ surface });
-      console.log(`Detected surface: ${surface}m²`);
-    }
+    // Extraire et mettre à jour les données du formulaire
+    extractAndUpdateFormData(analysis);
     
-    // Extract project type information
-    if (input.toLowerCase().includes('maison')) {
-      updateFormData({ projectType: 'Construction maison individuelle' });
-    } else if (input.toLowerCase().includes('rénovation')) {
-      updateFormData({ projectType: 'Rénovation lourde' });
-    }
-
-    // Pass the processed input up to the parent component
+    // Transmettre l'entrée traitée au parent
     onUserInput(input);
   };
 
-  // Ce composant ne rend rien visuellement, il gère seulement la logique
-  return <>{/* Processeur de messages - ne contient que de la logique */}</>;
+  // Extraire et mettre à jour les données du formulaire
+  const extractAndUpdateFormData = (analysis: ExtractedInfo) => {
+    const newData: Partial<Record<keyof FormData, any>> = {};
+    let hasUpdates = false;
+    
+    // Récupérer le type de projet s'il est mentionné
+    if (analysis.entities.project_type) {
+      if (analysis.entities.project_type.toLowerCase().includes('construction')) {
+        newData.projectType = 'construction';
+        hasUpdates = true;
+      } else if (analysis.entities.project_type.toLowerCase().includes('rénov')) {
+        newData.projectType = 'renovation';
+        hasUpdates = true;
+      } else if (analysis.entities.project_type.toLowerCase().includes('extension')) {
+        newData.projectType = 'extension';
+        hasUpdates = true;
+      }
+    }
+    
+    // Récupérer la surface si elle est mentionnée
+    if (analysis.entities.surface) {
+      newData.surface = analysis.entities.surface.toString();
+      hasUpdates = true;
+    }
+    
+    // Récupérer la localisation si elle est mentionnée
+    if (analysis.entities.location) {
+      newData.city = analysis.entities.location;
+      hasUpdates = true;
+    }
+    
+    // Récupérer le nombre de chambres si mentionné
+    if (analysis.entities.rooms) {
+      newData.roomCount = analysis.entities.rooms;
+      hasUpdates = true;
+    }
+    
+    // Récupérer le nombre d'étages si mentionné
+    if (analysis.entities.floors) {
+      if (analysis.entities.floors === 1) {
+        newData.levels = '1 niveau (plain-pied)';
+      } else if (analysis.entities.floors === 2) {
+        newData.levels = '2 niveaux (R+1)';
+      } else if (analysis.entities.floors === 3) {
+        newData.levels = '3 niveaux (R+2)';
+      } else {
+        newData.levels = '4 niveaux ou plus';
+      }
+      hasUpdates = true;
+    }
+    
+    // Récupérer le niveau de qualité s'il est mentionné
+    if (analysis.entities.quality) {
+      newData.finishLevel = analysis.entities.quality;
+      hasUpdates = true;
+    }
+    
+    // Récupérer les informations sur le terrain s'il est mentionné
+    if (analysis.entities.has_terrain !== undefined) {
+      newData.hasLand = analysis.entities.has_terrain;
+      
+      if (analysis.entities.terrain_price) {
+        newData.landPrice = analysis.entities.terrain_price;
+      }
+      
+      hasUpdates = true;
+    }
+    
+    // Récupérer le budget s'il est mentionné
+    if (analysis.entities.budget) {
+      newData.budget = analysis.entities.budget;
+      hasUpdates = true;
+    }
+    
+    // Récupérer l'email s'il est mentionné
+    if (analysis.entities.email) {
+      newData.email = analysis.entities.email;
+      hasUpdates = true;
+    }
+    
+    // Récupérer le téléphone s'il est mentionné
+    if (analysis.entities.phone) {
+      newData.phone = analysis.entities.phone;
+      hasUpdates = true;
+    }
+    
+    // Mettre à jour les données du formulaire si des modifications ont été détectées
+    if (hasUpdates) {
+      console.log('Mise à jour des données du formulaire:', newData);
+      updateFormData(newData);
+    }
+  };
+
+  // Ce composant ne rend rien visuellement
+  return null;
 };
 
 export default MessageProcessor;
