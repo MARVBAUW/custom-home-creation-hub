@@ -16,6 +16,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
   defaultValues,
   onSubmit
 }) => {
+  // Initialize state with the default value or the current formData value
   const [plumbingType, setPlumbingType] = useState<string>(
     defaultValues?.plumbingType || formData.plumbingType || 'standard'
   );
@@ -24,6 +25,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
     // Create the data object to pass to the submit handler
     const data = { plumbingType };
     
+    // Use the provided onSubmit handler or fall back to default behavior
     if (onSubmit) {
       onSubmit(data);
     } else {

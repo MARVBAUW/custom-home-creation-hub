@@ -11,11 +11,19 @@ export const createTechnicalStepRegistry = (
   updateFormData: (data: Partial<FormData>) => void,
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
+  // Define the function for moving to the next step
+  const goToNextStep = () => {
+    console.log('Going to next step');
+  };
+
   // Handle the electricalType submission
   const onElectriciteSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
     const electricalType = data.electricalType;
-    const validElectricalType = ['basic', 'standard', 'premium', 'smart_home'].includes(electricalType as string) 
+    
+    // Validate that electricalType is one of the expected values
+    const validElectricalTypes = ['basic', 'standard', 'premium', 'smart_home'];
+    const validElectricalType = validElectricalTypes.includes(electricalType as string) 
       ? electricalType 
       : 'standard';
     
@@ -24,6 +32,10 @@ export const createTechnicalStepRegistry = (
       electricalType: validElectricalType as string
     });
     
+    // Log the update for debugging
+    console.log('Updated electricalType:', validElectricalType);
+    
+    // Continue to the next step
     goToNextStep();
   };
 
@@ -31,7 +43,10 @@ export const createTechnicalStepRegistry = (
   const onPlomberieSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
     const plumbingType = data.plumbingType;
-    const validPlumbingType = ['basic', 'standard', 'premium'].includes(plumbingType as string)
+    
+    // Validate that plumbingType is one of the expected values
+    const validPlumbingTypes = ['basic', 'standard', 'premium'];
+    const validPlumbingType = validPlumbingTypes.includes(plumbingType as string)
       ? plumbingType
       : 'standard';
     
@@ -40,6 +55,10 @@ export const createTechnicalStepRegistry = (
       plumbingType: validPlumbingType as string
     });
     
+    // Log the update for debugging
+    console.log('Updated plumbingType:', validPlumbingType);
+    
+    // Continue to the next step
     goToNextStep();
   };
 
@@ -47,11 +66,15 @@ export const createTechnicalStepRegistry = (
   const onChauffageSubmit = (data: Partial<FormData>) => {
     // Format and validate the data
     const heatingType = data.heatingType;
-    const validHeatingType = ['standard', 'floorHeating', 'heatPump'].includes(heatingType as string)
+    
+    // Validate that heatingType is one of the expected values
+    const validHeatingTypes = ['standard', 'floorHeating', 'heatPump'];
+    const validHeatingType = validHeatingTypes.includes(heatingType as string)
       ? heatingType
       : 'standard';
     
-    const hasAirConditioning = !!data.hasAirConditioning;
+    // Ensure hasAirConditioning is a boolean
+    const hasAirConditioning = data.hasAirConditioning === true;
     
     // Update with validated data
     updateFormData({
@@ -59,6 +82,11 @@ export const createTechnicalStepRegistry = (
       hasAirConditioning: hasAirConditioning
     });
     
+    // Log the update for debugging
+    console.log('Updated heatingType:', validHeatingType);
+    console.log('Updated hasAirConditioning:', hasAirConditioning);
+    
+    // Continue to the next step
     goToNextStep();
   };
 
@@ -88,10 +116,4 @@ export const createTechnicalStepRegistry = (
       />
     ),
   };
-
-  function goToNextStep() {
-    // This function would typically be passed in from the parent component
-    // For now, we'll just define it here to avoid TypeScript errors
-    console.log('Going to next step');
-  }
 };

@@ -16,6 +16,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
   defaultValues,
   onSubmit
 }) => {
+  // Initialize state with the default value or the current formData value
   const [electricalType, setElectricalType] = useState<string>(
     defaultValues?.electricalType || formData.electricalType || 'standard'
   );
@@ -24,6 +25,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
     // Create the data object to pass to the submit handler
     const data = { electricalType };
     
+    // Use the provided onSubmit handler or fall back to default behavior
     if (onSubmit) {
       onSubmit(data);
     } else {
