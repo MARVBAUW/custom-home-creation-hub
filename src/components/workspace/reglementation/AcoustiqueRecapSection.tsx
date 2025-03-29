@@ -5,7 +5,7 @@ import { Volume, Home, Store, Headphones, Building, School, ExternalLink, BookOp
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { acoustiqueData } from './data/acoustique';
 import { acoustiqueDTUs } from './data/dtu/acoustique';
 import { DTUDetailDialog } from './dtu/DTUDetailDialog';
