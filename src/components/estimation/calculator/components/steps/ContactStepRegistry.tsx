@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StepComponentRegistry, FormStepProps } from './StepComponents';
+import { StepComponentRegistry } from './StepComponents';
 import ContactForm from '../../FormSteps/ContactForm';
 import { FormData } from '../../types';
 

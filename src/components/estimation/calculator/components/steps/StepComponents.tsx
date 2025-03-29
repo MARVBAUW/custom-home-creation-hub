@@ -1,6 +1,7 @@
 
 import React from 'react';
 import DefaultStepContent from '../../DefaultStepContent';
+import { BaseFormStepProps } from '../../types';
 
 // Define types for the step components props
 export interface StepComponentProps {
@@ -17,8 +18,8 @@ export interface DefaultStepProps extends StepComponentProps {
 
 // Type for forms that need default values
 export interface FormStepProps<T = any> extends StepComponentProps {
-  defaultValues: T;
-  onSubmit: (data: T) => void;
+  defaultValues?: T;
+  onSubmit?: (data: T) => void;
 }
 
 // Step component registry - updated to allow both number and string keys

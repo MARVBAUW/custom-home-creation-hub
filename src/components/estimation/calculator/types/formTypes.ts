@@ -11,11 +11,9 @@ export interface BaseFormStepProps {
 }
 
 // Form step props for components that use defaultValues and onSubmit pattern
-export interface FormStepProps<T = any> {
+export interface FormStepProps<T = any> extends BaseFormStepProps {
   defaultValues?: T;
   onSubmit?: (data: T) => void;
-  animationDirection: 'forward' | 'backward';
-  goToPreviousStep: () => void;
 }
 
 // Client type form props
@@ -31,18 +29,21 @@ export interface ProjectDetailsFormProps extends BaseFormStepProps {
 }
 
 // Professional project form props
-export interface ProfessionalProjectFormProps extends FormStepProps {
+export interface ProfessionalProjectFormProps extends BaseFormStepProps {
   defaultValues?: { activity: string; projectType: string; startDate: string; endDate: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Individual project form props
-export interface IndividualProjectFormProps extends FormStepProps {
+export interface IndividualProjectFormProps extends BaseFormStepProps {
   defaultValues?: { projectType: string };
+  onSubmit?: (data: { projectType: string }) => void;
 }
 
 // Estimation type form props
-export interface EstimationTypeFormProps extends FormStepProps {
+export interface EstimationTypeFormProps extends BaseFormStepProps {
   defaultValues?: { estimationType: string; termsAccepted: boolean };
+  onSubmit?: (data: any) => void;
 }
 
 // Terrain form props
@@ -58,76 +59,89 @@ export interface GrosOeuvreFormProps extends BaseFormStepProps {
 }
 
 // Charpente form props
-export interface CharpenteFormProps extends FormStepProps {
+export interface CharpenteFormProps extends BaseFormStepProps {
   defaultValues?: { roofType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Comble form props
-export interface CombleFormProps extends FormStepProps {
+export interface CombleFormProps extends BaseFormStepProps {
   defaultValues?: { atticType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Couverture form props
-export interface CouvertureFormProps extends FormStepProps {
+export interface CouvertureFormProps extends BaseFormStepProps {
   defaultValues?: { roofingType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Facade form props
-export interface FacadeFormProps extends FormStepProps {
+export interface FacadeFormProps extends BaseFormStepProps {
   defaultValues?: { facadeMaterial: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Facade renovation form props
-export interface FacadeRenovFormProps extends FormStepProps {
+export interface FacadeRenovFormProps extends BaseFormStepProps {
   defaultValues?: { 
     metalCladdingPercentage: number; 
     woodCladdingPercentage: number; 
     stoneCladdingPercentage: number 
   };
+  onSubmit?: (data: any) => void;
 }
 
 // Menuiseries extérieures form props
-export interface MenuiseriesExtFormProps extends FormStepProps {
+export interface MenuiseriesExtFormProps extends BaseFormStepProps {
   defaultValues?: { windowType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Isolation form props
-export interface IsolationFormProps extends FormStepProps {
+export interface IsolationFormProps extends BaseFormStepProps {
   defaultValues?: { insulationType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Electricité form props
-export interface ElectriciteFormProps extends FormStepProps {
+export interface ElectriciteFormProps extends BaseFormStepProps {
   defaultValues?: { electricalType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Plomberie form props
-export interface PlomberieFormProps extends FormStepProps {
+export interface PlomberieFormProps extends BaseFormStepProps {
   defaultValues?: { plumbingType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Chauffage form props
-export interface ChauffageFormProps extends FormStepProps {
+export interface ChauffageFormProps extends BaseFormStepProps {
   defaultValues?: { heatingType: string; hasAirConditioning: boolean };
+  onSubmit?: (data: any) => void;
 }
 
 // Plâtrerie form props
-export interface PlatrerieFormProps extends FormStepProps {
+export interface PlatrerieFormProps extends BaseFormStepProps {
   defaultValues?: { plasteringType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Menuiseries intérieures form props
-export interface MenuiseriesIntFormProps extends FormStepProps {
+export interface MenuiseriesIntFormProps extends BaseFormStepProps {
   defaultValues?: { interiorDoorsType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Carrelage form props
-export interface CarrelageFormProps extends FormStepProps {
+export interface CarrelageFormProps extends BaseFormStepProps {
   defaultValues?: { tileType: string };
+  onSubmit?: (data: any) => void;
 }
 
 // Parquet form props
-export interface ParquetFormProps extends FormStepProps {
+export interface ParquetFormProps extends BaseFormStepProps {
   defaultValues?: {
     floorTilePercentage: number;
     parquetPercentage: number;
@@ -135,10 +149,11 @@ export interface ParquetFormProps extends FormStepProps {
     parquetType?: string;
     softFloorType?: string;
   };
+  onSubmit?: (data: any) => void;
 }
 
 // Peinture form props
-export interface PeintureFormProps extends FormStepProps {
+export interface PeintureFormProps extends BaseFormStepProps {
   defaultValues?: {
     basicPaintPercentage: number | string;
     decorativePaintPercentage: number | string;
@@ -146,6 +161,7 @@ export interface PeintureFormProps extends FormStepProps {
     woodCladPercentage: number | string;
     stoneCladPercentage: number | string;
   };
+  onSubmit?: (data: any) => void;
 }
 
 // Aménagement extérieur form props

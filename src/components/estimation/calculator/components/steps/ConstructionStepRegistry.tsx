@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { StepComponentRegistry, FormStepProps } from './StepComponents';
+import { StepComponentRegistry } from './StepComponents';
 import ConstructionDetailsForm from '../../FormSteps/ConstructionDetailsForm';
 import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
 import CharpenteForm from '../../FormSteps/CharpenteForm';
 import CombleForm from '../../FormSteps/CombleForm';
-import { FormData, FormStepProps as ProjectFormStepProps } from '../../types';
+import { FormData, BaseFormStepProps } from '../../types';
 
 // Registry for construction steps (steps 5-9)
 export const createConstructionStepRegistry = (
@@ -19,7 +19,7 @@ export const createConstructionStepRegistry = (
   goToPreviousStep: () => void
 ): StepComponentRegistry => {
   return {
-    5: (props: FormStepProps) => (
+    5: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <ConstructionDetailsForm
         formData={formData}
         updateFormData={(data) => onConstructionDetailsSubmit({
@@ -32,7 +32,7 @@ export const createConstructionStepRegistry = (
         animationDirection={props.animationDirection}
       />
     ),
-    6: (props: FormStepProps) => (
+    6: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <TerrainForm
         formData={formData}
         updateFormData={(data) => onTerrainSubmit({
@@ -43,7 +43,7 @@ export const createConstructionStepRegistry = (
         animationDirection={props.animationDirection}
       />
     ),
-    7: (props: FormStepProps) => (
+    7: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <GrosOeuvreForm
         formData={formData}
         updateFormData={(data) => onGrosOeuvreSubmit({
@@ -54,7 +54,7 @@ export const createConstructionStepRegistry = (
         animationDirection={props.animationDirection}
       />
     ),
-    8: (props: FormStepProps) => (
+    8: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <CharpenteForm
         formData={formData}
         updateFormData={(data) => onCharpenteSubmit({
@@ -65,7 +65,7 @@ export const createConstructionStepRegistry = (
         animationDirection={props.animationDirection}
       />
     ),
-    9: (props: FormStepProps) => (
+    9: (props: { animationDirection: 'forward' | 'backward', goToPreviousStep: () => void }) => (
       <CombleForm
         formData={formData}
         updateFormData={(data) => onComblesSubmit({

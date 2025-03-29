@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
@@ -16,13 +15,15 @@ interface GrosOeuvreFormProps {
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
 
 const GrosOeuvreForm: React.FC<GrosOeuvreFormProps> = ({ 
   formData, 
   updateFormData, 
   goToNextStep,
-  goToPreviousStep
+  goToPreviousStep,
+  animationDirection
 }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
