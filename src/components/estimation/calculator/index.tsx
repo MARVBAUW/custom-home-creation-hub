@@ -8,7 +8,6 @@ const EstimationCalculator: React.FC = () => {
     <Card className="shadow-sm border-0">
       <CardContent className="p-0 sm:p-2">
         <div className="relative">
-          {/* Un seul composant de formulaire */}
           <ConversationalForm />
         </div>
       </CardContent>

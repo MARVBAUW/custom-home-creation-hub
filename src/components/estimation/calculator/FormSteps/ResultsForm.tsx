@@ -9,21 +9,26 @@ import EstimationReport from '../EstimationReport';
 import DetailedEstimationReport from '../DetailedEstimationReport';
 import EstimationSummaryReport from '../EstimationSummaryReport';
 import ProfessionalQuoteReport from '../ProfessionalQuoteReport';
+import { generatePDF } from '../utils/pdfGenerator';
+import { useToast } from '@/hooks/use-toast';
 
 interface ResultsFormProps {
   formData: FormData;
   estimationResult: number | null;
   categoriesAmounts: any[];
   goToPreviousStep: () => void;
+  animationDirection?: 'forward' | 'backward';
 }
 
 const ResultsForm: React.FC<ResultsFormProps> = ({ 
   formData, 
   estimationResult,
   categoriesAmounts,
-  goToPreviousStep
+  goToPreviousStep,
+  animationDirection = 'forward'
 }) => {
   const [activeTab, setActiveTab] = useState("summary");
+  const { toast } = useToast();
   
   // Simuler les données d'estimation
   const estimationData = {
@@ -52,6 +57,26 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   // Fonction pour l'impression du devis/rapport
   const handlePrint = () => {
     window.print();
+  };
+  
+  // Handle PDF download
+  const handleDownloadPDF = () => {
+    try {
+      const pdfName = generatePDF(formData, estimationData);
+      toast({
+        title: "PDF généré avec succès",
+        description: `Votre estimation a été téléchargée sous le nom "${pdfName}"`,
+        duration: 3000
+      });
+    } catch (error) {
+      console.error("Erreur lors de la génération du PDF:", error);
+      toast({
+        title: "Erreur de génération",
+        description: "Une erreur est survenue lors de la génération du PDF. Veuillez réessayer.",
+        duration: 3000,
+        variant: "destructive"
+      });
+    }
   };
   
   return (
@@ -87,16 +112,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
             <Button
               variant="outline"
               className="flex items-center gap-2"
-              onClick={() => {
-                const pdfBlob = new Blob(['Estimation détaillée'], { type: 'application/pdf' });
-                const url = URL.createObjectURL(pdfBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `Estimation_${formData.projectType || 'Projet'}_${new Date().toISOString().slice(0, 10)}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              onClick={handleDownloadPDF}
             >
               <Download className="h-4 w-4" />
               Télécharger PDF

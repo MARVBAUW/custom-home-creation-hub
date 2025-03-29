@@ -18,7 +18,6 @@ const EstimationCalculator: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="relative">
-          {/* Formulaire conversationnel - seul formulaire affiché */}
           <ConversationalForm />
           
           <div className="text-xs text-gray-500 mt-4 text-center">

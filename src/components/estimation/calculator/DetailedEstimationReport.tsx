@@ -9,8 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { formatPrice } from './utils';
 import Logo from '@/components/common/Logo';
 import { Separator } from '@/components/ui/separator';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { generatePDF } from './utils/pdfGenerator';
 
 interface EstimationReportProps {
   estimation: any;
@@ -50,74 +49,21 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
   ];
   
   // Fonction pour générer le PDF
-  const generatePDF = () => {
-    const doc = new jsPDF();
-    
-    // Titre du document
-    doc.setFontSize(20);
-    doc.text('Estimation Détaillée du Projet', 14, 20);
-    
-    // Informations du projet
-    doc.setFontSize(12);
-    doc.text(`Type de projet: ${formData.projectType}`, 14, 30);
-    doc.text(`Surface: ${formData.surface} m²`, 14, 36);
-    doc.text(`Localisation: ${formData.city || 'Non spécifiée'}`, 14, 42);
-    doc.text(`Finition: ${formData.finishLevel || 'Standard'}`, 14, 48);
-    
-    // Configuration du tableau avec les types corrects pour jsPDF-autotable
-    const columnStyles = {
-      0: { fontStyle: 'bold' as 'bold' },
-      1: { halign: 'right' as 'right' }
-    };
-    
-    const headStyles = {
-      fillColor: [242, 242, 242] as [number, number, number],
-      textColor: [51, 51, 51] as [number, number, number],
-      fontStyle: 'bold' as 'bold',
-      halign: 'center' as 'center'
-    };
-    
-    // Préparation des données pour le tableau
-    const tableBody = tableData.map(item => [item.label, formatPrice(item.amount)]);
-    
-    // Ajout du tableau
-    autoTable(doc, {
-      head: [['Poste', 'Montant (€)']],
-      body: tableBody,
-      columnStyles: columnStyles,
-      headStyles: headStyles,
-      startY: 60,
-    });
-    
-    // Totaux
-    const finalY = (doc as any).lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text(`Total HT: ${formatPrice(estimation.totalHT)}`, 14, finalY);
-    doc.text(`Total TTC: ${formatPrice(estimation.totalTTC)}`, 14, finalY + 10);
-    
-    // Prix du terrain si inclus
-    if (includeTerrainPrice && formData.landPrice) {
-      doc.text(`Prix du terrain: ${formatPrice(formData.landPrice)}`, 14, finalY + 20);
-      doc.text(`Frais de notaire (estimation): ${formatPrice(estimation.fraisNotaire)}`, 14, finalY + 30);
-      doc.text(`Coût total avec terrain: ${formatPrice(estimation.coutTotalAvecTerrain)}`, 14, finalY + 40);
+  const handleGeneratePDF = () => {
+    try {
+      const pdfName = generatePDF(formData, estimation);
+      toast({
+        title: "PDF téléchargé",
+        description: `Votre estimation détaillée a été téléchargée sous le nom "${pdfName}"`,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la génération du PDF:", error);
+      toast({
+        title: "Erreur",
+        description: "Un problème est survenu lors de la génération du PDF.",
+        variant: "destructive"
+      });
     }
-    
-    // Footer
-    const pageCount = (doc as any).getNumberOfPages();
-    for(let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(10);
-      doc.setTextColor(40);
-      doc.text(`Page ${i} sur ${pageCount}`, doc.internal.pageSize.getWidth() - 35, doc.internal.pageSize.getHeight() - 10);
-    }
-    
-    // Téléchargement du PDF
-    doc.save('estimation-detaillee.pdf');
-    
-    toast({
-      title: "PDF téléchargé",
-      description: "Votre estimation détaillée a été téléchargée avec succès.",
-    });
   };
   
   return (
@@ -164,6 +110,9 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
               </tr>
               {includeTerrainPrice && formData.landPrice && (
                 <>
+                  <tr className="bg-gray-100">
+                    <td className="py-2 px-4 font-semibold text-left" colSpan={2}>Terrain et frais associés</td>
+                  </tr>
                   <tr>
                     <td className="py-2 px-4 font-semibold text-right">Prix du terrain</td>
                     <td className="py-2 px-4 font-semibold text-right">{formatPrice(formData.landPrice)}</td>
@@ -189,7 +138,7 @@ const DetailedEstimationReport: React.FC<EstimationReportProps> = ({
             variant="outline" 
             size="sm" 
             className="flex items-center gap-2"
-            onClick={generatePDF}
+            onClick={handleGeneratePDF}
           >
             <FileText className="h-4 w-4" />
             Télécharger PDF
