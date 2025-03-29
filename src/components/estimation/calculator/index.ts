@@ -1,6 +1,6 @@
 
 // Exporter le composant principal
-export { default } from './EstimationCalculator';
+export { default } from './AIEnhancedEstimator';
 
 // Exporter les hooks et utilitaires
 export * from './hooks';
