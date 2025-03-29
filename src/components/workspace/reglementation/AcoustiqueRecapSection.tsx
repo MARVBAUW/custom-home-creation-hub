@@ -336,7 +336,7 @@ export const AcoustiqueRecapSection = () => {
                 <h4 className="font-medium text-sm mt-3">Open space</h4>
                 <ul className="text-sm list-disc pl-5 space-y-1">
                   <li><strong>Décroissance spatiale :</strong> D2,S entre 7 et 9 dB(A)</li>
-                  <li><strong>Rayon de distraction :</strong> rD < 5m recommandé</li>
+                  <li><strong>Rayon de distraction :</strong> rD &lt; 5m recommandé</li>
                 </ul>
                 
                 <h4 className="font-medium text-sm mt-3">Bruit de fond</h4>
