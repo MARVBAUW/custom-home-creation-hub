@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
@@ -889,3 +890,243 @@ Souhaitez-vous consulter le rapport détaillé ? Il vous permettra de visualiser
                 </FormItem>
               )}
             />
+          )}
+          
+          {type === 'select' && options && (
+            <div className="space-y-2">
+              <div className="grid grid-cols-1 gap-2">
+                {options.map((option) => (
+                  <Button
+                    key={option}
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      form.setValue('choice', option);
+                      form.handleSubmit(onSubmit)();
+                    }}
+                    className="justify-start text-left font-normal hover:bg-blue-50"
+                  >
+                    <ArrowRight className="mr-2 h-4 w-4 text-blue-500" />
+                    {option}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {type === 'multiChoice' && options && (
+            <div className="space-y-2">
+              <div className="grid grid-cols-1 gap-2">
+                {options.map((option) => {
+                  const isSelected = form.watch('choices')?.includes(option);
+                  
+                  return (
+                    <Button
+                      key={option}
+                      type="button"
+                      variant={isSelected ? "default" : "outline"}
+                      onClick={() => {
+                        const currentChoices = form.watch('choices') || [];
+                        
+                        if (isSelected) {
+                          form.setValue('choices', currentChoices.filter(c => c !== option));
+                        } else {
+                          form.setValue('choices', [...currentChoices, option]);
+                        }
+                      }}
+                      className="justify-start text-left font-normal"
+                    >
+                      {isSelected ? (
+                        <Check className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Plus className="mr-2 h-4 w-4 text-blue-500" />
+                      )}
+                      {option}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              {form.watch('choices')?.length > 0 && (
+                <Button 
+                  type="submit" 
+                  className="w-full mt-2"
+                >
+                  Valider ma sélection
+                </Button>
+              )}
+            </div>
+          )}
+          
+          {type === 'yesNo' && (
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 hover:bg-green-50 hover:border-green-200"
+                onClick={() => {
+                  form.setValue('yesNo', true);
+                  form.handleSubmit(onSubmit)();
+                }}
+              >
+                <Check className="mr-2 h-4 w-4 text-green-500" />
+                Oui
+              </Button>
+              
+              <Button
+                type="button"
+                variant="outline"
+                className="flex-1 hover:bg-red-50 hover:border-red-200"
+                onClick={() => {
+                  form.setValue('yesNo', false);
+                  form.handleSubmit(onSubmit)();
+                }}
+              >
+                <Minus className="mr-2 h-4 w-4 text-red-500" />
+                Non
+              </Button>
+            </div>
+          )}
+        </form>
+      </Form>
+    );
+  };
+
+  // Redémarrer le formulaire
+  const handleRestart = () => {
+    setMessages([]);
+    setFormData({});
+    setCurrentStep(1);
+    setDetailedEstimation(null);
+    setShowReport(false);
+    setIncludeTerrainPrice(false);
+  };
+
+  return (
+    <div className="flex flex-col h-[650px] max-h-[80vh]">
+      <div className="bg-gray-50 p-4 border-b rounded-t-lg flex items-center justify-between">
+        <div className="flex items-center">
+          <Calculator className="h-5 w-5 text-blue-500 mr-2" />
+          <h3 className="font-medium">Estimation détaillée de projet</h3>
+        </div>
+        
+        <div className="flex gap-2 items-center">
+          <Badge variant="outline" className="bg-slate-100 text-slate-700">
+            Étape {currentStep}/{totalSteps}
+          </Badge>
+          
+          {detailedEstimation && (
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+              Estimation: {new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(detailedEstimation.totalTTC)} TTC
+            </Badge>
+          )}
+        </div>
+      </div>
+      
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <AnimatePresence>
+          {messages.map((message) => (
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`flex items-start max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
+                {message.type === 'bot' && (
+                  <div className="shrink-0 mr-2">
+                    <Avatar className="h-8 w-8 bg-blue-600">
+                      <MessageSquare className="h-4 w-4 text-white" />
+                    </Avatar>
+                  </div>
+                )}
+                
+                <Card className={`${
+                  message.type === 'bot' 
+                    ? 'bg-white border-gray-200' 
+                    : 'bg-blue-600 text-white border-blue-600'
+                }`}>
+                  <CardContent className="p-3">
+                    <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+                  </CardContent>
+                </Card>
+                
+                {message.type === 'user' && (
+                  <div className="shrink-0 ml-2">
+                    <Avatar className="h-8 w-8 bg-gray-200">
+                      <div className="text-sm font-medium text-gray-700">
+                        {/* Initiales de l'utilisateur */}
+                        U
+                      </div>
+                    </Avatar>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+        
+        {isTyping && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-start"
+          >
+            <div className="flex items-start">
+              <div className="shrink-0 mr-2">
+                <Avatar className="h-8 w-8 bg-blue-600">
+                  <MessageSquare className="h-4 w-4 text-white" />
+                </Avatar>
+              </div>
+              
+              <Card className="bg-white border-gray-200">
+                <CardContent className="p-3">
+                  <div className="flex space-x-1">
+                    <span className="animate-bounce">•</span>
+                    <span className="animate-bounce delay-100">•</span>
+                    <span className="animate-bounce delay-200">•</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.div>
+        )}
+        
+        <div ref={messagesEndRef} />
+      </div>
+      
+      {showReport && detailedEstimation && (
+        <div className="border-t p-4 bg-gray-50">
+          <EstimationReport 
+            estimation={detailedEstimation} 
+            formData={formData}
+            includeTerrainPrice={includeTerrainPrice}
+          />
+        </div>
+      )}
+      
+      <div className="p-4 border-t bg-white rounded-b-lg">
+        {!showReport && renderInputForm()}
+        
+        {(showReport || messages.length > conversationFlow.length + 2) && (
+          <Button 
+            onClick={handleRestart} 
+            variant="outline" 
+            className="w-full"
+          >
+            <Calculator className="mr-2 h-4 w-4" />
+            Faire une nouvelle estimation
+          </Button>
+        )}
+        
+        <div className="mt-2 text-xs text-center text-gray-500">
+          * Cette estimation est fournie à titre indicatif et pourrait varier selon les spécificités de votre projet.
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ConversationalForm;
