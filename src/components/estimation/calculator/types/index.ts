@@ -8,6 +8,8 @@ export interface FormData {
   email?: string;
   phone?: string;
   message?: string;
+  firstName?: string;
+  lastName?: string;
   
   // Project details
   projectType?: string;
@@ -46,7 +48,7 @@ export interface FormData {
   foundationType?: string;
   soilType?: string;
   wallType?: string;
-  wallThickness?: string;
+  wallThickness?: string | number;
   hasBasement?: boolean;
   basementType?: string;
   floorType?: string;
@@ -91,6 +93,7 @@ export interface FormData {
   // Chauffage et climatisation
   heatingType?: string;
   energySource?: string;
+  hasAirConditioning?: boolean;
   
   // Plâtrerie
   plasteringType?: string;
@@ -98,7 +101,7 @@ export interface FormData {
   // Menuiseries intérieures
   doorType?: string;
   interiorDoorsType?: string;
-  interiorFittings?: string;
+  interiorFittings?: string | string[];
   
   // Carrelage
   floorTileType?: string;
@@ -142,6 +145,10 @@ export interface FormData {
   ecoFriendlyInsulation?: boolean;
   gardenSurface?: string | number;
   pool?: boolean;
+  landscapingType?: string;
+  outdoorKitchen?: boolean;
+  windTurbineType?: string;
+  greywaterRecycling?: boolean;
   
   // Other
   finishLevel?: string;

@@ -67,6 +67,20 @@ export const safeAdd = (a: string | number | undefined | null, b: string | numbe
 };
 
 /**
+ * Safely multiplies two values that might be strings or numbers
+ */
+export const safeMultiply = (a: string | number | undefined | null, b: string | number | undefined | null): number => {
+  return ensureNumber(a) * ensureNumber(b);
+};
+
+/**
+ * Safely converts a string or number to a number for use in calculations
+ */
+export const toCalculationValue = (value: string | number | undefined | null): number => {
+  return ensureNumber(value);
+};
+
+/**
  * Safely converts a value to string for API submissions
  */
 export const toApiString = (value: string | number | undefined | null): string => {
@@ -75,4 +89,31 @@ export const toApiString = (value: string | number | undefined | null): string =
   }
   
   return String(value);
+};
+
+/**
+ * Safely gets a percentage value (0-100) and converts it to a decimal (0-1)
+ */
+export const percentToDecimal = (value: string | number | undefined | null): number => {
+  const num = ensureNumber(value);
+  return num > 1 ? num / 100 : num;
+};
+
+/**
+ * Formats a number as currency (EUR)
+ */
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
+
+/**
+ * Formats a number with thousand separators
+ */
+export const formatNumber = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR').format(value);
 };

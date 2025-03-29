@@ -1,284 +1,165 @@
+
 import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Slider } from '@/components/ui/slider';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ParquetSchema } from '../types/validationSchemas';
 import { ParquetFormProps } from '../types/formTypes';
+import { toFormValue } from '../utils/typeConversions';
 
-const formSchema = z.object({
-  parquetType: z.string().min(1, { message: 'Veuillez sélectionner un type de parquet' }),
-  parquetPercentage: z.string(),
-  softFloorType: z.string().min(1, { message: 'Veuillez sélectionner un type de sol souple' }),
-  softFloorPercentage: z.string(),
-});
+const parquetOptions = [
+  { value: 'standard', label: 'Standard' },
+  { value: 'premium', label: 'Premium' },
+  { value: 'luxury', label: 'Luxe' },
+  { value: 'solid_wood', label: 'Bois massif' },
+  { value: 'engineered', label: 'Contrecollé' }
+];
 
-type FormValues = z.infer<typeof formSchema>;
+const softFloorOptions = [
+  { value: 'vinyl', label: 'PVC/Vinyle' },
+  { value: 'laminate', label: 'Stratifié' },
+  { value: 'carpet', label: 'Moquette' },
+  { value: 'linoleum', label: 'Linoléum' }
+];
 
 const ParquetForm: React.FC<ParquetFormProps> = ({
-  defaultValues,
-  onSubmit,
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
   animationDirection,
+  onSubmit
 }) => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const { register, handleSubmit, formState: { errors }, control, watch } = useForm({
+    resolver: zodResolver(ParquetSchema),
     defaultValues: {
-      parquetType: defaultValues?.parquetType || '',
-      parquetPercentage: defaultValues?.parquetPercentage?.toString() || '30',
-      softFloorType: defaultValues?.softFloorType || '',
-      softFloorPercentage: defaultValues?.softFloorPercentage?.toString() || '10',
-    },
+      parquetType: formData.parquetType || '',
+      parquetPercentage: toFormValue(formData.parquetPercentage) || '50',
+      softFloorType: formData.softFloorType || '',
+      softFloorPercentage: toFormValue(formData.softFloorPercentage) || '50'
+    }
   });
 
+  const parquetPercentage = watch('parquetPercentage');
+  const softFloorPercentage = 100 - Number(parquetPercentage || 0);
+
+  const submitHandler = (data: any) => {
+    // Calculate the complementary percentage
+    const updatedData = {
+      ...data,
+      softFloorPercentage: String(100 - Number(data.parquetPercentage))
+    };
+    
+    updateFormData(updatedData);
+    
+    if (onSubmit) {
+      onSubmit(updatedData);
+    } else {
+      goToNextStep();
+    }
+  };
+
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-1">Parquet & Sol souple</h2>
-        <p className="text-muted-foreground text-sm">
-          Définissez les types de revêtements de sol et leurs proportions
-        </p>
-      </div>
-
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit || (() => {}))} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="parquetType"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Type de parquet</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="stratifie" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/parquet-stratifie.jpg"
-                          alt="Parquet stratifié"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Stratifié</div>
-                        <p className="text-sm text-muted-foreground">
-                          Imitation bois économique et facile d'entretien
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="contrecolle" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/parquet-contrecolle.jpg"
-                          alt="Parquet contrecollé"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Contrecollé</div>
-                        <p className="text-sm text-muted-foreground">
-                          Parquet avec couche supérieure en bois véritable
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="massif" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/parquet-massif.jpg"
-                          alt="Parquet massif"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Massif</div>
-                        <p className="text-sm text-muted-foreground">
-                          Parquet traditionnel en bois massif, durable et noble
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="bambou" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/parquet-bambou.jpg"
-                          alt="Parquet bambou"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Bambou</div>
-                        <p className="text-sm text-muted-foreground">
-                          Alternative écologique et très résistante
-                        </p>
-                      </div>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="parquetPercentage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Pourcentage de surface en parquet : {field.value}%
-                </FormLabel>
-                <FormControl>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Parquet & Sol Souple</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="parquetType">Type de parquet</Label>
+              <Controller
+                name="parquetType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de parquet" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {parquetOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <Label htmlFor="parquetPercentage">Pourcentage de parquet</Label>
+                <span>{parquetPercentage || 0}%</span>
+              </div>
+              <Controller
+                name="parquetPercentage"
+                control={control}
+                render={({ field }) => (
                   <Slider
-                    min={0}
+                    defaultValue={[Number(field.value) || 50]}
                     max={100}
-                    step={5}
-                    value={[parseInt(field.value)]}
-                    onValueChange={(vals) => field.onChange(vals[0].toString())}
-                    className="py-4"
+                    step={1}
+                    onValueChange={(vals) => field.onChange(String(vals[0]))}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="softFloorType"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Type de sol souple</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                  >
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="lino" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/sol-lino.jpg"
-                          alt="Linoléum"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Linoléum</div>
-                        <p className="text-sm text-muted-foreground">
-                          Sol souple naturel et écologique
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="pvc" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/sol-pvc.jpg"
-                          alt="PVC"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">PVC</div>
-                        <p className="text-sm text-muted-foreground">
-                          Revêtement vinyle économique et résistant à l'eau
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="moquette" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/sol-moquette.jpg"
-                          alt="Moquette"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Moquette</div>
-                        <p className="text-sm text-muted-foreground">
-                          Confort thermique et acoustique optimal
-                        </p>
-                      </div>
-                    </FormItem>
-                    
-                    <FormItem className="flex flex-col items-center space-y-3 border border-input hover:bg-accent hover:text-accent-foreground rounded-lg p-4 cursor-pointer [&:has([data-state=checked])]:bg-primary/10 [&:has([data-state=checked])]:border-primary">
-                      <FormControl>
-                        <RadioGroupItem value="caoutchouc" className="sr-only" />
-                      </FormControl>
-                      <div className="w-full text-center">
-                        <img
-                          src="/images/sol-caoutchouc.jpg"
-                          alt="Caoutchouc"
-                          className="w-full h-32 object-cover rounded-md mb-3"
-                        />
-                        <div className="font-medium">Caoutchouc</div>
-                        <p className="text-sm text-muted-foreground">
-                          Grande résistance et amortissement des chocs
-                        </p>
-                      </div>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="softFloorPercentage"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>
-                  Pourcentage de surface en sol souple : {field.value}%
-                </FormLabel>
-                <FormControl>
-                  <Slider
-                    min={0}
-                    max={100}
-                    step={5}
-                    value={[parseInt(field.value)]}
-                    onValueChange={(vals) => field.onChange(vals[0].toString())}
-                    className="py-4"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-between pt-4">
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft size={16} />
+                )}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="softFloorType">Type de sol souple</Label>
+              <Controller
+                name="softFloorType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de sol souple" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {softFloorOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <Label>Pourcentage de sol souple</Label>
+                <span>{softFloorPercentage}%</span>
+              </div>
+              <div className="h-5 w-full bg-gray-200 rounded">
+                <div 
+                  className="h-5 bg-gray-400 rounded" 
+                  style={{ width: `${softFloorPercentage}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-gray-500">
+                (Calculé automatiquement comme le complément à 100% du parquet)
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
               Précédent
             </Button>
-            <Button type="submit">Continuer</Button>
-          </div>
+            <Button type="submit">
+              Suivant
+            </Button>
+          </CardFooter>
         </form>
-      </Form>
-    </AnimatedStepTransition>
+      </Card>
+    </div>
   );
 };
 

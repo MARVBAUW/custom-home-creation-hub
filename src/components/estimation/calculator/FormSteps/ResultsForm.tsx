@@ -1,270 +1,177 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ChartPie, Download, FileText, Printer } from "lucide-react";
-import { motion } from 'framer-motion';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Download, Printer, Share2 } from 'lucide-react';
+import { formatCurrency, ensureNumber } from '../utils/typeConversions';
 import { ResultsFormProps } from '../types/formTypes';
 import EstimationReport from '../EstimationReport';
-import { parseToNumber } from '../utils/typeConversions';
 
-// Colors for the pie chart
-const COLORS = [
-  '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe',
-  '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd',
-  '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6', '#60a5fa',
-  '#1e3a8a', '#1e40af', '#1d4ed8', '#2563eb', '#3b82f6'
-];
-
-const ResultsForm: React.FC<ResultsFormProps> = ({
-  estimationResult,
-  formData,
-  categoriesAmounts,
+const ResultsForm: React.FC<ResultsFormProps> = ({ 
+  estimationResult, 
+  formData, 
+  categoriesAmounts, 
   goToPreviousStep,
-  animationDirection
+  animationDirection 
 }) => {
-  const [activeTab, setActiveTab] = React.useState("summary");
+  // Ensure we have numbers for all calculations
+  const result = ensureNumber(estimationResult);
+  const surface = ensureNumber(formData.surface);
   
-  // Format price with euro symbol
-  const formatPrice = (price: number | null) => {
-    if (price === null) return "€0";
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(price);
-  };
+  // Apply VAT
+  const tva = result * 0.2;
+  const totalTTC = result + tva;
   
-  // Calculate total with terrain if applicable
-  const landPriceValue = parseToNumber(formData.landPrice, 0);
-  const totalWithTerrain = (estimationResult || 0) + landPriceValue;
+  // Calculate price per square meter
+  const pricePerSqm = surface > 0 ? result / surface : 0;
   
-  // Convert to monthly payment (rough estimation)
-  const monthlyPayment = estimationResult ? Math.round((estimationResult * 1.2) / 240) : 0; // 20 years loan at 20% interest total
-  
-  // Handle print of the estimation
+  // Handle print action
   const handlePrint = () => {
     window.print();
   };
   
+  // Handle download action (placeholder)
+  const handleDownload = () => {
+    alert('Téléchargement du rapport d\'estimation...');
+    // In a real implementation, this would generate and download a PDF
+  };
+  
+  // Handle share action (placeholder)
+  const handleShare = () => {
+    alert('Partage du rapport d\'estimation...');
+    // In a real implementation, this would open a share dialog
+  };
+
   return (
-    <motion.div
-      key="step-results"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-8"
-    >
-      <Card className="bg-white rounded-xl shadow-md overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-progineer-gold/90 to-progineer-gold py-6">
-          <CardTitle className="text-white text-center flex flex-col items-center">
-            <div className="mb-2">Estimation Détaillée - Progineer</div>
-            <div className="text-3xl font-bold mt-2">
-              {formatPrice(estimationResult)}
-              <span className="text-base font-normal ml-1">TTC</span>
-            </div>
-          </CardTitle>
+    <div className="animate-in fade-in slide-in-from-bottom-5 duration-500">
+      <Card className="overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-progineer-gold to-amber-500 text-white">
+          <CardTitle className="text-center text-2xl font-bold">Résultats de votre estimation</CardTitle>
         </CardHeader>
         
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div className="space-y-2">
-              <h3 className="text-lg font-medium">Projet</h3>
-              <p className="text-sm text-gray-600">Type: {formData.projectType || '-'}</p>
-              <p className="text-sm text-gray-600">Surface: {formData.surface || '-'} m²</p>
-              <p className="text-sm text-gray-600">Ville: {formData.city || '-'}</p>
-              {formData.landPrice && (
-                <p className="text-sm text-gray-600">Prix terrain: {formatPrice(landPriceValue)}</p>
-              )}
+        <CardContent className="p-6 space-y-6">
+          <div className="text-center mb-8">
+            <h3 className="text-lg font-medium text-gray-500">Coût estimatif de votre projet</h3>
+            <div className="text-4xl font-bold text-progineer-gold mt-2">
+              {formatCurrency(result)}
+              <span className="text-sm font-normal text-gray-500 ml-1">HT</span>
             </div>
-            
-            <div className="space-y-2">
-              <h3 className="text-lg font-medium">Financement indicatif</h3>
-              <p className="text-sm text-gray-600">Mensualité estimée: <span className="font-semibold">{formatPrice(monthlyPayment)}/mois</span></p>
-              <p className="text-sm text-gray-600">Sur 20 ans à 3.5% (à titre indicatif)</p>
-              {formData.landPrice && (
-                <p className="text-sm text-gray-600">Total avec terrain: {formatPrice(totalWithTerrain)}</p>
-              )}
+            <div className="text-xl font-semibold mt-1">
+              {formatCurrency(totalTTC)}
+              <span className="text-sm font-normal text-gray-500 ml-1">TTC</span>
             </div>
-          </div>
-          
-          <Tabs defaultValue="summary" value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-6">
-              <TabsTrigger value="summary" className="text-sm">
-                Résumé
-              </TabsTrigger>
-              <TabsTrigger value="details" className="text-sm">
-                Détails
-              </TabsTrigger>
-              <TabsTrigger value="chart" className="text-sm">
-                Graphique
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="summary" className="mt-0">
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600">
-                  Cette estimation a été générée automatiquement sur la base des informations que vous avez fournies.
-                  Pour une estimation plus précise, nos experts Progineer vous contacteront sous 24h.
-                </p>
-                
-                <div className="space-y-1">
-                  <div className="flex justify-between text-sm py-1 border-b">
-                    <span>Coût de construction HT</span>
-                    <span className="font-medium">{formatPrice((estimationResult || 0) / 1.2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm py-1 border-b">
-                    <span>TVA (20%)</span>
-                    <span className="font-medium">{formatPrice((estimationResult || 0) - (estimationResult || 0) / 1.2)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm py-1 border-b">
-                    <span>Coût de construction TTC</span>
-                    <span className="font-semibold">{formatPrice(estimationResult)}</span>
-                  </div>
-                  
-                  {formData.landPrice && (
-                    <>
-                      <div className="flex justify-between text-sm py-1 border-b">
-                        <span>Prix du terrain</span>
-                        <span className="font-medium">{formatPrice(landPriceValue)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm py-1 border-b">
-                        <span>Budget total (construction + terrain)</span>
-                        <span className="font-semibold">{formatPrice(totalWithTerrain)}</span>
-                      </div>
-                    </>
-                  )}
-                </div>
-                
-                <div className="mt-8 flex justify-center space-x-4">
-                  <Button variant="outline" onClick={handlePrint} className="flex items-center">
-                    <Printer className="mr-2 h-4 w-4" />
-                    Imprimer
-                  </Button>
-                  <Button variant="outline" className="flex items-center">
-                    <Download className="mr-2 h-4 w-4" />
-                    Télécharger PDF
-                  </Button>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="details" className="mt-0">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  {categoriesAmounts.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm py-1 border-b">
-                      <span>{item.category}</span>
-                      <span className="font-medium">{formatPrice(item.amount)}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-6 pt-4 border-t border-gray-200">
-                  <div className="flex justify-between text-sm font-semibold">
-                    <span>Coût total TTC</span>
-                    <span>{formatPrice(estimationResult)}</span>
-                  </div>
-                </div>
-                
-                <div className="mt-6">
-                  <p className="text-xs text-gray-500">
-                    * Cette estimation détaillée est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts Progineer.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="chart" className="mt-0">
-              <div className="flex flex-col items-center">
-                <div className="w-full h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={categoriesAmounts}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="amount"
-                        nameKey="category"
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                      >
-                        {categoriesAmounts.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip formatter={(value) => formatPrice(Number(value))} />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                
-                <div className="flex justify-center items-center text-sm text-gray-600 mt-4">
-                  <ChartPie className="mr-2 h-4 w-4" />
-                  <span>Répartition budgétaire par poste de dépense</span>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-6 pt-4 border-t border-gray-200 text-sm text-gray-600">
-            <p>Un expert Progineer vous contactera dans les 24h pour affiner cette estimation et répondre à vos questions.</p>
-          </div>
-          
-          <div className="mt-6">
-            {activeTab === "details" && (
-              <div className="print-only">
-                <EstimationReport
-                  estimation={{
-                    totalHT: (estimationResult || 0) / 1.2,
-                    totalTTC: estimationResult || 0,
-                    vat: ((estimationResult || 0) - (estimationResult || 0) / 1.2),
-                    honorairesHT: ((estimationResult || 0) / 1.2) * 0.1,
-                    honorairesTTC: ((estimationResult || 0) / 1.2) * 0.1 * 1.2,
-                    taxeAmenagement: ((estimationResult || 0) / 1.2) * 0.03,
-                    garantieDecennale: ((estimationResult || 0) / 1.2) * 0.01,
-                    etudesGeotechniques: 3000,
-                    etudeThermique: 2000,
-                    coutGlobalHT: ((estimationResult || 0) / 1.2) * 1.15,
-                    coutGlobalTTC: ((estimationResult || 0) / 1.2) * 1.15 * 1.2,
-                    corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
-                      ...acc,
-                      [cat.category]: {
-                        montantHT: cat.amount / 1.2,
-                        details: []
-                      }
-                    }), {})
-                  }}
-                  formData={formData}
-                  includeTerrainPrice={!!formData.landPrice}
-                />
+            {surface > 0 && (
+              <div className="text-sm text-gray-500 mt-2">
+                Soit environ {formatCurrency(pricePerSqm)} HT/m²
               </div>
             )}
           </div>
+          
+          <div className="divide-y">
+            <h4 className="font-semibold text-lg pb-2">Répartition par corps d'état</h4>
+            
+            {categoriesAmounts.map((category, index) => (
+              <div key={index} className="py-3 flex justify-between items-center">
+                <span className="text-gray-700">{category.category}</span>
+                <span className="font-medium">{formatCurrency(category.amount)}</span>
+              </div>
+            ))}
+            
+            <div className="py-3 flex justify-between items-center font-semibold">
+              <span>TVA (20%)</span>
+              <span>{formatCurrency(tva)}</span>
+            </div>
+            
+            <div className="py-3 flex justify-between items-center font-bold text-lg">
+              <span>Total TTC</span>
+              <span>{formatCurrency(totalTTC)}</span>
+            </div>
+          </div>
+          
+          <div className="bg-gray-50 p-4 rounded-lg mt-6">
+            <h4 className="font-semibold mb-2">Informations sur votre projet</h4>
+            <ul className="space-y-1 text-sm">
+              <li><span className="font-medium">Type de projet :</span> {formData.projectType}</li>
+              {formData.surface && <li><span className="font-medium">Surface :</span> {formData.surface} m²</li>}
+              {formData.levels && <li><span className="font-medium">Nombre de niveaux :</span> {formData.levels}</li>}
+              {formData.city && <li><span className="font-medium">Localisation :</span> {formData.city}</li>}
+            </ul>
+          </div>
+          
+          <div className="mt-8">
+            <h4 className="font-semibold mb-4">Rapport d'estimation détaillé</h4>
+            
+            <EstimationReport 
+              estimation={{
+                totalHT: result,
+                totalTTC: totalTTC,
+                vat: tva,
+                coutGlobalHT: result * 1.1,
+                coutGlobalTTC: result * 1.1 * 1.2,
+                honorairesHT: result * 0.1,
+                taxeAmenagement: result * 0.03,
+                garantieDecennale: result * 0.01,
+                etudesGeotechniques: result * 0.005,
+                etudeThermique: result * 0.005,
+                corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
+                  ...acc,
+                  [cat.category]: {
+                    montantHT: cat.amount,
+                    details: [
+                      formData.projectType ? `Type de projet: ${formData.projectType}` : '',
+                      formData.surface ? `Surface concernée: ${formData.surface} m²` : '',
+                    ].filter(Boolean)
+                  }
+                }), {})
+              }} 
+              formData={formData}
+              includeTerrainPrice={!!formData.landPrice}
+              estimationResult={result}
+            />
+          </div>
         </CardContent>
-      </Card>
-      
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={goToPreviousStep}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Retour aux informations
-        </Button>
         
-        <Button 
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-          onClick={handlePrint}
-        >
-          <FileText className="w-4 h-4" />
-          Récapitulatif PDF
-        </Button>
-      </div>
-    </motion.div>
+        <CardFooter className="flex flex-col sm:flex-row gap-3 bg-gray-50 p-4">
+          <Button 
+            variant="outline" 
+            className="w-full sm:w-auto" 
+            onClick={goToPreviousStep}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Retour
+          </Button>
+          
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto sm:ml-auto">
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto" 
+              onClick={handlePrint}
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Imprimer
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto" 
+              onClick={handleDownload}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              Télécharger
+            </Button>
+            
+            <Button 
+              variant="default" 
+              className="w-full sm:w-auto" 
+              onClick={handleShare}
+            >
+              <Share2 className="mr-2 h-4 w-4" />
+              Partager
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 

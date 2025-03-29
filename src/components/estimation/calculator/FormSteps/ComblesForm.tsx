@@ -1,78 +1,105 @@
 
 import React from 'react';
-import { CombleFormProps } from '../types/formTypes';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeftIcon, ArrowRightIcon, Home } from 'lucide-react';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ComblesSchema } from '../types/validationSchemas';
+import { ComblesFormProps } from '../types/formTypes';
 
-const ComblesForm: React.FC<CombleFormProps> = ({ 
-  formData, 
-  updateFormData, 
+const atticOptions = [
+  { value: 'lost', label: 'Perdus' },
+  { value: 'convertible', label: 'Aménageables' },
+  { value: 'converted', label: 'Aménagés' },
+  { value: 'roof_terrace', label: 'Toit terrasse' }
+];
+
+const ComblesForm: React.FC<ComblesFormProps> = ({
+  formData,
+  updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection,
-  defaultValues
+  onSubmit
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    goToNextStep();
+  const { handleSubmit, formState: { errors }, control } = useForm({
+    resolver: zodResolver(ComblesSchema),
+    defaultValues: {
+      atticType: formData.atticType || ''
+    }
+  });
+
+  const submitHandler = (data: any) => {
+    updateFormData(data);
+    
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      goToNextStep();
+    }
   };
 
   return (
-    <AnimatedStepTransition direction={animationDirection}>
-      <form onSubmit={handleSubmit}>
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Home className="h-5 w-5 text-progineer-gold" />
-                <h3 className="text-xl font-semibold">Combles</h3>
-              </div>
-
-              <div>
-                <Label>Type de combles</Label>
-                <RadioGroup 
-                  value={formData.atticType || defaultValues?.atticType || ''} 
-                  onValueChange={(value) => updateFormData({ atticType: value })}
-                  className="mt-2 space-y-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="amenageable" id="amenageable" />
-                    <Label htmlFor="amenageable" className="cursor-pointer">Aménageables</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="perdu" id="perdu" />
-                    <Label htmlFor="perdu" className="cursor-pointer">Perdus</Label>
-                  </div>
-                </RadioGroup>
-              </div>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Type de combles</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="atticType">Type de combles</Label>
+              <Controller
+                name="atticType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de combles" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {atticOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.atticType && (
+                <p className="text-sm text-red-500">{errors.atticType.message?.toString()}</p>
+              )}
+            </div>
+            
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-500">
+                <strong>Perdus</strong> : Combles non accessibles ou non utilisables comme espace de vie.
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Aménageables</strong> : Combles avec potentiel d'aménagement mais actuellement non aménagés.
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Aménagés</strong> : Combles déjà transformés en espace habitable.
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Toit terrasse</strong> : Surface plane utilisable comme espace extérieur.
+              </p>
             </div>
           </CardContent>
-        </Card>
-
-        <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={goToPreviousStep}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeftIcon className="w-4 h-4" />
-            Précédent
-          </Button>
-          <Button
-            type="submit"
-            className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-          >
-            Suivant
-            <ArrowRightIcon className="w-4 h-4" />
-          </Button>
-        </div>
-      </form>
-    </AnimatedStepTransition>
+          <CardFooter className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              Précédent
+            </Button>
+            <Button type="submit">
+              Suivant
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
 };
 

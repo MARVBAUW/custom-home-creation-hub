@@ -1,5 +1,6 @@
 
 import { FormData } from './index';
+import { ReactNode } from 'react';
 
 export interface BaseFormProps {
   formData: FormData;
@@ -8,6 +9,7 @@ export interface BaseFormProps {
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
   defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 export type ClientTypeFormProps = BaseFormProps;
@@ -18,6 +20,7 @@ export type ConstructionDetailsFormProps = BaseFormProps;
 export type TerrainFormProps = BaseFormProps;
 export type GrosOeuvreFormProps = BaseFormProps;
 export type CharpenteFormProps = BaseFormProps;
+export type ComblesFormProps = BaseFormProps;
 export type CouvertureFormProps = BaseFormProps;
 export type FacadeFormProps = BaseFormProps;
 export type MenuiseriesExtFormProps = BaseFormProps;
@@ -32,6 +35,14 @@ export type ParquetFormProps = BaseFormProps;
 export type PeintureFormProps = BaseFormProps;
 export type AmenagementExtFormProps = BaseFormProps;
 export type ContactFormProps = BaseFormProps;
+
+export interface BaseFormStepProps {
+  step: number;
+  totalSteps: number;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+}
 
 export interface ResultsFormProps {
   estimationResult: number | null;
@@ -60,4 +71,5 @@ export interface EstimationReportProps {
   };
   formData: FormData;
   includeTerrainPrice: boolean;
+  estimationResult?: number;
 }

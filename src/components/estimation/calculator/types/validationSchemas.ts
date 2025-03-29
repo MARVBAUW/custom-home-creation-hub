@@ -81,4 +81,99 @@ export const GrosOeuvreSchema = z.object({
   needsWaterManagement: z.boolean().optional(),
 });
 
-// Add additional validation schemas as needed
+// Schema for charpente
+export const CharpenteSchema = z.object({
+  roofType: z.string().min(1, "Veuillez sélectionner un type de toiture"),
+});
+
+// Schema for combles
+export const ComblesSchema = z.object({
+  atticType: z.string().min(1, "Veuillez sélectionner un type de combles"),
+});
+
+// Schema for couverture
+export const CouvertureSchema = z.object({
+  roofingType: z.string().min(1, "Veuillez sélectionner un type de couverture"),
+});
+
+// Schema for facade
+export const FacadeSchema = z.object({
+  stonePercentage: z.string().optional(),
+  plasterPercentage: z.string().optional(),
+  brickPercentage: z.string().optional(),
+  metalCladdingPercentage: z.string().optional(),
+  woodCladdingPercentage: z.string().optional(),
+  stoneCladdingPercentage: z.string().optional(),
+});
+
+// Schema for isolation
+export const IsolationSchema = z.object({
+  insulationType: z.string().min(1, "Veuillez sélectionner un type d'isolation"),
+});
+
+// Schema for electricite
+export const ElectriciteSchema = z.object({
+  electricalType: z.string().min(1, "Veuillez sélectionner un type d'installation électrique"),
+});
+
+// Schema for chauffage
+export const ChauffageSchema = z.object({
+  heatingType: z.string().min(1, "Veuillez sélectionner un type de chauffage"),
+  hasAirConditioning: z.boolean().optional(),
+});
+
+// Schema for platrerie
+export const PlatrerieSchema = z.object({
+  plasteringType: z.string().min(1, "Veuillez sélectionner un type de plâtrerie"),
+});
+
+// Schema for menuiseries interieures
+export const MenuiseriesIntSchema = z.object({
+  doorType: z.string().min(1, "Veuillez sélectionner un type de portes"),
+  interiorFittings: z.array(z.string()).optional(),
+});
+
+// Schema for carrelage
+export const CarrelageSchema = z.object({
+  floorTileType: z.string().min(1, "Veuillez sélectionner un type de carrelage sol"),
+  wallTileType: z.string().optional(),
+  floorTilePercentage: z.string().optional(),
+});
+
+// Schema for parquet
+export const ParquetSchema = z.object({
+  parquetType: z.string().optional(),
+  parquetPercentage: z.string().optional(),
+  softFloorType: z.string().optional(),
+  softFloorPercentage: z.string().optional(),
+});
+
+// Schema for peinture
+export const PeintureSchema = z.object({
+  basicPaintPercentage: z.string().optional(),
+  decorativePaintPercentage: z.string().optional(),
+  wallpaperPercentage: z.string().optional(),
+  woodCladPercentage: z.string().optional(),
+  stoneCladPercentage: z.string().optional(),
+});
+
+// Schema for amenagement exterieur
+export const AmenagementExtSchema = z.object({
+  landscapingType: z.string().optional(),
+  gardenSurface: z.string().optional(),
+  pool: z.boolean().optional(),
+  outdoorKitchen: z.boolean().optional(),
+});
+
+// Schema for contact
+export const ContactSchema = z.object({
+  firstName: z.string().min(1, "Veuillez indiquer votre prénom"),
+  lastName: z.string().min(1, "Veuillez indiquer votre nom"),
+  email: z.string().email("Veuillez indiquer une adresse email valide"),
+  phone: z.string().min(1, "Veuillez indiquer votre numéro de téléphone"),
+  city: z.string().optional(),
+  message: z.string().optional(),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: "Vous devez accepter les conditions",
+  }),
+});

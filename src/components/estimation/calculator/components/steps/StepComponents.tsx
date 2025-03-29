@@ -1,7 +1,7 @@
 
 import React from 'react';
 import DefaultStepContent from '../../DefaultStepContent';
-import { BaseFormStepProps } from '../../types';
+import { BaseFormProps } from '../../types/formTypes';
 
 // Define types for the step components props
 export interface StepComponentProps {

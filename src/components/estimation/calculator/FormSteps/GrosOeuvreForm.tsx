@@ -1,234 +1,322 @@
 
 import React from 'react';
-import { FormData } from '../types';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Building2, ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { GrosOeuvreSchema } from '../types/validationSchemas';
+import { GrosOeuvreFormProps } from '../types/formTypes';
+import { toFormValue, ensureNumber } from '../utils/typeConversions';
 
-interface GrosOeuvreFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-}
+const foundationOptions = [
+  { value: 'strip', label: 'Semelles filantes' },
+  { value: 'slab', label: 'Dalle pleine' },
+  { value: 'piles', label: 'Pieux/pilotis' },
+  { value: 'crawl_space', label: 'Vide sanitaire' },
+  { value: 'basement', label: 'Sous-sol' }
+];
 
-const GrosOeuvreForm: React.FC<GrosOeuvreFormProps> = ({ 
-  formData, 
-  updateFormData, 
+const soilOptions = [
+  { value: 'normal', label: 'Normal' },
+  { value: 'clay', label: 'Argileux' },
+  { value: 'rocky', label: 'Rocheux' },
+  { value: 'sandy', label: 'Sableux' },
+  { value: 'wet', label: 'Humide' }
+];
+
+const wallOptions = [
+  { value: 'concrete_blocks', label: 'Parpaings' },
+  { value: 'brick', label: 'Briques' },
+  { value: 'wood_frame', label: 'Ossature bois' },
+  { value: 'concrete', label: 'Béton armé' },
+  { value: 'stone', label: 'Pierre' },
+  { value: 'earth', label: 'Terre crue/pisé' },
+  { value: 'steel_frame', label: 'Structure métallique' }
+];
+
+const basementOptions = [
+  { value: 'semi', label: 'Semi-enterré' },
+  { value: 'full', label: 'Totalement enterré' },
+  { value: 'walkout', label: 'Partiellement enterré (accès direct)' }
+];
+
+const floorOptions = [
+  { value: 'concrete', label: 'Béton' },
+  { value: 'wood', label: 'Plancher bois' },
+  { value: 'mixed', label: 'Mixte' }
+];
+
+const GrosOeuvreForm: React.FC<GrosOeuvreFormProps> = ({
+  formData,
+  updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  onSubmit
 }) => {
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    goToNextStep();
+  const { register, handleSubmit, formState: { errors }, control } = useForm({
+    resolver: zodResolver(GrosOeuvreSchema),
+    defaultValues: {
+      foundationType: formData.foundationType || '',
+      soilType: formData.soilType || '',
+      wallType: formData.wallType || '',
+      wallThickness: toFormValue(formData.wallThickness),
+      hasBasement: formData.hasBasement || false,
+      basementType: formData.basementType || '',
+      floorType: formData.floorType || '',
+      slopedLand: formData.slopedLand || false,
+      difficultAccess: formData.difficultAccess || false,
+      needsDemolition: formData.needsDemolition || false,
+      needsWaterManagement: formData.needsWaterManagement || false
+    }
+  });
+
+  const submitHandler = (data: any) => {
+    const updatedData = {
+      ...data,
+      wallThickness: data.wallThickness ? String(data.wallThickness) : ''
+    };
+    
+    updateFormData(updatedData);
+    
+    if (onSubmit) {
+      onSubmit(updatedData);
+    } else {
+      goToNextStep();
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Building2 className="h-5 w-5 text-progineer-gold" />
-              <h3 className="text-xl font-semibold">Gros Œuvre</h3>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="foundationType">Type de fondations</Label>
-                <Select 
-                  value={formData.foundationType || ''} 
-                  onValueChange={(value) => updateFormData({ foundationType: value })}
-                >
-                  <SelectTrigger id="foundationType">
-                    <SelectValue placeholder="Sélectionnez le type de fondations" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="semelle-filante">Semelles filantes</SelectItem>
-                    <SelectItem value="radier">Radier</SelectItem>
-                    <SelectItem value="pieux">Pieux</SelectItem>
-                    <SelectItem value="micro-pieux">Micro-pieux</SelectItem>
-                    <SelectItem value="longrines">Longrines</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="soilType">Type de sol</Label>
-                <Select 
-                  value={formData.soilType || ''} 
-                  onValueChange={(value) => updateFormData({ soilType: value })}
-                >
-                  <SelectTrigger id="soilType">
-                    <SelectValue placeholder="Sélectionnez le type de sol" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="rocheux">Rocheux</SelectItem>
-                    <SelectItem value="argileux">Argileux</SelectItem>
-                    <SelectItem value="sableux">Sableux</SelectItem>
-                    <SelectItem value="remblai">Remblai</SelectItem>
-                    <SelectItem value="inconnu">Inconnu (étude à prévoir)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="wallType">Type de murs</Label>
-                <Select 
-                  value={formData.wallType || ''} 
-                  onValueChange={(value) => updateFormData({ wallType: value })}
-                >
-                  <SelectTrigger id="wallType">
-                    <SelectValue placeholder="Sélectionnez le type de murs" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="parpaing">Parpaings</SelectItem>
-                    <SelectItem value="brique">Briques</SelectItem>
-                    <SelectItem value="beton-coule">Béton coulé</SelectItem>
-                    <SelectItem value="pierre">Pierre</SelectItem>
-                    <SelectItem value="bois">Ossature bois</SelectItem>
-                    <SelectItem value="beton-cellulaire">Béton cellulaire</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label htmlFor="wallThickness">Épaisseur des murs (cm)</Label>
-                <Input 
-                  id="wallThickness" 
-                  type="number" 
-                  value={formData.wallThickness || ''} 
-                  onChange={(e) => updateFormData({ wallThickness: e.target.value })}
-                  placeholder="Ex: 20"
-                />
-              </div>
-
-              <div>
-                <Label>Sous-sol</Label>
-                <div className="flex items-center justify-between mt-2">
-                  <span>Inclure un sous-sol</span>
-                  <Switch 
-                    checked={formData.hasBasement || false}
-                    onCheckedChange={(checked) => updateFormData({ hasBasement: checked })}
-                  />
-                </div>
-              </div>
-
-              {formData.hasBasement && (
-                <div>
-                  <Label htmlFor="basementType">Type de sous-sol</Label>
-                  <Select 
-                    value={formData.basementType || ''} 
-                    onValueChange={(value) => updateFormData({ basementType: value })}
-                  >
-                    <SelectTrigger id="basementType">
-                      <SelectValue placeholder="Sélectionnez le type de sous-sol" />
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Structure & Gros Œuvre</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="foundationType">Type de fondation</Label>
+              <Controller
+                name="foundationType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de fondation" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="total">Total</SelectItem>
-                      <SelectItem value="partiel">Partiel</SelectItem>
-                      <SelectItem value="semi-enterre">Semi-enterré</SelectItem>
-                      <SelectItem value="vide-sanitaire">Vide sanitaire</SelectItem>
+                      {foundationOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
-                </div>
+                )}
+              />
+              {errors.foundationType && (
+                <p className="text-sm text-red-500">{errors.foundationType.message?.toString()}</p>
               )}
-
-              <div>
-                <Label>Type de plancher</Label>
-                <RadioGroup 
-                  value={formData.floorType || ''} 
-                  onValueChange={(value) => updateFormData({ floorType: value })}
-                  className="mt-2 space-y-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="beton" id="beton" />
-                    <Label htmlFor="beton" className="cursor-pointer">Dalle béton</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="poutrelles" id="poutrelles" />
-                    <Label htmlFor="poutrelles" className="cursor-pointer">Poutrelles/hourdis</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="bois" id="bois" />
-                    <Label htmlFor="bois" className="cursor-pointer">Plancher bois</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="mixte" id="mixte" />
-                    <Label htmlFor="mixte" className="cursor-pointer">Mixte</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-
-              <div>
-                <Label>Contraintes particulières</Label>
-                <div className="grid grid-cols-1 gap-2 mt-2">
-                  <div className="flex items-center space-x-2">
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="soilType">Type de sol</Label>
+              <Controller
+                name="soilType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de sol" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {soilOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.soilType && (
+                <p className="text-sm text-red-500">{errors.soilType.message?.toString()}</p>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="wallType">Type de murs</Label>
+              <Controller
+                name="wallType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de murs" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {wallOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.wallType && (
+                <p className="text-sm text-red-500">{errors.wallType.message?.toString()}</p>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="wallThickness">Épaisseur des murs (cm)</Label>
+              <Input
+                id="wallThickness"
+                type="number"
+                placeholder="Ex: 20"
+                {...register("wallThickness")}
+              />
+              {errors.wallThickness && (
+                <p className="text-sm text-red-500">{errors.wallThickness.message?.toString()}</p>
+              )}
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Controller
+                name="hasBasement"
+                control={control}
+                render={({ field }) => (
+                  <Checkbox 
+                    id="hasBasement" 
+                    checked={field.value} 
+                    onCheckedChange={field.onChange} 
+                  />
+                )}
+              />
+              <Label htmlFor="hasBasement">Sous-sol</Label>
+            </div>
+            
+            {/* Afficher le type de sous-sol uniquement si hasBasement est true */}
+            <div className="space-y-2">
+              <Label htmlFor="basementType">Type de sous-sol</Label>
+              <Controller
+                name="basementType"
+                control={control}
+                render={({ field }) => (
+                  <Select 
+                    onValueChange={field.onChange} 
+                    value={field.value}
+                    disabled={!control._formValues.hasBasement}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de sous-sol" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {basementOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="floorType">Type de plancher</Label>
+              <Controller
+                name="floorType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de plancher" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {floorOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            
+            <div className="space-y-3 pt-2">
+              <p className="font-medium">Contraintes particulières</p>
+              
+              <div className="flex items-center space-x-2">
+                <Controller
+                  name="slopedLand"
+                  control={control}
+                  render={({ field }) => (
                     <Checkbox 
                       id="slopedLand" 
-                      checked={formData.slopedLand || false}
-                      onCheckedChange={(checked) => updateFormData({ slopedLand: checked === true })}
+                      checked={field.value} 
+                      onCheckedChange={field.onChange} 
                     />
-                    <Label htmlFor="slopedLand" className="text-sm cursor-pointer">Terrain en pente</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                  )}
+                />
+                <Label htmlFor="slopedLand">Terrain en pente</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Controller
+                  name="difficultAccess"
+                  control={control}
+                  render={({ field }) => (
                     <Checkbox 
                       id="difficultAccess" 
-                      checked={formData.difficultAccess || false}
-                      onCheckedChange={(checked) => updateFormData({ difficultAccess: checked === true })}
+                      checked={field.value} 
+                      onCheckedChange={field.onChange} 
                     />
-                    <Label htmlFor="difficultAccess" className="text-sm cursor-pointer">Accès difficile au chantier</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                  )}
+                />
+                <Label htmlFor="difficultAccess">Accès difficile</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Controller
+                  name="needsDemolition"
+                  control={control}
+                  render={({ field }) => (
                     <Checkbox 
                       id="needsDemolition" 
-                      checked={formData.needsDemolition || false}
-                      onCheckedChange={(checked) => updateFormData({ needsDemolition: checked === true })}
+                      checked={field.value} 
+                      onCheckedChange={field.onChange} 
                     />
-                    <Label htmlFor="needsDemolition" className="text-sm cursor-pointer">Démolition nécessaire</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                  )}
+                />
+                <Label htmlFor="needsDemolition">Travaux de démolition nécessaires</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Controller
+                  name="needsWaterManagement"
+                  control={control}
+                  render={({ field }) => (
                     <Checkbox 
                       id="needsWaterManagement" 
-                      checked={formData.needsWaterManagement || false}
-                      onCheckedChange={(checked) => updateFormData({ needsWaterManagement: checked === true })}
+                      checked={field.value} 
+                      onCheckedChange={field.onChange} 
                     />
-                    <Label htmlFor="needsWaterManagement" className="text-sm cursor-pointer">Gestion des eaux souterraines</Label>
-                  </div>
-                </div>
+                  )}
+                />
+                <Label htmlFor="needsWaterManagement">Gestion des eaux nécessaire</Label>
               </div>
             </div>
-          </div>
-        </CardContent>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              Précédent
+            </Button>
+            <Button type="submit">
+              Suivant
+            </Button>
+          </CardFooter>
+        </form>
       </Card>
-
-      <div className="flex justify-between">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={goToPreviousStep}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Précédent
-        </Button>
-        <Button
-          type="submit"
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        >
-          Suivant
-          <ArrowRightIcon className="w-4 h-4" />
-        </Button>
-      </div>
-    </form>
+    </div>
   );
 };
 

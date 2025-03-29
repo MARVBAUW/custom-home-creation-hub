@@ -1,24 +1,20 @@
 
 import React from 'react';
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { motion } from 'framer-motion';
-import { slideVariants } from '../animations';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { PlomberieSchema } from '../types/validationSchemas';
-import { FormData } from '../types';
+import { PlomberieFormProps } from '../types/formTypes';
 
-export interface PlomberieFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-  defaultValues?: any;
-}
+const plumbingOptions = [
+  { value: 'basic', label: 'Basique' },
+  { value: 'standard', label: 'Standard' },
+  { value: 'premium', label: 'Premium' },
+  { value: 'renovation', label: 'Rénovation' }
+];
 
 const PlomberieForm: React.FC<PlomberieFormProps> = ({
   formData,
@@ -26,92 +22,84 @@ const PlomberieForm: React.FC<PlomberieFormProps> = ({
   goToNextStep,
   goToPreviousStep,
   animationDirection,
-  defaultValues = {}
+  onSubmit
 }) => {
-  const form = useForm({
+  const { handleSubmit, formState: { errors }, control } = useForm({
     resolver: zodResolver(PlomberieSchema),
     defaultValues: {
-      plumbingType: formData?.plumbingType || defaultValues?.plumbingType || "",
-    },
+      plumbingType: formData.plumbingType || 'standard'
+    }
   });
 
-  const onSubmit = (data: { plumbingType: string }) => {
-    updateFormData({
-      plumbingType: data.plumbingType
-    });
-    goToNextStep();
+  const submitHandler = (data: any) => {
+    updateFormData(data);
+    
+    if (onSubmit) {
+      onSubmit(data);
+    } else {
+      goToNextStep();
+    }
   };
 
-  const plumbingOptions = [
-    { id: "standard", label: "Plomberie standard", description: "Installations sans options premium" },
-    { id: "premium", label: "Plomberie premium", description: "Installations haut de gamme" },
-    { id: "remplacement", label: "Remplacement simple", description: "Uniquement remplacer des éléments existants" },
-    { id: "renovation", label: "Rénovation complète", description: "Refaire entièrement l'installation" },
-    { id: "extension", label: "Extension réseau", description: "Ajouter des points d'eau supplémentaires" },
-    { id: "sansAvis", label: "Sans avis", description: "Pas de préférence particulière" }
-  ];
-
   return (
-    <motion.div
-      key="step-plomberie"
-      custom={animationDirection}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={slideVariants}
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <h2 className="text-2xl font-semibold text-center mb-6">Plomberie</h2>
-          
-          <FormField
-            control={form.control}
-            name="plumbingType"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel>Type de plomberie souhaitée</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="grid grid-cols-2 gap-4"
-                  >
-                    {plumbingOptions.map((option) => (
-                      <FormItem key={option.id} className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={option.id} />
-                        </FormControl>
-                        <FormLabel className="font-normal">
-                          {option.label}
-                        </FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="pt-4 flex flex-col md:flex-row gap-4 items-center justify-between">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goToPreviousStep}
-              className="w-full md:w-auto group hover:border-progineer-gold/80"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
-              Étape précédente
-            </Button>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Plomberie</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(submitHandler)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="plumbingType">Type d'installation de plomberie</Label>
+              <Controller
+                name="plumbingType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez un type de plomberie" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {plumbingOptions.map(option => (
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.plumbingType && (
+                <p className="text-sm text-red-500">{errors.plumbingType.message?.toString()}</p>
+              )}
+            </div>
             
-            <Button type="submit" className="w-full md:w-auto group hover:bg-progineer-gold/90 bg-progineer-gold transition-all duration-300">
-              Continuer 
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <div className="mt-4 space-y-2">
+              <p className="text-sm text-gray-500">
+                <strong>Basique</strong> : Installations minimalistes, fonctionnelles mais sans options particulières.
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Standard</strong> : Installations de qualité moyenne avec quelques options (mitigeurs thermostatiques, etc.).
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Premium</strong> : Installations haut de gamme avec options avancées (distribution multi-circuits, équipements économes en eau, etc.).
+              </p>
+              <p className="text-sm text-gray-500">
+                <strong>Rénovation</strong> : Remplacement ou modification d'installations existantes.
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              Précédent
             </Button>
-          </div>
+            <Button type="submit">
+              Suivant
+            </Button>
+          </CardFooter>
         </form>
-      </Form>
-    </motion.div>
+      </Card>
+    </div>
   );
 };
 
