@@ -32,8 +32,52 @@ export interface FormData {
   includeOptions?: boolean;
   includeCuisine?: boolean;
   includeBathroom?: boolean;
+  termsAccepted?: boolean;
+  surface?: number;
+  levels?: number;
+  units?: number;
+  firstName?: string;
+  lastName?: string;
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
+  hasAirConditioning?: boolean;
+  doorType?: string;
+  interiorFittings?: string;
+  floorTileType?: string;
+  wallTileType?: string;
+  floorTilePercentage?: number;
+  parquetType?: string;
+  parquetPercentage?: number;
+  softFloorType?: string;
+  softFloorPercentage?: number;
+  basicPaintPercentage?: number;
+  decorativePaintPercentage?: number;
+  wallpaperPercentage?: number;
+  woodCladPercentage?: number;
+  stoneCladPercentage?: number;
+  stonePercentage?: number;
+  plasterPercentage?: number;
+  brickPercentage?: number;
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
+  windowRenovationArea?: number;
+  windowNewArea?: number;
+  landPrice?: number;
   [key: string]: any;
 }
+
+// Validation schemas for form steps
+import * as z from "zod";
+
+// Schema for EstimationType form
+export const EstimationTypeSchema = z.object({
+  estimationType: z.string().min(1, "Veuillez sélectionner un type d'estimation"),
+  termsAccepted: z.boolean().refine(val => val === true, {
+    message: "Vous devez accepter les conditions d'utilisation",
+  }),
+});
 
 // Exporter tous les autres types depuis les fichiers individuels
 export * from './baseTypes';

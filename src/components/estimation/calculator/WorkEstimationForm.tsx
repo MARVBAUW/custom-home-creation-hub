@@ -93,9 +93,12 @@ const WorkEstimationForm: React.FC = () => {
     },
   });
 
-  // Hooks personnalisés pour la gestion des étapes et calculs
+  // Define visibleSteps as an array
   const { visibleSteps } = useEstimationSteps(formData);
+  
+  // Use the array version with totalSteps
   const { totalSteps } = useStepCalculation({ visibleSteps });
+  
   const { goToNextStep, goToPreviousStep } = useStepNavigation({
     currentStep,
     totalSteps,

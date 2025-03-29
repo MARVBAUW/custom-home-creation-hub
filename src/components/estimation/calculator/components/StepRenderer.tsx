@@ -77,9 +77,9 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       case 1:
         return (
           <ClientTypeForm 
+            defaultValues={{ clientType: formData.clientType }}
             onSubmit={onClientTypeSubmit} 
             animationDirection={animationDirection}
-            defaultValues={{ clientType: formData.clientType }}
           />
         );
       // Pour l'instant, toutes les autres étapes utilisent le DefaultStepContent

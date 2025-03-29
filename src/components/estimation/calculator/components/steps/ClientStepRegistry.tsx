@@ -51,7 +51,7 @@ export const createClientStepRegistry = (
       <EstimationTypeForm
         defaultValues={{
           estimationType: formData.estimationType,
-          termsAccepted: formData.termsAccepted,
+          termsAccepted: formData.termsAccepted || false,
         }}
         onSubmit={onEstimationTypeSubmit}
         goToPreviousStep={goToPreviousStep}

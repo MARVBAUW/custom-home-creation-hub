@@ -3,24 +3,26 @@ import React from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { User, Building2, ArrowRightIcon } from 'lucide-react';
 
 interface ClientTypeFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
+  defaultValues: {
+    clientType?: string;
+  };
+  onSubmit: (data: { clientType: string }) => void;
+  animationDirection: 'forward' | 'backward';
 }
 
 const ClientTypeForm: React.FC<ClientTypeFormProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep
+  defaultValues,
+  onSubmit,
+  animationDirection
 }) => {
-  const handleContinue = (clientType: string) => {
-    updateFormData({ clientType });
-    goToNextStep();
+  const [clientType, setClientType] = React.useState<string>(defaultValues.clientType || "");
+
+  const handleContinue = (selectedType: string) => {
+    setClientType(selectedType);
+    onSubmit({ clientType: selectedType });
   };
 
   return (
@@ -34,7 +36,7 @@ const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'individual' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
+          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'individual' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
           onClick={() => handleContinue('individual')}
         >
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
@@ -47,7 +49,7 @@ const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
         </Card>
         
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'professional' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
+          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'professional' ? 'border-progineer-gold bg-progineer-gold/5' : ''}`}
           onClick={() => handleContinue('professional')}
         >
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
@@ -62,8 +64,8 @@ const ClientTypeForm: React.FC<ClientTypeFormProps> = ({
       
       <div className="mt-6 text-center">
         <Button
-          onClick={goToNextStep}
-          disabled={!formData.clientType}
+          onClick={() => onSubmit({ clientType })}
+          disabled={!clientType}
           className="bg-progineer-gold hover:bg-progineer-gold/90"
         >
           Commencer l'estimation

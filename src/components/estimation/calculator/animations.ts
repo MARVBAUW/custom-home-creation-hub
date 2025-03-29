@@ -1,10 +1,10 @@
 
-import { Variants } from 'framer-motion';
+import { Variants } from "framer-motion";
 
-// Animations pour les transitions de slides
+// Animations for sliding transitions between form steps
 export const slideVariants: Variants = {
   hidden: (direction: 'forward' | 'backward') => ({
-    x: direction === 'forward' ? 50 : -50,
+    x: direction === 'forward' ? '100%' : '-100%',
     opacity: 0,
   }),
   visible: {
@@ -12,62 +12,52 @@ export const slideVariants: Variants = {
     opacity: 1,
     transition: {
       duration: 0.3,
-      type: 'spring',
-      stiffness: 100,
-      damping: 15,
-    }
+      ease: "easeInOut",
+    },
   },
   exit: (direction: 'forward' | 'backward') => ({
-    x: direction === 'forward' ? -50 : 50,
+    x: direction === 'forward' ? '-100%' : '100%',
     opacity: 0,
     transition: {
-      duration: 0.2,
-    }
+      duration: 0.3,
+      ease: "easeInOut",
+    },
   }),
 };
 
-// Animations pour les fades
-export const fadeVariants: Variants = {
-  hidden: {
-    opacity: 0,
-  },
+// Fade in animation for form elements
+export const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (custom: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: custom * 0.1,
+      duration: 0.5,
+      ease: "easeOut",
+    },
+  }),
+};
+
+// Staggered fade in for lists
+export const staggeredFadeIn = {
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.5,
-    }
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.2,
-    }
+      staggerChildren: 0.1,
+    },
   },
 };
 
-// Animations pour les cartes et sélections
-export const cardVariants: Variants = {
-  initial: {
-    scale: 1,
-  },
-  hover: {
-    scale: 1.02,
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+// Item animation for staggered lists
+export const staggeredItem = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
     transition: {
-      duration: 0.2,
-    }
+      duration: 0.4,
+    },
   },
-  tap: {
-    scale: 0.98,
-    transition: {
-      duration: 0.1,
-    }
-  },
-  selected: {
-    scale: 1.03,
-    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
-    transition: {
-      duration: 0.3,
-    }
-  }
 };
