@@ -1,94 +1,85 @@
 
 import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Info } from "lucide-react";
-import { motion } from 'framer-motion';
-import { slideVariants } from './animations';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
+import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
+import { getStepIcon, getStepTitle } from './steps/stepUtils';
 
-type DefaultStepContentProps = {
+interface DefaultStepContentProps {
   step: number;
-  totalSteps: number;
   visibleSteps: any[];
-  goToPreviousStep: () => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  totalSteps: number;
   animationDirection: 'forward' | 'backward';
-};
+}
 
 const DefaultStepContent: React.FC<DefaultStepContentProps> = ({
   step,
-  totalSteps,
   visibleSteps,
-  goToPreviousStep,
   goToNextStep,
-  animationDirection,
+  goToPreviousStep,
+  totalSteps,
+  animationDirection
 }) => {
-  // Fonction pour obtenir le contenu du formulaire en fonction de l'étape
-  const getStepContent = () => {
-    // Les étapes 7 à totalSteps-1 utilisent le contenu par défaut
-    if (step >= 6 && step < totalSteps) {
-      const stepNumber = step; // L'index commence à 1
-      
-      return (
-        <div className="text-center space-y-6">
-          <h2 className="text-2xl font-semibold">
-            Étape {stepNumber} sur {totalSteps}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Cette étape sera implémentée prochainement. Cliquez sur continuer pour avancer.
-          </p>
+  // Obtenir le titre et l'icône de l'étape actuelle
+  const stepTitle = getStepTitle(step);
+  const stepIcon = getStepIcon(step);
+
+  return (
+    <AnimatedStepTransition direction={animationDirection}>
+      <div className="space-y-6">
+        <div className="flex items-center space-x-2 text-xl font-semibold">
+          <div className="bg-blue-100 p-2 rounded-full">
+            {stepIcon}
+          </div>
+          <h3>{stepTitle}</h3>
+        </div>
+        
+        <p className="text-gray-600">
+          Cette étape vous permet de préciser des détails importants pour votre projet.
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+          <div className="border p-4 rounded-lg shadow-sm bg-gray-50">
+            <h4 className="font-medium mb-2">Pourquoi cette information est importante</h4>
+            <p className="text-sm text-gray-600">
+              Les détails que vous fournissez nous permettent de calculer une estimation plus précise 
+              pour votre projet de construction ou rénovation.
+            </p>
+          </div>
           
-          <div className="flex justify-center">
-            <Info className="w-10 h-10 text-blue-500" />
+          <div className="border p-4 rounded-lg shadow-sm bg-blue-50">
+            <h4 className="font-medium mb-2">Ce que vous devez savoir</h4>
+            <p className="text-sm text-gray-600">
+              Prenez votre temps pour choisir les options qui correspondent le mieux à votre projet.
+              Si vous n'êtes pas sûr, vous pouvez toujours revenir en arrière pour modifier vos choix.
+            </p>
           </div>
         </div>
-      );
-    }
-    
-    return (
-      <div className="text-center space-y-6">
-        <h2 className="text-2xl font-semibold">
-          Étape {step} sur {totalSteps}
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Contenu de l'étape non trouvé. Cliquez sur continuer pour avancer.
-        </p>
-      </div>
-    );
-  };
-  
-  return (
-    <motion.div
-      key={`step-default-${step}`}
-      custom={animationDirection}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      variants={slideVariants}
-      className="space-y-8"
-    >
-      {getStepContent()}
-      
-      <div className="pt-4 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={goToPreviousStep}
-          className="w-full md:w-auto group hover:border-progineer-gold/80"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> 
-          Étape précédente
-        </Button>
         
-        <Button 
-          type="button"
-          onClick={goToNextStep}
-          className="w-full md:w-auto group hover:bg-progineer-gold/90 bg-progineer-gold transition-all duration-300"
-        >
-          Continuer 
-          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-        </Button>
+        <div className="flex justify-between">
+          {step > 1 && (
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={goToPreviousStep}
+              className="flex items-center"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" /> Précédent
+            </Button>
+          )}
+          <Button 
+            type="button" 
+            className="ml-auto flex items-center"
+            onClick={goToNextStep}
+          >
+            Continuer <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
       </div>
-    </motion.div>
+    </AnimatedStepTransition>
   );
 };
 

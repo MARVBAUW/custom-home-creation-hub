@@ -1,45 +1,20 @@
 
 import React from 'react';
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoIcon } from 'lucide-react';
+import WorkEstimationForm from './WorkEstimationForm';
 
 const EstimationCalculator: React.FC = () => {
   const { toast } = useToast();
 
-  // Composant temporaire utilisant Tally.so
   React.useEffect(() => {
-    // Fonction pour charger le script Tally.so
-    const loadTallyScript = () => {
-      if (document.querySelector('script[src="https://tally.so/widgets/embed.js"]') === null) {
-        const script = document.createElement('script');
-        script.src = "https://tally.so/widgets/embed.js";
-        script.onload = initTally;
-        script.onerror = initTally;
-        document.body.appendChild(script);
-      } else {
-        initTally();
-      }
-    };
-
-    // Fonction pour initialiser les iframes Tally
-    const initTally = () => {
-      if (typeof (window as any).Tally !== 'undefined') {
-        (window as any).Tally.loadEmbeds();
-      } else {
-        document.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((iframe: any) => {
-          iframe.src = iframe.dataset.tallySrc;
-        });
-      }
-    };
-
-    loadTallyScript();
-
-    // Message informant l'utilisateur du changement temporaire
+    // Message informant l'utilisateur du nouveau formulaire d'estimation
     setTimeout(() => {
       toast({
-        title: "Formulaire d'estimation",
-        description: "Notre outil d'estimation est en cours d'amélioration. Merci de votre compréhension.",
+        title: "Formulaire d'estimation détaillé",
+        description: "Notre formulaire d'estimation complet vous permet d'obtenir un devis précis pour votre projet.",
+        duration: 5000,
       });
     }, 1000);
   }, [toast]);
@@ -52,20 +27,13 @@ const EstimationCalculator: React.FC = () => {
           Estimation de votre projet
         </CardTitle>
         <CardDescription>
-          Veuillez compléter le formulaire ci-dessous pour obtenir une estimation de votre projet.
+          Complétez le formulaire ci-dessous pour obtenir une estimation détaillée de votre projet de construction ou rénovation.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="relative">
-          {/* Version temporaire avec iframe Tally.so */}
-          <iframe 
-            data-tally-src="https://tally.so/embed/nGB6KO?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" 
-            loading="lazy" 
-            width="100%" 
-            height="631" 
-            frameBorder="0" 
-            title="ESTIMER VOTRE PROJET"
-          ></iframe>
+          {/* Formulaire d'estimation complet */}
+          <WorkEstimationForm />
           
           <div className="text-xs text-gray-500 mt-4 text-center">
             * Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.

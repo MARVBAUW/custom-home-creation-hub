@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
+import ClientTypeForm from '../FormSteps/ClientTypeForm';
 import DefaultStepContent from '../DefaultStepContent';
 import { FormData } from '../types';
 import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-import { useStepRendererManager } from './steps/StepRendererManager';
 
 type StepRendererProps = {
   step: number;
@@ -38,15 +38,69 @@ type StepRendererProps = {
   onContactSubmit: (data: any) => void;
 };
 
-const StepRenderer: React.FC<StepRendererProps> = (props) => {
-  console.log("Current step:", props.step, "Total steps:", props.totalSteps);
+const StepRenderer: React.FC<StepRendererProps> = ({
+  step,
+  totalSteps,
+  animationDirection,
+  formData,
+  visibleSteps,
+  goToNextStep,
+  goToPreviousStep,
+  onClientTypeSubmit,
+  onProfessionalProjectSubmit,
+  onIndividualProjectSubmit,
+  onEstimationTypeSubmit,
+  onConstructionDetailsSubmit,
+  onTerrainSubmit,
+  onGrosOeuvreSubmit,
+  onCharpenteSubmit,
+  onComblesSubmit,
+  onCouvertureSubmit,
+  onIsolationSubmit,
+  onFacadeSubmit,
+  onMenuiseriesExtSubmit,
+  onElectriciteSubmit,
+  onPlomberieSubmit,
+  onChauffageSubmit,
+  onPlatrerieSubmit,
+  onMenuiseriesIntSubmit,
+  onCarrelageSubmit,
+  onParquetSubmit,
+  onPeintureSubmit,
+  onContactSubmit,
+}) => {
+  console.log("Current step:", step, "Total steps:", totalSteps);
   
-  // Use the step renderer manager to handle step rendering
-  const { renderStep } = useStepRendererManager(props);
+  // Rendu conditionnel des formulaires en fonction de l'étape actuelle
+  const renderFormStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <ClientTypeForm 
+            onSubmit={onClientTypeSubmit} 
+            animationDirection={animationDirection}
+            defaultValues={{ clientType: formData.clientType }}
+          />
+        );
+      // Pour l'instant, toutes les autres étapes utilisent le DefaultStepContent
+      // À mesure que vous développez les autres formulaires d'étape, vous pouvez les ajouter ici
+      default:
+        return (
+          <DefaultStepContent
+            step={step}
+            visibleSteps={visibleSteps}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            totalSteps={totalSteps}
+            animationDirection={animationDirection}
+          />
+        );
+    }
+  };
 
   return (
     <AnimatePresence mode="wait">
-      {renderStep()}
+      {renderFormStep()}
     </AnimatePresence>
   );
 };

@@ -1,48 +1,45 @@
 
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
-type AnimatedStepTransitionProps = {
-  step?: number;
-  direction?: 'forward' | 'backward';
+interface AnimatedStepTransitionProps {
   children: React.ReactNode;
+  direction: 'forward' | 'backward';
+}
+
+const variants = {
+  hidden: (direction: 'forward' | 'backward') => ({
+    x: direction === 'forward' ? 100 : -100,
+    opacity: 0,
+  }),
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.3,
+    },
+  },
+  exit: (direction: 'forward' | 'backward') => ({
+    x: direction === 'forward' ? -100 : 100,
+    opacity: 0,
+    transition: {
+      duration: 0.3,
+    },
+  }),
 };
 
-const AnimatedStepTransition: React.FC<AnimatedStepTransitionProps> = ({ 
-  step, 
-  direction = 'forward',
-  children 
-}) => {
-  const variants = {
-    enter: (direction: 'forward' | 'backward') => ({
-      x: direction === 'forward' ? 20 : -20,
-      opacity: 0
-    }),
-    center: {
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: 'forward' | 'backward') => ({
-      x: direction === 'forward' ? -20 : 20,
-      opacity: 0
-    })
-  };
-
+const AnimatedStepTransition: React.FC<AnimatedStepTransitionProps> = ({ children, direction }) => {
   return (
-    <AnimatePresence mode="wait" custom={direction}>
-      <motion.div
-        key={step}
-        custom={direction}
-        variants={variants}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        transition={{ duration: 0.3 }}
-        className="w-full"
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+    <motion.div
+      custom={direction}
+      variants={variants}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      key={direction}
+    >
+      {children}
+    </motion.div>
   );
 };
 

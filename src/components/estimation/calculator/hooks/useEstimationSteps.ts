@@ -1,41 +1,19 @@
 
 import { useState, useEffect } from 'react';
-import { useStepNavigation } from './steps/useStepNavigation';
-import { useStepCalculation } from './steps/useStepCalculation';
 import { FormData } from '../types';
+import { stepDefinitions } from '../steps/stepDefinitions';
 
 export const useEstimationSteps = (formData: FormData) => {
-  const [step, setStep] = useState(1);
-  const { animationDirection, goToNextStep, goToPreviousStep } = useStepNavigation(step, formData);
-  const { totalSteps, visibleSteps } = useStepCalculation(formData, step);
-  
-  // Ajuster l'étape actuelle si elle dépasse le nouveau total
+  const [visibleSteps, setVisibleSteps] = useState<any[]>([]);
+
   useEffect(() => {
-    if (step > totalSteps) {
-      setStep(totalSteps);
-    }
-  }, [totalSteps, step]);
+    // Filtrer les étapes visibles en fonction des données du formulaire
+    const filteredSteps = stepDefinitions.filter(
+      (step) => !step.skipCondition(formData)
+    );
+    
+    setVisibleSteps(filteredSteps);
+  }, [formData]);
 
-  // Fonctions de navigation améliorées qui mettent à jour l'étape
-  const handleNextStep = () => {
-    const { nextStep, animationDirection: newDirection } = goToNextStep();
-    setStep(nextStep);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handlePreviousStep = () => {
-    const { prevStep, animationDirection: newDirection } = goToPreviousStep();
-    setStep(prevStep);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  return {
-    step,
-    setStep,
-    totalSteps,
-    animationDirection,
-    visibleSteps,
-    goToNextStep: handleNextStep,
-    goToPreviousStep: handlePreviousStep
-  };
+  return { visibleSteps };
 };
