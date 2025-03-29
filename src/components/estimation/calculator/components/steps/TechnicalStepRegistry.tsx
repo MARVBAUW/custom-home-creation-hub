@@ -42,7 +42,7 @@ export const createTechnicalStepRegistry = (
         formData={formData}
         updateFormData={(data) => onChauffageSubmit({
           heatingType: data.heatingType || '',
-          hasAirConditioning: Boolean(data.hasAirConditioning)
+          hasAirConditioning: data.hasAirConditioning || false
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}

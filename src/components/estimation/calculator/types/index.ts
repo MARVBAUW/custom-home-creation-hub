@@ -96,5 +96,21 @@ export const EstimationTypeSchema = z.object({
   }),
 });
 
-// Exporter tous les autres types depuis les fichiers individuels
+// Export all schemas from their respective files
+export * from './clientTypes';
+export * from './constructionTypes';
+export * from './envelopeTypes';
+export * from './interiorTypes';
+export * from './renovationTypes';
+export * from './roomsTypes';
+export * from './specialFeaturesTypes';
 export * from './formTypes';
+
+// Define the baseFormStepProps that all form components will extend
+export interface BaseFormStepProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+}
