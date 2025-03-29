@@ -1,11 +1,48 @@
 
-import React from 'react';
-import { Calculator, BookOpen, Ruler, Columns, Atom } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calculator, BookOpen, Ruler, Columns, Atom, Download } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export const EurocodeRecapSection = () => {
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [openCalculator, setOpenCalculator] = useState<string | null>(null);
+
+  const handleDownload = (id: string, name: string) => {
+    setDownloadingId(id);
+    
+    // Simulate download delay
+    setTimeout(() => {
+      toast.success(`${name} téléchargé avec succès`);
+      setDownloadingId(null);
+    }, 1500);
+  };
+
+  const handleOpenCalculator = (id: string) => {
+    setOpenCalculator(id);
+  };
+
+  const calculators = {
+    'ec1-climate': {
+      title: 'Calcul des charges climatiques',
+      description: 'Calculateur des charges de neige et de vent selon l\'EC1',
+      content: 'Interface de calcul permettant de déterminer les charges de neige et de vent en fonction de la zone géographique, l\'altitude, la topographie et la géométrie du bâtiment.'
+    },
+    'ec1-combinations': {
+      title: 'Combinaisons d\'actions',
+      description: 'Générateur de combinaisons d\'actions selon l\'EC0',
+      content: 'Générateur automatique des combinaisons d\'actions ELU et ELS à partir des charges permanentes et variables définies par l\'utilisateur.'
+    },
+    'ec2-beams': {
+      title: 'Dimensionnement de poutres',
+      description: 'Calculateur de sections de poutres en béton armé',
+      content: 'Outil de calcul du ferraillage nécessaire pour une poutre en béton armé soumise à de la flexion simple ou composée selon l\'Eurocode 2.'
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-purple-50 p-4 rounded-lg border border-purple-200 mb-6">
@@ -54,10 +91,29 @@ export const EurocodeRecapSection = () => {
                   l'altitude et la géométrie de la construction.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec1-climate')}
+                >
                   <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec1-climate-pdf', 'Fiche EC1 Climat')}
+                  disabled={downloadingId === 'ec1-climate-pdf'}
+                >
+                  {downloadingId === 'ec1-climate-pdf' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger la fiche
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -75,10 +131,29 @@ export const EurocodeRecapSection = () => {
                   à partir des charges permanentes et variables de votre projet.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec1-combinations')}
+                >
                   <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec1-combinations-pdf', 'Fiche combinaisons EC0')}
+                  disabled={downloadingId === 'ec1-combinations-pdf'}
+                >
+                  {downloadingId === 'ec1-combinations-pdf' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger la fiche
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -96,10 +171,21 @@ export const EurocodeRecapSection = () => {
                   catégories d'usage et valeurs caractéristiques des actions.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  Consulter les tableaux
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec1-tables-pdf', 'Tableaux EC1')}
+                  disabled={downloadingId === 'ec1-tables-pdf'}
+                >
+                  {downloadingId === 'ec1-tables-pdf' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger les tableaux
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -121,10 +207,29 @@ export const EurocodeRecapSection = () => {
                   soumise à de la flexion simple ou composée.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec2-beams')}
+                >
                   <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec2-beams-guide', 'Guide poutres EC2')}
+                  disabled={downloadingId === 'ec2-beams-guide'}
+                >
+                  {downloadingId === 'ec2-beams-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -142,10 +247,29 @@ export const EurocodeRecapSection = () => {
                   simple ou composée selon l'Eurocode 2.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec2-columns')}
+                >
                   <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec2-columns-guide', 'Guide poteaux EC2')}
+                  disabled={downloadingId === 'ec2-columns-guide'}
+                >
+                  {downloadingId === 'ec2-columns-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -163,10 +287,29 @@ export const EurocodeRecapSection = () => {
                   en béton armé selon l'Eurocode 2.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec2-slabs')}
+                >
                   <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec2-slabs-guide', 'Guide dalles EC2')}
+                  disabled={downloadingId === 'ec2-slabs-guide'}
+                >
+                  {downloadingId === 'ec2-slabs-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -174,23 +317,203 @@ export const EurocodeRecapSection = () => {
         </TabsContent>
 
         <TabsContent value="ec3" className="space-y-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              Cette section sur l'Eurocode 3 (Structures en acier) est en cours de développement.
-              Elle contiendra prochainement des outils de calcul et des tableaux de dimensionnement.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profilés métalliques</CardTitle>
+                <CardDescription>
+                  Base de données et dimensions des profilés normalisés
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Consultez les caractéristiques géométriques et mécaniques des profilés
+                  métalliques standardisés (IPE, HEA, HEB, UPE, etc.).
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec3-profiles-db', 'Base de données profilés')}
+                  disabled={downloadingId === 'ec3-profiles-db'}
+                >
+                  {downloadingId === 'ec3-profiles-db' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le catalogue
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Guide EC3 simplifié</CardTitle>
+                <CardDescription>
+                  Guide pratique pour l'application de l'Eurocode 3
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Guide pratique synthétisant les principaux points de l'Eurocode 3
+                  pour les structures en acier avec des exemples concrets.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec3-guide', 'Guide EC3')}
+                  disabled={downloadingId === 'ec3-guide'}
+                >
+                  {downloadingId === 'ec3-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Outils de calcul EC3 - Prochainement</CardTitle>
+              <CardDescription>
+                De nouveaux calculateurs pour l'Eurocode 3 sont en cours de développement
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-500">
+                Nous travaillons actuellement sur des outils de dimensionnement pour les structures métalliques :
+                vérification de sections, flambement, assemblages boulonnés/soudés. 
+                Ils seront disponibles dans une prochaine mise à jour.
+              </p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="ec5" className="space-y-6">
-          <div className="text-center py-12">
-            <p className="text-gray-500">
-              Cette section sur l'Eurocode 5 (Structures en bois) est en cours de développement.
-              Elle contiendra prochainement des outils de calcul et des tableaux de dimensionnement.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Assemblages bois</CardTitle>
+                <CardDescription>
+                  Guide des assemblages courants en structure bois
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Catalogue détaillé des assemblages traditionnels et modernes
+                  en construction bois avec dimensionnement selon l'Eurocode 5.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec5-connections', 'Guide assemblages bois')}
+                  disabled={downloadingId === 'ec5-connections'}
+                >
+                  {downloadingId === 'ec5-connections' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Guide EC5 simplifié</CardTitle>
+                <CardDescription>
+                  Guide pratique pour l'application de l'Eurocode 5
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Guide synthétique sur l'Eurocode 5 pour les structures en bois
+                  avec des exemples de dimensionnement pratiques.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec5-guide', 'Guide EC5')}
+                  disabled={downloadingId === 'ec5-guide'}
+                >
+                  {downloadingId === 'ec5-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
+          
+          <Card>
+            <CardHeader>
+              <CardTitle>Outils de calcul EC5 - Prochainement</CardTitle>
+              <CardDescription>
+                De nouveaux calculateurs pour l'Eurocode 5 sont en cours de développement
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-500">
+                Nous travaillons actuellement sur des outils de dimensionnement pour les structures bois :
+                vérification de sections, assemblages, stabilité. 
+                Ils seront disponibles dans une prochaine mise à jour.
+              </p>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Calculator Dialogs */}
+      <Dialog open={!!openCalculator} onOpenChange={() => setOpenCalculator(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.title}
+            </DialogTitle>
+            <DialogDescription>
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.description}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-4 p-4 border rounded-md bg-gray-50">
+            <p className="text-center text-gray-500">
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.content}
+            </p>
+            <div className="flex justify-center mt-6">
+              <p className="text-sm text-blue-600">
+                Calculateur interactif en cours de chargement...
+              </p>
+            </div>
+            <div className="flex justify-center mt-8">
+              <Button onClick={() => setOpenCalculator(null)}>
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

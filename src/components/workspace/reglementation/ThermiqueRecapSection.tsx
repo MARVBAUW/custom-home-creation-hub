@@ -7,9 +7,11 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Thermometer, Sun, Home, BarChart3, Leaf } from 'lucide-react';
+import { Thermometer, Sun, Home, BarChart3, Leaf, Download, Calculator } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 export const ThermiqueRecapSection = () => {
   const { 
@@ -24,10 +26,44 @@ export const ThermiqueRecapSection = () => {
   const [selectedDTU, setSelectedDTU] = useState<DTU | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [thermiqueTab, setThermiqueTab] = useState("re2020");
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [openCalculator, setOpenCalculator] = useState<string | null>(null);
   
   const handleDTUClick = (dtu: DTU) => {
     setSelectedDTU(dtu);
     setIsDetailOpen(true);
+  };
+
+  const handleDownload = (id: string, name: string) => {
+    setDownloadingId(id);
+    
+    // Simulate download delay
+    setTimeout(() => {
+      toast.success(`${name} téléchargé avec succès`);
+      setDownloadingId(null);
+    }, 1500);
+  };
+
+  const handleOpenCalculator = (id: string) => {
+    setOpenCalculator(id);
+  };
+
+  const calculators = {
+    'thermique-resistance': {
+      title: 'Calcul de résistance thermique',
+      description: 'Estimation de la résistance thermique des parois',
+      content: 'Cet outil vous permet de calculer la résistance thermique d\'une paroi en fonction des matériaux qui la composent et de leurs épaisseurs respectives. Entrez les caractéristiques de chaque couche pour obtenir la résistance thermique totale et le coefficient U.'
+    },
+    'thermique-ponts': {
+      title: 'Calcul de ponts thermiques',
+      description: 'Estimation des déperditions par ponts thermiques',
+      content: 'Ce calculateur vous permet d\'évaluer l\'impact des ponts thermiques sur la performance globale du bâtiment en fonction de différentes configurations constructives.'
+    },
+    'thermique-bilan': {
+      title: 'Bilan thermique simplifié',
+      description: 'Estimation des besoins de chauffage',
+      content: 'Calculez une estimation des besoins de chauffage annuels en kWh/m² selon les caractéristiques du bâtiment (isolation, orientation, surfaces vitrées, etc.).'
+    }
   };
 
   return (
@@ -101,10 +137,21 @@ export const ThermiqueRecapSection = () => {
                   <li><strong>Ic énergie :</strong> ≤ 560 kgCO2eq/m² pour maisons</li>
                 </ul>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Thermometer className="mr-2 h-4 w-4" />
-                  Voir détails complets
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('re2020-guide', 'Guide complet RE2020')}
+                  disabled={downloadingId === 're2020-guide'}
+                >
+                  {downloadingId === 're2020-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -140,10 +187,21 @@ export const ThermiqueRecapSection = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  Télécharger l'infographie
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('re2020-infographie', 'Infographie calendrier RE2020')}
+                  disabled={downloadingId === 're2020-infographie'}
+                >
+                  {downloadingId === 're2020-infographie' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger l'infographie
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -179,10 +237,21 @@ export const ThermiqueRecapSection = () => {
                   <li><strong>Surface vitrée :</strong> ≥ 1/6 de la surface habitable</li>
                 </ul>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Sun className="mr-2 h-4 w-4" />
-                  Consulter la documentation
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('rt2012-doc', 'Documentation RT2012')}
+                  disabled={downloadingId === 'rt2012-doc'}
+                >
+                  {downloadingId === 'rt2012-doc' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger la documentation
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -210,10 +279,21 @@ export const ThermiqueRecapSection = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  Comparer avec RE2020
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('rt-re-comparatif', 'Comparatif RT2012/RE2020')}
+                  disabled={downloadingId === 'rt-re-comparatif'}
+                >
+                  {downloadingId === 'rt-re-comparatif' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Comparer avec RE2020
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -244,10 +324,29 @@ export const ThermiqueRecapSection = () => {
                   <li><strong>TVA à 5,5% :</strong> Pour travaux d'amélioration énergétique</li>
                 </ul>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Home className="mr-2 h-4 w-4" />
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('aides-calculator')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
                   Calculer mes aides
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('guide-aides', 'Guide des aides 2024')}
+                  disabled={downloadingId === 'guide-aides'}
+                >
+                  {downloadingId === 'guide-aides' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -280,10 +379,21 @@ export const ThermiqueRecapSection = () => {
                   </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Thermometer className="mr-2 h-4 w-4" />
-                  Consulter tous les critères
+              <CardFooter className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('criteres-techniques', 'Critères techniques 2024')}
+                  disabled={downloadingId === 'criteres-techniques'}
+                >
+                  {downloadingId === 'criteres-techniques' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger tous les critères
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -305,10 +415,29 @@ export const ThermiqueRecapSection = () => {
                   des matériaux et de leurs épaisseurs.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Thermometer className="mr-2 h-4 w-4" />
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('thermique-resistance')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('guide-resistance', 'Guide résistance thermique')}
+                  disabled={downloadingId === 'guide-resistance'}
+                >
+                  {downloadingId === 'guide-resistance' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -326,10 +455,29 @@ export const ThermiqueRecapSection = () => {
                   globale du bâtiment selon différentes configurations.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Thermometer className="mr-2 h-4 w-4" />
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('thermique-ponts')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('guide-ponts', 'Guide ponts thermiques')}
+                  disabled={downloadingId === 'guide-ponts'}
+                >
+                  {downloadingId === 'guide-ponts' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -347,10 +495,29 @@ export const ThermiqueRecapSection = () => {
                   en kWh/m² selon les caractéristiques du bâtiment.
                 </p>
               </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  <Thermometer className="mr-2 h-4 w-4" />
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('thermique-bilan')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
                   Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('guide-bilan', 'Guide bilan thermique')}
+                  disabled={downloadingId === 'guide-bilan'}
+                >
+                  {downloadingId === 'guide-bilan' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
                 </Button>
               </CardFooter>
             </Card>
@@ -364,6 +531,36 @@ export const ThermiqueRecapSection = () => {
         onOpenChange={setIsDetailOpen} 
         searchTerm={searchTerm}
       />
+
+      {/* Calculator Dialogs */}
+      <Dialog open={!!openCalculator} onOpenChange={() => setOpenCalculator(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.title}
+            </DialogTitle>
+            <DialogDescription>
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.description}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="mt-4 p-4 border rounded-md bg-gray-50">
+            <p className="text-center text-gray-500">
+              {openCalculator && calculators[openCalculator as keyof typeof calculators]?.content}
+            </p>
+            <div className="flex justify-center mt-6">
+              <p className="text-sm text-blue-600">
+                Calculateur interactif en cours de chargement...
+              </p>
+            </div>
+            <div className="flex justify-center mt-8">
+              <Button onClick={() => setOpenCalculator(null)}>
+                Fermer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
