@@ -1,6 +1,6 @@
 
 import React from 'react';
-import EstimationCalculator from './calculator';
+import ConversationalEstimator from './calculator/ConversationalEstimator';
 
-// Rediriger vers le nouveau composant refactorisé
-export default EstimationCalculator;
+// Nouveau composant conversationnel amélioré avec LLM
+export default ConversationalEstimator;
