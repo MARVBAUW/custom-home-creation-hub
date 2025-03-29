@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Calculator, BookOpen, Ruler, Columns, Atom, Download } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -5,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import LoadCombinationsCalculator from '../calculators/eurocode/LoadCombinationsCalculator';
+import { LoadCombinationsCalculator } from '../calculators/eurocode';
 
 export const EurocodeRecapSection = () => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -486,7 +487,7 @@ export const EurocodeRecapSection = () => {
       </Tabs>
 
       {/* Calculator Dialogs */}
-      <Dialog open={!!openCalculator && openCalculator !== 'ec1-combinations'} onOpenChange={() => setOpenCalculator(null)}>
+      <Dialog open={!!openCalculator} onOpenChange={() => setOpenCalculator(null)}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
             <DialogTitle>
@@ -500,28 +501,28 @@ export const EurocodeRecapSection = () => {
           </DialogHeader>
           
           <div className="mt-4 p-4 border rounded-md bg-gray-50">
-            {openCalculator && typeof calculators[openCalculator as keyof typeof calculators]?.content === 'string' ? (
+            {openCalculator && (
               <>
-                <p className="text-center text-gray-500">
-                  {calculators[openCalculator as keyof typeof calculators]?.content}
-                </p>
-                <div className="flex justify-center mt-6">
-                  <p className="text-sm text-blue-600">
-                    Calculateur interactif en cours de chargement...
-                  </p>
-                </div>
+                {typeof calculators[openCalculator as keyof typeof calculators]?.content === 'string' ? (
+                  <>
+                    <p className="text-center text-gray-500">
+                      {calculators[openCalculator as keyof typeof calculators]?.content}
+                    </p>
+                    <div className="flex justify-center mt-6">
+                      <p className="text-sm text-blue-600">
+                        Calculateur interactif en cours de chargement...
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  calculators[openCalculator as keyof typeof calculators]?.content
+                )}
                 <div className="flex justify-center mt-8">
                   <Button onClick={() => setOpenCalculator(null)}>
                     Fermer
                   </Button>
                 </div>
               </>
-            ) : (
-              <div className="flex justify-center mt-8">
-                <Button onClick={() => setOpenCalculator(null)}>
-                  Fermer
-                </Button>
-              </div>
             )}
           </div>
         </DialogContent>
