@@ -8,10 +8,10 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
   // Naviguer vers l'étape suivante
   const goToNextStep = () => {
     setAnimationDirection('forward');
-    // Trouver l'étape suivante appropriée en fonction du chemin du formulaire
+    
     let nextStep = currentStep + 1;
     
-    // Gérer le saut d'étapes en fonction du type de projet et des choix de l'utilisateur
+    // --- Routing spécifique selon le type de client ---
     if (formData.clientType === "individual") {
       // Si le choix est "particulier", sauter l'étape "projet professionnel"
       if (currentStep === 1) {
@@ -24,44 +24,71 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
-    // Ne jamais sauter les étapes techniques (électricité, plomberie, chauffage)
-    // et d'intérieur (plâtrerie, menuiseries, carrelage, parquet, peinture)
+    // --- Routing spécifique selon le type de projet ---
+    if (formData.projectType === "design") {
+      // Pour les projets de design d'espace, aller directement à l'étape de contact
+      return {
+        nextStep: 28, // Étape finale (contact)
+        animationDirection: 'forward' as const
+      };
+    }
     
-    // Gérer les sauts pour les étapes spécifiques en fonction des options choisies
-    if (formData.projectType === "renovation") {
-      // Sauter l'étape des solutions écologiques si non nécessaire
-      if (nextStep === 22 && !formData.includeEcoSolutions) {
-        nextStep = 23;
+    // --- Routing spécifique selon estimation rapide/précise ---
+    if (formData.estimationType && formData.estimationType.includes("Rapide")) {
+      if (currentStep === 4) {
+        // Pour estimation rapide, aller à la page des prestations
+        nextStep = 44; // Page des prestations concernées par le projet
       }
-      // Sauter l'étape des énergies renouvelables si non nécessaire
+    }
+    
+    // --- Chemins spécifiques construction/extension vs rénovation/division ---
+    if (formData.projectType === "construction" || formData.projectType === "extension") {
+      // Sauter l'étape des questions spécifiques à la rénovation
+      if (nextStep === 29) {
+        nextStep = 30; // Sauter la page dédiée à la démolition en rénovation
+      }
+      
+      // Gérer les sauts pour les options spécifiques en fonction des choix
+      if (nextStep === 24 && !formData.includeRenewableEnergy) {
+        nextStep = 25; // Sauter aux aménagements paysagers
+      }
+      if (nextStep === 25 && !formData.includeLandscaping) {
+        nextStep = 26; // Sauter aux options
+      }
+      if (nextStep === 26 && !formData.includeOptions) {
+        nextStep = 27; // Sauter à la cuisine
+      }
+      if (nextStep === 27 && !formData.includeCuisine) {
+        nextStep = 28; // Sauter à la salle de bain
+      }
+      if (nextStep === 28 && !formData.includeBathroom) {
+        nextStep = 45; // Aller au formulaire de contact
+      }
+    } else if (formData.projectType === "renovation" || formData.projectType === "division") {
+      // Pour les projets de rénovation/division
+      if (currentStep === 22 && !formData.includeEcoSolutions) {
+        nextStep = 23; // Sauter aux énergies renouvelables
+      }
       if (nextStep === 23 && !formData.includeRenewableEnergy) {
-        nextStep = 24;
+        nextStep = 24; // Sauter aux aménagements paysagers
       }
-      // Sauter l'étape d'aménagement paysager si non nécessaire
       if (nextStep === 24 && !formData.includeLandscaping) {
-        nextStep = 25;
+        nextStep = 25; // Sauter aux options
       }
-      // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
-      if (nextStep > 28) {
-        nextStep = 28; // Étape finale (contact)
-      }
-    } else if (formData.projectType === "construction") {
-      // Sauter l'étape des options pour la construction si non nécessaire
       if (nextStep === 25 && !formData.includeOptions) {
-        nextStep = 26;
+        nextStep = 26; // Sauter à la cuisine
       }
-      // Sauter l'étape cuisine si non nécessaire
       if (nextStep === 26 && !formData.includeCuisine) {
-        nextStep = 27;
+        nextStep = 27; // Sauter à la salle de bain
       }
-      // Sauter l'étape salle de bain si non nécessaire
       if (nextStep === 27 && !formData.includeBathroom) {
-        nextStep = 28;
+        nextStep = 45; // Aller au formulaire de contact
       }
-      // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
-      if (nextStep > 28) {
-        nextStep = 28; // Étape finale (contact)
-      }
+    }
+    
+    // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
+    if (nextStep > 45) {
+      nextStep = 45; // Étape finale (contact)
     }
     
     return {
@@ -77,7 +104,7 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     // Logique similaire pour la navigation en arrière
     let prevStep = currentStep - 1;
     
-    // Gérer le saut d'étapes lors du retour en arrière
+    // --- Gestion des chemins pour le retour en arrière ---
     if (formData.clientType === "individual") {
       // Si on revient de l'étape "projet particulier" vers la première étape
       if (currentStep === 3) {
@@ -90,25 +117,48 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
-    if (formData.projectType === "renovation") {
-      if (prevStep === 24 && !formData.includeLandscaping) {
-        prevStep = 23;
+    // --- Gestion des chemins selon le type de projet ---
+    if (formData.projectType === "construction" || formData.projectType === "extension") {
+      // Éviter de revenir aux pages spécifiques de rénovation
+      if (prevStep === 29) {
+        prevStep = 28; // Éviter la page de démolition
       }
-      if (prevStep === 23 && !formData.includeRenewableEnergy) {
-        prevStep = 22;
+      
+      // Gestion du retour pour les options
+      if (prevStep === 28 && !formData.includeBathroom) {
+        prevStep = 27;
       }
-      if (prevStep === 22 && !formData.includeEcoSolutions) {
-        prevStep = 21;
-      }
-    } else if (formData.projectType === "construction") {
-      if (prevStep === 27 && !formData.includeBathroom) {
+      if (prevStep === 27 && !formData.includeCuisine) {
         prevStep = 26;
       }
-      if (prevStep === 26 && !formData.includeCuisine) {
+      if (prevStep === 26 && !formData.includeOptions) {
         prevStep = 25;
       }
-      if (prevStep === 25 && !formData.includeOptions) {
+      if (prevStep === 25 && !formData.includeLandscaping) {
         prevStep = 24;
+      }
+      if (prevStep === 24 && !formData.includeRenewableEnergy) {
+        prevStep = 23;
+      }
+    } else if (formData.projectType === "renovation" || formData.projectType === "division") {
+      // Gestion du retour pour les options en rénovation
+      if (prevStep === 28 && !formData.includeBathroom) {
+        prevStep = 27;
+      }
+      if (prevStep === 27 && !formData.includeCuisine) {
+        prevStep = 26;
+      }
+      if (prevStep === 26 && !formData.includeOptions) {
+        prevStep = 25;
+      }
+      if (prevStep === 25 && !formData.includeLandscaping) {
+        prevStep = 24;
+      }
+      if (prevStep === 24 && !formData.includeRenewableEnergy) {
+        prevStep = 23;
+      }
+      if (prevStep === 23 && !formData.includeEcoSolutions) {
+        prevStep = 22;
       }
     }
     

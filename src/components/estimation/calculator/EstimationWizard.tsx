@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import { useEstimationSteps } from './hooks/useEstimationSteps';
@@ -17,6 +18,13 @@ import SpecialFeaturesStep from './steps/SpecialFeaturesStep';
 import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
 import ContactDetailsStep from './steps/ContactDetailsStep';
 import EstimationResults from './steps/EstimationResults';
+import RenovationDemolitionStep from './steps/RenovationDemolitionStep';
+import ElectricalStep from './steps/ElectricalStep';
+import PlumbingStep from './steps/PlumbingStep';
+import HeatingStep from './steps/HeatingStep';
+import WindowsDoorsStep from './steps/WindowsDoorsStep';
+import RoofingStep from './steps/RoofingStep';
+import InsulationStep from './steps/InsulationStep';
 
 const EstimationWizard = () => {
   const { toast } = useToast();
@@ -77,36 +85,53 @@ const EstimationWizard = () => {
   };
 
   const handleProjectTypeSubmit = (data: { projectType: string, landIncluded?: string }) => {
-    // Pour tous les types de projets, passer à l'étape suivante
     updateFormData(data);
-    goToNextStep();
+    
+    // Si c'est un projet de design d'espace, aller directement au formulaire de contact
+    if (data.projectType === "design") {
+      setStep(9); // Aller directement à l'étape de contact
+    } else {
+      goToNextStep();
+    }
   };
 
   const handleEstimationTypeSubmit = (data: { 
     estimationType: string;
     termsAccepted: boolean;
   }) => {
-    // Gérer les différents types d'estimation comme dans le formulaire original
     updateFormData(data);
     
-    // Suivre la logique du formulaire original pour les redirections
-    const projectType = formData.projectType || '';
-    
-    if ((projectType === 'construction' || projectType === 'extension') && 
-        data.estimationType.includes('Précise')) {
-      setStep(4); // CONSTRUCTION EXTENSION PRECIS
-    } else if ((projectType === 'renovation' || projectType === 'division') && 
-              data.estimationType.includes('Précise')) {
-      setStep(4); // CONSTRUCTION EXTENSION PRECIS aussi
-    } else if ((projectType === 'renovation' || projectType === 'division') && 
-              data.estimationType.includes('Rapide')) {
-      setStep(4); // CONSTRUCTION EXTENSION PRECIS aussi
+    // Pour l'estimation rapide, aller directement aux prestations
+    if (data.estimationType.includes('Rapide')) {
+      setStep(4); // Page des prestations concernées
     } else {
-      goToNextStep(); // Comportement par défaut
+      // Suivre la logique normale pour l'estimation précise
+      const projectType = formData.projectType || '';
+      if ((projectType === 'construction' || projectType === 'extension') && 
+          data.estimationType.includes('Précise')) {
+        setStep(3); // Détails de construction
+      } else if ((projectType === 'renovation' || projectType === 'division') && 
+                data.estimationType.includes('Précise')) {
+        setStep(3); // Également vers détails de construction
+      } else {
+        goToNextStep(); // Comportement par défaut
+      }
     }
   };
 
   const handleTerrainDetailsSubmit = (data: any) => {
+    updateFormData(data);
+    
+    // Différents chemins selon le type de projet
+    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+      // Pour rénovation/division, aller à l'étape de démolition
+      setStep(5); // Étape de démolition
+    } else {
+      goToNextStep(); // Pour construction/extension, continuer normalement
+    }
+  };
+
+  const handleRenovationDemolitionSubmit = (data: any) => {
     updateFormData(data);
     goToNextStep();
   };
@@ -140,8 +165,30 @@ const EstimationWizard = () => {
     updateFormData(data);
     goToNextStep();
   };
+  
+  const handleElectricalSubmit = (data: { electricalType: string }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+  
+  const handlePlumbingSubmit = (data: { plumbingType: string }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+  
+  const handleHeatingSubmit = (data: { heatingType: string, hasAirConditioning?: boolean }) => {
+    updateFormData(data);
+    goToNextStep();
+  };
+  
+  const handleWindowsDoorsSubmit = (data: any) => {
+    updateFormData(data);
+    goToNextStep();
+  };
 
   const renderStep = () => {
+    console.log("Rendering step:", step, "Project type:", formData.projectType);
+    
     switch (step) {
       case 0:
         return (
@@ -181,7 +228,15 @@ const EstimationWizard = () => {
           />
         );
       case 4:
-        return (
+        // Pour construction/extension : terrain normal, pour rénovation : pas de terrain
+        return formData.projectType === 'renovation' || formData.projectType === 'division' ? (
+          <RenovationDemolitionStep
+            formData={formData}
+            updateFormData={handleRenovationDemolitionSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        ) : (
           <TerrainDetailsStep 
             formData={formData}
             updateFormData={handleTerrainDetailsSubmit}
@@ -200,27 +255,27 @@ const EstimationWizard = () => {
         );
       case 6:
         return (
-          <FinishDetailsStep 
+          <WindowsDoorsStep
             formData={formData}
-            updateFormData={handleFinishDetailsSubmit}
+            updateFormData={handleWindowsDoorsSubmit}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
           />
         );
       case 7:
         return (
-          <SpecialFeaturesStep 
+          <ElectricalStep
             formData={formData}
-            updateFormData={handleSpecialFeaturesSubmit}
+            updateFormData={handleElectricalSubmit}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
           />
         );
       case 8:
         return (
-          <ExteriorFeaturesStep 
+          <PlumbingStep
             formData={formData}
-            updateFormData={handleExteriorFeaturesSubmit}
+            updateFormData={handlePlumbingSubmit}
             goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
           />
@@ -244,7 +299,15 @@ const EstimationWizard = () => {
           />
         );
       default:
-        return null;
+        // Par défaut, afficher une étape générique
+        return (
+          <FinishDetailsStep 
+            formData={formData}
+            updateFormData={handleFinishDetailsSubmit}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+          />
+        );
     }
   };
 

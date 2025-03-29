@@ -28,42 +28,59 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
     }
   }
   
-  // Chemins spécifiques selon le type de projet
-  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
-    if (currentStep === 4) {
-      // Si le type d'estimation est précis, aller à l'étape de construction/extension précise
-      if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)') {
-        return 5; // CONSTRUCTION EXTENSION PRECIS
-      }
+  // Traitement spécial pour les projets de design d'espace
+  if (formData.projectType === 'design') {
+    return 45; // Aller directement au formulaire de contact
+  }
+  
+  // Chemins spécifiques selon le type d'estimation
+  if (currentStep === 4) {
+    // Estimation rapide en 5 minutes
+    if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
+      return 44; // Aller à la page des prestations concernées
     }
   }
   
-  if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-    if (currentStep === 4) {
-      // Selon le type d'estimation pour rénovation/division
-      if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)' ||
-          formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
-        return 5; // CONSTRUCTION EXTENSION PRECIS
+  // Chemins spécifiques selon le type de projet
+  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+    // Sauter les pages spécifiques à la rénovation
+    if (currentStep === 28) {
+      return 30; // Sauter la page 29 (démolition rénovation)
+    }
+    
+    // Pour l'estimation précise
+    if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)') {
+      if (currentStep === 35) { // Après menuiseries extérieures
+        return 36; // Aller à l'électricité
       }
+    }
+  } else if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+    // Pages spécifiques pour rénovation
+    if (currentStep === 28) {
+      return 29; // Aller à la page démolition
     }
   }
   
   // Gérer les sauts pour les options spécifiques
-  if (currentStep === 23) { // Énergies renouvelables
-    // Vérifier si on doit montrer les solutions environnementales
-    if (formData.includeEcoSolutions) {
-      return 24; // Aller aux solutions environnementales
+  if (currentStep === 22 && !formData.includeEcoSolutions) {
+    if (formData.includeRenewableEnergy) {
+      return 23; // Aller aux énergies renouvelables
     } else if (formData.includeLandscaping) {
-      return 25; // Sauter les solutions environnementales et aller à l'aménagement paysager
+      return 24; // Sauter aux aménagements paysagers
     } else if (formData.includeOptions) {
-      return 26; // Sauter aux options
+      return 25; // Sauter aux options
     } else if (formData.includeCuisine) {
-      return 27; // Sauter aux cuisines
+      return 26; // Sauter à la cuisine
     } else if (formData.includeBathroom) {
-      return 28; // Sauter aux salles de bain
+      return 27; // Sauter à la salle de bain
     } else {
-      return 29; // Aller à l'étape finale (contact)
+      return 45; // Aller au formulaire de contact
     }
+  }
+  
+  // Gestion de la fin du formulaire après toutes les pages techniques
+  if (currentStep === 43) { // Après peinture
+    return 45; // Aller au formulaire de contact
   }
   
   // Par défaut, aller à l'étape suivante
@@ -94,10 +111,18 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
     }
   }
   
+  // Chemins spécifiques selon le type de projet
+  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+    // Éviter de revenir aux pages spécifiques de rénovation
+    if (currentStep === 30) {
+      return 28; // Sauter la page 29 (démolition rénovation)
+    }
+  }
+  
   // Gérer les sauts inverses pour les options spécifiques
-  if (currentStep === 24) { // Solutions environnementales
-    if (!formData.includeEcoSolutions) {
-      return 23; // Revenir aux énergies renouvelables
+  if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+    if (currentStep === 23 && !formData.includeEcoSolutions) {
+      return 21; // Revenir avant les solutions écologiques
     }
   }
   
@@ -133,9 +158,38 @@ export const recalculateEstimation = (formData: FormData): number => {
     montantTotal *= 1.0; // Coût standard pour construction
   } else if (formData.projectType === 'extension') {
     montantTotal *= 1.1; // Extension plus chère en proportion
+  } else if (formData.projectType === 'division') {
+    montantTotal *= 0.75; // Division légèrement moins chère que rénovation
   }
   
-  // Ajustements selon les choix techniques
+  // Calcul pour terrain uniquement si c'est un projet de construction/extension
+  if ((formData.projectType === 'construction' || formData.projectType === 'extension') && formData.terrainSurface) {
+    const terrainSurface = typeof formData.terrainSurface === 'string' ? 
+      parseFloat(formData.terrainSurface) : formData.terrainSurface;
+    
+    if (!isNaN(terrainSurface)) {
+      // Ajouter coût du terrain si prix fourni, sinon estimation
+      if (formData.landPrice) {
+        const landPrice = typeof formData.landPrice === 'string' ?
+          parseFloat(formData.landPrice) : formData.landPrice;
+        if (!isNaN(landPrice)) {
+          // Ne pas ajouter au montant total mais le prendre en compte dans le calcul
+          // car c'est un coût supplémentaire séparé
+        }
+      }
+      
+      // Ajuster le coût selon le type de terrain
+      if (formData.terrainType === 'plat') {
+        // Terrain plat - pas de supplément
+      } else if (formData.terrainType === 'pente_legere') {
+        montantTotal *= 1.05; // +5% pour pente légère
+      } else if (formData.terrainType === 'pente_forte') {
+        montantTotal *= 1.15; // +15% pour forte pente
+      }
+    }
+  }
+  
+  // Ajustements selon les choix techniques - Pour tous types de projets
   
   // Électricité
   if (formData.electricalType === 'basic') {
@@ -183,6 +237,29 @@ export const recalculateEstimation = (formData: FormData): number => {
     montantTotal += surfaceValue * 65;
   }
   
+  // Menuiseries extérieures
+  if (formData.windowType === 'bois' && formData.windowRenovationArea) {
+    const area = typeof formData.windowRenovationArea === 'string' ? 
+      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+    montantTotal += area * 650;
+  } else if (formData.windowType === 'pvc' && formData.windowRenovationArea) {
+    const area = typeof formData.windowRenovationArea === 'string' ? 
+      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+    montantTotal += area * 390;
+  } else if (formData.windowType === 'alu' && formData.windowRenovationArea) {
+    const area = typeof formData.windowRenovationArea === 'string' ? 
+      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+    montantTotal += area * 620;
+  } else if (formData.windowType === 'mixte' && formData.windowRenovationArea) {
+    const area = typeof formData.windowRenovationArea === 'string' ? 
+      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+    montantTotal += area * 690;
+  } else if (formData.windowType === 'pvc_colore' && formData.windowRenovationArea) {
+    const area = typeof formData.windowRenovationArea === 'string' ? 
+      parseFloat(formData.windowRenovationArea) : formData.windowRenovationArea;
+    montantTotal += area * 410;
+  }
+  
   // Options supplémentaires selon le questionnaire
   if (formData.includeEcoSolutions) {
     montantTotal *= 1.05; // +5% pour solutions écologiques
@@ -190,6 +267,15 @@ export const recalculateEstimation = (formData: FormData): number => {
   
   if (formData.includeRenewableEnergy) {
     montantTotal *= 1.08; // +8% pour énergies renouvelables
+  }
+  
+  if (formData.includeLandscaping) {
+    montantTotal *= 1.03; // +3% pour aménagements paysagers
+  }
+  
+  // Spécifique à la rénovation
+  if (formData.projectType === 'renovation' && formData.needsDemolition) {
+    montantTotal *= 1.1; // +10% pour démolition en rénovation
   }
   
   return Math.round(montantTotal); // Arrondir à l'entier
