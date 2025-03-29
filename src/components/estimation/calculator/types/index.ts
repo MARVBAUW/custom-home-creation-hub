@@ -1,144 +1,106 @@
 
-import { z } from "zod";
-import { RoofingSchema, InsulationSchema, FacadeSchema, MenuiseriesExtSchema } from "./envelopeTypes";
-
-// Forme interface for base form data
 export interface FormData {
+  // Client type
   clientType?: string;
+  
+  // Project type
   projectType?: string;
   landIncluded?: string;
   
-  // Professional project fields
-  activity?: string;
-  startDate?: string;
-  endDate?: string;
-  budget?: number | string;
+  // Terrain details
+  terrainType?: string;
+  terrainSurface?: number;
+  landPrice?: number;
   
   // Construction details
-  constructionStyle?: string;
   constructionType?: string;
-  landSurface?: number | string;
-  livingArea?: number | string;
-  floors?: number | string;
+  constructionStyle?: string;
+  levels?: number | string;
+  surface?: number;
   basement?: boolean;
   garage?: boolean;
-  floorCount?: number | string;
+  bedrooms?: number;
+  bathrooms?: number;
   
-  // Rooms
-  bedrooms?: number | string;
-  bathrooms?: number | string;
-  
-  // Wall & Foundation
+  // Gros oeuvre
   wallType?: string;
   foundationType?: string;
   
-  // Roof
+  // Charpente
   roofType?: string;
+  
+  // Combles
   atticType?: string;
   
-  // Envelope details
+  // Couverture
   roofingType?: string;
-  insulationType?: string;
-  facadeType?: string;
-  stonePercentage?: number | string;
-  plasterPercentage?: number | string;
-  brickPercentage?: number | string;
-  metalCladdingPercentage?: number | string;
-  woodCladdingPercentage?: number | string;
-  stoneCladdingPercentage?: number | string;
-  windowType?: string;
-  windowRenovationArea?: number | string;
-  windowNewArea?: number | string;
   
-  // Technical systems
+  // Isolation
+  insulationType?: string;
+  
+  // Facade
+  facadeType?: string;
+  
+  // Menuiseries extérieures
+  windowType?: string;
+  doorType?: string;
+  
+  // Electricité
   electricalType?: string;
+  
+  // Plomberie
   plumbingType?: string;
+  
+  // Chauffage
   heatingType?: string;
   hasAirConditioning?: boolean;
   
-  // Interior finishes
+  // Platrerie
   plasteringType?: string;
-  doorType?: string;
-  flooringType?: string;
-  tileSurface?: number | string;
-  parquetSurface?: number | string;
-  paintSurface?: number | string;
-  interiorDoorsType?: string;
   interiorFittings?: string;
   
-  // Floor and Wall tiles
+  // Menuiseries intérieures
+  interiorDoorsType?: string;
+  
+  // Carrelage
   floorTileType?: string;
   wallTileType?: string;
-  floorTilePercentage?: number | string;
+  floorTilePercentage?: number;
+  tileSurface?: number;
   
-  // Parquet and soft floors
+  // Parquet
   parquetType?: string;
-  parquetPercentage?: number | string;
+  parquetPercentage?: number;
   softFloorType?: string;
-  softFloorPercentage?: number | string;
+  softFloorPercentage?: number;
+  parquetSurface?: number;
   
-  // Paint and wall coverings
+  // Peinture
   paintType?: string;
-  basicPaintPercentage?: number | string;
-  decorativePaintPercentage?: number | string;
-  wallpaperPercentage?: number | string;
-  wallCovering?: string;
+  basicPaintPercentage?: number;
+  decorativePaintPercentage?: number;
+  wallpaperPercentage?: number;
+  paintSurface?: number;
+  
+  // Room details
+  roomCount?: number;
+  bathroomCount?: number;
+  bathroomType?: string;
+  bathroomBudget?: number;
+  kitchenType?: string;
+  kitchenBudget?: number;
+  livingRoomSize?: number;
+  livingRoomStyle?: string;
+  
+  // Special features
+  domotic?: boolean;
+  alarm?: boolean;
+  centralVacuum?: boolean;
   
   // Exterior features
   pool?: boolean;
   terrace?: boolean;
-  terrasse?: boolean; // French variant
   outdoorKitchen?: boolean;
-  
-  // Special features
-  smartHome?: boolean;
-  solarPanels?: boolean;
-  solarPanelType?: string;
-  solarPanelSurface?: number | string;
-  windTurbineType?: string;
-  fancyKitchen?: boolean;
-  rainwaterHarvesting?: boolean;
-  greywaterRecycling?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  
-  // Landscaping
-  landscapingType?: string;
-  gardenSurface?: number | string;
-  exteriorFeatures?: string[];
-  
-  // Room details
-  roomCount?: number | string;
-  bathroomCount?: number | string;
-  bathroomType?: string;
-  kitchenType?: string;
-  bathroomBudget?: number | string;
-  kitchenBudget?: number | string;
-  
-  // Step control flags
-  includeEcoSolutions?: boolean;
-  includeRenewableEnergy?: boolean;
-  includeLandscaping?: boolean;
-  includeOptions?: boolean;
-  includeCuisine?: boolean;
-  includeBathroom?: boolean;
-  
-  // Finish level
-  finishingLevel?: string;
-  finishLevel?: string; // Alias pour finishingLevel pour compatibilité
-  
-  // Terrain details
-  terrainType?: string;
-  terrainSurface?: number | string;
-  hasLand?: boolean;
-  landPrice?: number | string;
-  
-  // Building details
-  levels?: number | string;
-  niveaux?: number | string; // French variant
-  étages?: number | string; // French variant
-  combles?: number | string | boolean;
-  sousSOl?: boolean;
-  surface?: number | string;
   
   // Contact details
   firstName?: string;
@@ -146,25 +108,30 @@ export interface FormData {
   email?: string;
   phone?: string;
   city?: string;
-  message?: string;
-  termsAccepted?: boolean;
-  zipCode?: string;
-  timeline?: string;
-  additionalDetails?: string;
   
-  // Estimation type
-  estimationType?: string;
+  // Budget
+  budget?: number;
   
-  // French variants for rooms
-  chambres?: number | string;
-  sallesDeBain?: number | string;
+  // Additional fields for calculations
+  finishLevel?: string;
+  hasLand?: boolean;
+  
+  // French property equivalents
+  // Structure
+  niveaux?: number | string;
+  étages?: number | string;
+  combles?: string;
+  sousSOl?: boolean;
+  
+  // Pièces
+  chambres?: number;
+  sallesDeBain?: number;
   cuisine?: string;
-  salon?: boolean;
+  salon?: number;
   salleManger?: boolean;
   bureau?: boolean;
   
-  // French variants for technical details
-  fondationType?: string;
+  // Caractéristiques techniques
   structureMurs?: string;
   typeCouverture?: string;
   typeMenuiseries?: string;
@@ -172,13 +139,13 @@ export interface FormData {
   typeVentilation?: string;
   typeEnergie?: string;
   
-  // French variants for equipment
+  // Options
   domotique?: boolean;
   alarme?: boolean;
   climatisation?: boolean;
   aspCentralisée?: boolean;
   
-  // French variants for exterior
+  // Extérieur
   balcon?: boolean;
   piscine?: boolean;
   poolHouse?: boolean;
@@ -187,26 +154,11 @@ export interface FormData {
   portail?: boolean;
   carport?: boolean;
   
-  // French variants for finishing
+  // Qualité et finitions
   niveauFinition?: string;
   
-  // French variants for client preferences
-  budgetMaxi?: number | string;
+  // Contraintes
+  budgetMaxi?: number;
   délaiSouhaité?: string;
   contraintesParticulières?: string;
 }
-
-export * from './formTypes';
-export * from './clientTypes';
-export * from './envelopeTypes';
-export * from './constructionTypes';
-export * from './roomsTypes';
-export * from './interiorTypes';
-export * from './specialFeaturesTypes';
-export * from './renovationTypes';
-export * from './baseTypes';
-export * from './clientTypeForm';
-
-// Re-export validation schemas without causing ambiguity
-import * as ValidationSchemas from './validationSchemas';
-export { ValidationSchemas };

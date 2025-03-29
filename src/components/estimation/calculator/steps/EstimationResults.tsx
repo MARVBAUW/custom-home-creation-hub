@@ -1,262 +1,240 @@
 
 import React from 'react';
 import { FormData } from '../types';
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Printer, Mail, ArrowLeft } from 'lucide-react';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
+import { Download, Mail, ChevronLeft, FileText, Share2 } from 'lucide-react';
 
 interface EstimationResultsProps {
-  estimation: any;
+  estimation: number | null;
   formData: FormData;
-  animationDirection?: 'forward' | 'backward';
-  goToPreviousStep?: () => void;
+  goToPreviousStep: () => void;
 }
 
 const EstimationResults: React.FC<EstimationResultsProps> = ({ 
   estimation, 
   formData,
-  animationDirection,
   goToPreviousStep
 }) => {
-  const [activeTab, setActiveTab] = React.useState<string>('summary');
+  const isLoading = !estimation;
   
-  if (!estimation) {
-    return (
-      <div className="text-center py-8">
-        <p>Calcul en cours...</p>
-      </div>
-    );
-  }
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#8dd1e1', '#a4de6c', '#d0ed57', '#83a6ed', '#8dd1e1'];
+  
+  // Exemple de catégories (celles-ci seraient normalement calculées)
+  const categories = [
+    { category: 'Terrain', amount: Math.round((estimation || 0) * 0.25) },
+    { category: 'Gros œuvre', amount: Math.round((estimation || 0) * 0.30) },
+    { category: 'Second œuvre', amount: Math.round((estimation || 0) * 0.20) },
+    { category: 'Finitions', amount: Math.round((estimation || 0) * 0.15) },
+    { category: 'Frais annexes', amount: Math.round((estimation || 0) * 0.10) },
+  ];
+  
+  const handleDownloadPDF = () => {
+    // Implémenter la génération de PDF
+    console.log('Téléchargement du rapport en PDF');
+  };
+  
+  const handleSendEmail = () => {
+    // Implémenter l'envoi par email
+    console.log('Envoi du rapport par email');
+  };
+  
+  const handleShare = () => {
+    // Implémenter le partage
+    console.log('Partage du rapport');
   };
 
-  // Convertir la surface en nombre si c'est une chaîne
-  const surfaceValue = formData.surface ? 
-    (typeof formData.surface === 'string' ? parseFloat(formData.surface) : formData.surface) : 0;
-
   return (
-    <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-blue-600">Estimation de votre projet</h2>
-        <p className="text-gray-500 mt-2">
-          Basée sur les informations fournies pour un projet de {formData.projectType} de {surfaceValue} m².
-        </p>
-      </div>
-      
+    <div className="space-y-8">
       <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6 pb-6 text-center">
-          <div className="text-sm text-gray-500">Estimation totale (TTC)</div>
-          <div className="text-3xl font-bold text-blue-600 mt-1">
-            {formatPrice(estimation)}
-          </div>
-          <div className="text-sm text-gray-500 mt-1">
-            soit environ {formatPrice(estimation / (surfaceValue || 1))} /m²
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl text-blue-700 flex items-center">
+            <FileText className="h-5 w-5 mr-2" />
+            Résultat de votre estimation
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-4">
+            {isLoading ? (
+              <div className="animate-pulse">
+                <div className="h-8 bg-blue-200 rounded w-3/4 mx-auto mb-2"></div>
+                <div className="h-6 bg-blue-100 rounded w-1/2 mx-auto"></div>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-4xl font-bold text-blue-800">
+                  {estimation?.toLocaleString('fr-FR')} €
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Estimation approximative TTC
+                </p>
+              </>
+            )}
           </div>
         </CardContent>
       </Card>
       
-      <Tabs defaultValue="summary" value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="summary">Résumé</TabsTrigger>
-          <TabsTrigger value="details">Détails</TabsTrigger>
-          <TabsTrigger value="next-steps">Prochaines étapes</TabsTrigger>
-        </TabsList>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Ventilation par poste</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="animate-pulse flex flex-col space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/6"></div>
+              </div>
+            ) : (
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categories}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="amount"
+                      nameKey="category"
+                    >
+                      {categories.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `${value.toLocaleString('fr-FR')} €`} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
         
-        <TabsContent value="summary" className="pt-4">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Résumé du projet</h3>
-            
-            <div className="grid grid-cols-2 gap-2">
-              <Card>
-                <CardContent className="pt-4 pb-4">
-                  <div className="text-sm text-gray-500">Type de projet</div>
-                  <div className="font-medium">{formData.projectType}</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4">
-                  <div className="text-sm text-gray-500">Surface</div>
-                  <div className="font-medium">{surfaceValue} m²</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4">
-                  <div className="text-sm text-gray-500">Ville</div>
-                  <div className="font-medium">{formData.city}</div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4">
-                  <div className="text-sm text-gray-500">Finition</div>
-                  <div className="font-medium">{formData.finishingLevel || formData.finishLevel}</div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="details" className="pt-4">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Détail de l'estimation</h3>
-            
-            <div className="space-y-2">
-              {/* Simuler des catégories de coûts basées sur l'estimation totale */}
-              <Card>
-                <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">Gros œuvre</div>
-                    <div className="text-xs text-gray-500">
-                      Fondations, murs porteurs
-                    </div>
-                  </div>
-                  <div className="text-blue-600 font-medium">
-                    {formatPrice(estimation * 0.3)}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">Charpente et toiture</div>
-                    <div className="text-xs text-gray-500">
-                      Structure, couverture
-                    </div>
-                  </div>
-                  <div className="text-blue-600 font-medium">
-                    {formatPrice(estimation * 0.15)}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">Second œuvre</div>
-                    <div className="text-xs text-gray-500">
-                      Isolation, cloisons, plomberie, électricité
-                    </div>
-                  </div>
-                  <div className="text-blue-600 font-medium">
-                    {formatPrice(estimation * 0.25)}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">Menuiseries</div>
-                    <div className="text-xs text-gray-500">
-                      Fenêtres, portes
-                    </div>
-                  </div>
-                  <div className="text-blue-600 font-medium">
-                    {formatPrice(estimation * 0.1)}
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-medium">Finitions</div>
-                    <div className="text-xs text-gray-500">
-                      Sols, peintures, sanitaires
-                    </div>
-                  </div>
-                  <div className="text-blue-600 font-medium">
-                    {formatPrice(estimation * 0.2)}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                <div className="font-medium">Total HT</div>
-                <div className="text-blue-600 font-medium">
-                  {formatPrice(estimation / 1.2)}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                <div className="font-medium">TVA (20%)</div>
-                <div className="text-blue-600 font-medium">
-                  {formatPrice(estimation - (estimation / 1.2))}
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="pt-4 pb-4 flex justify-between items-center">
-                <div className="font-bold">Total TTC</div>
-                <div className="text-blue-600 font-bold">
-                  {formatPrice(estimation)}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="next-steps" className="pt-4">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Prochaines étapes</h3>
-            
-            <p className="text-gray-600">
-              Notre équipe d'experts est à votre disposition pour affiner cette estimation et vous accompagner dans votre projet.
-            </p>
-            
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-              <Button className="flex items-center justify-center gap-2 w-full">
-                <Download className="h-4 w-4" />
-                Télécharger PDF
-              </Button>
-              
-              <Button className="flex items-center justify-center gap-2 w-full">
-                <Printer className="h-4 w-4" />
-                Imprimer
-              </Button>
-              
-              <Button className="flex items-center justify-center gap-2 w-full">
-                <Mail className="h-4 w-4" />
-                Recevoir par email
-              </Button>
-            </div>
-            
-            <Card>
-              <CardContent className="pt-6 pb-6">
-                <h4 className="font-medium mb-2">Prendre rendez-vous</h4>
-                <p className="text-gray-600 text-sm mb-4">
-                  Un consultant Progineer peut vous contacter pour discuter de votre projet en détail.
-                </p>
-                <Button className="w-full">Prendre rendez-vous</Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg">Détail par catégorie</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="animate-pulse flex flex-col space-y-2">
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/6"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/6"></div>
+              </div>
+            ) : (
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={categories}
+                    margin={{
+                      top: 20,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="category" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => `${value.toLocaleString('fr-FR')} €`} />
+                    <Bar dataKey="amount" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
       
-      {goToPreviousStep && (
-        <div className="flex justify-start mt-4">
-          <Button 
-            variant="outline" 
-            onClick={goToPreviousStep}
-            className="flex items-center gap-2"
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Récapitulatif du projet</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Type de projet</h4>
+              <p className="text-sm">{formData.projectType === 'construction' ? 'Construction neuve' : formData.projectType === 'renovation' ? 'Rénovation' : 'Extension'}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Surface</h4>
+              <p className="text-sm">{formData.surface} m²</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Localisation</h4>
+              <p className="text-sm">{formData.city || 'Non spécifié'}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Chambres</h4>
+              <p className="text-sm">{formData.bedrooms || 'Non spécifié'}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Salles de bain</h4>
+              <p className="text-sm">{formData.bathrooms || 'Non spécifié'}</p>
+            </div>
+            
+            <div>
+              <h4 className="font-medium text-gray-700 mb-1">Type de construction</h4>
+              <p className="text-sm">{formData.constructionType === 'traditional' ? 'Traditionnelle' : formData.constructionType === 'contemporary' ? 'Contemporaine' : 'Écologique'}</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 sm:space-x-3">
+        <Button
+          variant="outline"
+          className="flex items-center"
+          onClick={goToPreviousStep}
+        >
+          <ChevronLeft className="h-4 w-4 mr-2" /> 
+          Revenir aux informations
+        </Button>
+        
+        <div className="flex flex-wrap justify-end gap-3">
+          <Button
+            variant="outline"
+            className="flex items-center"
+            onClick={handleDownloadPDF}
           >
-            <ArrowLeft className="h-4 w-4" />
-            Retour
+            <Download className="h-4 w-4 mr-2" />
+            Télécharger PDF
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="flex items-center"
+            onClick={handleSendEmail}
+          >
+            <Mail className="h-4 w-4 mr-2" />
+            Recevoir par email
+          </Button>
+          
+          <Button
+            className="flex items-center bg-blue-600 hover:bg-blue-700"
+            onClick={handleShare}
+          >
+            <Share2 className="h-4 w-4 mr-2" />
+            Partager
           </Button>
         </div>
-      )}
+      </div>
+      
+      <div className="text-center text-sm text-gray-500 italic">
+        * Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.
+      </div>
     </div>
   );
 };

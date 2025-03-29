@@ -1,9 +1,11 @@
 
 /**
- * Parse a string or number to a number value
+ * Ensures a value is a number
+ * @param value Value to convert to number
+ * @returns Number or 0 if conversion fails
  */
-export const parseToNumber = (value: string | number | undefined): number => {
-  if (value === undefined || value === '') {
+export const ensureNumber = (value: any): number => {
+  if (value === undefined || value === null) {
     return 0;
   }
   
@@ -11,37 +13,23 @@ export const parseToNumber = (value: string | number | undefined): number => {
     return value;
   }
   
-  // Remove non-numeric characters (except decimal point)
-  const cleanedValue = value.toString().replace(/[^\d.-]/g, '');
-  const result = parseFloat(cleanedValue);
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
+  }
   
-  return isNaN(result) ? 0 : result;
+  return 0;
 };
 
 /**
- * Convert a value to a form value
+ * Converts a value to form value (empty string if undefined)
+ * @param value Value to convert
+ * @returns String representation or empty string
  */
 export const toFormValue = (value: any): string => {
   if (value === undefined || value === null) {
     return '';
   }
   
-  return value.toString();
-};
-
-/**
- * Convert any value to a number before using it
- * This is a helper function to update form submissions and avoid type errors
- */
-export const ensureNumber = (value: any): number => {
-  if (value === undefined || value === null || value === '') {
-    return 0;
-  }
-  
-  if (typeof value === 'number') {
-    return value;
-  }
-  
-  const parsed = parseFloat(value.toString());
-  return isNaN(parsed) ? 0 : parsed;
+  return String(value);
 };

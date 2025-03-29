@@ -5,18 +5,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Waves, Utensils, Flower, Home } from 'lucide-react';
+import { Waves, Utensils, Home } from 'lucide-react';
 
 interface ExteriorFeaturesStepProps {
   formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  updateFormData: (data: any) => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
 }
 
-const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep 
+const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
+  goToPreviousStep
 }) => {
   // Initialize with form data or defaults
   const [pool, setPool] = React.useState<boolean>(
@@ -30,8 +32,8 @@ const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
   const [outdoorKitchen, setOutdoorKitchen] = React.useState<boolean>(
     formData.outdoorKitchen || false
   );
-  
-  const handleContinue = () => {
+
+  const handleSubmit = () => {
     updateFormData({ 
       pool,
       terrace,
@@ -111,10 +113,18 @@ const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
         </div>
       </div>
       
-      <div className="pt-4">
+      <div className="flex justify-between pt-4">
         <Button 
-          onClick={handleContinue}
-          className="w-full"
+          type="button" 
+          variant="outline" 
+          onClick={goToPreviousStep}
+        >
+          Précédent
+        </Button>
+        
+        <Button 
+          type="button" 
+          onClick={handleSubmit}
         >
           Continuer
         </Button>

@@ -4,121 +4,132 @@ import { FormData } from '../types';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Mail, Phone, User, MapPin } from 'lucide-react';
 
 interface ContactDetailsStepProps {
   formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  updateFormData: (data: any) => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
 }
 
 const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({ 
   formData, 
   updateFormData, 
-  goToNextStep 
+  goToNextStep,
+  goToPreviousStep 
 }) => {
-  // Initialize with form data or defaults
+  // Initialize state with form data or defaults
   const [firstName, setFirstName] = React.useState<string>(formData.firstName || '');
   const [lastName, setLastName] = React.useState<string>(formData.lastName || '');
   const [email, setEmail] = React.useState<string>(formData.email || '');
   const [phone, setPhone] = React.useState<string>(formData.phone || '');
-  const [message, setMessage] = React.useState<string>(formData.message || '');
-  const [termsAccepted, setTermsAccepted] = React.useState<boolean>(formData.termsAccepted || false);
+  const [city, setCity] = React.useState<string>(formData.city || '');
 
   const handleSubmit = () => {
-    updateFormData({ 
+    updateFormData({
       firstName,
       lastName,
       email,
       phone,
-      message,
-      termsAccepted
+      city
     });
     goToNextStep();
   };
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-4">Vos coordonnées</h3>
-        
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="first-name">Prénom</Label>
-            <Input
-              id="first-name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Prénom"
-            />
-          </div>
+      <Card>
+        <CardContent className="pt-6 pb-6">
+          <h3 className="text-lg font-medium mb-6">Vos coordonnées</h3>
           
-          <div className="space-y-2">
-            <Label htmlFor="last-name">Nom</Label>
-            <Input
-              id="last-name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Nom"
-            />
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="first-name" className="text-base flex items-center mb-2">
+                  <User className="h-4 w-4 text-blue-500 mr-2" />
+                  Prénom
+                </Label>
+                <Input
+                  id="first-name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="Votre prénom"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="last-name" className="text-base flex items-center mb-2">
+                  <User className="h-4 w-4 text-blue-500 mr-2" />
+                  Nom
+                </Label>
+                <Input
+                  id="last-name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Votre nom"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="email" className="text-base flex items-center mb-2">
+                <Mail className="h-4 w-4 text-blue-500 mr-2" />
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Votre email"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="phone" className="text-base flex items-center mb-2">
+                <Phone className="h-4 w-4 text-blue-500 mr-2" />
+                Téléphone
+              </Label>
+              <Input
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Votre numéro de téléphone"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="city" className="text-base flex items-center mb-2">
+                <MapPin className="h-4 w-4 text-blue-500 mr-2" />
+                Ville du projet
+              </Label>
+              <Input
+                id="city"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Ville où se situe votre projet"
+              />
+            </div>
           </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="votre@email.com"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="phone">Téléphone</Label>
-            <Input
-              id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="06 XX XX XX XX"
-            />
-          </div>
-        </div>
-        
-        <div className="mt-4 space-y-2">
-          <Label htmlFor="message">Message (facultatif)</Label>
-          <Textarea
-            id="message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Précisions sur votre projet..."
-            rows={4}
-          />
-        </div>
-        
-        <div className="mt-4 flex items-start space-x-3">
-          <Checkbox 
-            id="terms" 
-            checked={termsAccepted}
-            onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
-          />
-          <div>
-            <Label htmlFor="terms" className="text-sm">
-              J'accepte que mes données soient utilisées pour me contacter concernant mon projet
-            </Label>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
       
-      <div className="pt-4">
-        <Button 
-          onClick={handleSubmit}
-          className="w-full"
-          disabled={!firstName || !lastName || !email || !termsAccepted}
+      <div className="flex justify-between">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={goToPreviousStep}
         >
-          Obtenir mon estimation détaillée
+          Précédent
+        </Button>
+        
+        <Button
+          type="button"
+          onClick={handleSubmit}
+        >
+          Finaliser l'estimation
         </Button>
       </div>
     </div>

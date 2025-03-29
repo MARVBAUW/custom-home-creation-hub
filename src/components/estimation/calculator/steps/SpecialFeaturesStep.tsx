@@ -5,37 +5,44 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Leaf, Sun, Wind, Droplet } from 'lucide-react';
+import { Cpu, Bell, Vacuum, Thermometer } from 'lucide-react';
 
 interface SpecialFeaturesStepProps {
   formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  updateFormData: (data: any) => void;
   goToNextStep: () => void;
+  goToPreviousStep: () => void;
 }
 
-const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep 
+const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
+  goToPreviousStep
 }) => {
   // Initialize with form data or defaults
-  const [solarPanels, setSolarPanels] = React.useState<boolean>(
-    formData.solarPanelType ? true : false
+  const [domotic, setDomotic] = React.useState<boolean>(
+    formData.domotic || false
   );
   
-  const [rainwaterHarvesting, setRainwaterHarvesting] = React.useState<boolean>(
-    formData.rainwaterHarvesting || false
+  const [alarm, setAlarm] = React.useState<boolean>(
+    formData.alarm || false
   );
   
-  const [ecoInsulation, setEcoInsulation] = React.useState<boolean>(
-    formData.ecoFriendlyInsulation || false
+  const [centralVacuum, setCentralVacuum] = React.useState<boolean>(
+    formData.centralVacuum || false
   );
   
-  const handleContinue = () => {
+  const [hasAirConditioning, setHasAirConditioning] = React.useState<boolean>(
+    formData.hasAirConditioning || false
+  );
+
+  const handleSubmit = () => {
     updateFormData({ 
-      solarPanelType: solarPanels ? 'standard' : undefined,
-      rainwaterHarvesting,
-      ecoFriendlyInsulation: ecoInsulation
+      domotic,
+      alarm,
+      centralVacuum,
+      hasAirConditioning
     });
     goToNextStep();
   };
@@ -43,24 +50,24 @@ const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-medium mb-4">Options écologiques et spéciales</h3>
+        <h3 className="text-lg font-medium mb-4">Équipements spéciaux</h3>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Card className="shadow-sm">
             <CardContent className="pt-6 pb-6">
               <div className="flex items-start space-x-3">
                 <Checkbox 
-                  id="solar-panels" 
-                  checked={solarPanels}
-                  onCheckedChange={(checked) => setSolarPanels(checked as boolean)}
+                  id="domotic" 
+                  checked={domotic}
+                  onCheckedChange={(checked) => setDomotic(checked as boolean)}
                 />
                 <div>
-                  <Label htmlFor="solar-panels" className="text-base font-medium flex items-center">
-                    <Sun className="h-4 w-4 text-orange-400 mr-2" />
-                    Panneaux solaires
+                  <Label htmlFor="domotic" className="text-base font-medium flex items-center">
+                    <Cpu className="h-4 w-4 text-blue-400 mr-2" />
+                    Domotique
                   </Label>
                   <p className="text-sm text-gray-500 mt-1">
-                    Installation de panneaux photovoltaïques
+                    Système de contrôle intelligent de la maison
                   </p>
                 </div>
               </div>
@@ -71,17 +78,17 @@ const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({
             <CardContent className="pt-6 pb-6">
               <div className="flex items-start space-x-3">
                 <Checkbox 
-                  id="rainwater" 
-                  checked={rainwaterHarvesting}
-                  onCheckedChange={(checked) => setRainwaterHarvesting(checked as boolean)}
+                  id="alarm" 
+                  checked={alarm}
+                  onCheckedChange={(checked) => setAlarm(checked as boolean)}
                 />
                 <div>
-                  <Label htmlFor="rainwater" className="text-base font-medium flex items-center">
-                    <Droplet className="h-4 w-4 text-blue-400 mr-2" />
-                    Récupération d'eau de pluie
+                  <Label htmlFor="alarm" className="text-base font-medium flex items-center">
+                    <Bell className="h-4 w-4 text-red-400 mr-2" />
+                    Système d'alarme
                   </Label>
                   <p className="text-sm text-gray-500 mt-1">
-                    Système de collecte et stockage d'eau de pluie
+                    Surveillance et sécurité
                   </p>
                 </div>
               </div>
@@ -92,17 +99,38 @@ const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({
             <CardContent className="pt-6 pb-6">
               <div className="flex items-start space-x-3">
                 <Checkbox 
-                  id="eco-insulation" 
-                  checked={ecoInsulation}
-                  onCheckedChange={(checked) => setEcoInsulation(checked as boolean)}
+                  id="central-vacuum" 
+                  checked={centralVacuum}
+                  onCheckedChange={(checked) => setCentralVacuum(checked as boolean)}
                 />
                 <div>
-                  <Label htmlFor="eco-insulation" className="text-base font-medium flex items-center">
-                    <Leaf className="h-4 w-4 text-green-400 mr-2" />
-                    Isolation écologique
+                  <Label htmlFor="central-vacuum" className="text-base font-medium flex items-center">
+                    <Vacuum className="h-4 w-4 text-gray-400 mr-2" />
+                    Aspiration centralisée
                   </Label>
                   <p className="text-sm text-gray-500 mt-1">
-                    Matériaux d'isolation naturels et écologiques
+                    Système d'aspiration intégré
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="shadow-sm">
+            <CardContent className="pt-6 pb-6">
+              <div className="flex items-start space-x-3">
+                <Checkbox 
+                  id="air-conditioning" 
+                  checked={hasAirConditioning}
+                  onCheckedChange={(checked) => setHasAirConditioning(checked as boolean)}
+                />
+                <div>
+                  <Label htmlFor="air-conditioning" className="text-base font-medium flex items-center">
+                    <Thermometer className="h-4 w-4 text-blue-400 mr-2" />
+                    Climatisation
+                  </Label>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Système de climatisation
                   </p>
                 </div>
               </div>
@@ -111,10 +139,18 @@ const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({
         </div>
       </div>
       
-      <div className="pt-4">
+      <div className="flex justify-between pt-4">
         <Button 
-          onClick={handleContinue}
-          className="w-full"
+          type="button" 
+          variant="outline" 
+          onClick={goToPreviousStep}
+        >
+          Précédent
+        </Button>
+        
+        <Button 
+          type="button" 
+          onClick={handleSubmit}
         >
           Continuer
         </Button>
@@ -123,4 +159,4 @@ const SpecialFeaturesStepProps: React.FC<SpecialFeaturesStepProps> = ({
   );
 };
 
-export default SpecialFeaturesStepProps;
+export default SpecialFeaturesStep;
