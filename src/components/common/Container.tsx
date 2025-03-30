@@ -7,14 +7,14 @@ interface ContainerProps {
   children: React.ReactNode;
   size?: ContainerSize;
   className?: string;
-  fullBleed?: boolean; // Nouvelle propriété pour contrôler si le conteneur doit occuper toute la largeur
+  fullBleed?: boolean;
 }
 
 const Container: React.FC<ContainerProps> = ({ 
   children, 
   size = 'lg',
   className = '',
-  fullBleed = false, // Par défaut, on utilise les tailles prédéfinies
+  fullBleed = false,
 }) => {
   const getMaxWidth = () => {
     if (fullBleed) return 'max-w-full w-full';

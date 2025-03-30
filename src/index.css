@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -105,7 +106,17 @@
   
   /* Assurer que le contenu principal prend toute la largeur */
   #root {
-    @apply w-full max-w-full overflow-x-hidden;
+    @apply w-full max-w-[100vw] overflow-x-hidden;
+  }
+
+  /* Ajout de classes pour assurer une largeur complète pour tout le contenu */
+  main, section, article, div {
+    @apply max-w-full;
+  }
+  
+  /* Force l'application à utiliser toute la largeur disponible */
+  html, body {
+    @apply w-full max-w-[100vw] overflow-x-hidden;
   }
 }
 
@@ -196,12 +207,12 @@
 }
 
 .content-container {
-  @apply w-full max-w-[1200px] mx-auto px-4 md:px-6;
+  @apply w-full max-w-full mx-auto px-4 md:px-6;
 }
 
 /* Styles pour les sections à pleine largeur */
 .full-width-section {
-  @apply w-full;
+  @apply w-full max-w-full;
 }
 
 /* Styles pour la taille des images dans guides */

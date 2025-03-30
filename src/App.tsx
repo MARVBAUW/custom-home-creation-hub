@@ -19,7 +19,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <AuthProvider>
-            <div className="w-full max-w-full overflow-x-hidden">
+            <div className="w-full max-w-[100vw] overflow-x-hidden">
               <UserRegistrationNotificationsContainer />
               {routeElements}
               <Toaster />

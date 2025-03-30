@@ -23,11 +23,13 @@ const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions GÃ©nÃ
 
 // Wrap routes that need the standard layout (with navbar and footer)
 const StandardLayout = ({ children }: { children: React.ReactNode }) => (
-  <>
+  <div className="w-full max-w-full overflow-x-hidden">
     <Navbar />
-    {children}
+    <main className="w-full max-w-full overflow-x-hidden">
+      {children}
+    </main>
     <Footer />
-  </>
+  </div>
 );
 
 export const publicRoutes: RouteObject[] = [

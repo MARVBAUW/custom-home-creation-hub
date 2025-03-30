@@ -12,9 +12,9 @@ interface LegalContentProps {
 
 const LegalContent = ({ children, className, showBusinessData = true }: LegalContentProps) => {
   return (
-    <Container size="md">
+    <Container fullBleed={true} size="full">
       <div className={cn("prose prose-stone max-w-none py-12", className)}>
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 max-w-7xl mx-auto">
           <div className="md:col-span-8 bg-white rounded-xl shadow-sm border border-stone-100 p-6 md:p-8 lg:p-10">
             {children}
           </div>
