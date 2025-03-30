@@ -37,14 +37,9 @@ const SitemapXML: React.FC = () => {
     setXmlContent(xmlString);
   }, []);
 
-  // Set the correct content type for XML
-  useEffect(() => {
-    document.contentType = "application/xml; charset=utf-8";
-  }, []);
-
   return (
     <>
-      {/* Set XML content type in the head */}
+      {/* Set XML content type in the head - this is crucial for proper XML serving */}
       <Helmet>
         <title>Sitemap XML - Progineer</title>
         <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
