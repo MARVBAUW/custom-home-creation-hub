@@ -52,18 +52,27 @@ ${publicRoutes.map(route => {
     setXmlContent(xmlString);
   }, []);
 
-  return (
-    <>
-      {/* Set XML content type in the head - this is crucial for proper XML serving */}
-      <Helmet>
-        <title>Sitemap XML - Progineer</title>
-        <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
-      </Helmet>
+  // Use useEffect to modify the document directly for proper XML serving
+  useEffect(() => {
+    if (xmlContent) {
+      // Override the entire document with raw XML
+      document.documentElement.innerHTML = xmlContent;
+      document.documentElement.setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
       
-      {/* Render the XML content directly, not in a pre tag to avoid HTML escaping */}
-      <div dangerouslySetInnerHTML={{ __html: xmlContent }} />
-    </>
-  );
+      // Set the correct Content-Type
+      const meta = document.createElement('meta');
+      meta.httpEquiv = 'Content-Type';
+      meta.content = 'text/xml; charset=utf-8';
+      document.head.appendChild(meta);
+      
+      // Remove any HTML or body tags
+      document.documentElement.removeAttribute('lang');
+      document.documentElement.removeAttribute('class');
+    }
+  }, [xmlContent]);
+
+  // Return an empty fragment - we're manipulating the DOM directly
+  return null;
 };
 
 export default SitemapXML;
