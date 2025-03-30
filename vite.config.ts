@@ -39,7 +39,8 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.xml')) {
+          // Vérifier si name existe et s'il se termine par .xml
+          if (assetInfo.name && assetInfo.name.endsWith('.xml')) {
             return '[name][extname]';
           }
           return 'assets/[name]-[hash][extname]';
