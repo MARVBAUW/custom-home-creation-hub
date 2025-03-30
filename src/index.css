@@ -98,6 +98,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Correction des problèmes de largeur pour toutes les pages */
+  .container {
+    @apply w-full max-w-full md:max-w-[1200px] mx-auto px-4 md:px-6;
+  }
 }
 
 /* Styles spécifiques pour le composant Gantt */
@@ -179,4 +184,42 @@
 .prose-khaki {
   --tw-prose-headings: hsl(var(--khaki-800));
   --tw-prose-links: hsl(var(--khaki-600));
+}
+
+/* Ajout de styles responsifs pour les conteneurs */
+.page-container {
+  @apply w-full max-w-full mx-auto;
+}
+
+.content-container {
+  @apply w-full max-w-[1200px] mx-auto px-4 md:px-6;
+}
+
+/* Styles pour les sections à pleine largeur */
+.full-width-section {
+  @apply w-full;
+}
+
+/* Styles pour la taille des images dans guides */
+.guide-image {
+  @apply w-full h-auto object-cover;
+}
+
+/* Styles pour les listes dans les guides */
+.guide-list {
+  @apply list-disc pl-6 space-y-2;
+}
+
+/* Styles pour les tableaux dans les guides */
+.guide-table {
+  @apply w-full overflow-x-auto;
+}
+
+.guide-table table {
+  @apply min-w-full border-collapse;
+}
+
+.guide-table th,
+.guide-table td {
+  @apply border border-gray-300 p-2;
 }

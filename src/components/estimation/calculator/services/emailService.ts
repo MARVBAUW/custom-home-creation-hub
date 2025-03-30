@@ -1,5 +1,6 @@
 
 import { FormData } from '../types';
+import { supabase } from '@/integrations/supabase/client';
 
 interface CategoryAmount {
   category: string;
@@ -97,7 +98,7 @@ export const generateEmailContent = (
   return emailContent;
 };
 
-// Fonction pour envoyer l'email
+// Fonction pour envoyer l'email via la fonction Edge Supabase
 export const sendEstimationEmail = async (
   formData: FormData, 
   estimationResult: number, 
@@ -106,39 +107,28 @@ export const sendEstimationEmail = async (
   try {
     console.log("Envoi de l'email en cours...");
     
-    // En production, vous devriez utiliser un service d'envoi d'email comme EmailJS, SendGrid, etc.
-    // Pour l'instant, on simule un envoi réussi et on affiche le contenu dans la console
-    
     const emailContent = generateEmailContent(formData, estimationResult, categoriesAmounts);
-    console.log("Contenu de l'email:", emailContent);
+    console.log("Contenu de l'email généré");
     
-    // Endpoint fictif pour simuler l'envoi d'email (à remplacer par un vrai service)
+    // Préparer les données pour l'envoi
     const emailData = {
       to: [formData.email, "progineer.moe@gmail.com"],
       subject: "Estimation de votre projet - Progineer",
       html: emailContent,
-      from: "estimation@progineer.fr"
+      from: "Progineer <noreply@progineer.fr>"
     };
     
-    console.log("Données de l'email:", emailData);
-    
-    // Simulation d'un appel API réussi
-    // En production, vous utiliseriez un service d'email réel
-    
-    /*
-    const response = await fetch('https://api.emailservice.com/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(emailData),
+    // Appeler la fonction Edge via Supabase
+    const { data, error } = await supabase.functions.invoke('send-email', {
+      body: emailData
     });
     
-    if (!response.ok) {
-      throw new Error(`Erreur lors de l'envoi de l'email: ${response.status}`);
+    if (error) {
+      console.error("Erreur lors de l'appel à la fonction send-email:", error);
+      return false;
     }
-    */
     
+    console.log("Email envoyé avec succès:", data);
     return true;
   } catch (error) {
     console.error("Erreur lors de l'envoi de l'email:", error);
