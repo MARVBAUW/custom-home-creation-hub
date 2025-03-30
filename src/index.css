@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -95,27 +96,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground min-w-full overflow-x-hidden;
-  }
-  
-  /* Correction des problèmes de largeur pour toutes les pages */
-  .container {
-    @apply w-full max-w-full mx-auto px-4 md:px-6;
-  }
-  
-  /* Assurer que le contenu principal prend toute la largeur */
-  #root {
-    @apply w-full max-w-[100vw] overflow-x-hidden;
-  }
-
-  /* Ajout de classes pour assurer une largeur complète pour tout le contenu */
-  main, section, article, div {
-    @apply max-w-full;
-  }
-  
-  /* Force l'application à utiliser toute la largeur disponible */
-  html, body {
-    @apply w-full max-w-[100vw] overflow-x-hidden;
+    @apply bg-background text-foreground;
   }
 }
 
@@ -192,48 +173,4 @@
 
 .dark .clickable-card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-}
-
-/* Styles spécifiques pour les guides et documents */
-.prose-khaki {
-  --tw-prose-headings: hsl(var(--khaki-800));
-  --tw-prose-links: hsl(var(--khaki-600));
-}
-
-/* Ajout de styles responsifs pour les conteneurs */
-.page-container {
-  @apply w-full max-w-full mx-auto;
-}
-
-.content-container {
-  @apply w-full max-w-full mx-auto px-4 md:px-6;
-}
-
-/* Styles pour les sections à pleine largeur */
-.full-width-section {
-  @apply w-full max-w-full;
-}
-
-/* Styles pour la taille des images dans guides */
-.guide-image {
-  @apply w-full h-auto object-cover;
-}
-
-/* Styles pour les listes dans les guides */
-.guide-list {
-  @apply list-disc pl-6 space-y-2;
-}
-
-/* Styles pour les tableaux dans les guides */
-.guide-table {
-  @apply w-full overflow-x-auto;
-}
-
-.guide-table table {
-  @apply min-w-full border-collapse;
-}
-
-.guide-table th,
-.guide-table td {
-  @apply border border-gray-300 p-2;
 }

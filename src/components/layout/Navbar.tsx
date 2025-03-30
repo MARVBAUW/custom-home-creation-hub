@@ -47,8 +47,8 @@ const Navbar = () => {
           : "bg-transparent py-3"
       )}
     >
-      <Container size="full">
-        <nav className="flex items-center justify-between w-full max-w-[1440px] mx-auto">
+      <Container size="lg">
+        <nav className="flex items-center justify-between w-full">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 relative z-50">
             <Logo 

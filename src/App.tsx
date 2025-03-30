@@ -19,11 +19,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <AuthProvider>
-            <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
-              <UserRegistrationNotificationsContainer />
-              {routeElements}
-              <Toaster />
-            </div>
+            <UserRegistrationNotificationsContainer />
+            {routeElements}
+            <Toaster />
           </AuthProvider>
         </HelmetProvider>
       </QueryClientProvider>

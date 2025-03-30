@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
@@ -5,12 +6,11 @@ import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, Clock, ChevronRight
 import Logo from '@/components/common/Logo';
 
 const Footer = () => {
-  return (
-    <footer className="bg-progineer-dark dark:bg-gray-950 w-full">
+  return <footer className="bg-progineer-dark dark:bg-gray-950">
       {/* Top Section with Border */}
-      <div className="border-b border-white/10 w-full">
-        <Container size="full" className="py-14 bg-[#202014]/[0.94]">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 max-w-[1440px] mx-auto">
+      <div className="border-b border-white/10">
+        <Container size="lg" className="py-14 bg-[#202014]/[0.94]">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
             {/* Company Info */}
             <div className="md:col-span-4">
               <Logo variant="white" withTagline className="mx-auto md:mx-0 mb-6" />
@@ -142,9 +142,9 @@ const Footer = () => {
       </div>
 
       {/* Bottom section */}
-      <div className="py-6 bg-[#202014]/[0.94] w-full">
-        <Container size="full">
-          <div className="flex flex-col md:flex-row justify-between items-center max-w-[1440px] mx-auto">
+      <div className="py-6 bg-[0#202014f0] bg-[#202014]/[0.94]">
+        <Container size="lg">
+          <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <p className="text-xs text-white/50 dark:text-white/60">
                 &copy; {new Date().getFullYear()} Progineer. Tous droits réservés.
@@ -160,15 +160,14 @@ const Footer = () => {
           </div>
 
           {/* SEO Footer Text */}
-          <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/30 dark:text-white/40 text-center md:text-left max-w-[1440px] mx-auto">
+          <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/30 dark:text-white/40 text-center md:text-left">
             <p className="max-w-4xl">
               Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z.
             </p>
           </div>
         </Container>
       </div>
-    </footer>
-  );
+    </footer>;
 };
 
 export default Footer;

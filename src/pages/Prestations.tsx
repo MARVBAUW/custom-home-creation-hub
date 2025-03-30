@@ -201,8 +201,8 @@ const Prestations = () => {
       </Helmet>
 
       {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white w-full" id="overview">
-        <Container size="xl">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white" id="overview">
+        <Container size="md">
           <div className="text-center">
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
               Nos prestations
@@ -210,7 +210,7 @@ const Prestations = () => {
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
               Services de maîtrise d'œuvre
             </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               De la conception à la réalisation, Progineer vous accompagne dans tous vos projets de construction, 
               rénovation et aménagement en région PACA.
             </p>
@@ -222,9 +222,9 @@ const Prestations = () => {
       <PrestationsSubNav />
 
       {/* Services Overview */}
-      <section className="py-16 w-full">
-        <Container size="xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
+      <section className="py-16">
+        <Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
             {services.map((service) => (
               <Card key={service.id} id={service.id} className="border-gray-200 hover:shadow-md transition-shadow duration-300 scroll-mt-32">
                 <CardHeader>
@@ -283,8 +283,8 @@ const Prestations = () => {
       </section>
 
       {/* Process Section */}
-      <section className="py-16 bg-stone-50 border-y border-stone-100 w-full">
-        <Container size="xl">
+      <section className="py-16 bg-stone-50 border-y border-stone-100">
+        <Container>
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-3xl font-semibold mb-6">Notre processus d'accompagnement</h2>
             <p className="text-gray-600">
@@ -292,7 +292,7 @@ const Prestations = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Step 1 */}
             <div className="relative p-6 bg-white rounded-xl shadow-sm border border-gray-100">
               <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">1</div>
@@ -333,8 +333,8 @@ const Prestations = () => {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-16 w-full">
-        <Container size="xl">
+      <section className="py-16">
+        <Container>
           <div className="flex flex-col md:flex-row gap-12">
             <div className="md:w-1/2">
               <h2 className="text-3xl font-semibold mb-6">Pourquoi choisir Progineer ?</h2>
@@ -391,8 +391,8 @@ const Prestations = () => {
       </section>
 
       {/* CTA section */}
-      <section className="py-16 bg-khaki-600 text-white w-full">
-        <Container size="xl">
+      <section className="py-16 bg-khaki-600 text-white">
+        <Container>
           <div className="text-center max-w-3xl mx-auto">
             <h2 className="text-3xl font-semibold mb-6">
               Prêt à concrétiser votre projet ?
@@ -420,8 +420,8 @@ const Prestations = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 w-full">
-        <Container size="xl">
+      <section className="py-16">
+        <Container>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-semibold mb-4">Questions fréquentes</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -429,7 +429,7 @@ const Prestations = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold mb-3">Quelle est la différence entre un maître d'œuvre et un architecte ?</h3>
               <p className="text-gray-600">
@@ -468,9 +468,9 @@ const Prestations = () => {
       </section>
 
       {/* SEO Footer */}
-      <section className="py-8 bg-stone-50 border-t border-stone-200 w-full">
-        <Container fullBleed={true}>
-          <div className="max-w-7xl mx-auto text-sm text-stone-500">
+      <section className="py-8 bg-stone-50 border-t border-stone-200">
+        <Container>
+          <div className="text-sm text-stone-500">
             <p>
               Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation énergétique et extension. Nos architectes et ingénieurs assurent la maîtrise d'ouvrage complète de votre projet. Optimisation des espaces, design d'intérieur et montage administratif pour particuliers et professionnels dans toute la région Provence-Alpes-Côte d'Azur.
             </p>

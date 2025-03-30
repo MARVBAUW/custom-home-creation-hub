@@ -19,12 +19,6 @@ export default {
       },
     },
     extend: {
-      fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        montserrat: ["Montserrat", "sans-serif"],
-        playfair: ["Playfair Display", "serif"],
-        rare: ["Rare", "sans-serif"],
-      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -71,8 +65,6 @@ export default {
           800: "hsl(var(--khaki-800))",
           900: "hsl(var(--khaki-900))",
         },
-        "progineer-gold": "#C1A16A",
-        "progineer-dark": "#333333",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -1,42 +1,21 @@
 
 import React from 'react';
+import { cn } from '@/lib/utils';
 
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
-
-interface ContainerProps {
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  size?: ContainerSize;
-  className?: string;
-  fullBleed?: boolean;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-const Container: React.FC<ContainerProps> = ({ 
-  children, 
-  size = 'lg',
-  className = '',
-  fullBleed = false,
-}) => {
-  const getMaxWidth = () => {
-    if (fullBleed) return 'max-w-full w-full';
-    
-    switch (size) {
-      case 'sm':
-        return 'max-w-[640px]';
-      case 'md':
-        return 'max-w-[768px]';
-      case 'lg':
-        return 'max-w-[1024px]';
-      case 'xl':
-        return 'max-w-[1280px]';
-      case 'full':
-        return 'max-w-full w-full'; // Full width
-      default:
-        return 'max-w-[1024px]';
-    }
-  };
-
+const Container = ({ children, size = 'md', className, ...props }: ContainerProps) => {
+  const containerClass = size === 'sm' 
+    ? 'container-sm' 
+    : size === 'lg' 
+      ? 'container-lg' 
+      : 'container-md';
+  
   return (
-    <div className={`w-full ${getMaxWidth()} mx-auto px-4 md:px-6 ${className}`}>
+    <div className={cn(containerClass, className)} {...props}>
       {children}
     </div>
   );

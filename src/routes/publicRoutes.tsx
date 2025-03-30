@@ -18,18 +18,16 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
 // Create placeholder components for pages
-const PrivacyPolicy = () => <div className="p-8 w-full"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
-const CGU = () => <div className="p-8 w-full"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
+const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
+const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
 
 // Wrap routes that need the standard layout (with navbar and footer)
 const StandardLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex flex-col w-full max-w-[100vw] overflow-x-hidden">
+  <>
     <Navbar />
-    <main className="flex-1 w-full overflow-x-hidden">
-      {children}
-    </main>
+    {children}
     <Footer />
-  </div>
+  </>
 );
 
 export const publicRoutes: RouteObject[] = [

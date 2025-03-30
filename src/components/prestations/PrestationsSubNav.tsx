@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { Building, Construction, Wrench, Settings, Plus, Info } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Container from '@/components/common/Container';
 
 const subLinks = [
   { id: 'overview', name: 'Aperçu', icon: <Info className="h-4 w-4 mr-2" /> },
@@ -43,29 +42,27 @@ const PrestationsSubNav = () => {
 
   return (
     <div className="sticky top-20 z-30 w-full bg-gradient-to-r from-stone-50 to-white shadow-sm border-b border-stone-200">
-      <Container size="full" className="px-0 md:px-8">
-        <div className="max-w-[1440px] mx-auto">
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-            <TabsList className="h-11 p-0 bg-transparent w-full flex justify-start overflow-x-auto scrollbar-none">
-              {subLinks.map((link) => (
-                <TabsTrigger 
-                  key={link.id} 
-                  value={link.id}
-                  className={cn(
-                    "flex items-center whitespace-nowrap px-3 py-2 rounded-none border-b-2 data-[state=active]:border-progineer-gold data-[state=active]:text-progineer-dark border-transparent transition-all hover:bg-stone-100/50",
-                    activeTab === link.id 
-                      ? "text-progineer-dark font-medium" 
-                      : "text-stone-600 hover:text-progineer-dark"
-                  )}
-                >
-                  {link.icon}
-                  {link.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-      </Container>
+      <div className="max-w-screen-xl mx-auto">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="h-11 p-0 bg-transparent w-full flex justify-start overflow-x-auto no-scrollbar">
+            {subLinks.map((link) => (
+              <TabsTrigger 
+                key={link.id} 
+                value={link.id}
+                className={cn(
+                  "flex items-center whitespace-nowrap px-3 py-2 rounded-none border-b-2 data-[state=active]:border-progineer-gold data-[state=active]:text-progineer-dark border-transparent transition-all hover:bg-stone-100/50",
+                  activeTab === link.id 
+                    ? "text-progineer-dark font-medium" 
+                    : "text-stone-600 hover:text-progineer-dark"
+                )}
+              >
+                {link.icon}
+                {link.name}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
     </div>
   );
 };
