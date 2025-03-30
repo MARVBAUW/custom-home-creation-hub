@@ -57,6 +57,14 @@ const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Gén�
 const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
 
+// Create a component to handle sitemap.xml redirection
+const SitemapXML = () => {
+  React.useEffect(() => {
+    window.location.href = '/sitemap.xml';
+  }, []);
+  return null;
+};
+
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -76,6 +84,9 @@ const App = () => {
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
             <Routes>
+              {/* Special route for sitemap.xml */}
+              <Route path="/sitemap.xml" element={<SitemapXML />} />
+              
               {/* Public routes with standard layout */}
               <Route path="/" element={
                 <StandardLayout>
