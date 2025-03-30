@@ -3,6 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
 import { Link } from 'react-router-dom';
+import SEO from '@/components/common/SEO';
 
 const Sitemap = () => {
   // Structure des liens du site
@@ -27,6 +28,14 @@ const Sitemap = () => {
       ]
     },
     {
+      title: 'Calculateurs',
+      links: [
+        { href: '/workspace', name: 'Tous les calculateurs' },
+        { href: '/workspace/calculateurs', name: 'Calculateurs financiers' },
+        { href: '/workspace/calculateurs/eurocode', name: 'Calculateurs Eurocode' },
+      ]
+    },
+    {
       title: 'Mentions Légales',
       links: [
         { href: '/mentions-legales', name: 'Mentions Légales' },
@@ -40,11 +49,37 @@ const Sitemap = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Plan du site | Progineer</title>
-        <meta name="description" content="Consultez le plan du site Progineer et accédez facilement à toutes nos pages." />
-        <link rel="canonical" href="https://progineer.fr/sitemap" />
-      </Helmet>
+      <SEO 
+        title="Plan du site Progineer | Architecture et maîtrise d'oeuvre en PACA"
+        description="Consultez le plan du site Progineer et accédez facilement à toutes nos pages. Services de maîtrise d'oeuvre, architecture, calculateurs et outils professionnels."
+        keywords="plan du site, sitemap, progineer, maître d'oeuvre PACA, architecture, calculateurs structures, eurocode"
+        canonicalUrl="https://progineer.fr/sitemap"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "url": "https://progineer.fr/",
+          "name": "Progineer - Architecture et Maîtrise d'Œuvre",
+          "description": "Entreprise d'architecture et de maîtrise d'œuvre en PACA proposant des services de construction, rénovation et extension.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://progineer.fr/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          },
+          "hasPart": [
+            ...siteStructure.flatMap(section => 
+              section.links.map(link => ({
+                "@type": "WebPage",
+                "url": `https://progineer.fr${link.href}`,
+                "name": link.name,
+                "isPartOf": {
+                  "@type": "WebSite",
+                  "url": "https://progineer.fr/"
+                }
+              }))
+            )
+          ]
+        }}
+      />
 
       <section className="py-16 bg-white dark:bg-gray-950">
         <Container size="lg">
@@ -52,7 +87,7 @@ const Sitemap = () => {
             Plan du site
           </h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {siteStructure.map((section, index) => (
               <div key={index} className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-100">{section.title}</h2>

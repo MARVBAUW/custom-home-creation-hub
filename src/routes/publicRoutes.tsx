@@ -16,6 +16,7 @@ import Equipe from '@/pages/Equipe';
 import NotFound from '@/pages/NotFound';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import SEOFooter from '@/components/partenaires/SEOFooter';
 
 // Create placeholder components for pages
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
@@ -27,6 +28,7 @@ const StandardLayout = ({ children }: { children: React.ReactNode }) => (
     <Navbar />
     {children}
     <Footer />
+    <SEOFooter />
   </>
 );
 

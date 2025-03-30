@@ -12,7 +12,7 @@ import {
   SteelCalculator,
   TimberCalculator
 } from './index';
-import { Building, Ruler, Wind, Calculator } from 'lucide-react';
+import { Building, Ruler, Wind, Calculator, CircleOff, Warehouse } from 'lucide-react';
 
 const EurocodeCalculators = () => {
   const [activeCalculator, setActiveCalculator] = useState('climate');
@@ -47,12 +47,12 @@ const EurocodeCalculators = () => {
             <span className="sm:hidden">EC2</span>
           </TabsTrigger>
           <TabsTrigger value="steel">
-            <Ruler className="h-4 w-4 mr-2" />
+            <CircleOff className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Acier</span>
             <span className="sm:hidden">EC3</span>
           </TabsTrigger>
           <TabsTrigger value="timber">
-            <Ruler className="h-4 w-4 mr-2" />
+            <Warehouse className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Bois</span>
             <span className="sm:hidden">EC5</span>
           </TabsTrigger>
