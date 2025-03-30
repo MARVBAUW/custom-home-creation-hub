@@ -174,3 +174,9 @@
 .dark .clickable-card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
+
+/* Styles pour les guides et documents */
+.prose-khaki {
+  --tw-prose-headings: hsl(var(--khaki-800));
+  --tw-prose-links: hsl(var(--khaki-600));
+}

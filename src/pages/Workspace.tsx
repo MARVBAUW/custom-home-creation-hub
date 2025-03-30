@@ -13,8 +13,10 @@ import WorkspaceGuides from '@/components/workspace/WorkspaceGuides';
 import WorkspaceCalculateurs from '@/components/workspace/WorkspaceCalculateurs';
 import WorkspaceReglementation from '@/components/workspace/WorkspaceReglementation';
 import WorkspaceEspaceClient from '@/components/workspace/WorkspaceEspaceClient';
+import { useToast } from '@/hooks/use-toast';
 
 const Workspace = () => {
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('guides');
   const [email, setEmail] = useState('');
 
@@ -28,7 +30,11 @@ const Workspace = () => {
     e.preventDefault();
     // Ici on pourrait intégrer la logique d'inscription réelle
     setEmail('');
-    alert('Merci pour votre inscription ! Vous serez informé du lancement de nos nouvelles fonctionnalités.');
+    toast({
+      title: "Inscription confirmée",
+      description: "Vous serez informé du lancement de nos nouvelles fonctionnalités.",
+      duration: 3000,
+    });
   };
 
   return (

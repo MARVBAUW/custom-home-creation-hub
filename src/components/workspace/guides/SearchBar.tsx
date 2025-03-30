@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Search } from 'lucide-react';
 
 interface SearchBarProps {
   searchQuery: string;
@@ -8,24 +9,17 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, setSearchQuery }) => {
   return (
-    <div className="relative mb-8">
-      <input
-        type="text"
-        placeholder="Rechercher un guide ou une ressource..."
-        className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-khaki-500 focus:border-transparent"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <span className="absolute right-3 top-2.5 text-gray-400">
-        {searchQuery && (
-          <button 
-            onClick={() => setSearchQuery("")}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
-        )}
-      </span>
+    <div className="relative mb-6">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+        <input
+          type="text"
+          placeholder="Rechercher un guide, un document..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-khaki-500 focus:border-transparent"
+        />
+      </div>
     </div>
   );
 };

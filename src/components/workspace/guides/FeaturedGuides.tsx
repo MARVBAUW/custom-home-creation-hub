@@ -1,8 +1,8 @@
 
 import React from 'react';
+import { ArrowRight } from 'lucide-react';
 import { GuideDocument } from './types';
 import { GuideCard } from './GuideCard';
-import { Card, CardContent } from "@/components/ui/card";
 
 interface FeaturedGuidesProps {
   featuredGuides: GuideDocument[];
@@ -13,14 +13,17 @@ export const FeaturedGuides: React.FC<FeaturedGuidesProps> = ({
   featuredGuides, 
   handleDocumentClick 
 }) => {
-  if (featuredGuides.length === 0) {
-    return null;
-  }
-  
+  if (featuredGuides.length === 0) return null;
+
   return (
     <div className="mb-8">
-      <h3 className="text-xl font-medium mb-4">Guides recommandés</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-xl font-medium">Guides populaires</h3>
+        <button className="text-khaki-600 hover:text-khaki-800 flex items-center text-sm font-medium">
+          Voir tous <ArrowRight className="ml-1 h-4 w-4" />
+        </button>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {featuredGuides.map(guide => (
           <GuideCard 
             key={guide.id} 
