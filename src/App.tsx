@@ -39,6 +39,10 @@ import AdminClients from './pages/client/AdminClients';
 import AdminClientDetail from './pages/client/AdminClientDetail';
 import EstimationTravaux from './pages/client/EstimationTravaux';
 import DevisHonoraires from './pages/client/DevisHonoraires';
+import AdminPartners from './pages/client/AdminPartners';
+import AdminDocuments from './pages/client/AdminDocuments';
+import AdminNotifications from './pages/client/AdminNotifications';
+import AdminSettings from './pages/client/AdminSettings';
 
 // Import protected route component
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -52,10 +56,6 @@ const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politi
 const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
 const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
-const AdminSettings = () => <div className="p-8"><h1 className="text-2xl">Paramètres Admin</h1></div>;
-const AdminPartners = () => <div className="p-8"><h1 className="text-2xl">Gestion des Partenaires</h1></div>;
-const AdminDocuments = () => <div className="p-8"><h1 className="text-2xl">Gestion des Documents</h1></div>;
-const AdminNotifications = () => <div className="p-8"><h1 className="text-2xl">Notifications Admin</h1></div>;
 
 const queryClient = new QueryClient();
 
