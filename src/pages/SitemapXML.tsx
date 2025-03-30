@@ -9,14 +9,24 @@ const SitemapXML: React.FC = () => {
     const currentDate = new Date().toISOString();
     const baseUrl = 'https://progineer.fr';
     
+    // Helper function to ensure proper XML entity encoding
+    const encodeXMLEntities = (text: string) => {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+    };
+    
     // Create a properly formatted XML sitemap
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${publicRoutes
   .filter(route => route.path && route.path !== '/sitemap.xml') // Filter out the XML sitemap itself and routes without paths
   .map(route => {
-    // Construct full URL
-    const fullUrl = `${baseUrl}${route.path}`;
+    // Construct full URL and ensure it's properly encoded
+    const fullUrl = encodeXMLEntities(`${baseUrl}${route.path}`);
     
     // Generate lastmod date (using current date for this example)
     const lastMod = currentDate;
@@ -52,9 +62,14 @@ ${publicRoutes
     document.head.appendChild(meta);
     
     // Set the XML MIME type using the correct method for document creation
-    // Since we can't modify document.contentType directly, we need to use a different approach
     const xmlHeader = document.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
     document.insertBefore(xmlHeader, document.documentElement);
+    
+    // Check for parsing errors
+    const parseError = xmlDoc.getElementsByTagName('parsererror');
+    if (parseError.length > 0) {
+      console.error("XML parsing error:", parseError[0].textContent);
+    }
   }, []);
 
   // Return null as we're manipulating the document directly
