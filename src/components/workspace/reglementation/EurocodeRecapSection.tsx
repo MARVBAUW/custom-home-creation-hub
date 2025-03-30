@@ -1,12 +1,19 @@
 
 import React, { useState } from 'react';
-import { Calculator, BookOpen, Ruler, Columns, Atom, Download, ExternalLink } from 'lucide-react';
+import { Calculator, BookOpen, Ruler, Columns, Atom, Download, ExternalLink, Home, Database } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { LoadCombinationsCalculator, ClimateCalculator, BeamCalculator } from '../calculators/eurocode';
+import { 
+  LoadCombinationsCalculator, 
+  ClimateCalculator, 
+  BeamCalculator,
+  ColumnCalculator,
+  FoundationCalculator,
+  SlabCalculator
+} from '../calculators/eurocode';
 
 export const EurocodeRecapSection = () => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -41,6 +48,21 @@ export const EurocodeRecapSection = () => {
       title: 'Dimensionnement de poutres',
       description: 'Calculateur de sections de poutres en béton armé',
       content: <BeamCalculator />
+    },
+    'ec2-columns': {
+      title: 'Dimensionnement de poteaux',
+      description: 'Calculateur de sections de poteaux en béton armé',
+      content: <ColumnCalculator />
+    },
+    'ec2-slabs': {
+      title: 'Calcul de dalles',
+      description: 'Dimensionnement de dalles en béton armé',
+      content: <SlabCalculator />
+    },
+    'ec7-foundations': {
+      title: 'Dimensionnement de fondations',
+      description: 'Calculateur de semelles isolées selon l\'EC7',
+      content: <FoundationCalculator />
     }
   };
 
@@ -74,6 +96,10 @@ export const EurocodeRecapSection = () => {
           <TabsTrigger value="ec5" className="data-[state=active]:bg-white">
             <BookOpen className="h-4 w-4 mr-2" />
             <span>EC5 - Bois</span>
+          </TabsTrigger>
+          <TabsTrigger value="ec7" className="data-[state=active]:bg-white">
+            <Database className="h-4 w-4 mr-2" />
+            <span>EC7 - Géotechnique</span>
           </TabsTrigger>
         </TabsList>
 
@@ -483,6 +509,114 @@ export const EurocodeRecapSection = () => {
               </p>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="ec7" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Dimensionnement de fondations</CardTitle>
+                <CardDescription>
+                  Calculateur de semelles isolées selon l'EC7
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Dimensionnez les fondations superficielles selon les critères de l'Eurocode 7
+                  et vérifiez la capacité portante du sol.
+                </p>
+              </CardContent>
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec7-foundations')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
+                  Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec7-foundations-guide', 'Guide fondations EC7')}
+                  disabled={downloadingId === 'ec7-foundations-guide'}
+                >
+                  {downloadingId === 'ec7-foundations-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Guide de reconnaissance des sols</CardTitle>
+                <CardDescription>
+                  Paramètres géotechniques et méthodes d'investigation
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Guide pratique sur les différentes méthodes de reconnaissance des sols
+                  et l'interprétation des résultats d'essais in-situ et en laboratoire.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec7-soil-guide', 'Guide reconnaissance des sols')}
+                  disabled={downloadingId === 'ec7-soil-guide'}
+                >
+                  {downloadingId === 'ec7-soil-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Abaques géotechniques</CardTitle>
+                <CardDescription>
+                  Abaques et tableaux de valeurs caractéristiques
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Collection d'abaques et de tableaux de valeurs caractéristiques
+                  pour différents types de sols selon l'Eurocode 7.
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec7-abacus', 'Abaques géotechniques')}
+                  disabled={downloadingId === 'ec7-abacus'}
+                >
+                  {downloadingId === 'ec7-abacus' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger les abaques
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
 

@@ -1,254 +1,170 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Slider } from "@/components/ui/slider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Download, Calculator } from 'lucide-react';
+import { Calculator, Download, RefreshCw } from 'lucide-react';
 import { toast } from "sonner";
 
-interface ConcreteClass {
-  name: string;
-  fck: number;
-  description: string;
-}
-
-interface SteelClass {
-  name: string;
-  fyk: number;
-  description: string;
-}
-
-interface BeamResult {
-  moment: number;
-  requiredAs: number;
-  minAs: number;
-  barCount: number;
-  barDiameter: number;
-  d: number;
-  z: number;
-  x: number;
-}
-
 const BeamCalculator = () => {
-  // Entrées de dimensionnement
-  const [width, setWidth] = useState<number>(300);
-  const [height, setHeight] = useState<number>(500);
-  const [cover, setCover] = useState<number>(30);
-  const [moment, setMoment] = useState<number>(100);
-  const [concreteClass, setConcreteClass] = useState<string>("C25/30");
-  const [steelClass, setSteelClass] = useState<string>("B500B");
-  const [barDiameter, setBarDiameter] = useState<number>(12);
+  // État pour les inputs
+  const [beamType, setBeamType] = useState('rectangle');
+  const [beamWidth, setBeamWidth] = useState(30); // en cm
+  const [beamHeight, setBeamHeight] = useState(60); // en cm
+  const [beamLength, setBeamLength] = useState(5); // en m
+  const [concreteClass, setConcreteClass] = useState('C25/30');
+  const [steelClass, setSteelClass] = useState('S500');
+  const [designMoment, setDesignMoment] = useState(150); // en kN.m
   
-  // États de calcul
-  const [result, setResult] = useState<BeamResult | null>(null);
-  const [isCalculating, setIsCalculating] = useState<boolean>(false);
+  // États pour les résultats
+  const [results, setResults] = useState({
+    d: 0, // hauteur utile (cm)
+    mu: 0, // moment réduit
+    z: 0, // bras de levier (cm)
+    As: 0, // section d'acier nécessaire (cm²)
+    asMin: 0, // section d'acier minimale (cm²)
+    rebarConfig: '', // configuration des armatures
+    utilizationRate: 0, // taux d'utilisation
+  });
   
-  // Classes de béton selon l'EC2
-  const concreteClasses: ConcreteClass[] = [
-    { name: "C20/25", fck: 20, description: "Béton courant - Résistance faible" },
-    { name: "C25/30", fck: 25, description: "Béton courant - Résistance moyenne" },
-    { name: "C30/37", fck: 30, description: "Béton courant - Bonne résistance" },
-    { name: "C35/45", fck: 35, description: "Béton de haute résistance" },
-    { name: "C40/50", fck: 40, description: "Béton de haute résistance" },
-    { name: "C45/55", fck: 45, description: "Béton de haute résistance" },
-    { name: "C50/60", fck: 50, description: "Béton de très haute résistance" },
-  ];
-  
-  // Classes d'acier selon l'EC2
-  const steelClasses: SteelClass[] = [
-    { name: "B500A", fyk: 500, description: "Acier de constructiun soudable" },
-    { name: "B500B", fyk: 500, description: "Acier de construction soudable à haute ductilité" },
-    { name: "B500C", fyk: 500, description: "Acier de construction soudable à très haute ductilité" },
-  ];
-  
-  // Diamètres d'armatures courantes
-  const barDiameters = [6, 8, 10, 12, 14, 16, 20, 25, 32];
-  
-  // Fonction de calcul
-  const calculateReinforcement = () => {
-    setIsCalculating(true);
-    
-    // Simuler un délai de calcul
-    setTimeout(() => {
-      try {
-        // Récupérer les valeurs des classes de matériaux
-        const concrete = concreteClasses.find(c => c.name === concreteClass) || concreteClasses[1];
-        const steel = steelClasses.find(s => s.name === steelClass) || steelClasses[1];
-        
-        // Coefficients de sécurité
-        const gammaC = 1.5;
-        const gammaS = 1.15;
-        
-        // Résistances de calcul
-        const fcd = concrete.fck / gammaC;
-        const fyd = steel.fyk / gammaS;
-        
-        // Hauteur utile d (en mm)
-        const d = height - cover - barDiameter / 2;
-        
-        // Moment réduit μ = MEd / (b * d² * fcd)
-        const mu = (moment * 1000000) / (width * d * d * fcd);
-        
-        // Position relative de l'axe neutre et bras de levier z
-        // Formules simplifiées pour le dimensionnement
-        const alpha = 1.25 * (1 - Math.sqrt(1 - 2 * mu));
-        const z = d * (1 - 0.4 * alpha);
-        
-        // Section d'armatures requise (en mm²)
-        const As = (moment * 1000000) / (z * fyd);
-        
-        // Section minimale selon l'EC2
-        const minAs = Math.max(0.26 * (concrete.fck ** 0.5) / steel.fyk * width * d, 0.0013 * width * d);
-        
-        // Nombre de barres nécessaires
-        const singleBarArea = Math.PI * (barDiameter * barDiameter) / 4;
-        const barCount = Math.ceil(Math.max(As, minAs) / singleBarArea);
-        
-        setResult({
-          moment: moment,
-          requiredAs: parseFloat(As.toFixed(0)),
-          minAs: parseFloat(minAs.toFixed(0)),
-          barCount: barCount,
-          barDiameter: barDiameter,
-          d: d,
-          z: parseFloat(z.toFixed(0)),
-          x: parseFloat((alpha * d).toFixed(0)),
-        });
-        
-        toast.success("Calcul effectué avec succès");
-      } catch (error) {
-        toast.error("Erreur lors du calcul");
-        console.error(error);
-      } finally {
-        setIsCalculating(false);
-      }
-    }, 1000);
+  // Caractéristiques des matériaux
+  const concreteProperties = {
+    'C20/25': { fck: 20, fcd: 13.33 }, // MPa
+    'C25/30': { fck: 25, fcd: 16.67 },
+    'C30/37': { fck: 30, fcd: 20.00 },
+    'C35/45': { fck: 35, fcd: 23.33 },
+    'C40/50': { fck: 40, fcd: 26.67 },
+    'C45/55': { fck: 45, fcd: 30.00 },
+    'C50/60': { fck: 50, fcd: 33.33 },
   };
   
-  // Export des résultats en PDF
-  const exportToPDF = () => {
-    if (!result) return;
+  const steelProperties = {
+    'S400': { fyk: 400, fyd: 348 }, // MPa
+    'S500': { fyk: 500, fyd: 435 },
+    'S600': { fyk: 600, fyd: 522 },
+  };
+  
+  // Configurations standard des armatures
+  const rebarDiameters = [6, 8, 10, 12, 14, 16, 20, 25, 32]; // mm
+  
+  // Méthode de calcul des armatures
+  const calculateReinforcement = () => {
+    try {
+      // Récupération des propriétés des matériaux
+      const concrete = concreteProperties[concreteClass as keyof typeof concreteProperties];
+      const steel = steelProperties[steelClass as keyof typeof steelProperties];
+      
+      if (!concrete || !steel) {
+        toast.error("Classe de matériau non reconnue");
+        return;
+      }
+      
+      // Conversion des unités
+      const b = beamWidth / 100; // cm -> m
+      const h = beamHeight / 100; // cm -> m
+      const d = h - 0.04; // Hauteur utile (couverture 4 cm)
+      const Med = designMoment; // kN.m
+      
+      // Calcul du moment réduit μ
+      const mu = Med / (b * d * d * concrete.fcd * 1000);
+      
+      // Vérification si μ <= μR (0.372 pour béton armé)
+      if (mu > 0.372) {
+        toast.error("Moment trop important pour la section. Augmentez les dimensions ou ajoutez une compression.");
+        return;
+      }
+      
+      // Calcul du bras de levier z
+      const z = d * (0.5 + Math.sqrt(0.25 - 0.33 * mu));
+      
+      // Calcul de la section d'acier nécessaire
+      const As = (Med * 1000000) / (steel.fyd * z);
+      
+      // Section minimale selon EC2
+      const asMin = Math.max(0.26 * (concrete.fck ** 0.5) / steel.fyk * b * d * 10000, 0.0013 * b * d * 10000);
+      
+      // Section d'acier finale (prendre le max entre calculé et minimum)
+      const asFinal = Math.max(As, asMin);
+      
+      // Détermination de la configuration des armatures
+      let rebarConfig = determineRebarConfiguration(asFinal);
+      
+      // Calcul du taux d'utilisation
+      const utilizationRate = Math.min(mu / 0.372, 1);
+      
+      // Mise à jour des résultats
+      setResults({
+        d: d * 100, // Conversion en cm
+        mu: mu,
+        z: z * 100, // Conversion en cm
+        As: asFinal,
+        asMin: asMin,
+        rebarConfig,
+        utilizationRate,
+      });
+      
+      toast.success("Calcul effectué avec succès");
+    } catch (error) {
+      toast.error("Erreur lors du calcul");
+      console.error(error);
+    }
+  };
+  
+  // Fonction pour déterminer la configuration des armatures
+  const determineRebarConfiguration = (asRequired: number) => {
+    // Simplification : on va chercher la meilleure combinaison pour minimiser le nombre de barres
+    let bestConfig = '';
+    let bestCount = Infinity;
     
-    import('jspdf').then(({ jsPDF }) => {
-      import('jspdf-autotable').then((autoTable) => {
-        const doc = new jsPDF();
-        
-        // Titre
-        doc.setFontSize(18);
-        doc.text('Dimensionnement de poutre en béton armé', 105, 15, { align: 'center' });
-        
-        // Informations du projet
-        doc.setFontSize(12);
-        doc.text('Dimensionnement selon l\'Eurocode 2', 14, 25);
-        doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 14, 32);
-        
-        // Données d'entrée
-        doc.setFontSize(14);
-        doc.text('Données d\'entrée', 14, 45);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: 50,
-          head: [['Paramètre', 'Valeur', 'Unité']],
-          body: [
-            ['Largeur de poutre (b)', width.toString(), 'mm'],
-            ['Hauteur de poutre (h)', height.toString(), 'mm'],
-            ['Enrobage', cover.toString(), 'mm'],
-            ['Moment de calcul (MEd)', moment.toString(), 'kN.m'],
-            ['Classe de béton', concreteClass, ''],
-            ['Classe d\'acier', steelClass, ''],
-          ],
-        });
-        
-        // @ts-ignore
-        const finalY = doc.lastAutoTable.finalY + 10;
-        
-        // Résultats
-        doc.setFontSize(14);
-        doc.text('Résultats de calcul', 14, finalY);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: finalY + 5,
-          head: [['Paramètre', 'Valeur', 'Unité']],
-          body: [
-            ['Hauteur utile (d)', result.d.toString(), 'mm'],
-            ['Bras de levier (z)', result.z.toString(), 'mm'],
-            ['Position axe neutre (x)', result.x.toString(), 'mm'],
-            ['Section d\'armatures requise (As)', result.requiredAs.toString(), 'mm²'],
-            ['Section d\'armatures minimale', result.minAs.toString(), 'mm²'],
-            ['Diamètre des barres', result.barDiameter.toString(), 'mm'],
-            ['Nombre de barres', result.barCount.toString(), ''],
-          ],
-        });
-        
-        // Schéma simplifié
-        // @ts-ignore
-        const schemaY = doc.lastAutoTable.finalY + 15;
-        doc.setFontSize(12);
-        doc.text('Schéma de ferraillage (vue en coupe)', 105, schemaY, { align: 'center' });
-        
-        // Dessin simplifié de la poutre (rectangle)
-        const scale = 0.5;  // Échelle pour le dessin
-        const startX = 50;
-        const startY = schemaY + 15;
-        const scaledWidth = width * scale;
-        const scaledHeight = height * scale;
-        
-        // Contour de la poutre
-        doc.setDrawColor(0);
-        doc.setFillColor(240, 240, 240);
-        doc.rect(startX, startY, scaledWidth, scaledHeight, 'FD');
-        
-        // Position approximative des armatures
-        doc.setFillColor(0);
-        const barSpacing = Math.min(25, scaledWidth / (result.barCount + 1));
-        for (let i = 0; i < result.barCount; i++) {
-          const barX = startX + (i + 1) * barSpacing;
-          const barY = startY + scaledHeight - 10;
-          doc.circle(barX, barY, 2, 'F');
+    // On essaie d'abord avec des barres de grand diamètre
+    for (let i = rebarDiameters.length - 1; i >= 0; i--) {
+      const diameter = rebarDiameters[i];
+      const areaPerRebar = Math.PI * (diameter / 2) ** 2 / 100; // en cm²
+      
+      // Nombre de barres nécessaires
+      const numRebars = Math.ceil(asRequired / areaPerRebar);
+      
+      // Vérification de l'espacement
+      const availableWidth = beamWidth - 2 * 3; // Enlever 3 cm de chaque côté pour l'enrobage
+      const minSpacing = Math.max(20, diameter); // Espacement minimum (mm)
+      
+      // Calcul de l'espacement entre les barres
+      const spacing = (availableWidth - numRebars * diameter) / (numRebars - 1);
+      
+      if (spacing >= minSpacing / 10 || numRebars === 1) { // conversion mm -> cm
+        if (numRebars < bestCount) {
+          bestCount = numRebars;
+          bestConfig = `${numRebars} HA${diameter}`;
         }
         
-        // Cotes
-        doc.setDrawColor(0);
-        doc.setLineWidth(0.1);
-        // Cote hauteur
-        doc.line(startX - 10, startY, startX - 5, startY);
-        doc.line(startX - 10, startY + scaledHeight, startX - 5, startY + scaledHeight);
-        doc.line(startX - 10, startY, startX - 10, startY + scaledHeight);
-        doc.text('h=' + height + 'mm', startX - 35, startY + scaledHeight/2);
-        
-        // Cote largeur
-        doc.line(startX, startY + scaledHeight + 10, startX, startY + scaledHeight + 5);
-        doc.line(startX + scaledWidth, startY + scaledHeight + 10, startX + scaledWidth, startY + scaledHeight + 5);
-        doc.line(startX, startY + scaledHeight + 10, startX + scaledWidth, startY + scaledHeight + 10);
-        doc.text('b=' + width + 'mm', startX + scaledWidth/2 - 15, startY + scaledHeight + 20);
-        
-        // Note de bas de page
-        doc.setFontSize(10);
-        doc.text('Calcul simplifié pour une poutre soumise à de la flexion simple selon l\'Eurocode 2', 105, 280, { align: 'center' });
-        
-        doc.save('Dimensionnement_Poutre_BA.pdf');
-        
-        toast.success('PDF téléchargé avec succès');
-      });
-    });
+        // Si on a trouvé une config avec peu de barres, on s'arrête
+        if (numRebars <= 3) break;
+      }
+    }
+    
+    return bestConfig || "Configuration non trouvée";
   };
-
+  
+  // Exporter les résultats en PDF
+  const exportToPDF = () => {
+    // Simulation d'export
+    toast.success("Export PDF en cours de développement");
+  };
+  
   return (
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calculator className="h-5 w-5 text-purple-600" />
-          Dimensionnement de poutre en béton armé
+          Dimensionnement de poutre en béton armé EC2
         </CardTitle>
         <CardDescription>
-          Calcul de ferraillage selon l'Eurocode 2 pour une poutre en flexion simple
+          Calculez les armatures nécessaires pour une poutre en béton armé selon l'Eurocode 2
         </CardDescription>
       </CardHeader>
       
@@ -256,337 +172,256 @@ const BeamCalculator = () => {
         <Tabs defaultValue="input">
           <TabsList className="mb-4">
             <TabsTrigger value="input">Données d'entrée</TabsTrigger>
-            <TabsTrigger value="results" disabled={!result}>Résultats</TabsTrigger>
+            <TabsTrigger value="results">Résultats</TabsTrigger>
             <TabsTrigger value="help">Aide</TabsTrigger>
           </TabsList>
           
           <TabsContent value="input" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Géométrie de la poutre</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label htmlFor="beam-width">Largeur (b)</Label>
-                        <span className="text-gray-500 text-sm">{width} mm</span>
-                      </div>
-                      <Slider
-                        id="beam-width"
-                        value={[width]}
-                        onValueChange={(value) => setWidth(value[0])}
-                        min={150}
-                        max={1000}
-                        step={10}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label htmlFor="beam-height">Hauteur (h)</Label>
-                        <span className="text-gray-500 text-sm">{height} mm</span>
-                      </div>
-                      <Slider
-                        id="beam-height"
-                        value={[height]}
-                        onValueChange={(value) => setHeight(value[0])}
-                        min={200}
-                        max={1200}
-                        step={10}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <Label htmlFor="beam-cover">Enrobage</Label>
-                        <span className="text-gray-500 text-sm">{cover} mm</span>
-                      </div>
-                      <Slider
-                        id="beam-cover"
-                        value={[cover]}
-                        onValueChange={(value) => setCover(value[0])}
-                        min={15}
-                        max={50}
-                        step={5}
-                      />
-                    </div>
+                  <Label htmlFor="beam-type">Type de poutre</Label>
+                  <Select value={beamType} onValueChange={setBeamType}>
+                    <SelectTrigger id="beam-type">
+                      <SelectValue placeholder="Sélectionner un type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rectangle">Rectangulaire</SelectItem>
+                      <SelectItem value="t-beam" disabled>En T (bientôt disponible)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="beam-width">Largeur (cm)</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="beam-width"
+                      type="number"
+                      value={beamWidth}
+                      onChange={(e) => setBeamWidth(parseFloat(e.target.value))}
+                      min="10"
+                      max="100"
+                    />
+                    <div className="w-[60px] text-sm text-gray-500">cm</div>
                   </div>
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Ferraillage</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="bar-diameter">Diamètre des barres</Label>
-                      <Select 
-                        value={barDiameter.toString()} 
-                        onValueChange={(value) => setBarDiameter(parseInt(value))}
-                      >
-                        <SelectTrigger id="bar-diameter">
-                          <SelectValue placeholder="Diamètre" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {barDiameters.map((diam) => (
-                            <SelectItem key={diam} value={diam.toString()}>
-                              ⌀{diam} mm
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <Label htmlFor="beam-height">Hauteur (cm)</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="beam-height"
+                      type="number"
+                      value={beamHeight}
+                      onChange={(e) => setBeamHeight(parseFloat(e.target.value))}
+                      min="20"
+                      max="200"
+                    />
+                    <div className="w-[60px] text-sm text-gray-500">cm</div>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="beam-length">Longueur (m)</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="beam-length"
+                      type="number"
+                      value={beamLength}
+                      onChange={(e) => setBeamLength(parseFloat(e.target.value))}
+                      min="1"
+                      max="20"
+                    />
+                    <div className="w-[60px] text-sm text-gray-500">m</div>
                   </div>
                 </div>
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Chargement</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="moment">Moment de calcul (MEd)</Label>
-                      <div className="flex items-center">
-                        <Input
-                          id="moment"
-                          type="number"
-                          value={moment}
-                          onChange={(e) => setMoment(parseFloat(e.target.value) || 0)}
-                          min="0"
-                          step="5"
-                        />
-                        <span className="ml-2 text-gray-500">kN.m</span>
-                      </div>
-                    </div>
-                  </div>
+                  <Label htmlFor="concrete-class">Classe de béton</Label>
+                  <Select value={concreteClass} onValueChange={setConcreteClass}>
+                    <SelectTrigger id="concrete-class">
+                      <SelectValue placeholder="Sélectionner une classe" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(concreteProperties).map((className) => (
+                        <SelectItem key={className} value={className}>{className}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 
                 <div>
-                  <h3 className="text-lg font-medium mb-4">Matériaux</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="concrete-class">Classe de béton</Label>
-                      <Select 
-                        value={concreteClass} 
-                        onValueChange={setConcreteClass}
-                      >
-                        <SelectTrigger id="concrete-class">
-                          <SelectValue placeholder="Classe de béton" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {concreteClasses.map((concrete) => (
-                            <SelectItem key={concrete.name} value={concrete.name}>
-                              {concrete.name} - fck = {concrete.fck} MPa
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="steel-class">Classe d'acier</Label>
-                      <Select 
-                        value={steelClass} 
-                        onValueChange={setSteelClass}
-                      >
-                        <SelectTrigger id="steel-class">
-                          <SelectValue placeholder="Classe d'acier" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {steelClasses.map((steel) => (
-                            <SelectItem key={steel.name} value={steel.name}>
-                              {steel.name} - fyk = {steel.fyk} MPa
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                  <Label htmlFor="steel-class">Classe d'acier</Label>
+                  <Select value={steelClass} onValueChange={setSteelClass}>
+                    <SelectTrigger id="steel-class">
+                      <SelectValue placeholder="Sélectionner une classe" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(steelProperties).map((className) => (
+                        <SelectItem key={className} value={className}>{className}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="design-moment">Moment de calcul ELU (kN.m)</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="design-moment"
+                      type="number"
+                      value={designMoment}
+                      onChange={(e) => setDesignMoment(parseFloat(e.target.value))}
+                      min="0"
+                    />
+                    <div className="w-[60px] text-sm text-gray-500">kN.m</div>
                   </div>
                 </div>
                 
-                <div className="pt-6">
-                  <Button 
-                    onClick={calculateReinforcement} 
-                    disabled={isCalculating}
-                    className="w-full"
-                  >
-                    {isCalculating ? 'Calcul en cours...' : 'Calculer le ferraillage'}
+                <div className="pt-4">
+                  <Button onClick={calculateReinforcement} className="w-full">
+                    <Calculator className="mr-2 h-4 w-4" />
+                    Calculer les armatures
                   </Button>
                 </div>
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="results" className="space-y-6">
-            {result && (
-              <>
-                <Card className="border-t-4 border-t-green-500">
+          <TabsContent value="results">
+            <div className="space-y-6">
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={exportToPDF}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Exporter PDF
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle>Résultats du dimensionnement</CardTitle>
-                    <CardDescription>
-                      Ferraillage pour une poutre {width}×{height} mm soumise à un moment de {moment} kN.m
-                    </CardDescription>
+                    <CardTitle className="text-base">Propriétés de la section</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-500 mb-2">Caractéristiques géométriques</h4>
-                        <Table>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell className="font-medium">Hauteur utile (d)</TableCell>
-                              <TableCell>{result.d} mm</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Bras de levier (z)</TableCell>
-                              <TableCell>{result.z} mm</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Position axe neutre (x)</TableCell>
-                              <TableCell>{result.x} mm</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Section:</span>
+                        <span className="font-medium">{beamWidth} × {beamHeight} cm</span>
                       </div>
-                      
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-500 mb-2">Ferraillage</h4>
-                        <Table>
-                          <TableBody>
-                            <TableRow>
-                              <TableCell className="font-medium">Section d'armatures requise</TableCell>
-                              <TableCell>{result.requiredAs} mm²</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Section minimale réglementaire</TableCell>
-                              <TableCell>{result.minAs} mm²</TableCell>
-                            </TableRow>
-                            <TableRow>
-                              <TableCell className="font-medium">Ferraillage retenu</TableCell>
-                              <TableCell>{result.barCount} ⌀{result.barDiameter}</TableCell>
-                            </TableRow>
-                          </TableBody>
-                        </Table>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Hauteur utile d:</span>
+                        <span className="font-medium">{results.d.toFixed(1)} cm</span>
                       </div>
-                    </div>
-                    
-                    <div className="mt-4 p-4 bg-gray-50 rounded-md text-sm border">
-                      <div className="font-medium mb-2">Notes :</div>
-                      <ul className="list-disc pl-5 space-y-1">
-                        <li>Vérifier la résistance à l'effort tranchant si nécessaire</li>
-                        <li>Prévoir les armatures de montage (cadres/étriers)</li>
-                        <li>Vérifier les conditions de mise en œuvre (espacements, ancrages)</li>
-                        <li>Ces résultats ne concernent que la flexion simple</li>
-                      </ul>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Bras de levier z:</span>
+                        <span className="font-medium">{results.z.toFixed(1)} cm</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Moment réduit μ:</span>
+                        <span className="font-medium">{results.mu.toFixed(3)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Taux d'utilisation:</span>
+                        <span className="font-medium">{(results.utilizationRate * 100).toFixed(1)}%</span>
+                      </div>
                     </div>
                   </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" onClick={exportToPDF} className="ml-auto">
-                      <Download className="h-4 w-4 mr-2" />
-                      Exporter en PDF
-                    </Button>
-                  </CardFooter>
                 </Card>
                 
-                <div className="flex justify-center py-4">
-                  <div className="w-full max-w-md aspect-video relative bg-gray-100 border rounded-md flex flex-col items-center justify-center">
-                    <div className="text-sm text-gray-500 mb-4">Schéma de principe (vue en coupe)</div>
-                    
-                    {/* Poutre simplifiée */}
-                    <div 
-                      className="bg-gray-200 border border-gray-400 relative"
-                      style={{ 
-                        width: Math.min(350, width / 2),
-                        height: Math.min(200, height / 2),
-                      }}
-                    >
-                      {/* Position approximative des armatures */}
-                      <div className="absolute bottom-2 left-0 right-0 flex justify-around">
-                        {Array.from({ length: result.barCount }).map((_, i) => (
-                          <div 
-                            key={i} 
-                            className="rounded-full bg-black"
-                            style={{ 
-                              width: Math.max(4, barDiameter / 3),
-                              height: Math.max(4, barDiameter / 3)
-                            }}
-                          ></div>
-                        ))}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">Armatures calculées</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Section d'acier nécessaire:</span>
+                        <span className="font-medium">{results.As.toFixed(2)} cm²</span>
                       </div>
-                      
-                      {/* Cotes */}
-                      <div className="absolute -bottom-6 left-0 right-0 text-xs text-center text-gray-600">
-                        b = {width} mm
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Section d'acier minimale:</span>
+                        <span className="font-medium">{results.asMin.toFixed(2)} cm²</span>
                       </div>
-                      <div className="absolute -right-8 top-0 bottom-0 flex items-center">
-                        <div className="text-xs text-gray-600 rotate-90">h = {height} mm</div>
+                      <Separator className="my-2" />
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Configuration proposée:</span>
+                        <span className="font-medium">{results.rebarConfig}</span>
                       </div>
                     </div>
-                  </div>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="mt-4">
+                <div className="bg-gray-50 p-4 rounded-md border">
+                  <h4 className="font-medium text-sm mb-2">Notes de calcul</h4>
+                  <ul className="text-sm space-y-1 text-gray-600">
+                    <li>• Calcul réalisé selon l'Eurocode 2</li>
+                    <li>• Coefficient de sécurité γc = 1.5 pour le béton</li>
+                    <li>• Coefficient de sécurité γs = 1.15 pour l'acier</li>
+                    <li>• Enrobage considéré = 4 cm</li>
+                    <li>• Calcul en flexion simple uniquement</li>
+                  </ul>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
           </TabsContent>
           
-          <TabsContent value="help" className="space-y-6">
+          <TabsContent value="help">
             <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-medium mb-2">Comment utiliser ce calculateur</h3>
-                <p className="text-gray-600">
-                  Ce calculateur permet de dimensionner le ferraillage longitudinal d'une poutre en béton armé
-                  soumise à de la flexion simple (moment positif), selon l'Eurocode 2.
+              <h3 className="font-medium text-lg">Aide au dimensionnement des poutres</h3>
+              
+              <div className="space-y-2">
+                <h4 className="font-medium">Comment utiliser ce calculateur</h4>
+                <p className="text-gray-600 text-sm">
+                  Ce calculateur permet de dimensionner les armatures longitudinales en flexion simple d'une poutre en béton armé 
+                  selon les principes de l'Eurocode 2. Suivez les étapes ci-dessous:
                 </p>
+                
+                <ol className="text-sm space-y-1 text-gray-600 list-decimal pl-4">
+                  <li>Saisissez les dimensions de votre poutre (largeur et hauteur)</li>
+                  <li>Sélectionnez les classes de matériaux (béton et acier)</li>
+                  <li>Entrez le moment de calcul à l'ELU (issu du calcul de structure)</li>
+                  <li>Cliquez sur "Calculer les armatures"</li>
+                  <li>Consultez les résultats dans l'onglet correspondant</li>
+                </ol>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium mb-2">Méthode de calcul</h3>
-                <p className="text-gray-600">
-                  Le dimensionnement est basé sur la méthode des états limites ultimes (ELU) et utilise les principes suivants :
-                </p>
-                <ul className="list-disc pl-5 space-y-1 text-gray-600 mt-2">
-                  <li>Équilibre de la section</li>
-                  <li>Compatibilité des déformations</li>
-                  <li>Diagramme rectangulaire simplifié pour le béton</li>
-                  <li>Comportement élasto-plastique parfait pour l'acier</li>
+              <div className="space-y-2">
+                <h4 className="font-medium">Hypothèses de calcul</h4>
+                <ul className="text-sm space-y-1 text-gray-600 list-disc pl-4">
+                  <li>Le calcul est effectué en flexion simple uniquement</li>
+                  <li>La section est supposée sous-armée (pas de compression)</li>
+                  <li>L'enrobage considéré est de 4 cm</li>
+                  <li>Les coefficients partiels de sécurité sont γc = 1.5 et γs = 1.15</li>
+                  <li>La configuration d'armatures proposée tient compte des règles d'espacement</li>
+                  <li>Le calcul à l'ELS (flèche, fissuration) n'est pas inclus dans cette version</li>
                 </ul>
               </div>
               
-              <div>
-                <h3 className="text-lg font-medium mb-2">Limites du calculateur</h3>
-                <p className="text-gray-600">
-                  Ce calculateur présente certaines limitations :
+              <div className="bg-amber-50 p-4 rounded-md border border-amber-100">
+                <h4 className="font-medium text-amber-800">Attention</h4>
+                <p className="text-sm text-amber-700">
+                  Ce calculateur est fourni à titre indicatif et ne remplace pas l'analyse d'un ingénieur structure.
+                  Les résultats doivent être vérifiés par un professionnel qualifié avant toute mise en œuvre.
                 </p>
-                <ul className="list-disc pl-5 space-y-1 text-gray-600 mt-2">
-                  <li>Uniquement pour la flexion simple (pas de compression/traction)</li>
-                  <li>Ne vérifie pas la résistance à l'effort tranchant</li>
-                  <li>Ne dimensionne pas les armatures transversales (cadres/étriers)</li>
-                  <li>Ne vérifie pas les conditions de service (ELS - flèches, fissuration)</li>
-                  <li>Ne prend pas en compte des formes complexes de section</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-medium mb-2">Références</h3>
-                <p className="text-gray-600">
-                  Ce calculateur est basé sur les normes suivantes :
-                </p>
-                <ul className="list-disc pl-5 space-y-1 text-gray-600 mt-2">
-                  <li>EN 1992-1-1 : Eurocode 2 - Calcul des structures en béton</li>
-                  <li>NF EN 1992-1-1/NA : Annexe Nationale Française</li>
-                </ul>
               </div>
             </div>
           </TabsContent>
         </Tabs>
       </CardContent>
       
-      <CardFooter className="border-t bg-gray-50 px-6 py-4">
-        <div className="text-xs text-gray-500 w-full flex justify-between items-center">
-          <span>Conforme à l'EN 1992-1-1 (Eurocode 2)</span>
-          <span>Version simplifiée pour la flexion simple</span>
+      <CardFooter className="justify-between border-t pt-4 text-xs text-gray-500">
+        <div>
+          Calculateur basé sur l'EC2 (EN 1992-1-1)
         </div>
+        <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
+          <RefreshCw className="h-3 w-3 mr-1" />
+          Réinitialiser
+        </Button>
       </CardFooter>
     </Card>
   );
