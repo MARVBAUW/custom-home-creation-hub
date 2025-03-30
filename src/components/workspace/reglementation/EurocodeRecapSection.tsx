@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Calculator, BookOpen, Ruler, Columns, Atom, Download, ExternalLink, Home, Database } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -12,7 +11,9 @@ import {
   BeamCalculator,
   ColumnCalculator,
   FoundationCalculator,
-  SlabCalculator
+  SlabCalculator,
+  SteelCalculator,
+  TimberCalculator
 } from '../calculators/eurocode';
 
 export const EurocodeRecapSection = () => {
@@ -58,6 +59,16 @@ export const EurocodeRecapSection = () => {
       title: 'Calcul de dalles',
       description: 'Dimensionnement de dalles en béton armé',
       content: <SlabCalculator />
+    },
+    'ec3-steel': {
+      title: 'Structures métalliques',
+      description: 'Dimensionnement d\'éléments en acier selon l\'EC3',
+      content: <SteelCalculator />
+    },
+    'ec5-timber': {
+      title: 'Structures en bois',
+      description: 'Dimensionnement d\'éléments en bois selon l\'EC5',
+      content: <TimberCalculator />
     },
     'ec7-foundations': {
       title: 'Dimensionnement de fondations',
@@ -344,7 +355,47 @@ export const EurocodeRecapSection = () => {
         </TabsContent>
 
         <TabsContent value="ec3" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Structures métalliques</CardTitle>
+                <CardDescription>
+                  Vérification d'éléments en acier selon l'EC3
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Vérifiez la résistance de profilés métalliques soumis à différents
+                  types de sollicitations selon l'Eurocode 3.
+                </p>
+              </CardContent>
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec3-steel')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
+                  Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec3-steel-guide', 'Guide acier EC3')}
+                  disabled={downloadingId === 'ec3-steel-guide'}
+                >
+                  {downloadingId === 'ec3-steel-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+            
             <Card>
               <CardHeader>
                 <CardTitle>Profilés métalliques</CardTitle>
@@ -409,26 +460,50 @@ export const EurocodeRecapSection = () => {
               </CardFooter>
             </Card>
           </div>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Outils de calcul EC3 - Prochainement</CardTitle>
-              <CardDescription>
-                De nouveaux calculateurs pour l'Eurocode 3 sont en cours de développement
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">
-                Nous travaillons actuellement sur des outils de dimensionnement pour les structures métalliques :
-                vérification de sections, flambement, assemblages boulonnés/soudés. 
-                Ils seront disponibles dans une prochaine mise à jour.
-              </p>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="ec5" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Structures en bois</CardTitle>
+                <CardDescription>
+                  Vérification d'éléments en bois selon l'EC5
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-500">
+                  Dimensionnez et vérifiez les éléments de structure en bois 
+                  selon les exigences de l'Eurocode 5.
+                </p>
+              </CardContent>
+              <CardFooter className="flex gap-2 flex-col sm:flex-row">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => handleOpenCalculator('ec5-timber')}
+                >
+                  <Calculator className="mr-2 h-4 w-4" />
+                  Accéder au calculateur
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full"
+                  onClick={() => handleDownload('ec5-timber-guide', 'Guide bois EC5')}
+                  disabled={downloadingId === 'ec5-timber-guide'}
+                >
+                  {downloadingId === 'ec5-timber-guide' ? (
+                    <span className="flex items-center">Téléchargement...</span>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Télécharger le guide
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </Card>
+            
             <Card>
               <CardHeader>
                 <CardTitle>Assemblages bois</CardTitle>
@@ -493,22 +568,6 @@ export const EurocodeRecapSection = () => {
               </CardFooter>
             </Card>
           </div>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Outils de calcul EC5 - Prochainement</CardTitle>
-              <CardDescription>
-                De nouveaux calculateurs pour l'Eurocode 5 sont en cours de développement
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-500">
-                Nous travaillons actuellement sur des outils de dimensionnement pour les structures bois :
-                vérification de sections, assemblages, stabilité. 
-                Ils seront disponibles dans une prochaine mise à jour.
-              </p>
-            </CardContent>
-          </Card>
         </TabsContent>
 
         <TabsContent value="ec7" className="space-y-6">

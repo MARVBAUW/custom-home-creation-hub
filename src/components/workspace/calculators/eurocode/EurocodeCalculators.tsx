@@ -8,7 +8,9 @@ import {
   BeamCalculator,
   ColumnCalculator,
   SlabCalculator,
-  FoundationCalculator
+  FoundationCalculator,
+  SteelCalculator,
+  TimberCalculator
 } from './index';
 import { Building, Ruler, Wind, Calculator } from 'lucide-react';
 
@@ -23,7 +25,7 @@ const EurocodeCalculators = () => {
       </div>
       
       <Tabs value={activeCalculator} onValueChange={setActiveCalculator} className="space-y-4">
-        <TabsList className="bg-slate-50 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 border">
+        <TabsList className="bg-slate-50 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-8 border">
           <TabsTrigger value="climate">
             <Wind className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Climat</span>
@@ -43,6 +45,16 @@ const EurocodeCalculators = () => {
             <Ruler className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Dalles</span>
             <span className="sm:hidden">EC2</span>
+          </TabsTrigger>
+          <TabsTrigger value="steel">
+            <Ruler className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Acier</span>
+            <span className="sm:hidden">EC3</span>
+          </TabsTrigger>
+          <TabsTrigger value="timber">
+            <Ruler className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Bois</span>
+            <span className="sm:hidden">EC5</span>
           </TabsTrigger>
           <TabsTrigger value="foundation">
             <Building className="h-4 w-4 mr-2" />
@@ -70,6 +82,14 @@ const EurocodeCalculators = () => {
         
         <TabsContent value="slab">
           <SlabCalculator />
+        </TabsContent>
+        
+        <TabsContent value="steel">
+          <SteelCalculator />
+        </TabsContent>
+        
+        <TabsContent value="timber">
+          <TimberCalculator />
         </TabsContent>
         
         <TabsContent value="foundation">
