@@ -29,14 +29,14 @@ const Container: React.FC<ContainerProps> = ({
       case 'xl':
         return 'max-w-[1280px]';
       case 'full':
-        return 'max-w-full w-full';
+        return 'max-w-[1440px]'; // Increased from just full width to a specific large but constrained width
       default:
         return 'max-w-[1024px]';
     }
   };
 
   return (
-    <div className={`w-full ${getMaxWidth()} mx-auto px-4 md:px-6 ${className}`}>
+    <div className={`w-full ${getMaxWidth()} mx-auto px-4 md:px-8 lg:px-12 ${className}`}>
       {children}
     </div>
   );

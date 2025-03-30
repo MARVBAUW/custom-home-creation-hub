@@ -9,7 +9,7 @@ interface SEOFooterProps {
 const SEOFooter = ({ text }: SEOFooterProps) => {
   return (
     <section className="py-10 bg-stone-50 dark:bg-gray-900 border-t border-stone-200 dark:border-gray-800 w-full">
-      <Container fullBleed={true} size="full">
+      <Container fullBleed={true}>
         <div className="max-w-7xl mx-auto text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
           <p>{text}</p>
         </div>

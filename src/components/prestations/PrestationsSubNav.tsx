@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { Building, Construction, Wrench, Settings, Plus, Info } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useLocation, useNavigate } from 'react-router-dom';
+import Container from '@/components/common/Container';
 
 const subLinks = [
   { id: 'overview', name: 'Aperçu', icon: <Info className="h-4 w-4 mr-2" /> },
@@ -42,9 +43,9 @@ const PrestationsSubNav = () => {
 
   return (
     <div className="sticky top-20 z-30 w-full bg-gradient-to-r from-stone-50 to-white shadow-sm border-b border-stone-200">
-      <div className="max-w-screen-xl mx-auto">
+      <Container size="xl" className="px-0 md:px-8">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="h-11 p-0 bg-transparent w-full flex justify-start overflow-x-auto no-scrollbar">
+          <TabsList className="h-11 p-0 bg-transparent w-full flex justify-start overflow-x-auto scrollbar-none">
             {subLinks.map((link) => (
               <TabsTrigger 
                 key={link.id} 
@@ -62,7 +63,7 @@ const PrestationsSubNav = () => {
             ))}
           </TabsList>
         </Tabs>
-      </div>
+      </Container>
     </div>
   );
 };
