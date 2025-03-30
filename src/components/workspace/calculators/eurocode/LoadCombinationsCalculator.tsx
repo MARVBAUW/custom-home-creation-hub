@@ -1,837 +1,613 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { X, Plus, Download, FileText, Calculator, ExternalLink } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Calculator, Download, RefreshCw, Plus, Trash2 } from 'lucide-react';
 import { toast } from "sonner";
 
-interface Load {
-  id: string;
-  name: string;
-  value: number;
-  category: 'permanent' | 'variable';
-  type: string;
-  psi0?: number;
-  psi1?: number;
-  psi2?: number;
-}
-
-interface Combination {
-  id: string;
-  name: string;
-  formula: string;
-  result: number;
-  type: 'ELU' | 'ELS';
-  elsCategory?: 'characteristic' | 'frequent' | 'quasi-permanent';
-}
-
-// Eurocode factors
-const gammaG = 1.35; // Permanent load safety factor
-const gammaQ = 1.5;  // Variable load safety factor
-
-// Default psi values for common load categories (Eurocode 0)
-const defaultPsiValues = {
-  'cat-A': { psi0: 0.7, psi1: 0.5, psi2: 0.3, description: 'Catégorie A - Habitation' },
-  'cat-B': { psi0: 0.7, psi1: 0.5, psi2: 0.3, description: 'Catégorie B - Bureaux' },
-  'cat-C': { psi0: 0.7, psi1: 0.7, psi2: 0.6, description: 'Catégorie C - Lieux de réunion' },
-  'cat-D': { psi0: 0.7, psi1: 0.7, psi2: 0.6, description: 'Catégorie D - Commerces' },
-  'cat-E': { psi0: 1.0, psi1: 0.9, psi2: 0.8, description: 'Catégorie E - Stockage' },
-  'cat-F': { psi0: 0.7, psi1: 0.7, psi2: 0.6, description: 'Catégorie F - Trafic véhicules < 30kN' },
-  'cat-G': { psi0: 0.7, psi1: 0.5, psi2: 0.3, description: 'Catégorie G - Trafic véhicules 30-160kN' },
-  'cat-H': { psi0: 0.0, psi1: 0.0, psi2: 0.0, description: 'Catégorie H - Toitures' },
-  'snow': { psi0: 0.5, psi1: 0.2, psi2: 0.0, description: 'Neige (altitude < 1000m)' },
-  'snow-high': { psi0: 0.7, psi1: 0.5, psi2: 0.2, description: 'Neige (altitude > 1000m)' },
-  'wind': { psi0: 0.6, psi1: 0.2, psi2: 0.0, description: 'Vent' },
-  'temp': { psi0: 0.6, psi1: 0.5, psi2: 0.0, description: 'Température' },
-};
-
 const LoadCombinationsCalculator = () => {
-  const [loads, setLoads] = useState<Load[]>([
-    { id: '1', name: 'G - Poids propre', value: 25, category: 'permanent', type: 'self-weight' },
-    { id: '2', name: 'Q - Charge d\'exploitation', value: 15, category: 'variable', type: 'cat-A', psi0: 0.7, psi1: 0.5, psi2: 0.3 },
+  // États pour les inputs
+  const [projectType, setProjectType] = useState('building');
+  const [loads, setLoads] = useState([
+    { id: 1, type: 'G', name: 'Poids propre', value: 25.0, unit: 'kN/m²' },
+    { id: 2, type: 'Q', name: 'Charge d\'exploitation', value: 2.5, unit: 'kN/m²' },
   ]);
+  const [nextId, setNextId] = useState(3);
   
-  const [combinations, setCombinations] = useState<Combination[]>([]);
-  const [activeTab, setActiveTab] = useState('loads');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [customPsiValues, setCustomPsiValues] = useState(false);
-  const [loadType, setLoadType] = useState('cat-A');
-
-  // Generate a unique ID
-  const generateId = () => {
-    return Math.random().toString(36).substring(2, 9);
+  // États pour les résultats
+  const [combinations, setCombinations] = useState<any[]>([]);
+  
+  // Types de charges
+  const loadTypes = [
+    { value: 'G', label: 'G - Permanente' },
+    { value: 'Q', label: 'Q - Variable' },
+    { value: 'S', label: 'S - Neige' },
+    { value: 'W', label: 'W - Vent' },
+    { value: 'A', label: 'A - Accidentelle' },
+    { value: 'E', label: 'E - Sismique' },
+  ];
+  
+  // Gamma factors selon EC0
+  const gammaFactors = {
+    G: { favorable: 1.0, unfavorable: 1.35 },
+    Q: { favorable: 0.0, unfavorable: 1.5 },
+    S: { favorable: 0.0, unfavorable: 1.5 },
+    W: { favorable: 0.0, unfavorable: 1.5 },
+    A: { favorable: 1.0, unfavorable: 1.0 },
+    E: { favorable: 1.0, unfavorable: 1.0 },
   };
-
-  // Add a new load
+  
+  // Psi factors selon EC0
+  const psiFactors = {
+    Q: { psi0: 0.7, psi1: 0.5, psi2: 0.3 },
+    S: { psi0: 0.6, psi1: 0.2, psi2: 0.0 },
+    W: { psi0: 0.6, psi1: 0.2, psi2: 0.0 },
+    A: { psi0: 1.0, psi1: 1.0, psi2: 1.0 },
+    E: { psi0: 0.0, psi1: 0.0, psi2: 0.0 },
+  };
+  
+  // Ajouter une nouvelle charge
   const addLoad = () => {
-    const newId = generateId();
-    const isVariable = loads.filter(load => load.category === 'variable').length > 0;
-    
-    const psiValues = defaultPsiValues['cat-A'];
-    
-    const newLoad: Load = {
-      id: newId,
-      name: isVariable ? `G${loads.filter(load => load.category === 'permanent').length + 1} - Charge permanente` : 'Q1 - Charge variable',
-      value: 0,
-      category: isVariable ? 'permanent' : 'variable',
-      type: isVariable ? 'self-weight' : 'cat-A',
-      psi0: psiValues.psi0,
-      psi1: psiValues.psi1,
-      psi2: psiValues.psi2,
-    };
-    
-    setLoads([...loads, newLoad]);
+    setLoads([...loads, { id: nextId, type: 'G', name: 'Nouvelle charge', value: 0, unit: 'kN/m²' }]);
+    setNextId(nextId + 1);
   };
-
-  // Remove a load
-  const removeLoad = (id: string) => {
-    if (loads.length <= 1) {
-      toast.error('Vous devez conserver au moins une charge');
-      return;
-    }
+  
+  // Supprimer une charge
+  const removeLoad = (id: number) => {
     setLoads(loads.filter(load => load.id !== id));
   };
-
-  // Update load value
-  const updateLoadValue = (id: string, value: string) => {
-    setLoads(loads.map(load => {
-      if (load.id === id) {
-        return { ...load, value: parseFloat(value) || 0 };
-      }
-      return load;
-    }));
+  
+  // Mettre à jour une charge
+  const updateLoad = (id: number, field: string, value: any) => {
+    setLoads(loads.map(load => 
+      load.id === id ? { ...load, [field]: value } : load
+    ));
   };
-
-  // Update load name
-  const updateLoadName = (id: string, name: string) => {
-    setLoads(loads.map(load => {
-      if (load.id === id) {
-        return { ...load, name };
-      }
-      return load;
-    }));
-  };
-
-  // Update load category
-  const updateLoadCategory = (id: string, category: 'permanent' | 'variable') => {
-    setLoads(loads.map(load => {
-      if (load.id === id) {
-        const type = category === 'permanent' ? 'self-weight' : 'cat-A';
-        const psiValues = category === 'variable' ? defaultPsiValues['cat-A'] : undefined;
-        
-        return { 
-          ...load, 
-          category,
-          type,
-          psi0: psiValues?.psi0,
-          psi1: psiValues?.psi1,
-          psi2: psiValues?.psi2 
-        };
-      }
-      return load;
-    }));
-  };
-
-  // Update load type for variable loads
-  const updateLoadType = (id: string, type: string) => {
-    setLoads(loads.map(load => {
-      if (load.id === id) {
-        const psiValues = defaultPsiValues[type as keyof typeof defaultPsiValues];
-        
-        return { 
-          ...load, 
-          type,
-          psi0: customPsiValues ? load.psi0 : psiValues?.psi0,
-          psi1: customPsiValues ? load.psi1 : psiValues?.psi1,
-          psi2: customPsiValues ? load.psi2 : psiValues?.psi2 
-        };
-      }
-      return load;
-    }));
-  };
-
-  // Update psi values for variable loads
-  const updatePsiValue = (id: string, psiType: 'psi0' | 'psi1' | 'psi2', value: string) => {
-    setLoads(loads.map(load => {
-      if (load.id === id) {
-        return { ...load, [psiType]: parseFloat(value) || 0 };
-      }
-      return load;
-    }));
-  };
-
-  // Generate combinations
+  
+  // Générer les combinaisons de charges
   const generateCombinations = () => {
-    setIsGenerating(true);
-    
-    const permanentLoads = loads.filter(load => load.category === 'permanent');
-    const variableLoads = loads.filter(load => load.category === 'variable');
-    
-    if (variableLoads.length === 0) {
-      toast.error('Vous devez définir au moins une charge variable pour générer des combinaisons');
-      setIsGenerating(false);
-      return;
-    }
-    
-    const newCombinations: Combination[] = [];
-    
-    // ELU combinations
-    // 1.35G + 1.5Q1 + 1.5*psi0*Q2 + ...
-    for (let i = 0; i < variableLoads.length; i++) {
-      const primaryVariable = variableLoads[i];
+    try {
+      const permanentLoads = loads.filter(load => load.type === 'G');
+      const variableLoads = loads.filter(load => ['Q', 'S', 'W'].includes(load.type));
+      const accidentalLoads = loads.filter(load => load.type === 'A');
+      const seismicLoads = loads.filter(load => load.type === 'E');
       
-      let formula = `${gammaG}×(${permanentLoads.map(g => g.name).join(' + ')}) + ${gammaQ}×${primaryVariable.name}`;
-      let result = permanentLoads.reduce((sum, g) => sum + (g.value * gammaG), 0) + (primaryVariable.value * gammaQ);
+      const newCombinations = [];
       
-      // Add other variable loads with psi0
-      for (let j = 0; j < variableLoads.length; j++) {
-        if (j !== i) {
-          const secondaryVariable = variableLoads[j];
-          formula += ` + ${gammaQ}×${secondaryVariable.psi0}×${secondaryVariable.name}`;
-          result += secondaryVariable.value * gammaQ * (secondaryVariable.psi0 || 0);
+      // ELU - Combinaison fondamentale (6.10)
+      if (permanentLoads.length > 0) {
+        const eluCombination = {
+          name: 'ELU - Fondamentale (6.10)',
+          formula: '1.35G + 1.5Q + 1.5×0.7S + 1.5×0.6W',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = gammaFactors.G.unfavorable;
+          totalG += load.value * factorG;
+          eluCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charge variable principale (la première)
+        if (variableLoads.length > 0) {
+          const mainVariable = variableLoads[0];
+          const factorQ = gammaFactors.Q.unfavorable;
+          eluCombination.loads.push({
+            id: mainVariable.id,
+            name: mainVariable.name,
+            type: mainVariable.type,
+            value: mainVariable.value,
+            factor: factorQ,
+            result: mainVariable.value * factorQ,
+            unit: mainVariable.unit
+          });
+          totalG += mainVariable.value * factorQ;
+          
+          // Charges variables d'accompagnement
+          for (let i = 1; i < variableLoads.length; i++) {
+            const load = variableLoads[i];
+            const psi0 = psiFactors[load.type as keyof typeof psiFactors].psi0;
+            const factor = gammaFactors[load.type as keyof typeof gammaFactors].unfavorable * psi0;
+            eluCombination.loads.push({
+              id: load.id,
+              name: load.name,
+              type: load.type,
+              value: load.value,
+              factor: factor,
+              result: load.value * factor,
+              unit: load.unit
+            });
+            totalG += load.value * factor;
+          }
         }
+        
+        eluCombination.total = totalG;
+        newCombinations.push(eluCombination);
       }
       
-      newCombinations.push({
-        id: generateId(),
-        name: `ELU - ${primaryVariable.name} dominant`,
-        formula,
-        result,
-        type: 'ELU'
-      });
-    }
-    
-    // ELS Characteristic combinations
-    // G + Q1 + psi0*Q2 + ...
-    for (let i = 0; i < variableLoads.length; i++) {
-      const primaryVariable = variableLoads[i];
-      
-      let formula = `${permanentLoads.map(g => g.name).join(' + ')} + ${primaryVariable.name}`;
-      let result = permanentLoads.reduce((sum, g) => sum + g.value, 0) + primaryVariable.value;
-      
-      // Add other variable loads with psi0
-      for (let j = 0; j < variableLoads.length; j++) {
-        if (j !== i) {
-          const secondaryVariable = variableLoads[j];
-          formula += ` + ${secondaryVariable.psi0}×${secondaryVariable.name}`;
-          result += secondaryVariable.value * (secondaryVariable.psi0 || 0);
+      // ELS - Combinaison caractéristique
+      if (permanentLoads.length > 0) {
+        const elsCarCombination = {
+          name: 'ELS - Caractéristique',
+          formula: 'G + Q + 0.7S + 0.6W',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = 1.0; // Facteur 1.0 pour ELS
+          totalG += load.value * factorG;
+          elsCarCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charge variable principale (la première)
+        if (variableLoads.length > 0) {
+          const mainVariable = variableLoads[0];
+          const factorQ = 1.0; // Facteur 1.0 pour la charge principale en ELS
+          elsCarCombination.loads.push({
+            id: mainVariable.id,
+            name: mainVariable.name,
+            type: mainVariable.type,
+            value: mainVariable.value,
+            factor: factorQ,
+            result: mainVariable.value * factorQ,
+            unit: mainVariable.unit
+          });
+          totalG += mainVariable.value * factorQ;
+          
+          // Charges variables d'accompagnement
+          for (let i = 1; i < variableLoads.length; i++) {
+            const load = variableLoads[i];
+            const psi0 = psiFactors[load.type as keyof typeof psiFactors].psi0;
+            elsCarCombination.loads.push({
+              id: load.id,
+              name: load.name,
+              type: load.type,
+              value: load.value,
+              factor: psi0,
+              result: load.value * psi0,
+              unit: load.unit
+            });
+            totalG += load.value * psi0;
+          }
         }
+        
+        elsCarCombination.total = totalG;
+        newCombinations.push(elsCarCombination);
       }
       
-      newCombinations.push({
-        id: generateId(),
-        name: `ELS Caractéristique - ${primaryVariable.name} dominant`,
-        formula,
-        result,
-        type: 'ELS',
-        elsCategory: 'characteristic'
-      });
-    }
-    
-    // ELS Frequent combinations
-    // G + psi1*Q1 + psi2*Q2 + ...
-    for (let i = 0; i < variableLoads.length; i++) {
-      const primaryVariable = variableLoads[i];
-      
-      let formula = `${permanentLoads.map(g => g.name).join(' + ')} + ${primaryVariable.psi1}×${primaryVariable.name}`;
-      let result = permanentLoads.reduce((sum, g) => sum + g.value, 0) + (primaryVariable.value * (primaryVariable.psi1 || 0));
-      
-      // Add other variable loads with psi2
-      for (let j = 0; j < variableLoads.length; j++) {
-        if (j !== i) {
-          const secondaryVariable = variableLoads[j];
-          formula += ` + ${secondaryVariable.psi2}×${secondaryVariable.name}`;
-          result += secondaryVariable.value * (secondaryVariable.psi2 || 0);
-        }
+      // ELS - Combinaison fréquente
+      if (permanentLoads.length > 0) {
+        const elsFreqCombination = {
+          name: 'ELS - Fréquente',
+          formula: 'G + 0.5Q + 0.2S + 0.2W',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = 1.0; // Facteur 1.0 pour ELS
+          totalG += load.value * factorG;
+          elsFreqCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charges variables avec psi1
+        variableLoads.forEach(load => {
+          const psi1 = psiFactors[load.type as keyof typeof psiFactors].psi1;
+          elsFreqCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: psi1,
+            result: load.value * psi1,
+            unit: load.unit
+          });
+          totalG += load.value * psi1;
+        });
+        
+        elsFreqCombination.total = totalG;
+        newCombinations.push(elsFreqCombination);
       }
       
-      newCombinations.push({
-        id: generateId(),
-        name: `ELS Fréquent - ${primaryVariable.name} dominant`,
-        formula,
-        result,
-        type: 'ELS',
-        elsCategory: 'frequent'
-      });
+      // ELS - Combinaison quasi-permanente
+      if (permanentLoads.length > 0) {
+        const elsQpCombination = {
+          name: 'ELS - Quasi-permanente',
+          formula: 'G + 0.3Q + 0.0S + 0.0W',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = 1.0; // Facteur 1.0 pour ELS
+          totalG += load.value * factorG;
+          elsQpCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charges variables avec psi2
+        variableLoads.forEach(load => {
+          const psi2 = psiFactors[load.type as keyof typeof psiFactors].psi2;
+          elsQpCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: psi2,
+            result: load.value * psi2,
+            unit: load.unit
+          });
+          totalG += load.value * psi2;
+        });
+        
+        elsQpCombination.total = totalG;
+        newCombinations.push(elsQpCombination);
+      }
+      
+      // Combinaison accidentelle (si applicable)
+      if (accidentalLoads.length > 0) {
+        const accCombination = {
+          name: 'Combinaison accidentelle',
+          formula: 'G + A + 0.5Q + 0.2S + 0.2W',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = 1.0;
+          totalG += load.value * factorG;
+          accCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charges accidentelles
+        accidentalLoads.forEach(load => {
+          const factorA = 1.0;
+          accCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorA,
+            result: load.value * factorA,
+            unit: load.unit
+          });
+          totalG += load.value * factorA;
+        });
+        
+        // Charges variables avec psi1
+        variableLoads.forEach(load => {
+          const psi1 = psiFactors[load.type as keyof typeof psiFactors].psi1;
+          accCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: psi1,
+            result: load.value * psi1,
+            unit: load.unit
+          });
+          totalG += load.value * psi1;
+        });
+        
+        accCombination.total = totalG;
+        newCombinations.push(accCombination);
+      }
+      
+      // Combinaison sismique (si applicable)
+      if (seismicLoads.length > 0) {
+        const seisCombination = {
+          name: 'Combinaison sismique',
+          formula: 'G + E + 0.3Q',
+          loads: [] as any[],
+          total: 0
+        };
+        
+        // Charges permanentes
+        let totalG = 0;
+        permanentLoads.forEach(load => {
+          const factorG = 1.0;
+          totalG += load.value * factorG;
+          seisCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorG,
+            result: load.value * factorG,
+            unit: load.unit
+          });
+        });
+        
+        // Charges sismiques
+        seismicLoads.forEach(load => {
+          const factorE = 1.0;
+          seisCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: factorE,
+            result: load.value * factorE,
+            unit: load.unit
+          });
+          totalG += load.value * factorE;
+        });
+        
+        // Charges variables avec psi2
+        variableLoads.forEach(load => {
+          const psi2 = psiFactors[load.type as keyof typeof psiFactors].psi2;
+          seisCombination.loads.push({
+            id: load.id,
+            name: load.name,
+            type: load.type,
+            value: load.value,
+            factor: psi2,
+            result: load.value * psi2,
+            unit: load.unit
+          });
+          totalG += load.value * psi2;
+        });
+        
+        seisCombination.total = totalG;
+        newCombinations.push(seisCombination);
+      }
+      
+      setCombinations(newCombinations);
+      toast.success("Combinaisons générées avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de la génération des combinaisons");
+      console.error(error);
     }
-    
-    // ELS Quasi-permanent combination (only one)
-    // G + psi2*Q1 + psi2*Q2 + ...
-    let quasiFormula = permanentLoads.map(g => g.name).join(' + ');
-    let quasiResult = permanentLoads.reduce((sum, g) => sum + g.value, 0);
-    
-    for (let i = 0; i < variableLoads.length; i++) {
-      const variable = variableLoads[i];
-      quasiFormula += ` + ${variable.psi2}×${variable.name}`;
-      quasiResult += variable.value * (variable.psi2 || 0);
-    }
-    
-    newCombinations.push({
-      id: generateId(),
-      name: 'ELS Quasi-permanent',
-      formula: quasiFormula,
-      result: quasiResult,
-      type: 'ELS',
-      elsCategory: 'quasi-permanent'
-    });
-    
-    setCombinations(newCombinations);
-    setActiveTab('combinations');
-    setIsGenerating(false);
-    
-    toast.success('Combinaisons générées avec succès');
   };
-
-  // Export to PDF
+  
+  // Export PDF (simulé)
   const exportToPDF = () => {
-    import('jspdf').then(({ jsPDF }) => {
-      import('jspdf-autotable').then((autoTable) => {
-        const doc = new jsPDF();
-        
-        // Title
-        doc.setFontSize(18);
-        doc.text('Combinaisons de charges selon l\'Eurocode', 105, 15, { align: 'center' });
-        
-        // Project info
-        doc.setFontSize(12);
-        doc.text('Projet: Combinaisons EC0', 14, 25);
-        doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, 14, 32);
-        
-        // Loads table
-        doc.setFontSize(14);
-        doc.text('Charges définies', 14, 45);
-        
-        const loadRows = loads.map(load => [
-          load.name,
-          load.category === 'permanent' ? 'Permanente' : 'Variable',
-          load.value.toString(),
-          load.category === 'variable' ? defaultPsiValues[load.type as keyof typeof defaultPsiValues]?.description || load.type : '-',
-          load.category === 'variable' ? load.psi0?.toString() || '-' : '-',
-          load.category === 'variable' ? load.psi1?.toString() || '-' : '-',
-          load.category === 'variable' ? load.psi2?.toString() || '-' : '-',
-        ]);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: 50,
-          head: [['Nom', 'Type', 'Valeur (kN/m²)', 'Catégorie', 'ψ₀', 'ψ₁', 'ψ₂']],
-          body: loadRows,
-        });
-        
-        // Combinations tables
-        const eluCombinations = combinations.filter(c => c.type === 'ELU');
-        const elsCharacteristic = combinations.filter(c => c.type === 'ELS' && c.elsCategory === 'characteristic');
-        const elsFrequent = combinations.filter(c => c.type === 'ELS' && c.elsCategory === 'frequent');
-        const elsQuasiPermanent = combinations.filter(c => c.type === 'ELS' && c.elsCategory === 'quasi-permanent');
-        
-        // @ts-ignore
-        const finalY = doc.lastAutoTable.finalY + 10;
-        
-        doc.setFontSize(14);
-        doc.text('Combinaisons ELU (1.35G + 1.5Q)', 14, finalY);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: finalY + 5,
-          head: [['Combinaison', 'Formule', 'Résultat (kN/m²)']],
-          body: eluCombinations.map(c => [c.name, c.formula, c.result.toFixed(2)]),
-        });
-        
-        // @ts-ignore
-        const finalY2 = doc.lastAutoTable.finalY + 10;
-        
-        doc.setFontSize(14);
-        doc.text('Combinaisons ELS Caractéristiques (G + Q)', 14, finalY2);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: finalY2 + 5,
-          head: [['Combinaison', 'Formule', 'Résultat (kN/m²)']],
-          body: elsCharacteristic.map(c => [c.name, c.formula, c.result.toFixed(2)]),
-        });
-        
-        // Add a new page for remaining combinations
-        doc.addPage();
-        
-        doc.setFontSize(14);
-        doc.text('Combinaisons ELS Fréquentes', 14, 15);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: 20,
-          head: [['Combinaison', 'Formule', 'Résultat (kN/m²)']],
-          body: elsFrequent.map(c => [c.name, c.formula, c.result.toFixed(2)]),
-        });
-        
-        // @ts-ignore
-        const finalY3 = doc.lastAutoTable.finalY + 10;
-        
-        doc.setFontSize(14);
-        doc.text('Combinaison ELS Quasi-permanente', 14, finalY3);
-        
-        // @ts-ignore
-        doc.autoTable({
-          startY: finalY3 + 5,
-          head: [['Combinaison', 'Formule', 'Résultat (kN/m²)']],
-          body: elsQuasiPermanent.map(c => [c.name, c.formula, c.result.toFixed(2)]),
-        });
-        
-        // @ts-ignore
-        const finalY4 = doc.lastAutoTable.finalY + 10;
-        
-        doc.setFontSize(10);
-        doc.text('Document généré via le calculateur de combinaisons Eurocode - Progineer', 105, finalY4, { align: 'center' });
-        
-        doc.save('Combinaisons_Eurocode.pdf');
-        
-        toast.success('PDF téléchargé avec succès');
-      });
-    });
+    toast.success("Export PDF en cours de développement");
   };
-
-  // Export to Excel-like CSV
-  const exportToCSV = () => {
-    // Create CSV content
-    let csvContent = 'Combinaisons de charges selon l\'Eurocode\n\n';
-    
-    // Add loads
-    csvContent += 'CHARGES\n';
-    csvContent += 'Nom;Type;Valeur (kN/m²);Catégorie;ψ₀;ψ₁;ψ₂\n';
-    
-    loads.forEach(load => {
-      csvContent += `${load.name};`;
-      csvContent += `${load.category === 'permanent' ? 'Permanente' : 'Variable'};`;
-      csvContent += `${load.value};`;
-      csvContent += `${load.category === 'variable' ? defaultPsiValues[load.type as keyof typeof defaultPsiValues]?.description || load.type : '-'};`;
-      csvContent += `${load.category === 'variable' ? load.psi0 || '-' : '-'};`;
-      csvContent += `${load.category === 'variable' ? load.psi1 || '-' : '-'};`;
-      csvContent += `${load.category === 'variable' ? load.psi2 || '-' : '-'}\n`;
-    });
-    
-    // Add combinations
-    csvContent += '\nCOMBINAISONS\n';
-    csvContent += 'Combinaison;Formule;Résultat (kN/m²)\n';
-    
-    combinations.forEach(combo => {
-      csvContent += `${combo.name};${combo.formula};${combo.result.toFixed(2)}\n`;
-    });
-    
-    // Create download link
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Combinaisons_Eurocode.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast.success('CSV téléchargé avec succès');
-  };
-
+  
   return (
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Calculator className="h-5 w-5 text-purple-600" />
-          Générateur de combinaisons d'actions EC0
+          Combinaisons de charges EC0
         </CardTitle>
         <CardDescription>
-          Générez automatiquement les combinaisons ELU et ELS à partir des charges permanentes et variables définies
+          Générez automatiquement les combinaisons de charges selon l'Eurocode 0
         </CardDescription>
       </CardHeader>
       
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="mb-4">
-            <TabsTrigger value="loads">Définition des charges</TabsTrigger>
-            <TabsTrigger value="combinations">Combinaisons générées</TabsTrigger>
-            <TabsTrigger value="help">Aide</TabsTrigger>
-          </TabsList>
+      <CardContent className="space-y-6">
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="project-type">Type de projet</Label>
+            <Select value={projectType} onValueChange={setProjectType}>
+              <SelectTrigger id="project-type">
+                <SelectValue placeholder="Sélectionner un type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="building">Bâtiment</SelectItem>
+                <SelectItem value="bridge">Pont</SelectItem>
+                <SelectItem value="geotechnical">Géotechnique</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           
-          <TabsContent value="loads" className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Charges à considérer</h3>
-                <Button variant="outline" size="sm" onClick={addLoad}>
-                  <Plus className="h-4 w-4 mr-1" />
-                  Ajouter une charge
-                </Button>
-              </div>
-              
-              <div className="space-y-4">
-                {loads.map((load, index) => (
-                  <Card key={load.id} className="relative overflow-hidden">
-                    <div className={`absolute top-0 left-0 w-2 h-full ${load.category === 'permanent' ? 'bg-blue-500' : 'bg-amber-500'}`} />
-                    
-                    <CardHeader className="py-3">
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <Badge variant={load.category === 'permanent' ? 'secondary' : 'outline'} className={load.category === 'permanent' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}>
-                            {load.category === 'permanent' ? 'Permanente' : 'Variable'}
-                          </Badge>
-                          <CardTitle className="text-base">
-                            Charge {index + 1}
-                          </CardTitle>
-                        </div>
-                        <Button variant="ghost" size="icon" onClick={() => removeLoad(load.id)}>
-                          <X className="h-4 w-4" />
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Charges</Label>
+              <Button variant="outline" size="sm" onClick={addLoad}>
+                <Plus className="h-4 w-4 mr-1" />
+                Ajouter
+              </Button>
+            </div>
+            
+            <div className="border rounded-md">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Type</TableHead>
+                    <TableHead>Nom</TableHead>
+                    <TableHead className="w-[160px]">Valeur</TableHead>
+                    <TableHead className="w-[80px]">Unité</TableHead>
+                    <TableHead className="w-[60px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {loads.map(load => (
+                    <TableRow key={load.id}>
+                      <TableCell>
+                        <Select 
+                          value={load.type} 
+                          onValueChange={(value) => updateLoad(load.id, 'type', value)}
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {loadTypes.map(type => (
+                              <SelectItem key={type.value} value={type.value}>
+                                {type.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          className="h-8"
+                          value={load.name}
+                          onChange={(e) => updateLoad(load.id, 'name', e.target.value)}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Input
+                          className="h-8"
+                          type="number"
+                          value={load.value}
+                          onChange={(e) => updateLoad(load.id, 'value', parseFloat(e.target.value) || 0)}
+                          step="0.1"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Select 
+                          value={load.unit} 
+                          onValueChange={(value) => updateLoad(load.id, 'unit', value)}
+                        >
+                          <SelectTrigger className="h-8">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="kN">kN</SelectItem>
+                            <SelectItem value="kN/m">kN/m</SelectItem>
+                            <SelectItem value="kN/m²">kN/m²</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeLoad(load.id)}
+                          disabled={loads.length <= 1}
+                        >
+                          <Trash2 className="h-4 w-4 text-gray-500" />
                         </Button>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="py-0">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor={`load-name-${load.id}`}>Nom de la charge</Label>
-                          <Input
-                            id={`load-name-${load.id}`}
-                            value={load.name}
-                            onChange={(e) => updateLoadName(load.id, e.target.value)}
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor={`load-value-${load.id}`}>Valeur (kN/m²)</Label>
-                          <Input
-                            id={`load-value-${load.id}`}
-                            type="number"
-                            value={load.value}
-                            onChange={(e) => updateLoadValue(load.id, e.target.value)}
-                            min="0"
-                            step="0.1"
-                          />
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor={`load-category-${load.id}`}>Type de charge</Label>
-                          <Select
-                            value={load.category}
-                            onValueChange={(value) => updateLoadCategory(load.id, value as 'permanent' | 'variable')}
-                          >
-                            <SelectTrigger id={`load-category-${load.id}`}>
-                              <SelectValue placeholder="Sélectionnez un type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="permanent">Permanente (G)</SelectItem>
-                              <SelectItem value="variable">Variable (Q)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        
-                        {load.category === 'variable' && (
-                          <div className="space-y-2">
-                            <Label htmlFor={`load-type-${load.id}`}>Catégorie d'utilisation</Label>
-                            <Select
-                              value={load.type}
-                              onValueChange={(value) => updateLoadType(load.id, value)}
-                            >
-                              <SelectTrigger id={`load-type-${load.id}`}>
-                                <SelectValue placeholder="Sélectionnez une catégorie" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="cat-A">Catégorie A - Habitation</SelectItem>
-                                <SelectItem value="cat-B">Catégorie B - Bureaux</SelectItem>
-                                <SelectItem value="cat-C">Catégorie C - Lieux de réunion</SelectItem>
-                                <SelectItem value="cat-D">Catégorie D - Commerces</SelectItem>
-                                <SelectItem value="cat-E">Catégorie E - Stockage</SelectItem>
-                                <SelectItem value="cat-F">Catégorie F - Trafic véhicules &lt; 30kN</SelectItem>
-                                <SelectItem value="cat-G">Catégorie G - Trafic véhicules 30-160kN</SelectItem>
-                                <SelectItem value="cat-H">Catégorie H - Toitures</SelectItem>
-                                <SelectItem value="snow">Neige (altitude &lt; 1000m)</SelectItem>
-                                <SelectItem value="snow-high">Neige (altitude &gt; 1000m)</SelectItem>
-                                <SelectItem value="wind">Vent</SelectItem>
-                                <SelectItem value="temp">Température</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {load.category === 'variable' && (
-                        <div className="mt-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <Label className="font-medium">Coefficients de réduction ψ</Label>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => setCustomPsiValues(!customPsiValues)}
-                            >
-                              {customPsiValues ? 'Utiliser valeurs par défaut' : 'Personnaliser'}
-                            </Button>
-                          </div>
-                          
-                          <div className="grid grid-cols-3 gap-4">
-                            <div className="space-y-2">
-                              <Label htmlFor={`load-psi0-${load.id}`}>ψ₀</Label>
-                              <Input
-                                id={`load-psi0-${load.id}`}
-                                type="number"
-                                value={load.psi0}
-                                onChange={(e) => updatePsiValue(load.id, 'psi0', e.target.value)}
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                disabled={!customPsiValues}
-                              />
-                            </div>
-                            
-                            <div className="space-y-2">
-                              <Label htmlFor={`load-psi1-${load.id}`}>ψ₁</Label>
-                              <Input
-                                id={`load-psi1-${load.id}`}
-                                type="number"
-                                value={load.psi1}
-                                onChange={(e) => updatePsiValue(load.id, 'psi1', e.target.value)}
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                disabled={!customPsiValues}
-                              />
-                            </div>
-                            
-                            <div className="space-y-2">
-                              <Label htmlFor={`load-psi2-${load.id}`}>ψ₂</Label>
-                              <Input
-                                id={`load-psi2-${load.id}`}
-                                type="number"
-                                value={load.psi2}
-                                onChange={(e) => updatePsiValue(load.id, 'psi2', e.target.value)}
-                                min="0"
-                                max="1"
-                                step="0.1"
-                                disabled={!customPsiValues}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              
-              <div className="flex justify-end">
-                <Button onClick={generateCombinations} disabled={isGenerating}>
-                  {isGenerating ? 'Génération en cours...' : 'Générer les combinaisons'}
-                </Button>
-              </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
-          </TabsContent>
+          </div>
           
-          <TabsContent value="combinations" className="space-y-6">
-            {combinations.length === 0 ? (
-              <div className="text-center py-8">
-                <h3 className="text-lg font-medium text-gray-500">Aucune combinaison générée</h3>
-                <p className="text-gray-400 mt-2">Définissez vos charges et cliquez sur "Générer les combinaisons"</p>
-                <Button
-                  variant="outline"
-                  className="mt-4"
-                  onClick={() => setActiveTab('loads')}
-                >
-                  Définir les charges
-                </Button>
-              </div>
-            ) : (
-              <>
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-medium">Résultats des combinaisons</h3>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={exportToCSV}>
-                      <FileText className="h-4 w-4 mr-1" />
-                      Exporter CSV
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={exportToPDF}>
-                      <Download className="h-4 w-4 mr-1" />
-                      Exporter PDF
-                    </Button>
-                  </div>
-                </div>
-                
-                <Tabs defaultValue="elu">
-                  <TabsList>
-                    <TabsTrigger value="elu">ELU</TabsTrigger>
-                    <TabsTrigger value="els-char">ELS Caractéristique</TabsTrigger>
-                    <TabsTrigger value="els-freq">ELS Fréquent</TabsTrigger>
-                    <TabsTrigger value="els-quasi">ELS Quasi-permanent</TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="elu" className="mt-4">
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Combinaison</TableHead>
-                            <TableHead>Formule</TableHead>
-                            <TableHead className="text-right">Résultat (kN/m²)</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {combinations
-                            .filter(c => c.type === 'ELU')
-                            .map(combination => (
-                            <TableRow key={combination.id}>
-                              <TableCell className="font-medium">{combination.name}</TableCell>
-                              <TableCell>{combination.formula}</TableCell>
-                              <TableCell className="text-right">{combination.result.toFixed(2)}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="els-char" className="mt-4">
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Combinaison</TableHead>
-                            <TableHead>Formule</TableHead>
-                            <TableHead className="text-right">Résultat (kN/m²)</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {combinations
-                            .filter(c => c.type === 'ELS' && c.elsCategory === 'characteristic')
-                            .map(combination => (
-                            <TableRow key={combination.id}>
-                              <TableCell className="font-medium">{combination.name}</TableCell>
-                              <TableCell>{combination.formula}</TableCell>
-                              <TableCell className="text-right">{combination.result.toFixed(2)}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="els-freq" className="mt-4">
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Combinaison</TableHead>
-                            <TableHead>Formule</TableHead>
-                            <TableHead className="text-right">Résultat (kN/m²)</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {combinations
-                            .filter(c => c.type === 'ELS' && c.elsCategory === 'frequent')
-                            .map(combination => (
-                            <TableRow key={combination.id}>
-                              <TableCell className="font-medium">{combination.name}</TableCell>
-                              <TableCell>{combination.formula}</TableCell>
-                              <TableCell className="text-right">{combination.result.toFixed(2)}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-                  
-                  <TabsContent value="els-quasi" className="mt-4">
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Combinaison</TableHead>
-                            <TableHead>Formule</TableHead>
-                            <TableHead className="text-right">Résultat (kN/m²)</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {combinations
-                            .filter(c => c.type === 'ELS' && c.elsCategory === 'quasi-permanent')
-                            .map(combination => (
-                            <TableRow key={combination.id}>
-                              <TableCell className="font-medium">{combination.name}</TableCell>
-                              <TableCell>{combination.formula}</TableCell>
-                              <TableCell className="text-right">{combination.result.toFixed(2)}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="help" className="space-y-6">
-            <div className="prose dark:prose-invert max-w-none">
-              <h3>Guide d'utilisation</h3>
-              <p>Ce calculateur permet de générer automatiquement les combinaisons d'actions selon l'Eurocode 0 (EN 1990).</p>
-              
-              <h4>Étape 1: Définition des charges</h4>
-              <p>
-                Commencez par définir les charges permanentes (G) et variables (Q) à considérer dans votre calcul.
-                Pour chaque charge variable, vous pouvez sélectionner sa catégorie d'utilisation, ce qui définira
-                automatiquement les coefficients ψ correspondants.
-              </p>
-              
-              <h4>Étape 2: Génération des combinaisons</h4>
-              <p>
-                Une fois vos charges définies, cliquez sur "Générer les combinaisons" pour calculer:
-              </p>
-              <ul>
-                <li>Les combinaisons ELU (1.35G + 1.5Q)</li>
-                <li>Les combinaisons ELS Caractéristiques (G + Q)</li>
-                <li>Les combinaisons ELS Fréquentes (G + ψ₁Q₁ + ψ₂Q₂)</li>
-                <li>La combinaison ELS Quasi-permanente (G + ψ₂Q)</li>
-              </ul>
-              
-              <h4>Étape 3: Export et utilisation</h4>
-              <p>
-                Vous pouvez exporter les résultats au format PDF ou CSV pour les intégrer dans vos notes de calcul
-                ou les partager avec vos collaborateurs.
-              </p>
-              
-              <h3>Rappel des coefficients selon l'Eurocode</h3>
-              <h4>Coefficients partiels pour les ELU (approche fondamentale)</h4>
-              <ul>
-                <li>γG = 1.35 pour les actions permanentes défavorables</li>
-                <li>γQ = 1.50 pour les actions variables défavorables</li>
-              </ul>
-              
-              <h4>Coefficients ψ pour les combinaisons:</h4>
-              <p>
-                Les coefficients ψ sont automatiquement définis selon l'Eurocode 0 en fonction de la catégorie d'utilisation
-                sélectionnée pour chaque charge variable. Vous pouvez également personnaliser ces valeurs si nécessaire.
-              </p>
-              
-              <div className="bg-muted p-4 rounded-md mt-4">
-                <h4 className="text-sm font-medium">À propos</h4>
-                <p className="text-sm text-muted-foreground">
-                  Ce calculateur est fourni à titre indicatif et ne remplace pas l'expertise d'un ingénieur structure.
-                  Vérifiez toujours les résultats selon les annexes nationales applicables à votre projet.
-                </p>
-                <div className="mt-2">
-                  <a 
-                    href="https://www.eurocodes.fr/fr/eurocode0/annexe-nationale-nf-en-1990-an" 
-                    target="_blank"
-                    rel="noopener noreferrer" 
-                    className="text-sm flex items-center text-blue-600 hover:underline"
-                  >
-                    <ExternalLink className="h-3 w-3 mr-1" />
-                    Documentation Eurocode 0
-                  </a>
-                </div>
-              </div>
+          <div className="flex justify-between items-center pt-4">
+            <div className="text-sm text-gray-500">
+              {loads.length} charge(s) définie(s)
             </div>
-          </TabsContent>
-        </Tabs>
+            <div className="space-x-2">
+              <Button variant="outline" onClick={exportToPDF} disabled={combinations.length === 0}>
+                <Download className="h-4 w-4 mr-2" />
+                Exporter PDF
+              </Button>
+              <Button onClick={generateCombinations}>
+                <Calculator className="h-4 w-4 mr-2" />
+                Générer les combinaisons
+              </Button>
+            </div>
+          </div>
+        </div>
+        
+        {combinations.length > 0 && (
+          <div className="space-y-4">
+            <Separator />
+            
+            <h3 className="font-medium text-lg">Combinaisons de charges</h3>
+            
+            {combinations.map((combination, index) => (
+              <Card key={index} className="border-l-4 border-l-blue-500">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-base">{combination.name}</CardTitle>
+                  <CardDescription>{combination.formula}</CardDescription>
+                </CardHeader>
+                <CardContent className="py-2">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Charge</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Valeur</TableHead>
+                        <TableHead>Coefficient</TableHead>
+                        <TableHead>Résultat</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {combination.loads.map((load: any) => (
+                        <TableRow key={load.id}>
+                          <TableCell>{load.name}</TableCell>
+                          <TableCell>{load.type}</TableCell>
+                          <TableCell>{load.value} {load.unit}</TableCell>
+                          <TableCell>{load.factor.toFixed(2)}</TableCell>
+                          <TableCell>{load.result.toFixed(2)} {load.unit}</TableCell>
+                        </TableRow>
+                      ))}
+                      <TableRow className="bg-slate-50 font-medium">
+                        <TableCell colSpan={4}>Total</TableCell>
+                        <TableCell>{combination.total.toFixed(2)} {combination.loads[0]?.unit}</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </CardContent>
+      
+      <CardFooter className="justify-between border-t pt-4 text-xs text-gray-500">
+        <div>
+          Conforme à l'EN 1990 (Eurocode 0)
+        </div>
+        <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
+          <RefreshCw className="h-3 w-3 mr-1" />
+          Réinitialiser
+        </Button>
+      </CardFooter>
     </Card>
   );
 };

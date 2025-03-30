@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Home, ChartBar, Wallet, ArrowRightLeft, Building, DollarSign, PercentIcon, Volume2 } from 'lucide-react';
+import { Calculator, Home, ChartBar, Wallet, ArrowRightLeft, Building, DollarSign, PercentIcon, Volume2, Wind, Ruler } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import SurfaceCalculator from './calculators/SurfaceCalculator';
 import RentabilityCalculator from './calculators/RentabilityCalculator';
@@ -11,6 +11,7 @@ import LoanComparisonCalculator from './calculators/LoanComparisonCalculator';
 import TaxCalculator from './calculators/TaxCalculator';
 import YieldCalculator from './calculators/YieldCalculator';
 import AcousticCalculator from './calculators/AcousticCalculator';
+import EurocodeCalculators from './calculators/eurocode/EurocodeCalculators';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
@@ -28,7 +29,7 @@ const WorkspaceCalculateurs = () => {
       </div>
 
       <Tabs defaultValue="surface" value={activeCalculator} onValueChange={handleTabChange} className="space-y-6">
-        <TabsList className="bg-khaki-50 p-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 mb-6">
+        <TabsList className="bg-khaki-50 p-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-8 mb-6">
           <TabsTrigger value="surface" className="data-[state=active]:bg-white">
             <Home className="h-4 w-4 mr-2" />
             Surface habitable
@@ -56,6 +57,10 @@ const WorkspaceCalculateurs = () => {
           <TabsTrigger value="acoustic" className="data-[state=active]:bg-white">
             <Volume2 className="h-4 w-4 mr-2" />
             Acoustique
+          </TabsTrigger>
+          <TabsTrigger value="eurocode" className="data-[state=active]:bg-white">
+            <Ruler className="h-4 w-4 mr-2" />
+            Eurocodes
           </TabsTrigger>
         </TabsList>
         
@@ -85,6 +90,10 @@ const WorkspaceCalculateurs = () => {
         
         <TabsContent value="acoustic">
           <AcousticCalculator />
+        </TabsContent>
+        
+        <TabsContent value="eurocode">
+          <EurocodeCalculators />
         </TabsContent>
       </Tabs>
       
@@ -171,8 +180,15 @@ const WorkspaceCalculateurs = () => {
                 <td className="py-2 px-4 text-green-600">✓</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
               </tr>
-              <tr>
+              <tr className="border-b border-gray-100">
                 <td className="py-2 px-4">Rendement brut/net</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+                <td className="py-2 px-4 text-green-600">✓</td>
+              </tr>
+              <tr className="border-b border-gray-100">
+                <td className="py-2 px-4">Eurocodes (EC1-EC7)</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
                 <td className="py-2 px-4 text-green-600">✓</td>
