@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
@@ -283,28 +284,29 @@ const ProjectDetail = () => {
                     Technique
                   </TabsTrigger>
                 </TabsList>
+              
+                {/* Make sure TabsContent components are inside the Tabs component */}
+                <TabsContent value="general" className="m-0 pt-6">
+                  <ProjectGeneralForm />
+                </TabsContent>
+                <TabsContent value="phases" className="m-0 pt-6">
+                  <ProjectPhaseForm />
+                </TabsContent>
+                <TabsContent value="dates" className="m-0 pt-6">
+                  <ProjectDateForm />
+                </TabsContent>
+                <TabsContent value="team" className="m-0 pt-6">
+                  <ProjectTeamForm />
+                </TabsContent>
+                <TabsContent value="execution" className="m-0 pt-6">
+                  <ProjectExecutionForm />
+                </TabsContent>
+                <TabsContent value="technical" className="m-0 pt-6">
+                  <ProjectTechnicalForm />
+                </TabsContent>
               </Tabs>
             </CardHeader>
-            <CardContent className="p-6">
-              <TabsContent value="general" className="m-0">
-                <ProjectGeneralForm />
-              </TabsContent>
-              <TabsContent value="phases" className="m-0">
-                <ProjectPhaseForm />
-              </TabsContent>
-              <TabsContent value="dates" className="m-0">
-                <ProjectDateForm />
-              </TabsContent>
-              <TabsContent value="team" className="m-0">
-                <ProjectTeamForm />
-              </TabsContent>
-              <TabsContent value="execution" className="m-0">
-                <ProjectExecutionForm />
-              </TabsContent>
-              <TabsContent value="technical" className="m-0">
-                <ProjectTechnicalForm />
-              </TabsContent>
-            </CardContent>
+            {/* Remove the CardContent since we're now rendering content directly in TabsContent */}
           </Card>
         </div>
       </div>
