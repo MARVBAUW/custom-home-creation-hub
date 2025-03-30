@@ -10,8 +10,7 @@ import Equipe from '../pages/Equipe';
 import Parrainage from '../pages/Parrainage';
 import DevenirPartenaire from '../pages/DevenirPartenaire';
 import NotFound from '../pages/NotFound';
-import PrivacyPolicy from '../pages/PrivacyPolicy';
-import CGU from '../pages/CGU';
+import Legal from '../pages/Legal';
 import CGV from '../pages/CGV';
 import FAQ from '../pages/FAQ';
 import Sitemap from '../pages/Sitemap';
@@ -52,15 +51,15 @@ export const publicRoutes: RouteObject[] = [
   },
   {
     path: "/mentions-legales",
-    element: <NotFound />
+    element: <Legal />
   },
   {
     path: "/privacy-policy",
-    element: <PrivacyPolicy />
+    element: <Legal />
   },
   {
     path: "/cgu",
-    element: <CGU />
+    element: <Legal />
   },
   {
     path: "/cgv",
