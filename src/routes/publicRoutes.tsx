@@ -1,96 +1,76 @@
-
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
-import Index from '@/pages/Index';
+import Home from '@/pages/Home';
 import Contact from '@/pages/Contact';
 import Estimation from '@/pages/Estimation';
-import Legal from '@/pages/Legal';
-import CGV from '@/pages/CGV';
-import FAQ from '@/pages/FAQ';
-import Sitemap from '@/pages/Sitemap';
-import Parrainage from '@/pages/Parrainage';
-import DevenirPartenaire from '@/pages/DevenirPartenaire';
 import Prestations from '@/pages/Prestations';
 import Realisations from '@/pages/Realisations';
 import Equipe from '@/pages/Equipe';
-import NotFound from '@/pages/NotFound';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import SEOFooter from '@/components/partenaires/SEOFooter';
+import Parrainage from '@/pages/Parrainage';
+import DevenirPartenaire from '@/pages/DevenirPartenaire';
+import MentionsLegales from '@/pages/MentionsLegales';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import CGU from '@/pages/CGU';
+import CGV from '@/pages/CGV';
+import FAQ from '@/pages/FAQ';
+import Sitemap from '@/pages/Sitemap';
 
-// Create placeholder components for pages
-const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
-const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
-
-// Wrap routes that need the standard layout (with navbar and footer)
-const StandardLayout = ({ children }: { children: React.ReactNode }) => (
-  <>
-    <Navbar />
-    {children}
-    <Footer />
-    <SEOFooter />
-  </>
-);
-
+// Add a proper route for the HTML sitemap page
 export const publicRoutes: RouteObject[] = [
   {
     path: "/",
-    element: <StandardLayout><Index /></StandardLayout>
+    element: <Home />
   },
   {
     path: "/contact",
-    element: <StandardLayout><Contact /></StandardLayout>
+    element: <Contact />
   },
   {
     path: "/estimation",
-    element: <StandardLayout><Estimation /></StandardLayout>
-  },
-  {
-    path: "/mentions-legales",
-    element: <StandardLayout><Legal /></StandardLayout>
-  },
-  {
-    path: "/privacy-policy",
-    element: <StandardLayout><PrivacyPolicy /></StandardLayout>
-  },
-  {
-    path: "/cgu",
-    element: <StandardLayout><CGU /></StandardLayout>
-  },
-  {
-    path: "/cgv",
-    element: <StandardLayout><CGV /></StandardLayout>
-  },
-  {
-    path: "/faq",
-    element: <StandardLayout><FAQ /></StandardLayout>
-  },
-  {
-    path: "/sitemap",
-    element: <StandardLayout><Sitemap /></StandardLayout>
-  },
-  {
-    path: "/parrainage",
-    element: <StandardLayout><Parrainage /></StandardLayout>
-  },
-  {
-    path: "/devenir-partenaire",
-    element: <StandardLayout><DevenirPartenaire /></StandardLayout>
+    element: <Estimation />
   },
   {
     path: "/prestations-maitre-oeuvre",
-    element: <StandardLayout><Prestations /></StandardLayout>
+    element: <Prestations />
   },
   {
     path: "/realisations-architecte-maison",
-    element: <StandardLayout><Realisations /></StandardLayout>
+    element: <Realisations />
   },
   {
     path: "/equipe-maitrise-oeuvre",
-    element: <StandardLayout><Equipe /></StandardLayout>
+    element: <Equipe />
   },
   {
-    path: "*",
-    element: <NotFound />
-  }
+    path: "/parrainage",
+    element: <Parrainage />
+  },
+  {
+    path: "/devenir-partenaire",
+    element: <DevenirPartenaire />
+  },
+  {
+    path: "/mentions-legales",
+    element: <MentionsLegales />
+  },
+  {
+    path: "/privacy-policy",
+    element: <PrivacyPolicy />
+  },
+  {
+    path: "/cgu",
+    element: <CGU />
+  },
+  {
+    path: "/cgv",
+    element: <CGV />
+  },
+  {
+    path: "/faq",
+    element: <FAQ />
+  },
+  {
+    path: "/sitemap",
+    element: <Sitemap />
+  },
 ];

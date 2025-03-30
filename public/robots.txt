@@ -11,7 +11,7 @@ Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
 Allow: /parrainage-travaux
 
-# Main sitemap
+# Main sitemap (with absolute URL)
 Sitemap: https://progineer.fr/sitemap.xml
 
 # Specific bot directives

@@ -112,14 +112,24 @@ const Sitemap = () => {
             <p className="mb-4 text-gray-600 dark:text-gray-300">
               Pour les moteurs de recherche et l'indexation automatique, nous proposons également une version XML du sitemap.
             </p>
-            <a 
-              href="/sitemap.xml" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="inline-block px-4 py-2 rounded bg-khaki-600 text-white hover:bg-khaki-700 transition-colors"
-            >
-              Voir le sitemap XML
-            </a>
+            <div className="flex flex-wrap gap-4">
+              <a 
+                href="/sitemap.xml" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-block px-4 py-2 rounded bg-khaki-600 text-white hover:bg-khaki-700 transition-colors"
+              >
+                Voir le sitemap XML
+              </a>
+              <a 
+                href={`https://progineer.fr/sitemap.xml`}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="inline-block px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+              >
+                Voir le sitemap XML (URL complète)
+              </a>
+            </div>
           </div>
         </Container>
       </section>
