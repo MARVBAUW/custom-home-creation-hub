@@ -24,8 +24,7 @@ export default defineConfig(({ mode }) => ({
     },
     middlewareMode: false,
     headers: {
-      // Correct format for headers
-      'Content-Type': 'text/xml; charset=utf-8',
+      'Content-Type': 'text/xml; charset=utf-8'
     }
   },
   
@@ -42,8 +41,7 @@ export default defineConfig(({ mode }) => ({
   // Add specific headers for XML files in preview mode
   preview: {
     headers: {
-      // Correct format for headers
-      'Content-Type': 'text/xml; charset=utf-8',
+      'Content-Type': 'text/xml; charset=utf-8'
     }
   }
 }))

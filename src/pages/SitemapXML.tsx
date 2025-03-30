@@ -35,9 +35,6 @@ ${publicRoutes
   .join('\n')}
 </urlset>`;
 
-    // Force content type to be XML
-    document.contentType = 'text/xml';
-    
     // Clear any existing content
     document.documentElement.innerHTML = '';
     
@@ -48,11 +45,16 @@ ${publicRoutes
     // Append the XML document to the DOM
     document.appendChild(document.importNode(xmlDoc.documentElement, true));
     
-    // Ensure the document is treated as XML
+    // Ensure the document is treated as XML by setting the appropriate content type meta tag
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Type';
     meta.content = 'text/xml; charset=utf-8';
     document.head.appendChild(meta);
+    
+    // Set the XML MIME type using the correct method for document creation
+    // Since we can't modify document.contentType directly, we need to use a different approach
+    const xmlHeader = document.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
+    document.insertBefore(xmlHeader, document.documentElement);
   }, []);
 
   // Return null as we're manipulating the document directly
