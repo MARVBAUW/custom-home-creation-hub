@@ -31,6 +31,6 @@ export default defineConfig(({ mode }) => ({
     }
   },
   
-  // Configure proper MIME types for XML
+  // Configure proper MIME types for XML and handle routes correctly
   assetsInclude: ['**/*.xml'],
 }))

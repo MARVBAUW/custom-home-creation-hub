@@ -2,10 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
+import { Navigate } from 'react-router-dom';
 
-// Cette composante génère le contenu du sitemap XML
+// Cette composante gère le sitemap XML et redirige si nécessaire
 const SitemapXML: React.FC = () => {
   const [xmlContent, setXmlContent] = useState<string>('');
+  const currentPath = window.location.pathname;
+  
+  // Si l'URL a un slash final après "sitemap.xml", on redirige vers la version sans slash
+  if (currentPath.endsWith('/sitemap.xml/')) {
+    return <Navigate to="/sitemap.xml" replace />;
+  }
   
   useEffect(() => {
     // Génère le contenu XML immédiatement quand le composant est monté
@@ -68,25 +75,9 @@ const SitemapXML: React.FC = () => {
       
       // Définit le contenu XML dans l'état
       setXmlContent(xmlString);
-      
-      // Crée également le fichier physique dans le dossier public
-      createPhysicalSitemapFile(xmlString);
-      
     } catch (error) {
       console.error('Erreur lors de la génération du sitemap XML:', error);
       setXmlContent(`<!-- Erreur lors de la génération du sitemap: ${error} -->`);
-    }
-  };
-
-  // Fonction pour créer le fichier XML physique
-  const createPhysicalSitemapFile = (xmlContent: string) => {
-    // Ceci est uniquement à titre informatif, la création réelle du fichier
-    // se fait côté serveur ou lors du build
-    console.log('Un fichier sitemap.xml devrait être créé en production.');
-    
-    // En développement, nous utilisons le fichier statique dans /public
-    if (process.env.NODE_ENV === 'development') {
-      console.log('En développement, utilisation du fichier sitemap.xml statique dans /public');
     }
   };
 
