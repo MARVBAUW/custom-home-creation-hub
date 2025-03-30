@@ -23,11 +23,6 @@ export default defineConfig(({ mode }) => ({
       allow: ['.'],
     },
     middlewareMode: false,
-    
-    // Configure headers for proper XML content-type
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8'
-    }
   },
   
   // Configure path aliases
