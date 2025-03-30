@@ -52,26 +52,31 @@ ${publicRoutes.map(route => {
     setXmlContent(xmlString);
   }, []);
 
-  // Use useEffect to modify the document directly for proper XML serving
+  // Instead of manipulating the DOM directly, we'll use a more reliable approach
   useEffect(() => {
+    // When component mounts, set content type header
+    document.head.innerHTML = `
+      <meta charset="UTF-8">
+      <meta http-equiv="Content-Type" content="text/xml; charset=utf-8">
+    `;
+    
+    // Create a text/xml response - this forces the browser to interpret as XML
+    const blob = new Blob([xmlContent], { type: 'text/xml' });
+    const url = URL.createObjectURL(blob);
+    
+    // Replace the current window location with the XML blob
+    // This is a cleaner approach than manipulating the entire DOM
     if (xmlContent) {
-      // Override the entire document with raw XML
-      document.documentElement.innerHTML = xmlContent;
-      document.documentElement.setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
-      
-      // Set the correct Content-Type
-      const meta = document.createElement('meta');
-      meta.httpEquiv = 'Content-Type';
-      meta.content = 'text/xml; charset=utf-8';
-      document.head.appendChild(meta);
-      
-      // Remove any HTML or body tags
-      document.documentElement.removeAttribute('lang');
-      document.documentElement.removeAttribute('class');
+      window.location.replace(url);
     }
+    
+    // Clean up on unmount
+    return () => {
+      URL.revokeObjectURL(url);
+    };
   }, [xmlContent]);
 
-  // Return an empty fragment - we're manipulating the DOM directly
+  // Return null since we're handling everything in the effect
   return null;
 };
 
