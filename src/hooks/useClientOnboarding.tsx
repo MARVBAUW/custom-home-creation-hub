@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
+import { Profile, ClientProject } from '@/types/supabase';
 
 export const useClientOnboarding = () => {
   const [isOnboardingRequired, setIsOnboardingRequired] = useState(false);

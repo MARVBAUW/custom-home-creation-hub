@@ -12,6 +12,7 @@ import ClientProjectsCard from './ClientProjectsCard';
 import ClientTabsSection from './ClientTabsSection';
 import ClientOnboardingModal from '@/components/client/ClientOnboardingModal';
 import ClientProjectManager from '../ClientProjectManager';
+import { Profile, ClientProject } from '@/types/supabase';
 
 interface ClientDetailViewProps {
   clientId: string;

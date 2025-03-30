@@ -10,24 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Search, UserPlus, FileText, Trash2, PenLine, AlertTriangle } from 'lucide-react';
-
-interface ClientProject {
-  id: string;
-  user_id: string;
-  title: string;
-  project_type: string;
-  construction_type: string;
-  description: string;
-  location: string;
-  surface: number;
-  budget: number;
-  has_pool: boolean;
-  has_solar_panels: boolean;
-  has_garage: boolean;
-  has_basement: boolean;
-  created_at: string;
-  status: string;
-}
+import { ClientProject, Profile, AdminProject } from '@/types/supabase';
 
 interface ClientProfile {
   id: string;
@@ -64,7 +47,14 @@ const ClientProjectManager: React.FC<ClientProjectManagerProps> = ({ clientId })
             
           if (profileError) throw profileError;
           
-          setClient(profileData);
+          // Transform profile data to ClientProfile type
+          setClient({
+            id: profileData.id,
+            full_name: profileData.full_name || '',
+            email: profileData.email || '',
+            phone: profileData.phone || '',
+            address: profileData.address || ''
+          });
           
           // Fetch client projects
           const { data: projectsData, error: projectsError } = await supabase
@@ -134,24 +124,24 @@ const ClientProjectManager: React.FC<ClientProjectManagerProps> = ({ clientId })
   
   // Format project type for display
   const formatProjectType = (type: string) => {
-    const types = {
+    const types: Record<string, string> = {
       'new': 'Construction neuve',
       'renovation': 'Rénovation',
       'extension': 'Extension',
       'other': 'Autre'
     };
-    return types[type as keyof typeof types] || type;
+    return types[type] || type;
   };
   
   // Format construction type for display
   const formatConstructionType = (type: string) => {
-    const types = {
+    const types: Record<string, string> = {
       'residential': 'Résidentiel',
       'commercial': 'Commercial',
       'industrial': 'Industriel',
       'other': 'Autre'
     };
-    return types[type as keyof typeof types] || type;
+    return types[type] || type;
   };
   
   // Format date for display
