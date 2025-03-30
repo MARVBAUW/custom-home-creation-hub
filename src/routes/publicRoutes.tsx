@@ -14,6 +14,9 @@ import Legal from '../pages/Legal';
 import CGV from '../pages/CGV';
 import FAQ from '../pages/FAQ';
 import Sitemap from '../pages/Sitemap';
+import SitemapXML from '../pages/SitemapXML';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import CGU from '../pages/CGU';
 
 // Add a proper route for the HTML sitemap page
 export const publicRoutes: RouteObject[] = [
@@ -55,11 +58,11 @@ export const publicRoutes: RouteObject[] = [
   },
   {
     path: "/privacy-policy",
-    element: <Legal />
+    element: <PrivacyPolicy />
   },
   {
     path: "/cgu",
-    element: <Legal />
+    element: <CGU />
   },
   {
     path: "/cgv",
@@ -73,4 +76,8 @@ export const publicRoutes: RouteObject[] = [
     path: "/sitemap",
     element: <Sitemap />
   },
+  {
+    path: "/sitemap.xml",
+    element: <SitemapXML />
+  }
 ];

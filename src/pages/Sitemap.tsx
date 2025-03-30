@@ -122,13 +122,18 @@ const Sitemap = () => {
                 Voir le sitemap XML
               </a>
               <a 
-                href={`https://progineer.fr/sitemap.xml`}
-                target="_blank" 
-                rel="noopener noreferrer" 
+                href="/sitemap.xml"
+                download="sitemap.xml"
                 className="inline-block px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors"
               >
-                Voir le sitemap XML (URL complète)
+                Télécharger le sitemap XML
               </a>
+              <Link 
+                to="/sitemap.xml" 
+                className="inline-block px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
+              >
+                Générer un sitemap XML dynamique
+              </Link>
             </div>
           </div>
         </Container>

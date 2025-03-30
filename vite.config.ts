@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => ({
       // Allow serving files from the project root
       allow: ['.'],
     },
+    middlewareMode: false,
   },
   
   // Configure path aliases
@@ -29,5 +30,8 @@ export default defineConfig(({ mode }) => ({
     alias: {
       '@': path.resolve(__dirname, './src')
     }
-  }
+  },
+  
+  // Add specific configuration for XML files
+  assetsInclude: ['**/*.xml'],
 }))
