@@ -23,9 +23,9 @@ const CGU = () => <div className="p-8 w-full"><h1 className="text-2xl">Condition
 
 // Wrap routes that need the standard layout (with navbar and footer)
 const StandardLayout = ({ children }: { children: React.ReactNode }) => (
-  <div className="w-full max-w-[100vw] overflow-x-hidden">
+  <div className="flex flex-col w-full max-w-[100vw] overflow-x-hidden">
     <Navbar />
-    <main className="w-full max-w-[100vw] overflow-x-hidden">
+    <main className="flex-1 w-full overflow-x-hidden">
       {children}
     </main>
     <Footer />
