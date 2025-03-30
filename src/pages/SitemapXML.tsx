@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
@@ -64,18 +63,35 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // Style pour l'affichage du contenu XML
-  const preStyle = {
-    fontFamily: 'monospace',
-    whiteSpace: 'pre-wrap',
-    padding: '20px',
-    backgroundColor: '#f5f5f5',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    overflow: 'auto',
-    maxHeight: '80vh'
-  };
+  // If we're accessing directly at /sitemap.xml path, render pure XML
+  if (currentPath === '/sitemap.xml') {
+    return (
+      <>
+        <Helmet>
+          <title>Sitemap XML</title>
+          <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+        </Helmet>
+        <pre style={{ display: 'none' }}>{xmlContent}</pre>
+        <div 
+          dangerouslySetInnerHTML={{ __html: xmlContent }} 
+          style={{ 
+            fontFamily: 'monospace',
+            whiteSpace: 'pre',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            margin: 0,
+            padding: 20
+          }} 
+        />
+      </>
+    );
+  }
 
+  // Otherwise, show as a normal page with UI around it
   return (
     <>
       <Helmet>
@@ -87,7 +103,16 @@ const SitemapXML: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4">Sitemap XML</h1>
         <p className="mb-4">Ce sitemap XML est généré dynamiquement à partir des routes de l'application.</p>
         <p className="mb-4">Pour une utilisation avec les moteurs de recherche, utilisez plutôt l'URL: <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">/sitemap.xml</a></p>
-        <pre style={preStyle}>{xmlContent}</pre>
+        <pre style={{
+          fontFamily: 'monospace',
+          whiteSpace: 'pre-wrap',
+          padding: '20px',
+          backgroundColor: '#f5f5f5',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          overflow: 'auto',
+          maxHeight: '80vh'
+        }}>{xmlContent}</pre>
       </div>
     </>
   );
