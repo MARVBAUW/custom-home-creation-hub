@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -96,12 +95,17 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-w-full overflow-x-hidden;
   }
   
   /* Correction des problèmes de largeur pour toutes les pages */
   .container {
-    @apply w-full max-w-full md:max-w-[1200px] mx-auto px-4 md:px-6;
+    @apply w-full max-w-full mx-auto px-4 md:px-6;
+  }
+  
+  /* Assurer que le contenu principal prend toute la largeur */
+  #root {
+    @apply w-full max-w-full overflow-x-hidden;
   }
 }
 

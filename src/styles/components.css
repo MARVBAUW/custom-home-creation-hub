@@ -9,7 +9,7 @@
   }
 
   .container-lg {
-    @apply max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8;
+    @apply max-w-full mx-auto w-full px-4 sm:px-6 lg:px-8;
   }
 
   .container-md {
@@ -81,5 +81,18 @@
   
   .progineer-divider {
     @apply w-full h-px bg-progineer-gold/30 my-8;
+  }
+
+  /* Nouvelles classes pour assurer une largeur complète */
+  .full-width-container {
+    @apply w-full max-w-full mx-auto;
+  }
+  
+  .full-width-section {
+    @apply w-full max-w-full;
+  }
+  
+  .centered-content {
+    @apply max-w-7xl mx-auto;
   }
 }

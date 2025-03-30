@@ -19,9 +19,11 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <AuthProvider>
-            <UserRegistrationNotificationsContainer />
-            {routeElements}
-            <Toaster />
+            <div className="w-full max-w-full overflow-x-hidden">
+              <UserRegistrationNotificationsContainer />
+              {routeElements}
+              <Toaster />
+            </div>
           </AuthProvider>
         </HelmetProvider>
       </QueryClientProvider>

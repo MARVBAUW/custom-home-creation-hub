@@ -48,7 +48,7 @@ const Workspace = () => {
       <Navbar />
 
       {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white w-full">
         <Container size="md">
           <div className="text-center">
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
@@ -66,7 +66,7 @@ const Workspace = () => {
       </section>
 
       {/* Main Content Section */}
-      <section className="py-16">
+      <section className="py-16 w-full">
         <Container>
           <div className="bg-white rounded-xl p-8 shadow-md border border-gray-200">
             <Tabs defaultValue="guides" value={activeTab} onValueChange={handleTabChange} className="space-y-8">
@@ -151,9 +151,9 @@ const Workspace = () => {
       </section>
 
       {/* SEO Footer */}
-      <section className="py-8 bg-white border-t border-stone-200">
-        <Container>
-          <div className="text-sm text-stone-500">
+      <section className="py-8 bg-white border-t border-stone-200 w-full">
+        <Container size="full">
+          <div className="max-w-7xl mx-auto text-sm text-stone-500">
             <p>
               Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Retrouvez toutes nos ressources et outils pour faciliter vos projets immobiliers en région Provence-Alpes-Côte d'Azur.
             </p>
