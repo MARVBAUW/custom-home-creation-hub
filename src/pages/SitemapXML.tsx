@@ -1,9 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
+import { Helmet } from 'react-helmet-async';
 
 // This component will generate and serve an XML sitemap directly from React
 const SitemapXML: React.FC = () => {
+  const [xmlContent, setXmlContent] = useState('');
+
   useEffect(() => {
     // Create XML string
     const baseUrl = 'https://progineer.fr';
@@ -31,25 +34,40 @@ const SitemapXML: React.FC = () => {
   }).join('\n')}
 </urlset>`;
 
-    // Set the document content type to XML
-    const blob = new Blob([xmlString], { type: 'application/xml' });
-    const url = URL.createObjectURL(blob);
-
-    // Force download or display
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sitemap.xml';
-    a.click();
-    
-    // Clean up
-    URL.revokeObjectURL(url);
+    setXmlContent(xmlString);
   }, []);
 
   return (
-    <div>
-      <h1>Generating Sitemap XML...</h1>
-      <p>If your download doesn't start automatically, please check the console for any errors.</p>
-    </div>
+    <>
+      {/* Set XML content type in the head */}
+      <Helmet>
+        <title>Sitemap XML - Progineer</title>
+        <meta http-equiv="Content-Type" content="text/plain; charset=utf-8" />
+      </Helmet>
+      
+      {/* Display XML content in a pre tag for direct viewing */}
+      <pre style={{ 
+        whiteSpace: 'pre-wrap',
+        wordWrap: 'break-word',
+        fontFamily: 'monospace',
+        padding: '20px'
+      }}>
+        {xmlContent}
+      </pre>
+      
+      {/* Hidden div with download option */}
+      <div style={{ display: 'none' }}>
+        {xmlContent && (
+          <a
+            href={`data:application/xml;charset=utf-8,${encodeURIComponent(xmlContent)}`}
+            download="sitemap.xml"
+            id="downloadSitemap"
+          >
+            Download Sitemap
+          </a>
+        )}
+      </div>
+    </>
   );
 };
 

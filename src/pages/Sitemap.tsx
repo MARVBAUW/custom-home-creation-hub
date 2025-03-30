@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '../components/common/Container';
@@ -132,7 +131,7 @@ const Sitemap = () => {
                 to="/sitemap.xml" 
                 className="inline-block px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
               >
-                Générer un sitemap XML dynamique
+                Sitemap XML
               </Link>
             </div>
           </div>

@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => ({
       allow: ['.'],
     },
     middlewareMode: false,
+    headers: {
+      '/sitemap.xml': {
+        'Content-Type': 'application/xml; charset=utf-8',
+      }
+    }
   },
   
   // Configure path aliases
