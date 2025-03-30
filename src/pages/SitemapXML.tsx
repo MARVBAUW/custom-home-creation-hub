@@ -11,6 +11,21 @@ const SitemapXML: React.FC = () => {
     // Create XML string
     const baseUrl = 'https://progineer.fr';
     
+    // We need to create a properly escaped XML string
+    // Convert special XML characters to their entities
+    const escapeXml = (unsafe: string): string => {
+      return unsafe.replace(/[&<>"']/g, (match) => {
+        switch (match) {
+          case '&': return '&amp;';
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '"': return '&quot;';
+          case "'": return '&apos;';
+          default: return match;
+        }
+      });
+    };
+    
     // Generate the XML content with proper XML escaping
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -19,7 +34,7 @@ const SitemapXML: React.FC = () => {
     if (!route.path) return '';
     
     // Ensure the URL is properly escaped for XML
-    const fullUrl = `${baseUrl}${route.path}`.replace(/&/g, '&amp;');
+    const fullUrl = escapeXml(`${baseUrl}${route.path}`);
     
     // Determine priority based on route depth
     const pathSegments = route.path.split('/').filter(Boolean);

@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
     
     // Configure headers for proper XML content-type
     headers: {
-      'Content-Type': 'application/xml; charset=utf-8'
+      'Content-Type': 'text/html; charset=utf-8'
     }
   },
   
