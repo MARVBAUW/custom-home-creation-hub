@@ -33,4 +33,18 @@ export default defineConfig(({ mode }) => ({
   
   // Configure proper MIME types for XML and handle routes correctly
   assetsInclude: ['**/*.xml'],
+  
+  // Ensure the XML file is served with the correct content type
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name.endsWith('.xml')) {
+            return '[name][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        }
+      }
+    }
+  }
 }))

@@ -69,9 +69,10 @@ const SitemapXML: React.FC = () => {
           urlsetElement.appendChild(urlElement);
         });
       
-      // Sérialise en chaîne XML
+      // Sérialise en chaîne XML avec la déclaration XML en première ligne
       const serializer = new XMLSerializer();
-      const xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(xmlDoc);
+      const xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      const xmlString = xmlDeclaration + serializer.serializeToString(xmlDoc);
       
       // Définit le contenu XML dans l'état
       setXmlContent(xmlString);
