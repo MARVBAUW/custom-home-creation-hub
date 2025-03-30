@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import Container from '@/components/common/Container';
+import Container from '../components/common/Container';
 import { Link } from 'react-router-dom';
-import SEO from '@/components/common/SEO';
+import SEO from '../components/common/SEO';
 
 const Sitemap = () => {
   // Structure des liens du site

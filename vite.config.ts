@@ -1,5 +1,7 @@
+
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -10,10 +12,17 @@ export default defineConfig({
   
   // Add explicit configuration for serving XML files with the correct content type
   server: {
-    
+    port: 8080,
     fs: {
       // Allow serving files from the project root
       allow: ['.'],
     },
   },
+  
+  // Configure path aliases without modifying tsconfig.node.json
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
 })

@@ -1,25 +1,26 @@
+
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
-import Home from '@/pages/Home';
-import Contact from '@/pages/Contact';
-import Estimation from '@/pages/Estimation';
-import Prestations from '@/pages/Prestations';
-import Realisations from '@/pages/Realisations';
-import Equipe from '@/pages/Equipe';
-import Parrainage from '@/pages/Parrainage';
-import DevenirPartenaire from '@/pages/DevenirPartenaire';
-import MentionsLegales from '@/pages/MentionsLegales';
-import PrivacyPolicy from '@/pages/PrivacyPolicy';
-import CGU from '@/pages/CGU';
-import CGV from '@/pages/CGV';
-import FAQ from '@/pages/FAQ';
-import Sitemap from '@/pages/Sitemap';
+import Index from '../pages/Index';
+import Contact from '../pages/Contact';
+import Estimation from '../pages/Estimation';
+import Prestations from '../pages/Prestations';
+import Realisations from '../pages/Realisations';
+import Equipe from '../pages/Equipe';
+import Parrainage from '../pages/Parrainage';
+import DevenirPartenaire from '../pages/DevenirPartenaire';
+import NotFound from '../pages/NotFound';
+import PrivacyPolicy from '../pages/PrivacyPolicy';
+import CGU from '../pages/CGU';
+import CGV from '../pages/CGV';
+import FAQ from '../pages/FAQ';
+import Sitemap from '../pages/Sitemap';
 
 // Add a proper route for the HTML sitemap page
 export const publicRoutes: RouteObject[] = [
   {
     path: "/",
-    element: <Home />
+    element: <Index />
   },
   {
     path: "/contact",
@@ -51,7 +52,7 @@ export const publicRoutes: RouteObject[] = [
   },
   {
     path: "/mentions-legales",
-    element: <MentionsLegales />
+    element: <NotFound />
   },
   {
     path: "/privacy-policy",

@@ -46,6 +46,7 @@
     "@types/mapbox-gl": "^3.4.1",
     "@types/react-helmet": "^6.1.11",
     "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
     "canvas-confetti": "^1.9.3",
     "chart.js": "^4.4.8",
     "class-variance-authority": "^0.7.1",
