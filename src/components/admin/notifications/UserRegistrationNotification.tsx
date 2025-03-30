@@ -48,7 +48,14 @@ export const UserRegistrationNotificationsContainer = () => {
           toast({
             title: "Nouvel utilisateur",
             description: `L'utilisateur ${session?.user?.email || 'Inconnu'} vient de s'inscrire.`,
+            variant: "default",
+            duration: 5000,
           });
+          
+          // Trigger the modal to appear for the user to complete their project details
+          window.dispatchEvent(new CustomEvent('userSignedUp', { 
+            detail: { email: session?.user?.email }
+          }));
         }
       });
       
@@ -60,3 +67,5 @@ export const UserRegistrationNotificationsContainer = () => {
   
   return null;
 };
+
+export default UserRegistrationNotificationsContainer;

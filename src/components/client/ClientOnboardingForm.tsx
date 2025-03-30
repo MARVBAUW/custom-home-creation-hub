@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -65,38 +65,184 @@ const ClientOnboardingForm = () => {
     },
   })
 
+  // Check if there's data from a previous estimation
+  useEffect(() => {
+    const estimationData = localStorage.getItem('projectEstimation');
+    if (estimationData) {
+      try {
+        const data = JSON.parse(estimationData);
+        // Pre-fill form with estimation data if available
+        if (data.clientName) form.setValue('fullName', data.clientName);
+        if (data.clientEmail) form.setValue('email', data.clientEmail);
+        if (data.projectType) form.setValue('projectType', data.projectType);
+        if (data.projectLocation) form.setValue('projectLocation', data.projectLocation);
+        if (data.projectBudget) form.setValue('projectBudget', data.projectBudget.toString());
+        if (data.projectDescription) form.setValue('projectDescription', data.projectDescription);
+      } catch (error) {
+        console.error('Error parsing estimation data:', error);
+      }
+    }
+  }, [form]);
+
   async function onSubmit(values: z.infer<typeof FormSchema>) {
-    const { data, error } = await supabase.auth.signUp({
-      email: values.email,
-      password: "password123", // temporary password
-      options: {
-        data: {
-          full_name: values.fullName || '',
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError) {
+      toast({
+        title: "Erreur de session",
+        description: "Impossible de vérifier votre session",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!sessionData.session) {
+      // User is not signed in, create a new account
+      const { data, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: "password123", // temporary password
+        options: {
+          data: {
+            full_name: values.fullName || '',
+            phone: values.phone,
+            address: values.address,
+            company_name: values.companyName,
+            project_type: values.projectType,
+            project_description: values.projectDescription,
+            project_budget: values.projectBudget,
+            project_location: values.projectLocation,
+            is_admin: false, // default to regular user
+            registration_date: new Date().toISOString()
+          }
+        }
+      });
+      
+      if (error) {
+        toast({
+          title: "Erreur lors de la création du compte.",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        // Also create a project for the new user
+        if (data.user) {
+          await supabase.from('client_projects').insert({
+            user_id: data.user.id,
+            title: `Projet ${values.projectType} - ${values.projectLocation}`,
+            project_type: values.projectType === 'residential' ? 'new' : 'other',
+            construction_type: values.projectType,
+            description: values.projectDescription,
+            location: values.projectLocation,
+            budget: parseInt(values.projectBudget || '0'),
+            surface: 0, // Will be updated later
+            status: 'new',
+            created_at: new Date().toISOString()
+          });
+        }
+        
+        toast({
+          title: "Compte créé avec succès.",
+          description: "Veuillez vérifier votre email pour confirmer votre compte.",
+        });
+        navigate("/sign-in");
+      }
+    } else {
+      // User is already signed in, update their profile and create/update project
+      const userId = sessionData.session.user.id;
+      
+      // Update user profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          full_name: values.fullName,
+          email: values.email,
           phone: values.phone,
           address: values.address,
           company_name: values.companyName,
-          project_type: values.projectType,
-          project_description: values.projectDescription,
-          project_budget: values.projectBudget,
-          project_location: values.projectLocation,
-          is_admin: false, // default to regular user
-          registration_date: new Date().toISOString()
+          updated_at: new Date().toISOString()
+        });
+        
+      if (profileError) {
+        toast({
+          title: "Erreur lors de la mise à jour du profil",
+          description: profileError.message,
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Check if user already has a project
+      const { data: existingProjects, error: projectCheckError } = await supabase
+        .from('client_projects')
+        .select('id')
+        .eq('user_id', userId);
+        
+      if (projectCheckError) {
+        toast({
+          title: "Erreur lors de la vérification des projets",
+          description: projectCheckError.message,
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (existingProjects && existingProjects.length > 0) {
+        // Update existing project
+        const { error: updateError } = await supabase
+          .from('client_projects')
+          .update({
+            title: `Projet ${values.projectType} - ${values.projectLocation}`,
+            project_type: values.projectType === 'residential' ? 'new' : 'other',
+            construction_type: values.projectType,
+            description: values.projectDescription,
+            location: values.projectLocation,
+            budget: parseInt(values.projectBudget || '0'),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingProjects[0].id);
+          
+        if (updateError) {
+          toast({
+            title: "Erreur lors de la mise à jour du projet",
+            description: updateError.message,
+            variant: "destructive",
+          });
+          return;
+        }
+      } else {
+        // Create new project
+        const { error: createError } = await supabase
+          .from('client_projects')
+          .insert({
+            user_id: userId,
+            title: `Projet ${values.projectType} - ${values.projectLocation}`,
+            project_type: values.projectType === 'residential' ? 'new' : 'other',
+            construction_type: values.projectType,
+            description: values.projectDescription,
+            location: values.projectLocation,
+            budget: parseInt(values.projectBudget || '0'),
+            surface: 0, // Will be updated later
+            status: 'new',
+            created_at: new Date().toISOString()
+          });
+          
+        if (createError) {
+          toast({
+            title: "Erreur lors de la création du projet",
+            description: createError.message,
+            variant: "destructive",
+          });
+          return;
         }
       }
-    })
-    
-    if (error) {
+      
       toast({
-        title: "Erreur lors de la création du compte.",
-        description: error.message,
-        variant: "destructive",
-      })
-    } else {
-      toast({
-        title: "Compte créé avec succès.",
-        description: "Veuillez vérifier votre email pour confirmer votre compte.",
-      })
-      navigate("/sign-in")
+        title: "Informations enregistrées avec succès",
+        description: "Votre profil et projet ont été mis à jour.",
+      });
+      
+      navigate("/workspace/client-area");
     }
   }
 

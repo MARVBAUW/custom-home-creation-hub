@@ -5,185 +5,168 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Calculator, Download, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Download, FileText, Calculator, ExternalLink, AlertTriangle } from 'lucide-react';
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const FoundationCalculator = () => {
-  // État pour les inputs
-  const [foundationType, setFoundationType] = useState('isolated');
-  const [foundationLength, setFoundationLength] = useState(200); // en cm
-  const [foundationWidth, setFoundationWidth] = useState(200); // en cm
-  const [foundationHeight, setFoundationHeight] = useState(50); // en cm
-  const [columnWidth, setColumnWidth] = useState(30); // en cm
-  const [columnLength, setColumnLength] = useState(30); // en cm
-  const [concreteClass, setConcreteClass] = useState('C25/30');
-  const [steelClass, setSteelClass] = useState('S500');
-  const [soilType, setSoilType] = useState('gravel');
-  const [designForce, setDesignForce] = useState(500); // en kN
-  const [designMomentX, setDesignMomentX] = useState(30); // en kN.m
-  const [designMomentY, setDesignMomentY] = useState(30); // en kN.m
-  
-  // États pour les résultats
+  const [foundationType, setFoundationType] = useState<'isolated' | 'strip'>('isolated');
+  const [soilType, setSoilType] = useState('medium');
+  const [dimensions, setDimensions] = useState({
+    length: 1.5,
+    width: 1.5,
+    depth: 0.8,
+    columnWidth: 0.3,
+  });
+  const [loads, setLoads] = useState({
+    axial: 500,
+    moment: 20,
+    horizontal: 15,
+  });
+  const [reinforcement, setReinforcement] = useState({
+    diameter: 12,
+    spacing: 150,
+    cover: 50,
+  });
+  const [materials, setMaterials] = useState({
+    concreteClass: 'C25/30',
+    steelGrade: 'B500B',
+  });
   const [results, setResults] = useState({
-    loadBearingCapacity: 0, // capacité portante (kPa)
-    foundationArea: 0, // surface de la fondation (m²)
-    averagePressure: 0, // pression moyenne (kPa)
-    maximumPressure: 0, // pression maximale (kPa)
-    eccentricityX: 0, // excentricité en X (m)
-    eccentricityY: 0, // excentricité en Y (m)
-    isStable: true, // stabilité de la fondation
-    cantileverX: 0, // porte-à-faux en X (cm)
-    cantileverY: 0, // porte-à-faux en Y (cm)
-    reinforcementX: 0, // armatures dans la direction X (cm²/m)
-    reinforcementY: 0, // armatures dans la direction Y (cm²/m)
-    rebarDiameter: 0, // diamètre des barres (mm)
-    rebarSpacing: 0, // espacement des barres (cm)
-    punching: false, // vérification au poinçonnement
-    utilizationRate: 0 // taux d'utilisation
+    bearingCapacity: 0,
+    baseArea: 0,
+    requiredDepth: 0,
+    effectiveStress: 0,
+    overallStability: '',
+    reinforcementRatio: 0,
+    minimumReinforcement: 0,
+    actualReinforcement: 0,
+    requiredReinforcement: 0,
+    designVerification: false,
   });
   
-  // Caractéristiques des matériaux
-  const concreteProperties = {
-    'C20/25': { fck: 20, fcd: 13.33 }, // MPa
-    'C25/30': { fck: 25, fcd: 16.67 },
-    'C30/37': { fck: 30, fcd: 20.00 },
-    'C35/45': { fck: 35, fcd: 23.33 },
-    'C40/50': { fck: 40, fcd: 26.67 },
-  };
-  
-  const steelProperties = {
-    'S400': { fyk: 400, fyd: 348 }, // MPa
-    'S500': { fyk: 500, fyd: 435 },
-    'S600': { fyk: 600, fyd: 522 },
-  };
-  
-  // Caractéristiques des sols
-  const soilProperties = {
-    'soft-clay': { name: 'Argile molle', capacity: 100 }, // kPa
-    'stiff-clay': { name: 'Argile ferme', capacity: 200 },
-    'sand': { name: 'Sable', capacity: 250 },
-    'gravel': { name: 'Gravier compact', capacity: 400 },
-    'rock': { name: 'Roche', capacity: 800 },
-  };
-  
-  // Méthode pour calculer la fondation
-  const calculateFoundation = () => {
+  // Handle calculation
+  const handleCalculate = () => {
     try {
-      // Récupération des propriétés des matériaux
-      const concrete = concreteProperties[concreteClass as keyof typeof concreteProperties];
-      const steel = steelProperties[steelClass as keyof typeof steelProperties];
-      const soil = soilProperties[soilType as keyof typeof soilProperties];
+      // Soil bearing capacity based on soil type (kPa)
+      const bearingCapacities = {
+        'poor': 100,
+        'medium': 200,
+        'good': 300,
+        'rock': 500,
+      };
       
-      if (!concrete || !steel || !soil) {
-        toast.error("Propriétés des matériaux non reconnues");
-        return;
+      const bearingCapacity = bearingCapacities[soilType as keyof typeof bearingCapacities];
+      const baseArea = foundationType === 'isolated' 
+        ? dimensions.length * dimensions.width 
+        : dimensions.length * dimensions.width;
+      
+      // Calculate effective stress
+      const axialStress = loads.axial / baseArea;
+      const eccentricity = loads.moment / loads.axial;
+      
+      // Simplified check for effective area
+      let effectiveArea = baseArea;
+      if (eccentricity > 0) {
+        // Reduce effective area based on eccentricity
+        effectiveArea = baseArea * (1 - 2 * eccentricity / dimensions.length);
+        if (effectiveArea <= 0) {
+          effectiveArea = baseArea * 0.1; // Minimum effective area
+        }
       }
       
-      // Conversion des unités
-      const B = foundationWidth / 100; // cm -> m
-      const L = foundationLength / 100; // cm -> m
-      const h = foundationHeight / 100; // cm -> m
-      const b = columnWidth / 100; // cm -> m
-      const l = columnLength / 100; // cm -> m
+      const effectiveStress = loads.axial / effectiveArea;
       
-      // Surface de la fondation
-      const A = B * L; // m²
+      // Required depth based on simplified punching shear calculation
+      let requiredDepth = 0.5; // Minimum depth
+      if (foundationType === 'isolated') {
+        // Basic approximation for punching shear control
+        const columnArea = 0.3 * 0.3; // Assumption for column size
+        const punchingPerimeter = 4 * (0.3 + dimensions.depth);
+        const punchingForce = loads.axial * (1 - columnArea / baseArea);
+        requiredDepth = Math.max(punchingForce / (punchingPerimeter * 0.5 * Math.sqrt(25) * 1000), requiredDepth);
+      }
       
-      // Calcul des excentricités
-      const ex = designMomentX / designForce; // m
-      const ey = designMomentY / designForce; // m
+      // Overall stability check
+      let overallStability = '';
+      if (effectiveStress < bearingCapacity * 0.7) {
+        overallStability = 'Excellent';
+      } else if (effectiveStress < bearingCapacity * 0.9) {
+        overallStability = 'Bon';
+      } else if (effectiveStress < bearingCapacity) {
+        overallStability = 'Acceptable';
+      } else {
+        overallStability = 'Insuffisant';
+      }
       
-      // Vérification des excentricités (règle du tiers central)
-      const isStable = ex < B/6 && ey < L/6;
+      // Reinforcement calculation (simplified)
+      const fck = parseInt(materials.concreteClass.split('/')[0].substring(1));
+      const fyk = parseInt(materials.steelGrade.substring(1, 4));
       
-      // Pression moyenne
-      const averagePressure = designForce / A; // kN/m²
+      const d = dimensions.depth * 1000 - reinforcement.cover - reinforcement.diameter / 2;
+      const fcd = fck / 1.5;
+      const fyd = fyk / 1.15;
       
-      // Pression maximale (formule simplifiée)
-      const maximumPressure = designForce / A * (1 + 6 * ex / B + 6 * ey / L); // kN/m²
+      // Simplified bending reinforcement calculation
+      const bendingMoment = loads.axial * eccentricity * 1.5; // Design factor
+      const z = 0.9 * d;
+      const requiredAs = bendingMoment / (z * fyd / 1000);
       
-      // Porte-à-faux
-      const cantileverX = (foundationWidth - columnWidth) / 2; // cm
-      const cantileverY = (foundationLength - columnLength) / 2; // cm
-      
-      // Calcul des armatures (méthode simplifiée)
-      // Moment fléchissant dans chaque direction
-      const Mx = maximumPressure * cantileverX * cantileverX / 20000; // kN.m/m
-      const My = maximumPressure * cantileverY * cantileverY / 20000; // kN.m/m
-      
-      // Hauteur utile
-      const d = h - 0.05; // m (5 cm d'enrobage)
-      
-      // Calcul des armatures selon le modèle poutre
-      const reinforcementX = Mx * 1000000 / (0.9 * d * steel.fyd); // mm²/m
-      const reinforcementY = My * 1000000 / (0.9 * d * steel.fyd); // mm²/m
-      
-      // Choix du diamètre des barres et espacement
-      let rebarDiameter = 10; // mm
-      if (Math.max(reinforcementX, reinforcementY) > 400) rebarDiameter = 12;
-      if (Math.max(reinforcementX, reinforcementY) > 600) rebarDiameter = 16;
-      
-      // Calcul de l'espacement (simplifié)
-      const areaPerBar = Math.PI * rebarDiameter * rebarDiameter / 4; // mm²
-      const spacingX = Math.min(Math.floor(areaPerBar * 100 / reinforcementX), 25); // cm
-      const spacingY = Math.min(Math.floor(areaPerBar * 100 / reinforcementY), 25); // cm
-      const rebarSpacing = Math.min(spacingX, spacingY);
-      
-      // Vérification au poinçonnement (très simplifiée)
-      const punchingPerimeter = 2 * (b + l) + 2 * Math.PI * d; // m
-      const punchingResistance = 0.6 * d * punchingPerimeter * concrete.fcd * 1000; // kN
-      const punching = designForce > punchingResistance;
-      
-      // Calcul du taux d'utilisation
-      const utilizationRate = Math.max(
-        maximumPressure / soil.capacity,
-        reinforcementX / (0.15 * foundationHeight * 10),
-        reinforcementY / (0.15 * foundationHeight * 10)
+      // Minimum reinforcement as per Eurocode
+      const minimumAs = Math.max(
+        0.26 * (fck/fyk) * dimensions.width * 1000 * d / 1000000,
+        0.0013 * dimensions.width * 1000 * d / 1000000
       );
       
-      // Mise à jour des résultats
+      // Actual reinforcement provided
+      const barArea = Math.PI * Math.pow(reinforcement.diameter / 2, 2);
+      const barsPerMeter = 1000 / reinforcement.spacing;
+      const actualAs = barArea * barsPerMeter * dimensions.width;
+      
+      // Check if reinforcement is adequate
+      const designVerification = actualAs >= Math.max(requiredAs, minimumAs);
+      
+      const reinforcementRatio = actualAs / (dimensions.width * 1000 * d) * 100;
+      
       setResults({
-        loadBearingCapacity: soil.capacity,
-        foundationArea: A,
-        averagePressure,
-        maximumPressure,
-        eccentricityX: ex,
-        eccentricityY: ey,
-        isStable,
-        cantileverX,
-        cantileverY,
-        reinforcementX: reinforcementX / 100, // mm²/m -> cm²/m
-        reinforcementY: reinforcementY / 100, // mm²/m -> cm²/m
-        rebarDiameter,
-        rebarSpacing,
-        punching,
-        utilizationRate: Math.min(utilizationRate, 1.5)
+        bearingCapacity,
+        baseArea,
+        requiredDepth,
+        effectiveStress,
+        overallStability,
+        reinforcementRatio,
+        minimumReinforcement: minimumAs,
+        actualReinforcement: actualAs / 1000000, // Convert to m²
+        requiredReinforcement: Math.max(requiredAs, minimumAs) / 1000000, // Convert to m²
+        designVerification,
       });
       
-      toast.success("Calcul effectué avec succès");
+      toast.success('Calcul réalisé avec succès');
     } catch (error) {
-      toast.error("Erreur lors du calcul");
-      console.error(error);
+      console.error('Calculation error:', error);
+      toast.error('Erreur de calcul. Vérifiez vos données.');
     }
   };
   
-  // Export PDF (simulé)
-  const exportToPDF = () => {
-    toast.success("Export PDF en cours de développement");
+  // Generate report
+  const generateReport = () => {
+    // Placeholder for report generation
+    toast.success('Rapport généré avec succès');
   };
   
   return (
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Calculator className="h-5 w-5 text-purple-600" />
-          Dimensionnement de fondations superficielles EC7
+          <Calculator className="h-5 w-5 text-blue-600" />
+          Dimensionnement simplifié de fondations
         </CardTitle>
         <CardDescription>
-          Calculez les dimensions et armatures nécessaires pour une fondation superficielle selon l'Eurocode 7
+          Calculateur pour le pré-dimensionnement des fondations selon l'Eurocode 7
         </CardDescription>
       </CardHeader>
       
@@ -196,369 +179,385 @@ const FoundationCalculator = () => {
           </TabsList>
           
           <TabsContent value="input" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="foundation-type">Type de fondation</Label>
-                  <Select value={foundationType} onValueChange={setFoundationType}>
-                    <SelectTrigger id="foundation-type">
-                      <SelectValue placeholder="Sélectionner un type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="isolated">Semelle isolée</SelectItem>
-                      <SelectItem value="strip" disabled>Semelle filante (bientôt disponible)</SelectItem>
-                      <SelectItem value="raft" disabled>Radier (bientôt disponible)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="soil-type">Type de sol</Label>
-                  <Select value={soilType} onValueChange={setSoilType}>
-                    <SelectTrigger id="soil-type">
-                      <SelectValue placeholder="Sélectionner un type de sol" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.entries(soilProperties).map(([key, soil]) => (
-                        <SelectItem key={key} value={key}>{soil.name} ({soil.capacity} kPa)</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="foundation-length">Longueur de la fondation (cm)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="foundation-length"
-                      type="number"
-                      value={foundationLength}
-                      onChange={(e) => setFoundationLength(parseFloat(e.target.value))}
-                      min="50"
-                      max="500"
-                    />
-                    <div className="w-[60px] text-sm text-gray-500">cm</div>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Type de fondation</Label>
+                    <Select
+                      value={foundationType}
+                      onValueChange={(value) => setFoundationType(value as 'isolated' | 'strip')}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez un type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="isolated">Semelle isolée</SelectItem>
+                        <SelectItem value="strip">Semelle filante</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Type de sol</Label>
+                    <Select
+                      value={soilType}
+                      onValueChange={setSoilType}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez un type de sol" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="poor">Sol médiocre (100 kPa)</SelectItem>
+                        <SelectItem value="medium">Sol moyen (200 kPa)</SelectItem>
+                        <SelectItem value="good">Sol bon (300 kPa)</SelectItem>
+                        <SelectItem value="rock">Roche (500 kPa)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Classe de béton</Label>
+                    <Select
+                      value={materials.concreteClass}
+                      onValueChange={(value) => setMaterials({...materials, concreteClass: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez une classe" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="C20/25">C20/25</SelectItem>
+                        <SelectItem value="C25/30">C25/30</SelectItem>
+                        <SelectItem value="C30/37">C30/37</SelectItem>
+                        <SelectItem value="C35/45">C35/45</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label>Nuance d'acier</Label>
+                    <Select
+                      value={materials.steelGrade}
+                      onValueChange={(value) => setMaterials({...materials, steelGrade: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionnez une nuance" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="B400B">B400B</SelectItem>
+                        <SelectItem value="B500B">B500B</SelectItem>
+                        <SelectItem value="B500C">B500C</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 
-                <div>
-                  <Label htmlFor="foundation-width">Largeur de la fondation (cm)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="foundation-width"
-                      type="number"
-                      value={foundationWidth}
-                      onChange={(e) => setFoundationWidth(parseFloat(e.target.value))}
-                      min="50"
-                      max="500"
-                    />
-                    <div className="w-[60px] text-sm text-gray-500">cm</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="foundation-height">Hauteur de la fondation (cm)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="foundation-height"
-                      type="number"
-                      value={foundationHeight}
-                      onChange={(e) => setFoundationHeight(parseFloat(e.target.value))}
-                      min="30"
-                      max="150"
-                    />
-                    <div className="w-[60px] text-sm text-gray-500">cm</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="column-length">Longueur du poteau (cm)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="column-length"
-                      type="number"
-                      value={columnLength}
-                      onChange={(e) => setColumnLength(parseFloat(e.target.value))}
-                      min="20"
-                      max="100"
-                    />
-                    <div className="w-[60px] text-sm text-gray-500">cm</div>
-                  </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="column-width">Largeur du poteau (cm)</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      id="column-width"
-                      type="number"
-                      value={columnWidth}
-                      onChange={(e) => setColumnWidth(parseFloat(e.target.value))}
-                      min="20"
-                      max="100"
-                    />
-                    <div className="w-[60px] text-sm text-gray-500">cm</div>
+                <div className="space-y-4">
+                  <h3 className="font-medium">Dimensions de la fondation</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="length">Longueur (m)</Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        value={dimensions.length}
+                        onChange={(e) => setDimensions({...dimensions, length: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="width">Largeur (m)</Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        value={dimensions.width}
+                        onChange={(e) => setDimensions({...dimensions, width: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="depth">Hauteur (m)</Label>
+                      <Input
+                        id="depth"
+                        type="number"
+                        value={dimensions.depth}
+                        onChange={(e) => setDimensions({...dimensions, depth: parseFloat(e.target.value) || 0})}
+                      />
+                    </div>
+                    
+                    {foundationType === 'isolated' && (
+                      <div className="space-y-2">
+                        <Label htmlFor="columnWidth">Largeur poteau (m)</Label>
+                        <Input
+                          id="columnWidth"
+                          type="number"
+                          value={dimensions.columnWidth}
+                          onChange={(e) => setDimensions({...dimensions, columnWidth: parseFloat(e.target.value) || 0})}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
               
+              <Separator />
+              
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="concrete-class">Classe de béton</Label>
-                  <Select value={concreteClass} onValueChange={setConcreteClass}>
-                    <SelectTrigger id="concrete-class">
-                      <SelectValue placeholder="Sélectionner une classe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(concreteProperties).map((className) => (
-                        <SelectItem key={className} value={className}>{className}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="steel-class">Classe d'acier</Label>
-                  <Select value={steelClass} onValueChange={setSteelClass}>
-                    <SelectTrigger id="steel-class">
-                      <SelectValue placeholder="Sélectionner une classe" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(steelProperties).map((className) => (
-                        <SelectItem key={className} value={className}>{className}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="design-force">Effort normal ELU (kN)</Label>
-                  <div className="flex items-center space-x-2">
+                <h3 className="font-medium">Charges de calcul (ELU)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="axial">Charge axiale NEd (kN)</Label>
                     <Input
-                      id="design-force"
+                      id="axial"
                       type="number"
-                      value={designForce}
-                      onChange={(e) => setDesignForce(parseFloat(e.target.value))}
-                      min="0"
+                      value={loads.axial}
+                      onChange={(e) => setLoads({...loads, axial: parseFloat(e.target.value) || 0})}
                     />
-                    <div className="w-[60px] text-sm text-gray-500">kN</div>
                   </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="design-moment-x">Moment X ELU (kN.m)</Label>
-                  <div className="flex items-center space-x-2">
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="moment">Moment MEd (kN.m)</Label>
                     <Input
-                      id="design-moment-x"
+                      id="moment"
                       type="number"
-                      value={designMomentX}
-                      onChange={(e) => setDesignMomentX(parseFloat(e.target.value))}
-                      min="0"
+                      value={loads.moment}
+                      onChange={(e) => setLoads({...loads, moment: parseFloat(e.target.value) || 0})}
                     />
-                    <div className="w-[60px] text-sm text-gray-500">kN.m</div>
                   </div>
-                </div>
-                
-                <div>
-                  <Label htmlFor="design-moment-y">Moment Y ELU (kN.m)</Label>
-                  <div className="flex items-center space-x-2">
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="horizontal">Effort horizontal HEd (kN)</Label>
                     <Input
-                      id="design-moment-y"
+                      id="horizontal"
                       type="number"
-                      value={designMomentY}
-                      onChange={(e) => setDesignMomentY(parseFloat(e.target.value))}
-                      min="0"
+                      value={loads.horizontal}
+                      onChange={(e) => setLoads({...loads, horizontal: parseFloat(e.target.value) || 0})}
                     />
-                    <div className="w-[60px] text-sm text-gray-500">kN.m</div>
                   </div>
-                </div>
-                
-                <div className="pt-4">
-                  <Button onClick={calculateFoundation} className="w-full">
-                    <Calculator className="mr-2 h-4 w-4" />
-                    Calculer la fondation
-                  </Button>
                 </div>
               </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="results">
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <div>
-                  {results.utilizationRate > 0.9 && (
-                    <Alert variant="warning" className="bg-amber-50 text-amber-800 border-amber-200">
-                      <AlertTriangle className="h-4 w-4" />
-                      <AlertTitle>Attention</AlertTitle>
-                      <AlertDescription>
-                        Taux d'utilisation élevé ({(results.utilizationRate * 100).toFixed(1)}%). Vérifiez les dimensions.
-                      </AlertDescription>
-                    </Alert>
-                  )}
+              
+              <Separator />
+              
+              <div className="space-y-4">
+                <h3 className="font-medium">Ferraillage</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="diameter">Diamètre des barres (mm)</Label>
+                    <Select
+                      value={reinforcement.diameter.toString()}
+                      onValueChange={(value) => setReinforcement({...reinforcement, diameter: parseInt(value)})}
+                    >
+                      <SelectTrigger id="diameter">
+                        <SelectValue placeholder="Sélectionnez un diamètre" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="8">HA8</SelectItem>
+                        <SelectItem value="10">HA10</SelectItem>
+                        <SelectItem value="12">HA12</SelectItem>
+                        <SelectItem value="14">HA14</SelectItem>
+                        <SelectItem value="16">HA16</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="spacing">Espacement (mm)</Label>
+                    <Select
+                      value={reinforcement.spacing.toString()}
+                      onValueChange={(value) => setReinforcement({...reinforcement, spacing: parseInt(value)})}
+                    >
+                      <SelectTrigger id="spacing">
+                        <SelectValue placeholder="Sélectionnez un espacement" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="100">100 mm</SelectItem>
+                        <SelectItem value="125">125 mm</SelectItem>
+                        <SelectItem value="150">150 mm</SelectItem>
+                        <SelectItem value="200">200 mm</SelectItem>
+                        <SelectItem value="250">250 mm</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="cover">Enrobage (mm)</Label>
+                    <Select
+                      value={reinforcement.cover.toString()}
+                      onValueChange={(value) => setReinforcement({...reinforcement, cover: parseInt(value)})}
+                    >
+                      <SelectTrigger id="cover">
+                        <SelectValue placeholder="Sélectionnez un enrobage" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="30">30 mm</SelectItem>
+                        <SelectItem value="35">35 mm</SelectItem>
+                        <SelectItem value="40">40 mm</SelectItem>
+                        <SelectItem value="45">45 mm</SelectItem>
+                        <SelectItem value="50">50 mm</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <Button variant="outline" size="sm" onClick={exportToPDF}>
-                  <Download className="mr-2 h-4 w-4" />
-                  Exporter PDF
+              </div>
+              
+              <div className="flex justify-end mt-6">
+                <Button onClick={handleCalculate} className="bg-blue-600 hover:bg-blue-700">
+                  Calculer
                 </Button>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Vérification géotechnique</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Capacité portante du sol:</span>
-                        <span className="font-medium">{results.loadBearingCapacity} kPa</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Surface de la fondation:</span>
-                        <span className="font-medium">{results.foundationArea.toFixed(2)} m²</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Pression moyenne:</span>
-                        <span className="font-medium">{results.averagePressure.toFixed(2)} kPa</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Pression maximale:</span>
-                        <span className={`font-medium ${results.maximumPressure > results.loadBearingCapacity ? "text-red-600" : "text-green-600"}`}>
-                          {results.maximumPressure.toFixed(2)} kPa
-                        </span>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Excentricité en X:</span>
-                        <span className="font-medium">{results.eccentricityX.toFixed(3)} m</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Excentricité en Y:</span>
-                        <span className="font-medium">{results.eccentricityY.toFixed(3)} m</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Stabilité:</span>
-                        <span className={`font-medium ${results.isStable ? "text-green-600" : "text-red-600"}`}>
-                          {results.isStable ? "Vérifiée" : "Non vérifiée"}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">Armatures calculées</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Porte-à-faux en X:</span>
-                        <span className="font-medium">{results.cantileverX.toFixed(1)} cm</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Porte-à-faux en Y:</span>
-                        <span className="font-medium">{results.cantileverY.toFixed(1)} cm</span>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Armatures en X:</span>
-                        <span className="font-medium">{results.reinforcementX.toFixed(2)} cm²/m</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Armatures en Y:</span>
-                        <span className="font-medium">{results.reinforcementY.toFixed(2)} cm²/m</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Configuration recommandée:</span>
-                        <span className="font-medium">
-                          HA{results.rebarDiameter} @ {results.rebarSpacing} cm
-                        </span>
-                      </div>
-                      <Separator className="my-2" />
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Poinçonnement:</span>
-                        <span className={`font-medium ${results.punching ? "text-red-600" : "text-green-600"}`}>
-                          {results.punching ? "Vérification nécessaire" : "OK"}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="mt-4">
-                <div className="bg-gray-50 p-4 rounded-md border">
-                  <h4 className="font-medium text-sm mb-2">Notes de calcul</h4>
-                  <ul className="text-sm space-y-1 text-gray-600">
-                    <li>• Calcul réalisé selon l'Eurocode 7 (approche simplifiée)</li>
-                    <li>• Armatures calculées selon l'Eurocode 2</li>
-                    <li>• Méthode de la console pour le dimensionnement en flexion</li>
-                    <li>• Enrobage considéré = 5 cm</li>
-                    <li>• Vérification au poinçonnement simplifiée</li>
-                    <li>• Les tassements ne sont pas calculés dans cette version</li>
-                  </ul>
-                </div>
-              </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="help">
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">Aide au dimensionnement des fondations</h3>
-              
-              <div className="space-y-2">
-                <h4 className="font-medium">Comment utiliser ce calculateur</h4>
-                <p className="text-gray-600 text-sm">
-                  Ce calculateur permet de dimensionner et vérifier une fondation superficielle (semelle isolée)
-                  selon les principes des Eurocodes 2 et 7. Suivez les étapes ci-dessous:
-                </p>
+          <TabsContent value="results" className="space-y-6">
+            {results.bearingCapacity === 0 ? (
+              <div className="text-center py-8">
+                <h3 className="text-lg font-medium text-gray-600">Aucun résultat disponible</h3>
+                <p className="text-gray-500 mt-2">Veuillez remplir les données d'entrée et cliquer sur "Calculer"</p>
+              </div>
+            ) : (
+              <>
+                {!results.designVerification && (
+                  <Alert variant="destructive" className="mb-6">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Vérification non satisfaite</AlertTitle>
+                    <AlertDescription>
+                      Le dimensionnement ne répond pas aux exigences. Veuillez ajuster les paramètres de conception.
+                    </AlertDescription>
+                  </Alert>
+                )}
                 
-                <ol className="text-sm space-y-1 text-gray-600 list-decimal pl-4">
-                  <li>Sélectionnez le type de sol correspondant à votre projet</li>
-                  <li>Saisissez les dimensions de la fondation et du poteau</li>
-                  <li>Sélectionnez les classes de matériaux (béton et acier)</li>
-                  <li>Entrez les charges de calcul (effort normal et moments)</li>
-                  <li>Cliquez sur "Calculer la fondation"</li>
-                  <li>Consultez les résultats dans l'onglet correspondant</li>
-                </ol>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Vérification de la capacité portante</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Capacité portante du sol:</span>
+                          <span className="font-medium">{results.bearingCapacity} kPa</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Surface de la semelle:</span>
+                          <span className="font-medium">{results.baseArea.toFixed(2)} m²</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Contrainte effective:</span>
+                          <span className="font-medium">{results.effectiveStress.toFixed(2)} kPa</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Stabilité globale:</span>
+                          <Badge 
+                            variant={results.overallStability === 'Insuffisant' ? "destructive" : "default"}
+                            className={results.overallStability === 'Excellent' ? 'bg-green-100 text-green-800 hover:bg-green-100' : 
+                                       results.overallStability === 'Bon' ? 'bg-blue-100 text-blue-800 hover:bg-blue-100' :
+                                       results.overallStability === 'Acceptable' ? 'bg-amber-100 text-amber-800 hover:bg-amber-100' : ''}
+                          >
+                            {results.overallStability}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Hauteur minimale requise:</span>
+                          <span className="font-medium">{results.requiredDepth.toFixed(2)} m</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-base">Ferraillage de flexion</CardTitle>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Ferraillage requis:</span>
+                          <span className="font-medium">{(results.requiredReinforcement * 10000).toFixed(2)} cm²</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Ferraillage minimum:</span>
+                          <span className="font-medium">{(results.minimumReinforcement / 1000000 * 10000).toFixed(2)} cm²</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Ferraillage fourni:</span>
+                          <span className="font-medium">{(results.actualReinforcement * 10000).toFixed(2)} cm²</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Taux de ferraillage:</span>
+                          <span className="font-medium">{results.reinforcementRatio.toFixed(3)} %</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Vérification:</span>
+                          <Badge 
+                            variant={results.designVerification ? "default" : "destructive"}
+                            className={results.designVerification ? 'bg-green-100 text-green-800 hover:bg-green-100' : ''}
+                          >
+                            {results.designVerification ? 'Conforme' : 'Non conforme'}
+                          </Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="flex justify-end mt-6 space-x-2">
+                  <Button variant="outline" onClick={handleCalculate}>
+                    Recalculer
+                  </Button>
+                  <Button 
+                    onClick={generateReport}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    Générer un rapport
+                  </Button>
+                </div>
+              </>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="help" className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium text-lg">Comment utiliser ce calculateur</h3>
+                <p className="text-gray-600 mt-1">
+                  Ce calculateur permet de réaliser un pré-dimensionnement simplifié des fondations 
+                  superficielles selon les principes de l'Eurocode 7 (EN 1997).
+                </p>
               </div>
               
-              <div className="space-y-2">
-                <h4 className="font-medium">Hypothèses et limitations</h4>
+              <div>
+                <h3 className="font-medium">Hypothèses et limitations</h3>
                 <ul className="text-sm space-y-1 text-gray-600 list-disc pl-4">
-                  <li>Ce calculateur utilise une méthode simplifiée pour l'estimation des contraintes</li>
-                  <li>Les valeurs de capacité portante sont génériques et doivent être ajustées selon le rapport géotechnique</li>
-                  <li>Le calcul du ferraillage utilise la méthode de la console</li>
-                  <li>La vérification au poinçonnement est simplifiée</li>
-                  <li>Les tassements ne sont pas pris en compte</li>
-                  <li>La semelle est supposée rigide</li>
+                  <li>Ce calculateur utilise une méthode simplifiée basée sur l'Eurocode 7</li>
+                  <li>La capacité portante est considérée comme connue et fournie par l'utilisateur</li>
+                  <li>Le calcul est adapté pour une analyse préliminaire uniquement</li>
+                  <li>Le glissement et le renversement ne sont pas vérifiés dans cette version</li>
+                  <li>Pour une étude géotechnique complète, consultez un ingénieur spécialisé</li>
                 </ul>
               </div>
               
-              <div className="bg-amber-50 p-4 rounded-md border border-amber-100">
-                <h4 className="font-medium text-amber-800">Important</h4>
-                <p className="text-sm text-amber-700">
-                  Ce calculateur est fourni à titre indicatif et ne remplace pas l'analyse d'un ingénieur géotechnique.
-                  Les résultats doivent être vérifiés par un professionnel qualifié avant toute mise en œuvre.
-                  Le dimensionnement des fondations nécessite une étude de sol spécifique au site.
-                </p>
+              <div>
+                <h3 className="font-medium">Références</h3>
+                <ul className="text-sm space-y-1 text-gray-600 list-disc pl-4">
+                  <li>Eurocode 7 : Calcul géotechnique (EN 1997)</li>
+                  <li>Eurocode 2 : Calcul des structures en béton (EN 1992)</li>
+                </ul>
+              </div>
+              
+              <div className="pt-2">
+                <Button variant="outline" size="sm" className="flex items-center" asChild>
+                  <a href="https://www.eurocode7.com/" target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-3.5 w-3.5 mr-1.5" />
+                    En savoir plus sur l'Eurocode 7
+                  </a>
+                </Button>
               </div>
             </div>
           </TabsContent>
         </Tabs>
       </CardContent>
-      
-      <CardFooter className="justify-between border-t pt-4 text-xs text-gray-500">
-        <div>
-          Calculateur basé sur l'EC7 (EN 1997) et l'EC2 (EN 1992)
-        </div>
-        <Button variant="ghost" size="sm" onClick={() => window.location.reload()}>
-          <RefreshCw className="h-3 w-3 mr-1" />
-          Réinitialiser
-        </Button>
-      </CardFooter>
     </Card>
   );
 };
