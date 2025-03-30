@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => ({
   // Configure proper MIME types for XML
   assetsInclude: ['**/*.xml'],
   
-  // Add specific headers for XML files - using correct format
+  // Add specific headers for XML files
   preview: {
     headers: {
       '/*.xml': 'Content-Type: text/xml; charset=utf-8'

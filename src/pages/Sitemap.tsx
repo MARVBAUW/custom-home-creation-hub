@@ -127,12 +127,6 @@ const Sitemap = () => {
               >
                 Télécharger le sitemap XML
               </a>
-              <Link 
-                to="/sitemap.xml" 
-                className="inline-block px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 transition-colors"
-              >
-                Sitemap XML
-              </Link>
             </div>
           </div>
         </Container>
