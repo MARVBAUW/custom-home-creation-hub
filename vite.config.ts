@@ -23,6 +23,11 @@ export default defineConfig(({ mode }) => ({
       allow: ['.'],
     },
     middlewareMode: false,
+    headers: {
+      '/sitemap.xml': {
+        'Content-Type': 'text/xml; charset=utf-8'
+      }
+    }
   },
   
   // Configure path aliases
@@ -38,7 +43,7 @@ export default defineConfig(({ mode }) => ({
   // Add specific headers for XML files
   preview: {
     headers: {
-      '/*.xml': 'Content-Type: text/xml; charset=utf-8'
+      '/sitemap.xml': 'Content-Type: text/xml; charset=utf-8'
     }
   }
 }))

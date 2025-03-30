@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
-import { Helmet } from 'react-helmet-async';
 
 // This component generates a standard XML sitemap following conventional format
 const SitemapXML: React.FC = () => {
@@ -14,7 +13,7 @@ const SitemapXML: React.FC = () => {
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${publicRoutes
-  .filter(route => route.path) // Filter out routes without paths
+  .filter(route => route.path && route.path !== '/sitemap.xml') // Filter out the XML sitemap itself and routes without paths
   .map(route => {
     // Construct full URL
     const fullUrl = `${baseUrl}${route.path}`;
@@ -36,18 +35,20 @@ ${publicRoutes
   .join('\n')}
 </urlset>`;
 
-    // Use document.write for XML content with proper content type
+    // Set the correct content type for XML and write the content
     document.open('text/xml');
     document.write(xmlString);
     document.close();
+    
+    // Force the content type header for XML
+    const meta = document.createElement('meta');
+    meta.httpEquiv = 'Content-Type';
+    meta.content = 'text/xml; charset=utf-8';
+    document.head.appendChild(meta);
   }, []);
 
-  return (
-    <Helmet>
-      <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
-      <title>XML Sitemap - Progineer</title>
-    </Helmet>
-  );
+  // Return a minimal component - the actual rendering happens in useEffect
+  return null;
 };
 
 export default SitemapXML;
