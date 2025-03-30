@@ -10,6 +10,7 @@ Allow: /contact
 Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
 Allow: /parrainage-travaux
+Allow: /faq
 
 # Main sitemap (with absolute URL)
 Sitemap: https://progineer.fr/sitemap.xml
@@ -19,26 +20,31 @@ User-agent: Googlebot
 Allow: /
 Allow: /estimation
 Allow: /contact
+Allow: /faq
 
 User-agent: Bingbot
 Allow: /
 Allow: /estimation
 Allow: /contact
+Allow: /faq
 
 User-agent: Yandexbot
 Allow: /
 Allow: /estimation
 Allow: /contact
+Allow: /faq
 
 User-agent: Twitterbot
 Allow: /
 Allow: /estimation
 Allow: /contact
+Allow: /faq
 
 User-agent: facebookexternalhit
 Allow: /
 Allow: /estimation
 Allow: /contact
+Allow: /faq
 
 # Prevent bots from crawling certain pages (if needed)
 # Disallow: /workspace

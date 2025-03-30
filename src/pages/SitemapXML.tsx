@@ -36,17 +36,10 @@ ${publicRoutes
   .join('\n')}
 </urlset>`;
 
-    // Create a blob with the XML content
-    const blob = new Blob([xmlString], { type: 'text/xml;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    
-    // Direct browser to the blob URL
-    window.location.href = url;
-    
-    // Clean up the URL object when the component unmounts
-    return () => {
-      URL.revokeObjectURL(url);
-    };
+    // Use document.write for XML content with proper content type
+    document.open('text/xml');
+    document.write(xmlString);
+    document.close();
   }, []);
 
   return (
