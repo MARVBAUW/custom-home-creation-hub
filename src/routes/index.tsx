@@ -1,21 +1,31 @@
 
 import React from 'react';
-import { Navigate, RouteObject } from 'react-router-dom';
 import { publicRoutes } from './publicRoutes';
-import { clientRoutes } from './clientRoutes';
 import { adminRoutes } from './adminRoutes';
+import { clientRoutes } from './clientRoutes';
 import { workspaceRoutes } from './workspaceRoutes';
+import Footer from '../components/layout/Footer';
+import Navbar from '../components/layout/Navbar';
+import { Outlet } from 'react-router-dom';
 
-export const routes: RouteObject[] = [
-  // Redirect index route to home page
+// Layout component for standard pages with navbar and footer
+const MainLayout = () => (
+  <>
+    <Navbar />
+    <main className="min-h-screen pt-16">
+      <Outlet />
+    </main>
+    <Footer />
+  </>
+);
+
+// Combine all routes for the application
+export const routes = [
   {
-    path: "/index",
-    element: <Navigate to="/" replace />
+    element: <MainLayout />,
+    children: publicRoutes,
   },
-  
-  // Include all route groups
-  ...publicRoutes,
+  ...workspaceRoutes,
   ...clientRoutes,
   ...adminRoutes,
-  ...workspaceRoutes
 ];
