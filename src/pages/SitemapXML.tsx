@@ -11,15 +11,15 @@ const SitemapXML: React.FC = () => {
     // Create XML string
     const baseUrl = 'https://progineer.fr';
     
-    // Generate the XML content
+    // Generate the XML content - escape any ampersands with &amp;
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${publicRoutes.map(route => {
     // Skip any routes that don't have a path
     if (!route.path) return '';
     
-    // Convert relative paths to full URLs
-    const fullUrl = `${baseUrl}${route.path}`;
+    // Convert relative paths to full URLs and ensure ampersands are escaped
+    const fullUrl = `${baseUrl}${route.path}`.replace(/&/g, '&amp;');
     
     // Determine priority based on route depth
     const pathSegments = route.path.split('/').filter(Boolean);
@@ -37,6 +37,11 @@ const SitemapXML: React.FC = () => {
     setXmlContent(xmlString);
   }, []);
 
+  // Set the correct content type for XML
+  useEffect(() => {
+    document.contentType = "application/xml; charset=utf-8";
+  }, []);
+
   return (
     <>
       {/* Set XML content type in the head */}
@@ -45,28 +50,8 @@ const SitemapXML: React.FC = () => {
         <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
       </Helmet>
       
-      {/* Display XML content in a pre tag for direct viewing */}
-      <pre style={{ 
-        whiteSpace: 'pre-wrap',
-        wordWrap: 'break-word',
-        fontFamily: 'monospace',
-        padding: '20px'
-      }}>
-        {xmlContent}
-      </pre>
-      
-      {/* Hidden div with download option */}
-      <div style={{ display: 'none' }}>
-        {xmlContent && (
-          <a
-            href={`data:application/xml;charset=utf-8,${encodeURIComponent(xmlContent)}`}
-            download="sitemap.xml"
-            id="downloadSitemap"
-          >
-            Download Sitemap
-          </a>
-        )}
-      </div>
+      {/* Render the XML content directly, not in a pre tag to avoid HTML escaping */}
+      <div dangerouslySetInnerHTML={{ __html: xmlContent }} />
     </>
   );
 };

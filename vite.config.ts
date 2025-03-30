@@ -24,9 +24,9 @@ export default defineConfig(({ mode }) => ({
     },
     middlewareMode: false,
     
-    // Using the correct format for headers - keys are header names, not paths
+    // Using the correct format for headers
     headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
+      'Content-Type': 'application/xml; charset=utf-8'
     }
   },
   
