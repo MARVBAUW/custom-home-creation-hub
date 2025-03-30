@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
@@ -7,7 +6,7 @@ import Logo from '@/components/common/Logo';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center py-24 overflow-hidden">
+    <section className="relative min-h-screen flex items-center py-24 overflow-hidden w-full">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
@@ -20,8 +19,8 @@ const Hero = () => {
         ></div>
       </div>
       
-      <Container className="relative z-10 mt-16">
-        <div className="flex flex-col items-start animate-fade-in">
+      <Container size="full" className="relative z-10 mt-16">
+        <div className="flex flex-col items-start animate-fade-in max-w-[1440px] mx-auto">
           {/* Centered metallic logo */}
           <div className="w-full flex justify-center mb-12">
             <Logo variant="metallic-full" size="lg" className="mx-auto" />

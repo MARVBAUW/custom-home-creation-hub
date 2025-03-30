@@ -29,7 +29,7 @@ const Container: React.FC<ContainerProps> = ({
       case 'xl':
         return 'max-w-[1280px]';
       case 'full':
-        return 'max-w-[1440px]'; // Increased from just full width to a specific large but constrained width
+        return 'max-w-full w-full'; // Changed to truly full width
       default:
         return 'max-w-[1024px]';
     }
