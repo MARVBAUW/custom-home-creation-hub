@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -25,6 +24,7 @@ import Parrainage from './pages/Parrainage';
 import DevenirPartenaire from './pages/DevenirPartenaire';
 import Legal from './pages/Legal';
 import CGV from './pages/CGV';
+import Sitemap from './pages/Sitemap';
 
 // Import client area pages
 import ClientArea from './pages/client/ClientArea';
@@ -54,16 +54,7 @@ import Footer from './components/layout/Footer';
 // Create placeholder components for pages
 const PrivacyPolicy = () => <div className="p-8"><h1 className="text-2xl">Politique de confidentialité</h1></div>;
 const CGU = () => <div className="p-8"><h1 className="text-2xl">Conditions Générales d'Utilisation</h1></div>;
-const Sitemap = () => <div className="p-8"><h1 className="text-2xl">Plan du site</h1></div>;
 const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
-
-// Create a component to handle sitemap.xml redirection
-const SitemapXML = () => {
-  React.useEffect(() => {
-    window.location.href = '/sitemap.xml';
-  }, []);
-  return null;
-};
 
 const queryClient = new QueryClient();
 
@@ -84,8 +75,8 @@ const App = () => {
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
             <Routes>
-              {/* Special route for sitemap.xml */}
-              <Route path="/sitemap.xml" element={<SitemapXML />} />
+              {/* Redirect for sitemap.xml - this will send the browser to the static XML file */}
+              <Route path="/sitemap.xml" element={<Navigate to="/sitemap.xml" replace />} />
               
               {/* Public routes with standard layout */}
               <Route path="/" element={
