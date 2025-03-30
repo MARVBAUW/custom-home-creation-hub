@@ -1,11 +1,11 @@
 
-import { defineConfig, ConfigEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { componentTagger } from "lovable-tagger"
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }: ConfigEnv) => ({
+export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === 'development' && componentTagger(),
@@ -35,16 +35,10 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
   // Configure proper MIME types for XML
   assetsInclude: ['**/*.xml'],
   
-  // Add specific headers for XML files
-  // Using the correct format for OutgoingHttpHeaders
+  // Add specific headers for XML files - using correct format
   preview: {
     headers: {
-      "/*.xml": [
-        {
-          key: "Content-Type",
-          value: "text/xml; charset=utf-8"
-        }
-      ]
+      '/*.xml': 'Content-Type: text/xml; charset=utf-8'
     }
   }
 }))
