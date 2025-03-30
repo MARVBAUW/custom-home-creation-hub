@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
   // Ensure proper handling of static files
   publicDir: 'public',
   
-  // Add explicit configuration for serving XML files with the correct content type
+  // Configure server options
   server: {
     host: "::",
     port: 8080,
@@ -23,10 +23,10 @@ export default defineConfig(({ mode }) => ({
       allow: ['.'],
     },
     middlewareMode: false,
+    
+    // Using the correct format for headers - keys are header names, not paths
     headers: {
-      '/sitemap.xml': {
-        'Content-Type': 'application/xml; charset=utf-8',
-      }
+      'Content-Type': 'application/xml; charset=utf-8',
     }
   },
   

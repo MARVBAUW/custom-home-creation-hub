@@ -42,7 +42,7 @@ const SitemapXML: React.FC = () => {
       {/* Set XML content type in the head */}
       <Helmet>
         <title>Sitemap XML - Progineer</title>
-        <meta http-equiv="Content-Type" content="text/plain; charset=utf-8" />
+        <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
       </Helmet>
       
       {/* Display XML content in a pre tag for direct viewing */}
