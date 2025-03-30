@@ -7,7 +7,7 @@ import { adminRoutes } from './adminRoutes';
 import { workspaceRoutes } from './workspaceRoutes';
 
 export const routes: RouteObject[] = [
-  // Special route for sitemap.xml - redirects to the static XML file
+  // Special route for sitemap.xml - serves the static XML file directly
   {
     path: "/sitemap.xml",
     element: <Navigate to="/sitemap.xml" replace />
