@@ -10,7 +10,7 @@ export const routes: RouteObject[] = [
   // Special route for sitemap.xml - redirects to the static XML file
   {
     path: "/sitemap.xml",
-    element: <Navigate to={process.env.PUBLIC_URL + "/sitemap.xml"} replace />
+    element: <Navigate to="/sitemap.xml" replace />
   },
   
   // Redirect index route to home page
