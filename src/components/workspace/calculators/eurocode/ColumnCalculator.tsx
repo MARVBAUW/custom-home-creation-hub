@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -484,7 +483,7 @@ const ColumnCalculator = () => {
                 <ul className="text-sm space-y-1 text-gray-600 list-disc pl-4">
                   <li>Ce calculateur utilise une méthode simplifiée pour l'estimation des armatures</li>
                   <li>Le calcul de flexion biaxiale est approximatif</li>
-                  <li>Pour les poteaux très élancés (λ > 100), consultez un ingénieur structure</li>
+                  <li>Pour les poteaux très élancés (λ {'>'} 100), consultez un ingénieur structure</li>
                   <li>Les armatures transversales doivent être dimensionnées séparément</li>
                   <li>La vérification complète à l'ELS n'est pas incluse</li>
                 </ul>
