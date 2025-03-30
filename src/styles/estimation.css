@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Styles spécifiques pour les éléments de la page d'estimation */
 .estimation-form-container {
   background-color: #F5F2E7;

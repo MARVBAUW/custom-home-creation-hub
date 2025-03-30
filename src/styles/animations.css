@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Animations for different elements */
 .logo {
   height: 3em;

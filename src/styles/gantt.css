@@ -1,4 +1,8 @@
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Styles spécifiques pour le composant Gantt */
 .gantt-container {
   overflow-x: auto;
