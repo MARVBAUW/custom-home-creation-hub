@@ -24,9 +24,8 @@ export default defineConfig(({ mode }) => ({
     },
     middlewareMode: false,
     headers: {
-      '/sitemap.xml': {
-        'Content-Type': 'text/xml; charset=utf-8'
-      }
+      // Correct format for headers
+      'Content-Type': 'text/xml; charset=utf-8',
     }
   },
   
@@ -40,10 +39,11 @@ export default defineConfig(({ mode }) => ({
   // Configure proper MIME types for XML
   assetsInclude: ['**/*.xml'],
   
-  // Add specific headers for XML files
+  // Add specific headers for XML files in preview mode
   preview: {
     headers: {
-      '/sitemap.xml': 'Content-Type: text/xml; charset=utf-8'
+      // Correct format for headers
+      'Content-Type': 'text/xml; charset=utf-8',
     }
   }
 }))

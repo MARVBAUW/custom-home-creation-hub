@@ -35,19 +35,27 @@ ${publicRoutes
   .join('\n')}
 </urlset>`;
 
-    // Set the correct content type for XML and write the content
-    document.open('text/xml');
-    document.write(xmlString);
-    document.close();
+    // Force content type to be XML
+    document.contentType = 'text/xml';
     
-    // Force the content type header for XML
+    // Clear any existing content
+    document.documentElement.innerHTML = '';
+    
+    // Create the XML document structure
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+    
+    // Append the XML document to the DOM
+    document.appendChild(document.importNode(xmlDoc.documentElement, true));
+    
+    // Ensure the document is treated as XML
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Type';
     meta.content = 'text/xml; charset=utf-8';
     document.head.appendChild(meta);
   }, []);
 
-  // Return a minimal component - the actual rendering happens in useEffect
+  // Return null as we're manipulating the document directly
   return null;
 };
 

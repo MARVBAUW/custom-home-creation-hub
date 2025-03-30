@@ -9,7 +9,7 @@ Allow: /estimation
 Allow: /contact
 Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
-Allow: /parrainage-travaux
+Allow: /parrainage
 Allow: /faq
 
 # Main sitemap (with absolute URL)
