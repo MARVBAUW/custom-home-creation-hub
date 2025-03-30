@@ -52,32 +52,29 @@ ${publicRoutes.map(route => {
     setXmlContent(xmlString);
   }, []);
 
-  // Instead of manipulating the DOM directly, we'll use a more reliable approach
+  // Use a more reliable approach to serve XML content
   useEffect(() => {
-    // When component mounts, set content type header
+    if (!xmlContent) return;
+    
+    // Set the document's content type
     document.head.innerHTML = `
       <meta charset="UTF-8">
       <meta http-equiv="Content-Type" content="text/xml; charset=utf-8">
     `;
     
-    // Create a text/xml response - this forces the browser to interpret as XML
-    const blob = new Blob([xmlContent], { type: 'text/xml' });
-    const url = URL.createObjectURL(blob);
-    
-    // Replace the current window location with the XML blob
-    // This is a cleaner approach than manipulating the entire DOM
-    if (xmlContent) {
-      window.location.replace(url);
-    }
-    
-    // Clean up on unmount
-    return () => {
-      URL.revokeObjectURL(url);
-    };
+    // Instead of replacing the location, directly write to the document
+    // This is more reliable for XML content
+    document.open('text/xml');
+    document.write(xmlContent);
+    document.close();
   }, [xmlContent]);
 
   // Return null since we're handling everything in the effect
-  return null;
+  return (
+    <Helmet>
+      <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+    </Helmet>
+  );
 };
 
 export default SitemapXML;
