@@ -29,24 +29,24 @@ const SitemapXML: React.FC = () => {
     // Generate the XML content with proper XML escaping
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${publicRoutes.map(route => {
-    // Skip any routes that don't have a path
-    if (!route.path) return '';
-    
-    // Ensure the URL is properly escaped for XML
-    const fullUrl = escapeXml(`${baseUrl}${route.path}`);
-    
-    // Determine priority based on route depth
-    const pathSegments = route.path.split('/').filter(Boolean);
-    const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
-    
-    return `  <url>
+${publicRoutes.map(route => {
+  // Skip any routes that don't have a path
+  if (!route.path) return '';
+  
+  // Ensure the URL is properly escaped for XML
+  const fullUrl = escapeXml(`${baseUrl}${route.path}`);
+  
+  // Determine priority based on route depth
+  const pathSegments = route.path.split('/').filter(Boolean);
+  const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
+  
+  return `  <url>
     <loc>${fullUrl}</loc>
     <lastmod>2023-06-01</lastmod>
     <changefreq>${priority > 0.6 ? 'monthly' : 'yearly'}</changefreq>
     <priority>${priority.toFixed(1)}</priority>
   </url>`;
-  }).join('\n')}
+}).join('\n')}
 </urlset>`;
 
     setXmlContent(xmlString);
@@ -57,7 +57,7 @@ const SitemapXML: React.FC = () => {
       {/* Set XML content type in the head - this is crucial for proper XML serving */}
       <Helmet>
         <title>Sitemap XML - Progineer</title>
-        <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
+        <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
       </Helmet>
       
       {/* Render the XML content directly, not in a pre tag to avoid HTML escaping */}
