@@ -22,6 +22,7 @@ export default defineConfig(({ mode }) => ({
       // Allow serving files from the project root
       allow: ['.'],
     },
+    middlewareMode: false,
   },
   
   // Configure path aliases
@@ -46,6 +47,6 @@ export default defineConfig(({ mode }) => ({
           return 'assets/[name]-[hash][extname]';
         }
       }
-    }
+    },
   }
 }))

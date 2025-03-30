@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
@@ -63,29 +64,39 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // If we're accessing directly at /sitemap.xml path, render pure XML
+  // If we're accessing directly at /sitemap.xml path, serve pure XML with correct Content-Type
   if (currentPath === '/sitemap.xml') {
     return (
       <>
         <Helmet>
           <title>Sitemap XML</title>
-          <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+          <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
         </Helmet>
-        <pre style={{ display: 'none' }}>{xmlContent}</pre>
         <div 
           dangerouslySetInnerHTML={{ __html: xmlContent }} 
           style={{ 
-            fontFamily: 'monospace',
-            whiteSpace: 'pre',
-            display: 'block',
+            display: 'none' 
+          }} 
+        />
+        <textarea 
+          readOnly 
+          value={xmlContent} 
+          style={{
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
+            border: 'none',
             margin: 0,
-            padding: 20
-          }} 
+            padding: 0,
+            overflow: 'hidden',
+            resize: 'none',
+            background: 'white',
+            color: 'black',
+            fontFamily: 'monospace',
+            fontSize: '14px'
+          }}
         />
       </>
     );
