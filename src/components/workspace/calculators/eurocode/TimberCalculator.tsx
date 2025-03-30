@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InfoIcon, WoodIcon } from 'lucide-react';
+import { InfoIcon, Trees } from 'lucide-react';
 import { Separator } from "@/components/ui/separator";
 
 const TimberCalculator = () => {
@@ -208,7 +208,7 @@ const TimberCalculator = () => {
     <Card className="border-t-4 border-t-amber-600">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-amber-800">
-          <WoodIcon className="h-6 w-6" />
+          <Trees className="h-6 w-6" />
           Calcul de structure bois (EC5)
         </CardTitle>
         <CardDescription>
