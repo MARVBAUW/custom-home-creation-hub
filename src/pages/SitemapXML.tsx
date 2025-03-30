@@ -11,14 +11,14 @@ const SitemapXML: React.FC = () => {
     // Create XML string
     const baseUrl = 'https://progineer.fr';
     
-    // Generate the XML content - escape any ampersands with &amp;
+    // Generate the XML content with proper XML escaping
     const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   ${publicRoutes.map(route => {
     // Skip any routes that don't have a path
     if (!route.path) return '';
     
-    // Convert relative paths to full URLs and ensure ampersands are escaped
+    // Ensure the URL is properly escaped for XML
     const fullUrl = `${baseUrl}${route.path}`.replace(/&/g, '&amp;');
     
     // Determine priority based on route depth
