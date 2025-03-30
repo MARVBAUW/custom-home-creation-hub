@@ -64,45 +64,32 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // If we're accessing directly at /sitemap.xml path, serve pure XML with correct Content-Type
+  // Si nous accédons directement au chemin /sitemap.xml, servir en tant que XML pur
   if (currentPath === '/sitemap.xml') {
     return (
       <>
         <Helmet>
-          <title>Sitemap XML</title>
-          <meta httpEquiv="Content-Type" content="application/xml; charset=utf-8" />
+          <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
         </Helmet>
-        <div 
-          dangerouslySetInnerHTML={{ __html: xmlContent }} 
-          style={{ 
-            display: 'none' 
-          }} 
-        />
-        <textarea 
-          readOnly 
-          value={xmlContent} 
+        <pre 
           style={{
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
             height: '100%',
-            border: 'none',
             margin: 0,
             padding: 0,
-            overflow: 'hidden',
-            resize: 'none',
-            background: 'white',
-            color: 'black',
-            fontFamily: 'monospace',
-            fontSize: '14px'
+            border: 'none',
+            backgroundColor: 'white',
+            color: 'black'
           }}
-        />
+        >{xmlContent}</pre>
       </>
     );
   }
 
-  // Otherwise, show as a normal page with UI around it
+  // Autrement, afficher comme une page normale avec l'UI autour
   return (
     <>
       <Helmet>
