@@ -1,25 +1,23 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
+import { Helmet } from 'react-helmet';
 
 // This component generates a standard XML sitemap following conventional format
 const SitemapXML: React.FC = () => {
+  const [xmlContent, setXmlContent] = useState<string>('');
+  
   useEffect(() => {
+    // Generate the XML content immediately when the component mounts
+    generateSitemapXML();
+  }, []);
+
+  const generateSitemapXML = () => {
     // Get current date in ISO format for lastmod
     const currentDate = new Date().toISOString();
     const baseUrl = 'https://progineer.fr';
     
-    // Helper function to ensure proper XML entity encoding
-    const encodeXMLEntities = (text: string) => {
-      return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&apos;');
-    };
-    
-    // Create the XML document properly with DOMParser
+    // Create the XML document properly with DOM API
     const xmlDoc = document.implementation.createDocument(null, 'urlset', null);
     const urlsetElement = xmlDoc.documentElement;
     urlsetElement.setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -28,7 +26,7 @@ const SitemapXML: React.FC = () => {
     publicRoutes
       .filter(route => route.path && route.path !== '/sitemap.xml')
       .forEach(route => {
-        // Construct full URL and ensure it's properly encoded
+        // Construct full URL
         const fullUrl = `${baseUrl}${route.path}`;
         
         // Calculate priority based on route depth
@@ -41,7 +39,7 @@ const SitemapXML: React.FC = () => {
         
         // Add location
         const locElement = xmlDoc.createElement('loc');
-        locElement.textContent = encodeXMLEntities(fullUrl);
+        locElement.textContent = fullUrl;
         urlElement.appendChild(locElement);
         
         // Add lastmod
@@ -67,31 +65,31 @@ const SitemapXML: React.FC = () => {
     const serializer = new XMLSerializer();
     const xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(xmlDoc);
     
-    // Clear any existing content
-    document.documentElement.innerHTML = '';
-    document.body.innerHTML = '';
-    
-    // Set the content type with a meta tag
-    const meta = document.createElement('meta');
-    meta.httpEquiv = 'Content-Type';
-    meta.content = 'text/xml; charset=utf-8';
-    document.head.appendChild(meta);
-    
-    // Create a pre element to display the XML content properly
-    const pre = document.createElement('pre');
-    pre.textContent = xmlString;
-    document.body.appendChild(pre);
-    
-    // Set the XML document type for proper XML rendering
-    const doctype = document.implementation.createDocumentType('xml', '', '');
-    document.insertBefore(doctype, document.documentElement);
-    
-    // Log success message
-    console.log('Sitemap XML generated successfully');
-  }, []);
+    // Set the XML content in state
+    setXmlContent(xmlString);
+  };
 
-  // Return null as we're manipulating the document directly
-  return null;
+  // Create a style for displaying the XML content to make it readable
+  const preStyle = {
+    fontFamily: 'monospace',
+    whiteSpace: 'pre-wrap',
+    padding: '20px',
+    backgroundColor: '#f5f5f5',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    overflow: 'auto',
+    maxHeight: '80vh'
+  };
+
+  return (
+    <>
+      <Helmet>
+        <title>Sitemap XML - Progineer</title>
+        <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+      </Helmet>
+      <pre style={preStyle}>{xmlContent}</pre>
+    </>
+  );
 };
 
 export default SitemapXML;

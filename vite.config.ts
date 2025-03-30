@@ -22,10 +22,6 @@ export default defineConfig(({ mode }) => ({
       // Allow serving files from the project root
       allow: ['.'],
     },
-    middlewareMode: false,
-    headers: {
-      'Content-Type': 'text/xml; charset=utf-8'
-    }
   },
   
   // Configure path aliases
@@ -37,11 +33,4 @@ export default defineConfig(({ mode }) => ({
   
   // Configure proper MIME types for XML
   assetsInclude: ['**/*.xml'],
-  
-  // Add specific headers for XML files in preview mode
-  preview: {
-    headers: {
-      'Content-Type': 'text/xml; charset=utf-8'
-    }
-  }
 }))
