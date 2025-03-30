@@ -19,57 +19,75 @@ const SitemapXML: React.FC = () => {
         .replace(/'/g, '&apos;');
     };
     
-    // Create a properly formatted XML sitemap
-    const xmlString = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${publicRoutes
-  .filter(route => route.path && route.path !== '/sitemap.xml') // Filter out the XML sitemap itself and routes without paths
-  .map(route => {
-    // Construct full URL and ensure it's properly encoded
-    const fullUrl = encodeXMLEntities(`${baseUrl}${route.path}`);
+    // Create the XML document properly with DOMParser
+    const xmlDoc = document.implementation.createDocument(null, 'urlset', null);
+    const urlsetElement = xmlDoc.documentElement;
+    urlsetElement.setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
     
-    // Generate lastmod date (using current date for this example)
-    const lastMod = currentDate;
+    // Add each route as a URL element
+    publicRoutes
+      .filter(route => route.path && route.path !== '/sitemap.xml')
+      .forEach(route => {
+        // Construct full URL and ensure it's properly encoded
+        const fullUrl = `${baseUrl}${route.path}`;
+        
+        // Calculate priority based on route depth
+        const pathSegments = route.path.split('/').filter(Boolean);
+        const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
+        const changefreq = priority > 0.6 ? 'monthly' : 'yearly';
+        
+        // Create URL element
+        const urlElement = xmlDoc.createElement('url');
+        
+        // Add location
+        const locElement = xmlDoc.createElement('loc');
+        locElement.textContent = encodeXMLEntities(fullUrl);
+        urlElement.appendChild(locElement);
+        
+        // Add lastmod
+        const lastmodElement = xmlDoc.createElement('lastmod');
+        lastmodElement.textContent = currentDate;
+        urlElement.appendChild(lastmodElement);
+        
+        // Add changefreq
+        const changefreqElement = xmlDoc.createElement('changefreq');
+        changefreqElement.textContent = changefreq;
+        urlElement.appendChild(changefreqElement);
+        
+        // Add priority
+        const priorityElement = xmlDoc.createElement('priority');
+        priorityElement.textContent = priority.toFixed(1);
+        urlElement.appendChild(priorityElement);
+        
+        // Add URL to urlset
+        urlsetElement.appendChild(urlElement);
+      });
     
-    // Calculate priority based on route depth
-    const pathSegments = route.path.split('/').filter(Boolean);
-    const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
+    // Serialize to XML string
+    const serializer = new XMLSerializer();
+    const xmlString = '<?xml version="1.0" encoding="UTF-8"?>\n' + serializer.serializeToString(xmlDoc);
     
-    return `  <url>
-    <loc>${fullUrl}</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>${priority > 0.6 ? 'monthly' : 'yearly'}</changefreq>
-    <priority>${priority.toFixed(1)}</priority>
-  </url>`;
-  })
-  .join('\n')}
-</urlset>`;
-
     // Clear any existing content
     document.documentElement.innerHTML = '';
+    document.body.innerHTML = '';
     
-    // Create the XML document structure
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
-    
-    // Append the XML document to the DOM
-    document.appendChild(document.importNode(xmlDoc.documentElement, true));
-    
-    // Ensure the document is treated as XML by setting the appropriate content type meta tag
+    // Set the content type with a meta tag
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Type';
     meta.content = 'text/xml; charset=utf-8';
     document.head.appendChild(meta);
     
-    // Set the XML MIME type using the correct method for document creation
-    const xmlHeader = document.createProcessingInstruction('xml', 'version="1.0" encoding="UTF-8"');
-    document.insertBefore(xmlHeader, document.documentElement);
+    // Create a pre element to display the XML content properly
+    const pre = document.createElement('pre');
+    pre.textContent = xmlString;
+    document.body.appendChild(pre);
     
-    // Check for parsing errors
-    const parseError = xmlDoc.getElementsByTagName('parsererror');
-    if (parseError.length > 0) {
-      console.error("XML parsing error:", parseError[0].textContent);
-    }
+    // Set the XML document type for proper XML rendering
+    const doctype = document.implementation.createDocumentType('xml', '', '');
+    document.insertBefore(doctype, document.documentElement);
+    
+    // Log success message
+    console.log('Sitemap XML generated successfully');
   }, []);
 
   // Return null as we're manipulating the document directly
