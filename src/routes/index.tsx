@@ -7,8 +7,6 @@ import { adminRoutes } from './adminRoutes';
 import { workspaceRoutes } from './workspaceRoutes';
 
 export const routes: RouteObject[] = [
-  // Remove the special route for sitemap.xml as it's already handled by serving the static file from public/
-  
   // Redirect index route to home page
   {
     path: "/index",
