@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -12,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Plus, Search, UserPlus, FileText, Trash2, PenLine, AlertTriangle } from 'lucide-react';
 import { ClientProject, Profile, AdminProject } from '@/types/supabase';
 
-interface ClientProfile {
+interface ClientProfileDisplay {
   id: string;
   full_name: string;
   email: string;
@@ -26,7 +25,7 @@ interface ClientProjectManagerProps {
 
 const ClientProjectManager: React.FC<ClientProjectManagerProps> = ({ clientId }) => {
   const [projects, setProjects] = useState<ClientProject[]>([]);
-  const [client, setClient] = useState<ClientProfile | null>(null);
+  const [client, setClient] = useState<ClientProfileDisplay | null>(null);
   const [loading, setLoading] = useState(true);
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -47,7 +46,7 @@ const ClientProjectManager: React.FC<ClientProjectManagerProps> = ({ clientId })
             
           if (profileError) throw profileError;
           
-          // Transform profile data to ClientProfile type
+          // Transform profile data to ClientProfileDisplay type
           setClient({
             id: profileData.id,
             full_name: profileData.full_name || '',

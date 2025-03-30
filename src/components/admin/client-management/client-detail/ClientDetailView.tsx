@@ -99,7 +99,7 @@ const ClientDetailView: React.FC<ClientDetailViewProps> = ({ clientId }) => {
     name: client?.full_name || `${client?.firstName || ''} ${client?.lastName || ''}`,
     email: client?.email,
     phone: client?.phone,
-    company: client?.company,
+    company: client?.company_name || client?.company,
     address: client?.address || `${client?.address || ''}, ${client?.city || ''}, ${client?.postalCode || ''}, ${client?.country || ''}`,
     registrationDate: client?.created_at || client?.createdAt,
     projectType: "residential", // Default value since it's required

@@ -9,6 +9,62 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_projects: {
+        Row: {
+          client_id: string
+          client_project_id: string | null
+          construction_type: string
+          created_at: string | null
+          description: string | null
+          estimated_budget: number | null
+          id: string
+          location: string | null
+          project_title: string
+          project_type: string
+          status: string | null
+          surface: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_id: string
+          client_project_id?: string | null
+          construction_type: string
+          created_at?: string | null
+          description?: string | null
+          estimated_budget?: number | null
+          id?: string
+          location?: string | null
+          project_title: string
+          project_type: string
+          status?: string | null
+          surface?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_id?: string
+          client_project_id?: string | null
+          construction_type?: string
+          created_at?: string | null
+          description?: string | null
+          estimated_budget?: number | null
+          id?: string
+          location?: string | null
+          project_title?: string
+          project_type?: string
+          status?: string | null
+          surface?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_projects_client_project_id_fkey"
+            columns: ["client_project_id"]
+            isOneToOne: false
+            referencedRelation: "client_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       backlinks_logs: {
         Row: {
           backlinks_generated: number | null
@@ -39,25 +95,94 @@ export type Database = {
         }
         Relationships: []
       }
+      client_projects: {
+        Row: {
+          budget: number | null
+          construction_type: string
+          created_at: string | null
+          description: string
+          has_basement: boolean | null
+          has_garage: boolean | null
+          has_pool: boolean | null
+          has_solar_panels: boolean | null
+          id: string
+          location: string
+          project_type: string
+          status: string | null
+          surface: number | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          budget?: number | null
+          construction_type: string
+          created_at?: string | null
+          description: string
+          has_basement?: boolean | null
+          has_garage?: boolean | null
+          has_pool?: boolean | null
+          has_solar_panels?: boolean | null
+          id?: string
+          location: string
+          project_type: string
+          status?: string | null
+          surface?: number | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          budget?: number | null
+          construction_type?: string
+          created_at?: string | null
+          description?: string
+          has_basement?: boolean | null
+          has_garage?: boolean | null
+          has_pool?: boolean | null
+          has_solar_panels?: boolean | null
+          id?: string
+          location?: string
+          project_type?: string
+          status?: string | null
+          surface?: number | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          address: string | null
           avatar_url: string | null
+          company_name: string | null
+          email: string | null
           full_name: string | null
           id: string
+          phone: string | null
           updated_at: string | null
           username: string | null
         }
         Insert: {
+          address?: string | null
           avatar_url?: string | null
+          company_name?: string | null
+          email?: string | null
           full_name?: string | null
           id: string
+          phone?: string | null
           updated_at?: string | null
           username?: string | null
         }
         Update: {
+          address?: string | null
           avatar_url?: string | null
+          company_name?: string | null
+          email?: string | null
           full_name?: string | null
           id?: string
+          phone?: string | null
           updated_at?: string | null
           username?: string | null
         }
