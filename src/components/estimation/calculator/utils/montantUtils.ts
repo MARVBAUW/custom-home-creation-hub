@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for calculating costs in the estimation calculator
  */
@@ -465,3 +464,15 @@ export function calculateWallTilingCost(tileType: string, surface: number): numb
   return costPerM2 * estimatedWallTileArea;
 }
 
+/**
+ * Calculate pool heating cost based on area
+ */
+export function calculatePoolHeatingCost(area: number): number {
+  // Base cost for pool heating is approximately 6000€ for a standard pool
+  const baseHeatingCost = 6000;
+  
+  // Adjust cost based on pool size (larger pools need more powerful heating)
+  const sizeFactor = Math.max(1, area / 30); // 30m² is considered a standard pool
+  
+  return Math.round(baseHeatingCost * sizeFactor);
+}
