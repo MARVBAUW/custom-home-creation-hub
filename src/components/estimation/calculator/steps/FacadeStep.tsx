@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { FormData } from '../types';
-import { calculateFacadeCost, calculateNewMontantT } from '../utils/montantUtils';
+import { calculateDetailedFacadeCost, calculateNewMontantT } from '../utils/montantUtils';
 
 interface FacadeStepProps {
   formData: FormData;
@@ -135,8 +135,8 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
       return;
     }
     
-    // Calculate facade cost
-    const facadeCost = calculateFacadeCost(
+    // Calculate facade cost - using the renamed function
+    const facadeCost = calculateDetailedFacadeCost(
       formData,
       selectedFacades.includes('pierre') ? stonePercentage : '0',
       selectedFacades.includes('enduit') ? plasterPercentage : '0',

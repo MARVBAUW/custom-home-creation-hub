@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FormData } from '../../types';
 import { 
   calculateRoofingCost, 
-  calculateFacadeCost, 
+  calculateDetailedFacadeCost, 
   calculateWindowsCost,
   calculateInsulationCost
 } from '../../utils/montantUtils';
@@ -15,7 +15,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      const roofCost = calculateRoofingCost(formData, couvertureData.roofingType);
+      const roofCost = calculateRoofingCost(couvertureData.roofingType, formData.surface);
       
       updateFormData({
         ...couvertureData,
@@ -35,7 +35,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      const insulationCost = calculateInsulationCost(formData, isolationData.insulationType);
+      const insulationCost = calculateInsulationCost(isolationData.insulationType, formData.surface);
       
       updateFormData({
         ...isolationData,
@@ -62,7 +62,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      const facadeCost = calculateFacadeCost(
+      const facadeCost = calculateDetailedFacadeCost(
         formData,
         facadeData.stonePercentage,
         facadeData.plasterPercentage,
@@ -95,10 +95,8 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     
     try {
       const windowsCost = calculateWindowsCost(
-        formData,
         menuiseriesData.windowType,
-        menuiseriesData.windowRenovationArea,
-        menuiseriesData.windowNewArea
+        Number(menuiseriesData.windowNewArea) + Number(menuiseriesData.windowRenovationArea)
       );
       
       updateFormData({

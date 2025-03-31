@@ -1,3 +1,4 @@
+
 // Import the ensureNumber function from typeConversions to re-export it for compatibility
 import { ensureNumber } from './typeConversions';
 
@@ -167,7 +168,7 @@ export const calculatePaintingCost = (options: any, area: number): number => {
 };
 
 /**
- * Calculate facade renovation costs
+ * Calculate facade renovation costs (basic version)
  */
 export const calculateFacadeCost = (type: string, area: number): number => {
   const costPerSquareMeter = getFacadeCostPerSquareMeter(type);
@@ -474,9 +475,9 @@ const getRoofingCostPerSquareMeter = (type: string): number => {
 };
 
 /**
- * Calculate facade costs
+ * Calculate detailed facade costs (enhanced version with percentages)
  */
-export const calculateFacadeCost = (
+export const calculateDetailedFacadeCost = (
   formData: any,
   stonePercentage: number | string,
   plasterPercentage: number | string,
@@ -551,3 +552,4 @@ export const calculateNewMontantT = (currentTotal: number | undefined, additiona
 
 // Re-export ensureNumber for backward compatibility
 export { ensureNumber };
+
