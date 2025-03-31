@@ -1,65 +1,87 @@
 
-export type ProjectPhase = 'feasibility' | 'dce' | 'act' | 'exe' | 'reception' | 'delivery';
-
-export type PhaseDates = {
+export interface DateRange {
   startDate: string;
   endDate: string;
-};
+}
 
-export type ProjectDates = {
-  [phase in ProjectPhase]?: PhaseDates;
-} & {
-  global: PhaseDates;
-};
+export interface ProjectDates {
+  global: DateRange;
+  design?: DateRange;
+  permits?: DateRange;
+  construction?: DateRange;
+  phases?: {
+    [key: string]: DateRange;
+  };
+}
 
-export type TradeType = 
-  | 'go' | 'vrd' | 'framework' | 'cladding' | 'roofing' | 'joinery' 
-  | 'locksmithing' | 'flooring' | 'isothermal' | 'plastering' 
-  | 'painting' | 'demolition' | 'plumbing' | 'foodCold' | 'cvc' 
-  | 'arrangement' | 'sprinklage' | 'ria' | 'ssi' | 'electricity' 
-  | 'interiorJoinery' | 'sectionalDoor' | 'levelingDock' | 'fastDoor' 
-  | 'specialFoundations' | 'automaticDoor' | 'flexibleFloor' | 'tiling'
-  | 'metalwork' | 'railings' | 'elevator' | 'acoustics' | 'facades'
-  | 'greenSpaces' | 'security' | 'signage' | 'movableFurniture' | 'kitchenEquipment'
-  | 'audioVisual' | 'industrialEquipment' | 'cleaningEquipment' | 'wasteManagement'
-  | 'waterTreatment' | 'telecommunications';
+export interface TeamMembers {
+  projectManager?: string;
+  technicalDirector?: string;
+  draftsman?: string;
+  workSupervisor?: string;
+  adminAssistant?: string;
+  divisionDirector?: string;
+}
+
+export interface ProjectPhases {
+  feasibility: boolean;
+  dce: boolean;
+  act: boolean;
+  exe: boolean;
+  reception: boolean;
+  delivery: boolean;
+}
+
+export interface Company {
+  name: string;
+  contactName?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  role?: string;
+  tasks?: string[];
+}
+
+export interface SiteReport {
+  id: string;
+  date: string;
+  title: string;
+  content: string;
+  author: string;
+  companies: string[];
+  photos?: string[];
+  createdAt: string;
+}
 
 export interface ProjectDetails {
-  // Required fields
+  id: string;
   projectName: string;
-  fileNumber: string;
-  workAmount: string;
-  projectOwner: string;
   projectType: string;
-  adminAuthorization: string;
-  automaticDates: boolean;
-  dates: ProjectDates;
-  phases: {[key in ProjectPhase]: boolean};
-  team: {
-    projectManager?: string;
-    technicalDirector?: string;
-    draftsman?: string;
-    workSupervisor?: string;
-    adminAssistant?: string;
-    divisionDirector?: string;
-  };
-  execution: {
-    weeklyVisits?: number;
-    projectDistance?: number;
-    meetingDay?: string;
-    securityCommission?: string;
-    controlOffice?: string;
-    spsCoordinator?: string;
-  };
-  technicalOffices: {[key: string]: boolean};
-  trades: {[key: string]: boolean};
-  
-  // Additional fields needed for projectStorage.ts
-  id?: string;
-  description?: string;
+  fileNumber?: string;
+  projectOwner?: string;
   location?: string;
-  clientId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  status?: string;
+  workAmount?: number;
+  dates?: ProjectDates;
+  team?: TeamMembers;
+  phases: ProjectPhases;
+  automaticDates?: boolean;
+  adminAuthorization?: string;
+  companies?: Company[];
+  siteReports?: SiteReport[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ProjectFormData {
+  projectName: string;
+  projectType: string;
+  fileNumber?: string;
+  projectOwner?: string;
+  location?: string;
+  workAmount?: number;
+  team?: TeamMembers;
+  phases: ProjectPhases;
+  automaticDates?: boolean;
+  adminAuthorization?: string;
+  dates?: ProjectDates;
 }

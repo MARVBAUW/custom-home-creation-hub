@@ -4,13 +4,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Edit, ArrowLeft, Save, Calendar, FileText, Settings, Users, Truck, Building } from 'lucide-react';
+import { Edit, ArrowLeft, Calendar, FileText, Settings, Users, Truck, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { loadProjectById } from '@/utils/projectStorage';
 import { ProjectDetails } from '@/types/project';
 import ProjectPhases from './ProjectPhases';
 import ProjectTools from './ProjectTools';
 import ProjectGanttView from './ProjectGanttView';
+import { formatDateFrench } from '@/utils/dateUtils';
 
 const ProjectDetail = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -240,15 +241,50 @@ const ProjectDetail = () => {
         <TabsContent value="companies" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Entreprises</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-6">
-                <p className="text-gray-500">Aucune entreprise n'est rattachée à ce projet pour le moment.</p>
-                <Button className="mt-4 bg-khaki-600 hover:bg-khaki-700 text-white">
+              <div className="flex justify-between items-center">
+                <CardTitle>Entreprises</CardTitle>
+                <Button className="bg-khaki-600 hover:bg-khaki-700 text-white">
                   Ajouter une entreprise
                 </Button>
               </div>
+            </CardHeader>
+            <CardContent>
+              {project.companies && project.companies.length > 0 ? (
+                <div className="space-y-4">
+                  {project.companies.map((company, index) => (
+                    <div key={index} className="border rounded-lg p-4 bg-gray-50">
+                      <div className="flex justify-between mb-2">
+                        <h3 className="font-medium">{company.name}</h3>
+                        <span className="bg-khaki-100 text-khaki-800 text-xs px-2 py-1 rounded">
+                          {company.role || "Prestataire"}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="text-gray-500">Contact : </span>
+                          {company.contactName || "Non défini"}
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Téléphone : </span>
+                          {company.phone || "Non défini"}
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Email : </span>
+                          {company.email || "Non défini"}
+                        </div>
+                        <div>
+                          <span className="text-gray-500">Adresse : </span>
+                          {company.address || "Non définie"}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-6">
+                  <p className="text-gray-500">Aucune entreprise n'est rattachée à ce projet pour le moment.</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -279,11 +315,11 @@ const ProjectDetail = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <span className="text-sm font-medium text-gray-500">Date de début globale</span>
-                      <p>{project.dates?.global?.startDate ? new Date(project.dates.global.startDate).toLocaleDateString() : "Non définie"}</p>
+                      <p>{project.dates?.global?.startDate ? formatDateFrench(new Date(project.dates.global.startDate)) : "Non définie"}</p>
                     </div>
                     <div>
                       <span className="text-sm font-medium text-gray-500">Date de fin globale</span>
-                      <p>{project.dates?.global?.endDate ? new Date(project.dates.global.endDate).toLocaleDateString() : "Non définie"}</p>
+                      <p>{project.dates?.global?.endDate ? formatDateFrench(new Date(project.dates.global.endDate)) : "Non définie"}</p>
                     </div>
                   </div>
                 </div>

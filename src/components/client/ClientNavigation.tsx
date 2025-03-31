@@ -8,7 +8,6 @@ import {
   Clock, 
   User, 
   MessageSquare, 
-  CreditCard, 
   Settings,
   Users,
   FileSpreadsheet,
@@ -121,7 +120,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
   );
 
   return (
-    <div className="h-full flex flex-col">
+    <aside className="h-full flex flex-col">
       <div className="flex-1">
         <Link to="/" className="flex items-center py-4 px-4 mb-4">
           <span className="text-xl font-semibold text-khaki-800">Progineer</span>
@@ -174,7 +173,7 @@ const ClientNavigation = ({ isAdminMode = false }: ClientNavigationProps) => {
           className="w-full justify-start text-gray-700 hover:text-red-700 hover:bg-red-50"
         />
       </div>
-    </div>
+    </aside>
   );
 };
 
