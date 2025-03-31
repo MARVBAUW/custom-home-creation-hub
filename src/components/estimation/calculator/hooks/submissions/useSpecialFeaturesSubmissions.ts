@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { EstimationFormData as FormData } from '../../types';
 
 export const useSpecialFeaturesSubmissions = (
   formData: FormData,
@@ -42,9 +42,9 @@ export const useSpecialFeaturesSubmissions = (
       outdoorKitchen: data.outdoorKitchen,
     };
     
-    // Only include landscapingBudget if it exists in FormData interface
-    if ('landscapingBudget' in data) {
-      (updatedData as any).landscapingBudget = data.landscapingBudget;
+    // Only include landscapingBudget if it exists
+    if (data.landscapingBudget !== undefined) {
+      updatedData.landscapingBudget = data.landscapingBudget;
     }
     
     // Update formData
@@ -61,9 +61,9 @@ export const useSpecialFeaturesSubmissions = (
       exteriorFeatures: data.exteriorFeatures,
     };
     
-    // Only include terrace if it exists in FormData interface
-    if ('terrace' in data) {
-      (updatedData as any).terrace = data.terrace;
+    // Only include terrace if it exists
+    if (data.terrace !== undefined) {
+      updatedData.terrace = data.terrace;
     }
     
     // Update formData

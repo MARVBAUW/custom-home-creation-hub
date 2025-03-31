@@ -33,7 +33,7 @@ export interface AutoTable {
 // Extend the jsPDF typing to include autoTable plugin
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: UserOptions) => any;
+    autoTable: AutoTable;
     internal: JsPDFInternal;
   }
 }

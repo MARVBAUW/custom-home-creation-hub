@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { EstimationFormData as FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
 
 export const useClientInfoSubmissions = (

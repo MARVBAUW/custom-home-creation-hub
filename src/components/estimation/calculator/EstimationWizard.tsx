@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ClientTypeForm, ProjectDetailsForm, TerrainForm, ConstructionDetailsForm, RoomsDetailsForm, ResultsForm } from './FormSteps';
 import ProgressBar from './ProgressBar';
 import FormNavigation from './FormNavigation';
-import { FormData } from './types';
+import { EstimationFormData as FormData } from './types';
 import { calculateEstimation } from './calculationUtils';
 
 // Initial form data
@@ -15,7 +15,7 @@ const initialFormData: FormData = {
   landType: '',
   constructionType: '',
   constructionStyle: '',
-  levels: '', // Changed from storyCount to levels
+  levels: '', // This is now valid in our FormData interface
   roofingType: '',
   insulationType: '',
   heatingType: '',

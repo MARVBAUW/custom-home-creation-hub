@@ -1,8 +1,49 @@
 
 import { BaseSyntheticEvent } from 'react';
 
-// Define the comprehensive FormData type with all possible properties
-export interface FormData {
+// Define the EstimationResponseData interface that's missing
+export interface ConstructionCosts {
+  structuralWork: number;
+  finishingWork: number;
+  technicalLots: number;
+  externalWorks: number;
+  total: number;
+}
+
+export interface FeeCosts {
+  architectFees: number;
+  engineeringFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  total: number;
+}
+
+export interface OtherCosts {
+  insurance: number;
+  contingency: number;
+  taxes: number;
+  miscellaneous: number;
+  total: number;
+}
+
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
+}
+
+export interface EstimationResponseData {
+  constructionCosts: ConstructionCosts;
+  fees: FeeCosts;
+  otherCosts: OtherCosts;
+  totalAmount: number;
+  timeline: EstimationTimeline;
+}
+
+// Rename from FormData to EstimationFormData to avoid conflict with HTML's FormData
+export interface EstimationFormData {
   // Client & Project Information
   clientType?: string;
   projectType?: string;
@@ -162,6 +203,9 @@ export interface FormData {
   // Any additional custom fields
   [key: string]: any;
 }
+
+// Create an alias for backward compatibility
+export type FormData = EstimationFormData;
 
 // Export other types from the folder
 export * from './formTypes';

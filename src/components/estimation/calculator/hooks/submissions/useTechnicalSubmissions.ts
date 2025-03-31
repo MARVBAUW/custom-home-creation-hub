@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { EstimationFormData as FormData } from '../../types';
 
 export const useTechnicalSubmissions = (
   updateFormData: (data: Partial<FormData>) => void,

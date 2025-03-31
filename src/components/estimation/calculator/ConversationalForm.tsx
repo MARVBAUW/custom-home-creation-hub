@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
-import { FormData } from './types';
+import { EstimationFormData as FormData } from './types';
 import { useEstimationCalculator } from './useEstimationCalculator';
 import { useToast } from '@/hooks/use-toast';
 
@@ -43,7 +43,7 @@ const ConversationalForm: React.FC = () => {
   // Gestion de la soumission du type de client
   const onClientTypeSubmit = (data: {clientType: string}) => {
     if (data && data.clientType) {
-      updateFormData({ ...data });
+      updateFormData({ clientType: data.clientType });
       // Basculer vers le formulaire structuré si l'utilisateur a choisi un type de client
       if (activeTab === 'conversational') {
         setTimeout(() => {

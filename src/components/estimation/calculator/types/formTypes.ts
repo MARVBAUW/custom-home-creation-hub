@@ -1,5 +1,5 @@
 
-import { FormData, EstimationResponseData } from './index';
+import { EstimationFormData as FormData, EstimationResponseData } from './index';
 
 export interface BaseFormProps {
   formData: FormData;

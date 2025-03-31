@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { EstimationFormData as FormData } from '../../types';
 
 export interface Message {
   id: string;

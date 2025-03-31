@@ -4,8 +4,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
-import { Message, ConversationalProps } from './types/conversationalTypes';
-import { FormData } from './types';
+import { Message } from './types/conversationalTypes';
+import { EstimationFormData as FormData } from './types';
+
+interface ConversationalProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  onClientTypeSubmit: (data: {clientType: string}) => void;
+  goToStep: (step: number) => void;
+}
 
 const ConversationalEstimator: React.FC<ConversationalProps> = ({
   onUserInput,
@@ -69,12 +77,10 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     // Detect client type selection
     if (input.toLowerCase().includes('particulier')) {
       responseContent = 'Je note que vous êtes un particulier. Quel type de projet souhaitez-vous réaliser ?';
-      updateFormData({ clientType: 'individual' });
       onClientTypeSubmit({ clientType: 'individual' });
     } 
     else if (input.toLowerCase().includes('professionnel')) {
       responseContent = 'Je note que vous êtes un professionnel. Quel type de projet souhaitez-vous réaliser ?';
-      updateFormData({ clientType: 'professional' });
       onClientTypeSubmit({ clientType: 'professional' });
     }
     // Detect project type

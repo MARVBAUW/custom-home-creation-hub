@@ -1,4 +1,6 @@
 
+import { EstimationFormData as FormData } from './index';
+
 export interface Message {
   id: string;
   type: 'system' | 'user' | 'assistant' | 'loading';

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormData } from '../../types';
+import { EstimationFormData as FormData } from '../../types';
 import { ExtractedInfo, analyzeUserIntent } from '../../utils/conversationalUtils';
 import { ensureNumber } from '../../utils/typeConversions';
 
