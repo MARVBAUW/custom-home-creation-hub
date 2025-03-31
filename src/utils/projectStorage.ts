@@ -103,7 +103,30 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
         description: data.description || '',
         location: data.location || '',
         createdAt: data.created_at,
-        status: data.status || 'active'
+        status: data.status || 'active',
+        // Ajout des champs obligatoires avec des valeurs par défaut
+        fileNumber: '',
+        projectOwner: '',
+        adminAuthorization: '',
+        automaticDates: true,
+        dates: {
+          global: {
+            startDate: '',
+            endDate: ''
+          }
+        },
+        phases: {
+          feasibility: false,
+          dce: false,
+          act: false,
+          exe: false,
+          reception: false,
+          delivery: false
+        },
+        team: {},
+        execution: {},
+        technicalOffices: {},
+        trades: {}
       };
     }
   } catch (error) {
@@ -115,7 +138,36 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
   try {
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
     const project = projects.find((p: any) => p.id === projectId);
-    return project || null;
+    if (project) {
+      // Assurer que le projet contient tous les champs requis
+      const completeProject: ProjectDetails = {
+        ...project,
+        fileNumber: project.fileNumber || '',
+        projectOwner: project.projectOwner || '',
+        adminAuthorization: project.adminAuthorization || '',
+        automaticDates: project.automaticDates !== undefined ? project.automaticDates : true,
+        dates: project.dates || {
+          global: {
+            startDate: '',
+            endDate: ''
+          }
+        },
+        phases: project.phases || {
+          feasibility: false,
+          dce: false,
+          act: false,
+          exe: false,
+          reception: false,
+          delivery: false
+        },
+        team: project.team || {},
+        execution: project.execution || {},
+        technicalOffices: project.technicalOffices || {},
+        trades: project.trades || {}
+      };
+      return completeProject;
+    }
+    return null;
   } catch (error) {
     console.error('Erreur lors du chargement du projet depuis localStorage:', error);
     return null;
@@ -143,7 +195,30 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
         description: item.description || '',
         location: item.location || '',
         createdAt: item.created_at,
-        status: item.status || 'active'
+        status: item.status || 'active',
+        // Ajout des champs obligatoires avec des valeurs par défaut
+        fileNumber: '',
+        projectOwner: '',
+        adminAuthorization: '',
+        automaticDates: true,
+        dates: {
+          global: {
+            startDate: '',
+            endDate: ''
+          }
+        },
+        phases: {
+          feasibility: false,
+          dce: false,
+          act: false,
+          exe: false,
+          reception: false,
+          delivery: false
+        },
+        team: {},
+        execution: {},
+        technicalOffices: {},
+        trades: {}
       }));
     }
   } catch (error) {
@@ -154,7 +229,31 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
   // Fallback sur localStorage
   try {
     const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    return projects;
+    return projects.map((project: any) => ({
+      ...project,
+      fileNumber: project.fileNumber || '',
+      projectOwner: project.projectOwner || '',
+      adminAuthorization: project.adminAuthorization || '',
+      automaticDates: project.automaticDates !== undefined ? project.automaticDates : true,
+      dates: project.dates || {
+        global: {
+          startDate: '',
+          endDate: ''
+        }
+      },
+      phases: project.phases || {
+        feasibility: false,
+        dce: false,
+        act: false,
+        exe: false,
+        reception: false,
+        delivery: false
+      },
+      team: project.team || {},
+      execution: project.execution || {},
+      technicalOffices: project.technicalOffices || {},
+      trades: project.trades || {}
+    }));
   } catch (error) {
     console.error('Erreur lors du chargement des projets depuis localStorage:', error);
     return [];

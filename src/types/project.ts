@@ -25,6 +25,7 @@ export type TradeType =
   | 'waterTreatment' | 'telecommunications';
 
 export interface ProjectDetails {
+  // Required fields
   projectName: string;
   fileNumber: string;
   workAmount: string;
@@ -52,4 +53,13 @@ export interface ProjectDetails {
   };
   technicalOffices: {[key: string]: boolean};
   trades: {[key: string]: boolean};
+  
+  // Additional fields needed for projectStorage.ts
+  id?: string;
+  description?: string;
+  location?: string;
+  clientId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  status?: string;
 }
