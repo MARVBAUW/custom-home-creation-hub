@@ -1,7 +1,7 @@
 
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
-import { calculateElectricalCost, calculatePlumbingCost } from '../../utils/montantUtils';
+import { calculateElectricalCost, calculatePlumbingCost, calculatePlasteringCost } from '../../utils/montantUtils';
 
 export const useTechnicalSubmissions = () => {
   // Function to handle electricite submission
@@ -26,8 +26,20 @@ export const useTechnicalSubmissions = () => {
     };
   };
 
+  // Function to handle platrerie submission
+  const handlePlatrerieSubmit = (data: { plasteringType: string }, formData: FormData) => {
+    const surface = ensureNumber(formData.surface, 0);
+    const additionalCost = calculatePlasteringCost(data.plasteringType, surface);
+    
+    return {
+      plasteringType: data.plasteringType,
+      montantT: (formData.montantT || 0) + additionalCost
+    };
+  };
+
   return {
     handleElectriciteSubmit,
     handlePlomberieSubmit,
+    handlePlatrerieSubmit,
   };
 };

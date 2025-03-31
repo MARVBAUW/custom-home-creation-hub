@@ -1,4 +1,3 @@
-
 // Import the ensureNumber function from typeConversions to re-export it for compatibility
 import { ensureNumber } from './typeConversions';
 
