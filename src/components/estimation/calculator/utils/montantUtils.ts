@@ -408,3 +408,60 @@ export function calculatePlasteringCost(plasteringType: string, surface: number)
   return costPerM2 * surface;
 }
 
+/**
+ * Calculate floor tiling cost based on type, percentage, and surface area
+ */
+export function calculateFloorTilingCost(tileType: string, percentage: number, surface: number): number {
+  // Calculate the area to be tiled
+  const tileArea = (percentage / 100) * surface;
+  
+  // Determine cost per square meter based on tile type
+  let costPerM2 = 0;
+  switch (tileType) {
+    case 'standard':
+      costPerM2 = 70; // Standard tiles
+      break;
+    case 'medium':
+      costPerM2 = 100; // Medium quality tiles
+      break;
+    case 'premium':
+      costPerM2 = 150; // Premium quality tiles
+      break;
+    case 'non_concerne':
+    default:
+      costPerM2 = 0; // No tiling
+      break;
+  }
+  
+  // Calculate total cost including installation
+  return costPerM2 * tileArea;
+}
+
+/**
+ * Calculate wall tiling cost based on type and surface area
+ */
+export function calculateWallTilingCost(tileType: string, surface: number): number {
+  // We usually tile about 20% of walls (bathrooms, kitchen)
+  const estimatedWallTileArea = surface * 0.2;
+  
+  // Determine cost per square meter based on tile type
+  let costPerM2 = 0;
+  switch (tileType) {
+    case 'standard':
+      costPerM2 = 65; // Standard wall tiles
+      break;
+    case 'medium':
+      costPerM2 = 90; // Medium quality wall tiles
+      break;
+    case 'premium':
+      costPerM2 = 130; // Premium quality wall tiles
+      break;
+    default:
+      costPerM2 = 0; // No wall tiling
+      break;
+  }
+  
+  // Calculate total cost including installation
+  return costPerM2 * estimatedWallTileArea;
+}
+
