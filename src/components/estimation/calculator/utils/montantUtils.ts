@@ -133,17 +133,27 @@ export const calculatePlumbingCost = (formData: FormData, type: string): number 
   return surface * baseCost;
 };
 
-export const calculateHeatingCost = (formData: FormData, type: string): number => {
-  const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
+export const calculateHeatingCost = (type: string, surface: number): number => {
   let baseCost = 90; // cost per m²
   
-  if (type === 'heatPump') {
-    baseCost = 150;
-  } else if (type === 'floorHeating') {
-    baseCost = 180;
+  if (type === 'eco') {
+    baseCost = 120;
+  } else if (type === 'economic') {
+    baseCost = 70;
   } else if (type === 'standard') {
     baseCost = 90;
   }
+  
+  return surface * baseCost;
+};
+
+export const calculateAirConditioningCost = (hasAirConditioning: boolean, surface: number): number => {
+  if (!hasAirConditioning) {
+    return 0;
+  }
+  
+  // Base cost per square meter for air conditioning
+  const baseCost = 150;
   
   return surface * baseCost;
 };
@@ -508,13 +518,85 @@ export const calculateStructuralFeatureCost = (
 };
 
 // Utility function to convert values to numbers safely
-export const ensureNumber = (value: any): number => {
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
   if (typeof value === 'number') {
     return value;
   }
   if (typeof value === 'string') {
     const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
+    return isNaN(parsed) ? defaultValue : parsed;
   }
-  return 0;
+  return defaultValue;
+};
+
+// Add missing floor tiling cost calculation function
+export const calculateFloorTilingCost = (type: string, percentage: number, surface: number): number => {
+  let baseCost = 80; // cost per m²
+  
+  if (type === 'medium') {
+    baseCost = 120;
+  } else if (type === 'premium') {
+    baseCost = 180;
+  } else if (type === 'standard') {
+    baseCost = 80;
+  }
+  
+  // Calculate area based on percentage
+  const area = surface * (percentage / 100);
+  
+  return area * baseCost;
+};
+
+// Add missing wall tiling cost calculation function
+export const calculateWallTilingCost = (type: string, surface: number): number => {
+  let baseCost = 90; // cost per m²
+  
+  if (type === 'medium') {
+    baseCost = 130;
+  } else if (type === 'premium') {
+    baseCost = 200;
+  } else if (type === 'standard') {
+    baseCost = 90;
+  }
+  
+  // Assume bathroom and kitchen walls are about 20% of total surface
+  const wallArea = surface * 0.2;
+  
+  return wallArea * baseCost;
+};
+
+// Add missing interior carpentry cost calculation function
+export const calculateInteriorCarpenteryCost = (type: string, surface: number): number => {
+  let baseCost = 150; // cost per m²
+  
+  if (type === 'medium') {
+    baseCost = 200;
+  } else if (type === 'premium') {
+    baseCost = 300;
+  } else if (type === 'standard') {
+    baseCost = 150;
+  }
+  
+  // Assume doors and interior carpentry represent about 15% of total surface
+  const carpentryArea = surface * 0.15;
+  
+  return carpentryArea * baseCost;
+};
+
+// Add missing plastering cost calculation function
+export const calculatePlasteringCost = (type: string, surface: number): number => {
+  let baseCost = 40; // cost per m²
+  
+  if (type === 'medium') {
+    baseCost = 55;
+  } else if (type === 'premium') {
+    baseCost = 70;
+  } else if (type === 'standard') {
+    baseCost = 40;
+  }
+  
+  // Assume walls and ceilings represent about 2.5 times the floor area
+  const plasterArea = surface * 2.5;
+  
+  return plasterArea * baseCost;
 };
