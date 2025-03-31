@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { formatCurrency } from '@/utils/formatters';
+import { sendEstimationEmail } from './services/emailService';
 
 interface EstimationPDFExportProps {
   formData: FormData;
@@ -119,7 +120,9 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
   };
   
   const handleSendByEmail = async () => {
-    if (!estimationResult || !formData.contactEmail) {
+    const userEmail = formData.email || formData.contactEmail;
+    
+    if (!estimationResult || !userEmail) {
       toast({
         title: "Erreur",
         description: "Email manquant ou aucune estimation disponible",
@@ -129,21 +132,29 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     }
     
     try {
-      // Ici, nous ajouterions le code pour envoyer l'email via une Edge Function
-      // Pour l'instant, nous simulons l'envoi
-      toast({
-        title: "Email envoyé",
-        description: `L'estimation a été envoyée à ${formData.contactEmail}`,
-      });
+      const result = await sendEstimationEmail(
+        userEmail,
+        formData,
+        estimationResult
+      );
       
-      if (onEmailSent) {
-        onEmailSent();
+      if (result.success) {
+        toast({
+          title: "Email envoyé",
+          description: `L'estimation a été envoyée à ${userEmail}`,
+        });
+        
+        if (onEmailSent) {
+          onEmailSent();
+        }
+      } else {
+        throw new Error(result.message);
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi de l'email:", error);
       toast({
         title: "Erreur",
-        description: "Impossible d'envoyer l'email",
+        description: "Impossible d'envoyer l'email: " + (error instanceof Error ? error.message : "Erreur inconnue"),
         variant: "destructive"
       });
     }
@@ -173,7 +184,7 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
           Imprimer
         </Button>
         
-        {formData.contactEmail && (
+        {(formData.email || formData.contactEmail) && (
           <Button 
             onClick={handleSendByEmail} 
             className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 flex-1"
