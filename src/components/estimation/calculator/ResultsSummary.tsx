@@ -41,7 +41,6 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({
           etudeThermique: estimationResult * 0.005
         }}
         formData={formData}
-        includeTerrainPrice={formData.landIncluded === "yes"}
       />
       <div className="flex justify-center mt-6">
         <Button onClick={onBackClick}>

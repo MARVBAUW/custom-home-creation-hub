@@ -2,106 +2,96 @@
 import React from 'react';
 
 /**
- * Utility functions for type conversions in the estimation calculator
+ * Converts a value to a number
  */
-
-/**
- * Ensures a value is a number. Converts strings to numbers and provides default value for nullish values.
- * @param value The value to ensure is a number
- * @param defaultValue The default value to use if the value is nullish (default: 0)
- * @returns The value as a number
- */
-export const ensureNumber = (value: string | number | undefined | null, defaultValue: number = 0): number => {
-  // Return default value if value is nullish
-  if (value === undefined || value === null || value === '') {
-    return defaultValue;
+export function ensureNumber(value: any): number {
+  if (typeof value === 'number') return value;
+  if (!value) return 0;
+  
+  if (typeof value === 'string') {
+    // Remove currency symbols, commas, etc.
+    const cleanValue = value.replace(/[^0-9.-]+/g, '');
+    return parseFloat(cleanValue) || 0;
   }
   
-  // If value is already a number, return it
-  if (typeof value === 'number') {
-    return value;
-  }
-  
-  // Try to parse the string to a number
-  const parsed = parseFloat(value);
-  
-  // Return parsed value if valid, otherwise default value
-  return isNaN(parsed) ? defaultValue : parsed;
-};
+  return 0;
+}
 
 /**
- * Convert a value to a string for form inputs
- * @param value The value to convert
- * @returns The value as a string
+ * Converts a value to a boolean
  */
-export const toFormValue = (value: any): string => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-  return String(value);
-};
-
-/**
- * Ensures a value is a boolean
- * @param value The value to convert to boolean
- * @returns boolean
- */
-export const ensureBoolean = (value: any): boolean => {
+export function ensureBoolean(value: any): boolean {
   if (typeof value === 'boolean') return value;
-  if (value === 'true' || value === true || value === 1 || value === '1') return true;
-  return false;
-};
-
-/**
- * Safely check if an array includes a value
- * @param arr The array to check
- * @param value The value to check for
- * @returns boolean indicating if the array includes the value
- */
-export const safeIncludes = (arr: any[] | undefined | null, value: any): boolean => {
-  if (!arr || !Array.isArray(arr)) return false;
-  return arr.includes(value);
-};
-
-/**
- * Safe type casting utility for React components
- * Makes object properties safe for use in React JSX
- */
-export const ensureReactNode = (value: any): React.ReactNode => {
-  // Handle objects that are not valid React nodes
-  if (value !== null && typeof value === 'object' && !React.isValidElement(value)) {
-    try {
-      return JSON.stringify(value);
-    } catch {
-      return String(value);
-    }
+  if (!value) return false;
+  
+  if (typeof value === 'string') {
+    const lowercaseValue = value.toLowerCase().trim();
+    return lowercaseValue === 'true' || 
+           lowercaseValue === 'yes' || 
+           lowercaseValue === 'oui' || 
+           lowercaseValue === '1';
   }
-  return value;
-};
+  
+  return Boolean(value);
+}
 
 /**
- * Ensures a value is a string array
- * @param value The value to convert to a string array
- * @returns string[]
+ * Converts a value to a string
  */
-export const ensureStringArray = (value: any): string[] => {
-  if (Array.isArray(value)) {
-    return value.map(item => String(item));
-  }
-  if (value === undefined || value === null) {
-    return [];
-  }
-  return [String(value)];
-};
+export function ensureString(value: any): string {
+  if (typeof value === 'string') return value;
+  if (!value && value !== 0) return '';
+  
+  return String(value);
+}
 
 /**
- * Ensures a value is a string
- * @param value The value to convert to a string
- * @returns string
+ * Converts a value to an array
  */
-export const ensureString = (value: any): string => {
-  if (value === undefined || value === null) {
+export function ensureArray<T>(value: any): T[] {
+  if (Array.isArray(value)) return value;
+  if (!value) return [];
+  
+  return [value] as T[];
+}
+
+/**
+ * Convert a string percentage to a decimal value
+ */
+export function percentageToDecimal(value: string | number): number {
+  if (typeof value === 'number') return value / 100;
+  
+  // Remove % symbol if present
+  const cleanValue = value.replace('%', '');
+  return parseFloat(cleanValue) / 100 || 0;
+}
+
+/**
+ * Safely render any value as a React node
+ */
+export function safeRenderValue(value: any): React.ReactNode {
+  if (value === null || value === undefined) {
     return '';
   }
-  return String(value);
-};
+  
+  if (
+    typeof value === 'string' || 
+    typeof value === 'number' || 
+    typeof value === 'boolean'
+  ) {
+    return String(value);
+  }
+  
+  if (Array.isArray(value)) {
+    return JSON.stringify(value);
+  }
+  
+  if (typeof value === 'object') {
+    if (value instanceof Date) {
+      return value.toLocaleString();
+    }
+    return JSON.stringify(value);
+  }
+  
+  return '';
+}

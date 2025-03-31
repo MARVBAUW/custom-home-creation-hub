@@ -1,45 +1,38 @@
 
-import { FormData } from './formTypes';
-
 export interface Message {
-  id: string;
-  type: 'system' | 'user' | 'assistant' | 'loading';
   content: string;
-  options?: string[];
+  timestamp: Date;
+  isUser: boolean;
+  isProcessed?: boolean;
 }
 
-export interface ConversationalProps {
-  onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  onClientTypeSubmit: (data: {clientType: string}) => void;
-  goToStep: (step: number) => void;
-}
-
-export interface MessageDisplayProps {
-  messages: Message[];
-  loading: boolean;
-  onOptionClick: (option: string) => void;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
-}
-
-export interface InputAreaProps {
-  userInput: string;
-  setUserInput: (input: string) => void;
-  handleSendMessage: () => void;
-  handleKeyPress: (e: React.KeyboardEvent) => void;
-}
-
-export interface MessageProcessorProps {
-  onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-}
-
-// The state of the conversation to track progress
 export interface ConversationState {
-  currentStep: string;
-  askedQuestions: string[];
-  completedFields: string[];
-  formProgress: number;
+  messages: Message[];
+  isLoading: boolean;
+  processingStatus: string | null;
+  currentQuestion: string | null;
+  conversationHistory: string[];
+}
+
+export interface QuestionData {
+  question: string;
+  options?: string[];
+  type: 'text' | 'options' | 'number' | 'boolean' | 'date' | 'multiselect';
+  formField?: string;
+  nextQuestionBasedOn?: Record<string, string>;
+  defaultNextQuestion?: string;
+}
+
+export interface ConversationContext {
+  estimationType?: string;
+  projectType?: string;
+  surfaceArea?: number;
+  budget?: number;
+  location?: string;
+  stages?: number;
+  timeframe?: string;
+  structuralWork?: boolean;
+  demolition?: boolean;
+  renovation?: boolean;
+  newConstruction?: boolean;
 }

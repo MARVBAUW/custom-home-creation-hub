@@ -1,137 +1,211 @@
+
 import { FormData } from '../types/formTypes';
-import { EstimationResponseData } from '../types/estimationTypes';
+import { ensureNumber, ensureBoolean } from './typeConversions';
 
 /**
- * Create a function that handles type conversions automatically when updating form data
+ * Create a function that updates form data while handling type conversions
  */
-export const createTypeAdaptingUpdater = (
-  updateFunction: (data: Partial<FormData>) => void
-) => {
-  return (partialData: Partial<any>) => {
-    // Create a new object to store converted values
-    const convertedData: Partial<FormData> = {};
+export function createTypeAdaptingUpdater(
+  updateFn: (data: Partial<FormData>) => void
+): (data: Partial<FormData>) => void {
+  return (data: Partial<FormData>) => {
+    // Create a copy we can modify
+    const adaptedData = { ...data };
     
-    // Process each property for appropriate type conversion
-    Object.entries(partialData).forEach(([key, value]) => {
-      if (key === 'surface' || key === 'bedrooms' || key === 'bathrooms' || key === 'budget') {
-        // Convert string to number for numeric fields
-        if (typeof value === 'string' && value.trim() !== '') {
-          convertedData[key] = parseFloat(value);
-        } else if (typeof value === 'number') {
-          convertedData[key] = value;
-        }
-      } else if (typeof value === 'boolean' || typeof value === 'string' || Array.isArray(value)) {
-        // Keep boolean, string, and array values as they are
-        convertedData[key] = value;
-      } else if (value instanceof Date) {
-        // Keep Date objects as they are
-        convertedData[key] = value;
-      } else if (typeof value === 'object' && value !== null) {
-        // For objects, keep them as they are
-        convertedData[key] = value;
-      } else if (typeof value === 'number') {
-        // Keep number values as they are
-        convertedData[key] = value;
-      }
-    });
+    // Handle numeric fields
+    if ('surface' in adaptedData) {
+      adaptedData.surface = ensureNumber(adaptedData.surface);
+    }
     
-    // Call the update function with properly typed data
-    updateFunction(convertedData);
+    if ('bedrooms' in adaptedData) {
+      adaptedData.bedrooms = ensureNumber(adaptedData.bedrooms);
+    }
+    
+    if ('bathrooms' in adaptedData) {
+      adaptedData.bathrooms = ensureNumber(adaptedData.bathrooms);
+    }
+    
+    if ('budget' in adaptedData) {
+      adaptedData.budget = ensureNumber(adaptedData.budget);
+    }
+    
+    if ('terraceArea' in adaptedData) {
+      adaptedData.terraceArea = ensureNumber(adaptedData.terraceArea);
+    }
+    
+    if ('landscapingArea' in adaptedData) {
+      adaptedData.landscapingArea = ensureNumber(adaptedData.landscapingArea);
+    }
+    
+    if ('fencingLength' in adaptedData) {
+      adaptedData.fencingLength = ensureNumber(adaptedData.fencingLength);
+    }
+    
+    if ('stonePercentage' in adaptedData) {
+      adaptedData.stonePercentage = ensureNumber(adaptedData.stonePercentage);
+    }
+    
+    if ('plasterPercentage' in adaptedData) {
+      adaptedData.plasterPercentage = ensureNumber(adaptedData.plasterPercentage);
+    }
+    
+    if ('brickPercentage' in adaptedData) {
+      adaptedData.brickPercentage = ensureNumber(adaptedData.brickPercentage);
+    }
+    
+    if ('metalCladdingPercentage' in adaptedData) {
+      adaptedData.metalCladdingPercentage = ensureNumber(adaptedData.metalCladdingPercentage);
+    }
+    
+    if ('woodCladdingPercentage' in adaptedData) {
+      adaptedData.woodCladdingPercentage = ensureNumber(adaptedData.woodCladdingPercentage);
+    }
+    
+    if ('stoneCladdingPercentage' in adaptedData) {
+      adaptedData.stoneCladdingPercentage = ensureNumber(adaptedData.stoneCladdingPercentage);
+    }
+    
+    // Handle boolean fields
+    if ('hasAirConditioning' in adaptedData) {
+      adaptedData.hasAirConditioning = ensureBoolean(adaptedData.hasAirConditioning);
+    }
+    
+    if ('hasSmartHome' in adaptedData) {
+      adaptedData.hasSmartHome = ensureBoolean(adaptedData.hasSmartHome);
+    }
+    
+    if ('hasDressingRoom' in adaptedData) {
+      adaptedData.hasDressingRoom = ensureBoolean(adaptedData.hasDressingRoom);
+    }
+    
+    if ('hasCustomClosets' in adaptedData) {
+      adaptedData.hasCustomClosets = ensureBoolean(adaptedData.hasCustomClosets);
+    }
+    
+    if ('hasElevator' in adaptedData) {
+      adaptedData.hasElevator = ensureBoolean(adaptedData.hasElevator);
+    }
+    
+    if ('hasHomeAutomation' in adaptedData) {
+      adaptedData.hasHomeAutomation = ensureBoolean(adaptedData.hasHomeAutomation);
+    }
+    
+    if ('hasSecuritySystem' in adaptedData) {
+      adaptedData.hasSecuritySystem = ensureBoolean(adaptedData.hasSecuritySystem);
+    }
+    
+    if ('hasHeatRecovery' in adaptedData) {
+      adaptedData.hasHeatRecovery = ensureBoolean(adaptedData.hasHeatRecovery);
+    }
+    
+    if ('pool' in adaptedData) {
+      adaptedData.pool = ensureBoolean(adaptedData.pool);
+    }
+    
+    if ('terrace' in adaptedData) {
+      adaptedData.terrace = ensureBoolean(adaptedData.terrace);
+    }
+    
+    if ('outdoorKitchen' in adaptedData) {
+      adaptedData.outdoorKitchen = ensureBoolean(adaptedData.outdoorKitchen);
+    }
+    
+    // Pass the properly typed data to the update function
+    updateFn(adaptedData);
   };
-};
+}
 
 /**
- * Adapts form data to the estimation response data format
+ * Adapt form data to estimation response data
  */
-export const adaptToEstimationResponseData = (formData: FormData, calculationResult: any): EstimationResponseData => {
-  // Ensure the data has all required properties
-  const response: EstimationResponseData = {
-    projectType: formData.projectType || '',
-    projectDetails: {
-      surface: typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0),
-      location: formData.city || '',
-      projectType: formData.projectType || '',
-      city: formData.city || '',
-      bedrooms: typeof formData.bedrooms === 'string' ? parseInt(formData.bedrooms as string) : (formData.bedrooms || 0),
-      bathrooms: typeof formData.bathrooms === 'string' ? parseInt(formData.bathrooms as string) : (formData.bathrooms || 0),
-    },
-    estimatedCost: calculationResult.totalAmount || 0,
-    constructionCosts: calculationResult.constructionCosts || {
-      structuralWork: 0,
-      finishingWork: 0,
-      technicalLots: 0,
-      externalWorks: 0,
-      total: 0
-    },
-    otherCosts: calculationResult.otherCosts || {
-      insurance: 0,
-      contingency: 0,
-      taxes: 0,
-      miscellaneous: 0,
-      total: 0
-    },
-    totalAmount: calculationResult.totalAmount || 0,
-    categories: calculationResult.categories || [],
-    timeline: calculationResult.timeline || {
-      design: 0,
-      permits: 0,
-      bidding: 0,
-      construction: 0,
-      total: 0
-    },
-    fees: calculationResult.fees || {
-      architect: 0,
-      engineeringFees: 0,
-      architectFees: 0,
-      officialFees: 0,
-      inspectionFees: 0,
-      technicalStudies: 0,
-      other: 0,
-      total: 0
-    },
-    dateGenerated: calculationResult.dateGenerated || new Date().toISOString(),
-    isComplete: calculationResult.isComplete || false
-  };
+export function adaptToEstimationResponseData(formData: FormData) {
+  const totalEstimation = formData.budget || 250000; // Default if budget not set
   
-  return response;
-};
+  return {
+    projectType: formData.projectType || 'construction',
+    projectDetails: {
+      surface: formData.surface || 0,
+      bedrooms: formData.bedrooms || 0,
+      bathrooms: formData.bathrooms || 0,
+      city: formData.city || '',
+      constructionType: formData.constructionType || 'traditional',
+      clientType: formData.clientType || 'individual'
+    },
+    estimatedCost: totalEstimation,
+    dateGenerated: new Date().toISOString(),
+    isComplete: true,
+    
+    constructionCosts: {
+      structuralWork: totalEstimation * 0.4,
+      finishingWork: totalEstimation * 0.3,
+      technicalLots: totalEstimation * 0.2,
+      externalWorks: totalEstimation * 0.1,
+      total: totalEstimation
+    },
+    
+    fees: {
+      architect: totalEstimation * 0.08,
+      engineeringFees: totalEstimation * 0.03,
+      projectManagement: totalEstimation * 0.05,
+      permits: totalEstimation * 0.02,
+      insurance: totalEstimation * 0.02,
+      contingency: totalEstimation * 0.05,
+      taxes: totalEstimation * 0.03,
+      total: totalEstimation * 0.28
+    },
+    
+    otherCosts: {
+      insurance: totalEstimation * 0.02,
+      contingency: totalEstimation * 0.05,
+      taxes: totalEstimation * 0.03,
+      miscellaneous: totalEstimation * 0.02,
+      total: totalEstimation * 0.12
+    },
+    
+    totalAmount: totalEstimation * 1.4,
+    
+    timeline: {
+      planning: { duration: '2 mois', startOffset: 0 },
+      permits: { duration: '3 mois', startOffset: 2 },
+      foundation: { duration: '1 mois', startOffset: 5 },
+      structure: { duration: '2 mois', startOffset: 6 },
+      envelope: { duration: '1.5 mois', startOffset: 8 },
+      interiors: { duration: '3 mois', startOffset: 9.5 },
+      finishing: { duration: '1.5 mois', startOffset: 12.5 },
+      total: '14 mois'
+    },
+    
+    categories: [
+      { name: 'Gros œuvre', amount: totalEstimation * 0.4 },
+      { name: 'Second œuvre', amount: totalEstimation * 0.3 },
+      { name: 'Lots techniques', amount: totalEstimation * 0.2 },
+      { name: 'Extérieurs', amount: totalEstimation * 0.1 }
+    ]
+  };
+}
 
 /**
- * Convert any value to a number, with a fallback to a default value
+ * Adapt form data from another format (compatibility layer)
  */
-export const ensureNumber = (value: any, defaultValue: number = 0): number => {
-  if (typeof value === 'number') {
-    return value;
+export function adaptFormData(externalData: any): Partial<FormData> {
+  const adaptedData: Partial<FormData> = {};
+  
+  // Map fields based on common naming patterns
+  if (externalData.area || externalData.surface || externalData.surfaceArea) {
+    adaptedData.surface = ensureNumber(externalData.area || externalData.surface || externalData.surfaceArea);
   }
-  if (typeof value === 'string' && value.trim() !== '') {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? defaultValue : parsed;
+  
+  if (externalData.city || externalData.location) {
+    adaptedData.city = externalData.city || externalData.location;
   }
-  return defaultValue;
-};
-
-/**
- * Convert any value to a boolean
- */
-export const ensureBoolean = (value: any): boolean => {
-  if (typeof value === 'boolean') {
-    return value;
+  
+  if (externalData.budget || externalData.cost || externalData.price) {
+    adaptedData.budget = ensureNumber(externalData.budget || externalData.cost || externalData.price);
   }
-  if (typeof value === 'string') {
-    return value.toLowerCase() === 'true' || value === '1' || value === 'yes';
+  
+  if (externalData.type || externalData.projectType) {
+    adaptedData.projectType = externalData.type || externalData.projectType;
   }
-  if (typeof value === 'number') {
-    return value === 1;
-  }
-  return false;
-};
-
-/**
- * Convert any value to a string
- */
-export const ensureString = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  return String(value);
-};
+  
+  return adaptedData;
+}
