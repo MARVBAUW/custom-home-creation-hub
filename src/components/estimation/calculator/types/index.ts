@@ -1,6 +1,6 @@
 
 // Re-export all type definitions for easy importing
-export * from './estimationFormData';
+export { EstimationFormData } from './estimationFormData';
 export type { BaseFormProps } from './formTypes';
 export type { FormData } from './formTypes';
 
@@ -16,5 +16,5 @@ export * from './envelopeTypes';
 export * from './interiorTypes';
 export * from './specialFeaturesTypes';
 export * from './pdf-types';
-export * from './estimationTypes';
+export type { EstimationResponseData } from './estimationTypes';
 export * from './json';

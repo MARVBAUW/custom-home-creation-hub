@@ -1,129 +1,124 @@
 
-import { EstimationFormData, FormData } from '../types';
-import { toBoolean, toNumber, toString } from './typeConversions';
+import { FormData } from '../types/formTypes';
+import { toBoolean, toOuiNon, toNumber, convertToType } from './montantUtils';
 
-// Convert boolean values to string for certain fields
-export const adaptToEstimationFormData = (data: Partial<FormData>): Partial<EstimationFormData> => {
-  const result: Partial<EstimationFormData> = { ...data };
-
-  // Convert boolean values to strings where needed
-  if (data.createWalls !== undefined) {
-    result.createWalls = data.createWalls === true ? "OUI" : 
-                        data.createWalls === false ? "NON" : 
-                        String(data.createWalls);
-  }
-
-  if (data.createFloors !== undefined) {
-    result.createFloors = data.createFloors === true ? "OUI" : 
-                        data.createFloors === false ? "NON" : 
-                        String(data.createFloors);
-  }
-
-  // Convert other boolean values to appropriate string representations
-  for (const key of [
-    'hasSwimmingPool', 'hasTerrace', 'hasSolarPanels',
-    'hasGeothermalEnergy', 'hasAirConditioning', 'poolHeating',
-    'commercialAccepted'
-  ]) {
-    if (data[key] !== undefined) {
-      result[key] = typeof data[key] === 'boolean' ? 
-                   (data[key] === true ? "OUI" : "NON") : 
-                   data[key];
-    }
-  }
-
-  // Handle terassementsViabilisation specifically
-  if (data.terassementsViabilisation !== undefined) {
-    if (typeof data.terassementsViabilisation === 'boolean') {
-      result.terassementsViabilisation = data.terassementsViabilisation ? 1 : 0;
+// Utility function to adapt data between different form interfaces
+export const adaptFormData = (
+    sourceData: any, 
+    targetInterface: 'estimation' | 'form' = 'form'
+): any => {
+    // Create a copy of the source data
+    const adaptedData = { ...sourceData };
+    
+    // Convert types based on the target interface
+    if (targetInterface === 'form') {
+        // Converting from API/estimation data to form data
+        if (typeof adaptedData.terassementsViabilisation === 'boolean') {
+            adaptedData.terassementsViabilisation = toOuiNon(adaptedData.terassementsViabilisation);
+        }
+        
+        if (typeof adaptedData.retraitTerre === 'boolean') {
+            adaptedData.retraitTerre = toOuiNon(adaptedData.retraitTerre);
+        }
+        
+        // Convert numeric values to strings if needed
+        if (typeof adaptedData.surface === 'number') {
+            adaptedData.surface = String(adaptedData.surface);
+        }
+        
+        // Convert other fields as needed
+        // ... add other conversions as required
+        
     } else {
-      result.terassementsViabilisation = data.terassementsViabilisation;
+        // Converting from form data to API/estimation data
+        if (typeof adaptedData.terassementsViabilisation === 'string') {
+            adaptedData.terassementsViabilisation = toBoolean(adaptedData.terassementsViabilisation);
+        }
+        
+        if (typeof adaptedData.retraitTerre === 'string') {
+            adaptedData.retraitTerre = toBoolean(adaptedData.retraitTerre);
+        }
+        
+        // Convert string values to numbers if needed
+        if (typeof adaptedData.surface === 'string') {
+            adaptedData.surface = parseFloat(adaptedData.surface) || 0;
+        }
+        
+        // Convert other fields as needed
+        // ... add other conversions as required
     }
-  }
-
-  // Handle numeric values
-  for (const key of [
-    'surface', 'budget', 'landPrice', 'landArea', 'roofArea',
-    'landscapingArea', 'fencingLength', 'gateLength', 'terraceArea',
-    'wallArea', 'floorArea', 'windowRenovationArea', 'windowNewArea',
-    'doorCount', 'bathroomCount', 'kitchenCost', 'poolArea',
-    'montantT', 'totalAmount'
-  ]) {
-    if (data[key] !== undefined) {
-      result[key] = typeof data[key] === 'number' ? 
-                   data[key] : 
-                   toString(data[key]);
-    }
-  }
-
-  return result;
+    
+    return adaptedData;
 };
 
-// Convert string values to appropriate types
-export const adaptToFormData = (data: Partial<EstimationFormData>): Partial<FormData> => {
-  const result: Partial<FormData> = { ...data };
-
-  // Convert string OUI/NON values to boolean
-  if (data.createWalls !== undefined) {
-    result.createWalls = data.createWalls === "OUI" ? true : 
-                        data.createWalls === "NON" ? false : 
-                        data.createWalls;
-  }
-
-  if (data.createFloors !== undefined) {
-    result.createFloors = data.createFloors === "OUI" ? true : 
-                        data.createFloors === "NON" ? false : 
-                        data.createFloors;
-  }
-
-  // Convert other string values to boolean
-  for (const key of [
-    'hasSwimmingPool', 'hasTerrace', 'hasSolarPanels',
-    'hasGeothermalEnergy', 'hasAirConditioning', 'poolHeating',
-    'commercialAccepted'
-  ]) {
-    if (data[key] !== undefined) {
-      result[key] = data[key] === "OUI" || data[key] === true ? true : 
-                   data[key] === "NON" || data[key] === false ? false : 
-                   Boolean(data[key]);
-    }
-  }
-
-  // Handle terassementsViabilisation specifically
-  if (data.terassementsViabilisation !== undefined) {
-    if (data.terassementsViabilisation === "1" || data.terassementsViabilisation === 1) {
-      result.terassementsViabilisation = true;
-    } else if (data.terassementsViabilisation === "0" || data.terassementsViabilisation === 0) {
-      result.terassementsViabilisation = false;
-    } else {
-      result.terassementsViabilisation = toNumber(data.terassementsViabilisation);
-    }
-  }
-
-  // Convert string values to numbers
-  for (const key of [
-    'surface', 'budget', 'landPrice', 'landArea', 'roofArea',
-    'landscapingArea', 'fencingLength', 'gateLength', 'terraceArea',
-    'wallArea', 'floorArea', 'windowRenovationArea', 'windowNewArea',
-    'doorCount', 'bathroomCount', 'kitchenCost', 'poolArea',
-    'montantT', 'totalAmount'
-  ]) {
-    if (data[key] !== undefined) {
-      result[key] = typeof data[key] === 'string' ? 
-                   toNumber(data[key]) : 
-                   data[key];
-    }
-  }
-
-  return result;
+// Type adapter function to handle updates between different form types
+export const createTypeAdaptingUpdater = (updateFunction: (data: Partial<FormData>) => void) => {
+    return (data: any) => {
+        // Create a copy of the data with adapted types
+        const adaptedData: Partial<FormData> = {};
+        
+        // Process each field to ensure types match FormData expectations
+        Object.keys(data).forEach(key => {
+            const value = data[key];
+            
+            // Special handling for boolean/string conversions
+            if (key === 'terassementsViabilisation' || key === 'retraitTerre') {
+                if (typeof value === 'string' && (value === 'OUI' || value === 'NON')) {
+                    adaptedData[key] = value === 'OUI';
+                } else if (typeof value === 'boolean') {
+                    adaptedData[key] = value;
+                }
+            }
+            // Handle numeric conversions
+            else if (
+                key === 'surface' ||
+                key === 'budget' ||
+                key === 'niveaux' ||
+                key === 'chambres'
+            ) {
+                if (typeof value === 'string') {
+                    adaptedData[key] = parseFloat(value) || 0;
+                } else if (typeof value === 'number') {
+                    adaptedData[key] = value;
+                }
+            }
+            // For all other fields, pass the value as is
+            else {
+                adaptedData[key] = value;
+            }
+        });
+        
+        // Call the original update function with the adapted data
+        updateFunction(adaptedData);
+    };
 };
 
-// Create an updater function that ensures type compatibility
-export const createTypeAdaptingUpdater = (
-  updateFunction: (data: Partial<EstimationFormData>) => void
-) => {
-  return (data: Partial<FormData>) => {
-    const adaptedData = adaptToEstimationFormData(data);
-    updateFunction(adaptedData);
-  };
+// Utility function for stringifying nested objects/arrays for display
+export const stringifyForDisplay = (value: any): string => {
+    if (value === null || value === undefined) return '';
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+};
+
+// Function to sanitize form data before submission
+export const sanitizeFormData = (formData: any): any => {
+    const sanitized = { ...formData };
+    
+    // Convert string numbers to actual numbers
+    Object.keys(sanitized).forEach(key => {
+        const value = sanitized[key];
+        
+        if (typeof value === 'string' && !isNaN(Number(value))) {
+            // Check if it's a numeric string
+            sanitized[key] = Number(value);
+        }
+        else if (value === 'OUI') {
+            sanitized[key] = true;
+        }
+        else if (value === 'NON') {
+            sanitized[key] = false;
+        }
+    });
+    
+    return sanitized;
 };

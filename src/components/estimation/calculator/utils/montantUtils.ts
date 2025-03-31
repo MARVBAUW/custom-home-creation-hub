@@ -41,7 +41,7 @@ export const calculatePlasteringCost = (surface: number, plasteringType: string)
   return Math.round(basePrice * surface);
 };
 
-// Function to calculate the cost of interior carpentry (doors, moldings, etc.)
+// Function to calculate interior carpentry (doors, moldings, etc.)
 export const calculateInteriorCarpenteryCost = (doorCount: number, doorType: string): number => {
   if (!doorType) return 0;
   
@@ -397,7 +397,7 @@ export const calculateNewMontantT = (oldMontantT: any, additionalCost: number): 
   return oldMontant + additionalCost;
 };
 
-// Calculate Jacuzzi cost (missing function)
+// Calculate Jacuzzi cost
 export const calculateJacuzziCost = (type: string, area: number): number => {
   if (!type || type === 'none') return 0;
   
@@ -570,3 +570,62 @@ export const calculateKitchenCost = (kitchenType: string, hasIsland: boolean = f
 
 // Export ensureNumber for use in other files
 export { ensureNumber };
+
+// Add missing functions that were causing errors
+export const calculateSolarPanelsCost = (hasSolarPanels: boolean, area: number): number => {
+    if (!hasSolarPanels) return 0;
+    return 350 * area; // Cost per square meter
+};
+
+export const calculateHomeAutomationCost = (hasHomeAutomation: boolean, area: number): number => {
+    if (!hasHomeAutomation) return 0;
+    return 80 * area; // Cost per square meter
+};
+
+export const calculateSmartAppliancesCost = (hasSmartAppliances: boolean): number => {
+    if (!hasSmartAppliances) return 0;
+    return 5000; // Fixed cost for smart appliances
+};
+
+// Function to standardize boolean or string values to booleans
+export const toBoolean = (value: string | boolean | number | undefined): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value > 0;
+    if (typeof value === 'string') {
+        return value.toLowerCase() === 'true' || value === 'OUI' || value === 'yes' || value === '1';
+    }
+    return false;
+};
+
+// Function to standardize boolean or string values to string format (OUI/NON)
+export const toOuiNon = (value: string | boolean | number | undefined): 'OUI' | 'NON' => {
+    return toBoolean(value) ? 'OUI' : 'NON';
+};
+
+// Function to standardize boolean or string values to number format (1/0)
+export const toNumber = (value: string | boolean | number | undefined): number => {
+    if (typeof value === 'number') return value;
+    return toBoolean(value) ? 1 : 0;
+};
+
+// Function to convert types safely
+export const convertToType = <T extends string | boolean | number>(
+    value: string | boolean | number | undefined,
+    targetType: 'string' | 'boolean' | 'number',
+    defaultValue?: T
+): T => {
+    if (value === undefined) return defaultValue as T;
+    
+    if (targetType === 'boolean') {
+        return toBoolean(value) as unknown as T;
+    } else if (targetType === 'number') {
+        if (typeof value === 'number') return value as unknown as T;
+        if (typeof value === 'boolean') return (value ? 1 : 0) as unknown as T;
+        const parsed = parseFloat(value);
+        return (isNaN(parsed) ? 0 : parsed) as unknown as T;
+    } else {
+        if (typeof value === 'string') return value as unknown as T;
+        if (typeof value === 'boolean') return (value ? 'OUI' : 'NON') as unknown as T;
+        return String(value) as unknown as T;
+    }
+};
