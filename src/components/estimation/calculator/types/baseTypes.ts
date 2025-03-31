@@ -7,4 +7,6 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: string;
+  defaultValues?: Partial<FormData>;
+  onSubmit?: (data: Partial<FormData>) => void;
 }
