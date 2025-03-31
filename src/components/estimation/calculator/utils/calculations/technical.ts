@@ -35,6 +35,11 @@ export const calculateElectricalCost = (type: string, area: number): number => {
 };
 
 /**
+ * Calculate electrical system costs (alias for calculateElectricalCost for backward compatibility)
+ */
+export const calculateElectricityCost = calculateElectricalCost;
+
+/**
  * Get cost per square meter for different electrical system types
  */
 const getElectricalCostPerSquareMeter = (type: string): number => {
@@ -98,6 +103,3 @@ export const calculateComponentCost = (component: string, area: number): number 
     default: return 0;
   }
 };
-
-// Add alias for compatibility
-export { calculateElectricalCost as calculateElectricityCost };

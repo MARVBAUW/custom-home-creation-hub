@@ -30,7 +30,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
     // Update form data with electrical type and additional cost
     updateFormData({
       electricalType,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Move to the next step
@@ -133,7 +133,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
         
         {formData.montantT && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+            <p className="text-sm font-medium">Total estimé: {ensureNumber(formData.montantT).toLocaleString()} €</p>
           </div>
         )}
       </div>

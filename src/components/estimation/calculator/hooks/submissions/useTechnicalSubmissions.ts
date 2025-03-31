@@ -2,7 +2,7 @@
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
 import { 
-  calculateElectricityCost, 
+  calculateElectricalCost, 
   calculatePlumbingCost,
   calculateHeatingCost,
   calculateAirConditioningCost
@@ -12,9 +12,9 @@ export const useTechnicalSubmissions = () => {
   // Function to handle electricity submission
   const handleElectriciteSubmit = (data: any, formData: FormData) => {
     const surface = ensureNumber(formData.surface, 0);
-    const additionalCost = calculateElectricityCost(
-      data.electricalType,
-      surface
+    const additionalCost = calculateElectricalCost(
+      surface,
+      data.electricalType
     );
     
     return {
@@ -28,8 +28,8 @@ export const useTechnicalSubmissions = () => {
   const handlePlomberieSubmit = (data: any, formData: FormData) => {
     const surface = ensureNumber(formData.surface, 0);
     const additionalCost = calculatePlumbingCost(
-      data.plumbingType,
-      surface
+      surface,
+      data.plumbingType
     );
     
     return {
@@ -47,7 +47,7 @@ export const useTechnicalSubmissions = () => {
     let additionalCost = 0;
     
     if (data.heatingType) {
-      additionalCost += calculateHeatingCost(data.heatingType, surface);
+      additionalCost += calculateHeatingCost(surface, data.heatingType);
     }
     
     // Add air conditioning cost if selected

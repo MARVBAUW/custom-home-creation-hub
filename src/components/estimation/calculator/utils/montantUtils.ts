@@ -1,4 +1,3 @@
-
 import { ensureNumber } from './typeConversions';
 
 /**
@@ -48,13 +47,47 @@ export const calculatePlumbingCost = (surface: number | string, features?: strin
 };
 
 /**
- * Calculate electrical cost based on surface and premium features
+ * Calculate electrical cost based on surface and electrical type
  */
-export const calculateElectricalCost = (surface: number | string, isPremium?: boolean): number => {
+export const calculateElectricalCost = (surface: number | string, electricalType?: string): number => {
   const surfaceNum = ensureNumber(surface);
-  const baseCost = isPremium ? 90 : 70;
+  let baseCost = 0;
+  
+  switch (electricalType) {
+    case 'basic':
+      baseCost = 70;
+      break;
+    case 'standard':
+      baseCost = 100;
+      break;
+    case 'premium':
+      baseCost = 150;
+      break;
+    case 'smart_home':
+      baseCost = 200;
+      break;
+    case 'non_concerne':
+      baseCost = 0;
+      break;
+    default:
+      baseCost = 90;
+  }
   
   return surfaceNum * baseCost;
+};
+
+/**
+ * Alias for calculateElectricalCost for backward compatibility
+ */
+export const calculateElectricityCost = calculateElectricalCost;
+
+/**
+ * Calculate air conditioning cost
+ */
+export const calculateAirConditioningCost = (hasAirConditioning: boolean, surface: number | string): number => {
+  if (!hasAirConditioning) return 0;
+  const surfaceNum = ensureNumber(surface);
+  return 180 * surfaceNum;
 };
 
 /**
