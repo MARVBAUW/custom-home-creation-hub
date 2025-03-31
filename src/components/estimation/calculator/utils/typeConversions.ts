@@ -63,3 +63,37 @@ export const ensureBoolean = (value: any, defaultValue: boolean = false): boolea
   
   return Boolean(value);
 };
+
+/**
+ * Converts a value to a string form value for use with react-hook-form.
+ * 
+ * @param value - The value to convert to a form value
+ * @param defaultValue - Optional default value to return if conversion fails
+ * @returns A string representation of the value suitable for forms
+ */
+export const toFormValue = (value: any, defaultValue: string = ''): string => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  // Convert numbers and booleans to strings for form inputs
+  if (typeof value === 'number') {
+    return isNaN(value) ? defaultValue : String(value);
+  }
+  
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  
+  // If it's already a string, return it
+  if (typeof value === 'string') {
+    return value;
+  }
+  
+  // For any other type, convert to string
+  try {
+    return String(value);
+  } catch (error) {
+    return defaultValue;
+  }
+};
