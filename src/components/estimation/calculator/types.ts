@@ -61,15 +61,53 @@ export interface FormData {
   includeCuisine?: boolean;
   includeBathroom?: boolean;
   needsDemolition?: boolean;
+  
+  // Add missing properties that are causing TypeScript errors
+  finishStandard?: string;
+  rainwaterHarvesting?: boolean;
+  homeAutomation?: boolean;
+  energyEfficiency?: boolean;
+  softFloorType?: string;
+  parquetPercentage?: number | string;
+  softFloorPercentage?: number | string;
+  floorTilePercentage?: number | string;
+  kitchens?: number | string;
+  livingRooms?: number | string;
+  
+  // Properties for special features and submissions
+  solarPanelType?: string;
+  solarPanelSurface?: number | string;
+  windTurbineType?: string;
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  
+  // Properties for exterior and landscaping
+  landscapingType?: string;
+  gardenSurface?: number | string;
+  landscapingBudget?: number | string;
+  exteriorFeatures?: string[];
+  
+  // Properties for construction details
+  wallType?: string;
+  foundationType?: string;
+  units?: number | string;
+  demolitionType?: string;
+  atticType?: string;
+  
+  // Properties for facade
   stonePercentage?: number | string;
   plasterPercentage?: number | string;
   brickPercentage?: number | string;
   metalCladdingPercentage?: number | string;
   woodCladdingPercentage?: number | string;
   stoneCladdingPercentage?: number | string;
+  
+  // Properties for windows
   windowType?: string;
   windowNewArea?: number | string;
   windowRenovationArea?: number | string;
+  
+  // Properties for electrical
   electricalType?: string;
   plumbingType?: string;
 }
@@ -83,14 +121,14 @@ export interface ConstructionCosts {
 }
 
 export interface FeeCosts {
-  architectFees: number;
+  architect: number; // Make non-optional to match the requirement
   engineeringFees: number;
+  architectFees: number;
   officialFees: number;
   inspectionFees: number;
+  technicalStudies: number;
+  other: number;
   total: number;
-  architect?: number;
-  technicalStudies?: number;
-  other?: number;
 }
 
 export interface OtherCosts {

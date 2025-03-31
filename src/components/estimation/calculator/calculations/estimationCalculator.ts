@@ -60,6 +60,7 @@ const calculateConstructionCosts = (data: FormData) => {
 };
 
 const calculateFees = (data: FormData, constructionCost: number): FeeCosts => {
+  // Ensure all required properties are included and not undefined
   return {
     architect: constructionCost * 0.05,
     engineeringFees: constructionCost * 0.025,
