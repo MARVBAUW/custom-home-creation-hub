@@ -1,30 +1,31 @@
+
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { FormData } from './types';
-import { PDFGenerationOptions } from './types/pdf-types';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { FileDown, Printer } from 'lucide-react';
+import { generateEstimationPDF } from './utils/pdfGenerator';
+import { FormData, PDFGenerationOptions } from './types';
 
 interface EstimationPDFExportProps {
   formData: FormData;
-  onGeneratePDF: (options: PDFGenerationOptions) => void;
+  estimation?: any;
 }
 
-const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({ formData, onGeneratePDF }) => {
+const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({ formData, estimation }) => {
   const [includeDetails, setIncludeDetails] = useState(true);
   const [includeLogo, setIncludeLogo] = useState(true);
   const [includeContactInfo, setIncludeContactInfo] = useState(true);
   const [includeBreakdown, setIncludeBreakdown] = useState(true);
   const [includeTerrainPrice, setIncludeTerrainPrice] = useState(true);
   const [includeTimeline, setIncludeTimeline] = useState(true);
-  const [includeDetailedBreakdown, setIncludeDetailedBreakdown] = useState(true);
+  const [includeDetailedBreakdown, setIncludeDetailedBreakdown] = useState(false);
   const [clientInfo, setClientInfo] = useState(true);
   const [companyLogo, setCompanyLogo] = useState(true);
-  const [fileName, setFileName] = useState('estimation-report');
 
-  const handleGenerate = () => {
+  const handleExportPDF = () => {
+    if (!estimation) return;
+
     const options: PDFGenerationOptions = {
       includeDetails,
       includeLogo,
@@ -35,62 +36,111 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({ formData, onG
       includeDetailedBreakdown,
       clientInfo,
       companyLogo,
-      fileName,
     };
-    onGeneratePDF(options);
+
+    const doc = generateEstimationPDF(formData, estimation, options);
+    doc.save(`estimation-projet-${formData.clientType}-${Date.now()}.pdf`);
   };
 
   return (
-    <Card className="w-full">
+    <Card className="mt-8">
       <CardHeader>
-        <CardTitle>Options d'export PDF</CardTitle>
-        <CardDescription>Personnalisez votre rapport d'estimation avant de le générer.</CardDescription>
+        <CardTitle className="text-xl">Exporter votre estimation</CardTitle>
       </CardHeader>
-      <CardContent className="grid gap-4">
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeDetails" checked={includeDetails} onCheckedChange={setIncludeDetails} />
-          <Label htmlFor="includeDetails">Inclure les détails du projet</Label>
+      <CardContent>
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeDetails" 
+              checked={includeDetails} 
+              onCheckedChange={(checked) => setIncludeDetails(checked === true)}
+            />
+            <label htmlFor="includeDetails">Inclure les détails du projet</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeLogo" 
+              checked={includeLogo} 
+              onCheckedChange={(checked) => setIncludeLogo(checked === true)}
+            />
+            <label htmlFor="includeLogo">Inclure le logo</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeContactInfo" 
+              checked={includeContactInfo} 
+              onCheckedChange={(checked) => setIncludeContactInfo(checked === true)}
+            />
+            <label htmlFor="includeContactInfo">Inclure vos coordonnées</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeBreakdown" 
+              checked={includeBreakdown} 
+              onCheckedChange={(checked) => setIncludeBreakdown(checked === true)}
+            />
+            <label htmlFor="includeBreakdown">Ventilation par corps d'état</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeTerrainPrice" 
+              checked={includeTerrainPrice} 
+              onCheckedChange={(checked) => setIncludeTerrainPrice(checked === true)}
+            />
+            <label htmlFor="includeTerrainPrice">Intégrer le prix du terrain</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeTimeline" 
+              checked={includeTimeline} 
+              onCheckedChange={(checked) => setIncludeTimeline(checked === true)}
+            />
+            <label htmlFor="includeTimeline">Calendrier prévisionnel</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="includeDetailedBreakdown" 
+              checked={includeDetailedBreakdown} 
+              onCheckedChange={(checked) => setIncludeDetailedBreakdown(checked === true)}
+            />
+            <label htmlFor="includeDetailedBreakdown">Détail technique</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="clientInfo" 
+              checked={clientInfo} 
+              onCheckedChange={(checked) => setClientInfo(checked === true)}
+            />
+            <label htmlFor="clientInfo">Informations client</label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="companyLogo" 
+              checked={companyLogo} 
+              onCheckedChange={(checked) => setCompanyLogo(checked === true)}
+            />
+            <label htmlFor="companyLogo">Logo de l'entreprise</label>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeLogo" checked={includeLogo} onCheckedChange={setIncludeLogo} />
-          <Label htmlFor="includeLogo">Inclure le logo de l'entreprise</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeContactInfo" checked={includeContactInfo} onCheckedChange={setIncludeContactInfo} />
-          <Label htmlFor="includeContactInfo">Inclure les informations de contact</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeBreakdown" checked={includeBreakdown} onCheckedChange={setIncludeBreakdown} />
-          <Label htmlFor="includeBreakdown">Inclure la répartition des coûts</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeTerrainPrice" checked={includeTerrainPrice} onCheckedChange={setIncludeTerrainPrice} />
-          <Label htmlFor="includeTerrainPrice">Inclure le prix du terrain</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeTimeline" checked={includeTimeline} onCheckedChange={setIncludeTimeline} />
-          <Label htmlFor="includeTimeline">Inclure le calendrier prévisionnel</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="includeDetailedBreakdown" checked={includeDetailedBreakdown} onCheckedChange={setIncludeDetailedBreakdown} />
-          <Label htmlFor="includeDetailedBreakdown">Inclure une répartition détaillée</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="clientInfo" checked={clientInfo} onCheckedChange={setClientInfo} />
-          <Label htmlFor="clientInfo">Inclure les informations du client</Label>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox id="companyLogo" checked={companyLogo} onCheckedChange={setCompanyLogo} />
-          <Label htmlFor="companyLogo">Inclure le logo de la compagnie</Label>
-        </div>
-        <div>
-          <Label htmlFor="fileName">Nom du fichier</Label>
-          <Input id="fileName" value={fileName} onChange={(e) => setFileName(e.target.value)} />
+
+        <div className="flex justify-center space-x-4">
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={() => window.print()}
+          >
+            <Printer className="h-4 w-4" />
+            Imprimer
+          </Button>
+          <Button 
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+            onClick={handleExportPDF}
+          >
+            <FileDown className="h-4 w-4" />
+            Télécharger PDF
+          </Button>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={handleGenerate}>Générer le PDF</Button>
-      </CardFooter>
     </Card>
   );
 };

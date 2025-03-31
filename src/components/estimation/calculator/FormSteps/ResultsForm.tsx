@@ -1,115 +1,154 @@
 
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, Download } from 'lucide-react';
-import { DollarSign, Calendar, Clock } from 'lucide-react';
-import { formatCurrency } from '@/utils/formatters';
-import { ResultsFormProps } from '../types/formTypes';
+import React, { useState } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Home, 
+  ArrowLeft, 
+  DollarSign, 
+  Clock, 
+  BarChart, 
+  List,
+  Share2
+} from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
+import EstimationBreakdown from '../components/EstimationBreakdown';
+import EstimationTimeline from '../components/EstimationTimeline';
+import EstimationOverview from '../components/EstimationOverview';
 import EstimationPDFExport from '../EstimationPDFExport';
+import { BaseFormProps } from '../types/formTypes';
+import { EstimationResponseData } from '../types/estimationFormData';
+
+interface ResultsFormProps extends BaseFormProps {
+  estimationResult?: EstimationResponseData | number | null;
+  categoriesAmounts?: Array<{ category: string; amount: number }>;
+}
 
 const ResultsForm: React.FC<ResultsFormProps> = ({
-  estimationResult,
   formData,
-  categoriesAmounts,
   goToPreviousStep,
   animationDirection,
-  isLoading = false // Add default value for isLoading
+  updateFormData,
+  goToNextStep,
+  estimationResult,
+  categoriesAmounts = []
 }) => {
-  // Extract the estimation amount
-  const estimationAmount = estimationResult 
-    ? (typeof estimationResult === 'number' 
-        ? estimationResult 
-        : estimationResult.totalAmount)
-    : 0;
-
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  // Extract the total amount
+  const totalAmount = typeof estimationResult === 'number' 
+    ? estimationResult 
+    : estimationResult?.totalAmount || 0;
+  
+  // Extract the surface area
+  const surfaceArea = typeof formData.surface === 'string' 
+    ? parseFloat(formData.surface || '0') 
+    : formData.surface || 0;
+  
+  // Calculate price per square meter
+  const pricePerSqm = surfaceArea > 0 ? totalAmount / surfaceArea : 0;
+  
+  // Handle sharing the estimation
+  const handleShareEstimation = () => {
+    // Sharing logic would go here
+    alert('Fonctionnalité de partage en cours de développement');
+  };
+  
   return (
     <div className={`transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <h2 className="text-xl font-semibold mb-4">Résultat de l'estimation</h2>
-      
-      {isLoading ? (
-        <div className="flex flex-col items-center py-8">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-progineer-gold"></div>
-          <p className="mt-4 text-lg">Calcul de l'estimation en cours...</p>
-        </div>
-      ) : (
-        <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <Card className="bg-white/80">
-              <CardContent className="flex flex-col items-center justify-center p-6">
-                <DollarSign className="h-10 w-10 text-progineer-gold mb-2" />
-                <p className="text-sm text-gray-500">Estimation totale</p>
-                <p className="text-2xl font-bold">{formatCurrency(estimationAmount)}</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/80">
-              <CardContent className="flex flex-col items-center justify-center p-6">
-                <Calendar className="h-10 w-10 text-progineer-gold mb-2" />
-                <p className="text-sm text-gray-500">Surface</p>
-                <p className="text-2xl font-bold">{formData.surface || 0} m²</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/80">
-              <CardContent className="flex flex-col items-center justify-center p-6">
-                <Clock className="h-10 w-10 text-progineer-gold mb-2" />
-                <p className="text-sm text-gray-500">Prix au m²</p>
-                <p className="text-2xl font-bold">
-                  {formatCurrency(formData.surface && Number(formData.surface) > 0 
-                    ? estimationAmount / Number(formData.surface) 
-                    : 0)}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {categoriesAmounts && categoriesAmounts.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Détail par catégorie</h3>
-              <div className="bg-white/80 rounded-lg shadow p-4">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="text-left py-2">Catégorie</th>
-                      <th className="text-right py-2">Montant</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {categoriesAmounts.map((item, index) => (
-                      <tr key={index} className="border-b border-gray-100">
-                        <td className="py-2">{item.category}</td>
-                        <td className="text-right py-2">{formatCurrency(item.amount)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+      <Card className="border-none shadow-none">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-2xl text-center flex justify-center items-center gap-2">
+            <Home className="h-6 w-6 text-progineer-gold" />
+            Estimation de votre projet
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="px-0">
+          <div className="bg-gradient-to-b from-blue-50 to-white rounded-xl p-6 mb-6 text-center">
+            <div className="text-sm text-gray-600 mb-1">Estimation totale</div>
+            <div className="text-3xl font-bold text-blue-700 mb-2">{formatCurrency(totalAmount)}</div>
+            <div className="text-sm text-gray-500">
+              Prix au m²: <span className="font-medium">{formatCurrency(pricePerSqm)}/m²</span>
             </div>
-          )}
-          
-          <div className="flex justify-between">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Modifier mon estimation
-            </Button>
-            
-            {estimationResult && (
-              <EstimationPDFExport 
-                formData={formData} 
-                estimationResult={estimationResult} 
-              />
-            )}
           </div>
-        </>
-      )}
+          
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid grid-cols-4 mb-4">
+              <TabsTrigger value="overview" className="text-xs">
+                <DollarSign className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Aperçu</span>
+              </TabsTrigger>
+              <TabsTrigger value="breakdown" className="text-xs">
+                <BarChart className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Détail</span>
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="text-xs">
+                <Clock className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Calendrier</span>
+              </TabsTrigger>
+              <TabsTrigger value="export" className="text-xs">
+                <List className="h-4 w-4 mr-1" />
+                <span className="hidden sm:inline">Export</span>
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="mt-0">
+              <EstimationOverview 
+                formData={formData} 
+                totalAmount={totalAmount}
+                pricePerSqm={pricePerSqm}
+              />
+            </TabsContent>
+            
+            <TabsContent value="breakdown" className="mt-0">
+              <EstimationBreakdown 
+                categories={categoriesAmounts} 
+                formData={formData}
+              />
+            </TabsContent>
+            
+            <TabsContent value="timeline" className="mt-0">
+              {typeof estimationResult === 'object' && estimationResult?.timeline ? (
+                <EstimationTimeline timeline={estimationResult.timeline} />
+              ) : (
+                <div className="text-center py-6 text-gray-500">
+                  Le calendrier n'est pas disponible pour cette estimation
+                </div>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="export" className="mt-0">
+              <EstimationPDFExport 
+                formData={formData}
+                estimation={estimationResult}
+              />
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+        <CardFooter className="flex justify-between pt-6">
+          <Button 
+            variant="outline" 
+            onClick={goToPreviousStep}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Modifier l'estimation
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            onClick={handleShareEstimation}
+            className="flex items-center gap-2"
+          >
+            <Share2 className="h-4 w-4" />
+            Partager
+          </Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };

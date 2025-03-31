@@ -26,7 +26,6 @@ declare module 'jspdf' {
       };
     };
     internal: {
-      getNumberOfPages: () => number;
       events: any;
       scaleFactor: number;
       pageSize: {
@@ -37,6 +36,7 @@ declare module 'jspdf' {
       };
       pages: number[];
       getEncryptor(objectId: number): (data: string) => string;
+      getNumberOfPages: () => number;
     };
   }
 }
