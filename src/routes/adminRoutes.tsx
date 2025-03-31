@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import AdminDashboard from '@/components/admin/AdminDashboard';
@@ -16,6 +15,7 @@ import AdminSettings from '@/pages/client/AdminSettings';
 import EstimationTravaux from '@/pages/client/EstimationTravaux';
 import DevisHonoraires from '@/pages/client/DevisHonoraires';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import AdminProjectEdit from '@/pages/client/AdminProjectEdit';
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -33,6 +33,10 @@ export const adminRoutes: RouteObject[] = [
   {
     path: "/workspace/client-area/admin/projects/:projectId/assign-client",
     element: <ProtectedRoute adminOnly><AdminAssignClient /></ProtectedRoute>
+  },
+  {
+    path: "/workspace/client-area/admin/projects/:projectId/edit",
+    element: <ProtectedRoute adminOnly><AdminProjectEdit /></ProtectedRoute>
   },
   {
     path: "/workspace/client-area/admin/projects/create",

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,78 +13,101 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { Building2, User2, MoreVertical, Plus, Search, Filter } from 'lucide-react';
-
-// Mock data for projects
-const mockProjects = [
-  {
-    id: '1',
-    title: 'Villa Méditerranée',
-    location: 'Marseille',
-    type: 'Construction neuve',
-    status: 'En cours',
-    progress: 65,
-    client: 'Jean Dupont',
-    hasClient: true,
-    updatedAt: '2023-09-15T10:30:00.000Z',
-  },
-  {
-    id: '2',
-    title: 'Rénovation appartement haussmannien',
-    location: 'Paris',
-    type: 'Rénovation complète',
-    status: 'En attente',
-    progress: 25,
-    client: null,
-    hasClient: false,
-    updatedAt: '2023-09-12T14:45:00.000Z',
-  },
-  {
-    id: '3',
-    title: 'Extension maison de campagne',
-    location: 'Aix-en-Provence',
-    type: 'Extension',
-    status: 'Planifié',
-    progress: 10,
-    client: 'Marie Lambert',
-    hasClient: true,
-    updatedAt: '2023-09-10T09:15:00.000Z',
-  },
-  {
-    id: '4',
-    title: 'Réaménagement bureaux',
-    location: 'Lyon',
-    type: 'Aménagement intérieur',
-    status: 'Terminé',
-    progress: 100,
-    client: 'Société ABC',
-    hasClient: true,
-    updatedAt: '2023-08-28T16:20:00.000Z',
-  }
-];
+import { Building2, User2, MoreVertical, Plus, Search, Filter, Trash2, Edit } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { deleteProject, loadAllProjects } from '@/utils/projectStorage';
+import { ProjectDetails } from '@/types/project';
 
 const ProjectsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'withClient', 'withoutClient'
+  const [projects, setProjects] = useState<ProjectDetails[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  // Load projects when component mounts
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  // Function to load projects from storage
+  const loadProjects = async () => {
+    setIsLoading(true);
+    try {
+      const loadedProjects = await loadAllProjects();
+      setProjects(loadedProjects);
+    } catch (error) {
+      console.error('Erreur lors du chargement des projets:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de charger les projets.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   // Filter projects based on search and tabs
-  const filteredProjects = mockProjects.filter(project => {
+  const filteredProjects = projects.filter(project => {
     // Search filter
-    if (searchTerm && !project.title.toLowerCase().includes(searchTerm.toLowerCase()) && 
-        !project.location.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !project.type.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if (searchTerm && !project.projectName?.toLowerCase().includes(searchTerm.toLowerCase()) && 
+        !project.location?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !project.projectType?.toLowerCase().includes(searchTerm.toLowerCase())) {
       return false;
     }
     
     // Tab filter
-    if (activeTab === 'withClient' && !project.hasClient) return false;
-    if (activeTab === 'withoutClient' && project.hasClient) return false;
+    if (activeTab === 'withClient' && !project.clientId) return false;
+    if (activeTab === 'withoutClient' && project.clientId) return false;
     
     return true;
   });
+
+  // Handle project deletion
+  const handleDeleteProject = async () => {
+    if (!projectToDelete) return;
+    
+    try {
+      const success = await deleteProject(projectToDelete);
+      if (success) {
+        toast({
+          title: 'Succès',
+          description: 'Le projet a été supprimé avec succès.',
+        });
+        // Reload projects
+        loadProjects();
+      } else {
+        throw new Error('Échec de la suppression');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression du projet:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de supprimer le projet.',
+        variant: 'destructive',
+      });
+    } finally {
+      setDeleteDialogOpen(false);
+      setProjectToDelete(null);
+    }
+  };
+
+  // Open the delete confirmation dialog
+  const confirmDelete = (projectId: string) => {
+    setProjectToDelete(projectId);
+    setDeleteDialogOpen(true);
+  };
+
+  // Navigate to edit project page
+  const navigateToEdit = (projectId: string) => {
+    navigate(`/workspace/client-area/admin/projects/${projectId}/edit`);
+  };
 
   // Format date for display
   const formatDate = (dateString: string) => {
@@ -95,6 +118,14 @@ const ProjectsList = () => {
       year: 'numeric'
     }).format(date);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-khaki-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -138,7 +169,9 @@ const ProjectsList = () => {
           <ProjectsGrid 
             projects={filteredProjects} 
             formatDate={formatDate} 
-            toast={toast} 
+            toast={toast}
+            onEdit={navigateToEdit}
+            onDelete={confirmDelete}
           />
         </TabsContent>
         
@@ -146,7 +179,9 @@ const ProjectsList = () => {
           <ProjectsGrid 
             projects={filteredProjects} 
             formatDate={formatDate} 
-            toast={toast} 
+            toast={toast}
+            onEdit={navigateToEdit}
+            onDelete={confirmDelete}
           />
         </TabsContent>
         
@@ -154,16 +189,41 @@ const ProjectsList = () => {
           <ProjectsGrid 
             projects={filteredProjects} 
             formatDate={formatDate} 
-            toast={toast} 
+            toast={toast}
+            onEdit={navigateToEdit}
+            onDelete={confirmDelete}
           />
         </TabsContent>
       </Tabs>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogDescription>
+              Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteProject}
+            >
+              Supprimer
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 // ProjectsGrid component to display the list of projects
-const ProjectsGrid = ({ projects, formatDate, toast }) => {
+const ProjectsGrid = ({ projects, formatDate, toast, onEdit, onDelete }) => {
   if (projects.length === 0) {
     return (
       <div className="text-center py-10">
@@ -179,11 +239,11 @@ const ProjectsGrid = ({ projects, formatDate, toast }) => {
           <CardHeader className="p-4 pb-2">
             <div className="flex justify-between items-start">
               <Badge variant={
-                project.status === 'En cours' ? 'default' :
+                project.status === 'En cours' || project.status === 'active' ? 'default' :
                 project.status === 'En attente' ? 'secondary' :
                 project.status === 'Planifié' ? 'outline' : 'success'
               }>
-                {project.status}
+                {project.status === 'active' ? 'En cours' : project.status}
               </Badge>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -199,36 +259,44 @@ const ProjectsGrid = ({ projects, formatDate, toast }) => {
                       Voir les détails
                     </Link>
                   </DropdownMenuItem>
-                  {!project.hasClient && (
+                  {!project.clientId && (
                     <DropdownMenuItem>
                       <Link to={`/workspace/client-area/admin/projects/${project.id}/assign-client`} className="w-full">
                         Assigner un client
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuItem onClick={() => {
-                    toast({
-                      title: "Action en cours de développement",
-                      description: "Cette fonctionnalité sera bientôt disponible.",
-                    });
-                  }}>
-                    Modifier
+                  <DropdownMenuItem onClick={() => onEdit(project.id)}>
+                    <div className="flex items-center w-full">
+                      <Edit className="h-4 w-4 mr-2" />
+                      Modifier
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem 
+                    className="text-red-600"
+                    onClick={() => onDelete(project.id)}
+                  >
+                    <div className="flex items-center w-full">
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Supprimer
+                    </div>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <CardTitle className="text-lg mt-2">{project.title}</CardTitle>
+            <CardTitle className="text-lg mt-2">{project.projectName}</CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0">
             <div className="text-sm text-gray-500 space-y-2">
               <div className="flex items-center">
                 <Building2 className="h-4 w-4 mr-2" />
-                <span>{project.type} - {project.location}</span>
+                <span>{project.projectType} - {project.location || 'Non défini'}</span>
               </div>
-              {project.hasClient ? (
+              {project.clientId ? (
                 <div className="flex items-center">
                   <User2 className="h-4 w-4 mr-2" />
-                  <span>{project.client}</span>
+                  <span>{project.clientName || 'Client assigné'}</span>
                 </div>
               ) : (
                 <div className="flex items-center text-amber-600">
@@ -239,13 +307,14 @@ const ProjectsGrid = ({ projects, formatDate, toast }) => {
               <div className="bg-gray-100 dark:bg-gray-800 h-2 rounded-full mt-3">
                 <div 
                   className="bg-khaki-600 h-2 rounded-full" 
-                  style={{ width: `${project.progress}%` }}
+                  style={{ width: `${project.progress || 0}%` }}
                 ></div>
               </div>
             </div>
           </CardContent>
           <CardFooter className="p-4 pt-0 text-xs text-gray-500">
-            Mis à jour le {formatDate(project.updatedAt)}
+            Mis à jour le {project.updatedAt ? formatDate(project.updatedAt) : 
+              project.createdAt ? formatDate(project.createdAt) : 'N/A'}
           </CardFooter>
         </Card>
       ))}
