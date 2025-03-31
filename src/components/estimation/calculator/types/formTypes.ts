@@ -91,6 +91,28 @@ export interface FormData {
   bathrooms?: number;
   kitchens?: number;
   livingRooms?: number;
+  
+  // For amenagements exterieurs
+  hasPool?: boolean;
+  hasTerrace?: boolean;
+  hasOutdoorKitchen?: boolean;
+  
+  // For special features
+  solarPanels?: boolean;
+  rainwaterHarvesting?: boolean;
+  homeAutomation?: boolean;
+  energyEfficiency?: boolean;
+  
+  // For terrain details
+  landPrice?: number;
+  landIncluded?: boolean;
+  landType?: string;
+  
+  // For attic details
+  atticType?: string;
+  
+  // For insulation
+  insulationType?: string;
 }
 
 // Base form props that all form steps will use
@@ -100,4 +122,6 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  defaultValues?: Partial<FormData>;
+  onSubmit?: (data: Partial<FormData>) => void;
 }

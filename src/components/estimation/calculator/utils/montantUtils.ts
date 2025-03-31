@@ -1,4 +1,3 @@
-
 /**
  * Utility functions for calculating costs in the estimation calculator
  */
@@ -18,6 +17,39 @@ export function ensureNumber(value: any, defaultValue = 0): number {
   }
   
   return defaultValue;
+}
+
+/**
+ * Calculate insulation cost based on type and surface area
+ */
+export function calculateInsulationCost(insulationType: string, surface: number): number {
+  let costPerM2 = 0;
+  
+  // Determine cost per square meter based on insulation type
+  switch (insulationType) {
+    case 'standard':
+      costPerM2 = 80; // RT2012 standard insulation
+      break;
+    case 'reinforced':
+      costPerM2 = 100; // RT2020 reinforced insulation
+      break;
+    case 'passive':
+      costPerM2 = 120; // Passive house insulation
+      break;
+    case 'ecological':
+      costPerM2 = 110; // Ecological materials insulation
+      break;
+    case 'renovation':
+      costPerM2 = 90; // Renovation-specific insulation
+      break;
+    case 'non_concerne':
+    default:
+      costPerM2 = 0; // No insulation
+      break;
+  }
+  
+  // Calculate total cost
+  return costPerM2 * surface;
 }
 
 /**
