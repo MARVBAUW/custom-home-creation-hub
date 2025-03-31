@@ -12,9 +12,9 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
   // Page 0: Choix du profil (Client Type)
   if (currentStep === 0) {
     if (formData.clientType === 'professional') {
-      return 1; // Professionnel -> Page 1 (Project Details)
+      return 1; // Professionnel -> Page 1 (Project Professional)
     } else if (formData.clientType === 'individual') {
-      return 2; // Particulier -> Page 2 (Project Type)
+      return 2; // Particulier -> Page 2 (Project Type for Individual)
     }
     return 0; // Stay on same page if no choice made
   }
@@ -30,12 +30,38 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
     if (formData.projectType === 'optimization' || formData.projectType === 'design') {
       return 7; // Aller directement au formulaire de contact (Page 7)
     }
-    return 3; // Sinon continuer normalement vers la page 3 (Room Details)
+    return 3; // Sinon continuer normalement vers la page 3 (Estimation Type)
   }
   
-  // Pages 3-6: Diff details steps
-  if (currentStep >= 3 && currentStep <= 6) {
-    return currentStep + 1; // Go to next step
+  // Page 3: Type d'estimation (rapide ou précise)
+  if (currentStep === 3) {
+    // Si estimation rapide pour rénovation ou division
+    if (formData.estimationType === 'rapide' && 
+        (formData.projectType === 'renovation' || formData.projectType === 'division')) {
+      return 6; // Aller directement à la page 6 (Page 44 dans la logique donnée)
+    }
+    return 4; // Sinon continuer vers la page 4 (Construction Details)
+  }
+  
+  // Page 4: Détails de construction
+  if (currentStep === 4) {
+    return 5; // Aller à la page 5 (Terrain Details)
+  }
+  
+  // Page 5: Détails du terrain
+  if (currentStep === 5) {
+    // Pour les projets de rénovation ou division avec estimation précise
+    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
+        formData.estimationType === 'precise') {
+      return 29; // Aller à la page de démolition (Page 29 dans la logique donnée)
+    }
+    // Pour les autres projets (construction, extension)
+    return 6; // Aller aux pages suivantes (6-43 selon options)
+  }
+  
+  // Page 6 à 43: Pages d'options et détails
+  if (currentStep >= 6 && currentStep < 7) {
+    return 7; // Aller au formulaire de contact (Page 45 dans la logique donnée)
   }
   
   // Page 7: Contact Details
@@ -44,9 +70,9 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
     if (formData.projectType === 'optimization' || 
         formData.projectType === 'design' || 
         formData.clientType === 'professional') {
-      return 7; // Rester sur la même page ou finaliser
+      return 7; // Rester sur la même page (terminer le processus)
     }
-    return 8; // Sinon aller à la page d'estimation (Results)
+    return 8; // Sinon aller à la page d'estimation (Page 46 dans la logique donnée)
   }
   
   // Par défaut, passer à l'étape suivante
@@ -60,14 +86,34 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
  * @returns Le numéro de l'étape précédente
  */
 export const determinePreviousStep = (currentStep: number, formData: FormData): number => {
-  // Chemin inverse depuis la page des détails de projet (page 1)
+  // Chemin inverse depuis la page des détails de projet pro (page 1)
   if (currentStep === 1) {
     return 0; // Retour à la page 0 (Client Type)
   }
   
-  // Chemin inverse depuis la page du type de projet (page 2)
+  // Chemin inverse depuis la page du type de projet particulier (page 2)
   if (currentStep === 2) {
     return 0; // Retour à la page 0 (Client Type)
+  }
+  
+  // Chemin inverse depuis la page du type d'estimation (page 3)
+  if (currentStep === 3) {
+    return 2; // Retour à la page 2 (Project Type)
+  }
+  
+  // Chemin inverse depuis la page de détails de construction (page 4)
+  if (currentStep === 4) {
+    return 3; // Retour à la page 3 (Estimation Type)
+  }
+  
+  // Chemin inverse depuis la page de terrain (page 5)
+  if (currentStep === 5) {
+    return 4; // Retour à la page 4 (Construction Details)
+  }
+  
+  // Chemin inverse depuis la page 29 (démolition)
+  if (currentStep === 29) {
+    return 5; // Retour à la page 5 (Terrain Details)
   }
   
   // Chemin inverse depuis la page de contact (page 7)
@@ -80,7 +126,24 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
       return 2; // Retour à la page 2 pour les projets sans estimation
     }
     
-    return 6; // Retour à la page précédente (Special Features)
+    // Pour les projets de construction/extension
+    if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+      return 6; // Retour à la dernière page des options
+    }
+    
+    // Pour les projets de rénovation/division avec estimation rapide
+    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
+        formData.estimationType === 'rapide') {
+      return 6; // Retour à la page 6 (Page 44 dans la logique donnée)
+    }
+    
+    // Pour les projets de rénovation/division avec estimation précise
+    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
+        formData.estimationType === 'precise') {
+      return 6; // Retour à la dernière page des options
+    }
+    
+    return 6; // Par défaut, retour à la page précédente
   }
   
   // Chemin inverse depuis la page de résultats (page 8)

@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEstimationCalculator } from './useEstimationCalculator';
 import EstimationResult from './EstimationResult';
-import EstimationForm from './EstimationForm';
 import { Card } from '@/components/ui/card';
 import ClientTypeStep from './steps/ClientTypeStep';
 import ProjectDetailsStep from './steps/ProjectDetailsStep';
@@ -66,8 +65,10 @@ const EstimationWizard: React.FC = () => {
 
   // Function to render the current step component
   const renderCurrentStep = () => {
+    console.log("Rendering step:", step);
+    
     switch (step) {
-      case 0:
+      case 0: // Client Type (Particulier/Professionnel)
         return (
           <ClientTypeStep
             formData={formData}
@@ -76,7 +77,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 1:
+      case 1: // Professional Project Details
         return (
           <ProjectDetailsStep
             formData={formData}
@@ -86,9 +87,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 2:
+      case 2: // Individual Project Type
         return (
-          <TerrainDetailsStep
+          <ProjectDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -96,7 +97,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 3:
+      case 3: // Estimation Type (Rapide/Précise)
         return (
           <RoomsDetailsStep
             formData={formData}
@@ -106,7 +107,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 4:
+      case 4: // Construction Details
         return (
           <FinishDetailsStep
             formData={formData}
@@ -116,7 +117,17 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 5:
+      case 5: // Terrain Details
+        return (
+          <TerrainDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 6: // Options and more details
         return (
           <ExteriorFeaturesStep
             formData={formData}
@@ -126,9 +137,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 6:
+      case 7: // Contact Form
         return (
-          <SpecialFeaturesStep
+          <ContactDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -136,9 +147,19 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 7:
+      case 8: // Results
         return (
-          <ContactDetailsStep
+          <SpecialFeaturesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={finalizeEstimation}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 29: // Demolition (for renovation)
+        return (
+          <FinishDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
