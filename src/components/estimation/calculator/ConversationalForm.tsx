@@ -5,9 +5,9 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
-import { FormData } from './types';
 import { useEstimationCalculator } from './useEstimationCalculator';
 import { useToast } from '@/hooks/use-toast';
+import { createTypeAdaptingUpdater } from './utils/dataAdapter';
 
 const ConversationalForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('conversational');
@@ -28,6 +28,9 @@ const ConversationalForm: React.FC = () => {
     calculateEstimationResult
   } = useEstimationCalculator();
 
+  // Create a type-adapting updater function to handle type conversions between FormData and EstimationFormData
+  const adaptedUpdateFormData = createTypeAdaptingUpdater(updateFormData);
+
   // Afficher un toast au chargement du composant
   React.useEffect(() => {
     // Message informant l'utilisateur du formulaire d'estimation conversationnel
@@ -43,7 +46,7 @@ const ConversationalForm: React.FC = () => {
   // Gestion de la soumission du type de client
   const onClientTypeSubmit = (data: {clientType: string}) => {
     if (data && data.clientType) {
-      updateFormData({ clientType: data.clientType });
+      adaptedUpdateFormData({ clientType: data.clientType });
       // Basculer vers le formulaire structuré si l'utilisateur a choisi un type de client
       if (activeTab === 'conversational') {
         setTimeout(() => {
@@ -59,17 +62,17 @@ const ConversationalForm: React.FC = () => {
     
     // Analyser l'entrée pour extraire les données du formulaire
     if (input.toLowerCase().includes('maison') || input.toLowerCase().includes('construction')) {
-      updateFormData({ projectType: 'construction' });
+      adaptedUpdateFormData({ projectType: 'construction' });
     } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('renovation')) {
-      updateFormData({ projectType: 'renovation' });
+      adaptedUpdateFormData({ projectType: 'renovation' });
     } else if (input.toLowerCase().includes('extension')) {
-      updateFormData({ projectType: 'extension' });
+      adaptedUpdateFormData({ projectType: 'extension' });
     }
     
     // Extraire les informations de surface si mentionnées
     const surfaceMatch = input.match(/(\d+)\s*m²/);
     if (surfaceMatch && surfaceMatch[1]) {
-      updateFormData({ surface: parseInt(surfaceMatch[1]) });
+      adaptedUpdateFormData({ surface: parseInt(surfaceMatch[1]) });
     }
     
     // Extraire d'autres informations comme le lieu, le budget, etc.
@@ -87,7 +90,7 @@ const ConversationalForm: React.FC = () => {
         <ConversationalEstimator 
           onUserInput={processUserInput} 
           formData={formData} 
-          updateFormData={updateFormData}
+          updateFormData={adaptedUpdateFormData}
           onClientTypeSubmit={onClientTypeSubmit}
           goToStep={setStep}
         />

@@ -1,119 +1,146 @@
 
-import { useState, useEffect } from 'react';
-import { FormData, EstimationResponseData } from './types';
-import { determineNextStep, determinePreviousStep } from './utils/navigationPathUtils';
-import { calculateEstimation } from './calculations/estimationCalculator';
-import { useToast } from '@/hooks/use-toast';
-import { convertEstimationResponseData, normalizeFormData } from './utils/typeHelpers';
+import { useState, useCallback } from 'react';
+import { FormData, EstimationFormData, EstimationResponseData } from './types';
+import { createTypeAdaptingUpdater, adaptToEstimationFormData } from './utils/dataAdapter';
+
+// Initial form data
+const initialFormData: FormData = {
+  clientType: '',
+  projectType: '',
+  surface: '',
+  budget: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  montantT: 0
+};
 
 export const useEstimationCalculator = () => {
   const [step, setStep] = useState<number>(0);
-  const [totalSteps, setTotalSteps] = useState<number>(8); // Set fixed number of steps
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>(initialFormData);
   const [estimationResult, setEstimationResult] = useState<EstimationResponseData | null>(null);
-  const [showResultDialog, setShowResultDialog] = useState<boolean>(false);
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const { toast } = useToast();
   
-  // Function to update form data
-  const updateFormData = (data: Partial<FormData>) => {
-    setFormData(prevData => {
-      const newData = {
-        ...prevData,
-        ...data
-      };
-      console.log("Form data updated:", data);
-      return newData;
-    });
-  };
+  // Total number of steps - can be updated based on project type
+  const totalSteps = 20;
+  
+  // Update form data with new values
+  const updateFormData = useCallback((newData: Partial<FormData>) => {
+    // Convert the incoming data to a format compatible with FormData
+    setFormData(prevData => ({
+      ...prevData,
+      ...newData
+    }));
+  }, []);
+  
+  // Move to the next step
+  const goToNextStep = useCallback(() => {
+    setAnimationDirection('forward');
+    setStep(prev => Math.min(prev + 1, totalSteps - 1));
+  }, [totalSteps]);
+  
+  // Move to the previous step
+  const goToPreviousStep = useCallback(() => {
+    setAnimationDirection('backward');
+    setStep(prev => Math.max(prev - 1, 0));
+  }, []);
   
   // Calculate the estimation result
-  const calculateEstimationResult = () => {
-    try {
-      setIsSubmitting(true);
-      
-      // Normalize form data to ensure consistent types
-      const normalizedFormData = normalizeFormData(formData);
-      
-      // Calculate the estimation based on the form data
-      const result = calculateEstimation(normalizedFormData);
-      
-      // Convert to standard response format
-      const standardResult = convertEstimationResponseData(result);
-      
-      // Update the estimation result
-      setEstimationResult(standardResult);
-      
-      // Show the result dialog
-      setShowResultDialog(true);
-      
-      toast({
-        title: "Estimation calculée",
-        description: `Total estimé : ${standardResult.totalAmount.toLocaleString()} €`,
-      });
-      
-      return standardResult;
-    } catch (error) {
-      console.error("Error calculating estimation:", error);
-      
-      toast({
-        title: "Erreur de calcul",
-        description: "Une erreur est survenue lors du calcul de l'estimation.",
-        variant: "destructive",
-      });
-      
-      return null;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  // Finalize the estimation process
-  const finalizeEstimation = () => {
-    // Only calculate if no result exists yet
-    if (!estimationResult) {
-      return calculateEstimationResult();
-    }
-    return estimationResult;
-  };
-  
-  // Function to go to the next step
-  const goToNextStep = () => {
-    const nextStep = determineNextStep(step, formData);
-    setAnimationDirection('forward');
+  const calculateEstimationResult = useCallback((): EstimationResponseData => {
+    // Base cost per square meter
+    const baseCostPerSquareMeter = 1500;
     
-    // If we're already at the next step, don't animate
-    if (nextStep === step) {
-      return;
-    }
+    // Get numeric values from form data
+    const surface = Number(formData.surface) || 0;
     
-    // Delay to allow animation
-    setTimeout(() => {
-      setStep(nextStep);
-    }, 200);
-  };
+    // Calculate basic costs
+    const structuralWorkCost = surface * baseCostPerSquareMeter * 0.4;
+    const finishingWorkCost = surface * baseCostPerSquareMeter * 0.3;
+    const technicalLotsCost = surface * baseCostPerSquareMeter * 0.2;
+    const externalWorksCost = surface * baseCostPerSquareMeter * 0.1;
+    
+    // Calculate total construction cost
+    const totalConstructionCost = structuralWorkCost + finishingWorkCost + technicalLotsCost + externalWorksCost;
+    
+    // Calculate fees (architect, engineering, etc.)
+    const architectFees = totalConstructionCost * 0.1;
+    const engineeringFees = totalConstructionCost * 0.05;
+    const otherFees = totalConstructionCost * 0.03;
+    const totalFees = architectFees + engineeringFees + otherFees;
+    
+    // Calculate other costs
+    const insuranceCost = totalConstructionCost * 0.02;
+    const contingencyCost = totalConstructionCost * 0.05;
+    const taxesCost = totalConstructionCost * 0.01;
+    const miscellaneousCost = totalConstructionCost * 0.01;
+    const totalOtherCosts = insuranceCost + contingencyCost + taxesCost + miscellaneousCost;
+    
+    // Calculate total amount
+    const totalAmount = totalConstructionCost + totalFees + totalOtherCosts;
+    
+    // Create categories for pie chart
+    const categories = [
+      { category: 'Gros œuvre', amount: structuralWorkCost },
+      { category: 'Second œuvre', amount: finishingWorkCost },
+      { category: 'Lots techniques', amount: technicalLotsCost },
+      { category: 'Aménagements extérieurs', amount: externalWorksCost },
+      { category: 'Honoraires', amount: totalFees },
+      { category: 'Autres coûts', amount: totalOtherCosts }
+    ];
+    
+    // Create timeline estimation
+    const timelineEstimation = {
+      design: 2,
+      permits: 3,
+      bidding: 1,
+      construction: surface > 200 ? 12 : (surface > 100 ? 9 : 6),
+      total: 0
+    };
+    
+    // Calculate total timeline
+    timelineEstimation.total = timelineEstimation.design + timelineEstimation.permits + timelineEstimation.bidding + timelineEstimation.construction;
+    
+    // Create and return the estimation result
+    const result: EstimationResponseData = {
+      constructionCosts: {
+        structuralWork: structuralWorkCost,
+        finishingWork: finishingWorkCost,
+        technicalLots: technicalLotsCost,
+        externalWorks: externalWorksCost,
+        total: totalConstructionCost
+      },
+      fees: {
+        architect: architectFees,
+        engineeringFees: engineeringFees,
+        architectFees: architectFees,
+        officialFees: engineeringFees * 0.2,
+        inspectionFees: engineeringFees * 0.3,
+        technicalStudies: engineeringFees * 0.5,
+        other: otherFees,
+        total: totalFees
+      },
+      otherCosts: {
+        insurance: insuranceCost,
+        contingency: contingencyCost,
+        taxes: taxesCost,
+        miscellaneous: miscellaneousCost,
+        total: totalOtherCosts
+      },
+      totalAmount,
+      categories,
+      timeline: timelineEstimation
+    };
+    
+    return result;
+  }, [formData]);
   
-  // Function to go to the previous step
-  const goToPreviousStep = () => {
-    const prevStep = determinePreviousStep(step, formData);
-    setAnimationDirection('backward');
-    
-    // If we're already at the previous step, don't animate
-    if (prevStep === step) {
-      return;
-    }
-    
-    // Delay to allow animation
-    setTimeout(() => {
-      setStep(prevStep);
-    }, 200);
-  };
-  
-  // Log current step changes for debugging
-  useEffect(() => {
-    console.log(`Current step: ${step}, Client Type: ${formData.clientType}, Project Type: ${formData.projectType}`);
-  }, [step, formData.clientType, formData.projectType]);
+  // Finalize the estimation and store the result
+  const finalizeEstimation = useCallback(() => {
+    const result = calculateEstimationResult();
+    setEstimationResult(result);
+    return result;
+  }, [calculateEstimationResult]);
   
   return {
     step,
@@ -121,9 +148,7 @@ export const useEstimationCalculator = () => {
     totalSteps,
     formData,
     estimationResult,
-    showResultDialog,
     animationDirection,
-    isSubmitting,
     updateFormData,
     goToNextStep,
     goToPreviousStep,

@@ -36,9 +36,9 @@ export interface UnifiedFormData {
   units?: number | string;
   
   // Land information
+  landType?: string;
   landOwnership?: 'owned' | 'to-purchase' | string;
   landArea?: number | string;
-  landType?: string;
   landSlope?: string;
   landAccess?: string;
   landPrice?: number | string;
@@ -67,6 +67,9 @@ export interface UnifiedFormData {
   demolitionTypes?: string[];
   demolitionPercentages?: { [key: string]: string | number };
   demolitionTotalArea?: number | string;
+  demolitionType?: string;
+  demolitionCost?: number | string;
+  demolitionDetailedCosts?: { [key: string]: number };
   
   // Structural work
   createWalls?: "OUI" | "NON" | boolean | string;
@@ -98,6 +101,7 @@ export interface UnifiedFormData {
   // Interior details
   doorType?: string;
   interiorDoorType?: string;
+  interiorDoorsType?: string;
   doorCount?: number | string;
   
   // Kitchen and bathroom

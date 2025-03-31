@@ -188,3 +188,34 @@ export const calculateNewTotal = (currentTotal: string | number | undefined, cos
   const total = ensureNumber(currentTotal, 0);
   return total + costToAdd;
 };
+
+/**
+ * Converts a string or number to string
+ * @param value - The value to convert
+ * @returns The value as a string
+ */
+export const toString = (value: string | number): string => {
+  return typeof value === 'number' ? value.toString() : value;
+};
+
+/**
+ * Ensures a value is compatible with OUI/NON enum type
+ * @param value - The value to ensure compatibility with OUI/NON
+ * @returns "OUI" | "NON"
+ */
+export const ensureOuiNon = (value: any): "OUI" | "NON" => {
+  return toOuiNon(value);
+};
+
+/**
+ * Ensures a value is compatible with specific enum type
+ * @param value - The value to ensure compatibility
+ * @param defaultValue - Default value if conversion fails
+ * @param validValues - Array of valid enum values
+ * @returns A value from the valid values list
+ */
+export const ensureEnum = <T extends string>(value: any, defaultValue: T, validValues: T[]): T => {
+  if (value === undefined || value === null) return defaultValue;
+  const strValue = String(value);
+  return validValues.includes(strValue as T) ? strValue as T : defaultValue;
+};

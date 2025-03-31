@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -7,6 +8,7 @@ import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
 import FormNavigation from './components/FormNavigation';
 import { EstimationFormData } from './types';
+import { createTypeAdaptingUpdater } from './utils/dataAdapter';
 
 const WorkEstimationForm: React.FC = () => {
   const formWrapper = useRef<HTMLDivElement>(null);
@@ -24,6 +26,9 @@ const WorkEstimationForm: React.FC = () => {
     updateFormData,
     setStep
   } = useEstimationCalculator();
+  
+  // Create a type-adapting updater function to handle type conversions
+  const adaptedUpdateFormData = createTypeAdaptingUpdater(updateFormData);
   
   const { methods } = useEstimationForm();
 
@@ -60,7 +65,7 @@ const WorkEstimationForm: React.FC = () => {
   // Function to handle client type submission from conversational estimator
   const onClientTypeSubmit = (data: { clientType: string }) => {
     if (data && typeof data === 'object' && 'clientType' in data) {
-      updateFormData({ clientType: data.clientType });
+      adaptedUpdateFormData({ clientType: data.clientType });
     }
   };
 
@@ -85,7 +90,7 @@ const WorkEstimationForm: React.FC = () => {
             <ConversationalEstimator 
               onUserInput={processUserInput}
               formData={formData}
-              updateFormData={updateFormData}
+              updateFormData={adaptedUpdateFormData}
               onClientTypeSubmit={onClientTypeSubmit}
               goToStep={setStep}
             />
