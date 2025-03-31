@@ -23,3 +23,5 @@ export const useDTUSchemas = (schemas: DTUSchema[] = []) => {
     closeZoom
   };
 };
+
+export default useDTUSchemas;

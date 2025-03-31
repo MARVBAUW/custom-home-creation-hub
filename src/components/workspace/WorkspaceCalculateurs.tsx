@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler, Volume2, Thermometer, Droplets, Hammer, Briefcase } from 'lucide-react';
-import { FraisNotaireCalculator } from './calculators/FraisNotaireCalculator';
-import { RentabiliteLocativeCalculator } from './calculators/RentabiliteLocativeCalculator';
-import { CapaciteEmpruntCalculator } from './calculators/CapaciteEmpruntCalculator';
-import { SurfaceHabitableCalculator } from './calculators/SurfaceHabitableCalculator';
-import { AcoustiqueCalculator } from './calculators/AcoustiqueCalculator';
-import { DpeCalculator } from './calculators/DpeCalculator';
-import { EurocodesCalculator } from './calculators/EurocodesCalculator';
+
+// Import workspace components with correct import syntax (using default imports)
+import FraisNotaireCalculator from '@/components/workspace/calculators/FraisNotaireCalculator';
+import RentabiliteLocativeCalculator from '@/components/workspace/calculators/RentabiliteLocativeCalculator';
+import CapaciteEmpruntCalculator from '@/components/workspace/calculators/CapaciteEmpruntCalculator';
+import SurfaceHabitableCalculator from '@/components/workspace/calculators/SurfaceHabitableCalculator';
+import AcousticCalculator from '@/components/workspace/calculators/AcousticCalculator';
+import DpeCalculator from '@/components/workspace/calculators/DpeCalculator';
+import EurocodesCalculator from '@/components/workspace/calculators/EurocodesCalculator';
 import SimulationManager from './calculateurs/simulation/SimulationManager';
 import { useToast } from '@/hooks/use-toast';
 
@@ -104,7 +106,7 @@ const WorkspaceCalculateurs = () => {
                 <CardTitle className="text-lg">Acoustique</CardTitle>
               </CardHeader>
               <CardContent>
-                <AcoustiqueCalculator />
+                <AcousticCalculator />
               </CardContent>
             </Card>
           </div>
