@@ -77,7 +77,7 @@ export const calculateStructuralFeatureCost = (feature: string, value: number | 
     case 'RACCORDEMENT SANTAIRE RESEAU URBAIN':
       return valueNum * 180; // 180€ per linear meter
     default:
-      return.0;
+      return 0;
   }
 };
 
@@ -336,6 +336,45 @@ export const calculateSoftFloorCost = (area: number | string, type: string): num
       return areaNum * 40; // 40€ per m²
     case 'hautDeGamme':
       return areaNum * 60; // 60€ per m²
+    default:
+      return 0;
+  }
+};
+
+/**
+ * Calculate floor tiling costs based on type, percentage and total area
+ */
+export const calculateFloorTilingCost = (type: string, percentage: number, totalArea: number | string): number => {
+  const area = (percentage / 100) * ensureNumber(totalArea);
+  
+  switch (type) {
+    case 'standard':
+      return area * 80; // 80€ per m²
+    case 'medium':
+      return area * 120; // 120€ per m²
+    case 'premium':
+      return area * 200; // 200€ per m²
+    case 'non_concerne':
+      return 0;
+    default:
+      return 0;
+  }
+};
+
+/**
+ * Calculate wall tiling costs based on type and total area
+ */
+export const calculateWallTilingCost = (type: string, totalArea: number | string): number => {
+  // Wall tiling is typically 50% of floor area for bathrooms and kitchens
+  const wallArea = ensureNumber(totalArea) * 0.5;
+  
+  switch (type) {
+    case 'standard':
+      return wallArea * 60; // 60€ per m²
+    case 'medium':
+      return wallArea * 90; // 90€ per m²
+    case 'premium':
+      return wallArea * 150; // 150€ per m²
     default:
       return 0;
   }

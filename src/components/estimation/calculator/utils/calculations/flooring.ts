@@ -4,7 +4,7 @@ import { ensureNumber } from '../typeConversions';
 /**
  * Calculate costs for floor tiling based on type and area
  */
-export const calculateFloorTilingCost = (type: string, percentage: number, totalArea: number): number => {
+export const calculateFloorTilingCost = (type: string, percentage: number, totalArea: number | string): number => {
   const area = (percentage / 100) * ensureNumber(totalArea);
   const costPerSquareMeter = getFloorTileCostPerSquareMeter(type);
   return costPerSquareMeter * area;
@@ -18,6 +18,7 @@ const getFloorTileCostPerSquareMeter = (type: string): number => {
     case 'standard': return 80;
     case 'medium': return 120;
     case 'premium': return 200;
+    case 'non_concerne': return 0;
     default: return 0;
   }
 };
@@ -25,7 +26,7 @@ const getFloorTileCostPerSquareMeter = (type: string): number => {
 /**
  * Calculate parquet flooring costs based on type and area
  */
-export const calculateParquetCost = (type: string, area: number): number => {
+export const calculateParquetCost = (type: string, area: number | string): number => {
   const costPerSquareMeter = getParquetCostPerSquareMeter(type);
   return costPerSquareMeter * ensureNumber(area);
 };
@@ -35,6 +36,9 @@ export const calculateParquetCost = (type: string, area: number): number => {
  */
 const getParquetCostPerSquareMeter = (type: string): number => {
   switch (type) {
+    case 'base': return 45;
+    case 'milieuDeGamme': return 75;
+    case 'hautDeGamme': return 120;
     case 'PARQUET DE BASE': return 50;
     case 'PARQUET MG': return 90;
     case 'PARQUET HG': return 160;
@@ -46,7 +50,7 @@ const getParquetCostPerSquareMeter = (type: string): number => {
 /**
  * Calculate soft flooring costs based on type and area
  */
-export const calculateSoftFloorCost = (type: string, area: number): number => {
+export const calculateSoftFloorCost = (type: string, area: number | string): number => {
   const costPerSquareMeter = getSoftFloorCostPerSquareMeter(type);
   return costPerSquareMeter * ensureNumber(area);
 };
@@ -56,6 +60,9 @@ export const calculateSoftFloorCost = (type: string, area: number): number => {
  */
 const getSoftFloorCostPerSquareMeter = (type: string): number => {
   switch (type) {
+    case 'base': return 25;
+    case 'milieuDeGamme': return 40;
+    case 'hautDeGamme': return 60;
     case 'SOL SOUPLE BASE': return 30;
     case 'SOL SOUPLE MG': return 60;
     case 'SOL SOUPLE HG': return 100;
@@ -65,11 +72,33 @@ const getSoftFloorCostPerSquareMeter = (type: string): number => {
 };
 
 /**
+ * Calculate wall tiling costs based on type and area
+ */
+export const calculateWallTilingCost = (type: string, totalArea: number | string): number => {
+  // Wall tiling is typically 50% of floor area for bathrooms and kitchens
+  const wallArea = ensureNumber(totalArea) * 0.5;
+  const costPerSquareMeter = getWallTileCostPerSquareMeter(type);
+  return costPerSquareMeter * wallArea;
+};
+
+/**
+ * Get cost per square meter for different wall tile types
+ */
+const getWallTileCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 60;
+    case 'medium': return 90;
+    case 'premium': return 150;
+    default: return 0;
+  }
+};
+
+/**
  * Calculate flooring costs
  */
-export const calculateFlooringCost = (type: string, area: number): number => {
+export const calculateFlooringCost = (type: string, area: number | string): number => {
   const costPerSquareMeter = getFlooringCostPerSquareMeter(type);
-  return costPerSquareMeter * area;
+  return costPerSquareMeter * ensureNumber(area);
 };
 
 /**
@@ -88,9 +117,9 @@ const getFlooringCostPerSquareMeter = (type: string): number => {
 /**
  * Calculate floor construction costs
  */
-export const calculateFloorCost = (type: string, area: number): number => {
+export const calculateFloorCost = (type: string, area: number | string): number => {
   const costPerSquareMeter = getFloorCostPerSquareMeter(type);
-  return costPerSquareMeter * area;
+  return costPerSquareMeter * ensureNumber(area);
 };
 
 /**
@@ -98,31 +127,11 @@ export const calculateFloorCost = (type: string, area: number): number => {
  */
 const getFloorCostPerSquareMeter = (type: string): number => {
   switch (type) {
+    case 'BOIS': return 150;
+    case 'BETON': return 200;
     case 'CONCRETE': return 120;
     case 'WOODEN': return 150;
     case 'ENGINEERED': return 180;
-    default: return 0;
-  }
-};
-
-/**
- * Calculate wall tiling costs based on type and area
- */
-export const calculateWallTilingCost = (type: string, totalArea: number): number => {
-  // Wall tiling is typically 50% of floor area for bathrooms and kitchens
-  const wallArea = ensureNumber(totalArea) * 0.5;
-  const costPerSquareMeter = getWallTileCostPerSquareMeter(type);
-  return costPerSquareMeter * wallArea;
-};
-
-/**
- * Get cost per square meter for different wall tile types
- */
-const getWallTileCostPerSquareMeter = (type: string): number => {
-  switch (type) {
-    case 'standard': return 60;
-    case 'medium': return 90;
-    case 'premium': return 150;
-    default: return 0;
+    default: return 180;
   }
 };
