@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, CheckCircle, AlertTriangle, Zap } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -74,6 +73,7 @@ const BacklinksManager = () => {
       clearInterval(progressInterval);
       
       if (error) {
+        console.error("Error invoking function:", error);
         setProgress(0);
         setStatus('error');
         toast({
@@ -106,6 +106,7 @@ const BacklinksManager = () => {
         }, 2000);
       }
     } catch (error) {
+      console.error("Error generating backlinks:", error);
       toast({
         title: "Erreur",
         description: `Une erreur est survenue: ${error.message}`,

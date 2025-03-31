@@ -52,7 +52,7 @@ const ClientArea = () => {
   return (
     <>
       <Helmet>
-        <title>Espace Client | Progineer</title>
+        <title>{isAdminMode ? "Administration | Progineer" : "Espace Client | Progineer"}</title>
         <meta name="description" content="Accédez à votre espace client Progineer pour suivre l'avancement de vos projets de construction et rénovation." />
       </Helmet>
 
