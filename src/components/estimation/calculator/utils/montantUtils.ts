@@ -1,3 +1,4 @@
+
 // Import the ensureNumber function from typeConversions to re-export it
 import { ensureNumber } from './typeConversions';
 
@@ -409,4 +410,107 @@ export function calculateWallTilingCost(
     default:
       return 0;
   }
+}
+
+/**
+ * Calculate cost for parquet flooring based on type and area
+ * 
+ * @param type Type of parquet flooring
+ * @param area Area to cover in square meters
+ * @returns Cost of parquet flooring in euros
+ */
+export function calculateParquetCost(
+  type: string,
+  area: number
+): number {
+  switch (type) {
+    case 'standard':
+    case 'PARQUET DE BASE':
+      return 55 * area;
+    case 'medium':
+    case 'PARQUET MG':
+      return 66 * area;
+    case 'premium':
+    case 'PARQUET HG':
+      return 108 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculate cost for soft flooring (vinyl, carpet, etc) based on type and area
+ * 
+ * @param type Type of soft flooring
+ * @param area Area to cover in square meters
+ * @returns Cost of soft flooring in euros
+ */
+export function calculateSoftFloorCost(
+  type: string,
+  area: number
+): number {
+  switch (type) {
+    case 'standard':
+    case 'SOL SOUPLE BASE':
+      return 30 * area;
+    case 'medium':
+    case 'SOL SOUPLE MG':
+      return 35 * area;
+    case 'premium':
+    case 'SOL SOUPLE HG':
+      return 40 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculate cost for painting and wall coverings based on types and percentages
+ * 
+ * @param coverings Object containing wall coverings and their percentages
+ * @param area Total wall surface area
+ * @returns Cost of wall coverings in euros
+ */
+export function calculatePaintingCost(
+  coverings: {
+    basicPaint?: number;
+    decorativePaint?: number;
+    wallpaper?: number;
+    woodPaneling?: number;
+    stoneCladding?: number;
+  },
+  area: number
+): number {
+  let totalCost = 0;
+  
+  // Base paint cost
+  if (coverings.basicPaint) {
+    totalCost += (coverings.basicPaint / 100) * area * 0.58;
+  }
+  
+  // Decorative paint cost
+  if (coverings.decorativePaint) {
+    totalCost += (coverings.decorativePaint / 100) * area * 0.606;
+  }
+  
+  // Wallpaper cost
+  if (coverings.wallpaper) {
+    totalCost += (coverings.wallpaper / 100) * area * 0.6;
+  }
+  
+  // Wood paneling cost
+  if (coverings.woodPaneling) {
+    totalCost += (coverings.woodPaneling / 100) * area * 1.3;
+  }
+  
+  // Stone cladding cost
+  if (coverings.stoneCladding) {
+    totalCost += (coverings.stoneCladding / 100) * area * 1.9;
+  }
+  
+  return totalCost;
 }

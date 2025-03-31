@@ -10,7 +10,7 @@ import { ensureNumber } from '../utils/typeConversions';
 import { calculatePaintingCost } from '../utils/montantUtils';
 import { Paintbrush, Wallpaper, Construction, TreePine, Mountain } from 'lucide-react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExclamationCircle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 const PeintureForm: React.FC<BaseFormProps> = ({
   formData,
@@ -314,7 +314,7 @@ const PeintureForm: React.FC<BaseFormProps> = ({
         {/* Error indicator if total is not 100% */}
         {totalPercentage !== 100 && (
           <Alert variant="destructive" className="mb-4">
-            <ExclamationCircle className="h-4 w-4 mr-2" />
+            <AlertTriangle className="h-4 w-4 mr-2" />
             <AlertDescription>
               {totalPercentage > 100 
                 ? "La somme des surfaces de revêtements muraux ne peut pas être supérieure à 100%"
