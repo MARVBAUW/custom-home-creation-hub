@@ -1,173 +1,251 @@
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-
-const formSchema = z.object({
-  firstName: z.string().min(2, {
-    message: 'Le prénom doit contenir au moins 2 caractères'
-  }),
-  lastName: z.string().min(2, {
-    message: 'Le nom doit contenir au moins 2 caractères'
-  }),
-  email: z.string().email({
-    message: 'Veuillez entrer une adresse email valide'
-  }),
-  phone: z.string().min(10, {
-    message: 'Veuillez entrer un numéro de téléphone valide'
-  }),
-  referralName: z.string().min(2, {
-    message: 'Le nom doit contenir au moins 2 caractères'
-  }),
-  referralPhone: z.string().min(10, {
-    message: 'Veuillez entrer un numéro de téléphone valide'
-  }),
-  message: z.string().optional(),
-  acceptTerms: z.boolean().refine(val => val === true, {
-    message: 'Vous devez accepter les conditions'
-  })
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { CheckCircle, Send } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { supabase } from '@/integrations/supabase/client';
 
 const ParrainageForm = () => {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      referralName: '',
-      referralPhone: '',
-      message: '',
-      acceptTerms: false
-    }
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    yourName: '',
+    yourEmail: '',
+    yourPhone: '',
+    friendName: '',
+    friendEmail: '',
+    friendPhone: '',
+    projectType: '',
+    message: ''
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    // Here you would typically send the data to your backend
-
-    toast({
-      title: "Demande envoyée",
-      description: "Votre demande de parrainage a bien été envoyée. Nous vous contacterons rapidement."
-    });
-    form.reset();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  return <div>
-      <h2 className="text-2xl font-semibold mb-6 text-center">Inscrivez-vous au programme</h2>
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.yourName || !formData.yourEmail || !formData.friendName || !formData.friendEmail) {
+      toast({
+        title: "Formulaire incomplet",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Appel à la fonction Edge de Supabase
+      const { data, error } = await supabase.functions.invoke('send-referral-email', {
+        body: formData
+      });
       
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField control={form.control} name="firstName" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>Prénom</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Votre prénom" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>} />
+      if (error) throw error;
+      
+      console.log("Referral form submitted successfully:", data);
+      
+      setIsSubmitted(true);
+      setFormData({
+        yourName: '',
+        yourEmail: '',
+        yourPhone: '',
+        friendName: '',
+        friendEmail: '',
+        friendPhone: '',
+        projectType: '',
+        message: ''
+      });
+      
+      toast({
+        title: "Parrainage envoyé",
+        description: "Nous avons bien reçu votre parrainage et contacterons votre ami rapidement.",
+      });
+    } catch (error) {
+      console.error("Error submitting referral form:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'envoi du parrainage. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="text-center py-6">
+        <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-100 mb-4">
+          <CheckCircle className="h-6 w-6 text-green-600" />
+        </div>
+        <h3 className="text-xl font-semibold mb-2">Parrainage envoyé avec succès</h3>
+        <p className="text-gray-600 mb-6">
+          Merci pour votre recommandation ! Nous contacterons votre ami dans les plus brefs délais.
+        </p>
+        <Button onClick={() => setIsSubmitted(false)}>
+          Parrainer une autre personne
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2 className="text-2xl font-semibold mb-6 text-center">Recommander un ami</h2>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium mb-3">Vos informations</h3>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="yourName">Votre nom *</Label>
+              <Input
+                id="yourName"
+                name="yourName"
+                value={formData.yourName}
+                onChange={handleChange}
+                placeholder="Votre nom et prénom"
+                required
+              />
+            </div>
             
-            <FormField control={form.control} name="lastName" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>Nom</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Votre nom" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>} />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField control={form.control} name="email" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="votre@email.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>} />
+            <div className="space-y-2">
+              <Label htmlFor="yourEmail">Votre email *</Label>
+              <Input
+                id="yourEmail"
+                name="yourEmail"
+                type="email"
+                value={formData.yourEmail}
+                onChange={handleChange}
+                placeholder="votre@email.com"
+                required
+              />
+            </div>
             
-            <FormField control={form.control} name="phone" render={({
-            field
-          }) => <FormItem>
-                  <FormLabel>Téléphone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Votre numéro de téléphone" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>} />
-          </div>
-          
-          <div className="border-t border-gray-200 pt-6 mt-6">
-            <h3 className="text-lg font-medium mb-4">Informations sur votre filleul</h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField control={form.control} name="referralName" render={({
-              field
-            }) => <FormItem>
-                    <FormLabel>Nom du filleul</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Nom de la personne référée" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>} />
-              
-              <FormField control={form.control} name="referralPhone" render={({
-              field
-            }) => <FormItem>
-                    <FormLabel>Téléphone du filleul</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Numéro de téléphone du filleul" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>} />
+            <div className="space-y-2">
+              <Label htmlFor="yourPhone">Votre téléphone</Label>
+              <Input
+                id="yourPhone"
+                name="yourPhone"
+                value={formData.yourPhone}
+                onChange={handleChange}
+                placeholder="06 xx xx xx xx"
+              />
             </div>
           </div>
-          
-          <FormField control={form.control} name="message" render={({
-          field
-        }) => <FormItem>
-                <FormLabel>Message (optionnel)</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Informations complémentaires sur le projet de votre filleul" className="min-h-[100px]" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>} />
-          
-          <FormField control={form.control} name="acceptTerms" render={({
-          field
-        }) => <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <FormLabel className="text-sm font-normal">
-                    J'accepte que mes données personnelles soient traitées conformément à la politique de confidentialité.
-                  </FormLabel>
-                  <FormMessage />
-                </div>
-              </FormItem>} />
-          
-          <Button type="submit" className="w-full bg-[#787346]">
-            Envoyer ma demande de parrainage
-          </Button>
-        </form>
-      </Form>
-    </div>;
+        </div>
+        
+        <div className="pt-2">
+          <h3 className="text-lg font-medium mb-3">Informations de votre ami</h3>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="friendName">Nom de votre ami *</Label>
+              <Input
+                id="friendName"
+                name="friendName"
+                value={formData.friendName}
+                onChange={handleChange}
+                placeholder="Nom et prénom"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="friendEmail">Email de votre ami *</Label>
+              <Input
+                id="friendEmail"
+                name="friendEmail"
+                type="email"
+                value={formData.friendEmail}
+                onChange={handleChange}
+                placeholder="ami@email.com"
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="friendPhone">Téléphone de votre ami</Label>
+              <Input
+                id="friendPhone"
+                name="friendPhone"
+                value={formData.friendPhone}
+                onChange={handleChange}
+                placeholder="06 xx xx xx xx"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="projectType">Type de projet</Label>
+              <Select value={formData.projectType} onValueChange={(value) => handleSelectChange('projectType', value)}>
+                <SelectTrigger id="projectType">
+                  <SelectValue placeholder="Sélectionnez le type de projet" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="construction">Construction neuve</SelectItem>
+                  <SelectItem value="renovation">Rénovation</SelectItem>
+                  <SelectItem value="extension">Extension</SelectItem>
+                  <SelectItem value="amenagement">Aménagement intérieur</SelectItem>
+                  <SelectItem value="autre">Autre</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="message">Message (optionnel)</Label>
+              <Textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Ajoutez des informations supplémentaires sur le projet de votre ami..."
+                rows={3}
+              />
+            </div>
+          </div>
+        </div>
+        
+        <div className="bg-blue-50 rounded-lg p-4 text-sm text-blue-700 my-4">
+          <p className="font-medium">Comment fonctionne le parrainage ?</p>
+          <ol className="list-decimal pl-5 mt-2 space-y-1">
+            <li>Vous nous recommandez à un ami ayant un projet</li>
+            <li>Nous contactons votre ami pour discuter de son projet</li>
+            <li>Si votre ami signe un contrat avec nous, vous recevez votre prime</li>
+          </ol>
+        </div>
+        
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+              Envoi en cours...
+            </>
+          ) : (
+            <>
+              <Send className="mr-2 h-4 w-4" />
+              Envoyer le parrainage
+            </>
+          )}
+        </Button>
+        
+        <p className="text-xs text-gray-500 text-center">
+          * Champs obligatoires. En soumettant ce formulaire, vous acceptez que nous contactions votre ami pour lui présenter nos services.
+        </p>
+      </form>
+    </div>
+  );
 };
 
 export default ParrainageForm;

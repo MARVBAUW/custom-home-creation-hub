@@ -1,361 +1,369 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Settings, ChartGantt, FileText, RefreshCw, Building, Users, Calendar } from 'lucide-react';
-import BacklinksManager from './BacklinksManager';
-import ProjectsGanttView from './ProjectsGanttView';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { Building2, Users, FileText, BarChart3, CalendarRange, FileCheck, AlertTriangle, CheckCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import ProjectsGanttView from './ProjectsGanttView';
+import AdminStatistics from './AdminStatistics';
+import AdminDocuments from './AdminDocuments';
+import AdminClients from './AdminClients';
+import AdminProjects from './AdminProjects';
+import AdminTasks from './AdminTasks';
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
   const { toast } = useToast();
-  const [activeProjects, setActiveProjects] = useState(3);
-  const [pendingClients, setPendingClients] = useState(2);
-
-  const handleRefreshBacklinks = async () => {
-    toast({
-      title: "Rafraîchissement des backlinks",
-      description: "Les backlinks sont en cours de génération...",
-    });
+  const [activeTab, setActiveTab] = useState("overview");
+  const [statistics, setStatistics] = useState({
+    clients: 0,
+    projects: 0,
+    pendingTasks: 0,
+    documents: 0
+  });
+  
+  // Fetch statistics
+  useEffect(() => {
+    const fetchStatistics = async () => {
+      try {
+        // In a real implementation, this would fetch data from Supabase
+        // For now, we'll use simulated data
+        setStatistics({
+          clients: 8,
+          projects: 12,
+          pendingTasks: 5,
+          documents: 24
+        });
+      } catch (error) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+    
+    fetchStatistics();
+  }, []);
+  
+  const runBacklinksGeneration = async () => {
+    try {
+      toast({
+        title: "Génération en cours",
+        description: "Lancement de la génération de backlinks...",
+      });
+      
+      const { data, error } = await supabase.functions.invoke('generate-backlinks');
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Génération terminée",
+        description: data.message || "Backlinks générés avec succès",
+      });
+      
+      console.log("Backlinks generation result:", data);
+    } catch (error) {
+      console.error("Error generating backlinks:", error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la génération des backlinks",
+        variant: "destructive",
+      });
+    }
   };
-
+  
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold">Tableau de bord Administration</h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            Bienvenue, {user?.user_metadata?.full_name || 'Administrateur'}. Voici un aperçu de votre activité.
-          </p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <ThemeToggle />
-          <Badge className="ml-2 bg-khaki-100 text-khaki-800 dark:bg-khaki-900 dark:text-khaki-100">
-            Mode Administrateur
-          </Badge>
-        </div>
-      </div>
-      
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="border-khaki-100 dark:border-khaki-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">Projets actifs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <div className="text-3xl font-bold text-khaki-700 dark:text-khaki-300">{activeProjects}</div>
-              <Badge className="ml-3 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400">En cours</Badge>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-khaki-100 dark:border-khaki-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">Clients en attente</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <div className="text-3xl font-bold text-khaki-700 dark:text-khaki-300">{pendingClients}</div>
-              <Badge className="ml-3 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">À traiter</Badge>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-khaki-100 dark:border-khaki-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">Prochaine échéance</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <div className="text-lg font-bold text-khaki-700 dark:text-khaki-300">15/08/2023</div>
-              <Badge className="ml-3 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">5j restants</Badge>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-khaki-100 dark:border-khaki-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-500 dark:text-gray-400">Notifications</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <div className="text-3xl font-bold text-khaki-700 dark:text-khaki-300">7</div>
-              <Badge className="ml-3 bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-400">Non lues</Badge>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-      
-      {/* Planning Gantt - Composant principal et le plus important */}
-      <Card className="border-khaki-200 dark:border-khaki-800 shadow-md">
-        <CardHeader className="bg-khaki-50 dark:bg-khaki-900/20">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-xl text-khaki-800 dark:text-khaki-200">Planning des projets</CardTitle>
-              <CardDescription>Vue d'ensemble de tous vos projets en cours</CardDescription>
-            </div>
-            <div className="flex space-x-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="bg-white dark:bg-gray-800"
-                onClick={() => window.location.href = '/workspace/client-area/admin/projects'}
-              >
-                <Calendar className="h-4 w-4 mr-2 text-khaki-600" /> 
+    <div className="space-y-6">
+      {/* Admin Header */}
+      <div className="bg-gradient-to-r from-khaki-100/70 to-khaki-50/70 p-6 rounded-xl border border-khaki-200/50 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <Badge variant="outline" className="bg-khaki-700 text-white border-none mb-2">
+              Administration
+            </Badge>
+            <h1 className="text-2xl font-semibold mb-2">
+              Tableau de bord administrateur
+            </h1>
+            <p className="text-gray-600 max-w-xl">
+              Gérez vos projets, clients, documents et suivez les performances de votre entreprise.
+            </p>
+          </div>
+          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+            <Button asChild variant="outline" className="border-khaki-200 hover:bg-khaki-50 text-gray-700">
+              <Link to="/workspace/client-area/admin/create-project">
+                <FileText className="mr-2 h-4 w-4" />
                 Nouveau projet
-              </Button>
-              <ChartGantt className="h-6 w-6 text-khaki-600" />
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-0">
-          <ProjectsGanttView />
-        </CardContent>
-        <CardFooter className="bg-khaki-50/50 dark:bg-khaki-900/10 p-3 text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-2 text-khaki-600" />
-            <span>Affichage sur 1 an à partir d'aujourd'hui</span>
-          </div>
-          <div className="ml-auto flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="text-xs bg-white dark:bg-gray-800"
-              onClick={() => window.location.href = '/workspace/client-area/admin/planning'}
-            >
-              Voir tous les projets
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="border-khaki-200 hover:bg-khaki-50 text-gray-700">
+              <Link to="/workspace/client-area/admin/clients/new">
+                <Users className="mr-2 h-4 w-4" />
+                Nouveau client
+              </Link>
             </Button>
           </div>
-        </CardFooter>
-      </Card>
+        </div>
+      </div>
       
-      <Tabs defaultValue="parametres" className="space-y-6">
-        <TabsList className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1">
-          <TabsTrigger value="parametres" className="data-[state=active]:bg-khaki-50 dark:data-[state=active]:bg-khaki-900/20">
-            <Settings className="h-4 w-4 mr-2" />
-            Paramètres
+      {/* Key Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+        <Card className="bg-white">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Clients</p>
+                <p className="text-2xl font-semibold mt-1">{statistics.clients}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-khaki-100 flex items-center justify-center">
+                <Users className="h-6 w-6 text-khaki-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Projets</p>
+                <p className="text-2xl font-semibold mt-1">{statistics.projects}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
+                <Building2 className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Tâches en attente</p>
+                <p className="text-2xl font-semibold mt-1">{statistics.pendingTasks}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-amber-100 flex items-center justify-center">
+                <AlertTriangle className="h-6 w-6 text-amber-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm font-medium text-gray-500">Documents</p>
+                <p className="text-2xl font-semibold mt-1">{statistics.documents}</p>
+              </div>
+              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
+                <FileCheck className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Main Dashboard Content */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
+        <TabsList className="grid grid-cols-2 md:grid-cols-6 gap-2">
+          <TabsTrigger value="overview" className="flex items-center">
+            <BarChart3 className="mr-2 h-4 w-4" />
+            <span>Vue d'ensemble</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications" className="data-[state=active]:bg-khaki-50 dark:data-[state=active]:bg-khaki-900/20">
-            <Bell className="h-4 w-4 mr-2" />
-            Notifications
+          <TabsTrigger value="projects" className="flex items-center">
+            <Building2 className="mr-2 h-4 w-4" />
+            <span>Projets</span>
           </TabsTrigger>
-          <TabsTrigger value="articles" className="data-[state=active]:bg-khaki-50 dark:data-[state=active]:bg-khaki-900/20">
-            <FileText className="h-4 w-4 mr-2" />
-            Articles
+          <TabsTrigger value="clients" className="flex items-center">
+            <Users className="mr-2 h-4 w-4" />
+            <span>Clients</span>
           </TabsTrigger>
-          <TabsTrigger value="clients" className="data-[state=active]:bg-khaki-50 dark:data-[state=active]:bg-khaki-900/20">
-            <Users className="h-4 w-4 mr-2" />
-            Clients
+          <TabsTrigger value="calendar" className="flex items-center">
+            <CalendarRange className="mr-2 h-4 w-4" />
+            <span>Planning</span>
+          </TabsTrigger>
+          <TabsTrigger value="tasks" className="flex items-center">
+            <CheckCheck className="mr-2 h-4 w-4" />
+            <span>Tâches</span>
+          </TabsTrigger>
+          <TabsTrigger value="documents" className="flex items-center">
+            <FileText className="mr-2 h-4 w-4" />
+            <span>Documents</span>
           </TabsTrigger>
         </TabsList>
         
-        <TabsContent value="parametres" className="space-y-6">
-          <BacklinksManager />
-          
-          {/* Autres paramètres administrateur */}
+        <TabsContent value="overview" className="mt-6 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Overview Left Column */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Recent Projects */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Projets récents</CardTitle>
+                  <CardDescription>
+                    Les 5 derniers projets créés ou mis à jour
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-3 rounded-lg bg-khaki-50 border border-khaki-100 flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">Rénovation Appartement Paris</p>
+                        <p className="text-sm text-gray-500">Mis à jour le 02/04/2023</p>
+                      </div>
+                      <Badge className="bg-khaki-500">En cours</Badge>
+                    </div>
+                    <div className="p-3 rounded-lg bg-khaki-50 border border-khaki-100 flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">Construction Maison Marseille</p>
+                        <p className="text-sm text-gray-500">Mis à jour le 28/03/2023</p>
+                      </div>
+                      <Badge className="bg-blue-500">Planification</Badge>
+                    </div>
+                    <div className="p-3 rounded-lg bg-khaki-50 border border-khaki-100 flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">Extension Villa Nice</p>
+                        <p className="text-sm text-gray-500">Mis à jour le 25/03/2023</p>
+                      </div>
+                      <Badge className="bg-green-500">Terminé</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button asChild variant="outline">
+                    <Link to="/workspace/client-area/admin/projects">
+                      Voir tous les projets
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+              
+              {/* Statistics */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Statistiques</CardTitle>
+                  <CardDescription>
+                    Performance des projets et activités
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <AdminStatistics />
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Overview Right Column */}
+            <div className="space-y-6">
+              {/* Tasks */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Tâches à venir</CardTitle>
+                  <CardDescription>
+                    Prochaines échéances et rendez-vous
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-3 rounded-lg bg-amber-50 border border-amber-100 flex items-start gap-3">
+                      <div className="rounded-full bg-amber-100 p-1 mt-1">
+                        <AlertTriangle className="h-4 w-4 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Visite chantier Marseille</p>
+                        <p className="text-sm text-gray-500">Aujourd'hui à 14:00</p>
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-khaki-50 border border-khaki-100 flex items-start gap-3">
+                      <div className="rounded-full bg-khaki-100 p-1 mt-1">
+                        <FileText className="h-4 w-4 text-khaki-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Remise rapport technique</p>
+                        <p className="text-sm text-gray-500">Demain à 18:00</p>
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-blue-50 border border-blue-100 flex items-start gap-3">
+                      <div className="rounded-full bg-blue-100 p-1 mt-1">
+                        <Users className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Réunion client M. Dupont</p>
+                        <p className="text-sm text-gray-500">07/04/2023 à 10:30</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Button asChild variant="outline">
+                    <Link to="/workspace/client-area/admin/tasks">
+                      Voir toutes les tâches
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+              
+              {/* Quick Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Actions rapides</CardTitle>
+                  <CardDescription>
+                    Outils et fonctions fréquemment utilisés
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <Button className="w-full justify-start" variant="outline">
+                      <FileText className="mr-2 h-4 w-4" />
+                      Générer rapport mensuel
+                    </Button>
+                    <Button 
+                      className="w-full justify-start" 
+                      variant="outline"
+                      onClick={runBacklinksGeneration}
+                    >
+                      <BarChart3 className="mr-2 h-4 w-4" />
+                      Générer backlinks
+                    </Button>
+                    <Button className="w-full justify-start" variant="outline">
+                      <Users className="mr-2 h-4 w-4" />
+                      Importer contacts
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="projects" className="mt-6">
+          <AdminProjects />
+        </TabsContent>
+        
+        <TabsContent value="clients" className="mt-6">
+          <AdminClients />
+        </TabsContent>
+        
+        <TabsContent value="calendar" className="mt-6">
           <Card>
             <CardHeader>
-              <CardTitle>Paramètres du site</CardTitle>
-              <CardDescription>Configurez les options globales du site</CardDescription>
+              <CardTitle>Planning Gantt des projets</CardTitle>
+              <CardDescription>
+                Visualisez l'ensemble de vos projets et leurs phases sur une vue chronologique
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Mode sombre</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Activer ou désactiver le mode sombre sur l'ensemble du site</p>
-                  </div>
-                  <ThemeToggle />
-                </div>
-                <Separator className="my-4" />
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Notifications automatiques</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Envoi d'emails automatiques aux clients</p>
-                  </div>
-                  <Button variant="outline">Configurer</Button>
-                </div>
-              </div>
+              <ProjectsGanttView />
             </CardContent>
           </Card>
         </TabsContent>
         
-        <TabsContent value="notifications" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Centre de notifications</CardTitle>
-              <CardDescription>Gérez toutes les notifications système</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Liste des notifications */}
-                <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                  <div className="bg-gray-50 dark:bg-gray-800 p-3 font-medium">Récentes</div>
-                  <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                    <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                      <div className="flex items-start">
-                        <Badge className="mt-0.5 bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400">Contact</Badge>
-                        <div className="ml-3">
-                          <p className="font-medium">Nouveau message de contact</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Jean Dupont souhaite être contacté au sujet d'un projet.</p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 2 heures</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                      <div className="flex items-start">
-                        <Badge className="mt-0.5 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400">Estimation</Badge>
-                        <div className="ml-3">
-                          <p className="font-medium">Nouvelle demande d'estimation</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">Marie Martin a complété le formulaire d'estimation.</p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 1 jour</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                      <div className="flex items-start">
-                        <Badge className="mt-0.5 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400">Système</Badge>
-                        <div className="ml-3">
-                          <p className="font-medium">Backlinks générés avec succès</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">15 nouveaux backlinks ont été créés entre vos articles.</p>
-                          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Il y a 3 jours</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-end">
-                  <Button>Voir toutes les notifications</Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="tasks" className="mt-6">
+          <AdminTasks />
         </TabsContent>
         
-        <TabsContent value="articles" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gestion des articles</CardTitle>
-              <CardDescription>Gérer les articles de la veille réglementaire</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-end">
-                  <Button 
-                    variant="outline" 
-                    className="flex items-center text-sm" 
-                    onClick={handleRefreshBacklinks}
-                  >
-                    <RefreshCw className="h-3.5 w-3.5 mr-1" />
-                    Actualiser les backlinks
-                  </Button>
-                </div>
-                <Separator className="my-4" />
-                
-                {/* Liste des articles */}
-                <div className="space-y-3">
-                  <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div className="bg-gray-50 dark:bg-gray-800 p-3 flex justify-between items-center">
-                      <span className="font-medium">Articles récents</span>
-                      <Button variant="outline" size="sm" className="text-xs h-8">Nouvel article</Button>
-                    </div>
-                    <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                      <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                        <div className="flex justify-between">
-                          <h3 className="font-medium">Nouvelles normes RT2020</h3>
-                          <Badge>5 backlinks</Badge>
-                        </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Les nouvelles réglementations thermiques pour 2020
-                        </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Publié le 15/07/2023</p>
-                      </div>
-                      <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                        <div className="flex justify-between">
-                          <h3 className="font-medium">Évolutions des normes sismiques</h3>
-                          <Badge>3 backlinks</Badge>
-                        </div>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Mise à jour des normes parasismiques en PACA
-                        </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Publié le 02/07/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="clients" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Gestion des clients</CardTitle>
-              <CardDescription>Liste et statut de tous vos clients</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-end">
-                  <Button 
-                    className="flex items-center text-sm"
-                    onClick={() => window.location.href = '/workspace/client-area/admin/clients'}
-                  >
-                    <Users className="h-3.5 w-3.5 mr-1" />
-                    Ajouter un client
-                  </Button>
-                </div>
-                <Separator className="my-4" />
-                
-                {/* Liste des clients */}
-                <div className="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden">
-                  <div className="bg-gray-50 dark:bg-gray-800 p-3 font-medium">Clients récents</div>
-                  <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                    <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h3 className="font-medium">Jean Dupont</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">jean.dupont@example.com</p>
-                        </div>
-                        <Badge className="bg-khaki-100 text-khaki-800 dark:bg-khaki-900/20 dark:text-khaki-300">
-                          2 projets
-                        </Badge>
-                      </div>
-                    </div>
-                    <div className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h3 className="font-medium">Marie Martin</h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">marie.martin@example.com</p>
-                        </div>
-                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
-                          Nouveau
-                        </Badge>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex justify-end mt-4">
-                  <Button variant="outline" className="mr-2">
-                    <Building className="h-4 w-4 mr-2" />
-                    Corps de métiers
-                  </Button>
-                  <Button>
-                    Voir tous les clients
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <TabsContent value="documents" className="mt-6">
+          <AdminDocuments />
         </TabsContent>
       </Tabs>
     </div>

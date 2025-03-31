@@ -1,11 +1,31 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileSpreadsheet, Calculator, BookOpen } from 'lucide-react';
+import { FileSpreadsheet, Calculator, BookOpen, Ruler, TrendingUp, DollarSign } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import SimulationManager from './calculateurs/SimulationManager';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom';
+import TaxCalculator from './calculators/TaxCalculator';
+import RentabilityCalculator from './calculators/rentability/RentabilityCalculator';
+import SurfaceCalculator from './calculators/surface/SurfaceCalculator';
 
 const WorkspaceCalculateurs = () => {
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('simulations');
+  const [activeCalculator, setActiveCalculator] = useState<string | null>(null);
+  
+  const showCalculator = (calculatorType: string) => {
+    setActiveCalculator(calculatorType);
+    setActiveTab('calculator');
+  };
+  
+  const backToCalculatorsList = () => {
+    setActiveCalculator(null);
+    setActiveTab('calculators');
+  };
+  
   return (
     <div className="space-y-6">
       <div className="mb-8">
@@ -21,7 +41,7 @@ const WorkspaceCalculateurs = () => {
         </p>
       </div>
 
-      <Tabs defaultValue="simulations" className="space-y-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList>
           <TabsTrigger value="simulations" className="flex items-center">
             <FileSpreadsheet className="h-4 w-4 mr-2" />
@@ -30,6 +50,12 @@ const WorkspaceCalculateurs = () => {
           <TabsTrigger value="calculators" className="flex items-center">
             <Calculator className="h-4 w-4 mr-2" />
             Calculateurs
+          </TabsTrigger>
+          <TabsTrigger value="calculator" className="flex items-center" disabled={!activeCalculator}>
+            <Calculator className="h-4 w-4 mr-2" />
+            {activeCalculator === 'tax' ? 'Frais de notaire' : 
+             activeCalculator === 'rentability' ? 'Rentabilité' :
+             activeCalculator === 'surface' ? 'Surfaces' : 'Calculateur'}
           </TabsTrigger>
           <TabsTrigger value="guide" className="flex items-center">
             <BookOpen className="h-4 w-4 mr-2" />
@@ -43,39 +69,96 @@ const WorkspaceCalculateurs = () => {
 
         <TabsContent value="calculators" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Calculateur de surface */}
-            <div className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-              <h3 className="font-semibold mb-2">Calculateur de surfaces</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Calculez la surface habitable, SHON, SHOB et autres métriques de votre projet.
-              </p>
-              <div className="text-khaki-600 text-sm font-medium">
-                Bientôt disponible
-              </div>
-            </div>
+            {/* Calculateur de frais de notaire */}
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <DollarSign className="h-4 w-4 text-khaki-600" />
+                  Frais de notaire
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Estimez les frais de notaire pour votre acquisition immobilière
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">
+                  Calculez précisément les frais de notaire selon le type de bien (neuf ou ancien) et le département.
+                </p>
+                <Button 
+                  className="w-full bg-khaki-500 hover:bg-khaki-600 text-white"
+                  onClick={() => showCalculator('tax')}
+                >
+                  Accéder au calculateur
+                </Button>
+              </CardContent>
+            </Card>
 
-            {/* Calculateur de budget */}
-            <div className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-              <h3 className="font-semibold mb-2">Estimation budgétaire</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Estimez le budget de votre projet en fonction de sa surface et de ses caractéristiques.
-              </p>
-              <div className="text-khaki-600 text-sm font-medium">
-                Bientôt disponible
-              </div>
-            </div>
+            {/* Calculateur de surface */}
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Ruler className="h-4 w-4 text-khaki-600" />
+                  Calculateur de surfaces
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Calculez la surface habitable, SHON et autres métriques
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">
+                  Estimez précisément les différentes surfaces de votre projet selon les normes en vigueur.
+                </p>
+                <Button 
+                  className="w-full bg-khaki-500 hover:bg-khaki-600 text-white"
+                  onClick={() => showCalculator('surface')}
+                >
+                  Accéder au calculateur
+                </Button>
+              </CardContent>
+            </Card>
 
             {/* Calculateur de rentabilité */}
-            <div className="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
-              <h3 className="font-semibold mb-2">Calcul de rentabilité</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Évaluez la rentabilité d'un investissement immobilier avec nos outils personnalisés.
-              </p>
-              <div className="text-khaki-600 text-sm font-medium">
-                Bientôt disponible
-              </div>
-            </div>
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-khaki-600" />
+                  Calcul de rentabilité
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Évaluez la rentabilité d'un investissement immobilier
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600 mb-4">
+                  Analysez tous les aspects financiers de votre investissement locatif pour prendre la bonne décision.
+                </p>
+                <Button 
+                  className="w-full bg-khaki-500 hover:bg-khaki-600 text-white"
+                  onClick={() => showCalculator('rentability')}
+                >
+                  Accéder au calculateur
+                </Button>
+              </CardContent>
+            </Card>
           </div>
+        </TabsContent>
+        
+        <TabsContent value="calculator" className="space-y-6">
+          {activeCalculator && (
+            <div className="space-y-4">
+              <Button 
+                variant="outline" 
+                onClick={backToCalculatorsList}
+                className="mb-4"
+              >
+                ← Retour aux calculateurs
+              </Button>
+              
+              {activeCalculator === 'tax' && <TaxCalculator />}
+              {activeCalculator === 'rentability' && <RentabilityCalculator />}
+              {activeCalculator === 'surface' && <SurfaceCalculator />}
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="guide" className="space-y-6">
@@ -99,18 +182,27 @@ const WorkspaceCalculateurs = () => {
               </div>
               
               <div>
-                <h4 className="font-medium text-khaki-700">Confidentialité</h4>
-                <p className="text-gray-600 mt-1">
-                  Vos données sont stockées de manière sécurisée et ne sont accessibles que par vous.
-                  Les simulations temporaires sont stockées uniquement sur votre navigateur.
-                </p>
+                <h4 className="font-medium text-khaki-700">Simulateurs disponibles</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                  <div className="border rounded p-3">
+                    <h5 className="font-medium text-khaki-600 mb-1">Frais de notaire</h5>
+                    <p className="text-sm text-gray-600">Calculez précisément les frais de notaire pour un achat immobilier neuf ou ancien.</p>
+                  </div>
+                  <div className="border rounded p-3">
+                    <h5 className="font-medium text-khaki-600 mb-1">Surfaces</h5>
+                    <p className="text-sm text-gray-600">Déterminez la surface habitable, SHON, SHOB et autres métriques pour votre bien.</p>
+                  </div>
+                  <div className="border rounded p-3">
+                    <h5 className="font-medium text-khaki-600 mb-1">Rentabilité</h5>
+                    <p className="text-sm text-gray-600">Évaluez le retour sur investissement et la rentabilité d'un achat locatif.</p>
+                  </div>
+                </div>
               </div>
               
               <div>
-                <h4 className="font-medium text-khaki-700">Besoin d'aide ?</h4>
+                <h4 className="font-medium text-khaki-700">Confidentialité</h4>
                 <p className="text-gray-600 mt-1">
-                  Si vous avez des questions sur l'utilisation des calculateurs, n'hésitez pas à 
-                  nous contacter via la page de contact.
+                  Vos données sont stockées de manière sécurisée et ne sont accessibles que par vous. Nous ne partageons aucune information avec des tiers.
                 </p>
               </div>
             </div>

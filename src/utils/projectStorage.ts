@@ -1,305 +1,279 @@
 
-import { ProjectDetails } from '@/types/project';
+import { ProjectDetails, ProjectPhases } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
 
-// Fonction pour enregistrer un projet dans Supabase ou en local fallback
-export const saveProject = async (projectData: ProjectDetails): Promise<string> => {
-  try {
-    // D'abord essayer de sauvegarder dans Supabase
-    const user = supabase.auth.getUser();
-    if ((await user).data.user) {
-      // Si l'utilisateur est connecté, enregistrer dans Supabase
-      const projectId = projectData.id || `project-${Date.now()}`;
-      const workAmount = typeof projectData.workAmount === 'string' 
-        ? parseFloat(projectData.workAmount || '0') 
-        : projectData.workAmount || 0;
-        
-      const { error } = await supabase
-        .from('admin_projects')
-        .upsert({
-          id: projectId,
-          project_title: projectData.projectName,
-          project_type: projectData.projectType,
-          construction_type: projectData.projectType === 'residential' ? 'new' : 'other',
-          description: projectData.description || '',
-          location: projectData.location || '',
-          estimated_budget: workAmount,
-          surface: 0, // Valeur par défaut
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          status: 'active',
-          client_id: projectData.clientId || null
-        });
-      
-      if (error) throw error;
-      
-      return projectId;
-    } else {
-      // Fallback sur localStorage si l'utilisateur n'est pas connecté
-      return saveProjectToLocalStorage(projectData);
-    }
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde du projet dans Supabase:', error);
-    // Fallback sur localStorage en cas d'erreur
-    return saveProjectToLocalStorage(projectData);
-  }
-};
-
-// Fonction de fallback pour sauvegarder en localStorage
-const saveProjectToLocalStorage = (projectData: ProjectDetails): string => {
-  try {
-    // Récupérer les projets existants
-    const existingProjects = JSON.parse(localStorage.getItem('projects') || '[]');
-    
-    // Créer un nouvel ID ou utiliser celui existant
-    const projectId = projectData.id || `project-${Date.now()}`;
-    
-    // Créer l'objet projet avec timestamps
-    const newProject: ProjectDetails = {
-      ...projectData,
-      id: projectId,
-      createdAt: projectData.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      status: projectData.status || 'active'
-    };
-    
-    // Mise à jour si le projet existe déjà, sinon ajout
-    const projectIndex = existingProjects.findIndex((p: any) => p.id === projectId);
-    
-    if (projectIndex >= 0) {
-      existingProjects[projectIndex] = {
-        ...existingProjects[projectIndex],
-        ...newProject,
-        updatedAt: new Date().toISOString()
-      };
-    } else {
-      existingProjects.push(newProject);
-    }
-    
-    // Sauvegarder dans localStorage
-    localStorage.setItem('projects', JSON.stringify(existingProjects));
-    
-    return projectId;
-  } catch (error) {
-    console.error('Erreur lors de la sauvegarde du projet en localStorage:', error);
-    throw new Error('Erreur lors de la sauvegarde du projet');
-  }
-};
-
-// Fonction pour charger un projet par ID
-export const loadProjectById = async (projectId: string): Promise<ProjectDetails | null> => {
-  try {
-    // D'abord essayer de charger depuis Supabase
-    const { data, error } = await supabase
-      .from('admin_projects')
-      .select('*')
-      .eq('id', projectId)
-      .single();
-    
-    if (error) throw error;
-    
-    if (data) {
-      // Convertir le format Supabase au format ProjectDetails
-      return {
-        id: data.id,
-        projectName: data.project_title,
-        projectType: data.project_type,
-        workAmount: data.estimated_budget?.toString() || '0',
-        description: data.description || '',
-        location: data.location || '',
-        createdAt: data.created_at,
-        updatedAt: data.updated_at || data.created_at,
-        status: data.status || 'active',
-        // Ajout des champs obligatoires avec des valeurs par défaut
-        fileNumber: '',
-        projectOwner: '',
-        adminAuthorization: '',
-        automaticDates: true,
-        dates: {
-          global: {
-            startDate: '',
-            endDate: ''
-          }
-        },
-        phases: {
-          feasibility: false,
-          dce: false,
-          act: false,
-          exe: false,
-          reception: false,
-          delivery: false
-        },
-        team: {},
-        execution: {},
-        technicalOffices: {},
-        trades: {}
-      };
-    }
-  } catch (error) {
-    console.error('Erreur lors du chargement du projet depuis Supabase:', error);
-    // Fallback sur localStorage
-  }
-  
-  // Fallback sur localStorage
-  try {
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const project = projects.find((p: any) => p.id === projectId);
-    if (project) {
-      // Assurer que le projet contient tous les champs requis
-      const completeProject: ProjectDetails = {
-        ...project,
-        fileNumber: project.fileNumber || '',
-        projectOwner: project.projectOwner || '',
-        adminAuthorization: project.adminAuthorization || '',
-        automaticDates: project.automaticDates !== undefined ? project.automaticDates : true,
-        dates: project.dates || {
-          global: {
-            startDate: '',
-            endDate: ''
-          }
-        },
-        phases: project.phases || {
-          feasibility: false,
-          dce: false,
-          act: false,
-          exe: false,
-          reception: false,
-          delivery: false
-        },
-        team: project.team || {},
-        execution: project.execution || {},
-        technicalOffices: project.technicalOffices || {},
-        trades: project.trades || {},
-        updatedAt: project.updatedAt || project.createdAt || new Date().toISOString()
-      };
-      return completeProject;
-    }
-    return null;
-  } catch (error) {
-    console.error('Erreur lors du chargement du projet depuis localStorage:', error);
-    return null;
-  }
-};
-
-// Fonction pour charger tous les projets
+// Charger tous les projets
 export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
   try {
-    // D'abord essayer de charger depuis Supabase
     const { data, error } = await supabase
       .from('admin_projects')
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (error) throw error;
-    
-    if (data && data.length > 0) {
-      // Convertir le format Supabase au format ProjectDetails
-      return data.map(item => ({
-        id: item.id,
-        projectName: item.project_title,
-        projectType: item.project_type,
-        workAmount: item.estimated_budget?.toString() || '0',
-        description: item.description || '',
-        location: item.location || '',
-        createdAt: item.created_at,
-        updatedAt: item.updated_at || item.created_at,
-        status: item.status || 'active',
-        // Ajout des champs obligatoires avec des valeurs par défaut
-        fileNumber: '',
-        projectOwner: '',
-        adminAuthorization: '',
-        automaticDates: true,
-        dates: {
-          global: {
-            startDate: '',
-            endDate: ''
-          }
-        },
-        phases: {
-          feasibility: false,
-          dce: false,
-          act: false,
-          exe: false,
-          reception: false,
-          delivery: false
-        },
-        team: {},
-        execution: {},
-        technicalOffices: {},
-        trades: {}
-      }));
+    if (error) {
+      console.error("Erreur lors du chargement des projets depuis Supabase:", error);
+      throw error;
     }
-  } catch (error) {
-    console.error('Erreur lors du chargement des projets depuis Supabase:', error);
-    // Fallback sur localStorage
-  }
-  
-  // Fallback sur localStorage
-  try {
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    return projects.map((project: any) => ({
-      ...project,
-      fileNumber: project.fileNumber || '',
-      projectOwner: project.projectOwner || '',
-      adminAuthorization: project.adminAuthorization || '',
-      automaticDates: project.automaticDates !== undefined ? project.automaticDates : true,
-      dates: project.dates || {
+    
+    // Convertir les données de la base en ProjectDetails
+    const projects: ProjectDetails[] = data.map(project => ({
+      id: project.id,
+      projectName: project.project_title,
+      projectType: project.project_type,
+      workAmount: project.estimated_budget || 0,
+      description: project.description || '',
+      location: project.location || '',
+      createdAt: project.created_at,
+      updatedAt: project.updated_at,
+      status: project.status || 'new',
+      fileNumber: `${new Date(project.created_at).getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+      projectOwner: project.client_id || '',
+      adminAuthorization: 'granted',
+      automaticDates: true,
+      clientId: project.client_id || '',
+      dates: project.timeline?.dates || {
         global: {
-          startDate: '',
-          endDate: ''
+          startDate: new Date(project.created_at).toISOString(),
+          endDate: new Date(new Date(project.created_at).setMonth(new Date(project.created_at).getMonth() + 6)).toISOString()
         }
       },
-      phases: project.phases || {
-        feasibility: false,
+      phases: project.timeline?.phases || {
+        feasibility: true,
         dce: false,
         act: false,
         exe: false,
         reception: false,
         delivery: false
       },
-      team: project.team || {},
-      execution: project.execution || {},
-      technicalOffices: project.technicalOffices || {},
-      trades: project.trades || {},
-      updatedAt: project.updatedAt || project.createdAt || new Date().toISOString()
+      team: {},
+      companies: {},
+      execution: {},
+      permits: {},
+      technicalOffices: {},
+      trades: {}
     }));
+    
+    return projects;
   } catch (error) {
-    console.error('Erreur lors du chargement des projets depuis localStorage:', error);
+    console.error("Erreur lors du chargement des projets:", error);
     return [];
   }
 };
 
-// Fonction pour supprimer un projet
+// Charger un projet par son ID
+export const loadProjectById = async (projectId: string): Promise<ProjectDetails | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('admin_projects')
+      .select('*')
+      .eq('id', projectId)
+      .single();
+    
+    if (error) {
+      console.error("Erreur lors du chargement du projet:", error);
+      throw error;
+    }
+    
+    if (!data) {
+      return null;
+    }
+    
+    // Convertir les données de la base en ProjectDetails
+    const project: ProjectDetails = {
+      id: data.id,
+      projectName: data.project_title,
+      projectType: data.project_type,
+      workAmount: data.estimated_budget || 0,
+      description: data.description || '',
+      location: data.location || '',
+      createdAt: data.created_at,
+      updatedAt: data.updated_at,
+      status: data.status || 'new',
+      fileNumber: `${new Date(data.created_at).getFullYear()}-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
+      projectOwner: data.client_id || '',
+      adminAuthorization: 'granted',
+      automaticDates: true,
+      clientId: data.client_id || '',
+      dates: data.timeline?.dates || {
+        global: {
+          startDate: new Date(data.created_at).toISOString(),
+          endDate: new Date(new Date(data.created_at).setMonth(new Date(data.created_at).getMonth() + 6)).toISOString()
+        }
+      },
+      phases: data.timeline?.phases || {
+        feasibility: true,
+        dce: false,
+        act: false,
+        exe: false,
+        reception: false,
+        delivery: false
+      },
+      team: {},
+      companies: {},
+      execution: {},
+      permits: {},
+      technicalOffices: {},
+      trades: {}
+    };
+    
+    return project;
+  } catch (error) {
+    console.error("Erreur lors du chargement du projet:", error);
+    return null;
+  }
+};
+
+// Sauvegarder un projet
+export const saveProject = async (project: ProjectDetails): Promise<string> => {
+  try {
+    // Convertir le projet en format compatible avec la base de données
+    const dbProject = {
+      id: project.id,
+      project_title: project.projectName,
+      project_type: project.projectType,
+      estimated_budget: project.workAmount,
+      description: project.description || '',
+      location: project.location || '',
+      status: project.status || 'new',
+      client_id: project.clientId || null,
+      timeline: {
+        dates: project.dates,
+        phases: project.phases
+      }
+    };
+    
+    let result;
+    
+    if (project.id) {
+      // Mise à jour d'un projet existant
+      const { data, error } = await supabase
+        .from('admin_projects')
+        .update(dbProject)
+        .eq('id', project.id)
+        .select();
+      
+      if (error) {
+        console.error("Erreur lors de la mise à jour du projet:", error);
+        throw error;
+      }
+      
+      result = data?.[0]?.id;
+    } else {
+      // Création d'un nouveau projet
+      const { data, error } = await supabase
+        .from('admin_projects')
+        .insert(dbProject)
+        .select();
+      
+      if (error) {
+        console.error("Erreur lors de la création du projet:", error);
+        throw error;
+      }
+      
+      result = data?.[0]?.id;
+    }
+    
+    return result || '';
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde du projet:", error);
+    throw error;
+  }
+};
+
+// Supprimer un projet
 export const deleteProject = async (projectId: string): Promise<boolean> => {
   try {
-    // D'abord essayer de supprimer dans Supabase
     const { error } = await supabase
       .from('admin_projects')
       .delete()
       .eq('id', projectId);
     
-    if (error) throw error;
-    
-    // Également supprimer de localStorage pour rester synchronisé
-    deleteProjectFromLocalStorage(projectId);
+    if (error) {
+      console.error("Erreur lors de la suppression du projet:", error);
+      throw error;
+    }
     
     return true;
   } catch (error) {
-    console.error('Erreur lors de la suppression du projet dans Supabase:', error);
-    // Fallback sur localStorage
-    return deleteProjectFromLocalStorage(projectId);
+    console.error("Erreur lors de la suppression du projet:", error);
+    return false;
   }
 };
 
-// Fonction de fallback pour supprimer du localStorage
-const deleteProjectFromLocalStorage = (projectId: string): boolean => {
-  try {
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const updatedProjects = projects.filter((p: any) => p.id !== projectId);
-    localStorage.setItem('projects', JSON.stringify(updatedProjects));
-    return true;
-  } catch (error) {
-    console.error('Erreur lors de la suppression du projet du localStorage:', error);
-    return false;
-  }
+// Fonction de fallback pour les démos et tests
+export const getDemoProjects = (): ProjectDetails[] => {
+  const projects: ProjectDetails[] = [
+    {
+      id: "demo-1",
+      projectName: "Rénovation Appartement",
+      projectType: "residential",
+      fileNumber: "2023-001",
+      projectOwner: "Client Démo",
+      location: "Paris",
+      workAmount: 85000,
+      status: "in_progress",
+      dates: {
+        global: {
+          startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 60).toISOString(),
+        }
+      },
+      phases: {
+        feasibility: true,
+        dce: true,
+        act: true,
+        exe: false,
+        reception: false,
+        delivery: false
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      description: "Rénovation complète d'un appartement de 75m² à Paris",
+      adminAuthorization: "granted",
+      automaticDates: true,
+      team: {},
+      companies: {},
+      execution: {},
+      permits: {},
+      technicalOffices: {},
+      trades: {}
+    },
+    {
+      id: "demo-2",
+      projectName: "Construction Bureau",
+      projectType: "commercial",
+      fileNumber: "2023-002",
+      projectOwner: "Entreprise Démo",
+      location: "Lyon",
+      workAmount: 250000,
+      status: "planning",
+      dates: {
+        global: {
+          startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 120).toISOString(),
+        }
+      },
+      phases: {
+        feasibility: true,
+        dce: false,
+        act: false,
+        exe: false,
+        reception: false,
+        delivery: false
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      description: "Construction d'un immeuble de bureaux de 500m² à Lyon",
+      adminAuthorization: "granted",
+      automaticDates: true,
+      team: {},
+      companies: {},
+      execution: {},
+      permits: {},
+      technicalOffices: {},
+      trades: {}
+    }
+  ];
+  
+  return projects;
 };

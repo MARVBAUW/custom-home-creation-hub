@@ -27,15 +27,60 @@ serve(async (req) => {
     
     const supabaseAdmin = createClient(supabaseUrl, supabaseKey);
     
-    // For simulation purposes since the articles table doesn't exist yet
-    console.log("Simulating backlinks generation");
+    // Pour simulation, génération de backlinks fictifs
+    console.log("Generating simulated backlinks");
     
-    // Simulate a successful generation
-    const backlinksGenerated = {
-      total: 15,
-      new: 10,
-      updated: 5
-    };
+    // Sites à surveiller
+    const sitesToScan = [
+      "https://www.architectes-france.com",
+      "https://www.batiactu.com",
+      "https://www.construction21.org",
+      "https://www.batiment.fr",
+      "https://www.batiweb.com",
+      "https://www.lemoniteur.fr",
+      "https://www.batirama.com",
+      "https://www.maison-travaux.fr",
+      "https://www.paca.developpement-durable.gouv.fr",
+      "https://www.ffbatiment.fr",
+      "https://www.qualibat.com",
+      "https://www.architectes.org",
+      "https://www.ordre-architectes.org",
+      "https://www.architectes-paca.org",
+      "https://www.urbapaca.com"
+    ];
+    
+    // Mots-clés à rechercher
+    const keywords = [
+      "architecte marseille",
+      "maître d'œuvre paca",
+      "construction maison sur mesure",
+      "rénovation maison marseille",
+      "extension maison bouches du rhône",
+      "progineer",
+      "architecte paca"
+    ];
+    
+    // Générer des backlinks aléatoires
+    const newBacklinksCount = Math.floor(Math.random() * 10) + 5; // Entre 5 et 15 nouveaux backlinks
+    const updatedBacklinksCount = Math.floor(Math.random() * 5) + 1; // Entre 1 et 5 backlinks mis à jour
+    const totalBacklinksCount = newBacklinksCount + updatedBacklinksCount;
+    
+    // Générer des backlinks aléatoires fictifs
+    const backlinks = [];
+    for (let i = 0; i < newBacklinksCount; i++) {
+      const site = sitesToScan[Math.floor(Math.random() * sitesToScan.length)];
+      const keyword = keywords[Math.floor(Math.random() * keywords.length)];
+      const randomPath = Math.random().toString(36).substring(2, 15);
+      
+      backlinks.push({
+        source_url: `${site}/${randomPath}`,
+        anchor_text: keyword,
+        found_date: new Date().toISOString(),
+        status: "new"
+      });
+    }
+    
+    console.log(`Generated ${newBacklinksCount} new simulated backlinks`);
     
     // Log the result in the backlinks_logs table
     await supabaseAdmin
@@ -43,16 +88,21 @@ serve(async (req) => {
       .insert({
         created_at: new Date().toISOString(),
         status: 'success',
-        message: `${backlinksGenerated.total} backlinks générés (${backlinksGenerated.new} nouveaux, ${backlinksGenerated.updated} mis à jour)`,
-        backlinks_generated: backlinksGenerated.total,
-        new_backlinks: backlinksGenerated.new,
-        updated_backlinks: backlinksGenerated.updated
+        message: `${totalBacklinksCount} backlinks générés (${newBacklinksCount} nouveaux, ${updatedBacklinksCount} mis à jour)`,
+        backlinks_generated: totalBacklinksCount,
+        new_backlinks: newBacklinksCount,
+        updated_backlinks: updatedBacklinksCount
       });
     
     return new Response(JSON.stringify({
       success: true,
-      message: `${backlinksGenerated.total} backlinks générés avec succès`,
-      backlinksGenerated: backlinksGenerated,
+      message: `${totalBacklinksCount} backlinks générés avec succès`,
+      backlinksGenerated: {
+        total: totalBacklinksCount,
+        new: newBacklinksCount,
+        updated: updatedBacklinksCount
+      },
+      backlinks: backlinks, // Retourner les backlinks fictifs pour visualisation
       timestamp: new Date().toISOString()
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
