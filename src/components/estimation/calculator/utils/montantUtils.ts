@@ -267,8 +267,8 @@ export const calculatePoolCost = (poolType: string, area: number): number => {
     return basePrice * area;
 };
 
-// Function to calculate a fence
-export const calculateFenceCost = (fenceType: string, length: number): number => {
+// Function to calculate fencing costs - unified into a single implementation
+export function calculateFencingCost(fenceType: string, length: number): number {
     if (!fenceType) return 0;
 
     const basePrice = {
@@ -279,6 +279,9 @@ export const calculateFenceCost = (fenceType: string, length: number): number =>
 
     return basePrice * length;
 };
+
+// Create an alias for backward compatibility
+export const calculateFenceCost = calculateFencingCost;
 
 // Function to calculate a gate
 export const calculateGateCost = (gateType: string, length: number): number => {
@@ -546,22 +549,6 @@ export const calculateStructuralFeatureCost = (type: string, area: number): numb
     }[type] || 200;
     
     return basePrice * area;
-};
-
-// Function to calculate fencing costs
-export const calculateFenceCost = calculateFencingCost;
-
-// Function to calculate fencing costs
-export function calculateFencingCost(fenceType: string, length: number): number {
-    if (!fenceType) return 0;
-
-    const basePrice = {
-        'wood': 80,
-        'concrete': 120,
-        'metal': 100
-    }[fenceType] || 80;
-
-    return basePrice * length;
 };
 
 // Function to calculate kitchen costs including island options
