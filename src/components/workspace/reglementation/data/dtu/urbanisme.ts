@@ -4,44 +4,53 @@ import { DTU } from '../../dtu/types';
 export const urbanismeDTUs: DTU[] = [
   {
     id: "dtu-urbanisme-1",
-    title: "PLU - Plan Local d'Urbanisme",
+    title: "Règles d'urbanisme - Plan Local d'Urbanisme",
     category: "Urbanisme",
-    description: "Dispositions générales concernant les Plans Locaux d'Urbanisme et leur application",
-    lastUpdate: "Mai 2023",
+    description: "Comprendre et appliquer les règles du Plan Local d'Urbanisme (PLU)",
+    lastUpdate: "Janvier 2023",
     rules: [
       {
-        title: "Composition du PLU",
-        content: "Rapport de présentation, PADD, règlement, OAP et annexes. Le règlement définit 4 grands types de zones : U (urbaines), AU (à urbaniser), A (agricoles) et N (naturelles)",
+        title: "Zones du PLU",
+        content: "Le PLU divise le territoire en zones : U (urbaine), AU (à urbaniser), A (agricole) et N (naturelle), chacune avec ses propres règles de constructibilité.",
         type: "standard"
       },
       {
-        title: "Structure du règlement",
-        content: "3 sections : 1-destination des constructions, 2-caractéristiques urbaines, architecturales, environnementales et paysagères, 3-équipements et réseaux",
+        title: "Implantation des constructions",
+        content: "L'implantation par rapport aux voies, aux limites séparatives et aux autres constructions est définie dans les articles 6, 7 et 8 du règlement de zone.",
         type: "standard"
       },
       {
         title: "Coefficient d'emprise au sol",
-        content: "Détermine la surface constructible maximale sur un terrain (rapport entre projection verticale du bâti et surface du terrain)",
+        content: "Le CES définit le rapport maximal entre la surface bâtie au sol et la surface du terrain. Il varie généralement entre 30% et 70% selon les zones.",
         type: "warning"
       },
       {
-        title: "Servitudes d'utilité publique",
-        content: "Limitations administratives au droit de propriété (patrimoniale, électrique, gazier, télécommunication...) annexées au PLU et prévalant sur le règlement",
+        title: "Consultation préalable",
+        content: "Consulter le certificat d'urbanisme opérationnel (CUb) avant tout projet pour connaître précisément les règles applicables à la parcelle concernée.",
         type: "tip"
+      },
+      {
+        title: "Servitudes d'utilité publique",
+        content: "Vérifier les servitudes d'utilité publique (monuments historiques, lignes électriques, canalisations, etc.) qui peuvent restreindre les droits à construire.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Procédure d'élaboration",
-        content: "Prescription par délibération, concertation publique, arrêt du projet, consultation des PPA (personnes publiques associées), enquête publique, approbation. Durée moyenne : 3 ans."
+        title: "Documents constitutifs du PLU",
+        content: "Le PLU comprend un rapport de présentation, un PADD (Projet d'Aménagement et de Développement Durables), des OAP (Orientations d'Aménagement et de Programmation), un règlement et des annexes."
       },
       {
-        title: "Consultation du document",
-        content: "Disponible en mairie, au siège de l'EPCI et sur le géoportail de l'urbanisme. Certificat d'urbanisme informatif (CUa) ou opérationnel (CUb) pour connaître les règles applicables."
+        title: "Hauteur des constructions",
+        content: "La hauteur maximale est définie soit en mètres par rapport au terrain naturel, soit en nombre de niveaux (R+1, R+2...), avec parfois des règles spécifiques pour les toitures et les attiques."
       },
       {
-        title: "Évolutions du PLU",
-        content: "Révision (changements majeurs), modification (ajustements sans remettre en cause le PADD), modification simplifiée (corrections mineures) et mise à jour (actualisation des annexes)."
+        title: "Stationnement",
+        content: "Les normes de stationnement imposent un nombre minimal de places selon la destination et la surface du bâtiment (ex: 1 place pour 60 m² de surface habitable en zone résidentielle)."
+      },
+      {
+        title: "Espaces verts",
+        content: "Le pourcentage minimal d'espaces verts est généralement fixé entre 20% et 50% de la surface du terrain, avec parfois une obligation de pleine terre et des règles de plantation."
       }
     ]
   },
@@ -49,128 +58,171 @@ export const urbanismeDTUs: DTU[] = [
     id: "dtu-urbanisme-2",
     title: "Autorisations d'urbanisme",
     category: "Urbanisme",
-    description: "Procédures et dispositions concernant les différentes autorisations d'urbanisme",
-    lastUpdate: "Avril 2023",
+    description: "Démarches et procédures pour les différentes autorisations d'urbanisme",
+    lastUpdate: "Mars 2023",
     rules: [
       {
-        title: "Permis de construire",
-        content: "Obligatoire pour toute construction nouvelle > 20 m² de surface de plancher. Pour extension sur construction existante, seuil relevé à 40 m² en zone U du PLU",
+        title: "Déclaration préalable",
+        content: "Requise pour les travaux modifiant l'aspect extérieur, les extensions de 5 à 40 m² (20 m² hors zone U), changements de destination sans travaux structurels.",
         type: "standard"
       },
       {
-        title: "Déclaration préalable",
-        content: "Pour constructions 5-20 m² (jusqu'à 40 m² en zone U pour extensions), modifications d'aspect extérieur, changements de destination sans travaux",
+        title: "Permis de construire",
+        content: "Obligatoire pour toute nouvelle construction > 20 m² en zone U (> 5 m² ailleurs), extensions > 40 m² ou portant la surface totale à > 150 m², changements de destination avec structure.",
         type: "standard"
       },
       {
         title: "Délais d'instruction",
-        content: "Permis de construire : 2 mois (maison individuelle) ou 3 mois (autres cas). Déclaration préalable : 1 mois. Majorations possibles selon contraintes",
+        content: "1 mois pour une DP, 2 mois pour un PC maison individuelle, 3 mois pour autres PC. Délais prolongés en zones protégées ou si consultation spécifique.",
         type: "warning"
       },
       {
-        title: "Affichage",
-        content: "Obligatoire sur le terrain dès notification de l'autorisation, visible depuis l'espace public, sur panneau rectangulaire > 80 cm, pendant toute la durée du chantier",
+        title: "Affichage sur terrain",
+        content: "Afficher l'autorisation d'urbanisme sur le terrain dès obtention, sur panneau rectangulaire > 80 cm, visible depuis l'espace public pendant toute la durée des travaux.",
         type: "tip"
+      },
+      {
+        title: "Recours des tiers",
+        content: "Les tiers peuvent contester l'autorisation dans un délai de 2 mois à compter du premier jour d'affichage sur le terrain, prolongeant la période de fragilité juridique.",
+        type: "standard"
       }
     ],
     sections: [
       {
         title: "Composition du dossier",
-        content: "Formulaire CERFA, plan de situation, plan de masse, plan de coupe, notice descriptive, plan des façades, photos. Documents supplémentaires selon contraintes spécifiques."
+        content: "Le dossier doit comprendre le formulaire CERFA approprié, un plan de situation, un plan de masse, des plans de façades et toitures, des coupes, un document graphique d'insertion et des photographies."
       },
       {
-        title: "Recours des tiers",
-        content: "Délai de 2 mois à compter du premier jour d'affichage sur le terrain. Recours administratif (gracieux ou hiérarchique) ou contentieux devant le tribunal administratif."
+        title: "Conformité des travaux",
+        content: "À l'achèvement, déposer une DAACT (Déclaration Attestant l'Achèvement et la Conformité des Travaux). La mairie dispose de 3 à 5 mois pour contester la conformité."
       },
       {
-        title: "Validité et prolongation",
-        content: "Validité de 3 ans, prolongeable deux fois 1 an sur demande 2 mois avant expiration. Caducité si travaux interrompus pendant plus d'un an."
+        title: "Cas particuliers",
+        content: "Les ERP (Établissements Recevant du Public) nécessitent une autorisation de travaux complémentaire. En zone protégée, l'avis de l'ABF (Architecte des Bâtiments de France) est requis."
+      },
+      {
+        title: "Participations financières",
+        content: "Certaines autorisations entraînent des participations financières : taxe d'aménagement, redevance d'archéologie préventive, participation pour équipements publics exceptionnels, etc."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-urbanisme-1",
+        title: "Cycle de l'autorisation d'urbanisme",
+        imageUrl: "/images/schemas/cycle-autorisation.png",
+        description: "Schéma présentant les étapes clés d'une autorisation d'urbanisme, de la demande à la conformité."
       }
     ]
   },
   {
     id: "dtu-urbanisme-3",
-    title: "Règles de prospect et implantation",
+    title: "Réglementation des divisions foncières",
     category: "Urbanisme",
-    description: "Règles d'implantation des constructions par rapport aux limites et aux autres constructions",
+    description: "Cadre réglementaire des divisions et lotissements",
     lastUpdate: "Avril 2023",
     rules: [
       {
-        title: "Retraits sur limites",
-        content: "En l'absence de règle spécifique du PLU, distance minimale aux limites séparatives = H/2 (moitié de la hauteur du bâtiment) avec minimum 3 mètres",
+        title: "Types de divisions",
+        content: "Trois types de divisions existent : simple division, déclaration préalable de division et permis d'aménager, selon le nombre de lots et la création de voiries ou espaces communs.",
         type: "standard"
       },
       {
-        title: "Prospect par rapport à la voie",
-        content: "Implantation définie par le PLU : à l'alignement, avec un retrait fixe ou minimal. En l'absence de règle, s'aligner sur constructions voisines",
+        title: "Seuil du permis d'aménager",
+        content: "Permis d'aménager obligatoire pour toute division créant plus de 2 lots à bâtir sur 10 ans avec création de voies/espaces communs, ou plus de 4 lots sans création de voies.",
         type: "standard"
       },
       {
-        title: "Distance entre bâtiments",
-        content: "Distance minimale = H du bâtiment le plus élevé, avec minimum 8 mètres en présence de baies principales (4 mètres en l'absence de baies)",
+        title: "Surface minimale des lots",
+        content: "Le PLU peut imposer une surface minimale des terrains constructibles, généralement entre 400 et 1000 m² selon les zones et les contraintes d'assainissement.",
         type: "warning"
       },
       {
-        title: "Servitude de vue",
-        content: "Distance minimale de 1,90 m pour les vues droites et 0,60 m pour les vues obliques (mesurée depuis le bord extérieur de la fenêtre)",
+        title: "Déclaration préalable de division",
+        content: "Pour les divisions simples (jusqu'à 4 lots sur 10 ans sans voies communes), une DP est suffisante. Le délai d'instruction est d'1 mois, extensible à 2 mois.",
         type: "tip"
+      },
+      {
+        title: "Règlement de lotissement",
+        content: "Le règlement de lotissement peut imposer des règles plus restrictives que le PLU pendant 10 ans. Au-delà, seules les règles d'urbanisme communes s'appliquent.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Hauteur des constructions",
-        content: "Définie par le PLU : hauteur maximale, nombre de niveaux, règles de dépassement. Mesurée généralement depuis le sol naturel jusqu'à l'égout de toiture ou l'acrotère."
+        title: "Contenu du permis d'aménager",
+        content: "Le dossier de PA doit inclure un plan de l'état actuel, un projet d'aménagement, un programme des travaux, un document graphique, une notice et un règlement spécifique si nécessaire."
       },
       {
-        title: "Calcul des surfaces",
-        content: "Surface de plancher : somme des surfaces de chaque niveau, mesurées au nu intérieur des murs, sans les vides (hauteur < 1,80 m, stationnements, locaux techniques)."
+        title: "Viabilisation",
+        content: "Les terrains issus d'une division doivent être viabilisés : accès à une voie publique ou privée, raccordement aux réseaux d'eau, d'électricité et d'assainissement (collectif ou individuel)."
       },
       {
-        title: "Règles d'accessibilité PMR",
-        content: "Cheminements, ressauts, largeurs de passage et caractéristiques techniques définies dans l'arrêté du 20 avril 2017 pour les ERP et les logements."
+        title: "Taxes et participations",
+        content: "Les divisions foncières peuvent entraîner la taxe d'aménagement, la participation pour voiries et réseaux, la participation pour équipements publics exceptionnels, etc."
+      },
+      {
+        title: "Garanties d'achèvement",
+        content: "Pour les lotissements avec travaux, une garantie d'achèvement (bancaire ou consignation) est obligatoire pour obtenir l'autorisation de vente des lots avant finalisation des travaux."
       }
     ]
   },
   {
     id: "dtu-urbanisme-4",
-    title: "Règles de hauteur et de gabarit",
+    title: "Servitudes et contraintes d'urbanisme",
     category: "Urbanisme",
-    description: "Dispositions concernant les limites de hauteur et les gabarits constructibles",
+    description: "Comprendre les servitudes et contraintes affectant les droits à construire",
     lastUpdate: "Mai 2023",
     rules: [
       {
-        title: "Points de référence",
-        content: "Hauteur mesurée par rapport au terrain naturel avant travaux ou par rapport à un point de référence fixé par le PLU (ex: niveau de la voie)",
+        title: "Servitudes d'utilité publique",
+        content: "Les SUP sont des limitations administratives au droit de propriété, annexées au PLU : protection de monuments, réseaux, risques naturels et technologiques, etc.",
         type: "standard"
       },
       {
-        title: "Gabarit-enveloppe",
-        content: "Volume maximal dans lequel doivent s'inscrire les constructions. Souvent défini par une verticale à l'alignement suivie d'une oblique",
+        title: "Zone de protection patrimoniale",
+        content: "Dans un périmètre de 500 m autour d'un monument historique, tout projet est soumis à l'avis de l'ABF. Cet avis est conforme (obligatoire) dans les espaces en covisibilité.",
         type: "standard"
       },
       {
-        title: "Bonus de hauteur",
-        content: "Dépassement possible (souvent +3m) pour performances énergétiques (BEPOS), utilisation du bois dans la construction, ou destination spécifique (logement social)",
+        title: "Plans de prévention des risques",
+        content: "Les PPR (inondation, mouvement de terrain, technologique) définissent des zones avec interdiction ou restriction de construire, et des prescriptions constructives obligatoires.",
+        type: "warning"
+      },
+      {
+        title: "Étude géotechnique",
+        content: "En zone d'aléa moyen ou fort de retrait-gonflement des argiles, une étude géotechnique est obligatoire avant toute construction nouvelle depuis 2020.",
         type: "tip"
       },
       {
-        title: "Limites dérogatoires",
-        content: "Possibilité de dépassements ponctuels pour éléments techniques (cheminées, antennes, édicules d'ascenseur) dans la limite fixée par le PLU",
-        type: "warning"
+        title: "Servitudes de passage",
+        content: "Les servitudes de passage (des réseaux, des piétons sur le littoral, de halage) peuvent affecter un terrain et restreindre sa constructibilité sur une bande de 3 à 6 mètres.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Hauteur relative",
-        content: "Rapport entre hauteur maximale et largeur de la voie (généralement H=L ou H=L+m). Permet d'adapter la hauteur au contexte urbain immédiat."
+        title: "Contraintes environnementales",
+        content: "Les zones Natura 2000, ZNIEFF, espaces boisés classés, zones humides, trames vertes et bleues imposent des restrictions et peuvent nécessiter des études d'impact spécifiques."
       },
       {
-        title: "Intégration architecturale",
-        content: "Règles spécifiques pour assurer la cohérence avec le bâti environnant : pentes de toiture, matériaux, couleurs, modénatures, alignement des ouvertures."
+        title: "Servitudes d'alignement",
+        content: "Les plans d'alignement définissent la limite entre voie publique et propriété privée, avec interdiction de construire ou rénover des bâtiments dans la zone frappée d'alignement."
       },
       {
-        title: "Épannelage",
-        content: "Graduation des hauteurs en fonction de la profondeur du terrain ou de zones de transition (entre secteurs de hauteurs différentes)."
+        title: "Servitudes aéronautiques",
+        content: "À proximité des aéroports et aérodromes, des servitudes limitent la hauteur des constructions et installations selon des plans de dégagement spécifiques à chaque infrastructure."
+      },
+      {
+        title: "Emplacements réservés",
+        content: "Les emplacements réservés dans le PLU sont destinés à des équipements publics futurs. Ils gèlent la constructibilité mais donnent au propriétaire un droit de délaissement."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-urbanisme-2",
+        title: "Impact des servitudes d'utilité publique",
+        imageUrl: "/images/schemas/servitudes-urbanisme.png",
+        description: "Illustration des principales servitudes d'utilité publique et leur impact sur la constructibilité d'un terrain."
       }
     ]
   }

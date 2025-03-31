@@ -6,128 +6,231 @@ export const plomberieDTUs: DTU[] = [
     id: "dtu-60-1",
     title: "DTU 60.1 - Plomberie sanitaire",
     category: "Plomberie",
-    description: "Travaux de plomberie sanitaire pour bâtiments",
-    lastUpdate: "Mai 2023",
+    description: "Installation des réseaux d'alimentation en eau et d'évacuation des eaux usées",
+    lastUpdate: "Mars 2023",
     rules: [
       {
-        title: "Dimension des canalisations",
-        content: "Le diamètre intérieur des canalisations d'eau froide et chaude doit être au minimum de 12 mm pour les distributeurs et de 10 mm pour les branchements terminaux.",
+        title: "Dimensionnement réseaux eau froide",
+        content: "Vitesse maximale : 2 m/s en colonnes, 1,5 m/s en distribution secondaire. Dimensionnement selon débits probables : ∑de (0,8×débit total cumulé).",
         type: "standard"
       },
       {
-        title: "Pente des canalisations d'évacuation",
-        content: "Les canalisations d'évacuation doivent avoir une pente minimale de 1 cm par mètre pour assurer un bon écoulement gravitaire.",
+        title: "Diamètre minimal évacuation",
+        content: "Diamètre minimal des canalisations d'évacuation : lavabo 32 mm, douche 40 mm, baignoire 40 mm, WC 100 mm, évier 40 mm.",
         type: "standard"
       },
       {
-        title: "Risque de gel",
-        content: "Les canalisations exposées au gel doivent être protégées par un calorifugeage d'au moins 20 mm d'épaisseur ou par un traceur thermique.",
+        title: "Pente des évacuations",
+        content: "Pente minimale des canalisations d'évacuation horizontales : 1 cm/m pour les eaux usées, 0,5 cm/m pour les eaux pluviales.",
         type: "warning"
       },
       {
-        title: "Clapets anti-retour",
-        content: "Installer des clapets anti-retour sur toutes les liaisons entre le réseau d'eau potable et les points d'eau comportant un risque de pollution.",
+        title: "Rosaces de finition",
+        content: "Toute traversée de paroi visible doit être équipée d'une rosace de finition, fixée à la canalisation ou à la paroi.",
         type: "tip"
+      },
+      {
+        title: "Disconnexion",
+        content: "Tout réseau d'eau potable doit être protégé contre les retours d'eau par un dispositif de protection adapté au risque (EA, EB, CA, BA ou AA selon NF EN 1717).",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Domaine d'application",
-        content: "Le DTU 60.1 s'applique aux travaux d'exécution des installations de plomberie sanitaire pour bâtiments à usage d'habitation, de bureaux, ou recevant du public."
-      },
-      {
         title: "Matériaux autorisés",
-        content: "Les canalisations peuvent être réalisées en cuivre, PER, multicouche, PVC pression ou acier galvanisé selon les applications. Les brasures pour le cuivre doivent être réalisées avec un alliage comportant au moins 2% d'argent."
+        content: "Pour l'eau potable : cuivre, PER, multicouche, PP, PVC-C. Pour l'évacuation : PVC, fonte, PE. Compatibilité obligatoire avec la nature de l'eau distribuée (notamment pour l'eau chaude)."
       },
       {
-        title: "Essais de mise en service",
-        content: "Avant mise en service, l'installation doit être soumise à un essai de pression hydraulique de 1,5 fois la pression maximale de service, avec un minimum de 10 bars, durant 2 heures sans chute de pression."
+        title: "Isolation des canalisations",
+        content: "Isolation thermique obligatoire pour l'eau chaude (épaisseur selon diamètre) et pour éviter la condensation sur les tuyaux d'eau froide. Protection contre le gel pour les parties exposées."
+      },
+      {
+        title: "Ventilation du réseau d'évacuation",
+        content: "Ventilation primaire (prolongation de la chute jusqu'en toiture) obligatoire. Ventilation secondaire nécessaire pour les chutes > 10 m ou desservant plus de 6 niveaux."
+      },
+      {
+        title: "Fixation des canalisations",
+        content: "Espacement maximal des supports : 2,5 m pour le PVC, 0,5 m pour le PER nu, 1,3 à 2,0 m pour le cuivre selon diamètre. Dilatation à prendre en compte (lyres ou compensateurs)."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-plomberie-1",
+        title: "Schéma de principe",
+        imageUrl: "/images/schemas/plomberie-principe.png",
+        description: "Schéma de principe d'une installation de plomberie en habitation avec alimentation et évacuation."
       }
     ]
   },
   {
     id: "dtu-60-11",
-    title: "DTU 60.11 - Règles de calcul des installations de plomberie",
+    title: "DTU 60.11 - Dimensionnement plomberie",
     category: "Plomberie",
-    description: "Règles de dimensionnement des réseaux de plomberie",
-    lastUpdate: "Février 2022",
+    description: "Règles de calcul des installations de plomberie sanitaire et d'eaux pluviales",
+    lastUpdate: "Février 2023",
     rules: [
       {
-        title: "Débit de base",
-        content: "Le débit de base minimal pour un lavabo est de 0,20 L/s, pour une douche de 0,20 L/s, pour une baignoire de 0,33 L/s et pour un WC de 0,12 L/s.",
+        title: "Débits de base",
+        content: "Débits minimaux aux points de puisage : Lavabo 0,20 L/s, Évier 0,20 L/s, Douche 0,20 L/s, Baignoire 0,33 L/s, WC 0,12 L/s.",
         type: "standard"
       },
       {
-        title: "Coefficient de simultanéité",
-        content: "Le coefficient de simultanéité K se calcule selon la formule K = 1/√(n-1) où n est le nombre d'appareils, avec un minimum de 0,2 pour les habitations.",
+        title: "Calcul du débit probable",
+        content: "Pour 'n' appareils identiques : Qp = Q × y où y = 0,8 × √n-1 (pour les logements) ou y = 0,5 × √n-1 (pour locaux à forte simultanéité).",
         type: "standard"
       },
       {
-        title: "Surpression nécessaire",
-        content: "Si la pression disponible est inférieure à 1 bar pour le point le plus défavorisé, un surpresseur doit être installé pour garantir le bon fonctionnement de l'installation.",
+        title: "Diamètre des collecteurs",
+        content: "Pour les collecteurs d'évacuation horizontaux, le taux de remplissage ne doit pas dépasser 50% pour les EU/EV et 70% pour les EP.",
         type: "warning"
       },
       {
-        title: "Vitesse d'écoulement",
-        content: "La vitesse de l'eau dans les canalisations ne doit pas dépasser 2 m/s pour éviter les bruits et coups de bélier.",
+        title: "Abaque de Bazin",
+        content: "Utiliser l'abaque de Bazin pour déterminer rapidement les diamètres en fonction des débits et des pertes de charge linéaires acceptables.",
         type: "tip"
+      },
+      {
+        title: "Pression résiduelle",
+        content: "Pression résiduelle minimale au point de puisage le plus défavorisé : 1,0 bar pour robinetterie courante, 1,5 bar pour chauffe-eau instantané.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Objet et domaine d'application",
-        content: "Le DTU 60.11 définit les règles de calcul permettant de dimensionner les canalisations d'alimentation en eau froide et chaude sanitaire ainsi que les réseaux d'évacuation des eaux usées et eaux vannes."
+        title: "Dimensionnement des chutes EU/EV",
+        content: "Le diamètre des chutes EU/EV est déterminé selon le nombre d'équipements sanitaires desservis et leur débit de base cumulé, avec un remplissage maximal de 1/3 du diamètre."
       },
       {
-        title: "Dimensionnement des réseaux",
-        content: "Le diamètre des canalisations est déterminé en fonction du débit probable, calculé à partir des débits de base des appareils et du coefficient de simultanéité qui tient compte du fait que tous les appareils ne fonctionnent pas en même temps."
+        title: "Dispositifs anti-bélier",
+        content: "Installer des dispositifs anti-bélier pour limiter les coups de bélier dans les installations avec robinets à fermeture rapide, électrovannes ou surpresseurs, dimensionnés selon formule spécifique."
       },
       {
-        title: "Vitesses de référence",
-        content: "Pour les tronçons collectifs en colonnes montantes, la vitesse de référence est de 1,5 m/s maximum. Pour les branchements d'étage, elle est limitée à 1 m/s. Pour les tronçons en sous-sol ou vide sanitaire, elle peut atteindre 2 m/s."
+        title: "Pertes de charge singulières",
+        content: "Les pertes de charge singulières (coudes, tés, vannes) peuvent être évaluées soit par addition des longueurs équivalentes, soit en majorant de 20 à 50% les pertes linéaires."
+      },
+      {
+        title: "Calibrage des compteurs",
+        content: "Le calibre du compteur doit être choisi selon le débit probable de l'installation, en évitant le surdimensionnement qui réduit la sensibilité aux petits débits."
       }
     ]
   },
   {
-    id: "dtu-60-2",
-    title: "DTU 60.2 - Canalisations en fonte",
+    id: "dtu-65-10",
+    title: "DTU 65.10 - Canalisations eau chaude",
     category: "Plomberie",
-    description: "Canalisations en fonte, évacuations d'eaux usées et pluviales",
-    lastUpdate: "Septembre 2022",
+    description: "Canalisations d'eau chaude ou froide sous pression",
+    lastUpdate: "Janvier 2023",
     rules: [
       {
-        title: "Assemblage des tuyaux en fonte",
-        content: "L'assemblage des tuyaux en fonte doit être réalisé par joints élastomères conformes à la norme NF EN 681-1, correctement lubrifiés lors du montage.",
+        title: "Température maximale",
+        content: "Pour la distribution d'ECS, la température maximale de stockage est de 65°C et distribution à 50-55°C pour limiter les risques de brûlure.",
         type: "standard"
       },
       {
-        title: "Fixation des canalisations",
-        content: "Les canalisations en fonte doivent être supportées par des colliers anti-vibratiles, espacés de 2 m maximum pour les canalisations horizontales.",
+        title: "Dilatation thermique",
+        content: "Prévoir 0,7 mm/m pour 10°C de variation pour le PVC, 0,15 mm/m/10°C pour le cuivre, 1,5 mm/m/10°C pour le PE et 2,0 mm/m/10°C pour le PER.",
         type: "standard"
       },
       {
-        title: "Protection anticorrosion",
-        content: "Dans les environnements agressifs, prévoir une protection complémentaire par peinture époxy ou gainage pour éviter la corrosion externe des canalisations en fonte.",
+        title: "Boucle de récirculation",
+        content: "Obligatoire si la distance entre production et point de puisage > 8 m. Dimensionnement pour assurer une température > 50°C en tout point.",
         type: "warning"
       },
       {
-        title: "Isolation acoustique",
-        content: "Pour réduire les bruits d'écoulement, envelopper les canalisations traversant les locaux sensibles avec des matériaux acoustiques d'au moins 5 mm d'épaisseur.",
+        title: "Isolation thermique",
+        content: "Épaisseur minimale d'isolant de classe au moins 2 selon EN ISO 12241 : 20 mm pour Ø ≤ 42mm, 30 mm pour Ø > 42mm, majorée en extérieur.",
         type: "tip"
+      },
+      {
+        title: "Protection contre la légionelle",
+        content: "Éviter les bras morts, maintenir > 55°C dans le réseau, > 60°C en production. Choc thermique périodique recommandé à 70°C pendant 30 minutes.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Domaine d'application",
-        content: "Le DTU 60.2 s'applique aux canalisations d'évacuation en fonte pour les eaux usées, eaux vannes et eaux pluviales à l'intérieur des bâtiments."
+        title: "Compatibilité des matériaux",
+        content: "La compatibilité électrochimique doit être vérifiée pour éviter la corrosion galvanique entre métaux différents. Utiliser des raccords diélectriques entre cuivre et acier galvanisé."
       },
       {
-        title: "Types de fonte",
-        content: "Les canalisations peuvent être en fonte grise (ancienne génération) ou en fonte ductile/graphite sphéroïdal (SMU/SME) avec revêtement intérieur époxy pour les installations modernes."
+        title: "Réseaux ECS collectifs",
+        content: "Les réseaux ECS collectifs doivent comporter des organes d'équilibrage pour assurer une distribution homogène. Chaque colonne doit être équipée d'un robinet d'arrêt et de vidange."
       },
       {
-        title: "Calorifugeage",
-        content: "Les canalisations d'eaux usées et vannes situées en faux plafonds de locaux habitables doivent être calorifugées avec un matériau de 9 mm d'épaisseur minimum pour limiter le bruit et la condensation."
+        title: "Fixation et supports",
+        content: "Les canalisations doivent être fixées avec des supports adaptés à leur nature et à leur poids, permettant la dilatation tout en maintenant la pente requise."
+      },
+      {
+        title: "Acoustique",
+        content: "Pour limiter les nuisances sonores, la vitesse d'écoulement doit être ≤ 1,5 m/s et les traversées de parois doivent être désolidarisées par des fourreaux souples dépassant de 2 cm."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-ecs-1",
+        title: "Principe bouclage ECS",
+        imageUrl: "/images/schemas/bouclage-ecs.png",
+        description: "Schéma de principe d'une installation ECS avec boucle de récirculation et équilibrage."
+      }
+    ]
+  },
+  {
+    id: "dtu-65-12",
+    title: "DTU 65.12 - Installations solaires thermiques",
+    category: "Plomberie",
+    description: "Réalisation des installations de capteurs solaires pour eau chaude sanitaire",
+    lastUpdate: "Avril 2023",
+    rules: [
+      {
+        title: "Orientation capteurs",
+        content: "Orientation optimale plein sud (±15°), inclinaison optimale = latitude ±10° (environ 30 à 45° en France métropolitaine).",
+        type: "standard"
+      },
+      {
+        title: "Dimensionnement capteurs",
+        content: "Surface capteurs ECS : 1 m² par personne en habitat collectif, 1,2 m² par personne en habitat individuel pour couverture solaire de 50 à 60%.",
+        type: "standard"
+      },
+      {
+        title: "Surchauffe estivale",
+        content: "Prévoir une protection contre les surchauffes : vase d'expansion surdimensionné, système autovidangeable ou aérorefroidisseur automatique.",
+        type: "warning"
+      },
+      {
+        title: "Fluide caloporteur",
+        content: "Utiliser un fluide caloporteur avec antigel adapté à la température minimale locale (-15 à -20°C), avec vérification annuelle du pH (>7).",
+        type: "tip"
+      },
+      {
+        title: "Stockage thermique",
+        content: "Volume de stockage ECS : 50 à 70 litres par m² de capteur solaire, avec stratification thermique favorisée par une hauteur > 2 fois le diamètre.",
+        type: "standard"
+      }
+    ],
+    sections: [
+      {
+        title: "Types de capteurs",
+        content: "Le DTU couvre les capteurs plans vitrés, les capteurs sous vide et les capteurs auto-stockeurs, avec des spécificités de mise en œuvre pour chaque technologie."
+      },
+      {
+        title: "Implantation",
+        content: "Les capteurs peuvent être implantés en toiture (intégrés ou surimposés), en terrasse, en façade ou au sol, avec des règles d'ancrage et d'étanchéité spécifiques à chaque cas."
+      },
+      {
+        title: "Composants hydrauliques",
+        content: "Circuit primaire avec circulateur solaire haute température, vase d'expansion fermé (capacité ≥ 6% du volume total), soupape tarée à 6 bar et purgeurs d'air automatiques à clapet."
+      },
+      {
+        title: "Monitoring",
+        content: "Installation de compteurs d'énergie obligatoire pour les installations > 20 m², recommandée pour toutes les installations, avec relevé des températures et pressions aux points clés."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-solaire-1",
+        title: "Schéma installation solaire",
+        imageUrl: "/images/schemas/installation-solaire.png",
+        description: "Schéma de principe d'une installation solaire thermique pour ECS avec échangeur externe."
       }
     ]
   }
