@@ -11,6 +11,7 @@ import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
 import SpecialFeaturesStep from './steps/SpecialFeaturesStep';
 import ContactDetailsStep from './steps/ContactDetailsStep';
 import EstimationResults from './steps/EstimationResults';
+import { ClientTypeStepProps } from './types/clientTypeProps';
 
 interface EstimationFormProps {
   formData: FormData;
@@ -38,7 +39,6 @@ const EstimationForm: React.FC<EstimationFormProps> = ({
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );
@@ -128,7 +128,6 @@ const EstimationForm: React.FC<EstimationFormProps> = ({
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );

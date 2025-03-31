@@ -75,7 +75,7 @@ export interface StepRendererProps {
   onComplete?: () => void;
 }
 
-// Define client-specific step props
+// Define client-specific step props - make goToPreviousStep optional
 export interface ClientTypeStepProps {
   formData: EstimationFormData;
   updateFormData: (data: Partial<EstimationFormData>) => void;
@@ -91,7 +91,7 @@ export interface ContactDetailsStepProps extends FormStepProps {
 
 export interface DetailedEstimationReportProps {
   formData: EstimationFormData;
-  estimation?: any; // Add this property
+  estimation: any; // Add this property
   includeTerrainPrice?: boolean;
   options?: PDFGenerationOptions;
 }

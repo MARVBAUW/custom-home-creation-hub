@@ -3,6 +3,7 @@
 export * from './baseTypes';
 export * from './estimationFormData';
 export * from './formTypes';
+export * from './pdf-types';
 
 // Ensure type exports are clear and don't have duplicates
 export type { EstimationFormData, FormData, EstimationResponseData, PDFGenerationOptions, FeeCosts } from './estimationFormData';

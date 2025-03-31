@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { PDFIcon, Download, Mail, Eye } from 'lucide-react';
+import { FileText, Download, Mail, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EstimationFormData, PDFGenerationOptions } from './types';
 

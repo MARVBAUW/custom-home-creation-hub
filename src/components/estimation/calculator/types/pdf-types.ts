@@ -2,10 +2,28 @@
 // Type definitions for jsPDF and jspdf-autotable
 import jsPDF from 'jspdf';
 
+// Fix PDFGenerationOptions interface
+export interface PDFGenerationOptions {
+  includeDetails?: boolean;
+  includeLogo?: boolean;
+  includeContactInfo?: boolean;
+  includeBreakdown?: boolean;
+  includeTerrainPrice?: boolean;
+  includeTimeline?: boolean;
+  includeDetailedBreakdown?: boolean;
+  clientInfo?: boolean;
+  companyLogo?: boolean;
+  fileName?: string;
+}
+
 // Extend the jsPDF internal type
 declare module 'jspdf' {
   interface jsPDF {
-    // Add getNumberOfPages method
+    autoTable: (options: any) => jsPDF & {
+      lastAutoTable: {
+        finalY: number;
+      };
+    };
     internal: {
       getNumberOfPages: () => number;
       events: any;
@@ -18,12 +36,6 @@ declare module 'jspdf' {
       };
       pages: number[];
       getEncryptor(objectId: number): (data: string) => string;
-    };
-    // Add autoTable method
-    autoTable: (options: any) => any & {
-      previous: {
-        finalY: number;
-      };
     };
   }
 }

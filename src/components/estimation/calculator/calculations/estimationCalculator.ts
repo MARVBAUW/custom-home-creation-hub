@@ -57,12 +57,14 @@ export const calculateEstimation = (formData: EstimationFormData): EstimationRes
       total: constructionCost
     },
     fees: {
-      architect: fees * 0.6,
-      engineeringFees: fees * 0.2,
-      architectFees: fees * 0.4,
+      architect: fees * 0.4,
       technicalStudies: fees * 0.3,
       other: fees * 0.1,
-      total: fees
+      total: fees,
+      architectFees: fees * 0.4,
+      engineeringFees: fees * 0.2,
+      officialFees: fees * 0.2,
+      inspectionFees: fees * 0.1
     },
     otherCosts: {
       insurance: otherCosts * 0.3,

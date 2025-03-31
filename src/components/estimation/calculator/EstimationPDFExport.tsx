@@ -8,19 +8,6 @@ import { UserOptions } from 'jspdf-autotable';
 import { FormData, EstimationResponseData, PDFGenerationOptions } from './types';
 import { formatCurrency } from '@/utils/formatters';
 
-// Add the autoTable method type to jsPDF
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: UserOptions) => jsPDF;
-    lastAutoTable: {
-      finalY: number;
-    };
-    internal: {
-      getNumberOfPages: () => number;
-    };
-  }
-}
-
 interface EstimationPDFExportProps {
   formData: FormData;
   estimationResult: EstimationResponseData | number;
@@ -97,9 +84,12 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       body: projectDetails,
     });
     
+    // Store the last table's Y position
+    const lastTableY = (doc as any).lastAutoTable.finalY;
+    
     // Add cost breakdown
     doc.setFontSize(14);
-    doc.text('Coûts estimés', 14, doc.lastAutoTable.finalY + 10);
+    doc.text('Coûts estimés', 14, lastTableY + 10);
     
     const costBreakdown = [
       ['Gros œuvre', formatCurrency(result.constructionCosts.structuralWork)],
@@ -112,14 +102,17 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     ];
     
     doc.autoTable({
-      startY: doc.lastAutoTable.finalY + 15,
+      startY: lastTableY + 15,
       head: [['Poste de dépense', 'Montant estimé (€)']],
       body: costBreakdown,
     });
     
+    // Store the updated last table's Y position
+    const secondTableY = (doc as any).lastAutoTable.finalY;
+    
     // Add timeline
     doc.setFontSize(14);
-    doc.text('Calendrier prévisionnel', 14, doc.lastAutoTable.finalY + 10);
+    doc.text('Calendrier prévisionnel', 14, secondTableY + 10);
     
     const timelineData = [
       ['Conception et études', `${result.timeline.design} mois`],
@@ -130,15 +123,15 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     ];
     
     doc.autoTable({
-      startY: doc.lastAutoTable.finalY + 15,
+      startY: secondTableY + 15,
       head: [['Phase', 'Durée estimée']],
       body: timelineData,
     });
     
     // Add footer with disclaimer and date
-    const pageCount = doc.internal.getNumberOfPages();
+    const totalPages = (doc as any).internal.getNumberOfPages();
     doc.setFontSize(10);
-    for (let i = 1; i <= pageCount; i++) {
+    for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
       doc.text('Cette estimation est fournie à titre indicatif et peut varier en fonction des détails spécifiques du projet.', 105, 285, {
         align: 'center'
