@@ -9,22 +9,22 @@ export interface EstimationFormData {
   city?: string;
   
   // Budget
-  budget?: number;
+  budget?: number | string;
   
   // Terrain details
-  landIncluded?: string;
-  landPrice?: number;
+  landIncluded?: string | boolean;
+  landPrice?: number | string;
   terrainType?: string;
   landType?: string;
   terrainSurface?: number | string;
   
   // Construction details
   constructionType?: string;
-  levels?: number;
-  bedrooms?: number;
-  bathrooms?: number;
-  kitchens?: number;
-  livingRooms?: number;
+  levels?: number | string;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
+  kitchens?: number | string;
+  livingRooms?: number | string;
   livingRoomSize?: number | string;
   livingRoomStyle?: string;
   
@@ -119,9 +119,10 @@ export interface EstimationFormData {
   wallpaperPercentage?: number | string;
   
   // Project requirements
-  units?: number;
+  units?: number | string;
   needsDemolition?: boolean;
   demolitionType?: string;
+  existingSurface?: number | string;
   
   // Room types
   bathroomType?: string;
@@ -177,6 +178,12 @@ export interface PDFGenerationOptions {
   includeLogo?: boolean;
   includeContactInfo?: boolean;
   includeBreakdown?: boolean;
+  includeTerrainPrice?: boolean;
+  includeTimeline?: boolean;
+  includeDetailedBreakdown?: boolean;
+  clientInfo?: boolean;
+  companyLogo?: boolean;
+  fileName?: string;
 }
 
 // Pour FeeCosts qui est utilisé ailleurs

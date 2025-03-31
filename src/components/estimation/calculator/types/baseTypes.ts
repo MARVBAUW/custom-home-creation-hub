@@ -8,6 +8,8 @@ export interface BaseFormProps {
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
   isLoading?: boolean;
+  defaultValues?: Partial<EstimationFormData>;
+  onSubmit?: (data: Partial<EstimationFormData>) => void;
 }
 
 export interface BaseStepProps {

@@ -3,19 +3,32 @@
 // to provide a single import point for other modules
 
 // Main form data interface
-export * from './estimationFormData';
+export type { EstimationFormData, FormData, EstimationResponseData, PDFGenerationOptions, FeeCosts } from './estimationFormData';
 
 // Export from formTypes.ts
-export * from './formTypes';
+export type { 
+  BaseFormProps,
+  FormStepProps, 
+  ExtendedFormProps, 
+  ResultsFormProps,
+  EstimationCalculatorProps,
+  FormNavigationProps,
+  EstimationValidationError,
+  FormSubmitContext,
+  ConstructionDetailsStepProps,
+  StepRendererProps,
+  ClientTypeStepProps,
+  ContactDetailsStepProps
+} from './formTypes';
 
 // Export from conversationalTypes.ts
 export * from './conversationalTypes';
 
-// Export from baseTypes.ts 
-export * from './baseTypes';
+// Export from baseTypes.ts (excluding those already exported)
+export type { BaseStepProps } from './baseTypes';
 
 // Export from pdf-types
-export * from './pdf-types';
+export type { JsPDFInternal, ExtendedJsPDF } from './pdf-types';
 
 // Re-export any additional types
 export type { ConstructionDetailsSchema } from './constructionTypes';

@@ -3,7 +3,7 @@ import { BaseSyntheticEvent } from 'react';
 import { EstimationFormData, EstimationResponseData } from './estimationFormData';
 import { BaseFormProps } from './baseTypes';
 
-export { BaseFormProps };
+export type { BaseFormProps };
 
 export interface FormStepProps extends BaseFormProps {
   // This is a base interface for form components
@@ -80,7 +80,7 @@ export interface ClientTypeStepProps {
   formData: EstimationFormData;
   updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep: () => void;
-  goToPreviousStep: () => void;
+  goToPreviousStep?: () => void;
   animationDirection: 'forward' | 'backward';
 }
 
