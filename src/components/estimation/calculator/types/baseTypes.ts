@@ -1,47 +1,24 @@
 
-// Types de base pour le formulaire d'estimation
-export interface BaseFormData {
-  clientType?: string;
-  projectType?: string;
-  estimationType?: string;
-  surface?: number;
-  levels?: number;
-  constructionType?: string;
-  constructionMode?: string;
-  finishLevel?: string;
-  city?: string;
-  terrainSurface?: number;
-  landPrice?: number;
-  terrainType?: string;
-  terrainAccess?: string;
-  waterConnection?: boolean;
-  electricityConnection?: boolean;
-  gasConnection?: boolean;
-  sewerConnection?: boolean;
-  fiberConnection?: boolean;
-  needsSepticTank?: boolean;
-  floodRisk?: boolean;
-  claySoil?: boolean;
-  rockySoil?: boolean;
-  wetlandZone?: boolean;
-  heritageZone?: boolean;
-  foundationType?: string;
-  soilType?: string;
-  wallType?: string;
-  wallThickness?: number;
-  hasBasement?: boolean;
-  basementType?: string;
-  floorType?: string;
-  slopedLand?: boolean;
-  difficultAccess?: boolean;
-  needsDemolition?: boolean;
-  needsWaterManagement?: boolean;
-  name?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
-  postalCode?: string;
+// Base type definitions that might be reused across the application
+
+export interface BaseResponse {
+  success: boolean;
   message?: string;
-  agreeTerms?: boolean;
-  newsletter?: boolean;
+  error?: string;
 }
+
+export type ResponseStatus = 'success' | 'error' | 'loading' | 'idle';
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface StringKeyObject {
+  [key: string]: any;
+}
+
+export type CallbackFunction = (...args: any[]) => void;

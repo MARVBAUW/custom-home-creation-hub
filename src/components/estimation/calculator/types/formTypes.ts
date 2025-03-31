@@ -1,129 +1,44 @@
 
+import { BaseSyntheticEvent } from 'react';
 import { EstimationFormData as FormData, EstimationResponseData } from './index';
 
-export interface BaseFormProps {
+export interface FormStepProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  animationDirection?: 'forward' | 'backward';
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
+  animationDirection: 'forward' | 'backward';
+}
+
+export interface ResultsFormProps extends FormStepProps {
+  estimationResult?: EstimationResponseData | number | null;
   isLoading?: boolean;
-  estimationResult?: number | EstimationResponseData;
-  categoriesAmounts?: { category: string; amount: number }[];
+  categoriesAmounts?: Array<{ category: string; amount: number }>;
 }
 
-export interface ClientTypeStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
+export interface EstimationCalculatorProps {
+  initialData?: Partial<FormData>;
+  onComplete?: (data: FormData, result: EstimationResponseData) => void;
+  showEmbeddedResults?: boolean;
 }
 
-export interface ProjectTypeStepProps {
-  formData: FormData;
-  updateFormData: (data: { projectType: string; landIncluded?: string }) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  isIndividual?: boolean;
-}
-
-export interface TerrainDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface ConstructionDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  estimationType?: string;
-}
-
-export interface RoomsDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface FinishDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface SpecialFeaturesStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface ExteriorFeaturesStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface ContactDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: any) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-}
-
-export interface EstimationResultsProps {
-  estimation: number | null;
-  formData: FormData;
-  goToPreviousStep: () => void;
-  updateFormData?: (data: Partial<FormData>) => void;
-  goToNextStep?: () => void;
-  isLoading?: boolean;
-}
-
-export interface ResultsFormProps {
-  formData: FormData;
-  estimationResult?: number | null | EstimationResponseData;
-  categoriesAmounts?: { category: string; amount: number }[];
-  goToPreviousStep: () => void;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  animationDirection?: 'forward' | 'backward';
-  isLoading?: boolean;
-}
-
-// Updated interface for StepRendererProps
-export interface StepRendererProps {
+export interface FormNavigationProps {
   step: number;
   totalSteps: number;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  isSubmitting: boolean;
-  goToStep: (step: number) => void;
-  onComplete: () => void;
-}
-
-// Updated interface for FormNavigationProps
-export interface FormNavigationProps {
-  step?: number;
-  totalSteps?: number; 
-  currentStep?: number;
   estimationResult?: number;
   showSummary?: boolean;
-  onPreviousClick?: () => void;
-  onNextClick?: () => void;
+  onPreviousClick: () => void;
+  onNextClick: () => void;
   onShowSummaryClick?: () => void;
-  onPrevStep?: () => void;
-  onNextStep?: () => void;
-  isSubmitting?: boolean;
-  isComplete?: boolean;
-  onComplete?: () => void;
+}
+
+export interface EstimationValidationError {
+  path: string;
+  message: string;
+}
+
+export interface FormSubmitContext {
+  event?: BaseSyntheticEvent;
+  isValid: boolean;
+  errors: Record<string, any>;
 }

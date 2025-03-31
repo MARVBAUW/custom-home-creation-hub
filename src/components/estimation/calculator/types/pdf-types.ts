@@ -20,8 +20,8 @@ export interface JsPDFInternal {
   scaleFactor: number;
   pageSize: PageSize;
   pages: number[];
-  getEncryptor: (objectId: number) => (data: string) => string;
   getNumberOfPages: () => number;
+  getEncryptor: (objectId: number) => (data: string) => string;
   [key: string]: any;
 }
 

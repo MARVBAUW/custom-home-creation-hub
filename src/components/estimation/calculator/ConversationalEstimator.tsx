@@ -1,13 +1,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
-import { Message } from './types/conversationalTypes';
+import { Loader2, Send } from 'lucide-react';
 import { EstimationFormData as FormData } from './types';
+import { Message } from './types/conversationalTypes';
 
-interface ConversationalProps {
+interface ConversationalEstimatorProps {
   onUserInput: (input: string) => void;
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
@@ -15,32 +15,64 @@ interface ConversationalProps {
   goToStep: (step: number) => void;
 }
 
-const ConversationalEstimator: React.FC<ConversationalProps> = ({
+const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = ({
   onUserInput,
   formData,
   updateFormData,
   onClientTypeSubmit,
   goToStep
 }) => {
+  const [userInput, setUserInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       type: 'system',
-      content: 'Bonjour ! Je suis votre assistant d\'estimation Progineer. Comment puis-je vous aider avec votre projet de construction ou rénovation ?',
+      content: 'Bonjour ! Je suis votre assistant virtuel pour vous aider à estimer votre projet. Quel type de projet souhaitez-vous réaliser ?',
+      options: ['Construction neuve', 'Rénovation', 'Extension']
     }
   ]);
-  const [userInput, setUserInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleOptionClick = (option: string) => {
+    addMessage({
+      id: Date.now().toString(),
+      type: 'user',
+      content: option
+    });
+
+    // Process selection
+    if (option === 'Construction neuve' || option === 'Rénovation' || option === 'Extension') {
+      // Map to projectType
+      if (option === 'Construction neuve') {
+        updateFormData({ projectType: 'construction' });
+        onClientTypeSubmit({ clientType: 'individual' });
+      } else if (option === 'Rénovation') {
+        updateFormData({ projectType: 'renovation' });
+        onClientTypeSubmit({ clientType: 'individual' });
+      } else if (option === 'Extension') {
+        updateFormData({ projectType: 'extension' });
+        onClientTypeSubmit({ clientType: 'individual' });
+      }
+
+      // Simulate assistant typing
+      setIsTyping(true);
+      setTimeout(() => {
+        setIsTyping(false);
+        addMessage({
+          id: Date.now().toString(),
+          type: 'assistant',
+          content: `Parfait ! Pouvez-vous me donner plus de détails sur la surface approximative de votre ${option.toLowerCase()} ?`,
+        });
+      }, 1000);
     }
   };
 
@@ -48,67 +80,33 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     if (!userInput.trim()) return;
 
     // Add user message
-    const newUserMessage: Message = {
+    addMessage({
       id: Date.now().toString(),
       type: 'user',
       content: userInput
-    };
-    
-    setMessages(prev => [...prev, newUserMessage]);
-    setIsLoading(true);
-    
-    // Process the user input
+    });
+
+    // Process user input
     onUserInput(userInput);
-    
+
     // Clear input
     setUserInput('');
-    
-    // Simulate assistant response
+
+    // Simulate assistant typing
+    setIsTyping(true);
     setTimeout(() => {
-      handleAssistantResponse(userInput);
-      setIsLoading(false);
-    }, 1000);
+      setIsTyping(false);
+      addMessage({
+        id: Date.now().toString(),
+        type: 'assistant',
+        content: `Merci pour ces informations. J'ai bien noté votre demande concernant "${userInput}". Quelles autres caractéristiques souhaitez-vous pour votre projet ?`,
+        options: ['Surface', 'Budget', 'Localisation', 'Délai']
+      });
+    }, 1500);
   };
 
-  const handleAssistantResponse = (input: string) => {
-    // This is a simplified response logic
-    let responseContent = '';
-    
-    // Detect client type selection
-    if (input.toLowerCase().includes('particulier')) {
-      responseContent = 'Je note que vous êtes un particulier. Quel type de projet souhaitez-vous réaliser ?';
-      onClientTypeSubmit({ clientType: 'individual' });
-    } 
-    else if (input.toLowerCase().includes('professionnel')) {
-      responseContent = 'Je note que vous êtes un professionnel. Quel type de projet souhaitez-vous réaliser ?';
-      onClientTypeSubmit({ clientType: 'professional' });
-    }
-    // Detect project type
-    else if (input.toLowerCase().includes('construction')) {
-      responseContent = 'Parfait, pour votre construction neuve, pouvez-vous m\'indiquer la surface approximative souhaitée ?';
-      updateFormData({ projectType: 'construction' });
-    }
-    else if (input.toLowerCase().includes('renovation') || input.toLowerCase().includes('rénovation')) {
-      responseContent = 'Pour votre projet de rénovation, quelle est la surface concernée ?';
-      updateFormData({ projectType: 'renovation' });
-    }
-    else if (input.toLowerCase().includes('extension')) {
-      responseContent = 'Pour votre extension, quelle surface additionnelle envisagez-vous ?';
-      updateFormData({ projectType: 'extension' });
-    }
-    // Default response
-    else {
-      responseContent = 'Pourriez-vous me donner plus de détails sur votre projet ? Par exemple, s\'agit-il d\'une construction neuve, rénovation ou extension ?';
-    }
-    
-    // Add assistant response
-    const newAssistantMessage: Message = {
-      id: Date.now().toString(),
-      type: 'assistant',
-      content: responseContent
-    };
-    
-    setMessages(prev => [...prev, newAssistantMessage]);
+  const addMessage = (message: Message) => {
+    setMessages(prevMessages => [...prevMessages, message]);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -117,38 +115,49 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     }
   };
 
-  const handleOptionClick = (option: string) => {
-    setUserInput(option);
-    handleSendMessage();
-  };
-
   return (
-    <Card className="h-[550px] border shadow-md flex flex-col">
-      <CardContent className="flex flex-col h-full p-4">
+    <Card className="w-full h-[600px] relative">
+      <CardContent className="p-4 flex flex-col h-full">
         <div className="flex-1 overflow-y-auto mb-4 space-y-4">
           {messages.map((message) => (
             <div 
-              key={message.id}
+              key={message.id} 
               className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div 
-                className={`max-w-[80%] rounded-lg p-3 ${
+                className={`max-w-[80%] p-3 rounded-lg ${
                   message.type === 'user' 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'bg-muted'
+                    ? 'bg-blue-500 text-white rounded-tr-none' 
+                    : message.type === 'system' 
+                      ? 'bg-gray-100 text-gray-800' 
+                      : 'bg-gray-200 text-gray-800 rounded-tl-none'
                 }`}
               >
                 {message.content}
+                
+                {message.options && message.options.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {message.options.map((option) => (
+                      <Button
+                        key={option}
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => handleOptionClick(option)}
+                        className="text-xs"
+                      >
+                        {option}
+                      </Button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
           
-          {isLoading && (
+          {isTyping && (
             <div className="flex justify-start">
-              <div className="max-w-[80%] rounded-lg p-3 bg-muted flex items-center space-x-2">
-                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '600ms' }}></div>
+              <div className="max-w-[80%] p-3 rounded-lg bg-gray-200 text-gray-800">
+                <Loader2 className="h-4 w-4 animate-spin" />
               </div>
             </div>
           )}
@@ -156,11 +165,11 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
           <div ref={messagesEndRef} />
         </div>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-2">
           <Input
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Posez une question sur votre projet..."
+            placeholder="Écrivez votre message..."
             onKeyPress={handleKeyPress}
             className="flex-1"
           />
