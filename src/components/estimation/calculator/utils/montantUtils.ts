@@ -16,8 +16,17 @@ import {
 import {
   calculateInsulationCost as calculateInsulationCostBase,
   calculatePlasteringCost as calculatePlasteringCostBase,
-  calculatePaintingCost as calculatePaintingCostBase
+  calculateWallInsulationCost,
+  calculateRoofInsulationCost,
+  calculateFloorInsulationCost
 } from './calculations/insulation';
+
+import {
+  calculatePaintingCost as calculatePaintingCostBase,
+  calculateWallCoveringCost,
+  calculateCeilingPaintCost,
+  calculateTrimPaintCost
+} from './calculations/painting';
 
 /**
  * Calculate a new total amount by adding a cost to the existing total
@@ -267,20 +276,7 @@ export const calculateRoofingCost = (type: string, surface: number | string): nu
 
 // Calculate insulation cost based on type and surface
 export const calculateInsulationCost = (type: string, surface: number | string): number => {
-  const surfaceNum = ensureNumber(surface);
-  
-  switch (type) {
-    case 'base':
-      return surfaceNum * 60; // 60€ per m²
-    case 'performance':
-      return surfaceNum * 80; // 80€ per m²
-    case 'ultraPerformance':
-      return surfaceNum * 110; // 110€ per m²
-    case 'sansAvis':
-      return surfaceNum * 70; // 70€ per m² (average cost)
-    default:
-      return 0;
-  }
+  return calculateInsulationCostBase(type, surface);
 };
 
 /**
@@ -288,20 +284,7 @@ export const calculateInsulationCost = (type: string, surface: number | string):
  * Calculate plastering costs based on type and area
  */
 export const calculatePlasteringCost = (area: number | string, type: string): number => {
-  const surfaceNum = ensureNumber(area);
-  
-  switch (type) {
-    case 'base':
-      return surfaceNum * 60; // 60€ per m²
-    case 'specific':
-      return surfaceNum * 90; // 90€ per m²
-    case 'advanced':
-      return surfaceNum * 140; // 140€ per m²
-    case 'non_concerne':
-      return 0;
-    default:
-      return 0;
-  }
+  return calculatePlasteringCostBase(area, type);
 };
 
 /**
@@ -392,30 +375,7 @@ export const calculatePaintingCost = (
   },
   surface: number | string
 ): number => {
-  const surfaceNum = ensureNumber(surface);
-  
-  // Define cost per square meter for each paint type
-  const costPerType: { [key: string]: number } = {
-    'basicPaint': 25,          // 25€ per m²
-    'decorativePaint': 45,     // 45€ per m²
-    'wallpaper': 35,           // 35€ per m²
-    'woodPaneling': 90,        // 90€ per m²
-    'stoneCladding': 150       // 150€ per m²
-  };
-  
-  // Calculate wall area (typically 2.5x floor area for standard ceiling height)
-  const wallArea = surfaceNum * 2.5;
-  
-  // Calculate total cost based on percentage of each type
-  let totalCost = 0;
-  
-  totalCost += (paintTypes.basicPaint / 100) * wallArea * costPerType.basicPaint;
-  totalCost += (paintTypes.decorativePaint / 100) * wallArea * costPerType.decorativePaint;
-  totalCost += (paintTypes.wallpaper / 100) * wallArea * costPerType.wallpaper;
-  totalCost += (paintTypes.woodPaneling / 100) * wallArea * costPerType.woodPaneling;
-  totalCost += (paintTypes.stoneCladding / 100) * wallArea * costPerType.stoneCladding;
-  
-  return totalCost;
+  return calculatePaintingCostBase(paintTypes, surface);
 };
 
 // Re-export technical calculation functions for backward compatibility
@@ -438,7 +398,17 @@ export {
 export {
   calculateInsulationCostBase,
   calculatePlasteringCostBase,
-  calculatePaintingCostBase
+  calculateWallInsulationCost,
+  calculateRoofInsulationCost,
+  calculateFloorInsulationCost
+};
+
+// Re-export painting calculation functions
+export {
+  calculatePaintingCostBase,
+  calculateWallCoveringCost,
+  calculateCeilingPaintCost,
+  calculateTrimPaintCost
 };
 
 // Add ensureNumber export for backward compatibility

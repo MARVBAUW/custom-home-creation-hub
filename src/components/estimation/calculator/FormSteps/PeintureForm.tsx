@@ -274,7 +274,7 @@ const PeintureForm: React.FC<BaseFormProps> = ({
                       { value: basicPaintPercentage, setter: setBasicPaintPercentage },
                       { value: decorativePaintPercentage, setter: setDecorativePaintPercentage },
                       { value: wallpaperPercentage, setter: setWallpaperPercentage },
-                      { value: woodPanelingPercentage, setter: setWoodPanelingPercentage }
+                      { value: woodPanelingPercentage, setter: setStonePanelingPercentage }
                     ];
                     
                     const otherTotal = otherPercentages.reduce((sum, item) => sum + item.value, 0);
