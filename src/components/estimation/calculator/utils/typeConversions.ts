@@ -24,3 +24,18 @@ export const toBoolean = (value: string | boolean): boolean => {
   if (typeof value === 'boolean') return value;
   return value === 'true' || value === '1' || value === 'yes';
 };
+
+/**
+ * Ensure a value is a number, converting from string if necessary
+ * @param value - The value to convert
+ * @param defaultValue - Default value if conversion fails
+ * @returns A number
+ */
+export const ensureNumber = (value: any, defaultValue = 0): number => {
+  if (value === undefined || value === null || value === '') {
+    return defaultValue;
+  }
+  
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? defaultValue : parsed;
+};
