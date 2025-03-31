@@ -1,45 +1,79 @@
-
 import { FormData } from '../types';
-import { ensureNumber } from '../utils/typeConversions';
 
-export const calculateEstimation = (formData: FormData): number => {
-  // Coût de base
-  let totalCost = 25000;
+/**
+ * Calculate a simple estimation based on the provided form data
+ * @param data The form data
+ * @returns The estimated amount
+ */
+export const calculateSimpleEstimation = (data: FormData): number => {
+  let total = 50000; // Base amount
+
+  // Project type
+  if (data.projectType === 'renovation') {
+    total += 20000;
+  } else if (data.projectType === 'extension') {
+    total += 30000;
+  }
+
+  // Surface area
+  if (typeof data.surface === 'number') {
+    total += data.surface * 500;
+  } else if (typeof data.surface === 'string') {
+    const surface = parseFloat(data.surface);
+    if (!isNaN(surface)) {
+      total += surface * 500;
+    }
+  }
+
+  // Complexity
+  if (data.complexity === 'complex') {
+    total *= 1.3;
+  } else if (data.complexity === 'moderate') {
+    total *= 1.15;
+  }
+
+  // Quality standard
+  if (data.qualityStandard === 'high') {
+    total *= 1.2;
+  } else if (data.qualityStandard === 'premium') {
+    total *= 1.35;
+  }
+
+  // Number of bedrooms and bathrooms
+  if (typeof data.bedrooms === 'number') {
+    total += data.bedrooms * 10000;
+  } else if (typeof data.bedrooms === 'string') {
+    const bedrooms = parseInt(data.bedrooms, 10);
+    if (!isNaN(bedrooms)) {
+      total += bedrooms * 10000;
+    }
+  }
+
+  if (typeof data.bathrooms === 'number') {
+    total += data.bathrooms * 15000;
+  } else if (typeof data.bathrooms === 'string') {
+    const bathrooms = parseInt(data.bathrooms, 10);
+    if (!isNaN(bathrooms)) {
+      total += bathrooms * 15000;
+    }
+  }
+
+  // Check if land is included (convert string 'true'/'false' to boolean if needed)
+  const landIncludedValue = 
+    typeof data.landIncluded === 'string' 
+      ? data.landIncluded.toLowerCase() === 'true'
+      : !!data.landIncluded;
   
-  // Ajustement en fonction de la surface
-  const surface = ensureNumber(formData.surface);
-  if (surface > 0) {
-    totalCost += surface * 1200; // 1200€ par m²
+  // If land is included and there's a land price, add it to the total
+  if (landIncludedValue && data.landPrice) {
+    const landPrice = typeof data.landPrice === 'string' 
+      ? parseFloat(data.landPrice) 
+      : data.landPrice;
+    
+    if (!isNaN(landPrice)) {
+      total += landPrice;
+    }
   }
   
-  // Ajustement en fonction du type de projet
-  if (formData.projectType === 'renovation') {
-    totalCost *= 0.8; // La rénovation coûte moins cher que la construction
-  } else if (formData.projectType === 'extension') {
-    totalCost *= 0.9; // L'extension coûte un peu moins cher que la construction
-  }
-  
-  // Ajustement en fonction du niveau de finition
-  const finishLevel = formData.finishLevel || '';
-  if (finishLevel.includes('Premium') || finishLevel.includes('premium')) {
-    totalCost *= 1.3; // Premium: +30%
-  } else if (finishLevel.includes('Basique') || finishLevel.includes('basique')) {
-    totalCost *= 0.9; // Basique: -10%
-  }
-  
-  // Ajustement pour les caractéristiques spéciales
-  if (formData.domotic) totalCost += 8000;
-  if (formData.alarm) totalCost += 3000;
-  if (formData.centralVacuum) totalCost += 5000;
-  if (formData.smartHome) totalCost += 12000;
-  if (formData.solarPanels) totalCost += 15000;
-  
-  // Ajout du prix du terrain si nécessaire
-  if (formData.landIncluded === 'yes' && formData.landPrice) {
-    const landPrice = ensureNumber(formData.landPrice);
-    totalCost += landPrice;
-  }
-  
-  // S'assurer que le résultat est un nombre positif
-  return Math.max(totalCost, 25000);
+  return total;
 };

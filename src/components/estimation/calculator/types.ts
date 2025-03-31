@@ -33,7 +33,7 @@ export interface FormData {
   domotic?: boolean;
   alarm?: boolean;
   centralVacuum?: boolean;
-  landIncluded?: boolean;
+  landIncluded?: boolean | string;
   levels?: number | string;
   roomCount?: number | string;
   bathroomCount?: number | string;
@@ -61,15 +61,15 @@ export interface FormData {
   includeCuisine?: boolean;
   includeBathroom?: boolean;
   needsDemolition?: boolean;
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
+  stonePercentage?: number | string;
+  plasterPercentage?: number | string;
+  brickPercentage?: number | string;
+  metalCladdingPercentage?: number | string;
+  woodCladdingPercentage?: number | string;
+  stoneCladdingPercentage?: number | string;
   windowType?: string;
-  windowNewArea?: number;
-  windowRenovationArea?: number;
+  windowNewArea?: number | string;
+  windowRenovationArea?: number | string;
   electricalType?: string;
   plumbingType?: string;
 }
@@ -88,6 +88,9 @@ export interface FeeCosts {
   officialFees: number;
   inspectionFees: number;
   total: number;
+  architect?: number;
+  technicalStudies?: number;
+  other?: number;
 }
 
 export interface OtherCosts {
@@ -112,4 +115,41 @@ export interface EstimationResponseData {
   otherCosts: OtherCosts;
   totalAmount: number;
   timeline: EstimationTimeline;
+}
+
+// Alias EstimationFormData to FormData for backwards compatibility
+export type EstimationFormData = FormData;
+
+// Define base form props
+export interface BaseFormProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: string;
+}
+
+// Message and conversational types
+export interface Message {
+  text: string;
+  isUser: boolean;
+  timestamp?: Date;
+}
+
+export interface ConversationalProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  onClientTypeSubmit: (data: { clientType: string }) => void;
+  goToStep: (step: number) => void;
+}
+
+export interface ExtractedInfo {
+  projectType?: string;
+  surface?: number | string;
+  location?: string;
+  budget?: number | string;
+  roomCount?: number | string;
+  bathroomCount?: number | string;
+  [key: string]: any;
 }

@@ -1,8 +1,9 @@
+
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { EstimationFormData } from '../types/estimationFormData';
 import { FormData } from '../types';
 import { formatCurrency } from '@/utils/formatters';
+import { ExtendedJsPDF, PDFGenerationOptions } from '../types/pdf-types';
 
 /**
  * Generate a PDF document based on form data
@@ -12,11 +13,11 @@ import { formatCurrency } from '@/utils/formatters';
  */
 export const generatePDF = (
   documentTitle: string,
-  data: EstimationFormData,
+  data: FormData,
   fileName: string = 'estimation'
 ): void => {
   // Create new PDF document
-  const doc = new jsPDF();
+  const doc = new jsPDF() as ExtendedJsPDF;
   
   // Add document title
   doc.setFontSize(20);
@@ -58,7 +59,7 @@ export const generatePDF = (
   });
   
   // Add construction costs header
-  const lastY = (doc as any).lastAutoTable.finalY + 20;
+  const lastY = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(16);
   doc.text('Estimation des coûts', 14, lastY);
   
@@ -126,7 +127,7 @@ export const generatePDF = (
   });
   
   // Add additional fees header
-  const lastY2 = (doc as any).lastAutoTable.finalY + 20;
+  const lastY2 = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(16);
   doc.text('Honoraires et frais annexes', 14, lastY2);
   
@@ -161,7 +162,7 @@ export const generatePDF = (
   });
   
   // Add final project total
-  const lastY3 = (doc as any).lastAutoTable.finalY + 20;
+  const lastY3 = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(16);
   doc.setTextColor(0, 100, 0);
   doc.text('Estimation globale du projet', 14, lastY3);
@@ -181,7 +182,7 @@ export const generatePDF = (
   });
   
   // Add footnote
-  const lastY4 = (doc as any).lastAutoTable.finalY + 20;
+  const lastY4 = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(10);
   doc.setTextColor(100);
   doc.text('* Cette estimation est fournie à titre indicatif et ne constitue pas un devis détaillé.', 14, lastY4);
@@ -210,7 +211,7 @@ export const generateEstimationPDF = (
   includeTerrainPrice: boolean = false
 ): string => {
   // Create new PDF document
-  const doc = new jsPDF();
+  const doc = new jsPDF() as ExtendedJsPDF;
   
   // Define PDF file name with timestamp to make it unique
   const timestamp = new Date().getTime();
@@ -253,7 +254,7 @@ export const generateEstimationPDF = (
   });
   
   // Add construction costs header
-  const lastY = (doc as any).lastAutoTable.finalY + 20;
+  const lastY = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(16);
   doc.text('Estimation des coûts', 14, lastY);
   
@@ -296,7 +297,7 @@ export const generateEstimationPDF = (
       : formData.landPrice;
     
     if (!isNaN(terrainPrice) && terrainPrice > 0) {
-      const lastY2 = (doc as any).lastAutoTable.finalY + 20;
+      const lastY2 = (doc.autoTable as any).previous.finalY + 20;
       doc.setFontSize(16);
       doc.text('Terrain et frais associés', 14, lastY2);
       
@@ -326,7 +327,7 @@ export const generateEstimationPDF = (
   }
   
   // Add final project total
-  const lastY3 = (doc as any).lastAutoTable.finalY + 20;
+  const lastY3 = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(16);
   doc.setTextColor(0, 100, 0);
   doc.text('Estimation globale du projet', 14, lastY3);
@@ -344,14 +345,14 @@ export const generateEstimationPDF = (
   });
   
   // Add footnote
-  const lastY4 = (doc as any).lastAutoTable.finalY + 20;
+  const lastY4 = (doc.autoTable as any).previous.finalY + 20;
   doc.setFontSize(10);
   doc.setTextColor(100);
   doc.text('* Cette estimation est fournie à titre indicatif et ne constitue pas un devis détaillé.', 14, lastY4);
   doc.text('Les prix peuvent varier en fonction des spécificités du projet, des matériaux choisis et des contraintes du site.', 14, lastY4 + 5);
   
   // Add Progineer contact info
-  const pageCount = doc.getNumberOfPages();
+  const pageCount = doc.internal.getNumberOfPages();
   doc.setPage(pageCount);
   doc.setFontSize(8);
   doc.text('Progineer - Expertise en maîtrise d\'œuvre | contact@progineer.fr | www.progineer.fr', 105, 285, { align: 'center' });
