@@ -1,19 +1,21 @@
 
 import React from 'react';
-import { FormData } from '../types';
 import { Card, CardContent } from "@/components/ui/card";
 import { User, Building2 } from 'lucide-react';
+import { FormData } from '../types';
 
 interface ClientTypeStepProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
+  animationDirection: string;
 }
 
 const ClientTypeStep: React.FC<ClientTypeStepProps> = ({ 
   formData, 
   updateFormData, 
-  goToNextStep 
+  goToNextStep,
+  animationDirection
 }) => {
   const [clientType, setClientType] = React.useState<string>(formData.clientType || '');
 
@@ -24,7 +26,11 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
+    }`}>
+      <h2 className="text-xl font-semibold mb-4">Qui êtes-vous ?</h2>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
           className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'individual' ? 'border-blue-500 bg-blue-50' : ''}`}

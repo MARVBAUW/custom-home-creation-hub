@@ -1,364 +1,279 @@
 
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import { FormData } from '../types';
-import { formatCurrency } from '@/utils/formatters';
 import { ExtendedJsPDF, PDFGenerationOptions } from '../types/pdf-types';
 
 /**
- * Generate a PDF document based on form data
- * @param documentTitle Title of the document
- * @param data Estimation form data
- * @param fileName Name of the PDF file to download
- */
-export const generatePDF = (
-  documentTitle: string,
-  data: FormData,
-  fileName: string = 'estimation'
-): void => {
-  // Create new PDF document
-  const doc = new jsPDF() as ExtendedJsPDF;
-  
-  // Add document title
-  doc.setFontSize(20);
-  doc.text(documentTitle, 105, 20, { align: 'center' });
-  
-  // Add date of generation
-  const date = new Date();
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text(`Généré le: ${date.toLocaleDateString()}`, 195, 10, { align: 'right' });
-  
-  // Add project information header
-  doc.setFontSize(16);
-  doc.setTextColor(0);
-  doc.text('Informations du projet', 14, 40);
-  
-  // Data rows for project information
-  const projectDetails: string[][] = [
-    ['Type de projet', data.projectType || '-'],
-    ['Surface', `${data.surface || '-'} m²`],
-    ['Ville', data.city || '-'],
-    ['Type de terrain', data.terrainType || '-'],
-    ['Style de construction', data.constructionStyle || '-'],
-    ['Complexité', data.complexity || '-'],
-  ];
-  
-  // Add table for project information
-  doc.autoTable({
-    startY: 45,
-    head: [['Caractéristique', 'Valeur']],
-    body: projectDetails,
-    theme: 'grid',
-    headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-    styles: { fontSize: 10 },
-    columnStyles: {
-      0: { cellWidth: 70 },
-      1: { cellWidth: 80 }
-    }
-  });
-  
-  // Add construction costs header
-  const lastY = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(16);
-  doc.text('Estimation des coûts', 14, lastY);
-  
-  // Pricing estimate
-  let pricePerSqm = 0;
-  
-  // Determine base price per sqm based on project type
-  switch (data.projectType) {
-    case 'construction':
-      pricePerSqm = 1800;
-      break;
-    case 'renovation':
-      pricePerSqm = 1200;
-      break;
-    case 'extension':
-      pricePerSqm = 1500;
-      break;
-    default:
-      pricePerSqm = 1500;
-  }
-  
-  // Adjust for complexity
-  switch (data.complexity) {
-    case 'complex':
-      pricePerSqm *= 1.3;
-      break;
-    case 'moderate':
-      pricePerSqm *= 1.15;
-      break;
-    case 'simple':
-      pricePerSqm *= 1;
-      break;
-    default:
-      // No adjustment
-  }
-  
-  // Calculate construction costs
-  const surface = typeof data.surface === 'string' ? parseInt(data.surface, 10) : (data.surface || 0);
-  const constructionCost = surface * pricePerSqm;
-  
-  const constructionCosts: string[][] = [
-    ['Gros œuvre', formatCurrency(constructionCost * 0.4)],
-    ['Second œuvre', formatCurrency(constructionCost * 0.3)],
-    ['Lots techniques', formatCurrency(constructionCost * 0.2)],
-    ['Aménagements extérieurs', formatCurrency(constructionCost * 0.1)],
-    ['TOTAL construction HT', formatCurrency(constructionCost)],
-    ['TVA (20%)', formatCurrency(constructionCost * 0.2)],
-    ['TOTAL construction TTC', formatCurrency(constructionCost * 1.2)],
-  ];
-  
-  // Add table for construction costs
-  doc.autoTable({
-    startY: lastY + 10,
-    head: [['Poste', 'Montant']],
-    body: constructionCosts,
-    theme: 'grid',
-    headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-    styles: { fontSize: 10 },
-    columnStyles: {
-      0: { cellWidth: 80 },
-      1: { cellWidth: 70 }
-    },
-    footStyles: { fillColor: [220, 220, 220] },
-    foot: [['TOTAL', formatCurrency(constructionCost * 1.2)]],
-  });
-  
-  // Add additional fees header
-  const lastY2 = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(16);
-  doc.text('Honoraires et frais annexes', 14, lastY2);
-  
-  // Calculate fees
-  const architectFee = constructionCost * 0.1;
-  const engineeringFee = constructionCost * 0.03;
-  const permitFee = constructionCost * 0.02;
-  const insuranceFee = constructionCost * 0.03;
-  
-  const feeCosts: string[][] = [
-    ['Honoraires architecte', formatCurrency(architectFee)],
-    ['Etudes techniques', formatCurrency(engineeringFee)],
-    ['Permis de construire', formatCurrency(permitFee)],
-    ['Assurance dommage-ouvrage', formatCurrency(insuranceFee)],
-    ['TOTAL frais HT', formatCurrency(architectFee + engineeringFee + permitFee + insuranceFee)],
-    ['TVA (20%)', formatCurrency((architectFee + engineeringFee + permitFee + insuranceFee) * 0.2)],
-    ['TOTAL frais TTC', formatCurrency((architectFee + engineeringFee + permitFee + insuranceFee) * 1.2)],
-  ];
-  
-  // Add table for fees
-  doc.autoTable({
-    startY: lastY2 + 10,
-    head: [['Poste', 'Montant']],
-    body: feeCosts,
-    theme: 'grid',
-    headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-    styles: { fontSize: 10 },
-    columnStyles: {
-      0: { cellWidth: 80 },
-      1: { cellWidth: 70 }
-    }
-  });
-  
-  // Add final project total
-  const lastY3 = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(16);
-  doc.setTextColor(0, 100, 0);
-  doc.text('Estimation globale du projet', 14, lastY3);
-  
-  const totalProjectCost = constructionCost * 1.2 + (architectFee + engineeringFee + permitFee + insuranceFee) * 1.2;
-  
-  doc.autoTable({
-    startY: lastY3 + 10,
-    body: [['COÛT TOTAL ESTIMÉ (TTC)', formatCurrency(totalProjectCost)]],
-    theme: 'grid',
-    styles: { 
-      fontSize: 14,
-      fontStyle: 'bold',
-      halign: 'center'
-    },
-    bodyStyles: { fillColor: [220, 230, 240] }
-  });
-  
-  // Add footnote
-  const lastY4 = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text('* Cette estimation est fournie à titre indicatif et ne constitue pas un devis détaillé.', 14, lastY4);
-  doc.text('Les prix peuvent varier en fonction des spécificités du projet, des matériaux choisis et des contraintes du site.', 14, lastY4 + 5);
-  
-  // Add Progineer contact info
-  const pageCount = doc.internal.getNumberOfPages();
-  doc.setPage(pageCount);
-  doc.setFontSize(8);
-  doc.text('Progineer - Expertise en maîtrise d\'œuvre | contact@progineer.fr | www.progineer.fr', 105, 285, { align: 'center' });
-  
-  // Save PDF
-  doc.save(`${fileName}.pdf`);
-};
-
-/**
- * Generate an estimation PDF for a client project
- * @param formData Form data containing project information
- * @param totalHT Total cost before taxes
- * @param includeTerrainPrice Whether to include terrain price in calculations
- * @returns The filename of the generated PDF
+ * Generates a PDF estimation report for the user
  */
 export const generateEstimationPDF = (
   formData: FormData,
-  totalHT: number,
-  includeTerrainPrice: boolean = false
-): string => {
-  // Create new PDF document
+  estimationAmount: number,
+  options: PDFGenerationOptions = {}
+): Blob => {
+  // Create a new PDF document
   const doc = new jsPDF() as ExtendedJsPDF;
   
-  // Define PDF file name with timestamp to make it unique
-  const timestamp = new Date().getTime();
-  const fileName = `estimation-progineer-${timestamp}.pdf`;
+  // Default options
+  const defaultOptions: PDFGenerationOptions = {
+    includeTerrainPrice: true,
+    includeTimeline: true,
+    includeDetailedBreakdown: true,
+    clientInfo: true,
+    companyLogo: true,
+    fileName: 'estimation-progineer.pdf'
+  };
   
-  // Add document title
-  doc.setFontSize(20);
-  doc.text("Estimation détaillée de projet", 105, 20, { align: 'center' });
+  // Merge options
+  const pdfOptions = { ...defaultOptions, ...options };
   
-  // Add date of generation
-  const date = new Date();
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text(`Généré le: ${date.toLocaleDateString('fr-FR')}`, 195, 10, { align: 'right' });
-  
-  // Add project information header
-  doc.setFontSize(16);
-  doc.setTextColor(0);
-  doc.text('Informations du projet', 14, 40);
-  
-  // Data rows for project information
-  const projectDetails: string[][] = [
-    ['Type de projet', formData.projectType || '-'],
-    ['Surface', `${formData.surface || '-'} m²`],
-    ['Ville', formData.city || '-'],
-  ];
-  
-  // Add table for project information
-  doc.autoTable({
-    startY: 45,
-    head: [['Caractéristique', 'Valeur']],
-    body: projectDetails,
-    theme: 'grid',
-    headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-    styles: { fontSize: 10 },
-    columnStyles: {
-      0: { cellWidth: 70 },
-      1: { cellWidth: 80 }
-    }
-  });
-  
-  // Add construction costs header
-  const lastY = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(16);
-  doc.text('Estimation des coûts', 14, lastY);
-  
-  // Calculate costs for different construction categories
-  const structuralWork = totalHT * 0.4;
-  const finishingWork = totalHT * 0.3;
-  const technicalLots = totalHT * 0.2;
-  const exteriorWorks = totalHT * 0.1;
-  
-  const constructionCosts: string[][] = [
-    ['Gros œuvre', formatCurrency(structuralWork)],
-    ['Second œuvre', formatCurrency(finishingWork)],
-    ['Lots techniques', formatCurrency(technicalLots)],
-    ['Aménagements extérieurs', formatCurrency(exteriorWorks)],
-    ['TOTAL construction HT', formatCurrency(totalHT)],
-    ['TVA (20%)', formatCurrency(totalHT * 0.2)],
-    ['TOTAL construction TTC', formatCurrency(totalHT * 1.2)],
-  ];
-  
-  // Add table for construction costs
-  doc.autoTable({
-    startY: lastY + 10,
-    head: [['Poste', 'Montant']],
-    body: constructionCosts,
-    theme: 'grid',
-    headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-    styles: { fontSize: 10 },
-    columnStyles: {
-      0: { cellWidth: 80 },
-      1: { cellWidth: 70 }
-    }
-  });
-  
-  let totalAmount = totalHT * 1.2; // Construction cost with VAT
-  
-  // Add terrain information if needed
-  if (includeTerrainPrice && formData.landPrice) {
-    const terrainPrice = typeof formData.landPrice === 'string' 
-      ? parseFloat(formData.landPrice) 
-      : formData.landPrice;
+  // Add header with company name/logo
+  if (pdfOptions.companyLogo) {
+    // Here we'd usually add the logo image
+    // doc.addImage(logoBase64, 'PNG', 10, 10, 40, 20);
     
-    if (!isNaN(terrainPrice) && terrainPrice > 0) {
-      const lastY2 = (doc.autoTable as any).previous.finalY + 20;
-      doc.setFontSize(16);
-      doc.text('Terrain et frais associés', 14, lastY2);
-      
-      const fraisNotaire = terrainPrice * 0.08;
-      
-      const terrainCosts: string[][] = [
-        ['Prix du terrain', formatCurrency(terrainPrice)],
-        ['Frais de notaire (estimation 8%)', formatCurrency(fraisNotaire)],
-        ['TOTAL terrain', formatCurrency(terrainPrice + fraisNotaire)],
-      ];
-      
-      doc.autoTable({
-        startY: lastY2 + 10,
-        head: [['Poste', 'Montant']],
-        body: terrainCosts,
-        theme: 'grid',
-        headStyles: { fillColor: [69, 123, 157], textColor: [255, 255, 255] },
-        styles: { fontSize: 10 },
-        columnStyles: {
-          0: { cellWidth: 80 },
-          1: { cellWidth: 70 }
-        }
-      });
-      
-      totalAmount += terrainPrice + fraisNotaire;
-    }
+    // For now we'll just add the company name
+    doc.setFontSize(20);
+    doc.setTextColor(120, 115, 70); // Progineer gold
+    doc.text('PROGINEER', 10, 20);
+    
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Estimation de projet', 10, 30);
+    
+    doc.setDrawColor(120, 115, 70);
+    doc.line(10, 35, 200, 35);
   }
   
-  // Add final project total
-  const lastY3 = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(16);
-  doc.setTextColor(0, 100, 0);
-  doc.text('Estimation globale du projet', 14, lastY3);
+  // Add project information
+  doc.setFontSize(14);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Informations du projet', 10, 50);
   
-  doc.autoTable({
-    startY: lastY3 + 10,
-    body: [['COÛT TOTAL ESTIMÉ', formatCurrency(totalAmount)]],
+  // Project details table
+  autoTable(doc, {
+    startY: 55,
+    head: [['Caractéristique', 'Valeur']],
+    body: [
+      ['Type de projet', formData.projectType || 'Non spécifié'],
+      ['Surface', formData.surface ? `${formData.surface} m²` : 'Non spécifiée'],
+      ['Ville', formData.city || 'Non spécifiée'],
+      ['Type de terrain', formData.terrainType ? (formData.terrainType === 'flat' ? 'Terrain plat' : 'Terrain en pente') : 'Non spécifié'],
+      ['Niveau de finition', formData.finishStandard ? {
+        'basic': 'Basique',
+        'standard': 'Standard',
+        'premium': 'Premium',
+        'luxury': 'Luxe'
+      }[formData.finishStandard] : 'Standard']
+    ],
     theme: 'grid',
-    styles: { 
-      fontSize: 14,
-      fontStyle: 'bold',
-      halign: 'center'
+    headStyles: { 
+      fillColor: [120, 115, 70],
+      textColor: [255, 255, 255]
     },
-    bodyStyles: { fillColor: [220, 230, 240] }
+    styles: {
+      fontSize: 10
+    }
   });
   
-  // Add footnote
-  const lastY4 = (doc.autoTable as any).previous.finalY + 20;
-  doc.setFontSize(10);
-  doc.setTextColor(100);
-  doc.text('* Cette estimation est fournie à titre indicatif et ne constitue pas un devis détaillé.', 14, lastY4);
-  doc.text('Les prix peuvent varier en fonction des spécificités du projet, des matériaux choisis et des contraintes du site.', 14, lastY4 + 5);
+  // If client info is included and available
+  if (pdfOptions.clientInfo && (formData.firstName || formData.lastName)) {
+    const clientY = doc.lastAutoTable?.finalY || 120;
+    
+    doc.setFontSize(14);
+    doc.text('Informations client', 10, clientY + 10);
+    
+    autoTable(doc, {
+      startY: clientY + 15,
+      head: [['Information', 'Valeur']],
+      body: [
+        ['Nom', `${formData.firstName || ''} ${formData.lastName || ''}`],
+        ['Email', formData.email || 'Non spécifié'],
+        ['Téléphone', formData.phone || 'Non spécifié']
+      ],
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [120, 115, 70],
+        textColor: [255, 255, 255]
+      },
+      styles: {
+        fontSize: 10
+      }
+    });
+  }
   
-  // Add Progineer contact info
-  const pageCount = doc.internal.getNumberOfPages();
-  doc.setPage(pageCount);
-  doc.setFontSize(8);
-  doc.text('Progineer - Expertise en maîtrise d\'œuvre | contact@progineer.fr | www.progineer.fr', 105, 285, { align: 'center' });
+  // Add estimation results
+  const estimationY = doc.lastAutoTable?.finalY || 150;
   
-  // Save PDF
-  doc.save(fileName);
+  doc.setFontSize(16);
+  doc.setTextColor(120, 115, 70);
+  doc.text('Estimation du projet', 10, estimationY + 10);
   
-  return fileName;
+  // Format currency
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('fr-FR', { 
+      style: 'currency', 
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+  
+  // Calculate additional costs
+  const vat = estimationAmount * 0.2;
+  const totalWithVAT = estimationAmount + vat;
+  const pricePerSqm = formData.surface ? Math.round(estimationAmount / formData.surface) : 0;
+  
+  // Main estimation table
+  autoTable(doc, {
+    startY: estimationY + 15,
+    head: [['Désignation', 'Montant']],
+    body: [
+      ['Estimation HT', formatCurrency(estimationAmount)],
+      ['TVA (20%)', formatCurrency(vat)],
+      ['Estimation TTC', formatCurrency(totalWithVAT)],
+      ...(pricePerSqm ? [['Prix au m²', `${formatCurrency(pricePerSqm)} / m²`]] : []),
+      ...(pdfOptions.includeTerrainPrice && formData.landPrice ? [['Prix du terrain', formatCurrency(formData.landPrice as number)]] : []),
+      ...(pdfOptions.includeTerrainPrice && formData.landPrice ? [['Total avec terrain', formatCurrency(totalWithVAT + (formData.landPrice as number))]] : [])
+    ],
+    theme: 'grid',
+    headStyles: { 
+      fillColor: [120, 115, 70],
+      textColor: [255, 255, 255]
+    },
+    styles: {
+      fontSize: 10
+    },
+    bodyStyles: {
+      fontSize: 12
+    },
+    foot: [['TOTAL PROJET', formatCurrency(pdfOptions.includeTerrainPrice && formData.landPrice ? 
+      totalWithVAT + (formData.landPrice as number) : totalWithVAT)]],
+    footStyles: {
+      fillColor: [240, 240, 240],
+      textColor: [0, 0, 0],
+      fontStyle: 'bold',
+      fontSize: 12
+    }
+  });
+  
+  // If detailed breakdown is requested
+  if (pdfOptions.includeDetailedBreakdown) {
+    const breakdownY = doc.lastAutoTable?.finalY || 220;
+    
+    // Check if we need a new page
+    if (breakdownY > 240) {
+      doc.addPage();
+    } else {
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Détail par corps d\'état', 10, breakdownY + 10);
+    }
+    
+    // Create a breakdown of costs by category
+    const categories = [
+      { name: 'Gros œuvre', percentage: 0.25 },
+      { name: 'Charpente / Couverture', percentage: 0.15 },
+      { name: 'Menuiseries extérieures', percentage: 0.10 },
+      { name: 'Plomberie / Sanitaire', percentage: 0.08 },
+      { name: 'Électricité', percentage: 0.07 },
+      { name: 'Isolation / Cloisons', percentage: 0.08 },
+      { name: 'Revêtements sols et murs', percentage: 0.10 },
+      { name: 'Menuiseries intérieures', percentage: 0.05 },
+      { name: 'Chauffage / Climatisation', percentage: 0.07 },
+      { name: 'Peinture', percentage: 0.03 },
+      { name: 'Divers / Aménagements', percentage: 0.02 }
+    ];
+    
+    const breakdownData = categories.map(cat => [
+      cat.name, 
+      formatCurrency(estimationAmount * cat.percentage)
+    ]);
+    
+    autoTable(doc, {
+      startY: doc.pageCount > 1 ? 20 : breakdownY + 15,
+      head: [['Corps d\'état', 'Montant HT estimé']],
+      body: breakdownData,
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [120, 115, 70],
+        textColor: [255, 255, 255]
+      },
+      styles: {
+        fontSize: 10
+      }
+    });
+  }
+  
+  // Add timeline information if requested
+  if (pdfOptions.includeTimeline) {
+    const timelineY = doc.lastAutoTable?.finalY || 280;
+    
+    // Check if we need a new page
+    if (timelineY > 240) {
+      doc.addPage();
+    } else {
+      doc.setFontSize(14);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Calendrier estimatif', 10, timelineY + 10);
+    }
+    
+    // Timeline data - this would normally be calculated based on project specifics
+    const timelineData = [
+      ['Études et conception', '1 à 3 mois'],
+      ['Permis de construire', '2 à 5 mois'],
+      ['Préparation du chantier', '1 mois'],
+      ['Fondations et gros œuvre', '2 à 4 mois'],
+      ['Charpente et couverture', '1 à 2 mois'],
+      ['Second œuvre', '3 à 5 mois'],
+      ['Finitions', '1 à 2 mois']
+    ];
+    
+    autoTable(doc, {
+      startY: doc.pageCount > 1 ? (doc.lastAutoTable?.finalY || 20) + 10 : timelineY + 15,
+      head: [['Phase', 'Durée estimée']],
+      body: timelineData,
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [120, 115, 70],
+        textColor: [255, 255, 255]
+      },
+      styles: {
+        fontSize: 10
+      }
+    });
+  }
+  
+  // Add footer with disclaimer
+  // Get total number of pages to add footer to each page
+  const pageCount = doc.getNumberOfPages();
+  
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Cette estimation est fournie à titre indicatif et peut varier en fonction des spécificités du projet.', 10, 285);
+    doc.text(`Page ${i} sur ${pageCount}`, 180, 285);
+  }
+  
+  // Return the PDF as a blob
+  return doc.output('blob');
+};
+
+/**
+ * Formats a number as currency (€)
+ */
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat('fr-FR', { 
+    style: 'currency', 
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+export default {
+  generateEstimationPDF,
+  formatCurrency
 };

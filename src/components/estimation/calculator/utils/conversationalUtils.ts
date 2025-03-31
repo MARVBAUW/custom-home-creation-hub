@@ -1,97 +1,113 @@
 
-import { FormData, ExtractedInfo } from '../types';
+import { FormData } from '../types';
 
 /**
- * Extracts form data from user message using NLP techniques
- * @param message The user's message text
- * @returns ExtractedInfo object with form data fields
+ * Analyzes user input to extract intent and information
  */
-export const extractFormDataFromMessage = (message: string): ExtractedInfo => {
-  const extractedInfo: ExtractedInfo = {};
-  
-  // Extract project type
-  if (message.toLowerCase().includes('construction') || message.toLowerCase().includes('maison')) {
-    extractedInfo.projectType = 'construction';
-  } else if (message.toLowerCase().includes('rénovation') || message.toLowerCase().includes('renovation')) {
-    extractedInfo.projectType = 'renovation';
-  } else if (message.toLowerCase().includes('extension')) {
-    extractedInfo.projectType = 'extension';
+export const analyzeUserIntent = (message: string): string => {
+  const lowerMessage = message.toLowerCase();
+
+  if (lowerMessage.includes('construction') || lowerMessage.includes('construire')) {
+    return 'construction';
+  } else if (lowerMessage.includes('rénovation') || lowerMessage.includes('rénover')) {
+    return 'renovation';
+  } else if (lowerMessage.includes('extension') || lowerMessage.includes('agrandir')) {
+    return 'extension';
+  } else if (lowerMessage.includes('terrain')) {
+    return 'terrain';
+  } else if (lowerMessage.includes('budget') || lowerMessage.includes('coût') || lowerMessage.includes('prix')) {
+    return 'budget';
+  } else if (lowerMessage.includes('surface') || lowerMessage.includes('m2') || lowerMessage.includes('m²')) {
+    return 'surface';
+  } else if (lowerMessage.includes('maison') || lowerMessage.includes('villa')) {
+    return 'maison';
+  } else if (lowerMessage.includes('appartement')) {
+    return 'appartement';
+  } else {
+    return 'general';
   }
+};
+
+/**
+ * Extracts information from user message
+ */
+export const extractInformation = (message: string): Partial<FormData> => {
+  const result: Partial<FormData> = {};
   
-  // Extract surface area
-  const surfaceRegex = /(\d+)\s*m²/;
-  const surfaceMatch = message.match(surfaceRegex);
+  // Extract surface
+  const surfaceMatch = message.match(/(\d+)\s*m[²2]/i);
   if (surfaceMatch && surfaceMatch[1]) {
-    extractedInfo.surface = parseInt(surfaceMatch[1], 10);
+    result.surface = parseInt(surfaceMatch[1], 10);
   }
   
-  // Extract budget
-  const budgetRegex = /(\d+)\s*(k€|k euros|mille euros|000\s*€|000\s*euros)/i;
-  const budgetMatch = message.match(budgetRegex);
-  if (budgetMatch && budgetMatch[1]) {
-    extractedInfo.budget = parseInt(budgetMatch[1], 10) * 1000;
-  }
+  // Extract city/location
+  const cityMatches = [
+    /à\s+([A-Za-zÀ-ÖØ-öø-ÿ\s-]+?)(?:\s+\d|,|\.|\s+et|\s+ou|$)/i,
+    /sur\s+([A-Za-zÀ-ÖØ-öø-ÿ\s-]+?)(?:\s+\d|,|\.|\s+et|\s+ou|$)/i,
+    /dans\s+([A-Za-zÀ-ÖØ-öø-ÿ\s-]+?)(?:\s+\d|,|\.|\s+et|\s+ou|$)/i
+  ];
   
-  const largeBudgetRegex = /(\d+(?:\.\d+)?)\s*(million|M€|M euros)/i;
-  const largeBudgetMatch = message.match(largeBudgetRegex);
-  if (largeBudgetMatch && largeBudgetMatch[1]) {
-    extractedInfo.budget = parseFloat(largeBudgetMatch[1]) * 1000000;
-  }
-  
-  // Extract location (city)
-  const cities = ['marseille', 'nice', 'toulon', 'aix', 'cannes', 'antibes', 'monaco', 'montpellier', 'avignon', 'arles'];
-  
-  for (const city of cities) {
-    if (message.toLowerCase().includes(city)) {
-      extractedInfo.city = city.charAt(0).toUpperCase() + city.slice(1);
+  for (const pattern of cityMatches) {
+    const match = message.match(pattern);
+    if (match && match[1] && match[1].length > 2) {
+      result.city = match[1].trim();
       break;
     }
   }
   
-  return extractedInfo;
+  // Extract project type
+  if (message.toLowerCase().includes('construction')) {
+    result.projectType = 'construction';
+  } else if (message.toLowerCase().includes('rénovation') || message.toLowerCase().includes('renovation')) {
+    result.projectType = 'renovation';
+  } else if (message.toLowerCase().includes('extension')) {
+    result.projectType = 'extension';
+  }
+  
+  // Extract budget
+  const budgetMatch = message.match(/(\d+(?:\s*\d+)*)\s*(?:€|euros)/i);
+  if (budgetMatch && budgetMatch[1]) {
+    const budgetStr = budgetMatch[1].replace(/\s/g, '');
+    result.budget = parseInt(budgetStr, 10);
+  }
+  
+  return result;
 };
 
 /**
- * Generate a conversational response to the user's message
- * @param message The user's message text
- * @param currentData Current form data
- * @returns AI response message
+ * Generates a meaningful response based on the form data
  */
-export const generateConversationalResponse = (message: string, currentData: FormData): string => {
-  // Determine what we're missing in the form data
-  const missingInfo = [];
-  
-  if (!currentData.projectType) {
-    missingInfo.push('type de projet (construction, rénovation, extension)');
+export const generateResponse = (formData: Partial<FormData>): string => {
+  if (!formData || Object.keys(formData).length === 0) {
+    return "Bonjour ! Je suis l'assistant d'estimation de Progineer. Comment puis-je vous aider aujourd'hui ?";
   }
   
-  if (!currentData.surface) {
-    missingInfo.push('surface en m²');
-  }
+  let response = "D'après ce que je comprends, ";
   
-  if (!currentData.city) {
-    missingInfo.push('ville ou localisation');
-  }
-  
-  // Generate appropriate response
-  if (missingInfo.length > 0) {
-    return `Merci pour ces informations. Pour affiner mon estimation, pourriez-vous me préciser ${missingInfo.join(', ')} ?`;
-  } else if (!currentData.budget) {
-    return "Merci ! Pour définir les finitions et équipements adaptés, avez-vous un budget approximatif en tête ?";
-  } else if (!currentData.complexity) {
-    return "Parfait. Considérez-vous que votre projet est plutôt simple, standard ou complexe en termes de conception ?";
+  if (formData.projectType) {
+    const projectTypes: Record<string, string> = {
+      'construction': 'la construction d\'un bien neuf',
+      'renovation': 'la rénovation d\'un bien existant',
+      'extension': 'l\'extension d\'un bien existant'
+    };
+    response += `vous êtes intéressé par ${projectTypes[formData.projectType] || 'un projet de construction'} `;
   } else {
-    return "Merci pour toutes ces informations. Je peux maintenant vous proposer une estimation détaillée de votre projet. Vous pouvez voir les résultats dans l'onglet suivant.";
+    response += "vous êtes intéressé par un projet immobilier ";
   }
-};
-
-/**
- * Process the user's conversational input and update form data
- * @param input The user's input text
- * @param currentData Current form data
- * @returns Updated form data
- */
-export const processConversationalInput = (input: string, currentData: FormData): Partial<FormData> => {
-  const extractedInfo = extractFormDataFromMessage(input);
-  return { ...extractedInfo };
+  
+  if (formData.surface) {
+    response += `d'une surface d'environ ${formData.surface} m² `;
+  }
+  
+  if (formData.city) {
+    response += `situé à ${formData.city} `;
+  }
+  
+  if (formData.budget) {
+    response += `avec un budget d'environ ${formData.budget.toLocaleString('fr-FR')} € `;
+  }
+  
+  response += ".\n\nPour affiner votre estimation, pourriez-vous me préciser d'autres détails comme le nombre de pièces, le niveau de finition souhaité ou si vous avez des besoins spécifiques ?";
+  
+  return response;
 };
