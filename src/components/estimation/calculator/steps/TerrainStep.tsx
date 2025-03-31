@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import Image from 'next/image';
 
 interface TerrainStepProps {
   formData: FormData;
@@ -15,6 +14,16 @@ interface TerrainStepProps {
   goToPreviousStep: () => void;
   animationDirection: string;
 }
+
+const terrainOptions = [
+  { value: 'rocky', label: 'Rocheux' },
+  { value: 'clay', label: 'Argileux' },
+  { value: 'flat', label: 'Plat' },
+  { value: 'uneven', label: 'Accidenté' },
+  { value: 'steep', label: 'Pentu' },
+  { value: 'serviced', label: 'Viabilisé' },
+  { value: 'none', label: 'Sans objet' }
+];
 
 const TerrainStep: React.FC<TerrainStepProps> = ({ 
   formData, 
@@ -25,67 +34,41 @@ const TerrainStep: React.FC<TerrainStepProps> = ({
 }) => {
   const [terrainType, setTerrainType] = React.useState<string>(formData.terrainType || '');
   
-  // Define terrain options with their images
-  const terrainOptions = [
-    { 
-      value: 'rocky', 
-      label: 'ROCHEUX', 
-      image: 'https://storage.tally.so/ca35d469-4aca-4551-b106-d82eb6685aad/DALL-E-2024-10-23-11.00.10---A-beautiful-illustration-of-a-rocky-terrain-showing-a-rugged-landscape-with-scattered-rocks-and-boulders.-The-ground-is-uneven-with-stone-formations-.webp' 
-    },
-    { 
-      value: 'clay', 
-      label: 'ARGILEUX', 
-      image: 'https://storage.tally.so/19204de1-2be8-40c9-82fa-ee1469480b67/DALL-E-2024-10-23-11.00.08---A-beautiful-illustration-of-a-clayey-terrain-showing-a-landscape-with-slightly-cracked-earth-and-a-smooth-surface.-The-ground-looks-soft-and-dense-w.webp' 
-    },
-    { 
-      value: 'flat', 
-      label: 'PLAT', 
-      image: 'https://storage.tally.so/02f06ce3-8138-4760-881a-3caaebe90099/DALL-E-2024-10-23-11.00.12---A-beautiful-illustration-of-a-flat-terrain-showing-a-wide-open-plain-with-even-ground.-The-landscape-is-serene-and-peaceful-with-short-green-grass-.webp' 
-    },
-    { 
-      value: 'rugged', 
-      label: 'ACCIDENTE', 
-      image: 'https://storage.tally.so/1c1404ae-601d-4378-a2ff-d235bd924c65/DALL-E-2024-10-23-10.56.00---An-illustration-of-rugged-accidented-terrain-with-uneven-and-irregular-ground-levels-showing-a-variety-of-small-hills-dips-and-mounds.-The-landsca.webp' 
-    },
-    { 
-      value: 'sloped', 
-      label: 'PENTUE', 
-      image: 'https://storage.tally.so/e0576168-a151-4776-b05e-640c8aa7f610/DALL-E-2024-10-23-11.01.11---A-beautiful-illustration-of-a-steep-terrain-showing-a-sloped-landscape-with-a-noticeable-incline.-The-ground-features-scattered-rocks-and-patches-of-.webp' 
-    },
-    { 
-      value: 'serviced', 
-      label: 'VIABILISE', 
-      image: 'https://storage.tally.so/cc16539f-40fa-4acf-8503-1ab1ae322053/DALL-E-2024-10-23-11.09.38---A-detailed-illustration-of-a-serviced-viabilise-terrain-showing-a-flat-plot-of-land-with-essential-infrastructure-in-place.-The-landscape-is-clean-.webp' 
-    },
-    { 
-      value: 'none', 
-      label: 'SANS OBJET', 
-      image: '' 
-    }
-  ];
-  
-  const handleSubmit = () => {
-    // Calculate the amounts based on the terrain type and project surface
+  // Calculate terrain costs
+  const calculateTerrainCosts = (selectedTerrainType: string): { terassementsViabilisation: number, montantT: number } => {
     const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
-    let terassementsViabilisation = surface * 260;
+    let terassementsViabilisation = 0;
     let viabilisation = 0;
     
-    // Adjust for serviced terrain
-    if (terrainType === 'serviced') {
-      viabilisation = surface * 120;
-      terassementsViabilisation -= viabilisation;
+    // Calculate terassements based on terrain type and surface
+    if (selectedTerrainType !== 'none') {
+      terassementsViabilisation = surface * 260;
+      
+      // If the terrain is serviced, calculate viabilisation
+      if (selectedTerrainType === 'serviced') {
+        viabilisation = surface * 120;
+        terassementsViabilisation -= viabilisation;
+      }
     }
     
-    // Update the montant value in formData by adding the terrain costs
-    const currentMontant = formData.montantT || 0;
-    const newMontant = currentMontant + terassementsViabilisation;
+    // Calculate new montantT
+    const currentMontantT = formData.montantT || 0;
+    const newMontantT = currentMontantT + terassementsViabilisation;
+    
+    return {
+      terassementsViabilisation,
+      montantT: newMontantT
+    };
+  };
+  
+  const handleSubmit = () => {
+    const costs = calculateTerrainCosts(terrainType);
     
     // Update the form data
     updateFormData({ 
-      terrainType: terrainType,
-      terassementsViabilisation,
-      viabilisation,
-      montantT: newMontant
+      terrainType,
+      terassementsViabilisation: costs.terassementsViabilisation,
+      montantT: costs.montantT
     });
     
     // Proceed to next step
@@ -96,44 +79,31 @@ const TerrainStep: React.FC<TerrainStepProps> = ({
     <div className={`space-y-6 transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
     }`}>
-      <h2 className="text-xl font-semibold mb-6">Caractéristiques du terrain</h2>
+      <h2 className="text-xl font-semibold mb-6">Terrain</h2>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {terrainOptions.map((option) => (
-          <Card 
-            key={option.value}
-            className={`cursor-pointer transition-all hover:shadow-md 
-              ${terrainType === option.value ? 'border-blue-500 border-2' : 'border'}`}
-            onClick={() => setTerrainType(option.value)}
-          >
-            <CardContent className="p-3">
-              <div className="flex items-center mb-2">
-                <RadioGroupItem
-                  value={option.value}
-                  id={`terrain-${option.value}`}
-                  checked={terrainType === option.value}
-                  className="mr-2"
-                />
-                <Label 
-                  htmlFor={`terrain-${option.value}`}
-                  className="font-medium"
-                >
-                  {option.label}
-                </Label>
-              </div>
-              
-              {option.image && (
-                <div className="w-full h-32 relative overflow-hidden rounded-md">
-                  <img 
-                    src={option.image} 
-                    alt={option.label}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-4">
+        <Label className="text-base font-medium">
+          Caractéristique du terrain <span className="text-red-500">*</span>
+        </Label>
+        
+        <RadioGroup 
+          value={terrainType} 
+          onValueChange={setTerrainType}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2"
+        >
+          {terrainOptions.map((option) => (
+            <Card 
+              key={option.value}
+              className={`cursor-pointer transition-all hover:shadow-md ${terrainType === option.value ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setTerrainType(option.value)}
+            >
+              <CardContent className="flex items-center p-4">
+                <RadioGroupItem value={option.value} id={option.value} className="mr-2" />
+                <Label htmlFor={option.value} className="cursor-pointer">{option.label}</Label>
+              </CardContent>
+            </Card>
+          ))}
+        </RadioGroup>
       </div>
       
       <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">

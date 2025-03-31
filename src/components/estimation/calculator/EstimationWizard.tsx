@@ -10,8 +10,15 @@ import { Card } from '@/components/ui/card';
 import ClientTypeStep from './steps/ClientTypeStep';
 import ProfessionalProjectDetailsStep from './steps/ProfessionalProjectDetailsStep';
 import IndividualProjectTypeStep from './steps/IndividualProjectTypeStep';
-import ProjectDetailsStep from './steps/ProjectDetailsStep';
-import TerrainDetailsStep from './steps/TerrainDetailsStep';
+import EstimationTypeStep from './steps/EstimationTypeStep';
+import ConstructionDetailsStep from './steps/ConstructionDetailsStep';
+import TerrainStep from './steps/TerrainStep';
+import DemolitionStep from './steps/DemolitionStep';
+import GrosOeuvreStep from './steps/GrosOeuvreStep';
+import CharpenteStep from './steps/CharpenteStep';
+import ComblesStep from './steps/ComblesStep';
+import CouvertureStep from './steps/CouvertureStep';
+import RenovationSpecificStep from './steps/RenovationSpecificStep';
 import FinishDetailsStep from './steps/FinishDetailsStep';
 import RoomsDetailsStep from './steps/RoomsDetailsStep';
 import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
@@ -69,7 +76,7 @@ const EstimationWizard: React.FC = () => {
 
   // Function to render the current step component
   const renderCurrentStep = () => {
-    console.log("Rendering step:", step);
+    console.log("Rendering step:", step, "Project Type:", formData.projectType);
     
     switch (step) {
       case 0: // Type de client (première étape)
@@ -103,7 +110,7 @@ const EstimationWizard: React.FC = () => {
         );
       case 3: // Estimation Type (rapide/précise)
         return (
-          <RoomsDetailsStep
+          <EstimationTypeStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -113,7 +120,7 @@ const EstimationWizard: React.FC = () => {
         );
       case 4: // Construction Details
         return (
-          <FinishDetailsStep
+          <ConstructionDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -123,7 +130,7 @@ const EstimationWizard: React.FC = () => {
         );
       case 5: // Terrain Details
         return (
-          <TerrainDetailsStep
+          <TerrainStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -131,7 +138,87 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 6: // Options and more details
+      case 6: // Demolition
+        return (
+          <DemolitionStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 7: // Gros Oeuvre
+        return (
+          <GrosOeuvreStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 8: // Charpente
+        return (
+          <CharpenteStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 9: // Combles
+        return (
+          <ComblesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 10: // Couverture
+        return (
+          <CouvertureStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 11: // Renovation Specific (for renovation projects)
+        return (
+          <RenovationSpecificStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 12: // Rooms Details
+        return (
+          <RoomsDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 13: // Finish Details
+        return (
+          <FinishDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 14: // Exterior Features
         return (
           <ExteriorFeaturesStep
             formData={formData}
@@ -141,9 +228,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 7: // Contact Form
+      case 15: // Special Features
         return (
-          <ContactDetailsStep
+          <SpecialFeaturesStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -151,9 +238,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 8: // Results
+      case 16: // Contact Details
         return (
-          <SpecialFeaturesStep
+          <ContactDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={finalizeEstimation}

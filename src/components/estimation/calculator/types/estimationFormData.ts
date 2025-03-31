@@ -50,6 +50,19 @@ export interface EstimationFormData {
   surfaceDemo?: number;
   demoCost?: number;
   
+  // Gros oeuvre
+  wallType?: string;
+  foundationType?: string;
+  
+  // Charpente
+  roofType?: string;
+  
+  // Combles
+  atticType?: string;
+  
+  // Couverture
+  roofingType?: string;
+  
   // Amount calculations
   montantT?: number;
   
