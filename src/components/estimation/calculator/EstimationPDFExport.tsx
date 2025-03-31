@@ -5,13 +5,19 @@ import { Download } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
-import { FormData, EstimationResponseData } from './types';
+import { FormData, EstimationResponseData, PDFGenerationOptions } from './types';
 import { formatCurrency } from '@/utils/formatters';
 
 // Add the autoTable method type to jsPDF
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => any;
+    autoTable: (options: UserOptions) => jsPDF;
+    lastAutoTable: {
+      finalY: number;
+    };
+    internal: {
+      getNumberOfPages: () => number;
+    };
   }
 }
 
@@ -50,6 +56,9 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
           },
           fees: {
             total: estimationResult * 0.1,
+            architect: estimationResult * 0.05,
+            technicalStudies: estimationResult * 0.025,
+            other: estimationResult * 0.015,
             architectFees: estimationResult * 0.05,
             engineeringFees: estimationResult * 0.025,
             officialFees: estimationResult * 0.015,
@@ -90,7 +99,7 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     
     // Add cost breakdown
     doc.setFontSize(14);
-    doc.text('Coûts estimés', 14, doc.autoTable.previous.finalY + 10);
+    doc.text('Coûts estimés', 14, doc.lastAutoTable.finalY + 10);
     
     const costBreakdown = [
       ['Gros œuvre', formatCurrency(result.constructionCosts.structuralWork)],
@@ -103,14 +112,14 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     ];
     
     doc.autoTable({
-      startY: doc.autoTable.previous.finalY + 15,
+      startY: doc.lastAutoTable.finalY + 15,
       head: [['Poste de dépense', 'Montant estimé (€)']],
       body: costBreakdown,
     });
     
     // Add timeline
     doc.setFontSize(14);
-    doc.text('Calendrier prévisionnel', 14, doc.autoTable.previous.finalY + 10);
+    doc.text('Calendrier prévisionnel', 14, doc.lastAutoTable.finalY + 10);
     
     const timelineData = [
       ['Conception et études', `${result.timeline.design} mois`],
@@ -121,7 +130,7 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     ];
     
     doc.autoTable({
-      startY: doc.autoTable.previous.finalY + 15,
+      startY: doc.lastAutoTable.finalY + 15,
       head: [['Phase', 'Durée estimée']],
       body: timelineData,
     });

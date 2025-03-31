@@ -31,6 +31,7 @@ export interface EstimationFormData {
   // Finish details
   finishStandard?: string;
   finishingLevel?: string;
+  finishLevel?: string;
   
   // Special features
   solarPanels?: boolean;
@@ -131,6 +132,15 @@ export interface EstimationFormData {
   // Additional properties
   basement?: boolean;
   garage?: boolean;
+  
+  // Properties needed for special features
+  domotic?: boolean;
+  alarm?: boolean;
+  centralVacuum?: boolean;
+  smartHome?: boolean;
+  complexity?: string;
+  qualityStandard?: string;
+  name?: string;
 }
 
 // Pour la rétrocompatibilité
@@ -150,9 +160,9 @@ export interface EstimationResponseData {
     engineeringFees?: number;
     officialFees?: number;
     inspectionFees?: number;
-    architect?: number;
-    technicalStudies?: number;
-    other?: number;
+    architect: number;
+    technicalStudies: number;
+    other: number;
     total: number;
   };
   otherCosts: {
@@ -192,8 +202,8 @@ export interface FeeCosts {
   engineeringFees?: number;
   officialFees?: number;
   inspectionFees?: number;
-  architect?: number;
-  technicalStudies?: number;
-  other?: number;
+  architect: number;
+  technicalStudies: number;
+  other: number;
   total: number;
 }

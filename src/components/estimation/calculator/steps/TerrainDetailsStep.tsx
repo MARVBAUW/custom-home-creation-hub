@@ -1,10 +1,9 @@
-
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { ArrowRightIcon, ArrowLeftIcon, Globe, Mountain, Droplet } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { FormData } from '../types';
 
 interface TerrainDetailsStepProps {
@@ -22,135 +21,79 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [landIncluded, setLandIncluded] = React.useState<string>(formData.landIncluded || 'yes');
-  const [landPrice, setLandPrice] = React.useState<string | number>(formData.landPrice || '');
-  const [terrainType, setTerrainType] = React.useState<string>(formData.terrainType || 'flat');
+  const [landIncluded, setLandIncluded] = React.useState<string | boolean>(formData.landIncluded || 'true');
+  const [landPrice, setLandPrice] = React.useState<string>(formData.landPrice ? formData.landPrice.toString() : '');
+  const [terrainType, setTerrainType] = React.useState<string>(formData.terrainType || '');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     updateFormData({
       landIncluded,
-      landPrice: typeof landPrice === 'string' ? parseFloat(landPrice) || 0 : landPrice,
+      landPrice,
       terrainType
     });
-    
     goToNextStep();
   };
 
+  const landIncludedValue = formData.landIncluded ? formData.landIncluded.toString() : 'true';
+
   return (
     <div className={`transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
-      <h2 className="text-xl font-semibold mb-4">Détails du terrain</h2>
-      
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-6">
-          {/* Land Included */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Terrain inclus dans le projet ?</Label>
-            <RadioGroup 
-              value={landIncluded} 
-              onValueChange={setLandIncluded}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="yes" id="landYes" />
-                <Label htmlFor="landYes" className="flex flex-1 cursor-pointer">
-                  <span>Oui, le terrain est inclus</span>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="no" id="landNo" />
-                <Label htmlFor="landNo" className="flex flex-1 cursor-pointer">
-                  <span>Non, j'ai déjà un terrain</span>
-                </Label>
-              </div>
-            </RadioGroup>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Détails du terrain</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="landIncluded">Terrain inclus ?</Label>
+            <Select value={landIncludedValue} onValueChange={(value) => setLandIncluded(value)}>
+              <SelectTrigger id="landIncluded">
+                <SelectValue placeholder="Sélectionnez une option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Oui</SelectItem>
+                <SelectItem value="false">Non</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          
-          {/* Land Price (if included) */}
-          {landIncluded === 'yes' && (
+
+          {landIncluded === 'false' && (
             <div className="space-y-2">
-              <Label htmlFor="landPrice" className="text-base font-medium">Prix du terrain (€)</Label>
+              <Label htmlFor="landPrice">Prix du terrain (€)</Label>
               <Input
                 id="landPrice"
-                type="number"
-                min="0"
+                placeholder="Ex: 150000"
                 value={landPrice}
                 onChange={(e) => setLandPrice(e.target.value)}
-                placeholder="Ex: 150000"
-                className="w-full"
               />
             </div>
           )}
-          
-          {/* Terrain Type */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Type de terrain</Label>
-            <RadioGroup 
-              value={terrainType} 
-              onValueChange={setTerrainType}
-              className="grid grid-cols-1 md:grid-cols-3 gap-4"
-            >
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="flat" id="terrainFlat" />
-                <Label htmlFor="terrainFlat" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Globe className="h-4 w-4 text-blue-500" />
-                  <div>
-                    <p>Terrain plat</p>
-                    <p className="text-sm text-gray-500">Aucune pente significative</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="sloped" id="terrainSloped" />
-                <Label htmlFor="terrainSloped" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Mountain className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p>Terrain en pente</p>
-                    <p className="text-sm text-gray-500">Présence d'une pente</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="waterfront" id="terrainWaterfront" />
-                <Label htmlFor="terrainWaterfront" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Droplet className="h-4 w-4 text-green-500" />
-                  <div>
-                    <p>Front de mer/lac</p>
-                    <p className="text-sm text-gray-500">À proximité d'un plan d'eau</p>
-                  </div>
-                </Label>
-              </div>
-            </RadioGroup>
+
+          <div className="space-y-2">
+            <Label htmlFor="terrainType">Type de terrain</Label>
+            <Select value={terrainType} onValueChange={setTerrainType}>
+              <SelectTrigger id="terrainType">
+                <SelectValue placeholder="Sélectionnez un type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="flat">Plat</SelectItem>
+                <SelectItem value="slight_slope">Légère pente</SelectItem>
+                <SelectItem value="steep_slope">Forte pente</SelectItem>
+                <SelectItem value="uneven">Irrégulier</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          
-          {/* Navigation buttons */}
-          <div className="flex justify-between pt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Précédent
-            </Button>
-            
-            <Button 
-              type="submit"
-              className="flex items-center gap-2"
-            >
-              Suivant
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </div>
+        </CardContent>
+        <div className="flex justify-between p-6">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
+            Suivant
+          </Button>
         </div>
-      </form>
+      </Card>
     </div>
   );
 };

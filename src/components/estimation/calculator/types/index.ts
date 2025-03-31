@@ -3,7 +3,8 @@
 // to provide a single import point for other modules
 
 // Main form data interface
-export type { EstimationFormData, FormData, EstimationResponseData, PDFGenerationOptions, FeeCosts } from './estimationFormData';
+export type { EstimationFormData, FormData } from './estimationFormData';
+export type { EstimationResponseData, PDFGenerationOptions, FeeCosts } from './estimationFormData';
 
 // Export from formTypes.ts
 export type { 
