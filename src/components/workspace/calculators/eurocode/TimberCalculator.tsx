@@ -344,10 +344,10 @@ const TimberCalculator = () => {
               <div className="p-4 border rounded-md">
                 <h3 className="font-medium mb-2">Durées de charge</h3>
                 <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li><span className="font-medium">Permanente:</span> > 10 ans (poids propre)</li>
+                  <li><span className="font-medium">Permanente:</span> &gt; 10 ans (poids propre)</li>
                   <li><span className="font-medium">Longue durée:</span> 6 mois à 10 ans (stockage)</li>
                   <li><span className="font-medium">Moyenne durée:</span> 1 semaine à 6 mois (charges d'exploitation)</li>
-                  <li><span className="font-medium">Courte durée:</span> < 1 semaine (neige)</li>
+                  <li><span className="font-medium">Courte durée:</span> &lt; 1 semaine (neige)</li>
                   <li><span className="font-medium">Instantanée:</span> (vent, accidentelle)</li>
                 </ul>
               </div>
