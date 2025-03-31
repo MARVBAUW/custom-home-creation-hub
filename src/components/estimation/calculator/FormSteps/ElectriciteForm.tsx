@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { calculateElectricalCost } from '../utils/montantUtils';
+import { calculateElectricityCost } from '../utils/montantUtils';
 import { ensureNumber } from '../utils/typeConversions';
 import { Bolt, CircuitBoard, Zap } from 'lucide-react';
 
@@ -25,7 +25,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
     const surface = ensureNumber(formData.surface, 0);
     
     // Calculate the cost based on electrical type and surface
-    const additionalCost = calculateElectricalCost(electricalType, surface);
+    const additionalCost = calculateElectricityCost(surface, electricalType);
 
     // Update form data with electrical type and additional cost
     updateFormData({
