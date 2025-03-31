@@ -20,24 +20,24 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
   );
   
   const [hasPool, setHasPool] = useState<boolean>(
-    formData.hasPool || false
+    formData.pool || false
   );
   
   const [hasTerrace, setHasTerrace] = useState<boolean>(
-    formData.hasTerrace || false
+    formData.terrace || false
   );
   
   const [hasOutdoorKitchen, setHasOutdoorKitchen] = useState<boolean>(
-    formData.hasOutdoorKitchen || false
+    formData.outdoorKitchen || false
   );
 
   const handleSubmit = () => {
     // Update form data with exterior features
     updateFormData({
       includeLandscaping: hasLandscaping,
-      hasPool: hasPool,
-      hasTerrace: hasTerrace,
-      hasOutdoorKitchen: hasOutdoorKitchen
+      pool: hasPool,
+      terrace: hasTerrace,
+      outdoorKitchen: hasOutdoorKitchen
     });
     
     // Move to the next step

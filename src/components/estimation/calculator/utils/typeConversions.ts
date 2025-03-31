@@ -1,49 +1,91 @@
+/**
+ * Ensures a value is a number or zero if undefined/null/NaN
+ * 
+ * @param value The value to convert to number
+ * @param defaultValue Default value to use if conversion fails (defaults to 0)
+ * @returns A number
+ */
+export const ensureNumber = (
+  value: string | number | undefined | null,
+  defaultValue: number = 0
+): number => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  if (typeof value === 'number') {
+    return isNaN(value) ? defaultValue : value;
+  }
+  
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? defaultValue : parsed;
+};
 
 /**
- * Ensures a value is a number, converting strings to numbers if possible.
- * Returns 0 if the value cannot be converted to a number.
+ * Converts a value to a string
  * 
- * @param value The value to convert to a number
- * @returns A number representation of the value
+ * @param value The value to convert to string
+ * @param defaultValue Default value to use if value is undefined/null
+ * @returns A string
  */
-export function ensureNumber(value: any): number {
-  if (typeof value === 'number') {
+export const ensureString = (
+  value: string | number | undefined | null,
+  defaultValue: string = ''
+): string => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  return String(value);
+};
+
+/**
+ * Converts a value to a boolean
+ * 
+ * @param value The value to convert to boolean
+ * @param defaultValue Default value to use if conversion is not clear
+ * @returns A boolean
+ */
+export const ensureBoolean = (
+  value: string | boolean | number | undefined | null,
+  defaultValue: boolean = false
+): boolean => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  if (typeof value === 'boolean') {
     return value;
   }
   
   if (typeof value === 'string') {
-    const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
+    return value.toLowerCase() === 'true' || value === '1' || value === 'yes' || value === 'oui';
   }
   
-  return 0;
-}
-
-/**
- * Converts a value to a form-compatible value (string for inputs)
- * 
- * @param value The value to convert
- * @returns A string representation of the value, or empty string if null/undefined
- */
-export function toFormValue(value: any): string {
-  if (value === null || value === undefined) {
-    return '';
+  if (typeof value === 'number') {
+    return value === 1;
   }
   
-  return String(value);
-}
+  return defaultValue;
+};
 
 /**
- * Converts a string to a boolean
+ * Convert a string representation to an appropriate type (for calculated fields)
  * 
- * @param value The string value to convert
- * @returns A boolean representation of the value
+ * @param value The string value to parse
+ * @returns The converted value
  */
-export function stringToBoolean(value: string | undefined): boolean {
-  if (!value) return false;
+export const parseStringValue = (value: string): string | number | boolean => {
+  // Check if it's a number
+  if (!isNaN(Number(value)) && value.trim() !== '') {
+    return Number(value);
+  }
   
-  return value.toLowerCase() === 'true' || 
-         value.toLowerCase() === 'yes' || 
-         value.toLowerCase() === 'oui' || 
-         value === '1';
-}
+  // Check if it's a boolean
+  if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+    return value.toLowerCase() === 'true';
+  }
+  
+  // Otherwise return as string
+  return value;
+};

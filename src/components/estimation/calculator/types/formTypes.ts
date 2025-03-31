@@ -21,7 +21,7 @@ export interface FormData {
   endDate?: string;
   
   // Project details
-  terassementsViabilisation?: boolean | number;
+  terassementsViabilisation?: number | boolean;
   name?: string;
   constructionType?: string;
   constructionStyle?: string;
@@ -103,6 +103,9 @@ export interface FormData {
   poolHeating?: string;
   terrace?: boolean;
   outdoorKitchen?: boolean;
+  hasPool?: boolean;
+  hasTerrace?: boolean;
+  hasOutdoorKitchen?: boolean;
   carportType?: string;
   jacuzziType?: string;
   jacuzziArea?: number | string;
@@ -164,26 +167,22 @@ export interface FormData {
   needsDemolition?: boolean;
   demolitionType?: string;
   demolitionTypes?: string[];
-  demolitionPercentages?: { [key: string]: number };
+  demolitionPercentages?: { [key: string]: string | number };
   demolitionTotalArea?: number | string;
   existingSurface?: number | string;
   surfaceDemo?: number;
   demoCost?: number;
   demolitionCost?: number;
+  demolitionDetailedCosts?: { [key: string]: number };
   
-  // For attic details
-  
-  // For insulation
-  insulationType?: string;
-  
-  // Structural renovation
-  createWalls?: boolean;
+  // For structural renovation
+  createWalls?: boolean | string;
   wallArea?: number | string;
-  createFloors?: boolean;
+  createFloors?: boolean | string;
   floorType?: string;
   floorArea?: number | string;
   structuralFeatures?: string[];
-  structuralFeatureValues?: { [key: string]: number | string };
+  structuralFeatureValues?: { [key: string]: string | number };
   
   // Facade details
   stonePercentage?: number | string;
@@ -196,8 +195,6 @@ export interface FormData {
   // Additional properties
   basement?: boolean;
   garage?: boolean;
-  hasPool?: boolean;
-  hasTerrace?: boolean;
   domotic?: boolean;
   alarm?: boolean;
   centralVacuum?: boolean;
@@ -214,6 +211,9 @@ export interface FormData {
   exteriorFeatures?: string[];
   interiorFittings?: string;
   tileSurface?: number | string;
+  
+  // Budget
+  budget?: number | string;
 }
 
 // Base form props that all form steps will use

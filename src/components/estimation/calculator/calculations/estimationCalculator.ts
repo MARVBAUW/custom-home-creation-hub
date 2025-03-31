@@ -29,12 +29,12 @@ export const calculateEstimation = (data: FormData): EstimationResponseData => {
     totalAmount,
     timeline,
     categories: [ // Add categories to match EstimationResponseData interface
-      { name: 'Structural Work', amount: constructionCosts.structuralWork },
-      { name: 'Finishing Work', amount: constructionCosts.finishingWork },
-      { name: 'Technical Lots', amount: constructionCosts.technicalLots },
-      { name: 'External Works', amount: constructionCosts.externalWorks },
-      { name: 'Fees', amount: fees.total },
-      { name: 'Other Costs', amount: otherCosts.total }
+      { category: 'Structural Work', amount: constructionCosts.structuralWork },
+      { category: 'Finishing Work', amount: constructionCosts.finishingWork },
+      { category: 'Technical Lots', amount: constructionCosts.technicalLots },
+      { category: 'External Works', amount: constructionCosts.externalWorks },
+      { category: 'Fees', amount: fees.total },
+      { category: 'Other Costs', amount: otherCosts.total }
     ]
   };
 };

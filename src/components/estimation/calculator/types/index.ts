@@ -1,15 +1,12 @@
 
 // Re-export all types from individual files
 export * from './baseTypes';
-export * from './estimationFormData';
-export * from './formTypes';
-export * from './clientTypeProps';
-export * from './pdf-types';
-
-// Re-export types from main files without duplicates
-export type { FormData, EstimationFormData, EstimationResponseData, FeeCosts } from './formTypes';
-export type { BaseFormProps, FormStepProps, ExtendedFormProps, ResultsFormProps } from './formTypes';
-export type { 
+export type { FormData, EstimationFormData, EstimationResponseData, FeeCosts } from './estimationFormData';
+export type {
+  BaseFormProps,
+  FormStepProps,
+  ExtendedFormProps,
+  ResultsFormProps,
   EstimationCalculatorProps,
   FormNavigationProps,
   EstimationValidationError,
@@ -19,7 +16,7 @@ export type {
   ClientTypeStepProps,
   ContactDetailsStepProps,
   DetailedEstimationReportProps,
-  PDFGenerationOptions
+  PDFGenerationOptions,
 } from './formTypes';
 
 // Re-export EstimationTimeline with explicit reference to avoid ambiguity

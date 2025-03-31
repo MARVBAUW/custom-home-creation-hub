@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { FormData, EstimationResponseData } from './types';
 import { determineNextStep, determinePreviousStep, recalculateEstimation } from './utils/navigationPathUtils';
-import { calculateEstimation } from './calculationUtils';
+import { calculateEstimation } from './calculations/estimationCalculator';
 import { useToast } from '@/hooks/use-toast';
 
 export const useEstimationCalculator = () => {
