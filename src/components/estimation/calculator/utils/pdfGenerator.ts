@@ -60,12 +60,7 @@ export const generateEstimationPDF = (
       ['Surface', formData.surface ? `${formData.surface} m²` : 'Non spécifiée'],
       ['Ville', formData.city || 'Non spécifiée'],
       ['Type de terrain', formData.terrainType ? (formData.terrainType === 'flat' ? 'Terrain plat' : 'Terrain en pente') : 'Non spécifié'],
-      ['Niveau de finition', formData.finishStandard ? {
-        'basic': 'Basique',
-        'standard': 'Standard',
-        'premium': 'Premium',
-        'luxury': 'Luxe'
-      }[formData.finishStandard] : 'Standard']
+      ['Niveau de finition', 'Standard']
     ],
     theme: 'grid',
     headStyles: { 
@@ -79,7 +74,7 @@ export const generateEstimationPDF = (
   
   // If client info is included and available
   if (pdfOptions.clientInfo && (formData.firstName || formData.lastName)) {
-    const clientY = doc.lastAutoTable?.finalY || 120;
+    const clientY = (doc as any).lastAutoTable?.finalY || 120;
     
     doc.setFontSize(14);
     doc.text('Informations client', 10, clientY + 10);
@@ -104,7 +99,7 @@ export const generateEstimationPDF = (
   }
   
   // Add estimation results
-  const estimationY = doc.lastAutoTable?.finalY || 150;
+  const estimationY = (doc as any).lastAutoTable?.finalY || 150;
   
   doc.setFontSize(16);
   doc.setTextColor(120, 115, 70);
@@ -123,7 +118,7 @@ export const generateEstimationPDF = (
   // Calculate additional costs
   const vat = estimationAmount * 0.2;
   const totalWithVAT = estimationAmount + vat;
-  const pricePerSqm = formData.surface ? Math.round(estimationAmount / formData.surface) : 0;
+  const pricePerSqm = typeof formData.surface === 'number' ? Math.round(estimationAmount / formData.surface) : 0;
   
   // Main estimation table
   autoTable(doc, {
@@ -160,7 +155,7 @@ export const generateEstimationPDF = (
   
   // If detailed breakdown is requested
   if (pdfOptions.includeDetailedBreakdown) {
-    const breakdownY = doc.lastAutoTable?.finalY || 220;
+    const breakdownY = (doc as any).lastAutoTable?.finalY || 220;
     
     // Check if we need a new page
     if (breakdownY > 240) {
@@ -192,7 +187,7 @@ export const generateEstimationPDF = (
     ]);
     
     autoTable(doc, {
-      startY: doc.pageCount > 1 ? 20 : breakdownY + 15,
+      startY: doc.getNumberOfPages() > 1 ? 20 : breakdownY + 15,
       head: [['Corps d\'état', 'Montant HT estimé']],
       body: breakdownData,
       theme: 'grid',
@@ -208,7 +203,7 @@ export const generateEstimationPDF = (
   
   // Add timeline information if requested
   if (pdfOptions.includeTimeline) {
-    const timelineY = doc.lastAutoTable?.finalY || 280;
+    const timelineY = (doc as any).lastAutoTable?.finalY || 280;
     
     // Check if we need a new page
     if (timelineY > 240) {
@@ -231,7 +226,7 @@ export const generateEstimationPDF = (
     ];
     
     autoTable(doc, {
-      startY: doc.pageCount > 1 ? (doc.lastAutoTable?.finalY || 20) + 10 : timelineY + 15,
+      startY: doc.getNumberOfPages() > 1 ? ((doc as any).lastAutoTable?.finalY || 20) + 10 : timelineY + 15,
       head: [['Phase', 'Durée estimée']],
       body: timelineData,
       theme: 'grid',
@@ -327,7 +322,7 @@ export const generatePDF = (
   });
   
   // Add footer
-  const pageCount = doc.internal.getNumberOfPages();
+  const pageCount = doc.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);

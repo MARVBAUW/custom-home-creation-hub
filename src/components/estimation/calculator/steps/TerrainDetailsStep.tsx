@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArrowRightIcon, ArrowLeftIcon, Globe, Mountain, Water } from 'lucide-react';
+import { ArrowRightIcon, ArrowLeftIcon, Globe, Mountain, Droplet } from 'lucide-react';
 import { FormData } from '../types';
 
 interface TerrainDetailsStepProps {
@@ -119,7 +119,7 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
               <div className="flex items-center space-x-2 rounded-md border p-4">
                 <RadioGroupItem value="waterfront" id="terrainWaterfront" />
                 <Label htmlFor="terrainWaterfront" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Water className="h-4 w-4 text-green-500" />
+                  <Droplet className="h-4 w-4 text-green-500" />
                   <div>
                     <p>Front de mer/lac</p>
                     <p className="text-sm text-gray-500">À proximité d'un plan d'eau</p>
