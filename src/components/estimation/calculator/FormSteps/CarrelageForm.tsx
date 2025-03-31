@@ -1,130 +1,211 @@
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { Square, Grid } from 'lucide-react';
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Square, Grid2X2, CheckSquare } from 'lucide-react';
+import { calculateFloorTilingCost, calculateWallTilingCost, ensureNumber } from '../utils/montantUtils';
 
-const CarrelageForm: React.FC<BaseFormProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep, 
-  goToPreviousStep 
+const CarrelageForm: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
+  goToPreviousStep,
+  animationDirection
 }) => {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
-    defaultValues: {
-      floorTileType: formData.floorTileType || 'standard',
-      floorTilePercentage: formData.floorTilePercentage || 50
-    }
-  });
+  const [floorTileType, setFloorTileType] = useState<string>(
+    formData.floorTileType || 'standard'
+  );
+  
+  const [floorTilePercentage, setFloorTilePercentage] = useState<number>(
+    Number(formData.floorTilePercentage || 50)
+  );
+  
+  const [wallTileType, setWallTileType] = useState<string>(
+    formData.wallTileType || 'standard'
+  );
 
-  const watchTileType = watch('floorTileType');
-  const watchTilePercentage = watch('floorTilePercentage');
-
-  const onSubmit = (data: any) => {
-    // Use object literal instead of trying to set custom properties directly
-    const updatedData = {
-      floorTileType: data.floorTileType,
-      floorTilePercentage: data.floorTilePercentage
-    };
+  const handleSubmit = () => {
+    // Get the surface area
+    const surface = ensureNumber(formData.surface, 0);
     
-    updateFormData(updatedData);
+    // Calculate floor tiling cost based on selected options
+    const floorTilingCost = floorTileType !== 'non_concerne' 
+      ? calculateFloorTilingCost(floorTileType, floorTilePercentage, surface)
+      : 0;
+    
+    // Calculate wall tiling cost
+    const wallTilingCost = calculateWallTilingCost(wallTileType, surface);
+    
+    // Calculate total additional cost
+    const additionalCost = floorTilingCost + wallTilingCost;
+
+    // Update form data with tiling options and additional cost
+    updateFormData({
+      floorTileType,
+      floorTilePercentage,
+      wallTileType,
+      montantT: (formData.montantT || 0) + additionalCost
+    });
+    
+    // Move to the next step
     goToNextStep();
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Carrelage</CardTitle>
-      </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className="space-y-6">
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Type de carrelage</Label>
-            <RadioGroup className="grid gap-2" defaultValue={watchTileType}>
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="standard" id="standard" 
-                  {...register('floorTileType')} 
-                  onChange={() => setValue('floorTileType', 'standard')} />
-                <Label htmlFor="standard" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Square className="h-5 w-5 text-gray-400" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Carrelage standard</p>
-                    <p className="text-sm text-gray-500">Grès cérame qualité standard</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="premium" id="premium" 
-                  {...register('floorTileType')} 
-                  onChange={() => setValue('floorTileType', 'premium')} />
-                <Label htmlFor="premium" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Square className="h-5 w-5 text-amber-500" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Carrelage premium</p>
-                    <p className="text-sm text-gray-500">Grès cérame qualité supérieure</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="luxury" id="luxury" 
-                  {...register('floorTileType')} 
-                  onChange={() => setValue('floorTileType', 'luxury')} />
-                <Label htmlFor="luxury" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Grid className="h-5 w-5 text-purple-500" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Carrelage luxe</p>
-                    <p className="text-sm text-gray-500">Pierre naturelle, marbre ou équivalent</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="non_concerne" id="non_concerne" 
-                  {...register('floorTileType')} 
-                  onChange={() => setValue('floorTileType', 'non_concerne')} />
-                <Label htmlFor="non_concerne" className="cursor-pointer">Non concerné</Label>
-              </div>
-            </RadioGroup>
-          </div>
-          
-          {watchTileType !== 'non_concerne' && (
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <Label className="text-base font-medium">Proportion de surface carrelée</Label>
-                <span className="text-sm font-medium">{watchTilePercentage}%</span>
-              </div>
-              <Slider
-                defaultValue={[Number(watchTilePercentage)]}
-                max={100}
-                step={5}
-                onValueChange={(value) => setValue('floorTilePercentage', value[0])}
-              />
-              <div className="flex justify-between text-xs text-gray-500">
-                <span>0%</span>
-                <span>50%</span>
-                <span>100%</span>
-              </div>
-            </div>
-          )}
-        </CardContent>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium mb-4">Carrelage et Faïence</h3>
         
-        <CardFooter className="flex justify-between">
-          <Button type="button" variant="outline" onClick={goToPreviousStep}>
+        <div className="mb-8">
+          <Label className="mb-2 block">Type de carrelage sol</Label>
+          <RadioGroup 
+            value={floorTileType} 
+            onValueChange={setFloorTileType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${floorTileType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setFloorTileType('standard')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Square className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="standard" id="floor-standard" className="sr-only" />
+                <Label htmlFor="floor-standard" className="font-medium">Carrelage base</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Carrelage standard
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${floorTileType === 'medium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setFloorTileType('medium')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Grid2X2 className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="medium" id="floor-medium" className="sr-only" />
+                <Label htmlFor="floor-medium" className="font-medium">Milieu de gamme</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Carrelage qualité moyenne
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${floorTileType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setFloorTileType('premium')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <CheckSquare className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="premium" id="floor-premium" className="sr-only" />
+                <Label htmlFor="floor-premium" className="font-medium">Haut de gamme</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Carrelage haute qualité
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${floorTileType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setFloorTileType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Ban className="h-8 w-8 text-gray-500 mb-2" />
+                <RadioGroupItem value="non_concerne" id="floor-none" className="sr-only" />
+                <Label htmlFor="floor-none" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de carrelage sol
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
+        
+        {floorTileType !== 'non_concerne' && (
+          <div className="mb-8">
+            <div className="flex justify-between">
+              <Label className="text-base font-medium">Proportion de surface carrelée</Label>
+              <span className="text-sm font-medium">{floorTilePercentage}%</span>
+            </div>
+            <Slider
+              value={[floorTilePercentage]}
+              max={100}
+              step={5}
+              onValueChange={(value) => setFloorTilePercentage(value[0])}
+              className="mt-2"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0%</span>
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+        )}
+        
+        <div className="mb-8">
+          <Label className="mb-2 block">Type de faïence murs</Label>
+          <RadioGroup 
+            value={wallTileType} 
+            onValueChange={setWallTileType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWallTileType('standard')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Square className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="standard" id="wall-standard" className="sr-only" />
+                <Label htmlFor="wall-standard" className="font-medium">Faïence base</Label>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'medium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWallTileType('medium')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Grid2X2 className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="medium" id="wall-medium" className="sr-only" />
+                <Label htmlFor="wall-medium" className="font-medium">Faïence MG</Label>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWallTileType('premium')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <CheckSquare className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="premium" id="wall-premium" className="sr-only" />
+                <Label htmlFor="wall-premium" className="font-medium">Faïence HG</Label>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
+        
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
             Précédent
           </Button>
-          <Button type="submit">
-            Suivant
+          <Button onClick={handleSubmit}>
+            Continuer
           </Button>
-        </CardFooter>
-      </form>
-    </Card>
+        </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

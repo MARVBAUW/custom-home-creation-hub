@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { BaseFormProps } from '../types';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BaseFormProps } from '../types/formTypes';
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { ensureNumber } from '../utils/typeConversions';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { ensureNumber } from '../utils/montantUtils';
+import { Wood, Ban } from 'lucide-react';
 
 const ParquetForm: React.FC<BaseFormProps> = ({
   formData,
@@ -15,157 +16,137 @@ const ParquetForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  // Initialize state with formData values or defaults
-  const [parquetType, setParquetType] = useState(formData.parquetType || '');
-  const [softFloorType, setSoftFloorType] = useState(formData.softFloorType || '');
-  const [parquetPercentage, setParquetPercentage] = useState<number>(
-    ensureNumber(formData.parquetPercentage || 0)
+  const [parquetType, setParquetType] = useState<string>(
+    formData.parquetType || 'standard'
   );
-  const [softFloorPercentage, setSoftFloorPercentage] = useState<number>(
-    ensureNumber(formData.softFloorPercentage || 0)
-  );
-
-  // Calculate the total percentage (should be 100%)
-  const totalPercentage = parquetPercentage + softFloorPercentage;
   
-  // Flooring surface is the remaining percentage after tiles (coming from previous form)
-  const tileSurface = ensureNumber(formData.floorTilePercentage || 0);
-  const remainingSurface = 100 - tileSurface;
+  const [parquetPercentage, setParquetPercentage] = useState<number>(
+    Number(formData.parquetPercentage || 30)
+  );
 
-  // Handle form submission
   const handleSubmit = () => {
+    // Calculate parquet cost here if needed
+    // For now, we'll just store the selections
+
+    // Update form data with parquet options
     updateFormData({
       parquetType,
-      softFloorType,
       parquetPercentage,
-      softFloorPercentage
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
   return (
-    <Card className="bg-white/50 backdrop-blur transition-all duration-500">
-      <CardHeader>
-        <CardTitle className="text-xl text-center">Parquet et sols souples</CardTitle>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="space-y-6">
-          {tileSurface < 100 ? (
-            <>
-              <div className="mb-6">
-                <p className="text-sm">Surface restante à couvrir: {remainingSurface}%</p>
-                <p className="text-sm text-muted-foreground">(Le carrelage représente déjà {tileSurface}% de la surface)</p>
-              </div>
-              
-              <div className="space-y-4">
-                <Label htmlFor="parquet-type">Type de parquet</Label>
-                <Select value={parquetType} onValueChange={setParquetType}>
-                  <SelectTrigger id="parquet-type">
-                    <SelectValue placeholder="Sélectionnez un type de parquet" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="contrecolle">Parquet contrecollé</SelectItem>
-                    <SelectItem value="massif">Parquet massif</SelectItem>
-                    <SelectItem value="stratifie">Parquet stratifié</SelectItem>
-                    <SelectItem value="bambou">Parquet en bambou</SelectItem>
-                    <SelectItem value="design">Parquet design</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="parquet-slider">Pourcentage parquet</Label>
-                  <span className="w-16 text-right">{parquetPercentage}%</span>
-                </div>
-                <Slider
-                  id="parquet-slider"
-                  min={0}
-                  max={remainingSurface}
-                  step={5}
-                  value={[parquetPercentage]}
-                  onValueChange={(value) => {
-                    setParquetPercentage(value[0]);
-                    setSoftFloorPercentage(remainingSurface - value[0]);
-                  }}
-                />
-              </div>
-
-              <div className="space-y-4">
-                <Label htmlFor="soft-floor-type">Type de sol souple</Label>
-                <Select value={softFloorType} onValueChange={setSoftFloorType}>
-                  <SelectTrigger id="soft-floor-type">
-                    <SelectValue placeholder="Sélectionnez un type de sol souple" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="moquette">Moquette</SelectItem>
-                    <SelectItem value="lino">Linoléum</SelectItem>
-                    <SelectItem value="pvc">Sol PVC</SelectItem>
-                    <SelectItem value="vinyle">Sol vinyle</SelectItem>
-                    <SelectItem value="caoutchouc">Sol caoutchouc</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="soft-floor-slider">Pourcentage sol souple</Label>
-                  <span className="w-16 text-right">{softFloorPercentage}%</span>
-                </div>
-                <Slider
-                  id="soft-floor-slider"
-                  min={0}
-                  max={remainingSurface}
-                  step={5}
-                  value={[softFloorPercentage]}
-                  onValueChange={(value) => {
-                    setSoftFloorPercentage(value[0]);
-                    setParquetPercentage(remainingSurface - value[0]);
-                  }}
-                />
-              </div>
-
-              <div className="mt-6 pt-4 border-t">
-                <div className="flex items-center justify-between font-medium">
-                  <span>Total (avec carrelage)</span>
-                  <span className={`${(tileSurface + parquetPercentage + softFloorPercentage) === 100 ? 'text-green-600' : 'text-red-600'}`}>
-                    {tileSurface + parquetPercentage + softFloorPercentage}%
-                  </span>
-                </div>
-                {(tileSurface + parquetPercentage + softFloorPercentage) !== 100 && (
-                  <p className="text-sm text-red-600 mt-2">
-                    Le total doit être égal à 100%. Veuillez ajuster les pourcentages.
-                  </p>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="flex items-center justify-center h-40">
-              <p className="text-center text-muted-foreground">
-                Vous avez déjà alloué 100% de la surface au carrelage. Aucun parquet ou sol souple n'est nécessaire.
-              </p>
-            </div>
-          )}
-
-          <div className="flex justify-between mt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={goToPreviousStep}
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium mb-4">Parquet</h3>
+        
+        <div className="mb-8">
+          <Label className="mb-2 block">Type de parquet</Label>
+          <RadioGroup 
+            value={parquetType} 
+            onValueChange={setParquetType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setParquetType('standard')}
             >
-              Précédent
-            </Button>
-            <Button 
-              onClick={handleSubmit}
-              disabled={tileSurface < 100 && (parquetPercentage + softFloorPercentage) !== remainingSurface}
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wood className="h-8 w-8 text-amber-600 mb-2" />
+                <RadioGroupItem value="standard" id="parquet-standard" className="sr-only" />
+                <Label htmlFor="parquet-standard" className="font-medium">Parquet standard</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Parquet stratifié
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'medium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setParquetType('medium')}
             >
-              Continuer
-            </Button>
-          </div>
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wood className="h-8 w-8 text-amber-700 mb-2" />
+                <RadioGroupItem value="medium" id="parquet-medium" className="sr-only" />
+                <Label htmlFor="parquet-medium" className="font-medium">Parquet milieu de gamme</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Parquet contrecollé
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setParquetType('premium')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wood className="h-8 w-8 text-amber-800 mb-2" />
+                <RadioGroupItem value="premium" id="parquet-premium" className="sr-only" />
+                <Label htmlFor="parquet-premium" className="font-medium">Parquet haut de gamme</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Parquet massif
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${parquetType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setParquetType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Ban className="h-8 w-8 text-gray-500 mb-2" />
+                <RadioGroupItem value="non_concerne" id="parquet-none" className="sr-only" />
+                <Label htmlFor="parquet-none" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de parquet prévu
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
         </div>
-      </CardContent>
-    </Card>
+        
+        {parquetType !== 'non_concerne' && (
+          <div className="mb-8">
+            <div className="flex justify-between">
+              <Label className="text-base font-medium">Proportion de surface en parquet</Label>
+              <span className="text-sm font-medium">{parquetPercentage}%</span>
+            </div>
+            <Slider
+              value={[parquetPercentage]}
+              max={100}
+              step={5}
+              onValueChange={(value) => setParquetPercentage(value[0])}
+              className="mt-2"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>0%</span>
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+        )}
+        
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
+            Continuer
+          </Button>
+        </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

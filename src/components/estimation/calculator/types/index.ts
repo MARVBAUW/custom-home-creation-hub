@@ -8,7 +8,7 @@ export * from './pdf-types';
 
 // Ensure type exports are clear and don't have duplicates
 export type { EstimationFormData, FormData, EstimationResponseData, FeeCosts } from './estimationFormData';
-export type { BaseFormProps } from './baseTypes';
+export type { BaseFormProps } from './formTypes';
 export type { 
   FormStepProps, 
   ExtendedFormProps, 
@@ -21,9 +21,6 @@ export type {
   StepRendererProps,
   ClientTypeStepProps,
   ContactDetailsStepProps,
-  DetailedEstimationReportProps
+  DetailedEstimationReportProps,
+  PDFGenerationOptions
 } from './formTypes';
-
-// Export PDF related types
-export type { PDFGenerationOptions } from './pdf-types';
-export type { EnhancedJsPDF } from './pdf-types';

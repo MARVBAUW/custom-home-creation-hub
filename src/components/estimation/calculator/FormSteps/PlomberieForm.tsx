@@ -1,12 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Droplet, Waves, Gem } from 'lucide-react';
 import { calculatePlumbingCost, ensureNumber } from '../utils/montantUtils';
+import { Droplet, Droplets, Waves } from 'lucide-react';
 
 const PlomberieForm: React.FC<BaseFormProps> = ({
   formData,
@@ -15,7 +15,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [plumbingType, setPlumbingType] = React.useState<string>(
+  const [plumbingType, setPlumbingType] = useState<string>(
     formData.plumbingType || 'base'
   );
 
@@ -44,7 +44,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
         <h3 className="text-lg font-medium mb-4">Plomberie</h3>
         
         <div>
-          <Label className="mb-2 block">Niveau de prestation plomberie</Label>
+          <Label className="mb-2 block">Niveau de prestation en plomberie</Label>
           <RadioGroup 
             value={plumbingType} 
             onValueChange={setPlumbingType}
@@ -59,7 +59,7 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
                 <RadioGroupItem value="base" id="plumbing-base" className="sr-only" />
                 <Label htmlFor="plumbing-base" className="font-medium">Prestations de base</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Installation sanitaire standard
+                  Installation de plomberie standard
                 </p>
               </CardContent>
             </Card>
@@ -69,11 +69,11 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('advanced')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Waves className="h-8 w-8 text-blue-500 mb-2" />
+                <Droplets className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="advanced" id="plumbing-advanced" className="sr-only" />
                 <Label htmlFor="plumbing-advanced" className="font-medium">Prestations avancées</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Équipements sanitaires améliorés
+                  Installation de plomberie améliorée
                 </p>
               </CardContent>
             </Card>
@@ -83,11 +83,11 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('premium')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Gem className="h-8 w-8 text-blue-500 mb-2" />
+                <Waves className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="premium" id="plumbing-premium" className="sr-only" />
                 <Label htmlFor="plumbing-premium" className="font-medium">Prestations haut de gamme</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Équipements sanitaires premium et options avancées
+                  Installation de plomberie de qualité supérieure
                 </p>
               </CardContent>
             </Card>

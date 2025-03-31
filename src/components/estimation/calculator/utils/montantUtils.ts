@@ -67,6 +67,147 @@ export const calculateWindowsCost = (windowType: string, windowArea: number): nu
 };
 
 /**
+ * Calculate the cost of heating based on the chosen type, surface area, and air conditioning option
+ * @param heatingType The type of heating system
+ * @param hasAirConditioning Whether air conditioning is included
+ * @param surface The surface area in square meters
+ * @returns The calculated cost
+ */
+export const calculateHeatingCost = (heatingType: string, hasAirConditioning: boolean, surface: number): number => {
+  let cost = 0;
+  
+  // Calculate heating cost based on type
+  switch (heatingType) {
+    case 'standard':
+      cost = surface * 60; // MEILLEUR RAPPORT QUALITÉ/PRIX
+      break;
+    case 'eco':
+      cost = surface * 120; // LE PLUS ÉCOLOGIQUE
+      break;
+    case 'economic':
+      cost = surface * 45; // LE PLUS ÉCONOMIQUE
+      break;
+    default:
+      cost = surface * 60; // Default to standard
+  }
+  
+  // Add air conditioning cost if selected
+  if (hasAirConditioning) {
+    cost += surface * 65; // CLIMATISATION
+  }
+  
+  return cost;
+};
+
+/**
+ * Calculate the cost of plastering based on the chosen type and surface area
+ * @param plasteringType The type of plastering
+ * @param surface The surface area in square meters
+ * @returns The calculated cost
+ */
+export const calculatePlasteringCost = (plasteringType: string, surface: number): number => {
+  switch (plasteringType) {
+    case 'base':
+      return surface * 95; // PRESTATION DE BASE
+    case 'specific':
+      return surface * 105; // PRESTATION AVEC QUELQUES SPECIFICITES
+    case 'advanced':
+      return surface * 120; // PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)
+    default:
+      return surface * 95; // Default to base
+  }
+};
+
+/**
+ * Calculate the cost of interior carpentry based on the chosen options and surface area
+ * @param doorType Door type (base, standing, premium)
+ * @param hasMoldings Whether moldings are included
+ * @param hasCustomFurniture Whether custom furniture is included
+ * @param surface The surface area in square meters
+ * @returns The calculated cost
+ */
+export const calculateInteriorCarpenteryCost = (
+  doorType: string,
+  hasMoldings: boolean,
+  hasCustomFurniture: boolean,
+  surface: number
+): number => {
+  let cost = 0;
+  
+  // Calculate cost based on door type
+  switch (doorType) {
+    case 'base':
+      cost = surface * 50; // PORTES INTERIEURES BASE
+      break;
+    case 'standing':
+      cost = surface * 60; // PORTES INTERIEURES STANDING
+      break;
+    case 'premium':
+      cost = surface * 70; // PORTES INTERIEURES HAUT DE GAMME
+      break;
+    default:
+      cost = 0; // No doors
+  }
+  
+  // Add cost for moldings if selected
+  if (hasMoldings) {
+    cost += surface * 10; // MOULURE
+  }
+  
+  // Add cost for custom furniture if selected
+  if (hasCustomFurniture) {
+    cost += surface * 20; // AMEUBLEMENTS SPECIFIQUES
+  }
+  
+  return cost;
+};
+
+/**
+ * Calculate the cost of floor tiling based on the chosen type, percentage, and surface area
+ * @param tileType The type of floor tiles
+ * @param tilePercentage The percentage of the surface to be tiled (0-100)
+ * @param surface The total surface area in square meters
+ * @returns The calculated cost
+ */
+export const calculateFloorTilingCost = (
+  tileType: string,
+  tilePercentage: number,
+  surface: number
+): number => {
+  const surfaceToTile = surface * (tilePercentage / 100);
+  
+  switch (tileType) {
+    case 'standard':
+      return surfaceToTile * 0.66 * surface; // CARRELAGE BASE
+    case 'medium':
+      return surfaceToTile * 0.76 * surface; // CARRELAGE MILIEU DE GAMME
+    case 'premium':
+      return surfaceToTile * 0.86 * surface; // CARRELAGE HAUT DE GAMME
+    default:
+      return 0; // Non concerné
+  }
+};
+
+/**
+ * Calculate the cost of wall tiling based on the chosen type and surface area
+ * @param wallTileType The type of wall tiles
+ * @param surface The surface area in square meters
+ * @returns The calculated cost
+ */
+export const calculateWallTilingCost = (wallTileType: string, surface: number): number => {
+  switch (wallTileType) {
+    case 'standard':
+      return surface * 0.0536; // FAIENCE BASE
+    case 'medium':
+      return surface * 0.0612; // FAIENCE MG
+    case 'premium':
+      return surface * 0.0963; // FAIENCE HG
+    default:
+      return 0; // No wall tiling
+  }
+};
+
+/**
  * Helper function to ensure a value is converted to a number
  * @param value The value to convert
  * @param defaultValue The default value if conversion fails

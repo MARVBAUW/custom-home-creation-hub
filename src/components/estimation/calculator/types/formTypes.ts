@@ -1,10 +1,16 @@
 
 import { BaseSyntheticEvent } from 'react';
 import { EstimationFormData, EstimationResponseData } from './estimationFormData';
-import { BaseFormProps } from './baseTypes';
-import { PDFGenerationOptions } from './pdf-types';
 
-export type { BaseFormProps };
+export interface BaseFormProps {
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: string;
+  defaultValues?: Partial<EstimationFormData>;
+  onSubmit?: (data: Partial<EstimationFormData>) => void;
+}
 
 export interface FormStepProps extends BaseFormProps {
   // This is a base interface for form components
@@ -94,4 +100,17 @@ export interface DetailedEstimationReportProps {
   estimation: any; // Add this property
   includeTerrainPrice?: boolean;
   options?: PDFGenerationOptions;
+}
+
+export interface PDFGenerationOptions {
+  includeDetails?: boolean;
+  includeLogo?: boolean;
+  includeContactInfo?: boolean;
+  includeBreakdown?: boolean;
+  includeTerrainPrice?: boolean;
+  includeTimeline?: boolean;
+  includeDetailedBreakdown?: boolean;
+  clientInfo?: boolean;
+  companyLogo?: boolean;
+  fileName?: string;
 }

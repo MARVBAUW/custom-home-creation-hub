@@ -1,11 +1,12 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Paintbrush, Droplet, FileText, AlignLeft } from 'lucide-react';
+import { ensureNumber } from '../utils/montantUtils';
+import { PaintBucket, Wallpaper, Palette, Ban } from 'lucide-react';
 
 const PeintureForm: React.FC<BaseFormProps> = ({
   formData,
@@ -14,24 +15,18 @@ const PeintureForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [paintType, setPaintType] = React.useState<string>(formData.paintType || 'standard');
-  const [basicPaintPercentage, setBasicPaintPercentage] = React.useState<number>(
-    formData.basicPaintPercentage !== undefined ? Number(formData.basicPaintPercentage) : 70
-  );
-  const [decorativePaintPercentage, setDecorativePaintPercentage] = React.useState<number>(
-    formData.decorativePaintPercentage !== undefined ? Number(formData.decorativePaintPercentage) : 20
-  );
-  const [wallpaperPercentage, setWallpaperPercentage] = React.useState<number>(
-    formData.wallpaperPercentage !== undefined ? Number(formData.wallpaperPercentage) : 10
+  const [paintType, setPaintType] = useState<string>(
+    formData.paintType || 'standard'
   );
 
   const handleSubmit = () => {
+    // For now, we'll just store the selections
+    // Update form data with paint options
     updateFormData({
-      paintType,
-      basicPaintPercentage,
-      decorativePaintPercentage,
-      wallpaperPercentage
+      paintType
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
@@ -40,140 +35,71 @@ const PeintureForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-medium mb-4">Peinture et revêtements muraux</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <Label>Type de peinture</Label>
-              <RadioGroup 
-                value={paintType} 
-                onValueChange={setPaintType}
-                className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3"
-              >
-                <Card 
-                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
-                  onClick={() => setPaintType('standard')}
-                >
-                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                    <Paintbrush className="h-8 w-8 text-blue-500 mb-2" />
-                    <RadioGroupItem value="standard" id="paint-standard" className="mx-auto mb-1" />
-                    <Label htmlFor="paint-standard" className="font-medium">Standard</Label>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Peinture acrylique classique
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card 
-                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
-                  onClick={() => setPaintType('premium')}
-                >
-                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                    <Droplet className="h-8 w-8 text-blue-500 mb-2" />
-                    <RadioGroupItem value="premium" id="paint-premium" className="mx-auto mb-1" />
-                    <Label htmlFor="paint-premium" className="font-medium">Premium</Label>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Peinture haute qualité, lessivable
-                    </p>
-                  </CardContent>
-                </Card>
-                
-                <Card 
-                  className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'eco' ? 'border-blue-500 bg-blue-50' : ''}`}
-                  onClick={() => setPaintType('eco')}
-                >
-                  <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                    <AlignLeft className="h-8 w-8 text-blue-500 mb-2" />
-                    <RadioGroupItem value="eco" id="paint-eco" className="mx-auto mb-1" />
-                    <Label htmlFor="paint-eco" className="font-medium">Écologique</Label>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Peinture naturelle, sans COV
-                    </p>
-                  </CardContent>
-                </Card>
-              </RadioGroup>
-            </div>
+        <h3 className="text-lg font-medium mb-4">Peinture et Revêtements Muraux</h3>
+        
+        <div className="mb-8">
+          <Label className="mb-2 block">Type de finition murale</Label>
+          <RadioGroup 
+            value={paintType} 
+            onValueChange={setPaintType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPaintType('standard')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <PaintBucket className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="standard" id="paint-standard" className="sr-only" />
+                <Label htmlFor="paint-standard" className="font-medium">Peinture standard</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Peinture mate ou satinée
+                </p>
+              </CardContent>
+            </Card>
             
-            <div className="space-y-6 mt-6">
-              <h4 className="text-md font-medium">Répartition des revêtements muraux</h4>
-              
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="basic-paint">Peinture standard</Label>
-                    <span className="text-sm text-gray-500">{basicPaintPercentage}%</span>
-                  </div>
-                  <Slider
-                    id="basic-paint"
-                    min={0}
-                    max={100}
-                    step={5}
-                    value={[basicPaintPercentage]}
-                    onValueChange={(value) => {
-                      const newValue = value[0];
-                      setBasicPaintPercentage(newValue);
-                      // Adjust other percentages to maintain total of 100%
-                      const remaining = 100 - newValue;
-                      const ratio = remaining / (decorativePaintPercentage + wallpaperPercentage);
-                      setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
-                      setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
-                    }}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="decorative-paint">Peinture décorative</Label>
-                    <span className="text-sm text-gray-500">{decorativePaintPercentage}%</span>
-                  </div>
-                  <Slider
-                    id="decorative-paint"
-                    min={0}
-                    max={100}
-                    step={5}
-                    value={[decorativePaintPercentage]}
-                    onValueChange={(value) => {
-                      const newValue = value[0];
-                      setDecorativePaintPercentage(newValue);
-                      // Adjust other percentages to maintain total of 100%
-                      const remaining = 100 - newValue;
-                      const ratio = remaining / (basicPaintPercentage + wallpaperPercentage);
-                      setBasicPaintPercentage(Math.round(basicPaintPercentage * ratio));
-                      setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
-                    }}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <Label htmlFor="wallpaper">Papier peint</Label>
-                    <span className="text-sm text-gray-500">{wallpaperPercentage}%</span>
-                  </div>
-                  <Slider
-                    id="wallpaper"
-                    min={0}
-                    max={100}
-                    step={5}
-                    value={[wallpaperPercentage]}
-                    onValueChange={(value) => {
-                      const newValue = value[0];
-                      setWallpaperPercentage(newValue);
-                      // Adjust other percentages to maintain total of 100%
-                      const remaining = 100 - newValue;
-                      const ratio = remaining / (basicPaintPercentage + decorativePaintPercentage);
-                      setBasicPaintPercentage(Math.round(basicPaintPercentage * ratio));
-                      setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
-                    }}
-                  />
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-500 mt-2">
-                Total: {basicPaintPercentage + decorativePaintPercentage + wallpaperPercentage}%
-              </div>
-            </div>
-          </div>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'decorative' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPaintType('decorative')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Palette className="h-8 w-8 text-purple-500 mb-2" />
+                <RadioGroupItem value="decorative" id="paint-decorative" className="sr-only" />
+                <Label htmlFor="paint-decorative" className="font-medium">Peinture décorative</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Effets spéciaux, finitions particulières
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'wallpaper' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPaintType('wallpaper')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wallpaper className="h-8 w-8 text-amber-500 mb-2" />
+                <RadioGroupItem value="wallpaper" id="paint-wallpaper" className="sr-only" />
+                <Label htmlFor="paint-wallpaper" className="font-medium">Papier peint</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Papier peint ou toile de verre
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPaintType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Ban className="h-8 w-8 text-gray-500 mb-2" />
+                <RadioGroupItem value="non_concerne" id="paint-none" className="sr-only" />
+                <Label htmlFor="paint-none" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de travaux de peinture
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
         </div>
         
         <div className="flex justify-between pt-4">
@@ -181,9 +107,15 @@ const PeintureForm: React.FC<BaseFormProps> = ({
             Précédent
           </Button>
           <Button onClick={handleSubmit}>
-            Suivant
+            Continuer
           </Button>
         </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
       </div>
     </div>
   );

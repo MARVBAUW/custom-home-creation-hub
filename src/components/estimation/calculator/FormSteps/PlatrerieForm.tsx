@@ -1,10 +1,12 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Layers, Grid, Box } from 'lucide-react';
+import { calculatePlasteringCost, ensureNumber } from '../utils/montantUtils';
+import { Square, Layers, LayoutDashboard } from 'lucide-react';
 
 const PlatrerieForm: React.FC<BaseFormProps> = ({
   formData,
@@ -13,14 +15,24 @@ const PlatrerieForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [plasteringType, setPlasteringType] = React.useState<string>(
-    formData.plasteringType || 'traditional'
+  const [plasteringType, setPlasteringType] = useState<string>(
+    formData.plasteringType || 'base'
   );
 
   const handleSubmit = () => {
+    // Get the surface area
+    const surface = ensureNumber(formData.surface, 0);
+    
+    // Calculate the cost based on plastering type and surface
+    const additionalCost = calculatePlasteringCost(plasteringType, surface);
+
+    // Update form data with plastering type and additional cost
     updateFormData({
-      plasteringType
+      plasteringType,
+      montantT: (formData.montantT || 0) + additionalCost
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
@@ -29,64 +41,73 @@ const PlatrerieForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <h3 className="text-lg font-medium mb-4">Type de plâtrerie</h3>
+        <h3 className="text-lg font-medium mb-4">Plâtrerie</h3>
         
-        <RadioGroup 
-          value={plasteringType} 
-          onValueChange={setPlasteringType}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-        >
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'traditional' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setPlasteringType('traditional')}
+        <div>
+          <Label className="mb-2 block">Niveau de prestation en plâtrerie</Label>
+          <RadioGroup 
+            value={plasteringType} 
+            onValueChange={setPlasteringType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
           >
-            <CardContent className="pt-6 pb-6 text-center">
-              <Layers className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-              <RadioGroupItem value="traditional" id="plaster-traditional" className="mx-auto mb-2" />
-              <Label htmlFor="plaster-traditional" className="font-medium">Plâtre traditionnel</Label>
-              <p className="text-xs text-gray-500 mt-2">
-                Application manuelle, finition de qualité supérieure
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'plasterboard' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setPlasteringType('plasterboard')}
-          >
-            <CardContent className="pt-6 pb-6 text-center">
-              <Grid className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-              <RadioGroupItem value="plasterboard" id="plaster-plasterboard" className="mx-auto mb-2" />
-              <Label htmlFor="plaster-plasterboard" className="font-medium">Plaques de plâtre</Label>
-              <p className="text-xs text-gray-500 mt-2">
-                Installation rapide, bonne isolation thermique et acoustique
-              </p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'mixed' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setPlasteringType('mixed')}
-          >
-            <CardContent className="pt-6 pb-6 text-center">
-              <Box className="h-8 w-8 text-blue-500 mx-auto mb-3" />
-              <RadioGroupItem value="mixed" id="plaster-mixed" className="mx-auto mb-2" />
-              <Label htmlFor="plaster-mixed" className="font-medium">Mixte</Label>
-              <p className="text-xs text-gray-500 mt-2">
-                Combinaison de techniques selon les pièces et besoins
-              </p>
-            </CardContent>
-          </Card>
-        </RadioGroup>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'base' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPlasteringType('base')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Square className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="base" id="plastering-base" className="sr-only" />
+                <Label htmlFor="plastering-base" className="font-medium">Prestation de base</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Plâtrerie standard, sans finitions spécifiques
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'specific' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPlasteringType('specific')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Layers className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="specific" id="plastering-specific" className="sr-only" />
+                <Label htmlFor="plastering-specific" className="font-medium">Prestation avec spécificités</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Plâtrerie avec quelques finitions particulières
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'advanced' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPlasteringType('advanced')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <LayoutDashboard className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="advanced" id="plastering-advanced" className="sr-only" />
+                <Label htmlFor="plastering-advanced" className="font-medium">Prestations avancées</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Arches, niches, rangements cachés, etc.
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
         
         <div className="flex justify-between pt-4">
           <Button variant="outline" onClick={goToPreviousStep}>
             Précédent
           </Button>
           <Button onClick={handleSubmit}>
-            Suivant
+            Continuer
           </Button>
         </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
       </div>
     </div>
   );

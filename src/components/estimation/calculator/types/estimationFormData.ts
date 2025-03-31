@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export interface EstimationFormData {
@@ -112,6 +113,7 @@ export interface EstimationFormData {
   parquetPercentage?: number | string;
   softFloorType?: string;
   softFloorPercentage?: number | string;
+  wallTileType?: string;
   
   // Personal information
   firstName?: string;
@@ -147,7 +149,8 @@ export interface EstimationFormData {
   plasteringType?: string;
   doorType?: string;
   interiorDoorsType?: string;
-  wallTileType?: string;
+  hasMoldings?: boolean;
+  hasCustomFurniture?: boolean;
   
   // Project requirements
   needsDemolition?: boolean;
@@ -168,17 +171,9 @@ export interface EstimationFormData {
   complexity?: string;
   qualityStandard?: string;
   name?: string;
-  
-  // Paint related properties
-  paintType?: string;
-  basicPaintPercentage?: number | string;
-  decorativePaintPercentage?: number | string;
-  wallpaperPercentage?: number | string;
-  woodCladPercentage?: number | string;
-  stoneCladPercentage?: number | string;
 }
 
-// Pour la rétrocompatibilité
+// Pour la rétrocompatibilité, FormData est un alias d'EstimationFormData
 export type FormData = EstimationFormData;
 
 // Définition de la réponse d'estimation
@@ -215,20 +210,7 @@ export interface EstimationResponseData {
     construction: number;
     total: number;
   };
-}
-
-// Interface pour les options de génération PDF
-export interface PDFGenerationOptions {
-  includeDetails?: boolean;
-  includeLogo?: boolean;
-  includeContactInfo?: boolean;
-  includeBreakdown?: boolean;
-  includeTerrainPrice?: boolean;
-  includeTimeline?: boolean;
-  includeDetailedBreakdown?: boolean;
-  clientInfo?: boolean;
-  companyLogo?: boolean;
-  fileName?: string;
+  categories?: Array<{ category: string; amount: number; details?: string }>;
 }
 
 // Pour FeeCosts qui est utilisé ailleurs

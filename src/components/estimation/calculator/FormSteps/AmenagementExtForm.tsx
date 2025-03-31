@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Waves, Utensils, Flower, Home } from 'lucide-react';
+import { ensureNumber } from '../utils/montantUtils';
+import { Trees, Flower2, Pool, CookingPot } from 'lucide-react';
 
 const AmenagementExtForm: React.FC<BaseFormProps> = ({
   formData,
@@ -14,25 +15,32 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  // Initialize with form data or defaults
-  const [pool, setPool] = React.useState<boolean>(
+  const [hasLandscaping, setHasLandscaping] = useState<boolean>(
+    formData.includeLandscaping || false
+  );
+  
+  const [hasPool, setHasPool] = useState<boolean>(
     formData.pool || false
   );
   
-  const [terrace, setTerrace] = React.useState<boolean>(
+  const [hasTerrace, setHasTerrace] = useState<boolean>(
     formData.terrace || false
   );
   
-  const [outdoorKitchen, setOutdoorKitchen] = React.useState<boolean>(
+  const [hasOutdoorKitchen, setHasOutdoorKitchen] = useState<boolean>(
     formData.outdoorKitchen || false
   );
-  
-  const handleContinue = () => {
-    updateFormData({ 
-      pool,
-      terrace,
-      outdoorKitchen
+
+  const handleSubmit = () => {
+    // Update form data with exterior features
+    updateFormData({
+      includeLandscaping: hasLandscaping,
+      pool: hasPool,
+      terrace: hasTerrace,
+      outdoorKitchen: hasOutdoorKitchen
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
@@ -41,83 +49,94 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-medium mb-4">Aménagements extérieurs</h3>
+        <h3 className="text-lg font-medium mb-4">Aménagements extérieurs</h3>
+        
+        <div className="space-y-4">
+          <Label className="mb-2 block">Quels aménagements extérieurs souhaitez-vous ?</Label>
           
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Card className="shadow-sm">
-              <CardContent className="pt-6 pb-6">
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="pool" 
-                    checked={pool}
-                    onCheckedChange={(checked) => setPool(checked as boolean)}
-                  />
-                  <div>
-                    <Label htmlFor="pool" className="text-base font-medium flex items-center">
-                      <Waves className="h-4 w-4 text-blue-400 mr-2" />
-                      Piscine
-                    </Label>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Piscine extérieure
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-sm">
-              <CardContent className="pt-6 pb-6">
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="terrace" 
-                    checked={terrace}
-                    onCheckedChange={(checked) => setTerrace(checked as boolean)}
-                  />
-                  <div>
-                    <Label htmlFor="terrace" className="text-base font-medium flex items-center">
-                      <Home className="h-4 w-4 text-gray-400 mr-2" />
-                      Terrasse
-                    </Label>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Terrasse aménagée
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-sm">
-              <CardContent className="pt-6 pb-6">
-                <div className="flex items-start space-x-3">
-                  <Checkbox 
-                    id="outdoor-kitchen" 
-                    checked={outdoorKitchen}
-                    onCheckedChange={(checked) => setOutdoorKitchen(checked as boolean)}
-                  />
-                  <div>
-                    <Label htmlFor="outdoor-kitchen" className="text-base font-medium flex items-center">
-                      <Utensils className="h-4 w-4 text-amber-400 mr-2" />
-                      Cuisine extérieure
-                    </Label>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Cuisine d'été ou barbecue fixe
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="landscaping" 
+              checked={hasLandscaping}
+              onCheckedChange={(checked) => setHasLandscaping(checked as boolean)}
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="landscaping" className="flex items-center gap-2">
+                <Trees className="h-4 w-4 text-green-500" />
+                Aménagement paysager
+              </Label>
+              <p className="text-sm text-gray-500">
+                Plantation d'arbres, arbustes, gazon, etc.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="pool" 
+              checked={hasPool}
+              onCheckedChange={(checked) => setHasPool(checked as boolean)}
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="pool" className="flex items-center gap-2">
+                <Pool className="h-4 w-4 text-blue-500" />
+                Piscine
+              </Label>
+              <p className="text-sm text-gray-500">
+                Construction d'une piscine
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="terrace" 
+              checked={hasTerrace}
+              onCheckedChange={(checked) => setHasTerrace(checked as boolean)}
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="terrace" className="flex items-center gap-2">
+                <Flower2 className="h-4 w-4 text-yellow-500" />
+                Terrasse
+              </Label>
+              <p className="text-sm text-gray-500">
+                Aménagement d'une terrasse extérieure
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="outdoor-kitchen" 
+              checked={hasOutdoorKitchen}
+              onCheckedChange={(checked) => setHasOutdoorKitchen(checked as boolean)}
+            />
+            <div className="grid gap-1">
+              <Label htmlFor="outdoor-kitchen" className="flex items-center gap-2">
+                <CookingPot className="h-4 w-4 text-red-500" />
+                Cuisine extérieure
+              </Label>
+              <p className="text-sm text-gray-500">
+                Installation d'une cuisine d'été
+              </p>
+            </div>
           </div>
         </div>
         
-        <div className="pt-4">
-          <Button 
-            onClick={handleContinue}
-            className="w-full"
-          >
+        <div className="flex justify-between pt-4">
+          <Button variant="outline" onClick={goToPreviousStep}>
+            Précédent
+          </Button>
+          <Button onClick={handleSubmit}>
             Continuer
           </Button>
         </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
       </div>
     </div>
   );
