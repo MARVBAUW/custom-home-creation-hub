@@ -12,14 +12,15 @@ import { EstimationFormData as OriginalEstimationFormData,
 import { FormData as ExtendedFormData } from './formTypes';
 
 // Create unified types that combine both versions
-export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating' | 'surface'> {
+export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating' | 'surface' | 'terassementsViabilisation'> {
   // Add properties with flexible types to handle mixed data types
   surface?: number | string;
   poolHeating?: boolean | string;
   budget?: number | string;
-  // Champs spécifiques pour la navigation
+  terassementsViabilisation?: number | boolean | string;
+  // Fields specific for navigation
   skipToContact?: boolean;
-  // Champs spécifiques pour les formulaires professionnels et projets spéciaux
+  // Fields specific for professional forms and special projects
   companyName?: string;
   projectDescription?: string;
   projectPurpose?: string;
@@ -47,7 +48,7 @@ export interface UnifiedEstimationResponseData {
     architect: number;
     engineeringFees: number;
     architectFees: number;
-    // Include all properties from both types
+    // All fee properties should be optional for compatibility
     officialFees?: number;
     inspectionFees?: number;
     technicalStudies?: number;
@@ -70,7 +71,7 @@ export interface UnifiedEstimationResponseData {
     total: number;
   };
   totalAmount: number;
-  categories: Array<{ category: string; amount: number; details?: string }>;
+  categories: Array<{ category: string; amount: number; details?: string }> | Array<{ name: string; amount: number }>;
   timeline: {
     design?: number;
     permits?: number;
@@ -92,7 +93,7 @@ export interface UnifiedFeeCosts {
   architect: number;
   engineeringFees: number;
   architectFees: number;
-  // Include all possible properties
+  // Include all possible properties as optional
   officialFees?: number;
   inspectionFees?: number;
   technicalStudies?: number;

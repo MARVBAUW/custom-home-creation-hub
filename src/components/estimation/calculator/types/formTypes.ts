@@ -15,12 +15,14 @@ export interface BaseFormProps {
   onSubmit?: (data: any) => void;
 }
 
-// Extended FormData interface to include contact form fields
-export interface FormData extends Omit<EstimationFormData, 'budget' | 'poolHeating' | 'surface'> {
+// Extended FormData interface compatible with EstimationFormData
+export interface FormData extends Omit<EstimationFormData, 'budget' | 'poolHeating' | 'surface' | 'terassementsViabilisation'> {
   surface?: number | string;
   projectDescription?: string;
   projectPurpose?: string;
   commercialAccepted?: boolean;
   budget?: number | string;
   poolHeating?: boolean | string;
+  terassementsViabilisation?: number | boolean;
+  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
 }

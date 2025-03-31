@@ -13,8 +13,9 @@ import { UrbanismeRecapSection } from './reglementation/UrbanismeRecapSection';
 import { EurocodeRecapSection } from './reglementation/EurocodeRecapSection';
 import { AcoustiqueRecapSection } from './reglementation/AcoustiqueRecapSection';
 import { ThermiqueRecapSection } from './reglementation/ThermiqueRecapSection';
+import { HygrometrieRecapSection } from './reglementation/HygrometrieRecapSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, FileCheck, Flame, Accessibility, Building, Calculator, Volume, Thermometer } from 'lucide-react';
+import { FileText, FileCheck, Flame, Accessibility, Building, Calculator, Volume, Thermometer, Droplets } from 'lucide-react';
 
 const WorkspaceReglementation = () => {
   const {
@@ -77,6 +78,10 @@ const WorkspaceReglementation = () => {
             <Thermometer className="h-4 w-4" />
             <span>Thermique</span>
           </TabsTrigger>
+          <TabsTrigger value="hygrometrie" className="flex items-center gap-2">
+            <Droplets className="h-4 w-4" />
+            <span>Hygrométrie</span>
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="articles" className="space-y-6">
@@ -123,6 +128,10 @@ const WorkspaceReglementation = () => {
         
         <TabsContent value="thermique" className="space-y-6">
           <ThermiqueRecapSection />
+        </TabsContent>
+        
+        <TabsContent value="hygrometrie" className="space-y-6">
+          <HygrometrieRecapSection />
         </TabsContent>
       </Tabs>
       
