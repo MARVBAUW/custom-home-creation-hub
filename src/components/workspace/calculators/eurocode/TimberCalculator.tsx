@@ -337,7 +337,7 @@ const TimberCalculator = () => {
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   <li><span className="font-medium">Classe 1:</span> Humidité relative de l'air ≤ 65%, bois à une humidité ≤ 12%</li>
                   <li><span className="font-medium">Classe 2:</span> Humidité relative de l'air ≤ 85%, bois à une humidité ≤ 20%</li>
-                  <li><span className="font-medium">Classe 3:</span> Humidité relative de l'air > 85%, bois à une humidité > 20%</li>
+                  <li><span className="font-medium">Classe 3:</span> Humidité relative de l'air &gt; 85%, bois à une humidité &gt; 20%</li>
                 </ul>
               </div>
               
