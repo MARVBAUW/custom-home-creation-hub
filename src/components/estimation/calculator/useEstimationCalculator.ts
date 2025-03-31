@@ -71,6 +71,11 @@ export interface EstimationResponseData {
   etudeThermique?: number;
 }
 
+// Move the function outside the hook
+export function generateEstimationResult(formData: FormData): EstimationResponseData {
+  return adaptToEstimationResponseData(formData);
+}
+
 export const useEstimationCalculator = () => {
   const [step, setStep] = useState(0);
   const totalSteps = 20;
@@ -128,11 +133,6 @@ export const useEstimationCalculator = () => {
     }
     setStep(Math.max(0, Math.min(stepIndex, totalSteps - 1)));
   }, [step, totalSteps]);
-
-  // Generate estimation result
-  export function generateEstimationResult(formData: FormData): EstimationResponseData {
-    return adaptToEstimationResponseData(formData);
-  }
 
   // Calculate estimation result
   const calculateEstimationResult = useCallback(() => {
