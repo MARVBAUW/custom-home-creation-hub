@@ -1,165 +1,176 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { FormData, Message, ConversationState } from '../types';
 
-export const useConversationalEstimator = (formData: FormData, updateFormData: (data: Partial<FormData>) => void) => {
+export const useConversationalEstimator = (
+  formData: FormData,
+  updateFormData: (data: Partial<FormData>) => void
+) => {
+  // Initialize conversation state
   const [conversation, setConversation] = useState<ConversationState>({
-    messages: [],
-    options: [],
-    activeQuestions: [],
-    collectedData: {},
-    stage: 'initial'
+    currentStep: 'greeting',
+    askedQuestions: [],
+    completedFields: [],
+    formProgress: 0
   });
 
+  // Detect project information from user input
+  const extractProjectInfo = (input: string): Partial<FormData> => {
+    const data: Partial<FormData> = {};
+    
+    // Extract project type
+    if (input.toLowerCase().includes('neuve') || input.toLowerCase().includes('construction')) {
+      data.projectType = 'construction';
+    } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('renovation')) {
+      data.projectType = 'renovation';
+    } else if (input.toLowerCase().includes('extension')) {
+      data.projectType = 'extension';
+    }
+    
+    // Extract surface information
+    const surfaceMatch = input.match(/(\d+)\s*m²|(\d+)\s*m2|(\d+)\s*mètres?(\s*carrés?)?/i);
+    if (surfaceMatch) {
+      const surfaceValue = surfaceMatch[1] || surfaceMatch[2] || surfaceMatch[3];
+      data.surface = parseInt(surfaceValue);
+    }
+    
+    // Extract location information
+    const cities = ['paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille'];
+    const inputLower = input.toLowerCase();
+    for (const city of cities) {
+      if (inputLower.includes(city)) {
+        data.city = city.charAt(0).toUpperCase() + city.slice(1);
+        break;
+      }
+    }
+    
+    // Extract budget information
+    const budgetMatch = input.match(/(\d+)\s*(?:k€|k euros|mille euros|mille €|k)/i);
+    if (budgetMatch) {
+      data.budget = parseInt(budgetMatch[1]) * 1000;
+    } else {
+      const budgetEuroMatch = input.match(/(\d+)\s*(?:€|euros)/i);
+      if (budgetEuroMatch) {
+        data.budget = parseInt(budgetEuroMatch[1]);
+      }
+    }
+    
+    return data;
+  };
+
+  // Process user input and update form data
+  const processUserInput = async (input: string): Promise<void> => {
+    // Extract project information from user input
+    const extractedData = extractProjectInfo(input);
+    
+    // Update form data if we extracted any information
+    if (Object.keys(extractedData).length > 0) {
+      updateFormData(extractedData);
+    }
+    
+    // Update conversation state
+    setConversation(prev => {
+      // Track which fields have been filled
+      const newCompletedFields = [...prev.completedFields];
+      Object.keys(extractedData).forEach(key => {
+        if (!newCompletedFields.includes(key)) {
+          newCompletedFields.push(key);
+        }
+      });
+      
+      // Determine the next step based on conversation progress
+      let nextStep = prev.currentStep;
+      if (prev.currentStep === 'greeting') {
+        if (input.toLowerCase().includes('particulier')) {
+          nextStep = 'client_type';
+          updateFormData({ clientType: 'individual' });
+        } else if (input.toLowerCase().includes('professionnel')) {
+          nextStep = 'client_type';
+          updateFormData({ clientType: 'professional' });
+        } else if (extractedData.projectType) {
+          nextStep = 'project_type';
+        }
+      } else if (prev.currentStep === 'client_type' && extractedData.projectType) {
+        nextStep = 'project_type';
+      } else if (prev.currentStep === 'project_type' && extractedData.surface) {
+        nextStep = 'surface';
+      } else if (prev.currentStep === 'surface' && extractedData.city) {
+        nextStep = 'location';
+      }
+      
+      // Calculate progress
+      const totalFields = 10; // Total number of key fields to fill
+      const progress = Math.min(100, Math.round((newCompletedFields.length / totalFields) * 100));
+      
+      return {
+        ...prev,
+        currentStep: nextStep,
+        askedQuestions: [...prev.askedQuestions, input],
+        completedFields: newCompletedFields,
+        formProgress: progress
+      };
+    });
+  };
+
   // Add a message to the conversation
-  const addMessage = useCallback((text: string, isUser: boolean): Message => {
-    const newMessage: Message = {
+  const addMessage = (text: string, isUser: boolean): Message => {
+    const message = {
       id: Date.now().toString(),
       text,
       isUser,
-      timestamp: new Date(),
-      type: 'text'
+      createdAt: new Date()
     };
-
-    setConversation(prev => ({
-      ...prev,
-      messages: [...prev.messages, newMessage]
-    }));
-
-    return newMessage;
-  }, []);
-
-  // Simulate the bot typing
-  const simulateTyping = useCallback(async (duration: number = 1000): Promise<void> => {
-    const typingMessage: Message = {
-      id: `typing-${Date.now()}`,
-      text: '...',
-      isUser: false,
-      timestamp: new Date(),
-      type: 'loading'
-    };
-
-    setConversation(prev => ({
-      ...prev,
-      messages: [...prev.messages, typingMessage]
-    }));
-
-    return new Promise(resolve => {
-      setTimeout(() => {
-        setConversation(prev => ({
-          ...prev,
-          messages: prev.messages.filter(m => m.id !== typingMessage.id)
-        }));
-        resolve();
-      }, duration);
-    });
-  }, []);
-
-  // Get suggestions based on current conversation state
-  const getSuggestions = useCallback(() => {
-    const { stage } = conversation;
     
-    // Return different options based on the conversation stage
-    switch (stage) {
-      case 'initial':
-        return ['Particulier', 'Professionnel'];
-      case 'projectType':
-        return ['Construction', 'Rénovation', 'Extension'];
-      case 'surface':
-        return ['< 50m²', '50-100m²', '100-150m²', '150-200m²', '> 200m²'];
-      case 'budget':
-        return ['< 100K€', '100K-200K€', '200K-300K€', '> 300K€'];
-      default:
-        return [];
+    return message;
+  };
+
+  // Simulate typing delay for a more natural conversation
+  const simulateTyping = async (duration: number = 1000): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, duration));
+  };
+
+  // Get suggested next questions based on current conversation state
+  const getSuggestions = (): string[] => {
+    const { currentStep, completedFields } = conversation;
+    
+    if (!completedFields.includes('projectType')) {
+      return [
+        "Je souhaite construire une maison neuve",
+        "Je veux rénover mon appartement",
+        "J'ai besoin d'une extension pour ma maison"
+      ];
     }
-  }, [conversation]);
-
-  // Process user input and update conversation
-  const processUserInput = useCallback(async (input: string): Promise<void> => {
-    // Simulate bot thinking
-    await simulateTyping();
-
-    // Extract information from user input
-    const extractProjectType = (input: string): string | null => {
-      if (input.toLowerCase().includes('construction') || input.toLowerCase().includes('construire')) {
-        return 'construction';
-      } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('rénover')) {
-        return 'renovation';
-      } else if (input.toLowerCase().includes('extension') || input.toLowerCase().includes('agrandir')) {
-        return 'extension';
-      }
-      return null;
-    };
-
-    const extractSurface = (input: string): number | null => {
-      const match = input.match(/(\d+)\s*m²/);
-      return match ? parseInt(match[1]) : null;
-    };
-
-    // Update formData based on extracted information
-    const projectType = extractProjectType(input);
-    const surface = extractSurface(input);
-
-    if (projectType) {
-      updateFormData({ projectType });
+    
+    if (!completedFields.includes('surface')) {
+      return [
+        "La surface est d'environ 100 m²",
+        "Je prévois une surface de 150 m²",
+        "Quelle surface recommandez-vous pour une famille de 4 personnes ?"
+      ];
     }
-
-    if (surface) {
-      updateFormData({ surface });
+    
+    if (!completedFields.includes('city')) {
+      return [
+        "Mon projet est situé à Marseille",
+        "Je suis dans la région de Lyon",
+        "Quelles sont les particularités de construction dans le Sud ?"
+      ];
     }
-
-    // Determine next bot response based on conversation stage
-    let botResponse = '';
-    let nextStage = conversation.stage;
-
-    switch (conversation.stage) {
-      case 'initial':
-        if (input.toLowerCase().includes('particulier')) {
-          updateFormData({ clientType: 'individual' });
-          botResponse = 'Super ! Et quel type de projet avez-vous ? (construction, rénovation, extension)';
-          nextStage = 'projectType';
-        } else if (input.toLowerCase().includes('professionnel')) {
-          updateFormData({ clientType: 'professional' });
-          botResponse = 'Excellent ! Pour quel type de projet professionnel puis-je vous aider ? (construction, rénovation, extension)';
-          nextStage = 'projectType';
-        } else {
-          botResponse = 'Êtes-vous un particulier ou un professionnel ?';
-        }
-        break;
-      case 'projectType':
-        if (projectType) {
-          botResponse = `Parfait, un projet de ${projectType} ! Quelle surface approximative prévoyez-vous en m² ?`;
-          nextStage = 'surface';
-        } else {
-          botResponse = 'Quel type de projet avez-vous ? (construction, rénovation, extension)';
-        }
-        break;
-      case 'surface':
-        if (surface) {
-          botResponse = `${surface}m², c'est noté ! Quel est votre budget approximatif pour ce projet ?`;
-          nextStage = 'budget';
-        } else {
-          botResponse = 'Quelle est la surface approximative de votre projet en m² ?';
-        }
-        break;
-      case 'budget':
-        botResponse = 'Merci pour ces informations ! Je vais maintenant calculer une estimation pour votre projet. Vous souhaitez une estimation détaillée par corps de métier ?';
-        nextStage = 'estimation';
-        break;
-      case 'estimation':
-        botResponse = 'Votre estimation est maintenant disponible dans l\'onglet "Formulaire détaillé". Vous pouvez y accéder pour voir tous les détails de votre projet.';
-        nextStage = 'complete';
-        break;
-      default:
-        botResponse = 'Que puis-je faire d\'autre pour vous ?';
-        break;
+    
+    if (!completedFields.includes('budget')) {
+      return [
+        "J'ai un budget d'environ 200 000 €",
+        "Quel budget prévoir pour ce type de projet ?",
+        "Quels sont les coûts moyens au m² dans ma région ?"
+      ];
     }
-
-    // Add bot response and update conversation stage
-    addMessage(botResponse, false);
-    setConversation(prev => ({ ...prev, stage: nextStage }));
-
-  }, [conversation, updateFormData, simulateTyping, addMessage]);
+    
+    return [
+      "Quelles sont les prochaines étapes ?",
+      "Pouvez-vous me faire une estimation plus précise ?",
+      "Quels documents faut-il prévoir pour démarrer le projet ?"
+    ];
+  };
 
   return {
     conversation,
@@ -170,4 +181,4 @@ export const useConversationalEstimator = (formData: FormData, updateFormData: (
   };
 };
 
-export type { Message };
+export type { ConversationState, Message };

@@ -1,3 +1,4 @@
+
 import { BaseSyntheticEvent } from 'react';
 
 // Define the comprehensive FormData type with all possible properties
@@ -101,7 +102,7 @@ export interface FormData {
   softFloorPercentage?: number | string;
   
   // Exterior & Landscaping
-  landscapingType?: string;
+  landscapingType?: string | string[];
   pool?: boolean;
   terrace?: boolean;
   outdoorKitchen?: boolean;
@@ -218,3 +219,4 @@ export interface EstimationResponseData {
 
 // Export other types from the folder
 export * from './formTypes';
+export * from './conversationalTypes';

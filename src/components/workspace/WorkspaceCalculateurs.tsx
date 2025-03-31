@@ -1,87 +1,108 @@
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calculator, Home, Percent, CreditCard, FileText, TrendingUp, Volume2 } from 'lucide-react';
-import LoanComparatorCalculator from './calculators/LoanComparatorCalculator';
-import SurfaceHabitableCalculator from './calculators/SurfaceHabitableCalculator';
+import { Card, CardContent } from "@/components/ui/card";
+import { Calculator, AreaChart, Home, Percent } from 'lucide-react';
+
+// Import des calculateurs
 import RentabiliteLocativeCalculator from './calculators/RentabiliteLocativeCalculator';
 import CapaciteEmpruntCalculator from './calculators/CapaciteEmpruntCalculator';
 import FraisNotaireCalculator from './calculators/FraisNotaireCalculator';
 import RendementCalculator from './calculators/RendementCalculator';
 import AcoustiqueCalculator from './calculators/AcoustiqueCalculator';
 import DpeCalculator from './calculators/DpeCalculator';
+import LoanComparatorCalculator from './calculators/LoanComparatorCalculator';
 
-const WorkspaceCalculateurs = () => {
+const WorkspaceCalculateurs: React.FC = () => {
+  const [activeTab, setActiveTab] = useState('rentabilite');
+
   return (
-    <div className="space-y-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Outils de calcul et simulateurs</h2>
-        <p className="text-gray-600">
-          Utilisez ces calculateurs pour réaliser rapidement des estimations et simulations pour vos projets.
-        </p>
-      </div>
+    <div className="w-full p-4 md:p-6 space-y-6">
+      <h1 className="text-2xl font-bold flex items-center gap-2">
+        <Calculator className="h-6 w-6" />
+        Mes Calculateurs Immobiliers
+      </h1>
       
-      <Tabs defaultValue="surface" className="w-full">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 mb-6">
-          <TabsTrigger value="surface" className="flex items-center gap-2">
-            <Home className="h-4 w-4" /> Surface
-          </TabsTrigger>
-          <TabsTrigger value="rentabilite" className="flex items-center gap-2">
-            <Percent className="h-4 w-4" /> Rentabilité
-          </TabsTrigger>
-          <TabsTrigger value="emprunt" className="flex items-center gap-2">
-            <CreditCard className="h-4 w-4" /> Emprunt
-          </TabsTrigger>
-          <TabsTrigger value="prets" className="flex items-center gap-2">
-            <Calculator className="h-4 w-4" /> Prêts
-          </TabsTrigger>
-          <TabsTrigger value="notaire" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" /> Frais notaire
-          </TabsTrigger>
-          <TabsTrigger value="rendement" className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" /> Rendement
-          </TabsTrigger>
-          <TabsTrigger value="acoustique" className="flex items-center gap-2">
-            <Volume2 className="h-4 w-4" /> Acoustique
-          </TabsTrigger>
-          <TabsTrigger value="dpe" className="flex items-center gap-2">
-            <Home className="h-4 w-4" /> DPE
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="surface">
-          <SurfaceHabitableCalculator />
-        </TabsContent>
-        
-        <TabsContent value="rentabilite">
-          <RentabiliteLocativeCalculator />
-        </TabsContent>
-        
-        <TabsContent value="emprunt">
-          <CapaciteEmpruntCalculator />
-        </TabsContent>
-        
-        <TabsContent value="prets">
-          <LoanComparatorCalculator />
-        </TabsContent>
-        
-        <TabsContent value="notaire">
-          <FraisNotaireCalculator />
-        </TabsContent>
-        
-        <TabsContent value="rendement">
-          <RendementCalculator />
-        </TabsContent>
-        
-        <TabsContent value="acoustique">
-          <AcoustiqueCalculator />
-        </TabsContent>
-        
-        <TabsContent value="dpe">
-          <DpeCalculator />
-        </TabsContent>
-      </Tabs>
+      <Card>
+        <CardContent className="p-0">
+          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="flex w-full h-auto flex-wrap justify-start p-0 bg-transparent border-b">
+              <TabsTrigger 
+                value="rentabilite" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Rentabilité Locative
+              </TabsTrigger>
+              <TabsTrigger 
+                value="capacite" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Capacité d'Emprunt
+              </TabsTrigger>
+              <TabsTrigger 
+                value="comparateur" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Comparateur Prêts
+              </TabsTrigger>
+              <TabsTrigger 
+                value="frais-notaire" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Frais de Notaire
+              </TabsTrigger>
+              <TabsTrigger 
+                value="rendement" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Rendement
+              </TabsTrigger>
+              <TabsTrigger 
+                value="acoustique" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                Acoustique
+              </TabsTrigger>
+              <TabsTrigger 
+                value="dpe" 
+                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
+              >
+                DPE
+              </TabsTrigger>
+            </TabsList>
+
+            <div className="p-4">
+              <TabsContent value="rentabilite" className="mt-0">
+                <RentabiliteLocativeCalculator />
+              </TabsContent>
+              
+              <TabsContent value="capacite" className="mt-0">
+                <CapaciteEmpruntCalculator />
+              </TabsContent>
+              
+              <TabsContent value="comparateur" className="mt-0">
+                <LoanComparatorCalculator />
+              </TabsContent>
+              
+              <TabsContent value="frais-notaire" className="mt-0">
+                <FraisNotaireCalculator />
+              </TabsContent>
+              
+              <TabsContent value="rendement" className="mt-0">
+                <RendementCalculator />
+              </TabsContent>
+              
+              <TabsContent value="acoustique" className="mt-0">
+                <AcoustiqueCalculator />
+              </TabsContent>
+              
+              <TabsContent value="dpe" className="mt-0">
+                <DpeCalculator />
+              </TabsContent>
+            </div>
+          </Tabs>
+        </CardContent>
+      </Card>
     </div>
   );
 };
