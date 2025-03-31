@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Home, Hammer, Maximize, Columns, Printer, Scissors } from 'lucide-react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 
 interface IndividualProjectTypeStepProps {
   formData: FormData;
@@ -45,7 +45,7 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
         <p>Cet estimatif de travaux est fourni à titre indicatif pour vous aider dans votre prise de décision. Il ne remplace pas un devis complet, qui nécessite un rendez-vous avec un maître d'œuvre ou des artisans pour étudier votre projet en détail et adapter le chiffrage à vos besoins spécifiques.</p>
       </div>
       
-      <p className="font-medium mb-4">Quel type de projet ? *</p>
+      <p className="font-medium mb-4">Quel type de projet ? <span className="text-red-500">*</span></p>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
@@ -127,9 +127,10 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
             }
           }}
           disabled={!projectType}
-          className="px-6"
+          className="flex items-center gap-2"
         >
           Poursuivre
+          <ArrowRightIcon className="h-4 w-4" />
         </Button>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { User, Building } from 'lucide-react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
+import { ArrowRightIcon } from 'lucide-react';
 
 interface ClientTypeStepProps {
   formData: FormData;
@@ -72,6 +73,7 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
           className="px-6"
         >
           Poursuivre
+          <ArrowRightIcon className="ml-2 h-4 w-4" />
         </Button>
       </div>
     </div>
