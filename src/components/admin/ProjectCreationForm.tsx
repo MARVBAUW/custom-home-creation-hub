@@ -38,6 +38,7 @@ const defaultValues: ProjectDetails = {
     delivery: false
   },
   team: {},
+  companies: [], // Add the empty companies array
   execution: {},
   technicalOffices: {},
   trades: {},

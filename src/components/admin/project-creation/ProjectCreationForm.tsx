@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useForm, FormProvider } from "react-hook-form";
 import { Tabs } from "@/components/ui/tabs";
@@ -41,6 +42,7 @@ const defaultValues: ProjectDetails = {
     delivery: false
   },
   team: {},
+  companies: [], // Add the empty companies array
   execution: {},
   technicalOffices: {},
   trades: {},

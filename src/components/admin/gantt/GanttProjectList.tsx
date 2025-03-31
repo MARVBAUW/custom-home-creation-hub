@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { parseISO, addMonths, formatISO, addDays } from 'date-fns';
 import GanttTaskBar from './GanttTaskBar';
@@ -30,6 +31,7 @@ const createDemoData = (startDate: Date, endDate: Date) => {
       projectType: i % 2 === 0 ? "residential" : "commercial",
       adminAuthorization: "building_permit",
       automaticDates: true,
+      companies: [], // Add the empty companies array
       dates: {
         global: {
           startDate: formatISO(projectStartDate),

@@ -66,6 +66,7 @@ export const mockProjects: ProjectDetails[] = [
     location: 'Annecy',
     adminAuthorization: 'building_permit',
     automaticDates: true,
+    companies: [], // Add the empty companies array
     phases: {
       feasibility: true,
       dce: true,
@@ -122,6 +123,7 @@ export const mockProjects: ProjectDetails[] = [
     location: 'Lyon',
     adminAuthorization: 'building_permit',
     automaticDates: true,
+    companies: [], // Add the empty companies array
     phases: {
       feasibility: true,
       dce: true,
@@ -174,6 +176,7 @@ export const mockProjects: ProjectDetails[] = [
     location: 'Grenoble',
     adminAuthorization: 'building_permit',
     automaticDates: true,
+    companies: [], // Add the empty companies array
     phases: {
       feasibility: true,
       dce: true,
