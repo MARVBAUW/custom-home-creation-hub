@@ -1,6 +1,6 @@
 
 import { BaseSyntheticEvent } from 'react';
-import { EstimationFormData, EstimationResponseData } from './index';
+import { EstimationFormData, EstimationResponseData } from './estimationFormData';
 
 export interface FormStepProps {
   formData: EstimationFormData;
@@ -10,7 +10,7 @@ export interface FormStepProps {
   animationDirection: 'forward' | 'backward';
 }
 
-export interface BaseFormProps extends FormStepProps {
+export interface ExtendedFormProps extends FormStepProps {
   // This is a base interface for form components
   onSubmit?: (data: Partial<EstimationFormData>) => void;
   defaultValues?: Partial<EstimationFormData>;
@@ -58,7 +58,7 @@ export interface FormSubmitContext {
   errors: Record<string, any>;
 }
 
-export interface ConstructionDetailsStepProps extends BaseFormProps {
+export interface ConstructionDetailsStepProps extends FormStepProps {
   // Add any construction-specific props here
   estimationType?: string;
 }
@@ -74,4 +74,16 @@ export interface StepRendererProps {
   isSubmitting?: boolean;
   goToStep?: (step: number) => void;
   onComplete?: () => void;
+}
+
+// Define client-specific step props
+export interface ClientTypeStepProps {
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  animationDirection: string;
+}
+
+export interface ContactDetailsStepProps extends FormStepProps {
+  onSubmit?: (data: Partial<EstimationFormData>) => void;
 }

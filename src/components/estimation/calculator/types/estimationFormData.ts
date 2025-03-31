@@ -30,6 +30,9 @@ export interface EstimationFormData {
   
   // Special features
   solarPanels?: boolean;
+  solarPanelType?: string;
+  solarPanelSurface?: number | string;
+  windTurbineType?: string;
   rainwaterHarvesting?: boolean;
   homeAutomation?: boolean;
   energyEfficiency?: boolean;
@@ -108,9 +111,6 @@ export interface EstimationFormData {
   landscapingBudget?: number | string;
   
   // Renewable energy fields
-  solarPanelType?: string;
-  solarPanelSurface?: number | string;
-  windTurbineType?: string;
   
   // Eco-friendly features
   greywaterRecycling?: boolean;
@@ -126,6 +126,10 @@ export interface EstimationFormData {
   finishingLevel?: string;
   bathroomType?: string;
   kitchenType?: string;
+  
+  // Additional properties
+  basement?: boolean;
+  garage?: boolean;
 }
 
 // For backward compatibility, create an alias

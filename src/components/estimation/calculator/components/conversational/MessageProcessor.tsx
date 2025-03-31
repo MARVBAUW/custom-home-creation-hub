@@ -20,7 +20,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     
     // Mettre à jour les données si des mises à jour ont été détectées
     if (Object.keys(updatedData).length > 0) {
-      updateFormData(updatedData);
+      updateFormData(updatedData as Partial<EstimationFormData>);
     }
     
     // Transmettre l'entrée traitée au parent

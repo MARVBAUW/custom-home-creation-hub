@@ -1,6 +1,7 @@
 
 // Import necessary types
-import { FormData, ExtractedInfo } from '../types';
+import { EstimationFormData as FormData, EstimationFormData } from '../types/estimationFormData';
+import { ExtractedInfo } from '../types/conversationalTypes';
 
 /**
  * Analyzes the user's input to determine intent
@@ -87,8 +88,8 @@ export const analyzeUserIntent = (input: string) => {
  * @param existingData Current form data
  * @returns Updated form data
  */
-export const extractFormDataFromMessage = (message: string, existingData: FormData): Partial<FormData> => {
-  const updatedData: Partial<FormData> = {};
+export const extractFormDataFromMessage = (message: string, existingData: EstimationFormData): Partial<EstimationFormData> => {
+  const updatedData: Partial<EstimationFormData> = {};
   const analysis = analyzeUserIntent(message);
 
   // Update project type if detected
@@ -128,9 +129,9 @@ export const extractFormDataFromMessage = (message: string, existingData: FormDa
  * @param message The user input message
  * @returns Extracted information
  */
-export const extractInformation = (message: string): Partial<FormData> => {
+export const extractInformation = (message: string): Partial<EstimationFormData> => {
   // Simple implementation that works like extractFormDataFromMessage but without requiring existingData
-  const emptyData = {} as FormData;
+  const emptyData = {} as EstimationFormData;
   return extractFormDataFromMessage(message, emptyData);
 };
 
@@ -182,7 +183,7 @@ export const generateConversationalResponse = (extractedInfo: ExtractedInfo): st
  * @param formData FormData for generating a response
  * @returns A conversational response
  */
-export const generateResponse = (formData: Partial<FormData>): string => {
+export const generateResponse = (formData: Partial<EstimationFormData>): string => {
   // Create an ExtractedInfo object from formData
   const extractedInfo: ExtractedInfo = {
     projectType: formData.projectType || null,

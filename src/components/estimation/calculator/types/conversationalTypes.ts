@@ -9,6 +9,7 @@ export interface Message {
   text?: string;
   isUser?: boolean;
   createdAt?: Date;
+  timestamp?: Date;
 }
 
 export interface ConversationState {
@@ -49,8 +50,12 @@ export interface MessageProcessorProps {
 }
 
 export interface ExtractedInfo {
-  intent: string;
-  entities: {
-    [key: string]: any;
-  };
+  projectType?: string | null;
+  surface?: number | string | null;
+  city?: string | null;
+  location?: string | null;
+  budget?: number | string | null;
+  roomCount?: number | string;
+  bathroomCount?: number | string;
+  otherDetails: Record<string, any>;
 }

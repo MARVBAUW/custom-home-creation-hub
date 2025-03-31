@@ -84,7 +84,7 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     
     // Update form data if we extracted something
     if (Object.keys(extractedData).length > 0) {
-      updateFormData(extractedData);
+      updateFormData(extractedData as Partial<EstimationFormData>);
     }
     
     // Check for clientType in the message
@@ -97,7 +97,7 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     }
     
     // Generate assistant response
-    const response = generateResponse({...formData, ...extractedData});
+    const response = generateResponse({...formData, ...extractedData} as EstimationFormData);
     
     // Add assistant message
     const assistantMessage: Message = {

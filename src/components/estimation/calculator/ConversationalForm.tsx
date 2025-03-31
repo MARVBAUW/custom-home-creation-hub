@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
-import { EstimationFormData } from './types';
+import { EstimationFormData } from './types/estimationFormData';
 import { useEstimationCalculator } from './useEstimationCalculator';
 import { useToast } from '@/hooks/use-toast';
 
@@ -86,7 +86,7 @@ const ConversationalForm: React.FC = () => {
       <TabsContent value="conversational" className="pt-4">
         <ConversationalEstimator 
           onUserInput={processUserInput} 
-          formData={formData} 
+          formData={formData as EstimationFormData} 
           updateFormData={updateFormData}
           onClientTypeSubmit={onClientTypeSubmit}
           goToStep={setStep}
