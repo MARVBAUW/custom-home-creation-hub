@@ -104,16 +104,16 @@ export const calculateDetailedFacadeCost = (
   stoneCladdingPercentage: number | string
 ): number => {
   // Convert percentages to numbers
-  const stonePercent = ensureNumber(stonePercentage, 0);
-  const plasterPercent = ensureNumber(plasterPercentage, 0);
-  const brickPercent = ensureNumber(brickPercentage, 0);
-  const metalPercent = ensureNumber(metalCladdingPercentage, 0);
-  const woodPercent = ensureNumber(woodCladdingPercentage, 0);
-  const stoneCladdingPercent = ensureNumber(stoneCladdingPercentage, 0);
+  const stonePercent = ensureNumber(stonePercentage);
+  const plasterPercent = ensureNumber(plasterPercentage);
+  const brickPercent = ensureNumber(brickPercentage);
+  const metalPercent = ensureNumber(metalCladdingPercentage);
+  const woodPercent = ensureNumber(woodCladdingPercentage);
+  const stoneCladdingPercent = ensureNumber(stoneCladdingPercentage);
   
   // Calculate wall surface area (estimate based on project type and surface)
   let wallSurface = 0;
-  const surface = ensureNumber(formData.surface, 0);
+  const surface = ensureNumber(formData.surface);
   
   if (formData.projectType === 'construction' || formData.projectType === 'extension') {
     wallSurface = surface * 2.8; // Approximate wall surface based on floor surface (2.8m height)
@@ -158,3 +158,4 @@ export const calculateDetailedFacadeCost = (
   
   return totalCost;
 };
+

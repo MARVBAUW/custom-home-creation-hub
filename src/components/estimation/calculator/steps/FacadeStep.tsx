@@ -151,12 +151,12 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
     
     // Update form data
     updateFormData({
-      stonePercentage: selectedFacades.includes('pierre') ? stonePercentage : '0',
-      plasterPercentage: selectedFacades.includes('enduit') ? plasterPercentage : '0',
-      brickPercentage: selectedFacades.includes('brique') ? brickPercentage : '0',
-      metalCladdingPercentage: selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : '0',
-      woodCladdingPercentage: selectedFacades.includes('bardageBois') ? woodCladdingPercentage : '0',
-      stoneCladdingPercentage: selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0',
+      stonePercentage: Number(selectedFacades.includes('pierre') ? stonePercentage : '0'),
+      plasterPercentage: Number(selectedFacades.includes('enduit') ? plasterPercentage : '0'),
+      brickPercentage: Number(selectedFacades.includes('brique') ? brickPercentage : '0'),
+      metalCladdingPercentage: Number(selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : '0'),
+      woodCladdingPercentage: Number(selectedFacades.includes('bardageBois') ? woodCladdingPercentage : '0'),
+      stoneCladdingPercentage: Number(selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0'),
       montantT: newMontantT
     });
     
@@ -270,3 +270,4 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
 };
 
 export default FacadeStep;
+

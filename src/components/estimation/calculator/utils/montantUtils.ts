@@ -1,5 +1,13 @@
 
 import { FormData } from '../types/formTypes';
+import { ensureNumber } from './typeConversions';
+import { 
+  calculateRoofingCost as calcRoofingCost,
+  calculateRoofingRenovCost as calcRoofingRenovCost,
+  calculateRoofFrameworkRenovCost as calcRoofFrameworkRenovCost,
+  calculateFacadeCost as calcFacadeCost,
+  calculateDetailedFacadeCost as calcDetailedFacadeCost
+} from './calculations/exterior';
 
 /**
  * Calculate kitchen cost based on quality and size
@@ -87,23 +95,47 @@ export const percentageToNumber = (value: string | number | undefined): number =
 };
 
 /**
- * Ensure a value is a number
+ * Calculate windows cost
  */
-export const ensureNumber = (value: string | number | undefined): number => {
-  if (typeof value === 'number') return value;
-  if (!value) return 0;
+export const calculateWindowsCost = (type: string, area: number): number => {
+  const costPerSquareMeter = {
+    'pvc': 350,
+    'aluminum': 500,
+    'wood': 600,
+    'steel': 550
+  }[type] || 400;
   
-  return parseFloat(value.toString()) || 0;
+  return costPerSquareMeter * area;
 };
 
 /**
- * Ensure a value is a boolean
+ * Calculate insulation cost
  */
-export const ensureBoolean = (value: string | boolean | undefined): boolean => {
-  if (typeof value === 'boolean') return value;
-  if (!value) return false;
+export const calculateInsulationCost = (type: string, area: number): number => {
+  const costPerSquareMeter = {
+    'standard': 40,
+    'premium': 60,
+    'ecological': 75,
+    'highPerformance': 90
+  }[type] || 50;
   
-  return value.toString().toLowerCase() === 'true' || 
-         value.toString().toLowerCase() === 'yes' || 
-         value.toString().toLowerCase() === 'oui';
+  return costPerSquareMeter * area;
 };
+
+/**
+ * Re-export facade calculation functions
+ */
+export const calculateFacadeCost = calcFacadeCost;
+export const calculateDetailedFacadeCost = calcDetailedFacadeCost;
+export const calculateRoofingCost = calcRoofingCost;
+export const calculateRoofingRenovCost = calcRoofingRenovCost;
+export const calculateRoofFrameworkRenovCost = calcRoofFrameworkRenovCost;
+
+/**
+ * Calculate new total amount with a new cost component
+ */
+export const calculateNewMontantT = (currentMontantT: number | undefined, additionalCost: number): number => {
+  const current = currentMontantT || 0;
+  return current + additionalCost;
+};
+

@@ -17,8 +17,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     
     try {
       // Utiliser ensureNumber pour s'assurer que surface est un nombre
-      const surface = ensureNumber(formData.surface, 0);
-      // Note the argument order matches the updated function signature
+      const surface = ensureNumber(formData.surface);
       const roofCost = calculateRoofingCost(couvertureData.roofingType, surface);
       
       updateFormData({
@@ -40,7 +39,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     
     try {
       // Utiliser ensureNumber pour s'assurer que surface est un nombre
-      const surface = ensureNumber(formData.surface, 0);
+      const surface = ensureNumber(formData.surface);
       const insulationCost = calculateInsulationCost(isolationData.insulationType, surface);
       
       updateFormData({
@@ -79,7 +78,12 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
       );
       
       updateFormData({
-        ...facadeData,
+        stonePercentage: Number(facadeData.stonePercentage),
+        plasterPercentage: Number(facadeData.plasterPercentage),
+        brickPercentage: Number(facadeData.brickPercentage),
+        metalCladdingPercentage: Number(facadeData.metalCladdingPercentage),
+        woodCladdingPercentage: Number(facadeData.woodCladdingPercentage),
+        stoneCladdingPercentage: Number(facadeData.stoneCladdingPercentage),
         montantT: (formData.montantT || 0) + facadeCost
       });
       
@@ -126,3 +130,4 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     handleMenuiseriesExtSubmit
   };
 };
+
