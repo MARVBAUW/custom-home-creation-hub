@@ -29,6 +29,15 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
       projectType: type,
     });
     
+    // For optimization or design projects, handle special routing
+    if (type === 'optimization' || type === 'design') {
+      // Jump directly to contact page in the next step
+      updateFormData({
+        projectType: type,
+        skipToContact: true
+      });
+    }
+    
     // Proceed to next step with a slight delay for animation
     setTimeout(() => {
       goToNextStep();

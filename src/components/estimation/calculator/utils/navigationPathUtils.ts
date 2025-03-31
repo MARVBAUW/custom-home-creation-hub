@@ -39,32 +39,37 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
   
   // Page 3: Type d'estimation (rapide ou précise)
   if (currentStep === 3) {
-    // Si estimation rapide pour rénovation ou division
-    if (formData.estimationType === 'rapide' && 
-        (formData.projectType === 'renovation' || formData.projectType === 'division')) {
-      return 6; // Aller directement à la page d'options extérieures
-    }
-    return 4; // Sinon continuer vers la page 4 (Construction Details)
+    // Tous les types de projets vont à la page de détails de construction
+    return 4;
   }
   
   // Page 4: Détails de construction
   if (currentStep === 4) {
-    return 5; // Aller à la page 5 (Terrain Details)
+    // Si rénovation ou division avec estimation précise
+    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
+        formData.estimationType === 'precise') {
+      return 29; // Aller à la page spécifique de rénovation
+    }
+    
+    // Pour tous les autres cas
+    return 5; // Aller à la page 5 (Terrain)
   }
   
   // Page 5: Détails du terrain
   if (currentStep === 5) {
-    // Pour les projets de rénovation ou division avec estimation précise
-    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
-        formData.estimationType === 'precise') {
-      return 29; // Aller à la page de démolition spécifique à la rénovation
-    }
-    // Pour les autres projets (construction, extension)
-    return 6; // Aller aux pages d'options
+    return 6; // Aller à la page 6 (Démolition)
   }
   
-  // Page 6: Options extérieures
+  // Page 6: Démolition
   if (currentStep === 6) {
+    // Décider de la prochaine étape selon le type de projet et d'estimation
+    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+      if (formData.estimationType === 'quick') {
+        return 44; // Aller à l'estimation rapide pour rénovation/division
+      }
+    }
+    
+    // Pour les autres cas (construction, extension)
     return 7; // Aller au formulaire de contact
   }
   
@@ -77,6 +82,16 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
       return 8; // Aller à la page de résultats d'estimation
     }
     return 7; // Rester sur la page de contact pour les projets sans estimation
+  }
+  
+  // Page 29: Rénovation spécifique (si c'est un projet de rénovation ou division avec estimation précise)
+  if (currentStep === 29) {
+    return 6; // Aller à la page de démolition
+  }
+  
+  // Page 44: Estimation rapide pour rénovation/division
+  if (currentStep === 44) {
+    return 7; // Aller au formulaire de contact
   }
   
   // Par défaut, passer à l'étape suivante
@@ -120,13 +135,14 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
     return 4; // Retour à la page 4 (Construction Details)
   }
   
-  // Chemin inverse depuis la page d'options (page 6)
+  // Chemin inverse depuis la page de démolition (page 6)
   if (currentStep === 6) {
-    // Si projet de rénovation/division avec estimation rapide
+    // Si c'est un projet de rénovation ou division avec estimation précise
     if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
-        formData.estimationType === 'rapide') {
-      return 3; // Retour à la page 3 (Type d'estimation)
+        formData.estimationType === 'precise') {
+      return 29; // Retour à la page 29 (Rénovation spécifique)
     }
+    
     // Sinon retour normal
     return 5; // Retour à la page 5 (Terrain)
   }
@@ -137,13 +153,30 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
     if (formData.projectType === 'optimization' || formData.projectType === 'design') {
       return formData.clientType === 'professional' ? 1 : 2;
     }
-    // Sinon retour aux options
+    
+    // Pour rénovation/division avec estimation rapide
+    if ((formData.projectType === 'renovation' || formData.projectType === 'division') && 
+        formData.estimationType === 'quick') {
+      return 44; // Retour à l'estimation rapide
+    }
+    
+    // Sinon retour à la démolition
     return 6;
   }
   
   // Chemin inverse depuis la page de résultats (page 8)
   if (currentStep === 8) {
     return 7; // Retour à la page de contact
+  }
+  
+  // Chemin inverse depuis la page de rénovation spécifique (page 29)
+  if (currentStep === 29) {
+    return 4; // Retour à la page de détails de construction
+  }
+  
+  // Chemin inverse depuis la page d'estimation rapide pour rénovation (page 44)
+  if (currentStep === 44) {
+    return 6; // Retour à la page de démolition
   }
   
   // Par défaut, retourner à l'étape précédente

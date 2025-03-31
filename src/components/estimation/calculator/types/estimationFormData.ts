@@ -11,12 +11,14 @@ export interface EstimationFormData {
   // Budget
   budget?: number | string;
   
-  // Terrain details
-  landIncluded?: string | boolean;
-  landPrice?: number | string;
-  terrainType?: string;
-  landType?: string;
-  terrainSurface?: number | string;
+  // Estimation type
+  estimationType?: string;
+  termsAccepted?: boolean;
+  
+  // Professional specific
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
   
   // Construction details
   constructionType?: string;
@@ -27,6 +29,32 @@ export interface EstimationFormData {
   livingRooms?: number | string;
   livingRoomSize?: number | string;
   livingRoomStyle?: string;
+  units?: number | string;
+  
+  // Renovation specific
+  buildingCondition?: string;
+  renovationScope?: string;
+  
+  // Terrain details
+  landIncluded?: string | boolean;
+  landPrice?: number | string;
+  terrainType?: string;
+  landType?: string;
+  terrainSurface?: number | string;
+  terassementsViabilisation?: number;
+  viabilisation?: number;
+  
+  // Demolition details
+  demolitionType?: string;
+  existingSurface?: number | string;
+  surfaceDemo?: number;
+  demoCost?: number;
+  
+  // Amount calculations
+  montantT?: number;
+  
+  // Special routing
+  skipToContact?: boolean;
   
   // Finish details
   finishStandard?: string;
@@ -76,9 +104,6 @@ export interface EstimationFormData {
   foundationType?: string;
   
   // Construction units
-  units?: number | string;
-  demolitionType?: string;
-  existingSurface?: number | string;
   atticType?: string;
   
   // Personal information
@@ -87,13 +112,8 @@ export interface EstimationFormData {
   email?: string;
   phone?: string;
   message?: string;
-  termsAccepted?: boolean;
   
   // Additional fields for specific steps
-  activity?: string;
-  startDate?: string;
-  endDate?: string;
-  estimationType?: string;
   constructionStyle?: string;
   roofType?: string;
   roofingType?: string;
