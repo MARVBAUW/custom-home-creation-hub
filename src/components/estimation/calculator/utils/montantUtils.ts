@@ -381,3 +381,30 @@ export function calculateWindowsCost(windowType: string, area: number): number {
   }
 }
 
+/**
+ * Calculate plastering cost based on type and surface area
+ */
+export function calculatePlasteringCost(plasteringType: string, surface: number): number {
+  let costPerM2 = 0;
+  
+  // Determine cost per square meter based on plastering type
+  switch (plasteringType) {
+    case 'base':
+      costPerM2 = 45; // Basic plastering
+      break;
+    case 'specific':
+      costPerM2 = 60; // Plastering with specific features
+      break;
+    case 'advanced':
+      costPerM2 = 90; // Advanced plastering with arches, niches, etc.
+      break;
+    case 'non_concerne':
+    default:
+      costPerM2 = 0; // No plastering work
+      break;
+  }
+  
+  // Calculate total cost
+  return costPerM2 * surface;
+}
+
