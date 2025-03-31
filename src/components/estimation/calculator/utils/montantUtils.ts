@@ -89,6 +89,49 @@ const getHeatingCostPerSquareMeter = (type: string): number => {
 };
 
 /**
+ * Calculate electrical system costs based on type and area
+ */
+export const calculateElectricalCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getElectricalCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different electrical system types
+ */
+const getElectricalCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'basic': return 70;
+    case 'standard': return 100;
+    case 'premium': return 150;
+    case 'smart_home': return 200;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate plumbing system costs based on type and area
+ */
+export const calculatePlumbingCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getPlumbingCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different plumbing system types
+ */
+const getPlumbingCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'basic': return 80;
+    case 'standard': return 120;
+    case 'premium': return 170;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
+};
+
+/**
  * Calculate air conditioning costs
  */
 export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {
@@ -552,4 +595,3 @@ export const calculateNewMontantT = (currentTotal: number | undefined, additiona
 
 // Re-export ensureNumber for backward compatibility
 export { ensureNumber };
-
