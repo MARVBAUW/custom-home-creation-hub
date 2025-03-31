@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,7 +12,7 @@ import {
   calculateJacuzziCost,
   ensureNumber 
 } from '../utils/montantUtils';
-import { Car, Pool, Thermometer, Bath } from 'lucide-react';
+import { Car, Swimming, Thermometer, Bath } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const OptionsForm: React.FC<BaseFormProps> = ({
@@ -165,7 +164,7 @@ const OptionsForm: React.FC<BaseFormProps> = ({
                 className={`cursor-pointer transition-all hover:shadow-md ${poolType === 'COQUE POLYESTER' ? 'border-blue-500 bg-blue-50' : ''}`}
               >
                 <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                  <Pool className="h-8 w-8 text-blue-500" />
+                  <Swimming className="h-8 w-8 text-blue-500" />
                   <div>
                     <RadioGroupItem value="COQUE POLYESTER" id="pool-polyester" className="sr-only" />
                     <Label htmlFor="pool-polyester" className="font-medium">Coque Polyester</Label>
@@ -183,7 +182,7 @@ const OptionsForm: React.FC<BaseFormProps> = ({
                 className={`cursor-pointer transition-all hover:shadow-md ${poolType === 'BETON' ? 'border-blue-500 bg-blue-50' : ''}`}
               >
                 <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                  <Pool className="h-8 w-8 text-blue-500" />
+                  <Swimming className="h-8 w-8 text-blue-500" />
                   <div>
                     <RadioGroupItem value="BETON" id="pool-beton" className="sr-only" />
                     <Label htmlFor="pool-beton" className="font-medium">Béton</Label>
@@ -201,7 +200,7 @@ const OptionsForm: React.FC<BaseFormProps> = ({
                 className={`cursor-pointer transition-all hover:shadow-md ${poolType === 'PISCINE LAGON (HORS AMENAGEMENT PAYSAGER)' ? 'border-blue-500 bg-blue-50' : ''}`}
               >
                 <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                  <Pool className="h-8 w-8 text-blue-500" />
+                  <Swimming className="h-8 w-8 text-blue-500" />
                   <div>
                     <RadioGroupItem value="PISCINE LAGON (HORS AMENAGEMENT PAYSAGER)" id="pool-lagon" className="sr-only" />
                     <Label htmlFor="pool-lagon" className="font-medium">Piscine Lagon</Label>

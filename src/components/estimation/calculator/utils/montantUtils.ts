@@ -1,18 +1,27 @@
 
-// Import the ensureNumber function from typeConversions to re-export it
-import { ensureNumber } from './typeConversions';
-
-// Re-export the ensureNumber function
-export { ensureNumber };
+/**
+ * Utility functions for calculating costs in the estimation calculator
+ */
 
 /**
- * Calculates the additional cost for interior carpentry based on chosen options
- * 
- * @param doorType Type of interior doors
- * @param hasMoldings Whether moldings are included
- * @param hasCustomFurniture Whether custom furniture is included
- * @param surface Surface area in square meters
- * @returns Additional cost in euros
+ * Ensures a value is a number, converting strings to numbers if possible.
+ * Returns 0 if the value cannot be converted to a number.
+ */
+export function ensureNumber(value: any, defaultValue = 0): number {
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+  
+  return defaultValue;
+}
+
+/**
+ * Calculate interior carpentry cost based on selected options
  */
 export function calculateInteriorCarpenteryCost(
   doorType: string,
@@ -20,497 +29,242 @@ export function calculateInteriorCarpenteryCost(
   hasCustomFurniture: boolean,
   surface: number
 ): number {
-  let doorCost = 0;
-  
-  // Cost calculation for door type
+  // Base cost per door type (average per m²)
+  let doorCostPerM2 = 0;
   switch (doorType) {
     case 'base':
-      doorCost = 90 * surface / 10; // Standard doors cost
+      doorCostPerM2 = 60;
       break;
     case 'standing':
-      doorCost = 120 * surface / 10; // Quality doors cost
+      doorCostPerM2 = 120;
       break;
     case 'premium':
-      doorCost = 180 * surface / 10; // High-end doors cost
+      doorCostPerM2 = 180;
+      break;
+    case 'non_concerne':
+      doorCostPerM2 = 0;
       break;
     default:
-      doorCost = 0;
+      doorCostPerM2 = 0;
   }
   
-  // Add cost for moldings if selected
-  const moldingsCost = hasMoldings ? 30 * surface / 10 : 0;
+  // Calculate total door cost
+  let totalCost = doorCostPerM2 * surface * 0.10; // Assuming doors cover about 10% of surface area
   
-  // Add cost for custom furniture if selected
-  const customFurnitureCost = hasCustomFurniture ? 180 * surface / 10 : 0;
+  // Add moldings cost
+  if (hasMoldings) {
+    totalCost += 35 * surface * 0.15; // Assuming moldings on 15% of surface
+  }
   
-  // Return total carpentry cost
-  return doorCost + moldingsCost + customFurnitureCost;
+  // Add custom furniture cost
+  if (hasCustomFurniture) {
+    totalCost += 350 * surface * 0.05; // Assuming custom furniture covers 5% of surface
+  }
+  
+  return Math.round(totalCost);
 }
 
 /**
- * Calculate cost for carpentry or roof renovation
- * @param type Type of roof structure
- * @param area Surface area to renovate
+ * Calculate carport cost based on type
  */
-export function calculateRoofFrameworkCost(type: string, area: number): number {
-  switch (type) {
-    case 'CHARPENTE TRADITIONNELLE':
-      return 185 * area;
-    case 'CHARPENTE INDUSTRIELLE':
-      return 160 * area;
-    case 'TOITURE TERRASSE ACCESSIBLE':
-      return 190 * area;
-    case 'TOITURE TERRASSE INACCESSIBLE':
-      return 180 * area;
-    case 'NON CONCERNE':
+export function calculateCarportCost(carportType: string): number {
+  switch (carportType) {
+    case 'SIMPLE':
+      return 5000;
+    case 'DOUBLE':
+      return 8500;
     default:
       return 0;
   }
 }
 
 /**
- * Calculate cost for roofing renovation
- * @param type Type of roofing
- * @param area Surface area to renovate
+ * Calculate pool cost based on type and area
  */
-export function calculateRoofingCost(type: string, area: number): number {
-  switch (type) {
-    case 'TUILE PLATE':
-      return 125 * area;
-    case 'TUILE RONDE':
-      return 130 * area;
-    case 'ARDOISE':
-      return 180 * area;
-    case 'ZINC JOINT DEBOUT':
-      return 200 * area;
-    case 'TOIT DE CHAUME':
-      return 250 * area;
-    case 'BAC ACIER':
-      return 115 * area;
-    case 'ETANCHEITE BITUME (TOITURE PLATE)':
-      return 125 * area;
-    case 'TOITURE VEGETALISE (TOITURE PLATE)':
-      return 186 * area;
-    case 'TOITURE GRAVILLONNEE (TOITURE PLATE)':
-      return 145 * area;
-    case 'NON CONCERNE':
+export function calculatePoolCost(poolType: string, area: number): number {
+  let baseCostPerM2 = 0;
+  
+  switch (poolType) {
+    case 'COQUE POLYESTER':
+      baseCostPerM2 = 1200;
+      break;
+    case 'BETON':
+      baseCostPerM2 = 1500;
+      break;
+    case 'PISCINE LAGON (HORS AMENAGEMENT PAYSAGER)':
+      baseCostPerM2 = 2000;
+      break;
     default:
-      return 0;
-  }
-}
-
-/**
- * Calculate insulation cost based on the insulation type and surface area
- * @param type Type of insulation
- * @param area Surface area to insulate in square meters
- * @returns Cost of insulation in euros
- */
-export function calculateInsulationCost(type: string, area: number): number {
-  switch (type) {
-    case 'standard':
-    case 'ISOLATION THERMIQUE REGLEMENTAIRE (BASE)':
-      return 80 * area; // Base insulation cost
-    case 'reinforced':
-    case 'ISOLATION THERMIQUE PERFORMANTE':
-      return 100 * area; // Enhanced insulation cost
-    case 'passive':
-    case 'ISOLATION THERMIQUE ULTRA PERFORMANTE':
-      return 120 * area; // High performance insulation cost
-    case 'ecological':
-      return 110 * area; // Ecological materials insulation cost
-    case 'renovation':
-      return 90 * area; // Renovation standard insulation cost
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0; // No insulation
-  }
-}
-
-/**
- * Calculate facade cost based on the facade material type and surface area
- * @param materials Object containing facade materials and their percentages
- * @param area Total surface area in square meters
- * @returns Total cost of facade materials
- */
-export function calculateFacadeCost(materials: Record<string, number>, area: number): number {
-  let totalCost = 0;
-  
-  // Apply costs for each material type based on their percentage
-  if (materials.PIERRE_NUE) {
-    totalCost += (materials.PIERRE_NUE / 100) * area * 2.5;
+      baseCostPerM2 = 0;
   }
   
-  if (materials.ENDUIT) {
-    totalCost += (materials.ENDUIT / 100) * area * 0.7;
-  }
+  return baseCostPerM2 * area;
+}
+
+/**
+ * Calculate pool heating cost based on pool area
+ */
+export function calculatePoolHeatingCost(area: number): number {
+  return 150 * area;
+}
+
+/**
+ * Calculate jacuzzi cost based on type and area
+ */
+export function calculateJacuzziCost(jacuzziType: string, area: number): number {
+  let baseCostPerM2 = 0;
   
-  if (materials.BRIQUE) {
-    totalCost += (materials.BRIQUE / 100) * area * 1.9;
-  }
-  
-  if (materials.BARDAGE_METALLIQUE) {
-    totalCost += (materials.BARDAGE_METALLIQUE / 100) * area * 3;
-  }
-  
-  if (materials.BARDAGE_BOIS) {
-    totalCost += (materials.BARDAGE_BOIS / 100) * area * 2.1;
-  }
-  
-  if (materials.BARDAGE_PIERRE) {
-    totalCost += (materials.BARDAGE_PIERRE / 100) * area * 3.1;
-  }
-  
-  return totalCost;
-}
-
-/**
- * Calculate cost for windows based on the window type and area
- * @param type Type of windows (bois, pvc, alu, mixte, pvc_colore)
- * @param area Surface area of windows in square meters
- * @returns Cost of windows in euros
- */
-export function calculateWindowsCost(type: string, area: number): number {
-  switch (type) {
-    case 'bois':
-      return 650 * area;
-    case 'pvc':
-      return 390 * area;
-    case 'alu':
-      return 620 * area;
-    case 'mixte':
-      return 690 * area;
-    case 'pvc_colore':
-      return 410 * area;
-    case 'sans_avis':
-    case 'non_concerne':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculate cost for electrical installation based on the type and surface area
- * @param type Type of electrical installation
- * @param area Surface area in square meters
- * @returns Cost of electrical installation in euros
- */
-export function calculateElectricalCost(type: string, area: number): number {
-  switch (type) {
-    case 'basic':
-    case 'PRESTATION DE BASE':
-      return 100 * area;
-    case 'standard':
-    case 'PRESTATIONS AVANCEES':
-      return 125 * area;
-    case 'premium':
-    case 'PRESTATIONS HAUT DE GAMME':
-      return 155 * area;
-    case 'smart_home':
-    case 'PRESTATIONS HG + DOMMOTIQUE':
-      return 190 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculate cost for plumbing based on the plumbing type and surface area
- * @param type Type of plumbing installation
- * @param area Surface area in square meters
- * @returns Cost of plumbing in euros
- */
-export function calculatePlumbingCost(type: string, area: number): number {
-  switch (type) {
-    case 'basic':
-    case 'PRESTATIONS DE BASE':
-      return 80 * area;
-    case 'standard':
-    case 'PRESTATIONS AVANCEES':
-      return 100 * area;
-    case 'premium':
-    case 'PRESTATIONS HAUT DE GAMME':
-      return 125 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculate cost for heating system based on the type and surface area
- * @param type Type of heating system
- * @param area Surface area in square meters
- * @returns Cost of heating in euros
- */
-export function calculateHeatingCost(type: string, area: number): number {
-  switch (type) {
-    case 'standard':
-    case 'MEILLEURS RAPPORT QUALITE PRIX':
-    case 'SANS AVIS':
-      return 60 * area;
-    case 'eco':
-    case 'LE PLUS ECOLOGIQUE':
-      return 120 * area;
-    case 'economic':
-    case 'LE PLUS ECONOMIQUE':
-      return 45 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculate cost for air conditioning based on whether it's included
- * @param hasAirConditioning Boolean indicating if air conditioning is required
- * @param area Surface area in square meters
- * @returns Cost of air conditioning in euros
- */
-export function calculateAirConditioningCost(hasAirConditioning: boolean, area: number): number {
-  return hasAirConditioning ? 65 * area : 0;
-}
-
-/**
- * Calculate cost for plastering based on the type and surface area
- * @param type Type of plastering work
- * @param area Surface area in square meters
- * @returns Cost of plastering in euros
- */
-export function calculatePlasteringCost(type: string, area: number): number {
-  switch (type) {
-    case 'base':
-    case 'PRESTATION DE BASE':
-      return 95 * area;
-    case 'specific':
-    case 'PRESTATION AVEC QUELQUES SPECIFICITES':
-      return 105 * area;
-    case 'advanced':
-    case 'PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)':
-      return 120 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculates the additional cost for interior carpentry based on chosen options
- * 
- * @param doorType Type of interior doors
- * @param hasMoldings Whether moldings are included
- * @param hasCustomFurniture Whether custom furniture is included
- * @param surface Surface area in square meters
- * @returns Additional cost in euros
- */
-export function calculateInteriorCarpenteryCost2(
-  doorType: string,
-  hasMoldings: boolean = false,
-  hasCustomFurniture: boolean = false,
-  surface: number
-): number {
-  let doorCost = 0;
-  
-  // Cost calculation for door type
-  switch (doorType) {
-    case 'base':
+  switch (jacuzziType) {
     case 'BASE':
-      doorCost = 50 * surface;
+      baseCostPerM2 = 2500;
       break;
-    case 'standing':
-    case 'STANDING':
-      doorCost = 60 * surface;
+    case 'PLUS':
+      baseCostPerM2 = 3500;
       break;
-    case 'premium':
-    case 'HAUT DE GAMME':
-      doorCost = 70 * surface;
+    case 'PREMIUM':
+      baseCostPerM2 = 5000;
       break;
-    case 'non_concerne':
-    case 'NON CONCERNE':
     default:
-      doorCost = 0;
+      baseCostPerM2 = 0;
   }
   
-  // Add cost for moldings if selected
-  const moldingsCost = hasMoldings ? 10 * surface : 0;
-  
-  // Add cost for custom furniture if selected
-  const customFurnitureCost = hasCustomFurniture ? 20 * surface : 0;
-  
-  // Return total carpentry cost
-  return doorCost + moldingsCost + customFurnitureCost;
+  return baseCostPerM2 * area;
 }
 
 /**
- * Calculate cost for floor tiling based on type, percentage and surface area
- * 
- * @param type Type of floor tiling
- * @param percentage Percentage of the surface to tile
- * @param area Total surface area in square meters
- * @returns Cost of floor tiling in euros
+ * Calculate parquet flooring cost based on type and area
  */
-export function calculateFloorTilingCost(
-  type: string,
-  percentage: number,
-  area: number
-): number {
-  let basePrice = 0;
-  const tileArea = (percentage / 100) * area;
-  
-  switch (type) {
-    case 'standard':
-    case 'CARRELAGE BASE':
-      basePrice = 66;
-      break;
-    case 'medium':
-    case 'CARRELAGE MILIEU DE GAMME':
-      basePrice = 76;
-      break;
-    case 'premium':
-    case 'CARRELAGE HAUT DE GAMME':
-      basePrice = 86;
-      break;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-  
-  return basePrice * tileArea;
-}
-
-/**
- * Calculate cost for wall tiling based on type and surface area
- * 
- * @param type Type of wall tiling
- * @param area Surface area in square meters
- * @returns Cost of wall tiling in euros
- */
-export function calculateWallTilingCost(
-  type: string,
-  area: number
-): number {
-  switch (type) {
-    case 'standard':
-    case 'FAIENCE BASE':
-      return 6 * area;
-    case 'medium':
-    case 'FAIENCE MG':
-      return 7 * area;
-    case 'premium':
-    case 'FAIENCE HG':
-      return 8 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
-    default:
-      return 0;
-  }
-}
-
-/**
- * Calculate cost for parquet flooring based on type and area
- * 
- * @param type Type of parquet flooring
- * @param area Area to cover in square meters
- * @returns Cost of parquet flooring in euros
- */
-export function calculateParquetCost(
-  type: string,
-  area: number
-): number {
-  switch (type) {
-    case 'standard':
+export function calculateParquetCost(parquetType: string, area: number): number {
+  switch (parquetType) {
     case 'PARQUET DE BASE':
       return 55 * area;
-    case 'medium':
     case 'PARQUET MG':
       return 66 * area;
-    case 'premium':
     case 'PARQUET HG':
       return 108 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
     default:
       return 0;
   }
 }
 
 /**
- * Calculate cost for soft flooring (vinyl, carpet, etc) based on type and area
- * 
- * @param type Type of soft flooring
- * @param area Area to cover in square meters
- * @returns Cost of soft flooring in euros
+ * Calculate soft floor cost based on type and area
  */
-export function calculateSoftFloorCost(
-  type: string,
-  area: number
-): number {
-  switch (type) {
-    case 'standard':
+export function calculateSoftFloorCost(floorType: string, area: number): number {
+  switch (floorType) {
     case 'SOL SOUPLE BASE':
       return 30 * area;
-    case 'medium':
     case 'SOL SOUPLE MG':
       return 35 * area;
-    case 'premium':
     case 'SOL SOUPLE HG':
       return 40 * area;
-    case 'non_concerne':
-    case 'NON CONCERNE':
     default:
       return 0;
   }
 }
 
 /**
- * Calculate cost for painting and wall coverings based on types and percentages
- * 
- * @param coverings Object containing wall coverings and their percentages
- * @param area Total wall surface area
- * @returns Cost of wall coverings in euros
+ * Calculate painting cost based on type, percentage, and total surface
  */
-export function calculatePaintingCost(
-  coverings: {
-    basicPaint?: number;
-    decorativePaint?: number;
-    wallpaper?: number;
-    woodPaneling?: number;
-    stoneCladding?: number;
-  },
-  area: number
-): number {
-  let totalCost = 0;
+export function calculatePaintingCost(paintType: string, percentage: number, totalSurface: number): number {
+  const surfaceArea = (percentage / 100) * totalSurface;
   
-  // Base paint cost
-  if (coverings.basicPaint) {
-    totalCost += (coverings.basicPaint / 100) * area * 0.58;
+  switch (paintType) {
+    case 'PEINTURE BASE (monochrome blanc)':
+      return 0.58 * surfaceArea * totalSurface;
+    case 'PEINTURE DECORATIVE (mixite de couleur et de matérialité)':
+      return 0.606 * surfaceArea * totalSurface;
+    case 'PAPIER PEINT...':
+      return 0.6 * surfaceArea * totalSurface;
+    case 'REVETEMENT MURAUX BOIS AJOURE':
+      return 1.3 * surfaceArea * totalSurface;
+    case 'REVETEMENTS MURAUX TYPE PIERRE NATURELLE':
+      return 1.9 * surfaceArea * totalSurface;
+    default:
+      return 0;
   }
-  
-  // Decorative paint cost
-  if (coverings.decorativePaint) {
-    totalCost += (coverings.decorativePaint / 100) * area * 0.606;
+}
+
+/**
+ * Calculate heating cost based on heating type
+ */
+export function calculateHeatingCost(heatingType: string, surface: number): number {
+  switch (heatingType) {
+    case 'ÉLECTRIQUE':
+      return surface * 60;
+    case 'GAZ':
+      return surface * 80;
+    case 'POMPE À CHALEUR':
+      return surface * 120;
+    case 'POÊLE À BOIS':
+      return surface * 70;
+    default:
+      return 0;
   }
-  
-  // Wallpaper cost
-  if (coverings.wallpaper) {
-    totalCost += (coverings.wallpaper / 100) * area * 0.6;
+}
+
+/**
+ * Calculate facade cost based on facade type
+ */
+export function calculateFacadeCost(facadeType: string, surface: number): number {
+  switch (facadeType) {
+    case 'CRÉPI':
+      return surface * 45;
+    case 'PIERRE':
+      return surface * 180;
+    case 'BRIQUE':
+      return surface * 120;
+    case 'BOIS':
+      return surface * 150;
+    default:
+      return 0;
   }
-  
-  // Wood paneling cost
-  if (coverings.woodPaneling) {
-    totalCost += (coverings.woodPaneling / 100) * area * 1.3;
+}
+
+/**
+ * Calculate roof framework cost based on roof type
+ */
+export function calculateRoofFrameworkCost(roofType: string, surface: number): number {
+  switch (roofType) {
+    case 'CHARPENTE TRADITIONNELLE':
+      return surface * 110;
+    case 'CHARPENTE FERMETTE':
+      return surface * 80;
+    default:
+      return 0;
   }
-  
-  // Stone cladding cost
-  if (coverings.stoneCladding) {
-    totalCost += (coverings.stoneCladding / 100) * area * 1.9;
+}
+
+/**
+ * Calculate roofing cost based on roof type
+ */
+export function calculateRoofingCost(roofType: string, surface: number): number {
+  switch (roofType) {
+    case 'TUILES':
+      return surface * 75;
+    case 'ARDOISE':
+      return surface * 95;
+    case 'ZINC':
+      return surface * 120;
+    case 'TOIT TERRASSE':
+      return surface * 140;
+    default:
+      return 0;
   }
-  
-  return totalCost;
+}
+
+/**
+ * Calculate windows cost based on window type and area
+ */
+export function calculateWindowsCost(windowType: string, area: number): number {
+  switch (windowType) {
+    case 'PVC':
+      return area * 350;
+    case 'ALUMINIUM':
+      return area * 550;
+    case 'BOIS':
+      return area * 650;
+    default:
+      return 0;
+  }
 }
