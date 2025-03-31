@@ -5,9 +5,20 @@ import { Download } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
-import { FormData, EstimationResponseData } from '../types';
+import { FormData, EstimationResponseData } from './types';
 import { formatCurrency } from '@/utils/formatters';
 import logo from '@/assets/images/progineer-logo.png';
+
+// Add autoTable to jsPDF prototype
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: typeof autoTable;
+    lastAutoTable: {
+      finalY: number;
+    };
+    getNumberOfPages: () => number;
+  }
+}
 
 interface EstimationPDFExportProps {
   formData: FormData;
@@ -66,11 +77,11 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       // Estimation results
       doc.setFontSize(14);
       doc.setTextColor(88, 80, 55);
-      doc.text('Résultats de l\'estimation', 14, doc.autoTable.previous.finalY + 15);
+      doc.text('Résultats de l\'estimation', 14, doc.lastAutoTable.finalY + 15);
       
       // Cost breakdown table
       autoTable(doc, {
-        startY: doc.autoTable.previous.finalY + 20,
+        startY: doc.lastAutoTable.finalY + 20,
         head: [['Poste de dépense', 'Montant estimé (€)']],
         body: [
           ['Gros œuvre', formatCurrency(estimation.constructionCosts.structuralWork)],
@@ -89,11 +100,11 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       // Timeline
       doc.setFontSize(14);
       doc.setTextColor(88, 80, 55);
-      doc.text('Calendrier prévisionnel', 14, doc.autoTable.previous.finalY + 15);
+      doc.text('Calendrier prévisionnel', 14, doc.lastAutoTable.finalY + 15);
       
       // Timeline table
       autoTable(doc, {
-        startY: doc.autoTable.previous.finalY + 20,
+        startY: doc.lastAutoTable.finalY + 20,
         head: [['Phase', 'Durée estimée']],
         body: [
           ['Conception et études', `${estimation.timeline.design} mois`],
@@ -108,7 +119,7 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       });
       
       // Footer
-      const pageCount = doc.internal.getNumberOfPages();
+      const pageCount = doc.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(8);

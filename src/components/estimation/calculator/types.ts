@@ -8,6 +8,7 @@ export type FormData = FormDataFromIndex;
 
 // Re-export the form types
 export * from './types/formTypes';
+export * from './types/estimationTypes';
 
 export interface Message {
   id: string;

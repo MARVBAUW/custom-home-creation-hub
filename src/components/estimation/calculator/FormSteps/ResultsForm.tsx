@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { calculateEstimation } from '../calculationUtils';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2, FileText, Send } from 'lucide-react';
+import { EstimationResponseData } from '../types';
 
 const ResultsForm: React.FC<ResultsFormProps> = ({
   estimationResult,
@@ -16,7 +17,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
   animationDirection
 }) => {
   const [isCalculating, setIsCalculating] = useState(true);
-  const [calculation, setCalculation] = useState<number | null>(estimationResult);
+  const [calculation, setCalculation] = useState<EstimationResponseData | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   // Calculate the estimation when the component mounts
@@ -29,17 +30,13 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
             const result = calculateEstimation(formData);
             console.log("Résultat du calcul:", result);
             
-            if (typeof result !== 'number' || isNaN(result)) {
-              throw new Error("Le calcul n'a pas produit un résultat valide");
-            }
-            
             setCalculation(result);
             setIsCalculating(false);
           } catch (calculationError) {
             console.error("Erreur pendant le calcul:", calculationError);
             setError("Une erreur est survenue lors du calcul");
-            // Fallback value
-            setCalculation(150000);
+            // Fallback value - full calculation
+            setCalculation(calculateEstimation(formData));
             setIsCalculating(false);
           }
         }, 1500);
@@ -47,7 +44,7 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
         console.error("Erreur lors du calcul de l'estimation:", error);
         setError("Une erreur est survenue lors du calcul");
         // Use fallback value if calculation fails
-        setCalculation(150000);
+        setCalculation(calculateEstimation(formData));
         setIsCalculating(false);
       }
     };
@@ -104,14 +101,16 @@ const ResultsForm: React.FC<ResultsFormProps> = ({
         </p>
       </div>
       
-      <EstimationResults 
-        estimation={calculation} 
-        formData={formData} 
-        goToPreviousStep={goToPreviousStep}
-        updateFormData={updateFormData}
-        goToNextStep={goToNextStep}
-        isLoading={false}
-      />
+      {calculation && (
+        <EstimationResults 
+          estimation={calculation} 
+          formData={formData} 
+          goToPreviousStep={goToPreviousStep}
+          updateFormData={updateFormData}
+          goToNextStep={goToNextStep}
+          isLoading={false}
+        />
+      )}
       
       <div className="mt-6 pt-6 border-t border-gray-200 flex justify-between">
         <Button variant="outline" onClick={goToPreviousStep}>

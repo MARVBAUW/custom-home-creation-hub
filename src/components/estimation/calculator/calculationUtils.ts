@@ -1,171 +1,174 @@
 
-import { FormData } from './types';
+import { FormData, EstimationResponseData } from './types';
 
-// Calculer l'estimation en fonction des données du formulaire
-export const calculateEstimation = (formData: FormData): number => {
-  try {
-    // Base de calcul : prix au m²
-    let basePrice = 1500;
-    
-    // Convertir la surface en nombre
-    const surface = typeof formData.surface === 'string' 
-      ? parseFloat(formData.surface) 
-      : (formData.surface || 100);
-    
-    // Ajustements en fonction du type de projet
-    if (formData.projectType === 'construction') {
-      basePrice = 1800;
-    } else if (formData.projectType === 'renovation') {
-      basePrice = 1200;
-    } else if (formData.projectType === 'extension') {
-      basePrice = 1600;
-    }
-    
-    // Ajustements en fonction du type de client
-    if (formData.clientType === 'professional') {
-      basePrice *= 0.9; // 10% de réduction pour les professionnels
-    }
-    
-    // Ajustements en fonction du niveau de finition
-    if (formData.finishLevel === 'high') {
-      basePrice *= 1.2; // +20% pour finitions haut de gamme
-    } else if (formData.finishLevel === 'luxury') {
-      basePrice *= 1.5; // +50% pour finitions luxueuses
-    }
-    
-    // Calcul final
-    return Math.round(basePrice * surface);
-  } catch (error) {
-    console.error("Erreur lors du calcul de l'estimation:", error);
-    return 50000; // Valeur par défaut en cas d'erreur
+export const calculateEstimation = (formData: FormData): EstimationResponseData => {
+  // Default base price per m² depending on project type
+  let basePricePerSqm = 0;
+  
+  switch (formData.projectType) {
+    case 'construction':
+      basePricePerSqm = 1500;
+      break;
+    case 'renovation':
+      basePricePerSqm = 800;
+      break;
+    case 'extension':
+      basePricePerSqm = 1300;
+      break;
+    default:
+      basePricePerSqm = 1000;
   }
-};
-
-// Obtenir une estimation sécurisée (avec gestion d'erreurs)
-export const getSafeEstimation = (formData: FormData): number => {
-  try {
-    return calculateEstimation(formData);
-  } catch (error) {
-    console.error("Erreur lors du calcul de l'estimation:", error);
-    return 50000; // Valeur par défaut en cas d'erreur
+  
+  // Apply adjustments based on complexity
+  const complexityMultipliers = {
+    'simple': 0.8,
+    'standard': 1.0,
+    'complex': 1.3,
+    'very-complex': 1.6,
+  };
+  
+  // Apply adjustments based on quality standard
+  const qualityMultipliers = {
+    'basic': 0.8,
+    'standard': 1.0,
+    'premium': 1.5,
+    'luxury': 2.0,
+  };
+  
+  // Get multipliers (default to standard if not specified)
+  const complexityMultiplier = formData.complexity ? 
+    complexityMultipliers[formData.complexity as keyof typeof complexityMultipliers] || 1.0 : 1.0;
+  
+  const qualityMultiplier = formData.qualityStandard ? 
+    qualityMultipliers[formData.qualityStandard as keyof typeof qualityMultipliers] || 1.0 : 1.0;
+  
+  // Apply size adjustment (smaller projects are more expensive per m²)
+  const surface = typeof formData.surface === 'number' ? formData.surface : 
+                  typeof formData.surface === 'string' ? parseFloat(formData.surface) : 100;
+  
+  let sizeMultiplier = 1.0;
+  if (surface < 50) {
+    sizeMultiplier = 1.4;
+  } else if (surface < 100) {
+    sizeMultiplier = 1.2;
+  } else if (surface > 200) {
+    sizeMultiplier = 0.9;
+  } else if (surface > 500) {
+    sizeMultiplier = 0.8;
   }
-};
-
-// Générer un rapport complet d'estimation pour PDF et email
-export const generateEstimationReport = (formData: FormData, estimationAmount: number) => {
-  // Calculer TVA et montant TTC
-  const tvaRate = 0.2; // 20%
-  const totalHT = estimationAmount;
-  const vat = totalHT * tvaRate;
-  const totalTTC = totalHT + vat;
   
-  // Préparer les informations client
-  const clientInfo = {
-    clientType: formData.clientType || 'individual',
-    name: `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || 'Client',
-    email: formData.email || formData.contactEmail || 'Non spécifié',
-    phone: formData.phone || 'Non spécifié',
-    company: formData.company || '',
-  };
+  // Calculate the adjusted price per m²
+  const adjustedPricePerSqm = basePricePerSqm * complexityMultiplier * qualityMultiplier * sizeMultiplier;
   
-  // Préparer les informations du projet
-  const projectInfo = {
-    type: getProjectTypeLabel(formData.projectType || ''),
-    surface: formData.surface || 'Non spécifiée',
-    location: formData.city || 'Non spécifiée',
-    constructionType: formData.constructionType || 'standard',
-    constructionStyle: formData.constructionStyle || '',
-  };
+  // Calculate construction cost
+  const constructionCost = adjustedPricePerSqm * surface;
   
-  // Préparer les détails financiers
-  const estimationDetails = {
-    totalHT,
-    vat,
-    totalTTC,
-    paymentSchedule: generatePaymentSchedule(totalTTC),
-  };
+  // Distribute costs based on typical project breakdowns
+  const structuralWorkPercentage = formData.projectType === 'renovation' ? 0.3 : 0.45;
+  const finishingWorkPercentage = formData.projectType === 'renovation' ? 0.4 : 0.25;
+  const technicalLotsPercentage = 0.2;
+  const externalWorksPercentage = formData.projectType === 'renovation' ? 0.1 : 0.1;
   
-  // Calculer la répartition des coûts par catégorie
-  const categories = calculateCostBreakdown(totalHT, formData);
+  // Calculate construction costs breakdown
+  const structuralWork = constructionCost * structuralWorkPercentage;
+  const finishingWork = constructionCost * finishingWorkPercentage;
+  const technicalLots = constructionCost * technicalLotsPercentage;
+  const externalWorks = constructionCost * externalWorksPercentage;
   
-  // Retourner le rapport complet
-  return {
-    clientInfo,
-    projectInfo,
-    estimationDetails,
-    categories,
-    date: new Date().toISOString(),
-  };
-};
-
-// Générer un échéancier de paiement
-const generatePaymentSchedule = (totalAmount: number) => {
-  return [
-    { phase: 'Signature du contrat', percentage: 5, amount: totalAmount * 0.05 },
-    { phase: 'Validation des plans', percentage: 15, amount: totalAmount * 0.15 },
-    { phase: 'Début des travaux', percentage: 30, amount: totalAmount * 0.3 },
-    { phase: 'Gros œuvre terminé', percentage: 25, amount: totalAmount * 0.25 },
-    { phase: 'Second œuvre terminé', percentage: 20, amount: totalAmount * 0.2 },
-    { phase: 'Réception des travaux', percentage: 5, amount: totalAmount * 0.05 },
-  ];
-};
-
-// Calculer la répartition des coûts par catégorie
-const calculateCostBreakdown = (totalEstimation: number, formData: FormData) => {
-  // Répartition par défaut
-  const defaultBreakdown = [
-    { name: 'Terrassement & Fondations', percentage: 15 },
-    { name: 'Gros Œuvre', percentage: 25 },
-    { name: 'Charpente & Couverture', percentage: 15 },
-    { name: 'Menuiseries', percentage: 10 },
-    { name: 'Plomberie & Électricité', percentage: 15 },
-    { name: 'Isolation & Plâtrerie', percentage: 10 },
-    { name: 'Finitions & Revêtements', percentage: 8 },
-    { name: 'Divers & Imprévus', percentage: 2 },
-  ];
+  // Calculate fees (typically 10-15% of construction cost)
+  const feesPercentage = surface < 100 ? 0.15 : surface < 200 ? 0.12 : 0.10;
+  const fees = constructionCost * feesPercentage;
   
-  // Ajuster la répartition en fonction du type de projet
-  let breakdown = [...defaultBreakdown];
+  // Distribute fees
+  const architectFees = fees * 0.6;
+  const technicalStudiesFees = fees * 0.3;
+  const otherFees = fees * 0.1;
   
+  // Calculate other costs (insurances, taxes, etc. - typically 5-8% of construction cost)
+  const otherCostsPercentage = 0.07;
+  const otherCosts = constructionCost * otherCostsPercentage;
+  
+  // Distribute other costs
+  const insuranceCosts = otherCosts * 0.4;
+  const taxesCosts = otherCosts * 0.3;
+  const contingencyCosts = otherCosts * 0.3;
+  
+  // Calculate total amount
+  const totalAmount = constructionCost + fees + otherCosts;
+  
+  // Calculate timeline (in months)
+  let designDuration = 2;
+  let permitsDuration = 3;
+  let biddingDuration = 1;
+  let constructionDuration = 0;
+  
+  // Adjust timeline based on project size and complexity
+  if (surface < 100) {
+    constructionDuration = 4;
+  } else if (surface < 200) {
+    constructionDuration = 6;
+  } else if (surface < 500) {
+    constructionDuration = 9;
+  } else {
+    constructionDuration = 12;
+  }
+  
+  // Adjust for complexity
+  if (complexityMultiplier > 1.2) {
+    designDuration += 1;
+    permitsDuration += 1;
+    constructionDuration = Math.round(constructionDuration * 1.25);
+  }
+  
+  // Renovation projects typically have shorter durations for permits
   if (formData.projectType === 'renovation') {
-    breakdown = [
-      { name: 'Démolition & Préparation', percentage: 10 },
-      { name: 'Gros Œuvre', percentage: 20 },
-      { name: 'Menuiseries', percentage: 15 },
-      { name: 'Plomberie & Électricité', percentage: 20 },
-      { name: 'Isolation & Plâtrerie', percentage: 15 },
-      { name: 'Finitions & Revêtements', percentage: 15 },
-      { name: 'Divers & Imprévus', percentage: 5 },
-    ];
-  } else if (formData.projectType === 'extension') {
-    breakdown = [
-      { name: 'Terrassement & Fondations', percentage: 12 },
-      { name: 'Gros Œuvre', percentage: 25 },
-      { name: 'Charpente & Couverture', percentage: 15 },
-      { name: 'Raccords au bâtiment existant', percentage: 8 },
-      { name: 'Menuiseries', percentage: 10 },
-      { name: 'Plomberie & Électricité', percentage: 13 },
-      { name: 'Isolation & Plâtrerie', percentage: 10 },
-      { name: 'Finitions & Revêtements', percentage: 7 },
-    ];
+    permitsDuration = 2;
   }
   
-  // Calculer les montants pour chaque catégorie
-  return breakdown.map(category => ({
-    ...category,
-    amount: (totalEstimation * category.percentage) / 100
-  }));
+  // Calculate total timeline
+  const totalTimeline = designDuration + permitsDuration + biddingDuration + constructionDuration;
+  
+  // Create and return the estimation response
+  return {
+    constructionCosts: {
+      structuralWork,
+      finishingWork,
+      technicalLots,
+      externalWorks,
+      total: constructionCost
+    },
+    fees: {
+      architect: architectFees,
+      technicalStudies: technicalStudiesFees,
+      other: otherFees,
+      total: fees
+    },
+    otherCosts: {
+      insurance: insuranceCosts,
+      taxes: taxesCosts,
+      contingency: contingencyCosts,
+      total: otherCosts
+    },
+    totalAmount,
+    timeline: {
+      design: designDuration,
+      permits: permitsDuration,
+      bidding: biddingDuration,
+      construction: constructionDuration,
+      total: totalTimeline
+    }
+  };
 };
 
-// Fonction utilitaire pour obtenir un libellé lisible pour le type de projet
-export const getProjectTypeLabel = (projectType: string): string => {
-  const projectTypes: Record<string, string> = {
-    'construction': 'Construction neuve',
-    'renovation': 'Rénovation',
-    'extension': 'Extension',
-    'division': 'Division de propriété',
-    'design': 'Design d\'intérieur',
-  };
+// Utility function to ensure we always get a valid estimation object
+export const getSafeEstimation = (estimation: EstimationResponseData | number | null, formData: FormData): EstimationResponseData => {
+  if (estimation === null) {
+    return calculateEstimation(formData);
+  }
   
-  return projectTypes[projectType] || projectType;
+  if (typeof estimation === 'number') {
+    return calculateEstimation(formData);
+  }
+  
+  return estimation;
 };

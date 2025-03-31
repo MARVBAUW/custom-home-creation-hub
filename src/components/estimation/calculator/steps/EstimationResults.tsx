@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Save, Mail, Download } from 'lucide-react';
-import { FormData } from '../types';
+import { FormData, EstimationResponseData } from '../types';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { formatCurrency } from '@/utils/formatters';
@@ -14,12 +13,31 @@ import { useAuth } from '@/hooks/useAuth';
 import EstimationPDFExport from '../EstimationPDFExport';
 
 interface EstimationResultsProps {
+  estimation: EstimationResponseData | number;
   formData: FormData;
-  onBack: () => void;
+  onBack?: () => void;
+  goToPreviousStep?: () => void;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToNextStep?: () => void;
+  isLoading?: boolean;
 }
 
-const EstimationResults: React.FC<EstimationResultsProps> = ({ formData, onBack }) => {
-  const [estimation, setEstimation] = useState(calculateEstimation(formData));
+const EstimationResults: React.FC<EstimationResultsProps> = ({ 
+  estimation: initialEstimation, 
+  formData, 
+  onBack, 
+  goToPreviousStep, 
+  updateFormData, 
+  goToNextStep, 
+  isLoading 
+}) => {
+  // Ensure estimation is the correct type
+  const [estimation, setEstimation] = useState<EstimationResponseData>(
+    typeof initialEstimation === 'number' 
+      ? calculateEstimation(formData) 
+      : initialEstimation
+  );
+  
   const [isSending, setIsSending] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -28,8 +46,20 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({ formData, onBack 
 
   // Recalculate on form data change
   useEffect(() => {
-    setEstimation(calculateEstimation(formData));
-  }, [formData]);
+    if (typeof initialEstimation === 'number') {
+      setEstimation(calculateEstimation(formData));
+    } else {
+      setEstimation(initialEstimation);
+    }
+  }, [formData, initialEstimation]);
+
+  const handleGoBack = () => {
+    if (onBack) {
+      onBack();
+    } else if (goToPreviousStep) {
+      goToPreviousStep();
+    }
+  };
 
   const handleSaveEstimation = async () => {
     try {
@@ -125,7 +155,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({ formData, onBack 
     }
   };
 
-  const createEmailHtml = (formData: FormData, estimation: any): string => {
+  const createEmailHtml = (formData: FormData, estimation: EstimationResponseData): string => {
     return `
       <html>
         <head>
@@ -211,7 +241,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({ formData, onBack 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Button variant="outline" onClick={onBack}>
+        <Button variant="outline" onClick={handleGoBack}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Modifier les données
         </Button>
         <h2 className="text-2xl font-semibold">Résultats de l'estimation</h2>
@@ -330,20 +360,22 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({ formData, onBack 
                 <div className="space-y-4">
                   <div className="relative pt-6">
                     <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-khaki-200"></div>
-                    {Object.entries(estimation.timeline).filter(([key]) => key !== 'total').map(([phase, duration], index) => (
-                      <div key={phase} className="ml-12 relative mb-6">
-                        <div className="absolute -left-12 top-0 w-8 h-8 rounded-full bg-khaki-600 text-white flex items-center justify-center">
-                          {index + 1}
+                    {Object.entries(estimation.timeline)
+                      .filter(([key]) => key !== 'total')
+                      .map(([phase, duration], index) => (
+                        <div key={phase} className="ml-12 relative mb-6">
+                          <div className="absolute -left-12 top-0 w-8 h-8 rounded-full bg-khaki-600 text-white flex items-center justify-center">
+                            {index + 1}
+                          </div>
+                          <h4 className="font-medium">
+                            {phase === 'design' ? 'Conception et études' :
+                            phase === 'permits' ? 'Autorisations administratives' :
+                            phase === 'bidding' ? 'Consultation des entreprises' :
+                            phase === 'construction' ? 'Travaux' : phase}
+                          </h4>
+                          <p className="text-gray-600">{duration} mois</p>
                         </div>
-                        <h4 className="font-medium">
-                          {phase === 'design' ? 'Conception et études' :
-                           phase === 'permits' ? 'Autorisations administratives' :
-                           phase === 'bidding' ? 'Consultation des entreprises' :
-                           phase === 'construction' ? 'Travaux' : phase}
-                        </h4>
-                        <p className="text-gray-600">{duration} mois</p>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                   
                   <div className="bg-khaki-50 p-4 rounded-lg">
