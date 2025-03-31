@@ -1,6 +1,7 @@
 
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
+import { calculateParquetCost, calculateSoftFloorCost } from '../../utils/montantUtils';
 
 export const useInteriorSubmissions = () => {
   // Function to handle platrerie submission
@@ -30,13 +31,27 @@ export const useInteriorSubmissions = () => {
   };
 
   // Function to handle parquet submission
-  const handleParquetSubmit = (data: any) => {
+  const handleParquetSubmit = (data: any, formData: FormData) => {
+    const surface = ensureNumber(formData.surface, 0);
+    let additionalCost = 0;
+    
+    if (data.parquetType && data.parquetType !== 'none') {
+      additionalCost += calculateParquetCost(data.parquetType, ensureNumber(data.parquetArea, 0));
+    }
+    
+    if (data.softFloorType && data.softFloorType !== 'none') {
+      additionalCost += calculateSoftFloorCost(data.softFloorType, ensureNumber(data.softFloorArea, 0));
+    }
+    
     return {
       parquetType: data.parquetType,
       parquetPercentage: ensureNumber(data.parquetPercentage),
       softFloorType: data.softFloorType,
       softFloorPercentage: ensureNumber(data.softFloorPercentage),
       parquetSurface: ensureNumber(data.parquetSurface),
+      parquetArea: ensureNumber(data.parquetArea, 0),
+      softFloorArea: ensureNumber(data.softFloorArea, 0),
+      montantT: (formData.montantT || 0) + additionalCost
     };
   };
 

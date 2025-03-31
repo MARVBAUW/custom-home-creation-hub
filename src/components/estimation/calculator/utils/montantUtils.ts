@@ -185,6 +185,48 @@ const getDoorTypeCostPerSquareMeter = (type: string): number => {
 };
 
 /**
+ * Calculate parquet flooring costs based on type and area
+ */
+export const calculateParquetCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getParquetCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different parquet types
+ */
+const getParquetCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'PARQUET DE BASE': return 50;
+    case 'PARQUET MG': return 90;
+    case 'PARQUET HG': return 160;
+    case 'none': return 0;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate soft flooring costs based on type and area
+ */
+export const calculateSoftFloorCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getSoftFloorCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different soft floor types
+ */
+const getSoftFloorCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'SOL SOUPLE BASE': return 30;
+    case 'SOL SOUPLE MG': return 60;
+    case 'SOL SOUPLE HG': return 100;
+    case 'none': return 0;
+    default: return 0;
+  }
+};
+
+/**
  * Calculate air conditioning costs
  */
 export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {

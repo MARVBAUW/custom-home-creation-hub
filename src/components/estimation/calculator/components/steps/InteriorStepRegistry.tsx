@@ -35,7 +35,8 @@ export const createInteriorStepRegistry = (
         formData={formData}
         updateFormData={(data) => onMenuiseriesIntSubmit({
           doorType: data.doorType || '',
-          interiorDoorsType: data.interiorDoorsType || ''
+          hasMoldings: data.hasMoldings || false,
+          hasCustomFurniture: data.hasCustomFurniture || false
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -48,7 +49,8 @@ export const createInteriorStepRegistry = (
         updateFormData={(data) => onCarrelageSubmit({
           floorTileType: data.floorTileType || '',
           wallTileType: data.wallTileType || '',
-          floorTilePercentage: data.floorTilePercentage || 0
+          floorTilePercentage: data.floorTilePercentage || 0,
+          floorTileArea: data.floorTileArea || 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -60,9 +62,9 @@ export const createInteriorStepRegistry = (
         formData={formData}
         updateFormData={(data) => onParquetSubmit({
           parquetType: data.parquetType || '',
-          parquetPercentage: data.parquetPercentage || 0,
+          parquetArea: data.parquetArea || 0,
           softFloorType: data.softFloorType || '',
-          softFloorPercentage: data.softFloorPercentage || 0
+          softFloorArea: data.softFloorArea || 0
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
