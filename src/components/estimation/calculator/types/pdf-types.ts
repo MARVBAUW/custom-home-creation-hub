@@ -1,6 +1,6 @@
 
 // Define proper types for jsPDF with AutoTable
-import { ContentOptions, UserOptions } from 'jspdf-autotable';
+import { UserOptions } from 'jspdf-autotable';
 
 export interface PubSub {
   publish: (eventName: string, ...args: any[]) => void;
@@ -33,7 +33,7 @@ export interface AutoTable {
 // Extend the jsPDF typing to include autoTable plugin
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: AutoTable;
+    autoTable: (options: UserOptions) => any;
     internal: JsPDFInternal;
   }
 }

@@ -4,6 +4,9 @@ export interface Message {
   type: 'system' | 'user' | 'assistant' | 'loading';
   content: string;
   options?: string[];
+  text?: string;
+  isUser?: boolean;
+  createdAt?: Date;
 }
 
 export interface ConversationState {
@@ -11,4 +14,28 @@ export interface ConversationState {
   askedQuestions: string[];
   completedFields: string[];
   formProgress: number;
+  messages?: Message[];
+  isTyping?: boolean;
+}
+
+export interface ConversationalProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  onClientTypeSubmit: (data: {clientType: string}) => void;
+  goToStep: (step: number) => void;
+}
+
+export interface MessageDisplayProps {
+  messages: Message[];
+  loading: boolean;
+  onOptionClick: (option: string) => void;
+  messagesEndRef: React.RefObject<HTMLDivElement>;
+}
+
+export interface InputAreaProps {
+  userInput: string;
+  setUserInput: (input: string) => void;
+  handleSendMessage: () => void;
+  handleKeyPress: (e: React.KeyboardEvent) => void;
 }
