@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Thermometer, Leaf, Wallet, Ban, Wind } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { calculateHeatingCost, ensureNumber } from '../utils/montantUtils';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
+import { calculateHeatingCost, calculateAirConditioningCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
+import { Thermometer, Wind, Leaf, PiggyBank } from 'lucide-react';
 
 const ChauffageForm: React.FC<BaseFormProps> = ({
   formData,
@@ -16,7 +16,6 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  // Initialize state with the default value or the current formData value
   const [heatingType, setHeatingType] = useState<string>(
     formData.heatingType || 'standard'
   );
@@ -29,10 +28,16 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
     // Get the surface area
     const surface = ensureNumber(formData.surface, 0);
     
-    // Calculate the cost based on heating type, air conditioning, and surface
-    const additionalCost = calculateHeatingCost(heatingType, hasAirConditioning, surface);
+    // Calculate the heating cost based on type and surface
+    const heatingCost = calculateHeatingCost(heatingType, surface);
     
-    // Update form data with heating options and additional cost
+    // Calculate the air conditioning cost if selected
+    const airConditioningCost = calculateAirConditioningCost(hasAirConditioning, surface);
+    
+    // Total additional cost
+    const additionalCost = heatingCost + airConditioningCost;
+
+    // Update form data with heating type, air conditioning, and additional cost
     updateFormData({
       heatingType,
       hasAirConditioning,
@@ -48,80 +53,152 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <h3 className="text-lg font-medium mb-4">Type de chauffage</h3>
+        <h3 className="text-lg font-medium mb-4">Chauffage et Climatisation</h3>
         
-        <RadioGroup value={heatingType} onValueChange={setHeatingType} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setHeatingType('standard')}
+        <div>
+          <Label className="mb-2 block">Système de chauffage souhaité</Label>
+          <RadioGroup 
+            value={heatingType} 
+            onValueChange={setHeatingType}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
-            <CardContent className="pt-6 flex flex-col items-center text-center">
-              <Thermometer className="h-12 w-12 text-blue-500 mb-4" />
-              <RadioGroupItem value="standard" id="heating-standard" className="sr-only" />
-              <Label htmlFor="heating-standard" className="font-medium">Meilleur rapport qualité/prix</Label>
-              <p className="text-sm text-muted-foreground mt-2">Système de chauffage avec le meilleur rapport qualité/prix</p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'eco' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setHeatingType('eco')}
-          >
-            <CardContent className="pt-6 flex flex-col items-center text-center">
-              <Leaf className="h-12 w-12 text-green-500 mb-4" />
-              <RadioGroupItem value="eco" id="heating-eco" className="sr-only" />
-              <Label htmlFor="heating-eco" className="font-medium">Le plus écologique</Label>
-              <p className="text-sm text-muted-foreground mt-2">Système de chauffage respectueux de l'environnement</p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'economic' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setHeatingType('economic')}
-          >
-            <CardContent className="pt-6 flex flex-col items-center text-center">
-              <Wallet className="h-12 w-12 text-amber-500 mb-4" />
-              <RadioGroupItem value="economic" id="heating-economic" className="sr-only" />
-              <Label htmlFor="heating-economic" className="font-medium">Le plus économique</Label>
-              <p className="text-sm text-muted-foreground mt-2">Solution de chauffage au coût d'exploitation réduit</p>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setHeatingType('non_concerne')}
-          >
-            <CardContent className="pt-6 flex flex-col items-center text-center">
-              <Ban className="h-12 w-12 text-gray-500 mb-4" />
-              <RadioGroupItem value="non_concerne" id="heating-none" className="sr-only" />
-              <Label htmlFor="heating-none" className="font-medium">Non concerné</Label>
-              <p className="text-sm text-muted-foreground mt-2">Pas de chauffage nécessaire pour ce projet</p>
-            </CardContent>
-          </Card>
-        </RadioGroup>
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('standard')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Thermometer className="h-8 w-8 text-amber-500 mb-2" />
+                <RadioGroupItem value="standard" id="heating-standard" className="sr-only" />
+                <Label htmlFor="heating-standard" className="font-medium">Meilleur rapport qualité prix</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Système de chauffage standard mais performant
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'eco' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('eco')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Leaf className="h-8 w-8 text-green-500 mb-2" />
+                <RadioGroupItem value="eco" id="heating-eco" className="sr-only" />
+                <Label htmlFor="heating-eco" className="font-medium">Le plus écologique</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Systèmes à faible impact environnemental
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'economic' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('economic')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <PiggyBank className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="economic" id="heating-economic" className="sr-only" />
+                <Label htmlFor="heating-economic" className="font-medium">Le plus économique</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Solution à moindre coût de fonctionnement
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'sans_avis' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('sans_avis')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="sans_avis" id="heating-sans_avis" className="sr-only" />
+                <Label htmlFor="heating-sans_avis" className="font-medium">Sans avis</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Recommandation par un professionnel
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHeatingType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="non_concerne" id="heating-non_concerne" className="sr-only" />
+                <Label htmlFor="heating-non_concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de système de chauffage requis
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
+        </div>
         
-        <div className="mt-8 border-t pt-6">
-          <h3 className="text-lg font-medium mb-4">Climatisation</h3>
-          
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="air-conditioning" 
-              checked={hasAirConditioning}
-              onCheckedChange={(checked) => setHasAirConditioning(checked as boolean)}
-            />
-            <div className="grid gap-1.5 leading-none">
-              <label
-                htmlFor="air-conditioning"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center"
-              >
-                <Wind className="h-4 w-4 mr-2 text-blue-500" />
-                Inclure un système de climatisation
-              </label>
-              <p className="text-sm text-muted-foreground">
-                Adapté pour maintenir une température idéale toute l'année
-              </p>
-            </div>
-          </div>
+        <div className="pt-5 border-t">
+          <Label className="mb-2 block">Climatisation - Rénovation / Création</Label>
+          <RadioGroup 
+            value={hasAirConditioning ? "yes" : "no"} 
+            onValueChange={(value) => setHasAirConditioning(value === "yes")}
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
+          >
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${!hasAirConditioning ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHasAirConditioning(false)}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wind className="h-8 w-8 text-gray-500 mb-2" />
+                <RadioGroupItem value="no" id="ac-no" className="sr-only" />
+                <Label htmlFor="ac-no" className="font-medium">Non</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de climatisation requise
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${hasAirConditioning ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setHasAirConditioning(true)}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Wind className="h-8 w-8 text-blue-500 mb-2" />
+                <RadioGroupItem value="yes" id="ac-yes" className="sr-only" />
+                <Label htmlFor="ac-yes" className="font-medium">Oui</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Installation de climatisation
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'sans_avis' && !hasAirConditioning ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => {
+                setHeatingType('sans_avis');
+                setHasAirConditioning(false);
+              }}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="sans_avis" id="ac-sans_avis" className="sr-only" />
+                <Label htmlFor="ac-sans_avis" className="font-medium">Sans avis</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Recommandation par un professionnel
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${heatingType === 'non_concerne' && !hasAirConditioning ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => {
+                setHeatingType('non_concerne');
+                setHasAirConditioning(false);
+              }}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="non_concerne" id="ac-non_concerne" className="sr-only" />
+                <Label htmlFor="ac-non_concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas applicable à ce projet
+                </p>
+              </CardContent>
+            </Card>
+          </RadioGroup>
         </div>
         
         <div className="flex justify-between pt-4">

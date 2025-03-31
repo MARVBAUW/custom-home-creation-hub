@@ -188,3 +188,90 @@ export function calculateWindowsCost(type: string, area: number): number {
       return 0;
   }
 }
+
+/**
+ * Calculate cost for electrical installation based on the type and surface area
+ * @param type Type of electrical installation
+ * @param area Surface area in square meters
+ * @returns Cost of electrical installation in euros
+ */
+export function calculateElectricalCost(type: string, area: number): number {
+  switch (type) {
+    case 'basic':
+    case 'PRESTATION DE BASE':
+      return 100 * area;
+    case 'standard':
+    case 'PRESTATIONS AVANCEES':
+      return 125 * area;
+    case 'premium':
+    case 'PRESTATIONS HAUT DE GAMME':
+      return 155 * area;
+    case 'smart_home':
+    case 'PRESTATIONS HG + DOMMOTIQUE':
+      return 190 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculate cost for plumbing based on the plumbing type and surface area
+ * @param type Type of plumbing installation
+ * @param area Surface area in square meters
+ * @returns Cost of plumbing in euros
+ */
+export function calculatePlumbingCost(type: string, area: number): number {
+  switch (type) {
+    case 'basic':
+    case 'PRESTATIONS DE BASE':
+      return 80 * area;
+    case 'standard':
+    case 'PRESTATIONS AVANCEES':
+      return 100 * area;
+    case 'premium':
+    case 'PRESTATIONS HAUT DE GAMME':
+      return 125 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculate cost for heating system based on the type and surface area
+ * @param type Type of heating system
+ * @param area Surface area in square meters
+ * @returns Cost of heating in euros
+ */
+export function calculateHeatingCost(type: string, area: number): number {
+  switch (type) {
+    case 'standard':
+    case 'MEILLEURS RAPPORT QUALITE PRIX':
+    case 'SANS AVIS':
+      return 60 * area;
+    case 'eco':
+    case 'LE PLUS ECOLOGIQUE':
+      return 120 * area;
+    case 'economic':
+    case 'LE PLUS ECONOMIQUE':
+      return 45 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculate cost for air conditioning based on whether it's included
+ * @param hasAirConditioning Boolean indicating if air conditioning is required
+ * @param area Surface area in square meters
+ * @returns Cost of air conditioning in euros
+ */
+export function calculateAirConditioningCost(hasAirConditioning: boolean, area: number): number {
+  return hasAirConditioning ? 65 * area : 0;
+}
+

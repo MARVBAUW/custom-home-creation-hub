@@ -17,7 +17,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
   animationDirection
 }) => {
   const [electricalType, setElectricalType] = useState<string>(
-    formData.electricalType || 'standard'
+    formData.electricalType || 'basic'
   );
 
   const handleSubmit = () => {
@@ -52,13 +52,13 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
             className="grid grid-cols-1 gap-3 sm:grid-cols-3"
           >
             <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setElectricalType('standard')}
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'basic' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('basic')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
                 <Bolt className="h-8 w-8 text-yellow-500 mb-2" />
-                <RadioGroupItem value="standard" id="electrical-standard" className="sr-only" />
-                <Label htmlFor="electrical-standard" className="font-medium">Prestations de base</Label>
+                <RadioGroupItem value="basic" id="electrical-basic" className="sr-only" />
+                <Label htmlFor="electrical-basic" className="font-medium">Prestations de base</Label>
                 <p className="text-xs text-gray-500 mt-1">
                   Installation électrique standard
                 </p>
@@ -66,13 +66,13 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
             </Card>
             
             <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'advanced' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setElectricalType('advanced')}
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('standard')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
                 <CircuitBoard className="h-8 w-8 text-yellow-500 mb-2" />
-                <RadioGroupItem value="advanced" id="electrical-advanced" className="sr-only" />
-                <Label htmlFor="electrical-advanced" className="font-medium">Prestations avancées</Label>
+                <RadioGroupItem value="standard" id="electrical-standard" className="sr-only" />
+                <Label htmlFor="electrical-standard" className="font-medium">Prestations avancées</Label>
                 <p className="text-xs text-gray-500 mt-1">
                   Câblage renforcé et domotique basique
                 </p>
@@ -88,7 +88,34 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
                 <RadioGroupItem value="premium" id="electrical-premium" className="sr-only" />
                 <Label htmlFor="electrical-premium" className="font-medium">Prestations haut de gamme</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Domotique avancée, éclairage intelligent
+                  Éclairage intelligent et installation haute qualité
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'smart_home' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('smart_home')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Zap className="h-8 w-8 text-green-500 mb-2" />
+                <RadioGroupItem value="smart_home" id="electrical-smart_home" className="sr-only" />
+                <Label htmlFor="electrical-smart_home" className="font-medium">Prestations HG + Domotique</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Maison connectée et automatisation complète
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${electricalType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setElectricalType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="non_concerne" id="electrical-non_concerne" className="sr-only" />
+                <Label htmlFor="electrical-non_concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas d'installation électrique requise
                 </p>
               </CardContent>
             </Card>
