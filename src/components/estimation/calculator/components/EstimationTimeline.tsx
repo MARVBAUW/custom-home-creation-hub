@@ -40,7 +40,7 @@ const EstimationTimeline: React.FC<EstimationTimelineProps> = ({ timeline }) => 
     {
       phase: 'Réalisation des travaux',
       duration: timeline.construction || 9,
-      description: 'Exécution des travaux jusqu'à la réception'
+      description: "Exécution des travaux jusqu'à la réception"
     }
   ];
 
