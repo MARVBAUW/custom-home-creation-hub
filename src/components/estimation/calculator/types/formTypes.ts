@@ -11,6 +11,8 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward' | string;
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 // Type aliases for backward compatibility

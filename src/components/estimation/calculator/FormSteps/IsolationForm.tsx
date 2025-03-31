@@ -9,7 +9,12 @@ import { Shield, ShieldCheck, Award, Leaf, Wrench } from 'lucide-react';
 import { calculateInsulationCost } from '../utils/montantUtils';
 import { ensureNumber } from '../utils/typeConversions';
 
-const IsolationForm: React.FC<BaseFormProps> = ({
+interface ExtendedBaseFormProps extends BaseFormProps {
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+const IsolationForm: React.FC<ExtendedBaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,

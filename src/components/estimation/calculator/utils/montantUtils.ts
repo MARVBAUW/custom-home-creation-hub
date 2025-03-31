@@ -1,4 +1,3 @@
-
 // Import the ensureNumber function from typeConversions to re-export it for compatibility
 import { ensureNumber } from './typeConversions';
 
@@ -420,6 +419,134 @@ export const calculateComponentCost = (component: string, area: number): number 
     case 'plumbing': return 90 * area;
     default: return 0;
   }
+};
+
+/**
+ * Calculate insulation costs based on insulation type and area
+ */
+export const calculateInsulationCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getInsulationCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different insulation types
+ */
+const getInsulationCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 80;
+    case 'reinforced': return 100;
+    case 'passive': return 120;
+    case 'ecological': return 110;
+    case 'renovation': return 90;
+    case 'base': return 80;
+    case 'performance': return 100;
+    case 'ultraPerformance': return 120;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate roofing costs
+ */
+export const calculateRoofingCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getRoofingCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different roofing types
+ */
+const getRoofingCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'tuilePlate': return 120;
+    case 'tuileRonde': return 130;
+    case 'ardoise': return 240;
+    case 'zinc': return 180;
+    case 'chaume': return 220;
+    case 'bacAcier': return 110;
+    case 'bitume': return 90;
+    case 'vegetalisee': return 200;
+    case 'gravillonnee': return 150;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate facade costs
+ */
+export const calculateFacadeCost = (
+  formData: any,
+  stonePercentage: number | string,
+  plasterPercentage: number | string,
+  brickPercentage: number | string,
+  metalCladdingPercentage: number | string,
+  woodCladdingPercentage: number | string,
+  stoneCladdingPercentage: number | string
+): number => {
+  // Convert percentages to numbers
+  const stonePercent = ensureNumber(stonePercentage, 0);
+  const plasterPercent = ensureNumber(plasterPercentage, 0);
+  const brickPercent = ensureNumber(brickPercentage, 0);
+  const metalPercent = ensureNumber(metalCladdingPercentage, 0);
+  const woodPercent = ensureNumber(woodCladdingPercentage, 0);
+  const stoneCladdingPercent = ensureNumber(stoneCladdingPercentage, 0);
+  
+  // Calculate wall surface area (estimate based on project type and surface)
+  let wallSurface = 0;
+  const surface = ensureNumber(formData.surface, 0);
+  
+  if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+    wallSurface = surface * 2.8; // Approximate wall surface based on floor surface (2.8m height)
+  } else if (formData.projectType === 'renovation') {
+    wallSurface = surface * 2.5; // Slightly lower for renovation
+  } else {
+    wallSurface = surface * 2.5; // Default
+  }
+  
+  // Calculate cost based on percentages
+  let totalCost = 0;
+  
+  // Stone facade
+  if (stonePercent > 0) {
+    totalCost += (stonePercent / 100) * wallSurface * 220;
+  }
+  
+  // Plaster facade
+  if (plasterPercent > 0) {
+    totalCost += (plasterPercent / 100) * wallSurface * 65;
+  }
+  
+  // Brick facade
+  if (brickPercent > 0) {
+    totalCost += (brickPercent / 100) * wallSurface * 180;
+  }
+  
+  // Metal cladding
+  if (metalPercent > 0) {
+    totalCost += (metalPercent / 100) * wallSurface * 150;
+  }
+  
+  // Wood cladding
+  if (woodPercent > 0) {
+    totalCost += (woodPercent / 100) * wallSurface * 150;
+  }
+  
+  // Stone cladding
+  if (stoneCladdingPercent > 0) {
+    totalCost += (stoneCladdingPercent / 100) * wallSurface * 200;
+  }
+  
+  return totalCost;
+};
+
+/**
+ * Calculate a new total amount by adding a cost
+ */
+export const calculateNewMontantT = (currentTotal: number | undefined, additionalCost: number): number => {
+  const currentAmount = ensureNumber(currentTotal, 0);
+  return currentAmount + additionalCost;
 };
 
 // Re-export ensureNumber for backward compatibility
