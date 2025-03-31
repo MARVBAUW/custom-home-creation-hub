@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, Info } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { InfoCircle } from 'lucide-react';
 
 interface ProjectContactStepProps {
   formData: FormData;
@@ -119,7 +118,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
           
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
             <div className="flex items-start">
-              <InfoCircle className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+              <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
               <p className="text-sm text-blue-700">
                 {formData.projectType === 'design' 
                   ? "Ce type de projet nécessite une étude personnalisée. Un de nos designers vous contactera sous 24h pour discuter des détails."

@@ -2,13 +2,12 @@
 import React, { useState } from 'react';
 import { FormData } from '../types';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, Info } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { InfoCircle } from 'lucide-react';
 
 interface ProfessionalContactStepProps {
   formData: FormData;
@@ -104,7 +103,7 @@ const ProfessionalContactStep: React.FC<ProfessionalContactStepProps> = ({
           
           <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
             <div className="flex items-start">
-              <InfoCircle className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
+              <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
               <p className="text-sm text-blue-700">
                 Un conseiller spécialisé vous contactera sous 24h pour discuter de votre projet professionnel et vous proposer une solution adaptée.
               </p>
