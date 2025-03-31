@@ -41,59 +41,45 @@ export const calculatePaintingCost = (
 };
 
 /**
- * Calculate wall covering costs for a specific type and area
+ * Calculate wall covering costs based on type and area
  */
-export const calculateWallCoveringCost = (type: string, area: number | string): number => {
-  const areaNum = ensureNumber(area);
-  
+export const calculateWallCoveringCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getWallCoveringCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different wall covering types
+ */
+const getWallCoveringCostPerSquareMeter = (type: string): number => {
   switch (type) {
-    case 'basic':
-      return areaNum * 25; // Basic paint
-    case 'decorative':
-      return areaNum * 45; // Decorative paint
-    case 'wallpaper':
-      return areaNum * 35; // Wallpaper
-    case 'woodPanel':
-      return areaNum * 90; // Wood paneling
-    case 'stone':
-      return areaNum * 150; // Stone cladding
+    case 'paint_basic':
+      return 25;
+    case 'paint_premium':
+      return 45;
+    case 'wallpaper_standard':
+      return 35;
+    case 'wallpaper_premium':
+      return 60;
+    case 'wood_paneling':
+      return 90;
+    case 'stone_cladding':
+      return 150;
     default:
-      return 0;
+      return 25;
   }
 };
 
 /**
- * Calculate ceiling painting cost based on area and type
+ * Calculate ceiling paint costs
  */
-export const calculateCeilingPaintCost = (area: number | string, type: string): number => {
-  const areaNum = ensureNumber(area);
-  
-  switch (type) {
-    case 'basic':
-      return areaNum * 20; // Basic ceiling paint
-    case 'acoustic':
-      return areaNum * 45; // Acoustic ceiling treatment
-    case 'decorative':
-      return areaNum * 65; // Decorative ceiling (moldings, etc.)
-    default:
-      return areaNum * 20; // Default to basic
-  }
+export const calculateCeilingPaintCost = (area: number, isPremium: boolean = false): number => {
+  return area * (isPremium ? 30 : 20);
 };
 
 /**
- * Calculate trim/molding painting cost
+ * Calculate trim paint costs
  */
-export const calculateTrimPaintCost = (linearMeters: number | string, type: string): number => {
-  const length = ensureNumber(linearMeters);
-  
-  switch (type) {
-    case 'basic':
-      return length * 15; // Basic trim painting
-    case 'decorative':
-      return length * 30; // Decorative trim with complex finish
-    case 'premium':
-      return length * 45; // Premium trim with multiple coats/special finish
-    default:
-      return length * 15; // Default to basic
-  }
+export const calculateTrimPaintCost = (area: number, isPremium: boolean = false): number => {
+  return area * (isPremium ? 35 : 25);
 };
