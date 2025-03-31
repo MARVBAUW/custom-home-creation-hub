@@ -138,12 +138,12 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
     // Calculate facade cost
     const facadeCost = calculateFacadeCost(
       formData,
-      selectedFacades.includes('pierre') ? stonePercentage : 0,
-      selectedFacades.includes('enduit') ? plasterPercentage : 0,
-      selectedFacades.includes('brique') ? brickPercentage : 0,
-      selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : 0,
-      selectedFacades.includes('bardageBois') ? woodCladdingPercentage : 0,
-      selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : 0
+      selectedFacades.includes('pierre') ? stonePercentage : '0',
+      selectedFacades.includes('enduit') ? plasterPercentage : '0',
+      selectedFacades.includes('brique') ? brickPercentage : '0',
+      selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : '0',
+      selectedFacades.includes('bardageBois') ? woodCladdingPercentage : '0',
+      selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0'
     );
     
     // Calculate new total
@@ -151,12 +151,12 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
     
     // Update form data
     updateFormData({
-      stonePercentage: selectedFacades.includes('pierre') ? stonePercentage : 0,
-      plasterPercentage: selectedFacades.includes('enduit') ? plasterPercentage : 0,
-      brickPercentage: selectedFacades.includes('brique') ? brickPercentage : 0,
-      metalCladdingPercentage: selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : 0,
-      woodCladdingPercentage: selectedFacades.includes('bardageBois') ? woodCladdingPercentage : 0,
-      stoneCladdingPercentage: selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : 0,
+      stonePercentage: selectedFacades.includes('pierre') ? stonePercentage : '0',
+      plasterPercentage: selectedFacades.includes('enduit') ? plasterPercentage : '0',
+      brickPercentage: selectedFacades.includes('brique') ? brickPercentage : '0',
+      metalCladdingPercentage: selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : '0',
+      woodCladdingPercentage: selectedFacades.includes('bardageBois') ? woodCladdingPercentage : '0',
+      stoneCladdingPercentage: selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0',
       montantT: newMontantT
     });
     

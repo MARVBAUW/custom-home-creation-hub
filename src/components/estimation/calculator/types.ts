@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 export interface FormData {
@@ -24,11 +23,13 @@ export interface FormData {
   renovationScope?: string;
   terassementsViabilisation?: boolean | number;
   
-  // Additional fields to fix missing property errors
+  // Properties from FormTypes
   city?: string;
   landPrice?: number | string;
   levels?: number | string;
   finishLevel?: string;
+  finishStandard?: string;
+  finishingLevel?: string;
   bedrooms?: number | string;
   bathrooms?: number | string;
   kitchens?: number | string;
@@ -45,12 +46,12 @@ export interface FormData {
   landIncluded?: boolean | string;
   
   // Facade percentages
-  stonePercentage?: string;
-  plasterPercentage?: string;
-  brickPercentage?: string;
-  metalCladdingPercentage?: string;
-  woodCladdingPercentage?: string;
-  stoneCladdingPercentage?: string;
+  stonePercentage?: string | number;
+  plasterPercentage?: string | number;
+  brickPercentage?: string | number;
+  metalCladdingPercentage?: string | number;
+  woodCladdingPercentage?: string | number;
+  stoneCladdingPercentage?: string | number;
   
   // Windows
   windowType?: string;
@@ -70,9 +71,10 @@ export interface FormData {
   phone?: string;
   message?: string;
   
-  // New fields for the forms that reported missing properties
+  // Additional fields from formTypes
   doorType?: string;
-  finishStandard?: string;
+  interiorDoorType?: string;
+  interiorDoorsType?: string;
   foundationType?: string;
   carportType?: string;
   poolType?: string;
@@ -91,9 +93,15 @@ export interface FormData {
   bathroomCount?: number | string;
   kitchenType?: string;
   kitchenCost?: number;
+  
+  // Demolition fields
   demolitionTypes?: string[];
   demolitionPercentages?: { [key: string]: number };
   demolitionTotalArea?: number | string;
+  demolitionType?: string;
+  demolitionCost?: number;
+  
+  // Structural fields
   createWalls?: boolean;
   wallArea?: number | string;
   createFloors?: boolean;
@@ -101,17 +109,102 @@ export interface FormData {
   floorArea?: number | string;
   structuralFeatures?: string[];
   structuralFeatureValues?: { [key: string]: number | string };
+  
+  // Flooring fields
+  floorTileType?: string;
+  floorTilePercentage?: number | string;
+  floorTileArea?: number | string;
+  wallTileType?: string;
+  parquetType?: string;
+  parquetPercentage?: number | string;
+  parquetArea?: number | string;
+  softFloorType?: string;
+  softFloorPercentage?: number | string;
+  softFloorArea?: number | string;
+  
+  // Painting fields
+  paintType?: string;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
+  woodPanelingPercentage?: number | string;
+  stonePanelingPercentage?: number | string;
+  paintSurface?: number | string;
+  
+  // Special features
   renewableEnergyType?: string;
   environmentalSolutionType?: string;
-  termsAccepted?: boolean;
+  
+  // Project requirements
+  needsDemolition?: boolean;
+  
+  // Additional properties
+  basement?: boolean;
+  garage?: boolean;
+  hasAirConditioning?: boolean;
+  heatingType?: string;
+  smartHome?: boolean;
+  hasMoldings?: boolean;
+  hasCustomFurniture?: boolean;
+  
+  // Options for steps logic
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  includeLandscaping?: boolean;
+  includeOptions?: boolean;
+  includeCuisine?: boolean;
+  includeBathroom?: boolean;
+  
+  // Professional specific
   activity?: string;
   startDate?: string;
   endDate?: string;
+  termsAccepted?: boolean;
+  
+  // Other properties
+  name?: string;
+  constructionType?: string;
+  constructionStyle?: string;
+  units?: number | string;
+  plasteringType?: string;
+  livingRoomSize?: number | string;
+  livingRoomStyle?: string;
+  viabilisation?: number;
+  demoCost?: number;
+  bathroomBudget?: number | string;
+  kitchenBudget?: number | string;
+  landscapingBudget?: number | string;
+  solarPanelType?: string;
+  solarPanelSurface?: number | string;
+  windTurbineType?: string;
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  gardenSurface?: number | string;
+  exteriorFeatures?: string[];
+  interiorFittings?: string;
+  tileSurface?: number | string;
+  hasPool?: boolean;
+  hasTerrace?: boolean;
+  domotic?: boolean;
+  alarm?: boolean;
+  centralVacuum?: boolean;
+}
+
+// EstimationFormData is an alias of FormData for compatibility
+export type EstimationFormData = FormData;
+
+// Define EstimationTimeline for use in EstimationTimeline.tsx
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
 }
 
 export interface EstimationResponseData {
   totalAmount: number;
-  categories: Array<{ name: string; amount: number }>;
+  categories: Array<{ name: string; amount: number }> | Array<{ category: string; amount: number; details?: string }>;
   constructionCosts: {
     structuralWork: number;
     finishingWork: number;
@@ -145,13 +238,25 @@ export interface EstimationResponseData {
   };
 }
 
-// Define EstimationTimeline for use in EstimationTimeline.tsx
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  bidding: number;
-  construction: number;
+// Define FeeCosts for compatibility
+export interface FeeCosts {
+  architect: number;
+  engineeringFees: number;
+  architectFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  technicalStudies: number;
+  other: number;
   total: number;
 }
 
-// Add other types that might be needed in the application
+// Add BaseFormProps
+export interface BaseFormProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+  defaultValues?: Partial<FormData>;
+  onSubmit?: (data: Partial<FormData>) => void;
+}

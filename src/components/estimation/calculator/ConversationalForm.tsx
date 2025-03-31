@@ -86,7 +86,7 @@ const ConversationalForm: React.FC = () => {
       <TabsContent value="conversational" className="pt-4">
         <ConversationalEstimator 
           onUserInput={processUserInput} 
-          formData={formData as FormData} 
+          formData={formData} 
           updateFormData={updateFormData}
           onClientTypeSubmit={onClientTypeSubmit}
           goToStep={setStep}

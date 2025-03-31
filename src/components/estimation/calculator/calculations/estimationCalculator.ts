@@ -27,7 +27,15 @@ export const calculateEstimation = (data: FormData): EstimationResponseData => {
     fees,
     otherCosts,
     totalAmount,
-    timeline
+    timeline,
+    categories: [ // Add categories to match EstimationResponseData interface
+      { name: 'Structural Work', amount: constructionCosts.structuralWork },
+      { name: 'Finishing Work', amount: constructionCosts.finishingWork },
+      { name: 'Technical Lots', amount: constructionCosts.technicalLots },
+      { name: 'External Works', amount: constructionCosts.externalWorks },
+      { name: 'Fees', amount: fees.total },
+      { name: 'Other Costs', amount: otherCosts.total }
+    ]
   };
 };
 
