@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { calculateInteriorCarpenteryCost, ensureNumber } from '../utils/montantUtils';
-import { Door, PanelTop, PanelBottomClose } from 'lucide-react';
+import { DoorClosed, PanelTop, PanelBottomClose } from 'lucide-react';
 
 const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
   formData,
@@ -71,7 +71,7 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
               onClick={() => setDoorType('base')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Door className="h-8 w-8 text-blue-500 mb-2" />
+                <DoorClosed className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="base" id="door-base" className="sr-only" />
                 <Label htmlFor="door-base" className="font-medium">Base</Label>
                 <p className="text-xs text-gray-500 mt-1">
@@ -85,7 +85,7 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
               onClick={() => setDoorType('standing')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Door className="h-8 w-8 text-blue-500 mb-2" />
+                <DoorClosed className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="standing" id="door-standing" className="sr-only" />
                 <Label htmlFor="door-standing" className="font-medium">Standing</Label>
                 <p className="text-xs text-gray-500 mt-1">
@@ -99,7 +99,7 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
               onClick={() => setDoorType('premium')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Door className="h-8 w-8 text-blue-500 mb-2" />
+                <DoorClosed className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="premium" id="door-premium" className="sr-only" />
                 <Label htmlFor="door-premium" className="font-medium">Haut de gamme</Label>
                 <p className="text-xs text-gray-500 mt-1">

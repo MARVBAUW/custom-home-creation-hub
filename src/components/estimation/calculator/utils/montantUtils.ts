@@ -1,5 +1,8 @@
-// Re-export the utility functions from typeConversions.ts
-export { ensureNumber, toFormValue } from './typeConversions';
+// Import and re-export ensureNumber from typeConversions.ts
+import { ensureNumber, toFormValue } from './typeConversions';
+
+// Re-export these utility functions
+export { ensureNumber, toFormValue };
 
 /**
  * Calculate the cost of kitchen based on type and unit count
@@ -805,12 +808,19 @@ export const calculatePlasteringCost = (type: string, area: number | string): nu
 
 /**
  * Calculate interior carpentry cost
- * @param type Type of carpentry
- * @param area Area in m²
+ * @param doorType Type of door
+ * @param hasMoldings Whether there are moldings
+ * @param hasCustomFurniture Whether there is custom furniture
+ * @param surface Surface area in m²
  * @returns The calculated cost
  */
-export const calculateInteriorCarpenteryCost = (type: string, area: number | string): number => {
-  const areaNum = ensureNumber(area, 0);
+export const calculateInteriorCarpenteryCost = (
+  type: string,
+  hasMoldings: boolean,
+  hasCustomFurniture: boolean,
+  surface: number | string
+): number => {
+  const areaNum = ensureNumber(surface, 0);
   let baseCost = 0;
   
   switch (type) {
