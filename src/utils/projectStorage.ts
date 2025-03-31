@@ -37,6 +37,12 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
       throw error;
     }
     
+    // Si aucun projet trouvé, retourner des projets de démo
+    if (!data || data.length === 0) {
+      console.log("Aucun projet trouvé, retour des projets de démo");
+      return getDemoProjects();
+    }
+    
     // Convertir les données de la base en ProjectDetails
     const projects: ProjectDetails[] = data.map(project => {
       // Parse the timeline data safely
@@ -83,27 +89,51 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
     return projects;
   } catch (error) {
     console.error("Erreur lors du chargement des projets:", error);
-    return [];
+    // En cas d'erreur, retourner des projets de démo
+    return getDemoProjects();
   }
 };
 
 // Charger un projet par son ID
 export const loadProjectById = async (projectId: string): Promise<ProjectDetails | null> => {
   try {
+    // Log to track execution
+    console.log("Loading project by ID:", projectId);
+    
+    // Format demo IDs to match the expected pattern
+    if (projectId.startsWith("demo-")) {
+      const demoProjects = getDemoProjects();
+      const demoProject = demoProjects.find(p => p.id === projectId);
+      console.log("Demo project found:", demoProject ? "yes" : "no");
+      return demoProject || null;
+    }
+    
+    // Fetch from Supabase
     const { data, error } = await supabase
       .from('admin_projects')
       .select('*')
       .eq('id', projectId)
       .single();
     
+    // Check for errors
     if (error) {
-      console.error("Erreur lors du chargement du projet:", error);
+      console.error("Error loading project from Supabase:", error);
+      // If project not found, try demo projects
+      if (error.code === 'PGRST116') {
+        console.log("Project not found in database, checking demo projects");
+        const demoProjects = getDemoProjects();
+        return demoProjects.find(p => p.id === projectId) || null;
+      }
       throw error;
     }
     
+    // If no data returned
     if (!data) {
+      console.log("No data returned from Supabase");
       return null;
     }
+    
+    console.log("Project data from Supabase:", data);
     
     // Parse the timeline data safely
     const timelineData = parseTimelineData(data.timeline);
@@ -148,7 +178,14 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
     
     return project;
   } catch (error) {
-    console.error("Erreur lors du chargement du projet:", error);
+    console.error("Error loading project:", error);
+    
+    // In case of error, check if we're looking for a demo project
+    if (projectId.startsWith("demo-")) {
+      const demoProjects = getDemoProjects();
+      return demoProjects.find(p => p.id === projectId) || null;
+    }
+    
     return null;
   }
 };
@@ -259,6 +296,44 @@ export const getDemoProjects = (): ProjectDetails[] => {
         global: {
           startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
           endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 60).toISOString(),
+        },
+        design: {
+          startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
+          endDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
+        },
+        permits: {
+          startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(),
+        },
+        construction: {
+          startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 50).toISOString(),
+        },
+        phases: {
+          feasibility: {
+            startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
+            endDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(),
+          },
+          dce: {
+            startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(),
+            endDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
+          },
+          act: {
+            startDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).toISOString(),
+          },
+          exe: {
+            startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).toISOString(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 45).toISOString(),
+          },
+          reception: {
+            startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 45).toISOString(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 55).toISOString(),
+          },
+          delivery: {
+            startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 55).toISOString(),
+            endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 60).toISOString(),
+          }
         }
       },
       phases: {
@@ -274,8 +349,30 @@ export const getDemoProjects = (): ProjectDetails[] => {
       description: "Rénovation complète d'un appartement de 75m² à Paris",
       adminAuthorization: "granted",
       automaticDates: true,
-      team: {},
-      companies: [],  // Initialize as empty array instead of empty object
+      team: {
+        projectManager: "Jean Dupont",
+        technicalDirector: "Marie Lambert",
+        draftsman: "Pierre Martin",
+        workSupervisor: "Sophie Lefevre",
+      },
+      companies: [
+        {
+          name: "Dupont Construction",
+          contactName: "Jean Dupont",
+          email: "contact@dupont-construction.fr",
+          phone: "01 23 45 67 89",
+          address: "123 Avenue des Champs-Élysées, Paris",
+          role: "Gros œuvre"
+        },
+        {
+          name: "Électricité Lambert",
+          contactName: "Marie Lambert",
+          email: "marie@electricite-lambert.fr",
+          phone: "01 98 76 54 32",
+          address: "45 Rue de Rivoli, Paris",
+          role: "Électricité"
+        }
+      ],
       execution: {},
       permits: {},
       technicalOffices: {},
@@ -294,6 +391,18 @@ export const getDemoProjects = (): ProjectDetails[] => {
         global: {
           startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(),
           endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 120).toISOString(),
+        },
+        design: {
+          startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 45).toISOString(),
+        },
+        permits: {
+          startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 40).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 70).toISOString(),
+        },
+        construction: {
+          startDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 70).toISOString(),
+          endDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 110).toISOString(),
         }
       },
       phases: {
@@ -310,7 +419,7 @@ export const getDemoProjects = (): ProjectDetails[] => {
       adminAuthorization: "granted",
       automaticDates: true,
       team: {},
-      companies: [],  // Initialize as empty array instead of empty object
+      companies: [],
       execution: {},
       permits: {},
       technicalOffices: {},

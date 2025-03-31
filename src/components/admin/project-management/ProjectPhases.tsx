@@ -1,70 +1,88 @@
 
 import React from 'react';
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
-import { CheckSquare, Circle, Clock } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { ProjectPhase, ProjectPhases as ProjectPhasesType } from '@/types/project';
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Check, Clock } from 'lucide-react';
+import { ProjectPhases as ProjectPhasesType } from '@/types/project';
 
 interface ProjectPhasesProps {
-  projectId?: string;
-  phases?: ProjectPhasesType;
+  projectId: string;
+  phases: ProjectPhasesType;
 }
 
-const ProjectPhases = ({ projectId, phases }: ProjectPhasesProps) => {
-  const phasesList: { id: ProjectPhase; label: string }[] = [
-    { id: 'feasibility', label: 'Faisabilité' },
-    { id: 'dce', label: 'DCE' },
-    { id: 'act', label: 'ACT' },
-    { id: 'exe', label: 'EXE' },
-    { id: 'reception', label: 'Réception' },
-    { id: 'delivery', label: 'Livraison' },
-  ];
+const phaseLabels: Record<string, string> = {
+  feasibility: "Faisabilité",
+  dce: "DCE",
+  act: "ACT",
+  exe: "EXE",
+  reception: "Réception",
+  delivery: "Livraison"
+};
 
-  if (!phases) {
-    return null;
-  }
-
+const ProjectPhases: React.FC<ProjectPhasesProps> = ({ projectId, phases }) => {
+  // Count the number of completed phases
+  const completedPhases = Object.values(phases).filter(Boolean).length;
+  const totalPhases = Object.keys(phases).length;
+  const progress = Math.round((completedPhases / totalPhases) * 100);
+  
   return (
     <Card>
-      <CardContent className="p-0">
-        <div className="flex flex-wrap md:flex-nowrap">
-          {phasesList.map((phase, index) => {
-            const isActive = phases[phase.id];
-            const isComplete = false; // To implement: actual phase completion status
-            const isInProgress = isActive && !isComplete; // To implement: actual phase progress status
-            
-            return (
+      <CardContent className="p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+          <div>
+            <h3 className="text-lg font-medium mb-1">Phases du projet</h3>
+            <p className="text-sm text-gray-500">Avancement global: {progress}%</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Check className="h-3 w-3" /> 
+              <span>{completedPhases} sur {totalPhases}</span>
+            </Badge>
+          </div>
+        </div>
+        
+        <div className="relative">
+          {/* Progress bar */}
+          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-8">
+            <div 
+              className="h-full bg-khaki-600 rounded-full" 
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          
+          {/* Phase indicators */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(phases).map(([key, completed]) => (
               <div 
-                key={phase.id}
-                className={cn(
-                  "flex-1 py-3 px-4 text-center relative",
-                  index !== phasesList.length - 1 && "border-r border-gray-200",
-                  !isActive && "opacity-50 bg-gray-50",
-                  isInProgress && "bg-khaki-50",
-                  isComplete && "bg-green-50",
-                )}
+                key={key} 
+                className={`flex items-center p-3 rounded-lg border ${
+                  completed 
+                    ? "border-green-200 bg-green-50" 
+                    : "border-gray-200 bg-gray-50"
+                }`}
               >
-                <div className="flex justify-center mb-2">
-                  {isComplete ? (
-                    <CheckSquare className="h-6 w-6 text-green-500" />
-                  ) : isInProgress ? (
-                    <Clock className="h-6 w-6 text-khaki-600" />
+                <div 
+                  className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
+                    completed 
+                      ? "bg-green-100 text-green-600" 
+                      : "bg-gray-200 text-gray-500"
+                  }`}
+                >
+                  {completed ? (
+                    <Check className="h-4 w-4" />
                   ) : (
-                    <Circle className="h-6 w-6 text-gray-300" />
+                    <Clock className="h-4 w-4" />
                   )}
                 </div>
-                <span className={cn(
-                  "text-sm font-medium",
-                  isComplete ? "text-green-700" : isInProgress ? "text-khaki-800" : "text-gray-500"
-                )}>
-                  {phase.label}
-                </span>
+                <div>
+                  <p className="font-medium">{phaseLabels[key] || key}</p>
+                  <p className="text-xs text-gray-500">
+                    {completed ? "Terminée" : "À venir"}
+                  </p>
+                </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>

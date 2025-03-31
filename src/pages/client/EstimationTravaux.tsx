@@ -1,51 +1,142 @@
 
-import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
-import { useClientAuth } from '@/hooks/useClientAuth';
 import ClientNavigation from '@/components/client/ClientNavigation';
-import Navbar from '@/components/layout/Navbar';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import AdminSwitch from '@/components/client/AdminSwitch';
+import { useToast } from '@/hooks/use-toast';
+import { useClientAuth } from '@/hooks/useClientAuth';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { useParams, useNavigate } from 'react-router-dom';
+import { loadProjectById } from '@/utils/projectStorage';
+import { ProjectDetails } from '@/types/project';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Home, Calculator, Euro, Hammer, Building, Ruler, RefreshCcw, Download, Check } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, DownloadCloud, Mail, Save, Pencil } from 'lucide-react';
+import { formatCurrency } from '@/utils/formatters';
 
 const EstimationTravaux = () => {
-  const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [calculatedEstimation, setCalculatedEstimation] = useState<null | number>(null);
+  const { projectId } = useParams<{ projectId: string }>();
+  const { isLoaded, isSignedIn } = useClientAuth({ redirectIfUnauthenticated: true });
+  const [isAdminMode, setIsAdminMode] = useState(true);
+  const { toast } = useToast();
   const navigate = useNavigate();
-  
-  // Check localStorage for admin mode
-  React.useEffect(() => {
-    const savedMode = localStorage.getItem('adminMode');
-    if (savedMode === 'true') {
-      setIsAdminMode(true);
-    }
-  }, []);
+  const [project, setProject] = useState<ProjectDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [estimation, setEstimation] = useState({
+    structuralWork: 0,
+    finishingWork: 0,
+    technicalLots: 0,
+    externalWorks: 0,
+    total: 0
+  });
 
-  const handleCalculate = () => {
-    setIsCalculating(true);
+  // Load project details
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!projectId) return;
+      
+      setIsLoading(true);
+      try {
+        const projectData = await loadProjectById(projectId);
+        if (projectData) {
+          setProject(projectData);
+          calculateEstimation(projectData);
+        } else {
+          toast({
+            title: 'Erreur',
+            description: 'Projet non trouvé',
+            variant: 'destructive',
+          });
+          navigate('/workspace/client-area/admin/projects');
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement du projet :', error);
+        toast({
+          title: 'Erreur',
+          description: 'Impossible de charger les détails du projet',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [projectId, navigate, toast]);
+
+  // Calculate a basic estimation based on project type and size
+  const calculateEstimation = (project: ProjectDetails) => {
+    const workAmount = typeof project.workAmount === 'string' 
+      ? parseFloat(project.workAmount) 
+      : project.workAmount || 0;
     
-    // Simulate API call
-    setTimeout(() => {
-      // Generate a random estimation between 50,000 and 150,000
-      const estimation = Math.floor(Math.random() * (150000 - 50000 + 1)) + 50000;
-      setCalculatedEstimation(estimation);
-      setIsCalculating(false);
-    }, 1500);
+    // Base cost distribution
+    let structuralWorkPercent = 0.45;
+    let finishingWorkPercent = 0.30;
+    let technicalLotsPercent = 0.15;
+    let externalWorksPercent = 0.10;
+    
+    // Adjust based on project type
+    if (project.projectType === 'residential') {
+      // Residential has more finishing work
+      structuralWorkPercent = 0.40;
+      finishingWorkPercent = 0.35;
+    } else if (project.projectType === 'commercial') {
+      // Commercial has more technical lots
+      structuralWorkPercent = 0.35;
+      technicalLotsPercent = 0.25;
+      finishingWorkPercent = 0.25;
+    } else if (project.projectType === 'industrial') {
+      // Industrial has more structural work
+      structuralWorkPercent = 0.55;
+      technicalLotsPercent = 0.20;
+      finishingWorkPercent = 0.15;
+    }
+    
+    setEstimation({
+      structuralWork: workAmount * structuralWorkPercent,
+      finishingWork: workAmount * finishingWorkPercent,
+      technicalLots: workAmount * technicalLotsPercent,
+      externalWorks: workAmount * externalWorksPercent,
+      total: workAmount
+    });
   };
 
-  const formattedPrice = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+  // Handle admin mode toggle
+  const handleAdminModeToggle = (checked: boolean) => {
+    setIsAdminMode(checked);
+    localStorage.setItem('adminMode', checked.toString());
+    toast({
+      title: checked ? "Mode administrateur activé" : "Mode client activé",
+      description: checked 
+        ? "Vous pouvez maintenant gérer les dossiers et les clients." 
+        : "Vous voyez maintenant l'interface client standard.",
+    });
+  };
+
+  // Export the estimation as PDF
+  const handleExportPDF = () => {
+    toast({
+      title: "Export PDF",
+      description: "La fonctionnalité d'export PDF est en cours de développement.",
+    });
+  };
+
+  // Send the estimation by email
+  const handleSendEmail = () => {
+    toast({
+      title: "Envoi par email",
+      description: "La fonctionnalité d'envoi par email est en cours de développement.",
+    });
+  };
+
+  // Save the estimation
+  const handleSave = () => {
+    toast({
+      title: "Sauvegarde",
+      description: "La fonctionnalité de sauvegarde est en cours de développement.",
+    });
   };
 
   if (!isLoaded || !isSignedIn) {
@@ -54,28 +145,38 @@ const EstimationTravaux = () => {
     </div>;
   }
 
+  if (isLoading) {
+    return <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+    </div>;
+  }
+
   return (
     <>
       <Helmet>
-        <title>Estimation de Travaux | Espace Client Progineer</title>
-        <meta name="description" content="Estimez le coût de vos travaux avec Progineer." />
+        <title>Estimation des travaux | Progineer</title>
+        <meta name="description" content="Estimation détaillée des travaux pour votre projet" />
       </Helmet>
-
-      <Navbar />
 
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white dark:from-gray-900 dark:to-gray-950">
         <Container size="lg">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
               <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 dark:bg-khaki-900 dark:text-khaki-100 text-sm font-medium">
-                Outils
+                Administration
               </div>
               <h1 className="text-3xl md:text-4xl font-semibold mb-2 text-gray-900 dark:text-white">
-                Estimation de Travaux
+                Estimation des travaux
               </h1>
               <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
-                Estimez le coût de vos travaux de construction ou de rénovation.
+                Établissez une estimation détaillée des travaux pour le projet {project?.projectName || 'sélectionné'}.
               </p>
+            </div>
+            
+            {/* Admin Switch */}
+            <div className="md:mt-0 mt-4 flex items-center gap-3">
+              <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
+              <ThemeToggle />
             </div>
           </div>
         </Container>
@@ -91,298 +192,206 @@ const EstimationTravaux = () => {
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <Tabs defaultValue="construction" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="construction" className="flex items-center gap-2">
-                    <Building className="h-4 w-4" />
-                    <span>Construction Neuve</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="renovation" className="flex items-center gap-2">
-                    <Hammer className="h-4 w-4" />
-                    <span>Rénovation</span>
-                  </TabsTrigger>
-                </TabsList>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => navigate(`/workspace/client-area/admin/projects/${projectId}`)}
+                    className="flex items-center"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Retour au projet
+                  </Button>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" onClick={handleSave}>
+                      <Save className="h-4 w-4 mr-2" />
+                      Sauvegarder
+                    </Button>
+                    <Button variant="outline" onClick={handleSendEmail}>
+                      <Mail className="h-4 w-4 mr-2" />
+                      Envoyer par email
+                    </Button>
+                    <Button className="bg-khaki-600 hover:bg-khaki-700 text-white" onClick={handleExportPDF}>
+                      <DownloadCloud className="h-4 w-4 mr-2" />
+                      Exporter en PDF
+                    </Button>
+                  </div>
+                </div>
                 
-                {/* Construction Neuve */}
-                <TabsContent value="construction">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Estimation Construction Neuve</CardTitle>
-                      <CardDescription>
-                        Entrez les caractéristiques de votre projet pour obtenir une estimation.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div>
-                        <Label htmlFor="surface">Surface habitable (m²)</Label>
-                        <Input id="surface" type="number" placeholder="Ex: 120" />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="type">Type de construction</Label>
-                        <Select defaultValue="traditional">
-                          <SelectTrigger id="type">
-                            <SelectValue placeholder="Sélectionnez un type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="traditional">Traditionnelle</SelectItem>
-                            <SelectItem value="modern">Moderne</SelectItem>
-                            <SelectItem value="eco">Éco-responsable</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="location">Emplacement</Label>
-                        <Select defaultValue="city">
-                          <SelectTrigger id="location">
-                            <SelectValue placeholder="Sélectionnez un emplacement" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="city">Zone urbaine</SelectItem>
-                            <SelectItem value="suburban">Zone périurbaine</SelectItem>
-                            <SelectItem value="rural">Zone rurale</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="quality">Niveau de qualité</Label>
-                        <Select defaultValue="standard">
-                          <SelectTrigger id="quality">
-                            <SelectValue placeholder="Sélectionnez un niveau" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="basic">Basique</SelectItem>
-                            <SelectItem value="standard">Standard</SelectItem>
-                            <SelectItem value="premium">Premium</SelectItem>
-                            <SelectItem value="luxury">Luxe</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col space-y-1">
-                          <Label htmlFor="garage">Garage</Label>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Inclure un garage</span>
-                        </div>
-                        <Switch id="garage" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col space-y-1">
-                          <Label htmlFor="basement">Sous-sol</Label>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">Inclure un sous-sol</span>
-                        </div>
-                        <Switch id="basement" />
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div>
-                        <Label className="flex items-center gap-2">
-                          <span>Options supplémentaires</span>
-                          <Badge variant="outline" className="ml-2">Facultatif</Badge>
-                        </Label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                          <div className="flex items-center space-x-2">
-                            <Switch id="pool" />
-                            <Label htmlFor="pool">Piscine</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="solar" />
-                            <Label htmlFor="solar">Panneaux solaires</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="heatpump" />
-                            <Label htmlFor="heatpump">Pompe à chaleur</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="smarthome" />
-                            <Label htmlFor="smarthome">Domotique</Label>
+                {project ? (
+                  <div className="space-y-6">
+                    <Card>
+                      <CardHeader className="border-b pb-4">
+                        <div className="flex justify-between items-center">
+                          <CardTitle>Estimation des travaux</CardTitle>
+                          <div className="text-sm text-gray-500">
+                            Référence: EST-{new Date().getFullYear()}-{projectId?.slice(-4).toUpperCase()}
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex flex-col space-y-4">
-                      <Button 
-                        className="w-full bg-khaki-600 hover:bg-khaki-700 text-white flex items-center justify-center h-12"
-                        onClick={handleCalculate}
-                        disabled={isCalculating}
-                      >
-                        {isCalculating ? (
-                          <>
-                            <RefreshCcw className="mr-2 h-4 w-4 animate-spin" />
-                            Calcul en cours...
-                          </>
-                        ) : (
-                          <>
-                            <Calculator className="mr-2 h-4 w-4" />
-                            Calculer l'estimation
-                          </>
-                        )}
-                      </Button>
-                      
-                      {calculatedEstimation && (
-                        <div className="w-full p-4 border border-green-200 bg-green-50 rounded-lg">
-                          <div className="flex justify-between items-center mb-2">
-                            <h3 className="text-lg font-medium text-green-800 flex items-center">
-                              <Check className="mr-2 h-5 w-5" />
-                              Estimation complétée
-                            </h3>
-                            <Button variant="outline" size="sm" className="border-green-300 text-green-700 hover:bg-green-100">
-                              <Download className="mr-1.5 h-3.5 w-3.5" />
-                              PDF
-                            </Button>
+                      </CardHeader>
+                      <CardContent className="pt-6">
+                        <div className="space-y-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="border rounded-lg p-4 bg-gray-50">
+                              <h3 className="font-medium mb-2">Détails du projet</h3>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Nom du projet:</span>
+                                  <span>{project.projectName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Type:</span>
+                                  <span>{project.projectType === 'residential' ? 'Résidentiel' : 
+                                         project.projectType === 'commercial' ? 'Commercial' : 
+                                         project.projectType === 'industrial' ? 'Industriel' : 
+                                         project.projectType}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Localisation:</span>
+                                  <span>{project.location || 'Non définie'}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-600">Numéro de dossier:</span>
+                                  <span>{project.fileNumber || 'Non défini'}</span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="border rounded-lg p-4 bg-khaki-50">
+                              <h3 className="font-medium mb-2">Estimation globale</h3>
+                              <div className="text-center py-2">
+                                <div className="text-3xl font-bold text-khaki-800">
+                                  {formatCurrency(estimation.total)}
+                                </div>
+                                <div className="text-sm text-gray-600 mt-1">
+                                  Montant estimatif total des travaux HT
+                                </div>
+                              </div>
+                              <div className="mt-4 flex justify-between text-sm">
+                                <span>Date d'estimation:</span>
+                                <span>{new Date().toLocaleDateString('fr-FR')}</span>
+                              </div>
+                            </div>
                           </div>
-                          <p className="text-green-700 mb-2">
-                            Votre projet est estimé à environ:
+                          
+                          <div className="border rounded-lg p-4">
+                            <div className="flex justify-between items-center mb-4">
+                              <h3 className="font-medium">Détail par lots</h3>
+                              <Button variant="outline" size="sm" className="flex items-center">
+                                <Pencil className="h-3 w-3 mr-1" />
+                                Modifier
+                              </Button>
+                            </div>
+                            
+                            <table className="w-full">
+                              <thead className="bg-gray-100">
+                                <tr>
+                                  <th className="text-left p-2">Lots</th>
+                                  <th className="text-right p-2 w-1/4">Montant HT</th>
+                                  <th className="text-right p-2 w-1/4">Pourcentage</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr className="border-b">
+                                  <td className="p-2">
+                                    <div className="font-medium">Gros œuvre</div>
+                                    <div className="text-xs text-gray-500">Fondations, structure, maçonnerie</div>
+                                  </td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.structuralWork)}</td>
+                                  <td className="p-2 text-right">{Math.round((estimation.structuralWork / estimation.total) * 100)}%</td>
+                                </tr>
+                                <tr className="border-b">
+                                  <td className="p-2">
+                                    <div className="font-medium">Second œuvre</div>
+                                    <div className="text-xs text-gray-500">Menuiseries, plâtrerie, revêtements</div>
+                                  </td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.finishingWork)}</td>
+                                  <td className="p-2 text-right">{Math.round((estimation.finishingWork / estimation.total) * 100)}%</td>
+                                </tr>
+                                <tr className="border-b">
+                                  <td className="p-2">
+                                    <div className="font-medium">Lots techniques</div>
+                                    <div className="text-xs text-gray-500">Électricité, plomberie, CVC</div>
+                                  </td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.technicalLots)}</td>
+                                  <td className="p-2 text-right">{Math.round((estimation.technicalLots / estimation.total) * 100)}%</td>
+                                </tr>
+                                <tr className="border-b">
+                                  <td className="p-2">
+                                    <div className="font-medium">Aménagements extérieurs</div>
+                                    <div className="text-xs text-gray-500">VRD, espaces verts, clôtures</div>
+                                  </td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.externalWorks)}</td>
+                                  <td className="p-2 text-right">{Math.round((estimation.externalWorks / estimation.total) * 100)}%</td>
+                                </tr>
+                              </tbody>
+                              <tfoot className="bg-gray-50 font-medium">
+                                <tr>
+                                  <td className="p-2">Total HT</td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.total)}</td>
+                                  <td className="p-2 text-right">100%</td>
+                                </tr>
+                                <tr>
+                                  <td className="p-2">TVA (20%)</td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.total * 0.2)}</td>
+                                  <td className="p-2 text-right">20%</td>
+                                </tr>
+                                <tr className="font-bold">
+                                  <td className="p-2">Total TTC</td>
+                                  <td className="p-2 text-right">{formatCurrency(estimation.total * 1.2)}</td>
+                                  <td className="p-2 text-right"></td>
+                                </tr>
+                              </tfoot>
+                            </table>
+                          </div>
+                          
+                          <div className="border rounded-lg p-4">
+                            <h3 className="font-medium mb-4">Notes et hypothèses</h3>
+                            <div className="text-sm space-y-2 text-gray-600">
+                              <p>Cette estimation est basée sur les hypothèses suivantes :</p>
+                              <ul className="list-disc list-inside space-y-1 ml-4">
+                                <li>Tarifs marchés actuels (date de l'estimation)</li>
+                                <li>Surface approximative de {project.workAmount ? (Number(project.workAmount) / 1500).toFixed(0) : "N/A"} m²</li>
+                                <li>Type de construction standard pour un projet {project.projectType === 'residential' ? 'résidentiel' : 
+                                   project.projectType === 'commercial' ? 'commercial' : 
+                                   project.projectType === 'industrial' ? 'industriel' : 
+                                   project.projectType}</li>
+                                <li>Terrain sans contraintes particulières</li>
+                                <li>Prestations de qualité standard</li>
+                              </ul>
+                              <p className="mt-4">Cette estimation est fournie à titre indicatif et ne constitue pas un engagement contractuel. Un devis détaillé sera établi après étude approfondie du projet.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Estimation détaillée</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-center py-6">
+                          <p className="mb-6 text-gray-600">
+                            Pour une estimation plus détaillée, veuillez utiliser notre estimateur avancé qui vous permettra de préciser les caractéristiques techniques de votre projet.
                           </p>
-                          <div className="text-3xl font-bold text-green-800 flex items-center">
-                            <Euro className="mr-2 h-6 w-6" />
-                            {formattedPrice(calculatedEstimation)}
-                          </div>
-                          <p className="text-sm text-green-600 mt-2">
-                            Cette estimation inclut le coût de construction sans les frais de notaire et les taxes.
-                          </p>
+                          <Button 
+                            className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                            onClick={() => navigate('/calcul-estimation')}
+                          >
+                            Utiliser l'estimateur avancé
+                          </Button>
                         </div>
-                      )}
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-                
-                {/* Rénovation */}
-                <TabsContent value="renovation">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Estimation Rénovation</CardTitle>
-                      <CardDescription>
-                        Estimez le coût de vos travaux de rénovation.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div>
-                        <Label htmlFor="renovation-surface">Surface à rénover (m²)</Label>
-                        <Input id="renovation-surface" type="number" placeholder="Ex: 80" />
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="renovation-type">Type de rénovation</Label>
-                        <Select defaultValue="light">
-                          <SelectTrigger id="renovation-type">
-                            <SelectValue placeholder="Sélectionnez un type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="light">Légère (peinture, sols)</SelectItem>
-                            <SelectItem value="medium">Moyenne (cuisine, salle de bain)</SelectItem>
-                            <SelectItem value="heavy">Lourde (murs, plomberie, électricité)</SelectItem>
-                            <SelectItem value="complete">Complète (tout refaire)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="building-age">Âge du bâtiment</Label>
-                        <Select defaultValue="10-30">
-                          <SelectTrigger id="building-age">
-                            <SelectValue placeholder="Sélectionnez une tranche d'âge" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="0-10">Moins de 10 ans</SelectItem>
-                            <SelectItem value="10-30">10 à 30 ans</SelectItem>
-                            <SelectItem value="30-50">30 à 50 ans</SelectItem>
-                            <SelectItem value="50+">Plus de 50 ans</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      
-                      <Separator />
-                      
-                      <div>
-                        <Label>Postes de travaux</Label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                          <div className="flex items-center space-x-2">
-                            <Switch id="walls" />
-                            <Label htmlFor="walls">Murs / Cloisons</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="flooring" />
-                            <Label htmlFor="flooring">Sols</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="plumbing" />
-                            <Label htmlFor="plumbing">Plomberie</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="electricity" />
-                            <Label htmlFor="electricity">Électricité</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="kitchen" />
-                            <Label htmlFor="kitchen">Cuisine</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="bathroom" />
-                            <Label htmlFor="bathroom">Salle de bain</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="windows" />
-                            <Label htmlFor="windows">Fenêtres</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <Switch id="heating" />
-                            <Label htmlFor="heating">Chauffage</Label>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex flex-col space-y-4">
-                      <Button 
-                        className="w-full bg-khaki-600 hover:bg-khaki-700 text-white flex items-center justify-center h-12"
-                        onClick={handleCalculate}
-                        disabled={isCalculating}
-                      >
-                        {isCalculating ? (
-                          <>
-                            <RefreshCcw className="mr-2 h-4 w-4 animate-spin" />
-                            Calcul en cours...
-                          </>
-                        ) : (
-                          <>
-                            <Calculator className="mr-2 h-4 w-4" />
-                            Calculer l'estimation
-                          </>
-                        )}
-                      </Button>
-                      
-                      {calculatedEstimation && (
-                        <div className="w-full p-4 border border-green-200 bg-green-50 rounded-lg">
-                          <div className="flex justify-between items-center mb-2">
-                            <h3 className="text-lg font-medium text-green-800 flex items-center">
-                              <Check className="mr-2 h-5 w-5" />
-                              Estimation complétée
-                            </h3>
-                            <Button variant="outline" size="sm" className="border-green-300 text-green-700 hover:bg-green-100">
-                              <Download className="mr-1.5 h-3.5 w-3.5" />
-                              PDF
-                            </Button>
-                          </div>
-                          <p className="text-green-700 mb-2">
-                            Vos travaux sont estimés à environ:
-                          </p>
-                          <div className="text-3xl font-bold text-green-800 flex items-center">
-                            <Euro className="mr-2 h-6 w-6" />
-                            {formattedPrice(calculatedEstimation)}
-                          </div>
-                          <p className="text-sm text-green-600 mt-2">
-                            Cette estimation inclut les matériaux et la main d'œuvre hors taxes.
-                          </p>
-                        </div>
-                      )}
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+                      </CardContent>
+                    </Card>
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-gray-500">Projet non trouvé ou impossible à charger.</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </Container>

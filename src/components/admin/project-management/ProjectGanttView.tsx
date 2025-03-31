@@ -1,80 +1,86 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ProjectDetails } from '@/types/project';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProjectDetails, DateRange } from '@/types/project';
 import { formatDateFrench } from '@/utils/dateUtils';
 
 interface ProjectGanttViewProps {
   project: ProjectDetails;
 }
 
-const ProjectGanttView = ({ project }: ProjectGanttViewProps) => {
-  // Check if the project has dates defined
-  const hasDates = project.dates && project.dates.global && 
-                  project.dates.global.startDate && project.dates.global.endDate;
-  
-  if (!hasDates) {
+const ProjectGanttView: React.FC<ProjectGanttViewProps> = ({ project }) => {
+  if (!project.dates || !project.dates.global) {
     return (
       <Card>
         <CardHeader>
           <CardTitle>Planning du projet</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-12">
-            <p className="text-gray-500">Aucune date n'est définie pour ce projet.</p>
-            <p className="text-gray-500 mt-2">
-              Veuillez définir les dates globales du projet dans les paramètres.
-            </p>
+          <div className="py-8 text-center">
+            <p className="text-gray-500">Aucune donnée de planning disponible pour ce projet.</p>
           </div>
         </CardContent>
       </Card>
     );
   }
   
-  // For simplicity, I'll just render a basic representation of the timeline
-  // A more complex Gantt chart implementation would be needed for a real application
-  const startDate = new Date(project.dates.global.startDate);
-  const endDate = new Date(project.dates.global.endDate);
+  // We need to have at least global dates
+  const { global } = project.dates;
   
-  // Calculate total project duration in days
-  const totalDurationDays = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  // Calculate the project start and end dates
+  const projectStart = new Date(global.startDate);
+  const projectEnd = new Date(global.endDate);
   
-  // Get phase dates or calculate them based on overall timeline if they don't exist
-  const phaseDates = {
-    feasibility: project.dates.phases?.feasibility || calculatePhaseDates('feasibility', 0, totalDurationDays / 4),
-    dce: project.dates.phases?.dce || calculatePhaseDates('dce', totalDurationDays / 4, totalDurationDays / 3),
-    act: project.dates.phases?.act || calculatePhaseDates('act', totalDurationDays / 3, totalDurationDays / 2),
-    exe: project.dates.phases?.exe || calculatePhaseDates('exe', totalDurationDays / 2, totalDurationDays * 0.8),
-    reception: project.dates.phases?.reception || calculatePhaseDates('reception', totalDurationDays * 0.8, totalDurationDays * 0.9),
-    delivery: project.dates.phases?.delivery || calculatePhaseDates('delivery', totalDurationDays * 0.9, totalDurationDays)
-  };
+  // Calculate the total duration in days
+  const totalDays = Math.max(1, Math.floor((projectEnd.getTime() - projectStart.getTime()) / (1000 * 60 * 60 * 24)));
   
-  // Helper function to calculate phase dates based on percentage of total duration
-  function calculatePhaseDates(phase: string, startPercent: number, endPercent: number) {
-    const startOffset = Math.ceil(startPercent);
-    const endOffset = Math.ceil(endPercent);
-    
-    const phaseStartDate = new Date(startDate);
-    phaseStartDate.setDate(phaseStartDate.getDate() + startOffset);
-    
-    const phaseEndDate = new Date(startDate);
-    phaseEndDate.setDate(phaseEndDate.getDate() + endOffset);
-    
-    return {
-      startDate: phaseStartDate.toISOString(),
-      endDate: phaseEndDate.toISOString()
-    };
+  // Determine phases to display
+  const phasesToDisplay: { name: string; dates: DateRange; color: string }[] = [
+    { name: 'Global', dates: global, color: 'bg-gray-400' },
+  ];
+  
+  // Add design phase if available
+  if (project.dates.design) {
+    phasesToDisplay.push({ name: 'Conception', dates: project.dates.design, color: 'bg-blue-400' });
   }
   
-  // Define phase names in French
-  const phaseNames = {
-    feasibility: 'Faisabilité',
-    dce: 'DCE',
-    act: 'ACT',
-    exe: 'EXE',
-    reception: 'Réception',
-    delivery: 'Livraison'
+  // Add permits phase if available
+  if (project.dates.permits) {
+    phasesToDisplay.push({ name: 'Autorisations', dates: project.dates.permits, color: 'bg-yellow-400' });
+  }
+  
+  // Add construction phase if available
+  if (project.dates.construction) {
+    phasesToDisplay.push({ name: 'Construction', dates: project.dates.construction, color: 'bg-green-400' });
+  }
+  
+  // Add specific phases if available
+  const phaseColors: Record<string, string> = {
+    feasibility: 'bg-indigo-400',
+    dce: 'bg-purple-400',
+    act: 'bg-pink-400',
+    exe: 'bg-red-400',
+    reception: 'bg-orange-400',
+    delivery: 'bg-teal-400',
   };
+  
+  Object.entries(project.dates.phases || {}).forEach(([key, dates]) => {
+    if (dates) {
+      const phaseName = 
+        key === 'feasibility' ? 'Faisabilité' :
+        key === 'dce' ? 'DCE' :
+        key === 'act' ? 'ACT' :
+        key === 'exe' ? 'EXE' :
+        key === 'reception' ? 'Réception' :
+        key === 'delivery' ? 'Livraison' : key;
+      
+      phasesToDisplay.push({ 
+        name: phaseName, 
+        dates, 
+        color: phaseColors[key] || 'bg-gray-400' 
+      });
+    }
+  });
   
   return (
     <Card>
@@ -83,81 +89,50 @@ const ProjectGanttView = ({ project }: ProjectGanttViewProps) => {
       </CardHeader>
       <CardContent>
         <div className="mb-6">
-          <div className="flex justify-between mb-2">
-            <span className="text-sm text-gray-500">Date de début globale:</span>
-            <span className="font-medium">{formatDateFrench(startDate)}</span>
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm">Début: {formatDateFrench(projectStart)}</span>
+            <span className="text-sm">Fin: {formatDateFrench(projectEnd)}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-gray-500">Date de fin globale:</span>
-            <span className="font-medium">{formatDateFrench(endDate)}</span>
+          <div className="h-2 w-full bg-gray-100 rounded-full">
+            <div className="h-full bg-khaki-600 rounded-full" style={{ width: '100%' }}></div>
           </div>
         </div>
         
-        <div className="relative mt-8 mb-4">
-          {/* Timeline header */}
-          <div className="flex mb-2">
-            <div className="w-1/4 text-sm font-medium">Phase</div>
-            <div className="w-1/4 text-sm font-medium text-center">Dates</div>
-            <div className="w-1/2 text-sm font-medium text-center">Timeline</div>
-          </div>
-          
-          {/* Timeline rows for each phase */}
-          <div className="space-y-4">
-            {Object.entries(phaseDates).map(([phase, dates], index) => {
-              if (!project.phases[phase as keyof typeof project.phases]) {
-                return null; // Skip inactive phases
-              }
-              
-              const phaseStart = new Date(dates.startDate);
-              const phaseEnd = new Date(dates.endDate);
-              
-              // Calculate position percentage for the phase bar
-              const startOffset = ((phaseStart.getTime() - startDate.getTime()) / 
-                                  (endDate.getTime() - startDate.getTime())) * 100;
-              const width = ((phaseEnd.getTime() - phaseStart.getTime()) / 
-                            (endDate.getTime() - startDate.getTime())) * 100;
-              
-              return (
-                <div key={phase} className="flex items-center">
-                  <div className="w-1/4 text-sm">
-                    {phaseNames[phase as keyof typeof phaseNames]}
-                  </div>
-                  <div className="w-1/4 text-xs text-center">
-                    {formatDateFrench(phaseStart, 'dd/MM/yyyy')} - {formatDateFrench(phaseEnd, 'dd/MM/yyyy')}
-                  </div>
-                  <div className="w-1/2 relative h-8">
-                    <div className="absolute inset-y-0 bg-gray-100 w-full rounded"></div>
-                    <div 
-                      className="absolute inset-y-0 bg-khaki-600 rounded"
-                      style={{ 
-                        left: `${startOffset}%`, 
-                        width: `${width}%`,
-                        minWidth: '20px' // To ensure very short phases are still visible
-                      }}
-                    ></div>
-                  </div>
+        <div className="space-y-4">
+          {phasesToDisplay.map((phase, index) => {
+            // Calculate position and width of the phase bar
+            const phaseStart = new Date(phase.dates.startDate);
+            const phaseEnd = new Date(phase.dates.endDate);
+            
+            const leftPercentage = Math.max(0, Math.min(100, (phaseStart.getTime() - projectStart.getTime()) / (totalDays * 24 * 60 * 60 * 1000) * 100));
+            const widthPercentage = Math.max(0, Math.min(100 - leftPercentage, (phaseEnd.getTime() - phaseStart.getTime()) / (totalDays * 24 * 60 * 60 * 1000) * 100));
+            
+            return (
+              <div key={index} className="relative h-10">
+                <div className="absolute left-0 top-0 h-full w-full bg-gray-100 rounded"></div>
+                <div 
+                  className={`absolute top-0 h-full ${phase.color} rounded`} 
+                  style={{ 
+                    left: `${leftPercentage}%`, 
+                    width: `${widthPercentage}%`,
+                  }}
+                ></div>
+                <div className="absolute left-2 top-0 h-full flex items-center text-sm font-medium">
+                  {phase.name}
                 </div>
-              );
-            })}
-          </div>
-          
-          {/* Timeline legend */}
-          <div className="flex justify-between mt-4 text-xs text-gray-500">
-            <span>{formatDateFrench(startDate, 'MMM yyyy')}</span>
-            <span>{formatDateFrench(
-              new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) / 3), 
-              'MMM yyyy'
-            )}</span>
-            <span>{formatDateFrench(
-              new Date(startDate.getTime() + (endDate.getTime() - startDate.getTime()) * 2 / 3), 
-              'MMM yyyy'
-            )}</span>
-            <span>{formatDateFrench(endDate, 'MMM yyyy')}</span>
-          </div>
+                <div className="absolute right-2 top-0 h-full flex items-center text-sm">
+                  {formatDateFrench(phaseStart)} - {formatDateFrench(phaseEnd)}
+                </div>
+              </div>
+            );
+          })}
         </div>
         
-        <div className="text-sm text-center mt-8 text-gray-500">
-          <p>Pour éditer le planning, veuillez accéder aux paramètres du projet.</p>
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <p className="text-sm text-gray-500">
+            Ce planning est généré automatiquement à partir des dates renseignées dans le projet.
+            Pour un planning détaillé, utilisez l'outil de planning Gantt dans les outils du projet.
+          </p>
         </div>
       </CardContent>
     </Card>

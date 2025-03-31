@@ -28,8 +28,10 @@ const ProjectDetail = () => {
       try {
         const projectData = await loadProjectById(projectId);
         if (projectData) {
+          console.log("Project data loaded:", projectData);
           setProject(projectData);
         } else {
+          console.error("Project not found:", projectId);
           toast({
             title: 'Erreur',
             description: 'Projet non trouvé',
@@ -75,6 +77,12 @@ const ProjectDetail = () => {
             <p className="text-gray-500">
               Le projet demandé n'existe pas ou vous n'avez pas les permissions nécessaires pour y accéder.
             </p>
+            <Button 
+              onClick={() => navigate('/workspace/client-area/admin/projects')}
+              className="mt-4"
+            >
+              Retourner à la liste des projets
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -119,12 +127,12 @@ const ProjectDetail = () => {
               </div>
             </div>
             
-            <ProjectTools projectId={projectId} />
+            <ProjectTools projectId={projectId || ''} />
           </div>
         </CardHeader>
       </Card>
       
-      <ProjectPhases projectId={projectId} phases={project.phases} />
+      {project.phases && <ProjectPhases projectId={projectId || ''} phases={project.phases} />}
       
       <Tabs defaultValue="details" className="space-y-6">
         <TabsList className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1">
@@ -171,7 +179,8 @@ const ProjectDetail = () => {
                     <p>{
                       project.projectType === "residential" ? "Résidentiel" :
                       project.projectType === "commercial" ? "Commercial" :
-                      project.projectType === "industrial" ? "Industriel" : "Autre"
+                      project.projectType === "industrial" ? "Industriel" : 
+                      project.projectType || "Autre"
                     }</p>
                   </div>
                 </div>
@@ -195,7 +204,7 @@ const ProjectDetail = () => {
         </TabsContent>
         
         <TabsContent value="planning" className="space-y-6">
-          <ProjectGanttView project={project} />
+          {project && <ProjectGanttView project={project} />}
         </TabsContent>
         
         <TabsContent value="team" className="space-y-6">
@@ -298,7 +307,7 @@ const ProjectDetail = () => {
               <div className="space-y-6">
                 <div>
                   <h3 className="text-lg font-medium mb-3">Autorisations administratives</h3>
-                  <p>{project.adminAuthorization === "building_permit" ? "Permis de construire" : project.adminAuthorization}</p>
+                  <p>{project.adminAuthorization === "building_permit" ? "Permis de construire" : project.adminAuthorization || "Non défini"}</p>
                 </div>
                 
                 <div>

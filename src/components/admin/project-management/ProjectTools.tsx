@@ -108,7 +108,7 @@ const ProjectTools: React.FC<ProjectToolsProps> = ({ projectId }) => {
             <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
         </Button>
-        
+
         <Button 
           variant="outline" 
           className="w-full justify-between text-sm" 
@@ -117,7 +117,7 @@ const ProjectTools: React.FC<ProjectToolsProps> = ({ projectId }) => {
           <Link to={`/workspace/client-area/admin/projects/${projectId}/meetings`}>
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-2 text-khaki-600" />
-              Réunions
+              Réunions de chantier
             </div>
             <ArrowRight className="h-4 w-4 text-gray-400" />
           </Link>
