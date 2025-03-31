@@ -1,184 +1,95 @@
 
 import { FormData } from '../types';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { Json } from '../types/json';
+import { supabase } from '@/lib/supabase';
 
-/**
- * Sauvegarde une estimation dans le compte utilisateur
- */
-export const saveEstimationToUserAccount = async (
+// Function to save an estimation to local storage
+export const saveEstimationToLocalStorage = (formData: FormData, estimationAmount: number) => {
+  const data = {
+    formData,
+    estimationAmount,
+    createdAt: new Date().toISOString(),
+  };
+  
+  localStorage.setItem('saved_estimation', JSON.stringify(data));
+  return true;
+};
+
+// Function to load estimation from local storage
+export const loadEstimationFromLocalStorage = () => {
+  const savedData = localStorage.getItem('saved_estimation');
+  if (!savedData) return null;
+  
+  try {
+    return JSON.parse(savedData);
+  } catch (error) {
+    console.error('Error parsing saved estimation:', error);
+    return null;
+  }
+};
+
+// Function to clear estimation from local storage
+export const clearEstimationFromLocalStorage = () => {
+  localStorage.removeItem('saved_estimation');
+  return true;
+};
+
+// Function to save estimation to Supabase database
+export const saveEstimationToDatabase = async (
+  userId: string,
   formData: FormData,
   estimationAmount: number
-): Promise<{ success: boolean; message: string; id?: string }> => {
+) => {
   try {
-    // Vérifier si l'utilisateur est connecté
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const projectType = formData.projectType || 'Non spécifié';
+    const surface = formData.surface || 'Non spécifié';
+    const location = formData.city || 'Non spécifiée';
     
-    if (sessionError || !session) {
-      return {
-        success: false,
-        message: 'Vous devez être connecté pour sauvegarder une estimation.'
-      };
-    }
+    // Title is generated from the project data
+    const title = `${projectType} - ${surface}m² - ${location}`;
     
-    const userId = session.user.id;
-    
-    // Préparer les données à sauvegarder
-    const estimationData = {
-      user_id: userId,
-      title: `Estimation ${formData.projectType} - ${new Date().toLocaleDateString('fr-FR')}`,
-      type: 'estimation',
-      is_temporary: false,
-      content: {
-        formData,
-        estimationAmount,
-        createdAt: new Date().toISOString(),
-        projectType: formData.projectType,
-        surface: formData.surface,
-        location: formData.city,
-      }
+    // Define content object that matches Json type
+    const content: Json = {
+      formData: JSON.parse(JSON.stringify(formData)) as Json, // Serialize and parse to ensure it matches Json type
+      estimationAmount,
+      createdAt: new Date().toISOString(),
+      projectType,
+      surface,
+      location
     };
     
-    // Sauvegarder dans la table user_simulations
     const { data, error } = await supabase
-      .from('user_simulations')
-      .insert(estimationData)
-      .select('id')
-      .single();
+      .from('simulations')
+      .insert({
+        user_id: userId,
+        title,
+        type: 'calculator',
+        is_temporary: false,
+        content
+      });
     
-    if (error) {
-      console.error('Erreur lors de la sauvegarde de l\'estimation:', error);
-      throw error;
-    }
-    
-    return {
-      success: true,
-      message: 'Estimation sauvegardée avec succès',
-      id: data.id
-    };
+    if (error) throw error;
+    return data;
   } catch (error) {
-    console.error('Erreur lors de la sauvegarde de l\'estimation:', error);
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : 'Erreur inconnue'
-    };
+    console.error('Error saving estimation to database:', error);
+    throw error;
   }
 };
 
-/**
- * Récupère les estimations enregistrées d'un utilisateur
- */
-export const getUserEstimations = async () => {
+// Function to load user's estimations from database
+export const loadUserEstimations = async (userId: string) => {
   try {
-    // Vérifier si l'utilisateur est connecté
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError || !session) {
-      return {
-        success: false,
-        message: 'Vous devez être connecté pour accéder à vos estimations.',
-        data: []
-      };
-    }
-    
-    const userId = session.user.id;
-    
-    // Récupérer les estimations
     const { data, error } = await supabase
-      .from('user_simulations')
+      .from('simulations')
       .select('*')
       .eq('user_id', userId)
-      .eq('type', 'estimation')
+      .eq('type', 'calculator')
       .order('created_at', { ascending: false });
     
-    if (error) {
-      console.error('Erreur lors de la récupération des estimations:', error);
-      throw error;
-    }
-    
-    return {
-      success: true,
-      message: 'Estimations récupérées avec succès',
-      data: data || []
-    };
+    if (error) throw error;
+    return data;
   } catch (error) {
-    console.error('Erreur lors de la récupération des estimations:', error);
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : 'Erreur inconnue',
-      data: []
-    };
+    console.error('Error loading user estimations:', error);
+    throw error;
   }
-};
-
-/**
- * Supprime une estimation
- */
-export const deleteEstimation = async (estimationId: string) => {
-  try {
-    // Vérifier si l'utilisateur est connecté
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-    
-    if (sessionError || !session) {
-      return {
-        success: false,
-        message: 'Vous devez être connecté pour supprimer une estimation.'
-      };
-    }
-    
-    // Supprimer l'estimation
-    const { error } = await supabase
-      .from('user_simulations')
-      .delete()
-      .eq('id', estimationId)
-      .eq('user_id', session.user.id); // Sécurité supplémentaire
-    
-    if (error) {
-      console.error('Erreur lors de la suppression de l\'estimation:', error);
-      throw error;
-    }
-    
-    return {
-      success: true,
-      message: 'Estimation supprimée avec succès'
-    };
-  } catch (error) {
-    console.error('Erreur lors de la suppression de l\'estimation:', error);
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : 'Erreur inconnue'
-    };
-  }
-};
-
-/**
- * Hook personnalisé pour la gestion des estimations utilisateur
- */
-export const useEstimationStorage = () => {
-  const { toast } = useToast();
-  
-  const saveEstimation = async (formData: FormData, estimationAmount: number) => {
-    const result = await saveEstimationToUserAccount(formData, estimationAmount);
-    
-    if (result.success) {
-      toast({
-        title: "Sauvegarde réussie",
-        description: "Votre estimation a été sauvegardée dans votre compte.",
-      });
-      return result.id;
-    } else {
-      toast({
-        title: "Erreur",
-        description: result.message,
-        variant: "destructive"
-      });
-      return null;
-    }
-  };
-  
-  return {
-    saveEstimation,
-    getUserEstimations,
-    deleteEstimation
-  };
 };

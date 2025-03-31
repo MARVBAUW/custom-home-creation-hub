@@ -1,18 +1,19 @@
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
 import { FormData } from './types';
-import { useEstimationCalculator } from './hooks/useEstimationCalculator';
+import { useEstimationCalculator } from './useEstimationCalculator';
 import { useToast } from '@/hooks/use-toast';
 
 const ConversationalForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('conversational');
   const { toast } = useToast();
   
+  // Use the updated hook that includes all required properties
   const {
     step,
     setStep,
@@ -23,7 +24,8 @@ const ConversationalForm: React.FC = () => {
     updateFormData,
     goToNextStep,
     goToPreviousStep,
-    finalizeEstimation
+    finalizeEstimation,
+    calculateEstimationResult
   } = useEstimationCalculator();
 
   // Afficher un toast au chargement du composant

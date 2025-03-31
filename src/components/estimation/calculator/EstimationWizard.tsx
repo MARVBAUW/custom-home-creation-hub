@@ -15,7 +15,7 @@ const initialFormData: FormData = {
   landType: '',
   constructionType: '',
   constructionStyle: '',
-  storyCount: '',
+  levels: '', // Changed from storyCount to levels
   roofingType: '',
   insulationType: '',
   heatingType: '',
@@ -149,8 +149,8 @@ const EstimationWizard = () => {
             goToPreviousStep={goToPreviousStep}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
-            isLoading={isLoading}
             animationDirection={animationDirection}
+            isLoading={isLoading}
           />
         );
       default:

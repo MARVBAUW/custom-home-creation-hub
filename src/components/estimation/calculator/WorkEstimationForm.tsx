@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
-import { useEstimationCalculator } from './hooks/useEstimationCalculator';
+import { useEstimationCalculator } from './useEstimationCalculator';
 import { FormProvider } from 'react-hook-form';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
@@ -11,7 +11,7 @@ const WorkEstimationForm: React.FC = () => {
   const formWrapper = useRef<HTMLDivElement>(null);
   const [showSummary, setShowSummary] = useState(false);
   
-  // Utiliser le hook pour gérer les différentes étapes
+  // Use the updated hook that includes all required properties
   const {
     step,
     totalSteps,
@@ -81,17 +81,18 @@ const WorkEstimationForm: React.FC = () => {
           </div>
         </Card>
 
-        {/* Affichage du résultat estimatif ou boutons de navigation */}
+        {/* Display estimation result or navigation buttons */}
         <ResultsSummary 
           showSummary={showSummary} 
-          estimationResult={estimationResult} 
+          estimationResult={estimationResult ? estimationResult.totalAmount : 0} 
           formData={formData} 
           onBackClick={() => setShowSummary(false)} 
         />
         
         <FormNavigation 
           step={step}
-          estimationResult={estimationResult}
+          totalSteps={totalSteps}
+          estimationResult={estimationResult ? estimationResult.totalAmount : 0}
           showSummary={showSummary}
           onPreviousClick={goToPreviousStep}
           onNextClick={goToNextStep}

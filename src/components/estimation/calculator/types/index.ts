@@ -27,6 +27,7 @@ export interface FormData {
   terrainType?: string;
   terrainSurface?: number | string;
   terrainAccess?: string;
+  storyCount?: string; // Added missing property
   
   // Rooms & Layout
   roomCount?: number | string;
@@ -150,8 +151,66 @@ export interface FormData {
   city?: string;
   message?: string;
   
+  // Construction processes
+  demolitionType?: string;
+  existingSurface?: number | string;
+  
   // Any additional custom fields
   [key: string]: any;
+}
+
+// Fix the types for ConversationalForm.tsx
+export interface Message {
+  id: string;
+  text: string;
+  isUser: boolean;
+  createdAt: Date;
+}
+
+export interface ConversationState {
+  messages: Message[];
+  isTyping: boolean;
+}
+
+// Define the EstimationResponseData type to fix WorkEstimationForm.tsx
+export interface ConstructionCosts {
+  structuralWork: number;
+  finishingWork: number;
+  technicalLots: number;
+  externalWorks: number;
+  total: number;
+}
+
+export interface FeeCosts {
+  architectFees: number;
+  engineeringFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  total: number;
+}
+
+export interface OtherCosts {
+  insurance: number;
+  contingency: number;
+  taxes: number;
+  miscellaneous: number;
+  total: number;
+}
+
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
+}
+
+export interface EstimationResponseData {
+  constructionCosts: ConstructionCosts;
+  fees: FeeCosts;
+  otherCosts: OtherCosts;
+  totalAmount: number;
+  timeline: EstimationTimeline;
 }
 
 // Export other types from the folder

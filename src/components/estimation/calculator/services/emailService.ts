@@ -1,51 +1,39 @@
 
 import { FormData, EstimationResponseData } from '../types';
-import { generateEstimationReport } from '../calculationUtils';
+import { generateEstimationReport } from '../utils/generateEstimationReport';
 
-/**
- * Send estimation results via email
- */
-export const sendEstimationEmail = async (
+// Function to send estimation results by email
+export const sendEstimationByEmail = async (
+  email: string,
   formData: FormData,
-  estimation: EstimationResponseData,
-  recipientEmail: string
-): Promise<boolean> => {
+  estimationResult: EstimationResponseData
+) => {
   try {
-    // In a real implementation, this would use an API endpoint to send the email
-    console.log('Sending estimation email to:', recipientEmail);
-    const emailContent = generateEstimationReport(formData, estimation);
-    console.log('Email content:', emailContent);
+    // Generate a report for the email
+    const report = generateEstimationReport(formData, estimationResult);
     
-    // Mock successful email sending
-    console.log('Email sent successfully');
-    return true;
+    // In a real implementation, this would call an API to send the email
+    console.log('Sending estimation to email:', email);
+    console.log('Estimation report:', report);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return {
+      success: true,
+      message: `Estimation envoyée avec succès à ${email}`
+    };
   } catch (error) {
-    console.error('Error sending estimation email:', error);
-    return false;
+    console.error('Error sending estimation by email:', error);
+    return {
+      success: false,
+      message: 'Une erreur est survenue lors de l\'envoi de l\'email'
+    };
   }
 };
 
-/**
- * Send a contact request email
- */
-export const sendContactEmail = async (
-  name: string,
-  email: string,
-  phone: string,
-  message: string
-): Promise<boolean> => {
-  try {
-    // In a real implementation, this would use an API endpoint to send the email
-    console.log('Sending contact email from:', email);
-    console.log('Contact name:', name);
-    console.log('Contact phone:', phone);
-    console.log('Contact message:', message);
-    
-    // Mock successful email sending
-    console.log('Contact email sent successfully');
-    return true;
-  } catch (error) {
-    console.error('Error sending contact email:', error);
-    return false;
-  }
+// Function to generate a shareable link for the estimation
+export const generateShareableLink = (estimationId: string) => {
+  // In a real implementation, this would generate a unique, secure link
+  return `https://progineer.fr/estimation/share/${estimationId}`;
 };
