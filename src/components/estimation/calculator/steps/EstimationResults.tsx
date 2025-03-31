@@ -18,6 +18,8 @@ interface EstimationResultsProps {
   estimation: number | null;
   formData: FormData;
   goToPreviousStep: () => void;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToNextStep?: () => void;
   isLoading?: boolean;
 }
 
@@ -25,6 +27,8 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   estimation,
   formData,
   goToPreviousStep,
+  updateFormData,
+  goToNextStep,
   isLoading = false
 }) => {
   const { toast } = useToast();
@@ -100,7 +104,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
     }, 1500);
   };
   
-  // Calcul de la TVA et du total TTC
+  // Calculer la TVA et du total TTC
   const vat = estimation ? estimation * 0.2 : 0;
   const totalTTC = estimation ? estimation + vat : 0;
   
