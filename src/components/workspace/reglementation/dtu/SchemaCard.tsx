@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { ImageOff, ZoomIn } from 'lucide-react';
 import { DTUSchema } from './types';
+import { formatImageUrl, isLikelyValidImagePath } from './imageUtils';
 
 interface SchemaCardProps {
   schema: DTUSchema;
@@ -17,19 +18,25 @@ export const SchemaCard: React.FC<SchemaCardProps> = ({
   hasError,
   onOpenImage,
 }) => {
+  // Pre-format the image URL for display
+  const displayImageUrl = formatImageUrl(schema.imageUrl);
+  
+  // Additional validation check before attempting to display the image
+  const shouldShowImage = isValidImage && !hasError && isLikelyValidImagePath(displayImageUrl);
+  
   return (
     <Card key={schema.id} className="overflow-hidden hover:shadow-md transition-shadow">
       <CardContent className="p-0">
         <div className="p-4">
           <h4 className="font-medium mb-1">{schema.title}</h4>
           <div 
-            className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${isValidImage && !hasError ? 'cursor-pointer group' : ''}`}
-            onClick={() => isValidImage && !hasError && onOpenImage(schema)}
+            className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${shouldShowImage ? 'cursor-pointer group' : ''}`}
+            onClick={() => shouldShowImage && onOpenImage(schema)}
           >
-            {isValidImage && !hasError ? (
+            {shouldShowImage ? (
               <>
                 <img 
-                  src={schema.imageUrl} 
+                  src={displayImageUrl} 
                   alt={schema.title}
                   className="w-full h-full object-contain transition-transform group-hover:scale-105"
                   onError={() => onOpenImage(schema)}
