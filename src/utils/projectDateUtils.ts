@@ -1,16 +1,17 @@
 
 import { addDays, format } from 'date-fns';
-import { ProjectDates, ProjectPhase } from '@/types/project';
+import { ProjectDates, ProjectPhase, ProjectPhases } from '@/types/project';
 
 // Calculate duration in days based on project work amount and selected phases
 export const calculatePhaseDurations = (
-  workAmount: number,
-  selectedPhases: { [key in ProjectPhase]: boolean }
+  workAmount: string,
+  selectedPhases: ProjectPhases
 ): { [key in ProjectPhase]?: number } => {
   // Base duration calculation factor
-  const baseFactor = workAmount < 100000 ? 0.8 : 
-                     workAmount < 500000 ? 1 : 
-                     workAmount < 1000000 ? 1.2 : 1.5;
+  const workAmountNum = parseFloat(workAmount) || 0;
+  const baseFactor = workAmountNum < 100000 ? 0.8 : 
+                     workAmountNum < 500000 ? 1 : 
+                     workAmountNum < 1000000 ? 1.2 : 1.5;
   
   const phaseDurations: { [key in ProjectPhase]?: number } = {};
   
@@ -27,7 +28,7 @@ export const calculatePhaseDurations = (
   }
   
   if (selectedPhases.exe) {
-    phaseDurations.exe = Math.round(workAmount / 10000 * baseFactor);
+    phaseDurations.exe = Math.round(workAmountNum / 10000 * baseFactor);
   }
   
   if (selectedPhases.reception) {
@@ -44,8 +45,8 @@ export const calculatePhaseDurations = (
 // Calculate start and end dates for each phase
 export const calculatePhaseDates = (
   globalStartDate: string,
-  workAmount: number,
-  selectedPhases: { [key in ProjectPhase]: boolean }
+  workAmount: string,
+  selectedPhases: ProjectPhases
 ): ProjectDates => {
   if (!globalStartDate) {
     // Default to today if no start date provided
@@ -53,7 +54,7 @@ export const calculatePhaseDates = (
   }
 
   const phaseDurations = calculatePhaseDurations(workAmount, selectedPhases);
-  const phases = Object.keys(selectedPhases).filter(phase => selectedPhases[phase as ProjectPhase]) as ProjectPhase[];
+  const phases = Object.keys(selectedPhases).filter(phase => selectedPhases[phase]) as ProjectPhase[];
   
   let currentStartDate = new Date(globalStartDate);
   const dates: ProjectDates = { global: { startDate: globalStartDate, endDate: globalStartDate } };

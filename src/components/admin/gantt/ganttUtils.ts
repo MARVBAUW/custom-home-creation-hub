@@ -1,160 +1,53 @@
 
-import { ProjectDetails } from '@/types/project';
-import { addMonths, addDays, parseISO, formatISO } from 'date-fns';
+import { ProjectPhase } from '@/types/project';
 
-// Étiquettes pour les phases du projet
-export const phaseLabels: Record<string, string> = {
-  feasibility: 'Faisabilité',
-  dce: 'DCE',
-  act: 'ACT',
-  exe: 'Exécution',
-  reception: 'Réception',
-  delivery: 'Livraison',
+// Define phase labels in French
+export const phaseLabels: Record<ProjectPhase, string> = {
+  'feasibility': 'Faisabilité',
+  'dce': 'DCE',
+  'act': 'ACT',
+  'exe': 'EXE',
+  'reception': 'Réception',
+  'delivery': 'Livraison'
 };
 
-// Couleurs pour les phases du projet
-export const phaseColors: Record<string, string> = {
-  feasibility: 'bg-blue-500 hover:bg-blue-600',
-  dce: 'bg-indigo-500 hover:bg-indigo-600',
-  act: 'bg-khaki-500 hover:bg-khaki-600',
-  exe: 'bg-amber-500 hover:bg-amber-600',
-  reception: 'bg-emerald-500 hover:bg-emerald-600',
-  delivery: 'bg-green-500 hover:bg-green-600',
+// Define colors for each phase
+export const phaseColors: Record<ProjectPhase, string> = {
+  'feasibility': 'bg-blue-500',
+  'dce': 'bg-indigo-500',
+  'act': 'bg-purple-500',
+  'exe': 'bg-khaki-600',
+  'reception': 'bg-orange-500',
+  'delivery': 'bg-green-500'
 };
 
-// Projets de démonstration pour l'affichage initial
-export const mockProjects: ProjectDetails[] = [
-  {
-    projectName: "Maison Dupont",
-    fileNumber: "P2023001",
-    workAmount: "320 000 €",
-    projectOwner: "M. et Mme Dupont",
-    projectType: "residential",
-    adminAuthorization: "building_permit",
-    automaticDates: true,
-    dates: {
-      global: {
-        startDate: formatISO(new Date()),
-        endDate: formatISO(addMonths(new Date(), 12))
-      },
-      feasibility: {
-        startDate: formatISO(new Date()),
-        endDate: formatISO(addDays(new Date(), 30))
-      },
-      dce: {
-        startDate: formatISO(addDays(new Date(), 31)),
-        endDate: formatISO(addDays(new Date(), 90))
-      },
-      act: {
-        startDate: formatISO(addDays(new Date(), 91)),
-        endDate: formatISO(addDays(new Date(), 120))
-      },
-      exe: {
-        startDate: formatISO(addDays(new Date(), 121)),
-        endDate: formatISO(addDays(new Date(), 300))
-      },
-      reception: {
-        startDate: formatISO(addDays(new Date(), 301)),
-        endDate: formatISO(addDays(new Date(), 330))
-      },
-      delivery: {
-        startDate: formatISO(addDays(new Date(), 331)),
-        endDate: formatISO(addDays(new Date(), 365))
-      }
-    },
-    phases: {
-      feasibility: true,
-      dce: true,
-      act: true,
-      exe: true,
-      reception: true,
-      delivery: true
-    },
-    team: {},
-    execution: {},
-    technicalOffices: {},
-    trades: {}
-  },
-  {
-    projectName: "Immeuble Martin",
-    fileNumber: "P2023002",
-    workAmount: "750 000 €",
-    projectOwner: "SCI Martin",
-    projectType: "commercial",
-    adminAuthorization: "building_permit",
-    automaticDates: true,
-    dates: {
-      global: {
-        startDate: formatISO(addDays(new Date(), 15)),
-        endDate: formatISO(addMonths(addDays(new Date(), 15), 14))
-      },
-      feasibility: {
-        startDate: formatISO(addDays(new Date(), 15)),
-        endDate: formatISO(addDays(new Date(), 60))
-      },
-      dce: {
-        startDate: formatISO(addDays(new Date(), 61)),
-        endDate: formatISO(addDays(new Date(), 120))
-      },
-      act: {
-        startDate: formatISO(addDays(new Date(), 121)),
-        endDate: formatISO(addDays(new Date(), 180))
-      },
-      exe: {
-        startDate: formatISO(addDays(new Date(), 181)),
-        endDate: formatISO(addDays(new Date(), 380))
-      }
-    },
-    phases: {
-      feasibility: true,
-      dce: true,
-      act: true,
-      exe: true,
-      reception: false,
-      delivery: false
-    },
-    team: {},
-    execution: {},
-    technicalOffices: {},
-    trades: {}
-  },
-  {
-    projectName: "Rénovation Dubois",
-    fileNumber: "P2023003",
-    workAmount: "180 000 €",
-    projectOwner: "M. Dubois",
-    projectType: "renovation",
-    adminAuthorization: "declaration",
-    automaticDates: true,
-    dates: {
-      global: {
-        startDate: formatISO(addDays(new Date(), -30)),
-        endDate: formatISO(addMonths(addDays(new Date(), -30), 8))
-      },
-      feasibility: {
-        startDate: formatISO(addDays(new Date(), -30)),
-        endDate: formatISO(addDays(new Date(), 0))
-      },
-      dce: {
-        startDate: formatISO(addDays(new Date(), 1)),
-        endDate: formatISO(addDays(new Date(), 45))
-      },
-      exe: {
-        startDate: formatISO(addDays(new Date(), 46)),
-        endDate: formatISO(addDays(new Date(), 200))
-      }
-    },
-    phases: {
-      feasibility: true,
-      dce: true,
-      act: false,
-      exe: true,
-      reception: false,
-      delivery: false
-    },
-    team: {},
-    execution: {},
-    technicalOffices: {},
-    trades: {}
-  }
-];
+// Define phase icons or descriptions
+export const phaseDescriptions: Record<ProjectPhase, string> = {
+  'feasibility': 'Études de faisabilité et conception préliminaire',
+  'dce': 'Dossier de Consultation des Entreprises',
+  'act': 'Analyse des Candidatures et des offres techniques',
+  'exe': 'Exécution des travaux',
+  'reception': 'Réception des travaux',
+  'delivery': 'Livraison finale'
+};
+
+// Function to calculate phase duration in days
+export const calculatePhaseDuration = (phase: ProjectPhase, workAmount: number): number => {
+  // Base durations for each phase based on project size
+  const baseDurations: Record<ProjectPhase, number> = {
+    'feasibility': 14,
+    'dce': 30,
+    'act': 21,
+    'exe': Math.ceil(workAmount / 10000), // 1 day per 10,000€
+    'reception': 7,
+    'delivery': 3
+  };
+  
+  // Apply a multiplier based on project size
+  let multiplier = 1;
+  if (workAmount > 1000000) multiplier = 1.5;
+  else if (workAmount > 500000) multiplier = 1.3;
+  else if (workAmount > 100000) multiplier = 1.1;
+  
+  return Math.ceil(baseDurations[phase] * multiplier);
+};

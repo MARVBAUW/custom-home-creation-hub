@@ -15,6 +15,7 @@ import ProjectExecutionForm from './forms/ProjectExecutionForm';
 import ProjectTechnicalForm from './forms/ProjectTechnicalForm';
 
 const defaultValues: ProjectDetails = {
+  id: "",
   projectName: "",
   fileNumber: "",
   workAmount: "",
@@ -39,7 +40,9 @@ const defaultValues: ProjectDetails = {
   team: {},
   execution: {},
   technicalOffices: {},
-  trades: {}
+  trades: {},
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
 };
 
 const ProjectCreationForm = () => {
@@ -63,6 +66,7 @@ const ProjectCreationForm = () => {
         ...data,
         id: `project-${Date.now()}`,
         createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
         status: 'active'
       };
       

@@ -17,8 +17,8 @@ const ProjectDateForm = () => {
   // Recalculate dates when automatic is toggled or relevant data changes
   useEffect(() => {
     if (automaticDates && workAmount && globalStartDate) {
-      const workAmountNum = parseFloat(workAmount) || 0;
-      const phaseDates = calculatePhaseDates(globalStartDate, workAmountNum, selectedPhases);
+      const workAmountStr = typeof workAmount === 'number' ? workAmount.toString() : workAmount;
+      const phaseDates = calculatePhaseDates(globalStartDate, workAmountStr || '0', selectedPhases);
       setValue('dates', phaseDates);
     }
   }, [automaticDates, workAmount, globalStartDate, selectedPhases, setValue]);

@@ -10,6 +10,10 @@ export const saveProject = async (projectData: ProjectDetails): Promise<string> 
     if ((await user).data.user) {
       // Si l'utilisateur est connecté, enregistrer dans Supabase
       const projectId = projectData.id || `project-${Date.now()}`;
+      const workAmount = typeof projectData.workAmount === 'string' 
+        ? parseFloat(projectData.workAmount || '0') 
+        : projectData.workAmount || 0;
+        
       const { error } = await supabase
         .from('admin_projects')
         .upsert({
@@ -19,7 +23,7 @@ export const saveProject = async (projectData: ProjectDetails): Promise<string> 
           construction_type: projectData.projectType === 'residential' ? 'new' : 'other',
           description: projectData.description || '',
           location: projectData.location || '',
-          estimated_budget: parseFloat(projectData.workAmount || '0'),
+          estimated_budget: workAmount,
           surface: 0, // Valeur par défaut
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
@@ -51,11 +55,12 @@ const saveProjectToLocalStorage = (projectData: ProjectDetails): string => {
     const projectId = projectData.id || `project-${Date.now()}`;
     
     // Créer l'objet projet avec timestamps
-    const newProject = {
+    const newProject: ProjectDetails = {
       ...projectData,
       id: projectId,
-      createdAt: new Date().toISOString(),
-      status: 'active'
+      createdAt: projectData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: projectData.status || 'active'
     };
     
     // Mise à jour si le projet existe déjà, sinon ajout
@@ -103,6 +108,7 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
         description: data.description || '',
         location: data.location || '',
         createdAt: data.created_at,
+        updatedAt: data.updated_at || data.created_at,
         status: data.status || 'active',
         // Ajout des champs obligatoires avec des valeurs par défaut
         fileNumber: '',
@@ -163,7 +169,8 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
         team: project.team || {},
         execution: project.execution || {},
         technicalOffices: project.technicalOffices || {},
-        trades: project.trades || {}
+        trades: project.trades || {},
+        updatedAt: project.updatedAt || project.createdAt || new Date().toISOString()
       };
       return completeProject;
     }
@@ -195,6 +202,7 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
         description: item.description || '',
         location: item.location || '',
         createdAt: item.created_at,
+        updatedAt: item.updated_at || item.created_at,
         status: item.status || 'active',
         // Ajout des champs obligatoires avec des valeurs par défaut
         fileNumber: '',
@@ -252,7 +260,8 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
       team: project.team || {},
       execution: project.execution || {},
       technicalOffices: project.technicalOffices || {},
-      trades: project.trades || {}
+      trades: project.trades || {},
+      updatedAt: project.updatedAt || project.createdAt || new Date().toISOString()
     }));
   } catch (error) {
     console.error('Erreur lors du chargement des projets depuis localStorage:', error);

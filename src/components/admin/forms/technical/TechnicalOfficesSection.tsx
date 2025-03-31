@@ -23,27 +23,30 @@ const technicalOffices = [
 ];
 
 const TechnicalOfficesSection = () => {
-  const { setValue, watch } = useFormContext<ProjectDetails>();
-  const selectedTechnicalOffices = watch('technicalOffices');
+  const { register, setValue, getValues } = useFormContext<ProjectDetails>();
   
   const handleTechnicalOfficeChange = (office: string, checked: boolean) => {
-    setValue(`technicalOffices.${office}`, checked, { shouldDirty: true });
+    setValue(`technicalOffices.${office}` as any, checked, { shouldDirty: true });
   };
   
   return (
     <div className="bg-gray-50 p-4 rounded-md">
       <h3 className="text-sm font-medium text-gray-600 mb-3">SÉLECTIONNEZ LES BET ENGAGÉS SUR LE DOSSIER</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {technicalOffices.map((office) => (
-          <div key={office.id} className="flex items-start space-x-2">
-            <Checkbox 
-              id={`be-${office.id}`} 
-              checked={selectedTechnicalOffices?.[office.id] || false}
-              onCheckedChange={(checked) => handleTechnicalOfficeChange(office.id, Boolean(checked))}
-            />
-            <Label htmlFor={`be-${office.id}`} className="text-sm">{office.label}</Label>
-          </div>
-        ))}
+        {technicalOffices.map((office) => {
+          const isChecked = getValues()?.technicalOffices?.[office.id] || false;
+          
+          return (
+            <div key={office.id} className="flex items-start space-x-2">
+              <Checkbox 
+                id={`be-${office.id}`} 
+                checked={isChecked}
+                onCheckedChange={(checked) => handleTechnicalOfficeChange(office.id, Boolean(checked))}
+              />
+              <Label htmlFor={`be-${office.id}`} className="text-sm">{office.label}</Label>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

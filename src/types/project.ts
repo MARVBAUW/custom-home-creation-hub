@@ -12,6 +12,12 @@ export interface ProjectDates {
   phases?: {
     [key: string]: DateRange;
   };
+  feasibility?: DateRange;
+  dce?: DateRange;
+  act?: DateRange;
+  exe?: DateRange;
+  reception?: DateRange;
+  delivery?: DateRange;
 }
 
 export interface TeamMembers {
@@ -23,6 +29,8 @@ export interface TeamMembers {
   divisionDirector?: string;
 }
 
+export type ProjectPhase = 'feasibility' | 'dce' | 'act' | 'exe' | 'reception' | 'delivery';
+
 export interface ProjectPhases {
   feasibility: boolean;
   dce: boolean;
@@ -30,6 +38,7 @@ export interface ProjectPhases {
   exe: boolean;
   reception: boolean;
   delivery: boolean;
+  [key: string]: boolean;
 }
 
 export interface Company {
@@ -53,6 +62,23 @@ export interface SiteReport {
   createdAt: string;
 }
 
+export interface ExecutionDetails {
+  weeklyVisits?: number;
+  projectDistance?: number;
+  meetingDay?: string;
+  securityCommission?: string;
+  controlOffice?: string;
+  spsCoordinator?: string;
+}
+
+export interface TechnicalOffices {
+  [key: string]: boolean;
+}
+
+export interface Trades {
+  [key: string]: boolean;
+}
+
 export interface ProjectDetails {
   id: string;
   projectName: string;
@@ -60,7 +86,7 @@ export interface ProjectDetails {
   fileNumber?: string;
   projectOwner?: string;
   location?: string;
-  workAmount?: number;
+  workAmount?: string | number;
   dates?: ProjectDates;
   team?: TeamMembers;
   phases: ProjectPhases;
@@ -70,6 +96,12 @@ export interface ProjectDetails {
   siteReports?: SiteReport[];
   createdAt: string;
   updatedAt: string;
+  description?: string;
+  clientId?: string;
+  status?: string;
+  execution?: ExecutionDetails;
+  technicalOffices?: TechnicalOffices;
+  trades?: Trades;
 }
 
 export interface ProjectFormData {
@@ -78,10 +110,14 @@ export interface ProjectFormData {
   fileNumber?: string;
   projectOwner?: string;
   location?: string;
-  workAmount?: number;
+  workAmount?: string | number;
   team?: TeamMembers;
   phases: ProjectPhases;
   automaticDates?: boolean;
   adminAuthorization?: string;
   dates?: ProjectDates;
+  description?: string;
+  execution?: ExecutionDetails;
+  technicalOffices?: TechnicalOffices;
+  trades?: Trades;
 }

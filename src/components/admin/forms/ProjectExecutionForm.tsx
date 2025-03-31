@@ -23,8 +23,11 @@ const ProjectExecutionForm = () => {
                 <Input 
                   type="number" 
                   placeholder="2" 
-                  {...field} 
-                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                  value={field.value || ''}
+                  onChange={(e) => {
+                    const value = e.target.value ? parseInt(e.target.value) : undefined;
+                    field.onChange(value);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -41,8 +44,11 @@ const ProjectExecutionForm = () => {
                 <Input 
                   type="number" 
                   placeholder="25" 
-                  {...field} 
-                  onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                  value={field.value || ''}
+                  onChange={(e) => {
+                    const value = e.target.value ? parseInt(e.target.value) : undefined;
+                    field.onChange(value);
+                  }}
                 />
               </FormControl>
               <FormMessage />
@@ -57,7 +63,7 @@ const ProjectExecutionForm = () => {
               <FormLabel>Jour de réunion</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
-                defaultValue={field.value}
+                value={field.value as string || undefined}
               >
                 <FormControl>
                   <SelectTrigger>
@@ -83,7 +89,11 @@ const ProjectExecutionForm = () => {
             <FormItem>
               <FormLabel>Commission de sécurité</FormLabel>
               <FormControl>
-                <Input placeholder="Détails de la commission" {...field} />
+                <Input 
+                  placeholder="Détails de la commission" 
+                  value={field.value || ''} 
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -96,7 +106,11 @@ const ProjectExecutionForm = () => {
             <FormItem>
               <FormLabel>Bureau de contrôle</FormLabel>
               <FormControl>
-                <Input placeholder="Nom du bureau de contrôle" {...field} />
+                <Input 
+                  placeholder="Nom du bureau de contrôle" 
+                  value={field.value || ''} 
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -109,7 +123,11 @@ const ProjectExecutionForm = () => {
             <FormItem>
               <FormLabel>Coordinateur SPS</FormLabel>
               <FormControl>
-                <Input placeholder="Nom du coordinateur SPS" {...field} />
+                <Input 
+                  placeholder="Nom du coordinateur SPS" 
+                  value={field.value || ''} 
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

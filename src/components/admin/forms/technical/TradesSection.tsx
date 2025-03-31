@@ -53,27 +53,30 @@ const trades = [
 ];
 
 const TradesSection = () => {
-  const { setValue, watch } = useFormContext<ProjectDetails>();
-  const selectedTrades = watch('trades');
+  const { register, setValue, getValues } = useFormContext<ProjectDetails>();
   
   const handleTradeChange = (trade: string, checked: boolean) => {
-    setValue(`trades.${trade}`, checked, { shouldDirty: true });
+    setValue(`trades.${trade}` as any, checked, { shouldDirty: true });
   };
   
   return (
     <div className="bg-gray-50 p-4 rounded-md">
       <h3 className="text-sm font-medium text-gray-600 mb-3">SÉLECTIONNEZ LES CORPS D'ÉTAT CONCERNÉS PAR LE DOSSIER</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {trades.map((trade) => (
-          <div key={trade.id} className="flex items-start space-x-2">
-            <Checkbox 
-              id={`trade-${trade.id}`} 
-              checked={selectedTrades?.[trade.id] || false}
-              onCheckedChange={(checked) => handleTradeChange(trade.id, Boolean(checked))}
-            />
-            <Label htmlFor={`trade-${trade.id}`} className="text-sm">{trade.label}</Label>
-          </div>
-        ))}
+        {trades.map((trade) => {
+          const isChecked = getValues()?.trades?.[trade.id] || false;
+          
+          return (
+            <div key={trade.id} className="flex items-start space-x-2">
+              <Checkbox 
+                id={`trade-${trade.id}`} 
+                checked={isChecked}
+                onCheckedChange={(checked) => handleTradeChange(trade.id, Boolean(checked))}
+              />
+              <Label htmlFor={`trade-${trade.id}`} className="text-sm">{trade.label}</Label>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -30,13 +30,13 @@ const ProjectPhaseForm = () => {
             <FormField
               key={phase.id}
               control={control}
-              name={`phases.${phase.id}`}
+              name={`phases.${phase.id}` as any}
               render={({ field }) => (
                 <FormItem className="flex items-start space-x-2">
                   <FormControl>
                     <Checkbox 
                       id={`phase-${phase.id}`} 
-                      checked={field.value}
+                      checked={field.value as boolean}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -58,7 +58,7 @@ const ProjectPhaseForm = () => {
             <FormItem className="flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
                 <Checkbox 
-                  checked={field.value}
+                  checked={field.value as boolean}
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
