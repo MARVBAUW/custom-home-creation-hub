@@ -98,7 +98,7 @@ export interface ProjectDetails {
   phases: ProjectPhases;
   automaticDates?: boolean;
   adminAuthorization?: string;
-  companies?: Company[];  // Changed from object to array
+  companies: Company[];  // Defined as array not object
   siteReports?: SiteReport[];
   createdAt: string;
   updatedAt: string;

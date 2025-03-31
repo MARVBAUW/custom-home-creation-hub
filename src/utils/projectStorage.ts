@@ -1,6 +1,28 @@
 
 import { ProjectDetails, ProjectPhases } from '@/types/project';
 import { supabase } from '@/integrations/supabase/client';
+import { Json } from '@/integrations/supabase/types';
+
+// Helper function to safely parse JSON timeline data
+const parseTimelineData = (timeline: Json | null): { 
+  dates?: any, 
+  phases?: any 
+} => {
+  if (!timeline) return {};
+
+  // If it's a string, try to parse it
+  if (typeof timeline === 'string') {
+    try {
+      return JSON.parse(timeline);
+    } catch (e) {
+      console.error("Error parsing timeline JSON:", e);
+      return {};
+    }
+  }
+  
+  // If it's already an object, return it
+  return timeline as Record<string, any>;
+};
 
 // Charger tous les projets
 export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
@@ -17,19 +39,8 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
     
     // Convertir les données de la base en ProjectDetails
     const projects: ProjectDetails[] = data.map(project => {
-      let timeline = project.timeline;
-      
-      // Handle string or null timeline
-      if (typeof timeline === 'string') {
-        try {
-          timeline = JSON.parse(timeline);
-        } catch (e) {
-          console.error("Error parsing timeline JSON:", e);
-          timeline = {};
-        }
-      } else if (!timeline) {
-        timeline = {};
-      }
+      // Parse the timeline data safely
+      const timelineData = parseTimelineData(project.timeline);
       
       return {
         id: project.id,
@@ -46,13 +57,13 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
         adminAuthorization: 'granted',
         automaticDates: true,
         clientId: project.client_id || '',
-        dates: timeline?.dates || {
+        dates: timelineData.dates || {
           global: {
             startDate: new Date(project.created_at).toISOString(),
             endDate: new Date(new Date(project.created_at).setMonth(new Date(project.created_at).getMonth() + 6)).toISOString()
           }
         },
-        phases: timeline?.phases || {
+        phases: timelineData.phases || {
           feasibility: true,
           dce: false,
           act: false,
@@ -61,7 +72,7 @@ export const loadAllProjects = async (): Promise<ProjectDetails[]> => {
           delivery: false
         },
         team: {},
-        companies: [],  // Initialize as empty array instead of empty object
+        companies: [], // Initialize as empty array
         execution: {},
         permits: {},
         technicalOffices: {},
@@ -94,18 +105,8 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
       return null;
     }
     
-    // Handle timeline parsing
-    let timeline = data.timeline;
-    if (typeof timeline === 'string') {
-      try {
-        timeline = JSON.parse(timeline);
-      } catch (e) {
-        console.error("Error parsing timeline JSON:", e);
-        timeline = {};
-      }
-    } else if (!timeline) {
-      timeline = {};
-    }
+    // Parse the timeline data safely
+    const timelineData = parseTimelineData(data.timeline);
     
     // Convertir les données de la base en ProjectDetails
     const project: ProjectDetails = {
@@ -123,13 +124,13 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
       adminAuthorization: 'granted',
       automaticDates: true,
       clientId: data.client_id || '',
-      dates: timeline?.dates || {
+      dates: timelineData.dates || {
         global: {
           startDate: new Date(data.created_at).toISOString(),
           endDate: new Date(new Date(data.created_at).setMonth(new Date(data.created_at).getMonth() + 6)).toISOString()
         }
       },
-      phases: timeline?.phases || {
+      phases: timelineData.phases || {
         feasibility: true,
         dce: false,
         act: false,
@@ -138,7 +139,7 @@ export const loadProjectById = async (projectId: string): Promise<ProjectDetails
         delivery: false
       },
       team: {},
-      companies: [],  // Initialize as empty array instead of empty object
+      companies: [], // Initialize as empty array
       execution: {},
       permits: {},
       technicalOffices: {},
@@ -163,6 +164,12 @@ export const saveProject = async (project: ProjectDetails): Promise<string> => {
       estimatedBudget = project.workAmount || 0;
     }
     
+    // Stringify the timeline object to make it compatible with the Json type
+    const timelineJson = JSON.stringify({
+      dates: project.dates,
+      phases: project.phases
+    });
+    
     // Convertir le projet en format compatible avec la base de données
     const dbProject = {
       id: project.id,
@@ -175,10 +182,7 @@ export const saveProject = async (project: ProjectDetails): Promise<string> => {
       client_id: project.clientId || null,
       // Add required field for the database schema
       construction_type: 'standard', // Default value
-      timeline: {
-        dates: project.dates,
-        phases: project.phases
-      }
+      timeline: timelineJson // Use stringified version for storage
     };
     
     let result;
