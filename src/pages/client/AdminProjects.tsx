@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
 import ClientNavigation from '@/components/client/ClientNavigation';
@@ -8,11 +8,14 @@ import { useToast } from '@/hooks/use-toast';
 import { useClientAuth } from '@/hooks/useClientAuth';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import ProjectsList from '@/components/admin/project-management/ProjectsList';
+import { loadAllProjects } from '@/utils/projectStorage';
 
 const AdminProjects = () => {
   const { isLoaded, isSignedIn } = useClientAuth({ redirectIfUnauthenticated: true });
   const [isAdminMode, setIsAdminMode] = useState(true);
   const { toast } = useToast();
+  const [projects, setProjects] = useState([]);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
 
   // Handle admin mode toggle
   const handleAdminModeToggle = (checked: boolean) => {
@@ -25,6 +28,29 @@ const AdminProjects = () => {
         : "Vous voyez maintenant l'interface client standard.",
     });
   };
+
+  // Load projects when component mounts
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projectsData = await loadAllProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error("Error loading projects:", error);
+        toast({
+          title: "Erreur de chargement",
+          description: "Impossible de charger les projets.",
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoadingProjects(false);
+      }
+    };
+
+    if (isSignedIn) {
+      fetchProjects();
+    }
+  }, [isSignedIn, toast]);
 
   if (!isLoaded || !isSignedIn) {
     return <div className="flex justify-center items-center min-h-screen">
@@ -73,7 +99,7 @@ const AdminProjects = () => {
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              <ProjectsList />
+              <ProjectsList isLoading={isLoadingProjects} initialProjects={projects} />
             </div>
           </div>
         </Container>

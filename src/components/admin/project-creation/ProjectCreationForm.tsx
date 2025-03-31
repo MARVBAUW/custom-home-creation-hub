@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm, FormProvider } from "react-hook-form";
 import { Tabs } from "@/components/ui/tabs";
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProjectDetails } from '@/types/project';
+import { useNavigate } from 'react-router-dom';
 import ProjectFormTabs from './ProjectFormTabs';
 import { 
   GeneralTabContent, 
@@ -15,6 +16,7 @@ import {
   ExecutionTabContent, 
   TechnicalTabContent 
 } from './TabContents';
+import { saveProject } from '@/utils/projectStorage';
 
 const defaultValues: ProjectDetails = {
   projectName: "",
@@ -48,14 +50,37 @@ const ProjectCreationForm = () => {
   const methods = useForm<ProjectDetails>({
     defaultValues
   });
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onSubmit = (data: ProjectDetails) => {
+  const onSubmit = async (data: ProjectDetails) => {
     console.log("Form submitted", data);
+    setIsSubmitting(true);
     
-    toast({
-      title: "Projet créé avec succès",
-      description: `Le projet ${data.projectName} a été créé.`,
-    });
+    try {
+      // Save project using projectStorage utility
+      const projectId = await saveProject(data);
+      
+      toast({
+        title: "Projet créé avec succès",
+        description: `Le projet ${data.projectName} a été créé.`,
+      });
+      
+      // Redirect to projects list
+      setTimeout(() => {
+        navigate('/workspace/client-area/admin/projects');
+      }, 1000);
+    } catch (error) {
+      console.error("Error saving project:", error);
+      toast({
+        title: "Erreur lors de la création du projet",
+        description: "Une erreur est survenue lors de l'enregistrement du projet.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,8 +103,9 @@ const ProjectCreationForm = () => {
               <Button 
                 type="submit" 
                 className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                disabled={isSubmitting}
               >
-                Valider la saisie et enregistrer
+                {isSubmitting ? 'Enregistrement en cours...' : 'Valider la saisie et enregistrer'}
               </Button>
             </div>
           </form>

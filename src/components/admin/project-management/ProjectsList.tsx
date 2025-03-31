@@ -20,24 +20,29 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { deleteProject, loadAllProjects } from '@/utils/projectStorage';
 import { ProjectDetails } from '@/types/project';
 
-const ProjectsList = () => {
+interface ProjectsListProps {
+  isLoading?: boolean;
+  initialProjects?: ProjectDetails[];
+}
+
+const ProjectsList: React.FC<ProjectsListProps> = ({ isLoading = false, initialProjects = [] }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('all'); // 'all', 'withClient', 'withoutClient'
-  const [projects, setProjects] = useState<ProjectDetails[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [projects, setProjects] = useState<ProjectDetails[]>(initialProjects);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // Load projects when component mounts
+  // Use initialProjects when they change
   useEffect(() => {
-    loadProjects();
-  }, []);
+    if (initialProjects.length > 0) {
+      setProjects(initialProjects);
+    }
+  }, [initialProjects]);
 
-  // Function to load projects from storage
-  const loadProjects = async () => {
-    setIsLoading(true);
+  // Function to refresh projects
+  const refreshProjects = async () => {
     try {
       const loadedProjects = await loadAllProjects();
       setProjects(loadedProjects);
@@ -48,8 +53,6 @@ const ProjectsList = () => {
         description: 'Impossible de charger les projets.',
         variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
   
@@ -80,8 +83,8 @@ const ProjectsList = () => {
           title: 'Succès',
           description: 'Le projet a été supprimé avec succès.',
         });
-        // Reload projects
-        loadProjects();
+        // Refresh projects
+        refreshProjects();
       } else {
         throw new Error('Échec de la suppression');
       }
@@ -111,6 +114,7 @@ const ProjectsList = () => {
 
   // Format date for display
   const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('fr-FR', {
       day: '2-digit',
