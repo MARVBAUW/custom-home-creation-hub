@@ -33,16 +33,23 @@ export default defineConfig(({ mode }) => ({
   },
   
   // Configure proper MIME types for XML and handle routes correctly
-  assetsInclude: ['**/*.xml'],
+  assetsInclude: ['**/*.xml', '**/*.png', '**/*.jpg', '**/*.ico'],
   
-  // Ensure the XML file is served with the correct content type
+  // Ensure the XML file and favicon files are served with the correct content type
   build: {
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
-          // Vérifier si name existe et s'il se termine par .xml
-          if (assetInfo.name && assetInfo.name.endsWith('.xml')) {
-            return '[name][extname]';
+          // Check for XML files and favicon files
+          if (assetInfo.name) {
+            if (assetInfo.name.endsWith('.xml')) {
+              return '[name][extname]';
+            }
+            if (assetInfo.name.includes('progineer-icon') || 
+                assetInfo.name.includes('progineer-apple-touch-icon') || 
+                assetInfo.name === 'site.webmanifest') {
+              return '[name][extname]';
+            }
           }
           return 'assets/[name]-[hash][extname]';
         }
