@@ -1,149 +1,186 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { List, Building, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BaseFormProps } from '../types/formTypes';
+import { PDFGenerator } from '../components/PDFGenerator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { BaseFormProps } from '../types/baseTypes';
+import { EstimationResponseData } from '../types/estimationTypes';
+import { formatCurrency } from '@/utils/formatters';
 
-const ResultsForm: React.FC<BaseFormProps> = ({ 
-  formData, 
-  goToPreviousStep, 
-  animationDirection,
-  isLoading,
+// Extend BaseFormProps with specific props for the results form
+interface ResultsFormProps extends BaseFormProps {
+  estimationResult?: EstimationResponseData | number | null;
+  categoriesAmounts?: Array<{ category: string; amount: number }>;
+}
+
+const ResultsForm: React.FC<ResultsFormProps> = ({
+  formData,
   estimationResult,
-  categoriesAmounts
+  categoriesAmounts,
+  goToPreviousStep,
+  isLoading,
+  animationDirection
 }) => {
-  // Créer des catégories fictives pour la démo si aucune n'est fournie
-  const displayCategories = categoriesAmounts || [
-    { category: 'Gros oeuvre', amount: 120000 },
-    { category: 'Second oeuvre', amount: 80000 },
-    { category: 'Électricité', amount: 25000 },
-    { category: 'Plomberie', amount: 25000 },
-    { category: 'Menuiseries', amount: 35000 },
-    { category: 'Isolation', amount: 30000 },
-    { category: 'Finitions', amount: 40000 },
-    { category: 'Frais annexes', amount: 20000 }
-  ];
-  
-  // Calculer le montant total à partir des catégories
-  const totalAmount = displayCategories.reduce((sum, item) => sum + item.amount, 0);
-  
-  // Formater les nombres en euros
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
-  };
-  
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-48">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-progineer-gold"></div>
-      </div>
+      <Card className="bg-white/50 backdrop-blur transition-all duration-500">
+        <CardHeader>
+          <CardTitle className="text-xl text-center">Calcul de votre estimation en cours...</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700 mb-4"></div>
+          <p className="text-gray-600">Veuillez patienter, nous calculons votre estimation détaillée...</p>
+        </CardContent>
+      </Card>
     );
   }
-  
-  const displayAmount = typeof estimationResult === 'number' 
-    ? estimationResult 
-    : estimationResult?.totalAmount || totalAmount;
 
-  return (
-    <div className={`transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
-    }`}>
-      <Card className="bg-white shadow-md">
-        <CardHeader className="bg-gray-50 rounded-t-lg">
-          <CardTitle className="text-2xl font-bold text-center">
-            Estimation de votre projet
-          </CardTitle>
+  if (!estimationResult) {
+    return (
+      <Card className="bg-white/50 backdrop-blur transition-all duration-500">
+        <CardHeader>
+          <CardTitle className="text-xl text-center">Résultats non disponibles</CardTitle>
         </CardHeader>
-        <CardContent className="pt-6">
-          {/* Récapitulatif du projet */}
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-            <h3 className="text-lg font-semibold mb-3 flex items-center">
-              <List className="mr-2 text-blue-600" />
-              Récapitulatif du projet
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="flex items-start">
-                <div className="mr-2 mt-1 text-blue-600">
-                  <Building size={16} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Type de projet</p>
-                  <p className="text-sm">{formData.projectType === 'construction' ? 'Construction neuve' : 
-                     formData.projectType === 'renovation' ? 'Rénovation' : 
-                     formData.projectType === 'extension' ? 'Extension' : 'Non spécifié'}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="mr-2 mt-1 text-blue-600">
-                  <User size={16} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Type de client</p>
-                  <p className="text-sm">{formData.clientType === 'individual' ? 'Particulier' : 
-                     formData.clientType === 'professional' ? 'Professionnel' : 'Non spécifié'}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="mr-2 mt-1 text-blue-600">
-                  <CheckCircle2 size={16} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Surface</p>
-                  <p className="text-sm">{formData.surface ? `${formData.surface} m²` : 'Non spécifiée'}</p>
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="mr-2 mt-1 text-blue-600">
-                  <CheckCircle2 size={16} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Localisation</p>
-                  <p className="text-sm">{formData.city || 'Non spécifiée'}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Montant total estimé */}
-          <div className="mb-6 text-center p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-medium">Montant total estimé</h3>
-            <p className="text-3xl font-bold text-progineer-gold">
-              {formatCurrency(displayAmount)}
-            </p>
-            <p className="text-sm text-gray-500 mt-2">
-              * Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.
-            </p>
-          </div>
-          
-          {/* Détail des coûts par catégorie */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Détail par corps d'état</h3>
-            <div className="space-y-2">
-              {displayCategories.map((item, index) => (
-                <div key={index} className="flex justify-between py-2 border-b">
-                  <span className="font-medium">{item.category}</span>
-                  <span>{formatCurrency(item.amount)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Boutons d'action */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+        <CardContent>
+          <Alert variant="destructive">
+            <AlertDescription>
+              Une erreur est survenue lors du calcul de l'estimation. Veuillez réessayer.
+            </AlertDescription>
+          </Alert>
+          <div className="flex justify-center mt-6">
             <Button onClick={goToPreviousStep} variant="outline">
-              Modifier l'estimation
-            </Button>
-            <Button className="bg-progineer-gold hover:bg-progineer-gold/90">
-              Télécharger le PDF
-            </Button>
-            <Button>
-              Prendre rendez-vous
+              Retour
             </Button>
           </div>
         </CardContent>
       </Card>
-    </div>
+    );
+  }
+
+  // Calculate total amount
+  const totalAmount = typeof estimationResult === 'number' 
+    ? estimationResult 
+    : estimationResult.totalAmount;
+
+  return (
+    <Card className="bg-white/50 backdrop-blur transition-all duration-500">
+      <CardHeader>
+        <CardTitle className="text-xl text-center">Estimation de votre projet</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-8">
+          {/* Total estimation */}
+          <div className="bg-blue-50 p-6 rounded-xl text-center">
+            <h3 className="text-lg font-medium text-blue-800 mb-2">Estimation globale du projet</h3>
+            <p className="text-3xl font-bold text-blue-900">
+              {formatCurrency(totalAmount)}
+            </p>
+            <p className="text-sm text-blue-700 mt-2">
+              {formData.surface && `${formatCurrency(totalAmount / Number(formData.surface))} / m²`}
+            </p>
+          </div>
+
+          {/* Breakdown by category */}
+          {categoriesAmounts && categoriesAmounts.length > 0 && (
+            <div>
+              <h3 className="text-lg font-medium mb-4">Répartition par corps d'état</h3>
+              <div className="space-y-3">
+                {categoriesAmounts.map((item, index) => (
+                  <div key={index} className="flex justify-between items-center border-b pb-2">
+                    <span className="text-gray-700">{item.category}</span>
+                    <span className="font-medium">{formatCurrency(item.amount)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Timeline */}
+          {typeof estimationResult !== 'number' && estimationResult.timeline && (
+            <div>
+              <h3 className="text-lg font-medium mb-4">Calendrier prévisionnel</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Études et conception</p>
+                  <p className="text-lg font-medium">{estimationResult.timeline.design} mois</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Autorisations</p>
+                  <p className="text-lg font-medium">{estimationResult.timeline.permits} mois</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Consultation</p>
+                  <p className="text-lg font-medium">{estimationResult.timeline.bidding} mois</p>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Construction</p>
+                  <p className="text-lg font-medium">{estimationResult.timeline.construction} mois</p>
+                </div>
+              </div>
+              <div className="bg-blue-50 p-4 rounded-lg mt-4 text-center">
+                <p className="text-sm text-blue-500">Durée totale estimée</p>
+                <p className="text-xl font-medium text-blue-700">{estimationResult.timeline.total} mois</p>
+              </div>
+            </div>
+          )}
+
+          {/* Project summary */}
+          <div>
+            <h3 className="text-lg font-medium mb-4">Résumé du projet</h3>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <div className="text-gray-600">Type de projet:</div>
+              <div className="font-medium">{formData.projectType}</div>
+              
+              <div className="text-gray-600">Surface:</div>
+              <div className="font-medium">{formData.surface} m²</div>
+              
+              {formData.city && (
+                <>
+                  <div className="text-gray-600">Localisation:</div>
+                  <div className="font-medium">{formData.city}</div>
+                </>
+              )}
+              
+              {formData.constructionType && (
+                <>
+                  <div className="text-gray-600">Type de construction:</div>
+                  <div className="font-medium">{formData.constructionType}</div>
+                </>
+              )}
+              
+              {formData.constructionStyle && (
+                <>
+                  <div className="text-gray-600">Style architectural:</div>
+                  <div className="font-medium">{formData.constructionStyle}</div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-between pt-4">
+            <Button onClick={goToPreviousStep} variant="outline">
+              Modifier mon estimation
+            </Button>
+            
+            <PDFGenerator
+              documentTitle="Estimation détaillée de projet"
+              data={formData}
+              fileName="estimation-progineer"
+              buttonLabel="Télécharger l'estimation"
+              variant="default"
+              className="bg-blue-600 hover:bg-blue-700"
+            />
+          </div>
+          
+          <div className="text-xs text-gray-500 mt-4 text-center">
+            * Cette estimation est fournie à titre indicatif et ne constitue pas un engagement contractuel.
+            Les prix peuvent varier selon les spécificités du projet, les matériaux choisis et les contraintes du site.
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

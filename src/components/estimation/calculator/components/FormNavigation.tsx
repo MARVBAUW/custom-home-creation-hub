@@ -1,8 +1,23 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon, CheckCircle, ListChecks } from 'lucide-react';
-import { FormNavigationProps } from '../types/formTypes';
+import { ArrowLeftIcon, ArrowRightIcon, Check } from 'lucide-react';
+
+export interface FormNavigationProps {
+  step: number;
+  totalSteps: number;
+  estimationResult?: number;
+  showSummary?: boolean;
+  onPreviousClick: () => void;
+  onNextClick: () => void;
+  onShowSummaryClick?: () => void;
+  currentStep?: number;
+  onPrevStep?: () => void;
+  onNextStep?: () => void;
+  isSubmitting?: boolean;
+  isComplete?: boolean;
+  onComplete?: () => void;
+}
 
 const FormNavigation: React.FC<FormNavigationProps> = ({
   step,
@@ -19,84 +34,49 @@ const FormNavigation: React.FC<FormNavigationProps> = ({
   isComplete,
   onComplete
 }) => {
-  // Use either the direct click handlers or the step handlers
-  const handlePrevious = onPreviousClick || onPrevStep;
-  const handleNext = onNextClick || onNextStep;
-  const handleComplete = onComplete || onShowSummaryClick;
-
-  // Show different buttons based on whether we're showing the summary
-  if (showSummary) {
-    return (
-      <div className="flex justify-between mt-6">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onPreviousClick}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Retour
-        </Button>
-      </div>
-    );
-  }
-
-  // If we're at the last step and have a result
-  if (step === totalSteps - 1 && estimationResult) {
-    return (
-      <div className="flex justify-between mt-6">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handlePrevious}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeftIcon className="w-4 h-4" />
-          Précédent
-        </Button>
-        <Button
-          type="button"
-          onClick={onShowSummaryClick}
-          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        >
-          <ListChecks className="w-4 h-4" />
-          Voir le récapitulatif
-        </Button>
-      </div>
-    );
-  }
-
-  // Default navigation buttons
+  // Is this the first step?
+  const isFirstStep = step === 0;
+  
+  // Is this the last step?
+  const isLastStep = step === totalSteps - 1;
+  
   return (
-    <div className="flex justify-between mt-6">
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handlePrevious}
-        className="flex items-center gap-2"
-        disabled={step === 0}
-      >
-        <ArrowLeftIcon className="w-4 h-4" />
-        Précédent
-      </Button>
-      <Button
-        type="button"
-        onClick={isComplete ? handleComplete : handleNext}
-        className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-        disabled={isSubmitting}
-      >
-        {isComplete ? (
-          <>
-            <CheckCircle className="w-4 h-4" />
-            Terminer
-          </>
-        ) : (
-          <>
-            Suivant
-            <ArrowRightIcon className="w-4 h-4" />
-          </>
+    <div className="flex justify-between mt-8">
+      {/* Previous button (hidden on first step) */}
+      <div>
+        {!isFirstStep && (
+          <Button 
+            variant="outline" 
+            onClick={onPreviousClick}
+            disabled={isSubmitting}
+          >
+            <ArrowLeftIcon className="mr-2 h-4 w-4" />
+            Précédent
+          </Button>
         )}
-      </Button>
+      </div>
+      
+      {/* Next/Complete button */}
+      <div>
+        {isLastStep ? (
+          <Button 
+            onClick={onComplete} 
+            disabled={isSubmitting}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Check className="mr-2 h-4 w-4" />
+            Terminer
+          </Button>
+        ) : (
+          <Button 
+            onClick={onNextClick}
+            disabled={isSubmitting}
+          >
+            Suivant
+            <ArrowRightIcon className="ml-2 h-4 w-4" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

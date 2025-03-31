@@ -1,268 +1,29 @@
 
-import { BaseSyntheticEvent } from 'react';
+// This file exports all types from individual type files
+// to provide a single import point for other modules
 
-// Define the EstimationResponseData interface
-export interface ConstructionCosts {
-  structuralWork: number;
-  finishingWork: number;
-  technicalLots: number;
-  externalWorks: number;
-  total: number;
-}
+// Export from estimationFormData.ts
+export * from './estimationFormData';
 
-export interface FeeCosts {
-  architectFees: number;
-  engineeringFees: number;
-  officialFees: number;
-  inspectionFees: number;
-  total: number;
-}
-
-export interface OtherCosts {
-  insurance: number;
-  contingency: number;
-  taxes: number;
-  miscellaneous: number;
-  total: number;
-}
-
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  bidding: number;
-  construction: number;
-  total: number;
-}
-
-export interface EstimationResponseData {
-  constructionCosts: ConstructionCosts;
-  fees: FeeCosts;
-  otherCosts: OtherCosts;
-  totalAmount: number;
-  timeline: EstimationTimeline;
-}
-
-// Rename from FormData to EstimationFormData to avoid conflict with HTML's FormData
-export interface EstimationFormData {
-  // Client & Project Information
-  clientType?: string;
-  projectType?: string;
-  projectPurpose?: string;
-  estimationType?: string;
-  activity?: string;
-  landIncluded?: string;
-  budget?: number | string;
-  startDate?: string;
-  endDate?: string;
-  termsAccepted?: boolean;
-  hasLand?: boolean;
-  
-  // Construction Details
-  surface?: number | string;
-  levels?: number | string | any;
-  storyCount?: string;
-  units?: number | string;
-  constructionType?: string;
-  constructionStyle?: string;
-  gardenSurface?: number | string;
-  landPrice?: number | string;
-  terrainType?: string;
-  terrainSurface?: number | string;
-  terrainAccess?: string;
-  
-  // Rooms & Layout
-  roomCount?: number | string;
-  bedrooms?: number | string;
-  bathrooms?: number | string;
-  bathroomCount?: number | string;
-  bathroomType?: string;
-  kitchenType?: string;
-  livingRoomSize?: string;
-  livingRoomStyle?: string;
-  basement?: boolean;
-  garage?: boolean;
-  
-  // Structure
-  foundationType?: string;
-  wallType?: string;
-  wallThickness?: string;
-  hasBasement?: boolean;
-  basementType?: string;
-  floorType?: string;
-  slopedLand?: boolean;
-  difficultAccess?: boolean;
-  needsDemolition?: boolean;
-  needsWaterManagement?: boolean;
-  soilType?: string;
-  
-  // Roof
-  roofType?: string;
-  atticType?: string;
-  roofingType?: string;
-  
-  // Envelope
-  stonePercentage?: number | string;
-  plasterPercentage?: number | string;
-  brickPercentage?: number | string;
-  metalCladdingPercentage?: number | string;
-  woodCladdingPercentage?: number | string;
-  stoneCladdingPercentage?: number | string;
-  
-  // Windows & Doors
-  windowType?: string;
-  shutterType?: string;
-  windowRenovationArea?: number | string;
-  windowNewArea?: number | string;
-  doorType?: string;
-  interiorDoorsType?: string;
-  interiorFittings?: string[];
-  
-  // Technical Systems
-  electricalType?: string;
-  plumbingType?: string;
-  heatingType?: string;
-  hasAirConditioning?: boolean;
-  insulationType?: string;
-  
-  // Finishes
-  plasteringType?: string;
-  finishLevel?: string;
-  finishingLevel?: string;
-  paintType?: string;
-  basicPaintPercentage?: number | string;
-  decorativePaintPercentage?: number | string;
-  wallpaperPercentage?: number | string;
-  
-  // Flooring
-  floorTileType?: string;
-  wallTileType?: string;
-  floorTilePercentage?: number | string;
-  parquetType?: string;
-  parquetPercentage?: number | string;
-  softFloorType?: string;
-  softFloorPercentage?: number | string;
-  
-  // Exterior & Landscaping
-  landscapingType?: string | string[];
-  pool?: boolean;
-  terrace?: boolean;
-  outdoorKitchen?: boolean;
-  landscapingBudget?: number | string;
-  
-  // Special Features
-  domotic?: boolean;
-  alarm?: boolean;
-  centralVacuum?: boolean;
-  smartHome?: boolean;
-  solarPanels?: boolean;
-  solarPanelType?: string;
-  solarPanelSurface?: number | string;
-  windTurbineType?: string;
-  rainwaterHarvesting?: boolean;
-  greywaterRecycling?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  exteriorFeatures?: string[];
-  
-  // Section Toggles
-  includeEcoSolutions?: boolean;
-  includeRenewableEnergy?: boolean;
-  includeLandscaping?: boolean;
-  includeOptions?: boolean;
-  includeCuisine?: boolean;
-  includeBathroom?: boolean;
-  
-  // Utilities & Connections
-  waterConnection?: boolean;
-  electricityConnection?: boolean;
-  gasConnection?: boolean;
-  sewerConnection?: boolean;
-  fiberConnection?: boolean;
-  needsSepticTank?: boolean;
-  floodRisk?: boolean;
-  claySoil?: boolean;
-  rockySoil?: boolean;
-  wetlandZone?: boolean;
-  heritageZone?: boolean;
-  
-  // Contact Information
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  city?: string;
-  message?: string;
-  
-  // Construction processes
-  demolitionType?: string;
-  existingSurface?: number | string;
-  
-  // Complexity
-  complexity?: string;
-  qualityStandard?: string;
-  
-  // Any additional custom fields
-  [key: string]: any;
-}
-
-// Create an alias for backward compatibility
-export type FormData = EstimationFormData;
-
-// Define message types for conversational interface
-export interface Message {
-  id: string;
-  type: 'system' | 'user' | 'assistant' | 'loading';
-  content: string;
-  options?: string[];
-  text?: string;
-  isUser?: boolean;
-  createdAt?: Date;
-}
-
-export interface ConversationState {
-  currentStep: string;
-  askedQuestions: string[];
-  completedFields: string[];
-  formProgress: number;
-  messages?: Message[];
-  isTyping?: boolean;
-}
-
-export interface ConversationalProps {
-  onUserInput: (input: string) => void;
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
-  onClientTypeSubmit: (data: {clientType: string}) => void;
-  goToStep: (step: number) => void;
-}
-
-export interface MessageDisplayProps {
-  messages: Message[];
-  loading: boolean;
-  onOptionClick: (option: string) => void;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
-}
-
-export interface InputAreaProps {
-  userInput: string;
-  setUserInput: (input: string) => void;
-  handleSendMessage: () => void;
-  handleKeyPress: (e: React.KeyboardEvent) => void;
-}
-
-export interface MessageProcessorProps {
-  onUserInput: (input: string) => void;
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
-}
-
-export interface ExtractedInfo {
-  intent: string;
-  entities: {
-    [key: string]: any;
-  };
-}
-
-// Export other types from the related files
+// Export from formTypes.ts
 export * from './formTypes';
-export * from './baseTypes';
+
+// Export from conversationalTypes.ts
 export * from './conversationalTypes';
+
+// Export from baseTypes.ts 
+export * from './baseTypes';
+
+// Re-export BaseFormProps with a clear identifier to avoid ambiguity
+import { BaseFormProps as OriginalBaseFormProps } from './baseTypes';
+export { OriginalBaseFormProps };
+
+// Export from pdf-types
+export * from './pdf-types';
+
+// Re-export any additional types
+export * from './constructionTypes';
+export * from './envelopeTypes';
+export * from './clientTypes';
+export * from './estimationTypes';
+export * from './constructionSteps';
