@@ -1,38 +1,24 @@
 
 import { DTU } from '../../dtu/types';
-import { menuiseriesDTUs } from './menuiseries';
-import { grosOeuvreDTUs } from './grosOeuvre';
-import { fondationsDTUs } from './fondations';
-import { facadeDTUs } from './facade';
-import { plomberieDTUs } from './plomberie';
-import { electriciteDTUs } from './electricite';
-import { assainissementDTUs } from './assainissement';
-import { isolationDTUs } from './isolation';
-import { revetementsDTUs } from './revetements';
-import { toitureDTUs } from './toiture';
 import { incendieDTUs } from './incendie';
 import { accessibiliteDTUs } from './accessibilite';
-import { urbanismeDTUs } from './urbanisme';
-import { thermiqueDTUs } from './thermique';
 import { acoustiqueDTUs } from './acoustique';
-import { etancheiteDTUs } from './etancheite';
+import { thermiqueDTUs } from './thermique';
+import { dtuDTUs } from './dtu-list';
+import { urbanismeDTUs } from './urbanisme';
+import { eurocodeDTUs } from './eurocode';
+import { hygrometrieDTUs } from './hygrometrie';
+import { ratingClassificationsDTUs } from './ratings';
 
-// Export all DTUs combined
-export const dtuRecaps: DTU[] = [
-  ...menuiseriesDTUs,
-  ...grosOeuvreDTUs,
-  ...fondationsDTUs,
-  ...facadeDTUs,
-  ...plomberieDTUs,
-  ...electriciteDTUs,
-  ...assainissementDTUs,
-  ...isolationDTUs,
-  ...revetementsDTUs,
-  ...toitureDTUs,
-  ...etancheiteDTUs,
+// Combine all DTUs from different categories
+export const allDTUs: DTU[] = [
+  ...dtuDTUs,
   ...incendieDTUs,
-  ...accessibiliteDTUs,
-  ...urbanismeDTUs,
+  ...accessibiliteDTUs, 
+  ...acoustiqueDTUs,
   ...thermiqueDTUs,
-  ...acoustiqueDTUs
+  ...urbanismeDTUs,
+  ...eurocodeDTUs,
+  ...hygrometrieDTUs,
+  ...ratingClassificationsDTUs
 ];
