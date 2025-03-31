@@ -68,7 +68,7 @@ const EstimationWizard: React.FC = () => {
     console.log("Rendering step:", step);
     
     switch (step) {
-      case 0: // Client Type (Particulier/Professionnel)
+      case 0: // Type de projet (première étape)
         return (
           <ClientTypeStep
             formData={formData}
@@ -77,7 +77,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 1: // Professional Project Details
+      case 1: // Professionnel - Infos projet
         return (
           <ProjectDetailsStep
             formData={formData}
@@ -87,7 +87,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 2: // Individual Project Type
+      case 2: // Individual Project Type (hidden in new flow)
         return (
           <ProjectDetailsStep
             formData={formData}
@@ -97,7 +97,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 3: // Estimation Type (Rapide/Précise)
+      case 3: // Estimation Type (rapide/précise)
         return (
           <RoomsDetailsStep
             formData={formData}

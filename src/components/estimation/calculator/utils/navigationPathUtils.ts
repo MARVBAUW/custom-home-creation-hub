@@ -1,3 +1,4 @@
+
 import { FormData } from '../types';
 
 /**
@@ -9,17 +10,18 @@ import { FormData } from '../types';
 export const determineNextStep = (currentStep: number, formData: FormData): number => {
   console.log(`Determining next step from ${currentStep} for project type: ${formData.projectType}, client type: ${formData.clientType}`);
   
-  // Page 0: Choix du profil (Client Type)
+  // Page 0: Choix du type de projet
   if (currentStep === 0) {
-    if (formData.clientType === 'professional') {
-      return 1; // Professionnel -> Page 1 (Project Professional)
-    } else if (formData.clientType === 'individual') {
-      return 2; // Particulier -> Page 2 (Project Type for Individual)
+    if (formData.projectType === 'construction' || formData.projectType === 'renovation' || 
+        formData.projectType === 'extension') {
+      return 3; // Aller à la page d'estimation rapide/précise
+    } else if (formData.projectType === 'agencement') {
+      return 7; // Aller directement au formulaire de contact pour agencement
     }
-    return 0; // Stay on same page if no choice made
+    return 0; // Rester sur la même page si aucun choix n'est fait
   }
   
-  // Page 1: Professionnel - Infos projet
+  // Page 1: Professionnel - Infos projet (si on ajoute un chemin pro dans le futur)
   if (currentStep === 1) {
     return 7; // Aller directement au formulaire de contact (Page 7)
   }
@@ -27,7 +29,8 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
   // Page 2: Particulier - Choix du projet (Project Type)
   if (currentStep === 2) {
     // Les projets qui n'ont pas besoin d'estimation
-    if (formData.projectType === 'optimization' || formData.projectType === 'design') {
+    if (formData.projectType === 'optimization' || formData.projectType === 'design' || 
+        formData.projectType === 'agencement') {
       return 7; // Aller directement au formulaire de contact (Page 7)
     }
     return 3; // Sinon continuer normalement vers la page 3 (Estimation Type)
@@ -69,6 +72,7 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
     // Si projet sans estimation, ne pas aller à la page d'estimation
     if (formData.projectType === 'optimization' || 
         formData.projectType === 'design' || 
+        formData.projectType === 'agencement' ||
         formData.clientType === 'professional') {
       return 7; // Rester sur la même page (terminer le processus)
     }
@@ -88,17 +92,17 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
 export const determinePreviousStep = (currentStep: number, formData: FormData): number => {
   // Chemin inverse depuis la page des détails de projet pro (page 1)
   if (currentStep === 1) {
-    return 0; // Retour à la page 0 (Client Type)
+    return 0; // Retour à la page 0 (Type de projet)
   }
   
   // Chemin inverse depuis la page du type de projet particulier (page 2)
   if (currentStep === 2) {
-    return 0; // Retour à la page 0 (Client Type)
+    return 0; // Retour à la page 0 (Type de projet)
   }
   
   // Chemin inverse depuis la page du type d'estimation (page 3)
   if (currentStep === 3) {
-    return 2; // Retour à la page 2 (Project Type)
+    return 0; // Retour à la page 0 (Type de projet)
   }
   
   // Chemin inverse depuis la page de détails de construction (page 4)
@@ -122,8 +126,9 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
       return 1; // Retour à la page 1 pour les professionnels
     }
     
-    if (formData.projectType === 'optimization' || formData.projectType === 'design') {
-      return 2; // Retour à la page 2 pour les projets sans estimation
+    if (formData.projectType === 'optimization' || formData.projectType === 'design' || 
+        formData.projectType === 'agencement') {
+      return 0; // Retour à la page 0 pour les projets sans estimation
     }
     
     // Pour les projets de construction/extension
