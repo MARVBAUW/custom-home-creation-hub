@@ -123,7 +123,7 @@ const ProjectDetail = () => {
         </CardHeader>
       </Card>
       
-      <ProjectPhases phases={project.phases} />
+      <ProjectPhases projectId={projectId} phases={project.phases} />
       
       <Tabs defaultValue="details" className="space-y-6">
         <TabsList className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-1">
