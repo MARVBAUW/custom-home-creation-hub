@@ -4,6 +4,7 @@ export * from './baseTypes';
 export * from './estimationFormData';
 export * from './formTypes';
 export * from './pdf-types';
+export * from './clientTypeProps';
 
 // Ensure type exports are clear and don't have duplicates
 export type { EstimationFormData, FormData, EstimationResponseData, PDFGenerationOptions, FeeCosts } from './estimationFormData';
@@ -22,3 +23,6 @@ export type {
   ContactDetailsStepProps,
   DetailedEstimationReportProps
 } from './formTypes';
+
+// Also export PDFGenerationOptions from pdf-types explicitly
+export type { PDFGenerationOptions as PDFOptions, EnhancedJsPDF } from './pdf-types';

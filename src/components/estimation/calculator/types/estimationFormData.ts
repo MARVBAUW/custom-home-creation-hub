@@ -63,6 +63,24 @@ export interface EstimationFormData {
   gardenSurface?: number | string;
   landscapingBudget?: number | string;
   
+  // Floor related properties
+  floorTileType?: string;
+  floorTilePercentage?: number | string;
+  parquetType?: string;
+  parquetPercentage?: number | string;
+  softFloorType?: string;
+  softFloorPercentage?: number | string;
+  
+  // Wall and structure related properties
+  wallType?: string;
+  foundationType?: string;
+  
+  // Construction units
+  units?: number | string;
+  demolitionType?: string;
+  existingSurface?: number | string;
+  atticType?: string;
+  
   // Personal information
   firstName?: string;
   lastName?: string;
@@ -77,8 +95,6 @@ export interface EstimationFormData {
   endDate?: string;
   estimationType?: string;
   constructionStyle?: string;
-  wallType?: string;
-  foundationType?: string;
   roofType?: string;
   atticType?: string;
   roofingType?: string;
@@ -107,23 +123,10 @@ export interface EstimationFormData {
   plasteringType?: string;
   doorType?: string;
   interiorDoorsType?: string;
-  floorTileType?: string;
-  floorTilePercentage?: number | string;
   wallTileType?: string;
-  parquetType?: string;
-  parquetPercentage?: number | string;
-  softFloorType?: string;
-  softFloorPercentage?: number | string;
-  paintType?: string;
-  basicPaintPercentage?: number | string;
-  decorativePaintPercentage?: number | string;
-  wallpaperPercentage?: number | string;
   
   // Project requirements
-  units?: number | string;
   needsDemolition?: boolean;
-  demolitionType?: string;
-  existingSurface?: number | string;
   
   // Room types
   bathroomType?: string;
@@ -157,10 +160,10 @@ export interface EstimationResponseData {
   };
   fees: {
     architect: number;
-    engineeringFees?: number;
-    architectFees?: number;
-    officialFees?: number;
-    inspectionFees?: number;
+    engineeringFees: number;
+    architectFees: number;
+    officialFees: number;
+    inspectionFees: number;
     technicalStudies: number;
     other: number;
     total: number;

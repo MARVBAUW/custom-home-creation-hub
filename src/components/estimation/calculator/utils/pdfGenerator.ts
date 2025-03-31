@@ -2,7 +2,7 @@
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { FormData } from '../types';
-import { PDFGenerationOptions } from '../types/estimationFormData';
+import { PDFGenerationOptions } from '../types/pdf-types';
 
 export const generateEstimationPDF = (formData: FormData, estimation: any, options: PDFGenerationOptions = {}) => {
   const doc = new jsPDF();
@@ -77,15 +77,17 @@ export const generateEstimationPDF = (formData: FormData, estimation: any, optio
   doc.setFontSize(14);
   doc.text('Récapitulatif', 14, summaryY);
   
+  const totalHT = estimation.totalHT || estimation.totalAmount || 0;
+  
   const summary = [
-    ['Coût total HT', `${estimation.totalHT} €`],
-    ['TVA (20%)', `${estimation.totalHT * 0.2} €`],
-    ['Coût total TTC', `${estimation.totalTTC} €`]
+    ['Coût total HT', `${totalHT} €`],
+    ['TVA (20%)', `${totalHT * 0.2} €`],
+    ['Coût total TTC', `${totalHT * 1.2} €`]
   ];
   
   if (options.includeTerrainPrice && formData.landPrice) {
     summary.push(['Prix du terrain', `${formData.landPrice} €`]);
-    summary.push(['Coût global avec terrain', `${estimation.coutTotalAvecTerrain} €`]);
+    summary.push(['Coût global avec terrain', `${totalHT * 1.2 + Number(formData.landPrice)} €`]);
   }
   
   doc.autoTable({
@@ -99,10 +101,10 @@ export const generateEstimationPDF = (formData: FormData, estimation: any, optio
   });
   
   // Add footer
-  const totalPages = (doc as any).internal.getNumberOfPages();
+  const pageCount = doc.internal.getNumberOfPages();
   doc.setFontSize(10);
   
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.text('Cette estimation est fournie à titre indicatif et peut varier en fonction des détails spécifiques du projet.', 105, 285, {
       align: 'center'
@@ -114,4 +116,14 @@ export const generateEstimationPDF = (formData: FormData, estimation: any, optio
   
   // Return the document for further processing or save it
   return doc;
+};
+
+// Helper function to save the PDF
+export const savePDF = (doc: jsPDF, fileName: string = 'estimation-projet.pdf') => {
+  doc.save(fileName);
+};
+
+// Helper function to get PDF as blob
+export const getPDFBlob = (doc: jsPDF) => {
+  return new Blob([doc.output('blob')], { type: 'application/pdf' });
 };

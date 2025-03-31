@@ -1,85 +1,117 @@
 
-import { EstimationFormData, EstimationResponseData } from '../types';
+import { FormData, EstimationResponseData, FeeCosts } from '../types';
 
-// Main calculation function for estimation
-export const calculateEstimation = (formData: EstimationFormData): EstimationResponseData => {
-  const surface = typeof formData.surface === 'string' 
-    ? parseFloat(formData.surface) 
-    : (formData.surface || 0);
+/**
+ * Calculate a complete estimation based on the provided form data
+ * @param data The form data
+ * @returns The estimated amount and breakdown
+ */
+export const calculateEstimation = (data: FormData): EstimationResponseData => {
+  // Calculate construction costs
+  const constructionCosts = calculateConstructionCosts(data);
   
-  let basePrice = 1800; // Default price per m²
+  // Calculate fees
+  const fees = calculateFees(data, constructionCosts.total);
   
-  // Adjust base price based on project type
-  switch (formData.projectType) {
-    case 'construction':
-      basePrice = 1800;
-      break;
-    case 'renovation':
-      basePrice = 1200;
-      break;
-    case 'extension':
-      basePrice = 1600;
-      break;
-    case 'amenagement':
-      basePrice = 900;
-      break;
-    case 'commercial':
-      basePrice = 1500;
-      break;
-    case 'offices':
-      basePrice = 1600;
-      break;
-    case 'industrial':
-      basePrice = 1200;
-      break;
-    default:
-      basePrice = 1800;
-  }
-  
-  // Calculate total construction cost
-  const constructionCost = surface * basePrice;
-  
-  // Calculate fees (10% of construction cost)
-  const fees = constructionCost * 0.1;
-  
-  // Calculate other costs (5% of construction cost)
-  const otherCosts = constructionCost * 0.05;
+  // Calculate other costs
+  const otherCosts = calculateOtherCosts(data, constructionCosts.total);
   
   // Calculate total amount
-  const totalAmount = constructionCost + fees + otherCosts;
+  const totalAmount = constructionCosts.total + fees.total + otherCosts.total;
+  
+  // Calculate timeline
+  const timeline = calculateTimeline(data);
   
   return {
-    constructionCosts: {
-      structuralWork: constructionCost * 0.5,
-      finishingWork: constructionCost * 0.3,
-      technicalLots: constructionCost * 0.15,
-      externalWorks: constructionCost * 0.05,
-      total: constructionCost
-    },
-    fees: {
-      architect: fees * 0.4,
-      technicalStudies: fees * 0.3,
-      other: fees * 0.1,
-      total: fees,
-      architectFees: fees * 0.4,
-      engineeringFees: fees * 0.2,
-      officialFees: fees * 0.2,
-      inspectionFees: fees * 0.1
-    },
-    otherCosts: {
-      insurance: otherCosts * 0.3,
-      contingency: otherCosts * 0.4,
-      taxes: otherCosts * 0.2,
-      miscellaneous: otherCosts * 0.1,
-      total: otherCosts
-    },
-    totalAmount: totalAmount,
-    timeline: {
-      design: 2,
-      permits: 3,
-      bidding: 1,
-      construction: 10,
-      total: 16
-    }
+    constructionCosts,
+    fees,
+    otherCosts,
+    totalAmount,
+    timeline
+  };
+};
+
+const calculateConstructionCosts = (data: FormData) => {
+  const surface = typeof data.surface === 'string' ? parseFloat(data.surface) : (data.surface || 0);
+  
+  // Base costs per square meter
+  let baseCostPerSqm = 1500;
+  
+  // Apply adjustments based on project type
+  if (data.projectType === 'renovation') {
+    baseCostPerSqm = 1200;
+  } else if (data.projectType === 'extension') {
+    baseCostPerSqm = 1400;
+  }
+  
+  // Calculate the components
+  const structuralWork = surface * baseCostPerSqm * 0.4;
+  const finishingWork = surface * baseCostPerSqm * 0.3;
+  const technicalLots = surface * baseCostPerSqm * 0.2;
+  const externalWorks = surface * baseCostPerSqm * 0.1;
+  
+  return {
+    structuralWork,
+    finishingWork,
+    technicalLots,
+    externalWorks,
+    total: structuralWork + finishingWork + technicalLots + externalWorks
+  };
+};
+
+const calculateFees = (data: FormData, constructionCost: number): FeeCosts => {
+  return {
+    architect: constructionCost * 0.05,
+    engineeringFees: constructionCost * 0.025,
+    architectFees: constructionCost * 0.05,
+    officialFees: constructionCost * 0.015,
+    inspectionFees: constructionCost * 0.01,
+    technicalStudies: constructionCost * 0.02,
+    other: constructionCost * 0.01,
+    total: constructionCost * 0.12
+  };
+};
+
+const calculateOtherCosts = (data: FormData, constructionCost: number) => {
+  return {
+    insurance: constructionCost * 0.02,
+    contingency: constructionCost * 0.05,
+    taxes: constructionCost * 0.01,
+    miscellaneous: constructionCost * 0.01,
+    total: constructionCost * 0.09
+  };
+};
+
+const calculateTimeline = (data: FormData) => {
+  const baseTimeMonths = 12;
+  let design = 2;
+  let permits = 3;
+  let bidding = 1;
+  let construction = 6;
+  
+  // Adjust based on project size
+  const surface = typeof data.surface === 'string' ? parseFloat(data.surface) : (data.surface || 0);
+  if (surface > 200) {
+    construction += 3;
+  } else if (surface > 100) {
+    construction += 1;
+  }
+  
+  // Adjust based on project type
+  if (data.projectType === 'renovation') {
+    permits -= 1;
+    construction -= 1;
+  } else if (data.projectType === 'extension') {
+    permits -= 0.5;
+  }
+  
+  const total = design + permits + bidding + construction;
+  
+  return {
+    design,
+    permits,
+    bidding,
+    construction,
+    total
   };
 };

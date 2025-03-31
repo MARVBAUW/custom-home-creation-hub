@@ -1,6 +1,7 @@
 
 // Type definitions for jsPDF and jspdf-autotable
 import jsPDF from 'jspdf';
+import { UserOptions } from 'jspdf-autotable';
 
 // Fix PDFGenerationOptions interface
 export interface PDFGenerationOptions {
@@ -16,10 +17,10 @@ export interface PDFGenerationOptions {
   fileName?: string;
 }
 
-// Extend the jsPDF internal type
+// Extend the jsPDF internal type with proper typing
 declare module 'jspdf' {
   interface jsPDF {
-    autoTable: (options: any) => jsPDF & {
+    autoTable: (options: UserOptions) => jsPDF & {
       lastAutoTable: {
         finalY: number;
       };

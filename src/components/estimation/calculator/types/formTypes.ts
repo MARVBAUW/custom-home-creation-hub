@@ -1,7 +1,8 @@
 
 import { BaseSyntheticEvent } from 'react';
-import { EstimationFormData, EstimationResponseData, PDFGenerationOptions } from './estimationFormData';
+import { EstimationFormData, EstimationResponseData } from './estimationFormData';
 import { BaseFormProps } from './baseTypes';
+import { PDFGenerationOptions } from './pdf-types';
 
 export type { BaseFormProps };
 
@@ -73,15 +74,6 @@ export interface StepRendererProps {
   isSubmitting?: boolean;
   goToStep?: (step: number) => void;
   onComplete?: () => void;
-}
-
-// Define client-specific step props - make goToPreviousStep optional
-export interface ClientTypeStepProps {
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep?: () => void;  // Make this optional
-  animationDirection: string;
 }
 
 export interface ContactDetailsStepProps extends FormStepProps {
