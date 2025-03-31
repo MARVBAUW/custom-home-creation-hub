@@ -273,7 +273,75 @@ export const formatCurrency = (amount: number): string => {
   }).format(amount);
 };
 
+/**
+ * Generate a PDF document with the given data
+ * This is the function imported by PDFGenerator component
+ */
+export const generatePDF = (
+  documentTitle: string,
+  data: FormData | Record<string, any>,
+  fileName: string = 'estimation'
+): void => {
+  // Create a new PDF document
+  const doc = new jsPDF() as ExtendedJsPDF;
+  
+  // Add title
+  doc.setFontSize(20);
+  doc.text(documentTitle, 105, 15, { align: 'center' });
+  
+  // Add timestamp
+  const now = new Date();
+  doc.setFontSize(10);
+  doc.text(`Généré le ${now.toLocaleDateString('fr-FR')} à ${now.toLocaleTimeString('fr-FR')}`, 105, 25, { align: 'center' });
+  
+  // Add data as table
+  const tableData = Object.entries(data)
+    .filter(([_, value]) => value !== undefined && value !== null && value !== '')
+    .map(([key, value]) => {
+      // Format boolean values
+      if (typeof value === 'boolean') {
+        return [key, value ? 'Oui' : 'Non'];
+      }
+      // Format number values
+      if (typeof value === 'number') {
+        // Check if it looks like a price (larger values)
+        if (value > 1000) {
+          return [key, formatCurrency(value)];
+        }
+        // For smaller numbers, just return as is
+        return [key, value.toString()];
+      }
+      // Return other values as strings
+      return [key, String(value)];
+    });
+  
+  autoTable(doc, {
+    startY: 35,
+    head: [['Paramètre', 'Valeur']],
+    body: tableData,
+    theme: 'grid',
+    headStyles: {
+      fillColor: [120, 115, 70],
+      textColor: [255, 255, 255]
+    }
+  });
+  
+  // Add footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Estimation Progineer - Document non contractuel', 105, 285, { align: 'center' });
+    doc.text(`Page ${i} sur ${pageCount}`, 190, 285, { align: 'right' });
+  }
+  
+  // Save the PDF
+  doc.save(`${fileName}.pdf`);
+};
+
 export default {
   generateEstimationPDF,
-  formatCurrency
+  formatCurrency,
+  generatePDF
 };

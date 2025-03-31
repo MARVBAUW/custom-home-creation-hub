@@ -15,6 +15,7 @@ export interface EstimationFormData {
   landIncluded?: string;
   landPrice?: number;
   terrainType?: string;
+  landType?: string;
   
   // Construction details
   constructionType?: string;
@@ -43,6 +44,7 @@ export interface EstimationFormData {
   pool?: boolean;
   terrace?: boolean;
   outdoorKitchen?: boolean;
+  exteriorFeatures?: string[];
   
   // Personal information
   firstName?: string;
@@ -117,7 +119,6 @@ export interface EstimationFormData {
   // Additional properties for specific project types
   needsDemolition?: boolean;
   demolitionType?: string;
-  exteriorFeatures?: string[];
   units?: number;
   terrainSurface?: number | string;
   livingRoomSize?: number | string;

@@ -37,3 +37,5 @@ export const PDFGenerator: React.FC<PDFGeneratorProps> = ({
     </Button>
   );
 };
+
+export default PDFGenerator;

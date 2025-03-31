@@ -175,3 +175,11 @@ export const generateConversationalResponse = (userInput: string, formData: Form
       return "Pour vous fournir une estimation précise, j'aurais besoin de quelques informations supplémentaires. Pouvez-vous me préciser le type de projet (construction, rénovation, extension), la surface approximative et la localisation ?";
   }
 };
+
+export default {
+  analyzeUserIntent,
+  extractInformation,
+  extractFormDataFromMessage,
+  generateResponse,
+  generateConversationalResponse
+};
