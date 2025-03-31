@@ -4,8 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Info, AlertTriangle, Droplets, ThermometerSnowflake, BarChart2 } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -131,7 +130,7 @@ const HygrometrieRecapSection = () => {
                   
                   <div className="flex justify-end">
                     <Button variant="outline" asChild>
-                      <Link href="/workspace/calculateurs/hygro-condensation">
+                      <Link to="/workspace/calculateurs/hygro-condensation">
                         Accéder au calculateur de point de rosée {"->"} 
                       </Link>
                     </Button>
@@ -306,7 +305,7 @@ const HygrometrieRecapSection = () => {
                       </div>
                       
                       <Button variant="outline" size="sm" asChild className="w-full">
-                        <Link href="/workspace/calculateurs/hygro-condensation">
+                        <Link to="/workspace/calculateurs/hygro-condensation">
                           Accéder au calculateur de point de rosée
                         </Link>
                       </Button>
@@ -337,7 +336,7 @@ const HygrometrieRecapSection = () => {
                       </div>
                       
                       <Button variant="outline" size="sm" asChild className="w-full">
-                        <Link href="/workspace/calculateurs/diagramme-glaser">
+                        <Link to="/workspace/calculateurs/diagramme-glaser">
                           Accéder au calculateur Glaser
                         </Link>
                       </Button>
@@ -581,7 +580,7 @@ const HygrometrieRecapSection = () => {
                 
                 <div className="flex justify-end mt-6">
                   <Button asChild>
-                    <Link href="/workspace/calculateurs">
+                    <Link to="/workspace/calculateurs">
                       Explorer nos calculateurs hygrométriques
                     </Link>
                   </Button>

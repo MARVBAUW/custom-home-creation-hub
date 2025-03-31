@@ -13,7 +13,7 @@ import { UrbanismeRecapSection } from './reglementation/UrbanismeRecapSection';
 import { EurocodeRecapSection } from './reglementation/EurocodeRecapSection';
 import { AcoustiqueRecapSection } from './reglementation/AcoustiqueRecapSection';
 import { ThermiqueRecapSection } from './reglementation/ThermiqueRecapSection';
-import { HygrometrieRecapSection } from './reglementation/HygrometrieRecapSection';
+import HygrometrieRecapSection from './reglementation/HygrometrieRecapSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, FileCheck, Flame, Accessibility, Building, Calculator, Volume, Thermometer, Droplets } from 'lucide-react';
 
