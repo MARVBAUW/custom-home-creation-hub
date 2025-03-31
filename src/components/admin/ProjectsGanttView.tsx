@@ -30,7 +30,8 @@ const demoProjects: ProjectDetails[] = [
       delivery: false
     },
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    companies: []
   },
   {
     id: "demo-2",
@@ -56,7 +57,8 @@ const demoProjects: ProjectDetails[] = [
       delivery: false
     },
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    companies: []
   }
 ];
 

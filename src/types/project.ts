@@ -98,7 +98,7 @@ export interface ProjectDetails {
   phases: ProjectPhases;
   automaticDates?: boolean;
   adminAuthorization?: string;
-  companies?: Company[];
+  companies?: Company[];  // Changed from object to array
   siteReports?: SiteReport[];
   createdAt: string;
   updatedAt: string;
@@ -108,6 +108,7 @@ export interface ProjectDetails {
   execution?: ExecutionDetails;
   technicalOffices?: TechnicalOffices;
   trades?: Trades;
+  permits?: any;  // Added to match usages in code
 }
 
 export interface ProjectFormData {
