@@ -152,6 +152,39 @@ const getPlasteringCostPerSquareMeter = (type: string): number => {
 };
 
 /**
+ * Calculate interior carpentry costs based on door type, moldings, custom furniture and area
+ */
+export const calculateInteriorCarpenteryCost = (doorType: string, hasMoldings: boolean, hasCustomFurniture: boolean, area: number): number => {
+  // Base cost for the door type
+  let totalCost = getDoorTypeCostPerSquareMeter(doorType) * ensureNumber(area);
+  
+  // Add cost for moldings if selected
+  if (hasMoldings) {
+    totalCost += 40 * ensureNumber(area);
+  }
+  
+  // Add cost for custom furniture if selected
+  if (hasCustomFurniture) {
+    totalCost += 120 * ensureNumber(area);
+  }
+  
+  return totalCost;
+};
+
+/**
+ * Get cost per square meter for different door types
+ */
+const getDoorTypeCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'base': return 80;
+    case 'standing': return 130;
+    case 'premium': return 200;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
+};
+
+/**
  * Calculate air conditioning costs
  */
 export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {

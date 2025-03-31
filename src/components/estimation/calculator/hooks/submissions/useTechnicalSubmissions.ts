@@ -1,7 +1,12 @@
 
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
-import { calculateElectricalCost, calculatePlumbingCost, calculatePlasteringCost } from '../../utils/montantUtils';
+import { 
+  calculateElectricalCost, 
+  calculatePlumbingCost, 
+  calculatePlasteringCost, 
+  calculateInteriorCarpenteryCost 
+} from '../../utils/montantUtils';
 
 export const useTechnicalSubmissions = () => {
   // Function to handle electricite submission
@@ -37,9 +42,32 @@ export const useTechnicalSubmissions = () => {
     };
   };
 
+  // Function to handle menuiseries intérieures submission
+  const handleMenuiseriesIntSubmit = (data: { 
+    doorType: string, 
+    hasMoldings: boolean,
+    hasCustomFurniture: boolean 
+  }, formData: FormData) => {
+    const surface = ensureNumber(formData.surface, 0);
+    const additionalCost = calculateInteriorCarpenteryCost(
+      data.doorType, 
+      data.hasMoldings, 
+      data.hasCustomFurniture, 
+      surface
+    );
+    
+    return {
+      doorType: data.doorType,
+      hasMoldings: data.hasMoldings,
+      hasCustomFurniture: data.hasCustomFurniture,
+      montantT: (formData.montantT || 0) + additionalCost
+    };
+  };
+
   return {
     handleElectriciteSubmit,
     handlePlomberieSubmit,
     handlePlatrerieSubmit,
+    handleMenuiseriesIntSubmit,
   };
 };
