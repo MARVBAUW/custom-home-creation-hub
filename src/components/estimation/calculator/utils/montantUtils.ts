@@ -250,6 +250,145 @@ export function calculatePaintingCost(paintType: string, percentage: number, sur
 }
 
 /**
+ * Calculate kitchen cost based on type and unit count
+ * @param kitchenType The type of kitchen
+ * @param unitCount Number of units/apartments
+ * @returns The calculated cost
+ */
+export function calculateKitchenCost(kitchenType: string, unitCount: number): number {
+  // Base costs for different kitchen types
+  const baseCosts: Record<string, number> = {
+    'KITCHENETTE': 2700,
+    'CUISINE DE BASE': 8500,
+    'CUISINE +': 13500,
+    'CUISINIE PREMIUM': 19000,
+    'SANS CUISINE': 0
+  };
+
+  // Get the base cost or return 0 if not found
+  const baseCost = baseCosts[kitchenType] || 0;
+
+  // Calculate total cost based on number of units
+  return baseCost * unitCount;
+}
+
+/**
+ * Calculate bathroom cost based on type and count
+ * @param bathroomType The type of bathroom
+ * @param count Number of bathrooms
+ * @returns The calculated cost
+ */
+export function calculateBathroomCost(bathroomType: string, count: number): number {
+  // Base costs for different bathroom types
+  const baseCosts: Record<string, number> = {
+    'BASE': 2000,
+    'MILIEU DE GAMME': 3150,
+    'PREMIUM': 4200,
+    'SANS OBJET': 0,
+    'NON CONCERNE': 0
+  };
+
+  // Get the base cost or return 0 if not found
+  const baseCost = baseCosts[bathroomType] || 0;
+
+  // Calculate total cost based on count
+  return baseCost * count;
+}
+
+/**
+ * Calculate demolition cost based on type, area and percentage
+ * @param demolitionType The type of element to demolish
+ * @param area The surface area
+ * @param percentage The percentage to demolish
+ * @returns The calculated cost
+ */
+export function calculateDemolitionCost(demolitionType: string, area: number, percentage: number): number {
+  // Base costs per m² for different demolition types
+  const costsPerSqm: Record<string, number> = {
+    'REVETEMENT DE FACADE': 0.65,
+    'PLATRERIE': 0.19,
+    'REVETEMENTS DE SOL': 0.25,
+    'MENUISERIES INTERIEURES': 0.1,
+    'MENUISERIES EXTERIEURES': 0.08,
+    'PLOMBERIE': 0.17,
+    'EQUIPEMENTS SANITAIRES': 0.08,
+    'ELECTRICITE': 0.18,
+    'CLIMATISATION': 0.06,
+    'VENTILATION': 0.06,
+    'CHAUFFAGE': 0.12,
+    'TOTALITE HORS GROS OEUVRE': 193
+  };
+
+  // Get the cost per m² or return 0 if not found
+  const costPerSqm = costsPerSqm[demolitionType] || 0;
+
+  // For "TOTALITE HORS GROS OEUVRE", we don't apply percentage
+  if (demolitionType === 'TOTALITE HORS GROS OEUVRE') {
+    return area * costPerSqm;
+  }
+
+  // Calculate cost based on area, percentage and cost per m²
+  return area * (percentage / 100) * costPerSqm;
+}
+
+/**
+ * Calculate masonry wall cost
+ * @param area The wall area in m²
+ * @returns The calculated cost
+ */
+export function calculateMasonryWallCost(area: number): number {
+  const costPerSqm = 120;
+  return area * costPerSqm;
+}
+
+/**
+ * Calculate floor construction cost based on type and area
+ * @param floorType The type of floor (wood or concrete)
+ * @param area The floor area in m²
+ * @returns The calculated cost
+ */
+export function calculateFloorCost(floorType: string, area: number): number {
+  // Costs per m² for different floor types
+  const costsPerSqm: Record<string, number> = {
+    'BOIS': 80,
+    'BETON': 120
+  };
+
+  // Get the cost per m² or return 0 if not found
+  const costPerSqm = costsPerSqm[floorType] || 0;
+
+  // Calculate cost
+  return area * costPerSqm;
+}
+
+/**
+ * Calculate structural work specific feature cost
+ * @param featureType The type of structural feature
+ * @param value The quantity (length, area, or count)
+ * @returns The calculated cost
+ */
+export function calculateStructuralFeatureCost(featureType: string, value: number): number {
+  // Costs for different structural features
+  const featureCosts: Record<string, number> = {
+    'RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE': 120, // per ml
+    'DEMOLITION MUR PORTEUR': 120, // per m²
+    'POSE D\'UN IPN': 850, // per ml
+    'OUVERTURE EN FACADE/MUR PORTEUR': 120, // per m²
+    'CREATION D\'UNE TREMIE* (ouverture dans un plancher pour accéder à un étage supérieur)': 90, // per m²
+    'FONDATION SEMELLE': 80, // per ml
+    'FONDATION MASSIF': 110, // per unit
+    'CHAPE': 22, // per m²
+    'RACCORDEMENT SANTAIRE RESEAU URBAIN': 145 // per ml
+  };
+
+  // Get the cost or return 0 if not found
+  const cost = featureCosts[featureType] || 0;
+
+  // Calculate total cost
+  return cost * value;
+}
+
+/**
  * Ensure a value is a number for calculations
  * @param value The value to convert
  * @param defaultValue The default value to use if conversion fails
@@ -261,4 +400,3 @@ export const ensureNumber = (value: any, defaultValue: number = 0): number => {
   const parsed = typeof value === 'string' ? parseFloat(value) : Number(value);
   return isNaN(parsed) ? defaultValue : parsed;
 };
-
