@@ -13,7 +13,7 @@ export interface StepRendererManagerProps {
   step: number;
   totalSteps: number;
   formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void; // Adding the missing property
+  updateFormData: (data: Partial<FormData>) => void; 
   visibleSteps: any[];
   animationDirection: 'forward' | 'backward';
   goToNextStep: () => void;
@@ -43,7 +43,6 @@ export interface StepRendererManagerProps {
   onContactSubmit: (data: any) => void;
 }
 
-// Fix the technicalStepRegistry creation
 export const useStepRendererManager = (props: StepRendererManagerProps) => {
   const {
     step,
@@ -53,7 +52,7 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     animationDirection,
     goToNextStep,
     goToPreviousStep,
-    updateFormData, // Use the added property 
+    updateFormData,
     // Submit handlers
     onClientTypeSubmit,
     onProfessionalProjectSubmit,
@@ -108,12 +107,12 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     goToPreviousStep
   );
 
-  // Fix: Add the missing goToNextStep parameter to createTechnicalStepRegistry
+  // Create technical registry with all required parameters
   const technicalStepRegistry = createTechnicalStepRegistry(
     formData,
     updateFormData,
     goToPreviousStep,
-    goToNextStep // Add the missing argument
+    goToNextStep
   );
 
   const interiorStepRegistry = createInteriorStepRegistry(
@@ -147,7 +146,6 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
     const isLastStep = step === totalSteps;
 
     if (isLastStep) {
-      // Pass 'contact' as string key - now allowed by updated StepComponentRegistry type
       return createStepComponent('contact' as any, contactStepRegistry, {
         animationDirection,
         goToPreviousStep,
@@ -174,7 +172,6 @@ export const useStepRendererManager = (props: StepRendererManagerProps) => {
 
     return createStepComponent('default' as any, {
       default: (props: DefaultStepProps) => {
-        // Return the DefaultStepContent component with the props
         return <DefaultStepContent {...props} />;
       },
     }, defaultProps);

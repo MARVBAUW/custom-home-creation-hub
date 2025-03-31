@@ -7,6 +7,7 @@ import {
   calculateWindowsCost,
   calculateInsulationCost
 } from '../../utils/montantUtils';
+import { ensureNumber } from '../../utils/typeConversions';
 
 export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data: Partial<FormData>) => void) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -15,7 +16,9 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      const roofCost = calculateRoofingCost(couvertureData.roofingType, formData.surface);
+      // Utiliser ensureNumber pour s'assurer que surface est un nombre
+      const surface = ensureNumber(formData.surface, 0);
+      const roofCost = calculateRoofingCost(couvertureData.roofingType, surface);
       
       updateFormData({
         ...couvertureData,
@@ -35,7 +38,9 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      const insulationCost = calculateInsulationCost(isolationData.insulationType, formData.surface);
+      // Utiliser ensureNumber pour s'assurer que surface est un nombre
+      const surface = ensureNumber(formData.surface, 0);
+      const insulationCost = calculateInsulationCost(isolationData.insulationType, surface);
       
       updateFormData({
         ...isolationData,
@@ -96,7 +101,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     try {
       const windowsCost = calculateWindowsCost(
         menuiseriesData.windowType,
-        Number(menuiseriesData.windowNewArea) + Number(menuiseriesData.windowRenovationArea)
+        ensureNumber(menuiseriesData.windowNewArea) + ensureNumber(menuiseriesData.windowRenovationArea)
       );
       
       updateFormData({

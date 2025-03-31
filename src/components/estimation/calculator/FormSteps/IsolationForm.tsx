@@ -44,6 +44,8 @@ const IsolationForm: React.FC<ExtendedBaseFormProps> = ({
       montantT: newTotal
     };
     
+    console.log('Isolation form submitted:', updatedData);
+    
     if (onSubmit) {
       onSubmit(updatedData);
     } else {

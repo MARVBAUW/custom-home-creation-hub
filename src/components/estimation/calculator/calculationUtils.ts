@@ -83,11 +83,13 @@ const calculateFees = (data: FormData, constructionCost: number) => {
     inspectionFees,
     technicalStudies,
     other: otherFees,
-    // Include properties from both versions of the type
-    masterBuilderFees: architectFee, // Set to the same as architectFees for compatibility
-    safetyCoordination: inspectionFees, // Set to the same as inspectionFees for compatibility
-    technicalControl: technicalStudies, // Set to the same as technicalStudies for compatibility
-    insurance: otherFees, // Set to the same as other for compatibility
+    
+    // Properties for the unified type compatibility
+    masterBuilderFees: architectFee,
+    safetyCoordination: inspectionFees,
+    technicalControl: technicalStudies,
+    insurance: otherFees,
+    
     total: architectFee + engineeringFees + officialFees + inspectionFees + technicalStudies + otherFees
   };
 };
@@ -103,11 +105,13 @@ const calculateOtherCosts = (data: FormData, constructionCost: number) => {
     contingency,
     taxes,
     miscellaneous,
-    // Include properties from both versions of the type
-    landRegistry: taxes * 0.3, // A portion of taxes
-    urbanismTax: taxes * 0.4, // A portion of taxes
-    landTax: taxes * 0.2, // A portion of taxes
-    connectionFees: miscellaneous * 0.5, // A portion of miscellaneous
+    
+    // Properties for the unified type compatibility
+    landRegistry: taxes * 0.3,
+    urbanismTax: taxes * 0.4,
+    landTax: taxes * 0.2,
+    connectionFees: miscellaneous * 0.5,
+    
     total: insurance + contingency + taxes + miscellaneous
   };
 };
@@ -125,9 +129,10 @@ const calculateTimeline = (data: FormData) => {
     bidding,
     construction,
     total,
-    // Include properties from both versions of the type
+    
+    // Properties for the unified type compatibility
     duration: total,
-    type: 'standard' as EstimationTimeline // Type assertion to match the enum
+    type: 'standard' as any // as EstimationTimeline but safer to use any
   };
 };
 

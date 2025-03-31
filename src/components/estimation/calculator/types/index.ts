@@ -12,11 +12,10 @@ import { FormData as OriginalFormData,
         FeeCosts as LegacyFeeCosts } from '../types';
 
 // Create unified types that combine both versions
-export interface UnifiedFormData extends OriginalEstimationFormData {
-  // Add any properties from OriginalFormData that are incompatible or missing
+export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating'> {
+  // Add properties with flexible types to handle mixed data types
   surface?: number | string;
   poolHeating?: boolean | string;
-  // Add any other properties needed for full compatibility
   budget?: number | string;
   [key: string]: any; // Allow for dynamic properties
 }
