@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, BatteryMedium, Zap, Bolt } from 'lucide-react';
+import { Zap, Bolt, Lightbulb, BatteryMedium } from 'lucide-react';
+import { calculateElectricalCost, ensureNumber } from '../utils/montantUtils';
 
 const ElectriciteForm: React.FC<BaseFormProps> = ({
   formData,
@@ -19,31 +20,19 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
-    // Calculate the additional cost based on electrical type
-    let additionalCost = 0;
-    const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
+    // Get the surface area
+    const surface = ensureNumber(formData.surface, 0);
     
-    switch (electricalType) {
-      case 'base':
-        additionalCost = surface * 100; // PRESTATION DE BASE
-        break;
-      case 'advanced':
-        additionalCost = surface * 125; // PRESTATIONS AVANCEES
-        break;
-      case 'premium':
-        additionalCost = surface * 155; // PRESTATIONS HAUT DE GAMME
-        break;
-      case 'domotique':
-        additionalCost = surface * 190; // PRESTATIONS HG + DOMMOTIQUE
-        break;
-      default:
-        additionalCost = surface * 100; // Default to base
-    }
+    // Calculate the cost based on electrical type and surface
+    const additionalCost = calculateElectricalCost(electricalType, surface);
 
+    // Update form data with electrical type and additional cost
     updateFormData({
       electricalType,
       montantT: (formData.montantT || 0) + additionalCost
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
@@ -66,9 +55,9 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
               onClick={() => setElectricalType('base')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Lightbulb className="h-8 w-8 text-blue-500 mb-2" />
+                <Zap className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="base" id="electrical-base" className="sr-only" />
-                <Label htmlFor="electrical-base" className="font-medium">Prestation de base</Label>
+                <Label htmlFor="electrical-base" className="font-medium">Prestations de base</Label>
                 <p className="text-xs text-gray-500 mt-1">
                   Installation électrique standard
                 </p>
@@ -80,11 +69,11 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
               onClick={() => setElectricalType('advanced')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <BatteryMedium className="h-8 w-8 text-blue-500 mb-2" />
+                <Bolt className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="advanced" id="electrical-advanced" className="sr-only" />
                 <Label htmlFor="electrical-advanced" className="font-medium">Prestations avancées</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Plus de prises et équipements
+                  Installation électrique améliorée
                 </p>
               </CardContent>
             </Card>
@@ -94,11 +83,11 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
               onClick={() => setElectricalType('premium')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Zap className="h-8 w-8 text-blue-500 mb-2" />
+                <Lightbulb className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="premium" id="electrical-premium" className="sr-only" />
                 <Label htmlFor="electrical-premium" className="font-medium">Prestations haut de gamme</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Installation de qualité supérieure
+                  Installation électrique de qualité supérieure
                 </p>
               </CardContent>
             </Card>
@@ -108,11 +97,11 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
               onClick={() => setElectricalType('domotique')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Bolt className="h-8 w-8 text-blue-500 mb-2" />
+                <BatteryMedium className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="domotique" id="electrical-domotique" className="sr-only" />
-                <Label htmlFor="electrical-domotique" className="font-medium">HG + Domotique</Label>
+                <Label htmlFor="electrical-domotique" className="font-medium">Prestations HG + domotique</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Système connecté et automatisé
+                  Installation électrique intelligente
                 </p>
               </CardContent>
             </Card>

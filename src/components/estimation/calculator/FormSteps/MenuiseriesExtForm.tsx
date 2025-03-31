@@ -4,9 +4,14 @@ import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Square, Minimize2, Layers } from 'lucide-react';
+import { calculateWindowsCost, ensureNumber } from '../utils/montantUtils';
+
+interface WindowTypeOption {
+  id: string;
+  label: string;
+  imageUrl: string;
+}
 
 const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
   formData,
@@ -15,143 +20,107 @@ const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [windowType, setWindowType] = React.useState<string>(
-    formData.windowType || 'pvc'
-  );
+  const [windowType, setWindowType] = React.useState<string>(formData.windowType || '');
   
-  const [windowRenovationArea, setWindowRenovationArea] = React.useState<string>(
-    formData.windowRenovationArea?.toString() || '0'
-  );
-  
-  const [windowNewArea, setWindowNewArea] = React.useState<string>(
-    formData.windowNewArea?.toString() || '0'
-  );
+  const windowOptions: WindowTypeOption[] = [
+    {
+      id: 'bois',
+      label: 'Bois',
+      imageUrl: 'https://storage.tally.so/431090b7-6e9f-4b65-9287-b5fbd328627a/fenetre-bois-exotique.jpg',
+    },
+    {
+      id: 'pvc',
+      label: 'PVC',
+      imageUrl: 'https://storage.tally.so/373eab2e-754c-4ce1-84c5-06620cd162a4/201824309.jpg',
+    },
+    {
+      id: 'alu',
+      label: 'Alu',
+      imageUrl: 'https://storage.tally.so/0c7036b5-5dd9-49e7-a61d-38aa1ce89904/fenetre-aluminium.png',
+    },
+    {
+      id: 'mixte',
+      label: 'Mixte bois alu',
+      imageUrl: 'https://storage.tally.so/6a387837-9be3-456c-8b14-df07914e6958/fe_bois_alu.webp',
+    },
+    {
+      id: 'pvcColore',
+      label: 'PVC coloré',
+      imageUrl: 'https://storage.tally.so/d7c9b355-b6a5-4b3b-9886-459581f8c2de/fenetre-pvc-de-differente-couleur.webp',
+    }
+  ];
 
   const handleSubmit = () => {
-    // Calculate the new montantT based on the window type and surface
-    let additionalCost = 0;
-    const windowNewAreaNum = parseFloat(windowNewArea || '0');
-    const windowRenovationAreaNum = parseFloat(windowRenovationArea || '0');
-    const totalWindowArea = windowNewAreaNum + windowRenovationAreaNum;
-
-    if (totalWindowArea > 0) {
-      switch (windowType) {
-        case 'bois':
-          additionalCost = totalWindowArea * 650;
-          break;
-        case 'pvc':
-          additionalCost = totalWindowArea * 390;
-          break;
-        case 'aluminum':
-          additionalCost = totalWindowArea * 620;
-          break;
-        case 'mixed':
-          additionalCost = totalWindowArea * 690;
-          break;
-        case 'pvc_colored':
-          additionalCost = totalWindowArea * 410;
-          break;
-        default:
-          additionalCost = totalWindowArea * 390; // Default to PVC
-      }
+    if (!windowType) {
+      // If no window type is selected, select a default one
+      setWindowType('alu');
+      return;
     }
+    
+    // Calculate window area (estimate as 15% of total surface)
+    const surface = ensureNumber(formData.surface, 0);
+    const windowArea = surface * 0.15;
+    
+    // Calculate the cost based on window type and area
+    const additionalCost = calculateWindowsCost(windowType, windowArea);
 
-    // Update form data with window details
+    // Update form data
     updateFormData({
       windowType,
-      windowRenovationArea: windowRenovationArea !== '' ? Number(windowRenovationArea) : 0,
-      windowNewArea: windowNewArea !== '' ? Number(windowNewArea) : 0,
+      windowNewArea: windowArea,
       montantT: (formData.montantT || 0) + additionalCost
     });
+    
+    // Move to the next step
     goToNextStep();
   };
-
+  
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <h3 className="text-lg font-medium mb-4">Menuiseries Extérieures</h3>
+        <h3 className="text-lg font-medium mb-4">Menuiseries extérieures</h3>
         
         <div>
-          <Label className="mb-2 block">Type de menuiseries</Label>
+          <Label className="mb-2 block">Type de fenêtres</Label>
           <RadioGroup 
             value={windowType} 
             onValueChange={setWindowType}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'pvc' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setWindowType('pvc')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Square className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="pvc" id="window-pvc" className="sr-only" />
-                <Label htmlFor="window-pvc" className="font-medium">PVC</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Bon rapport qualité/prix
-                </p>
-              </CardContent>
-            </Card>
+            {windowOptions.map((option) => (
+              <Card 
+                key={option.id}
+                className={`cursor-pointer transition-all hover:shadow-md ${windowType === option.id ? 'border-blue-500 bg-blue-50' : ''}`}
+                onClick={() => setWindowType(option.id)}
+              >
+                <CardContent className="p-0">
+                  <div className="h-32 overflow-hidden">
+                    <img 
+                      src={option.imageUrl} 
+                      alt={option.label}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-3 flex items-center justify-center">
+                    <RadioGroupItem value={option.id} id={`window-${option.id}`} className="sr-only" />
+                    <Label htmlFor={`window-${option.id}`} className="font-medium">{option.label}</Label>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
             
             <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'aluminum' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setWindowType('aluminum')}
+              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'sans_avis' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWindowType('sans_avis')}
             >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Minimize2 className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="aluminum" id="window-aluminum" className="sr-only" />
-                <Label htmlFor="window-aluminum" className="font-medium">Aluminium</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Finesse et durabilité
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${windowType === 'mixed' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setWindowType('mixed')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Layers className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="mixed" id="window-mixed" className="sr-only" />
-                <Label htmlFor="window-mixed" className="font-medium">Mixte (bois/alu)</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Esthétique et performance
-                </p>
+              <CardContent className="pt-4 pb-4 flex flex-col items-center justify-center h-full">
+                <RadioGroupItem value="sans_avis" id="window-sans_avis" className="sr-only" />
+                <Label htmlFor="window-sans_avis" className="font-medium">Sans avis</Label>
               </CardContent>
             </Card>
           </RadioGroup>
-        </div>
-        
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="window-renovation">Surface à rénover (m²)</Label>
-            <Input
-              id="window-renovation"
-              type="number"
-              placeholder="0"
-              value={windowRenovationArea}
-              onChange={(e) => setWindowRenovationArea(e.target.value)}
-            />
-            <p className="text-xs text-gray-500">
-              Surface de menuiseries à remplacer
-            </p>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="window-new">Surface à créer (m²)</Label>
-            <Input
-              id="window-new"
-              type="number"
-              placeholder="0"
-              value={windowNewArea}
-              onChange={(e) => setWindowNewArea(e.target.value)}
-            />
-            <p className="text-xs text-gray-500">
-              Surface de nouvelles menuiseries
-            </p>
-          </div>
         </div>
         
         <div className="flex justify-between pt-4">
@@ -162,6 +131,12 @@ const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
             Continuer
           </Button>
         </div>
+        
+        {formData.montantT && (
+          <div className="mt-4 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+          </div>
+        )}
       </div>
     </div>
   );
