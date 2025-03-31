@@ -29,3 +29,15 @@ export const MenuiseriesExtSchema = z.object({
   windowRenovationArea: z.string().optional(),
   windowNewArea: z.string().optional(),
 });
+
+export const ElectriciteSchema = z.object({
+  electricalType: z.enum(["base", "advanced", "premium", "domotique"], {
+    required_error: "Veuillez sélectionner un type d'installation électrique",
+  }),
+});
+
+export const PlomberieSchema = z.object({
+  plumbingType: z.enum(["base", "advanced", "premium"], {
+    required_error: "Veuillez sélectionner un type d'installation de plomberie",
+  }),
+});

@@ -1,45 +1,25 @@
 
-import { EstimationFormData as FormData } from '../../types';
+import { FormData } from '../../types';
+import { ensureNumber } from '../../utils/typeConversions';
+import { calculateElectricalCost, calculatePlumbingCost } from '../../utils/montantUtils';
 
-export const useTechnicalSubmissions = (
-  updateFormData: (data: Partial<FormData>) => void,
-  goToNextStep: () => void
-) => {
-  // Soumission du formulaire d'électricité
-  const onElectriciteSubmit = (data: {
-    electricalType: string;
-  }) => {
-    updateFormData({
+export const useTechnicalSubmissions = () => {
+  // Function to handle electricite submission
+  const handleElectriciteSubmit = (data: { electricalType: string }) => {
+    return {
       electricalType: data.electricalType,
-    });
-    goToNextStep(); // Passer à l'étape plomberie (15)
+    };
   };
 
-  // Soumission du formulaire de plomberie
-  const onPlomberieSubmit = (data: {
-    plumbingType: string;
-  }) => {
-    updateFormData({
+  // Function to handle plomberie submission
+  const handlePlomberieSubmit = (data: { plumbingType: string }) => {
+    return {
       plumbingType: data.plumbingType,
-    });
-    goToNextStep(); // Passer à l'étape chauffage (16)
-  };
-
-  // Soumission du formulaire de chauffage
-  const onChauffageSubmit = (data: {
-    heatingType: string;
-    hasAirConditioning: boolean;
-  }) => {
-    updateFormData({
-      heatingType: data.heatingType,
-      hasAirConditioning: data.hasAirConditioning,
-    });
-    goToNextStep(); // Passer à l'étape plâtrerie (17)
+    };
   };
 
   return {
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit
+    handleElectriciteSubmit,
+    handlePlomberieSubmit,
   };
 };

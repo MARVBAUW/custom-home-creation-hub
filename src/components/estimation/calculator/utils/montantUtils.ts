@@ -86,3 +86,75 @@ export const calculateFacadeCost = (
   // Sum up all costs
   return stoneCost + plasterCost + brickCost + metalCost + woodCost + stoneCladCost;
 };
+
+/**
+ * Calculate window cost based on window type and dimensions
+ */
+export const calculateWindowCost = (
+  windowType: string,
+  windowRenovationArea: number | string | undefined,
+  windowNewArea: number | string | undefined
+): number => {
+  const renovationArea = typeof windowRenovationArea === 'string' ? parseFloat(windowRenovationArea) : (windowRenovationArea || 0);
+  const newArea = typeof windowNewArea === 'string' ? parseFloat(windowNewArea) : (windowNewArea || 0);
+  const totalArea = renovationArea + newArea;
+  
+  switch (windowType) {
+    case 'bois':
+      return totalArea * 650; // BOIS
+    case 'pvc':
+      return totalArea * 390; // PVC
+    case 'aluminum':
+      return totalArea * 620; // ALU
+    case 'mixed':
+      return totalArea * 690; // MIXTE BOIS ALU
+    case 'pvc_colored':
+      return totalArea * 410; // PVC COLORE
+    default:
+      return totalArea * 390; // Default to PVC
+  }
+};
+
+/**
+ * Calculate electrical installation cost
+ */
+export const calculateElectricalCost = (
+  electricalType: string,
+  surface: number | string | undefined
+): number => {
+  const surfaceValue = typeof surface === 'string' ? parseFloat(surface) : (surface || 0);
+  
+  switch (electricalType) {
+    case 'base':
+      return surfaceValue * 100; // PRESTATION DE BASE
+    case 'advanced':
+      return surfaceValue * 125; // PRESTATIONS AVANCEES
+    case 'premium':
+      return surfaceValue * 155; // PRESTATIONS HAUT DE GAMME
+    case 'domotique':
+      return surfaceValue * 190; // PRESTATIONS HG + DOMMOTIQUE
+    default:
+      return surfaceValue * 100; // Default to base
+  }
+};
+
+/**
+ * Calculate plumbing installation cost
+ */
+export const calculatePlumbingCost = (
+  plumbingType: string,
+  surface: number | string | undefined
+): number => {
+  const surfaceValue = typeof surface === 'string' ? parseFloat(surface) : (surface || 0);
+  
+  switch (plumbingType) {
+    case 'base':
+      return surfaceValue * 80; // PRESTATIONS DE BASE
+    case 'advanced':
+      return surfaceValue * 100; // PRESTATIONS AVANCEES
+    case 'premium':
+      return surfaceValue * 125; // PRESTATIONS HAUT DE GAMME
+    default:
+      return surfaceValue * 80; // Default to base
+  }
+};

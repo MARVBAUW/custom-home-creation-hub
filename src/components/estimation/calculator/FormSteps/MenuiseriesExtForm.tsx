@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,10 +28,40 @@ const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
+    // Calculate the new montantT based on the window type and surface
+    let additionalCost = 0;
+    const windowNewAreaNum = parseFloat(windowNewArea || '0');
+    const windowRenovationAreaNum = parseFloat(windowRenovationArea || '0');
+    const totalWindowArea = windowNewAreaNum + windowRenovationAreaNum;
+
+    if (totalWindowArea > 0) {
+      switch (windowType) {
+        case 'bois':
+          additionalCost = totalWindowArea * 650;
+          break;
+        case 'pvc':
+          additionalCost = totalWindowArea * 390;
+          break;
+        case 'aluminum':
+          additionalCost = totalWindowArea * 620;
+          break;
+        case 'mixed':
+          additionalCost = totalWindowArea * 690;
+          break;
+        case 'pvc_colored':
+          additionalCost = totalWindowArea * 410;
+          break;
+        default:
+          additionalCost = totalWindowArea * 390; // Default to PVC
+      }
+    }
+
+    // Update form data with window details
     updateFormData({
       windowType,
       windowRenovationArea: windowRenovationArea !== '' ? Number(windowRenovationArea) : 0,
-      windowNewArea: windowNewArea !== '' ? Number(windowNewArea) : 0
+      windowNewArea: windowNewArea !== '' ? Number(windowNewArea) : 0,
+      montantT: (formData.montantT || 0) + additionalCost
     });
     goToNextStep();
   };

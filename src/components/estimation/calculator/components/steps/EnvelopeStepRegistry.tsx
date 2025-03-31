@@ -55,7 +55,8 @@ export const createEnvelopeStepRegistry = (
           const formData: Partial<FormData> = {
             windowType: data.windowType,
             windowRenovationArea: data.windowRenovationArea,
-            windowNewArea: data.windowNewArea
+            windowNewArea: data.windowNewArea,
+            montantT: data.montantT
           };
           props.updateFormData(formData);
           props.goToNextStep();

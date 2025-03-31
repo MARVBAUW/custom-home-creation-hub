@@ -1,6 +1,11 @@
 
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
+import { 
+  calculateInsulationCost, 
+  calculateFacadeCost,
+  calculateWindowCost 
+} from '../../utils/montantUtils';
 
 export const useEnvelopeSubmissions = () => {
   // Function to handle couverture submission
@@ -24,9 +29,9 @@ export const useEnvelopeSubmissions = () => {
       stonePercentage: ensureNumber(data.stonePercentage),
       plasterPercentage: ensureNumber(data.plasterPercentage),
       brickPercentage: ensureNumber(data.brickPercentage),
-      metalCladdingPercentage: 0,
-      woodCladdingPercentage: 0,
-      stoneCladdingPercentage: 0,
+      metalCladdingPercentage: ensureNumber(data.metalCladdingPercentage),
+      woodCladdingPercentage: ensureNumber(data.woodCladdingPercentage),
+      stoneCladdingPercentage: ensureNumber(data.stoneCladdingPercentage),
     };
   };
 
