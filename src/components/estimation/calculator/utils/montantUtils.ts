@@ -132,6 +132,27 @@ const getPlumbingCostPerSquareMeter = (type: string): number => {
 };
 
 /**
+ * Calculate plastering system costs based on type and area
+ */
+export const calculatePlasteringCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getPlasteringCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different plastering types
+ */
+const getPlasteringCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'base': return 60;
+    case 'specific': return 90;
+    case 'advanced': return 140;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
+};
+
+/**
  * Calculate air conditioning costs
  */
 export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {
