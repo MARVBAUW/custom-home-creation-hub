@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +6,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { calculateWindowsCost, ensureNumber } from '../utils/montantUtils';
+import { calculateWindowsCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 
 interface WindowTypeOption {
   id: string;
@@ -101,6 +101,7 @@ const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
   const showAreaInput = windowType !== 'non_concerne' && windowType !== '';
   
   return (
+    
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
@@ -244,6 +245,7 @@ const MenuiseriesExtForm: React.FC<BaseFormProps> = ({
         )}
       </div>
     </div>
+  
   );
 };
 

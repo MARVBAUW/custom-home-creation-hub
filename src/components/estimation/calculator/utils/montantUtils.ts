@@ -1,642 +1,426 @@
 
-import { ensureNumber, ensureString, ensureBoolean, ensurePercentage } from './typeConversions';
+// Import the ensureNumber function from typeConversions to re-export it for compatibility
+import { ensureNumber } from './typeConversions';
 
 /**
- * Base calculation functions for different construction/renovation costs
+ * Calculate costs for different types of windows based on area
  */
-
-// Constants for pricing (example values)
-const COST_PER_SQM_FOUNDATION = 150;
-const COST_PER_SQM_WALL = 210;
-const COST_PER_SQM_FLOOR = 180;
-const COST_PER_SQM_ROOF_FRAMEWORK = 240;
-const COST_PER_SQM_ROOFING = 120;
-const COST_PER_SQM_FACADE = 180;
-const COST_PER_SQM_WINDOW = 450;
-const COST_PER_SQM_DOOR = 380;
-const COST_PER_SQM_INSULATION = 80;
-const COST_PER_SQM_PLUMBING = 110;
-const COST_PER_SQM_ELECTRICAL = 95;
-const COST_PER_SQM_HEATING = 130;
-const COST_PER_SQM_PLASTER = 60;
-const COST_PER_SQM_FLOOR_TILING = 90;
-const COST_PER_SQM_WALL_TILING = 85;
-const COST_PER_SQM_PARQUET = 120;
-const COST_PER_SQM_SOFT_FLOOR = 70;
-const COST_PER_SQM_PAINT = 35;
-const COST_PER_SQM_EXTERIOR = 90;
-const COST_PER_SQM_POOL = 1200;
-const COST_AIR_CONDITIONING = 8000;
-const COST_PER_BATHROOM_STANDARD = 5000;
-const COST_PER_BATHROOM_LUXURY = 15000;
-const COST_PER_KITCHEN_STANDARD = 8000;
-const COST_PER_KITCHEN_LUXURY = 25000;
-const COST_PER_GATE = 3000;
-const COST_PER_CARPORT = 8000;
-const COST_PER_JACUZZI = 12000;
-const COST_SOLAR_PANELS = 15000;
-const COST_HEAT_PUMP = 12000;
-
-/**
- * Calculate foundation cost based on surface area
- */
-export const calculateFoundationCost = (
-  surface: number | string,
-  foundationType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (foundationType === 'reinforced') multiplier = 1.3;
-  if (foundationType === 'pile') multiplier = 1.6;
-  
-  return area * COST_PER_SQM_FOUNDATION * multiplier;
+export const calculateWindowsCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getWindowCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
 };
 
 /**
- * Calculate wall construction cost
+ * Get cost per square meter for different window types
  */
-export const calculateWallsCost = (
-  surface: number | string,
-  wallType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (wallType === 'brick') multiplier = 1.2;
-  if (wallType === 'stone') multiplier = 1.5;
-  
-  return area * COST_PER_SQM_WALL * multiplier;
-};
-
-/**
- * Calculate flooring construction cost
- */
-export const calculateFlooringCost = (
-  surface: number | string,
-  floorType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (floorType === 'BETON') multiplier = 1.2;
-  if (floorType === 'BOIS') multiplier = 1.4;
-  
-  return area * COST_PER_SQM_FLOOR * multiplier;
-};
-
-/**
- * Calculate roof framework cost
- */
-export const calculateRoofFrameworkCost = (
-  surface: number | string,
-  roofType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (roofType === 'complex') multiplier = 1.4;
-  if (roofType === 'mansard') multiplier = 1.6;
-  
-  return area * COST_PER_SQM_ROOF_FRAMEWORK * multiplier;
-};
-
-/**
- * Calculate roof framework renovation cost
- */
-export const calculateRoofFrameworkRenovCost = (
-  surface: number | string,
-  roofType: string = 'standard',
-  renovExtent: number = 50
-): number => {
-  const baseCost = calculateRoofFrameworkCost(surface, roofType);
-  const renovPercentage = ensurePercentage(renovExtent) / 100;
-  return baseCost * renovPercentage * 1.2; // Renovation costs 20% more than new
-};
-
-/**
- * Calculate roofing cost
- */
-export const calculateRoofingCost = (
-  surface: number | string,
-  roofingType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (roofingType === 'tile') multiplier = 1.2;
-  if (roofingType === 'slate') multiplier = 1.5;
-  if (roofingType === 'metal') multiplier = 1.3;
-  if (roofingType === 'flat') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_ROOFING * multiplier;
-};
-
-/**
- * Calculate roofing renovation cost
- */
-export const calculateRoofingRenovCost = (
-  surface: number | string,
-  roofingType: string = 'standard',
-  renovExtent: number = 50
-): number => {
-  const baseCost = calculateRoofingCost(surface, roofingType);
-  const renovPercentage = ensurePercentage(renovExtent) / 100;
-  return baseCost * renovPercentage * 1.15; // Renovation costs 15% more than new
-};
-
-/**
- * Calculate facade cost
- */
-export const calculateFacadeCost = (
-  surface: number | string,
-  facadeType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (facadeType === 'stone') multiplier = 1.8;
-  if (facadeType === 'wood') multiplier = 1.4;
-  if (facadeType === 'composite') multiplier = 1.5;
-  
-  return area * COST_PER_SQM_FACADE * multiplier;
-};
-
-/**
- * Calculate windows cost
- */
-export const calculateWindowsCost = (
-  surface: number | string,
-  windowType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (windowType === 'double') multiplier = 1.2;
-  if (windowType === 'triple') multiplier = 1.5;
-  if (windowType === 'aluminum') multiplier = 1.4;
-  
-  return area * COST_PER_SQM_WINDOW * multiplier;
-};
-
-/**
- * Calculate door cost
- */
-export const calculateDoorCost = (
-  surface: number | string,
-  doorType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (doorType === 'security') multiplier = 1.5;
-  if (doorType === 'glass') multiplier = 1.3;
-  if (doorType === 'designer') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_DOOR * multiplier;
-};
-
-/**
- * Calculate insulation cost
- */
-export const calculateInsulationCost = (
-  surface: number | string,
-  insulationType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (insulationType === 'high-performance') multiplier = 1.4;
-  if (insulationType === 'eco') multiplier = 1.6;
-  
-  return area * COST_PER_SQM_INSULATION * multiplier;
-};
-
-/**
- * Calculate plumbing cost
- */
-export const calculatePlumbingCost = (
-  surface: number | string,
-  complexity: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (complexity === 'complex') multiplier = 1.5;
-  
-  return area * COST_PER_SQM_PLUMBING * multiplier;
-};
-
-/**
- * Calculate electrical cost
- */
-export const calculateElectricalCost = (
-  surface: number | string,
-  complexity: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (complexity === 'complex') multiplier = 1.4;
-  if (complexity === 'smart') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_ELECTRICAL * multiplier;
-};
-
-/**
- * Calculate heating cost
- */
-export const calculateHeatingCost = (
-  surface: number | string,
-  heatingType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (heatingType === 'floor') multiplier = 1.5;
-  if (heatingType === 'heat-pump') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_HEATING * multiplier;
-};
-
-/**
- * Calculate air conditioning cost
- */
-export const calculateAirConditioningCost = (
-  surface: number | string,
-  hasAirConditioning: string | boolean = false
-): number => {
-  if (!hasAirConditioning || hasAirConditioning === 'NON') {
-    return 0;
+const getWindowCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'bois': return 750;
+    case 'pvc': return 450;
+    case 'alu': return 650;
+    case 'mixte': return 850;
+    case 'pvc_colore': return 550;
+    default: return 0;
   }
-  
-  const area = ensureNumber(surface);
-  const baseUnits = Math.ceil(area / 50); // One unit per 50m²
-  
-  return baseUnits * COST_AIR_CONDITIONING;
 };
 
 /**
- * Calculate plastering cost
+ * Calculate costs for floor tiling based on type and area
  */
-export const calculatePlasteringCost = (
-  surface: number | string,
-  complexity: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (complexity === 'complex') multiplier = 1.3;
-  if (complexity === 'decorative') multiplier = 1.5;
-  
-  return area * COST_PER_SQM_PLASTER * multiplier;
+export const calculateFloorTilingCost = (type: string, percentage: number, totalArea: number): number => {
+  const area = (percentage / 100) * ensureNumber(totalArea);
+  const costPerSquareMeter = getFloorTileCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
 };
 
 /**
- * Calculate floor tiling cost
+ * Get cost per square meter for different floor tile types
  */
-export const calculateFloorTilingCost = (
-  surface: number | string,
-  tileType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (tileType === 'luxury') multiplier = 1.5;
-  if (tileType === 'natural-stone') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_FLOOR_TILING * multiplier;
-};
-
-/**
- * Calculate wall tiling cost
- */
-export const calculateWallTilingCost = (
-  surface: number | string,
-  tileType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (tileType === 'luxury') multiplier = 1.5;
-  if (tileType === 'mosaic') multiplier = 1.7;
-  
-  return area * COST_PER_SQM_WALL_TILING * multiplier;
-};
-
-/**
- * Calculate parquet flooring cost
- */
-export const calculateParquetCost = (
-  surface: number | string,
-  parquetType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (parquetType === 'premium') multiplier = 1.5;
-  if (parquetType === 'exotic') multiplier = 2;
-  
-  return area * COST_PER_SQM_PARQUET * multiplier;
-};
-
-/**
- * Calculate soft flooring cost (carpet, vinyl, etc.)
- */
-export const calculateSoftFloorCost = (
-  surface: number | string,
-  floorType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (floorType === 'premium') multiplier = 1.4;
-  
-  return area * COST_PER_SQM_SOFT_FLOOR * multiplier;
-};
-
-/**
- * Calculate painting cost
- */
-export const calculatePaintingCost = (
-  surface: number | string,
-  paintType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (paintType === 'premium') multiplier = 1.3;
-  if (paintType === 'decorative') multiplier = 1.6;
-  
-  return area * COST_PER_SQM_PAINT * multiplier;
-};
-
-/**
- * Calculate exterior work cost
- */
-export const calculateExteriorWorkCost = (
-  surface: number | string,
-  workType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (workType === 'landscaping') multiplier = 1.4;
-  if (workType === 'hardscaping') multiplier = 1.6;
-  
-  return area * COST_PER_SQM_EXTERIOR * multiplier;
-};
-
-/**
- * Calculate bathroom cost
- */
-export const calculateBathroomCost = (
-  count: number | string,
-  bathroomType: string = 'standard'
-): number => {
-  const bathrooms = ensureNumber(count);
-  let baseCost = COST_PER_BATHROOM_STANDARD;
-  
-  if (bathroomType === 'luxury') baseCost = COST_PER_BATHROOM_LUXURY;
-  
-  return bathrooms * baseCost;
-};
-
-/**
- * Calculate kitchen cost
- */
-export const calculateKitchenCost = (
-  kitchenType: string = 'standard'
-): number => {
-  if (kitchenType === 'luxury') return COST_PER_KITCHEN_LUXURY;
-  return COST_PER_KITCHEN_STANDARD;
-};
-
-/**
- * Calculate pool cost
- */
-export const calculatePoolCost = (
-  surface: number | string,
-  poolType: string = 'standard'
-): number => {
-  const area = ensureNumber(surface);
-  let multiplier = 1;
-  
-  if (poolType === 'infinity') multiplier = 1.5;
-  if (poolType === 'indoor') multiplier = 1.8;
-  
-  return area * COST_PER_SQM_POOL * multiplier;
-};
-
-/**
- * Calculate pool heating cost
- */
-export const calculatePoolHeatingCost = (
-  poolHeating: string | boolean
-): number => {
-  if (!poolHeating || poolHeating === 'NON') {
-    return 0;
+const getFloorTileCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 80;
+    case 'medium': return 120;
+    case 'premium': return 200;
+    default: return 0;
   }
-  
-  return 6000;
 };
 
 /**
- * Calculate gate cost
+ * Calculate costs for wall tiling based on type and area
  */
-export const calculateGateCost = (
-  includeGate: string | boolean,
-  gateType: string = 'standard'
-): number => {
-  if (!includeGate || includeGate === 'NON') {
-    return 0;
+export const calculateWallTilingCost = (type: string, totalArea: number): number => {
+  // Wall tiling is typically 50% of floor area for bathrooms and kitchens
+  const wallArea = ensureNumber(totalArea) * 0.5;
+  const costPerSquareMeter = getWallTileCostPerSquareMeter(type);
+  return costPerSquareMeter * wallArea;
+};
+
+/**
+ * Get cost per square meter for different wall tile types
+ */
+const getWallTileCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 60;
+    case 'medium': return 90;
+    case 'premium': return 150;
+    default: return 0;
   }
-  
-  let baseCost = COST_PER_GATE;
-  if (gateType === 'automatic') baseCost *= 1.5;
-  if (gateType === 'ornamental') baseCost *= 1.8;
-  
-  return baseCost;
 };
 
 /**
- * Calculate carport cost
+ * Calculate heating system costs
  */
-export const calculateCarportCost = (
-  carportType: string = 'none'
-): number => {
-  if (carportType === 'none') return 0;
-  
-  let baseCost = COST_PER_CARPORT;
-  if (carportType === 'enclosed') baseCost *= 1.4;
-  if (carportType === 'double') baseCost *= 1.8;
-  
-  return baseCost;
+export const calculateHeatingCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getHeatingCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
 };
 
 /**
- * Calculate jacuzzi cost
+ * Get cost per square meter for different heating types
  */
-export const calculateJacuzziCost = (
-  jacuzziType: string = 'none',
-  jacuzziArea: number | string = 0
-): number => {
-  if (jacuzziType === 'none') return 0;
-  
-  const area = ensureNumber(jacuzziArea);
-  let baseCost = COST_PER_JACUZZI;
-  
-  if (jacuzziType === 'luxury') baseCost *= 1.5;
-  if (jacuzziType === 'swim-spa') baseCost *= 2;
-  
-  // Add size factor
-  if (area > 10) {
-    baseCost *= (1 + (area - 10) * 0.1);
+const getHeatingCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 120;
+    case 'eco': return 180;
+    case 'economic': return 90;
+    case 'sans_avis': return 130;
+    default: return 0;
   }
-  
-  return baseCost;
 };
 
 /**
- * Calculate masonry wall cost
+ * Calculate air conditioning costs
  */
-export const calculateMasonryWallCost = (
-  wallArea: number | string, 
-  createWalls: string | boolean
-): number => {
-  if (!createWalls || createWalls === 'NON') {
-    return 0;
+export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {
+  if (!hasAirConditioning) return 0;
+  return 180 * ensureNumber(area);
+};
+
+/**
+ * Calculate roofing renovation costs
+ */
+export const calculateRoofingRenovCost = (type: string, area: string | number): number => {
+  const costPerSquareMeter = getRoofingRenovCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different roofing types
+ */
+const getRoofingRenovCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'TUILES': return 120;
+    case 'ARDOISES': return 240;
+    case 'ZINC': return 180;
+    case 'BACS ACIER': return 110;
+    default: return 0;
   }
-  
-  const area = ensureNumber(wallArea);
-  return area * COST_PER_SQM_WALL * 1.2; // Renovation costs more than new construction
 };
 
 /**
- * Calculate structural feature cost
+ * Calculate roof framework renovation costs
  */
-export const calculateStructuralFeatureCost = (
-  features: string[],
-  featureValues: { [key: string]: string | number }
-): number => {
+export const calculateRoofFrameworkRenovCost = (type: string, area: string | number): number => {
+  const costPerSquareMeter = getRoofFrameworkRenovCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different roof framework types
+ */
+const getRoofFrameworkRenovCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'TOITURE TERRASSE ACCESSIBLE': return 190;
+    case 'TOITURE TERRASSE INACCESSIBLE': return 180;
+    case 'CHARPENTE INDUSTRIELLE': return 160;
+    case 'CHARPENTE TRADITIONNELLE': return 185;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate painting costs
+ */
+export const calculatePaintingCost = (options: any, area: number): number => {
   let totalCost = 0;
   
-  for (const feature of features) {
-    const value = ensureNumber(featureValues[feature] || 0);
-    
-    switch (feature) {
-      case 'beam':
-        totalCost += value * 1000;
-        break;
-      case 'column':
-        totalCost += value * 1200;
-        break;
-      case 'arch':
-        totalCost += value * 2000;
-        break;
-      case 'vault':
-        totalCost += value * 3000;
-        break;
-      default:
-        totalCost += value * 500;
-    }
+  if (options.basicPaint) {
+    totalCost += 20 * area;
+  }
+  
+  if (options.decorativePaint) {
+    totalCost += 35 * area;
+  }
+  
+  if (options.wallpaper) {
+    totalCost += 30 * area;
+  }
+  
+  if (options.woodPaneling) {
+    totalCost += 50 * area;
+  }
+  
+  if (options.stoneCladding) {
+    totalCost += 70 * area;
   }
   
   return totalCost;
 };
 
 /**
- * Calculate interior carpentry cost
+ * Calculate facade renovation costs
  */
-export const calculateInteriorCarpenteryCost = (
-  doorCount: number | string,
-  doorType: string = 'standard'
-): number => {
-  const doors = ensureNumber(doorCount);
-  let costPerDoor = 800;
-  
-  if (doorType === 'premium') costPerDoor = 1200;
-  if (doorType === 'custom') costPerDoor = 2000;
-  
-  return doors * costPerDoor;
+export const calculateFacadeCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getFacadeCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
 };
 
 /**
- * Calculate renewable energy cost
+ * Get cost per square meter for different facade types
  */
-export const calculateRenewableEnergyCost = (
-  renewableType: string = 'none'
-): number => {
-  if (renewableType === 'none') return 0;
-  
-  if (renewableType === 'solar') return COST_SOLAR_PANELS;
-  if (renewableType === 'heat-pump') return COST_HEAT_PUMP;
-  if (renewableType === 'both') return COST_SOLAR_PANELS + COST_HEAT_PUMP;
-  
-  return 0;
-};
-
-/**
- * Calculate environmental solutions cost
- */
-export const calculateEnvironmentalSolutionsCost = (
-  solutionType: string = 'none'
-): number => {
-  if (solutionType === 'none') return 0;
-  
-  if (solutionType === 'rainwater') return 6000;
-  if (solutionType === 'greywater') return 8000;
-  if (solutionType === 'green-roof') return 12000;
-  if (solutionType === 'combination') return 20000;
-  
-  return 0;
-};
-
-/**
- * Calculate global estimation based on all parameters
- */
-export const calculateGlobalEstimation = (
-  surface: number | string,
-  projectType: string = 'construction',
-  complexityFactor: number = 1
-): number => {
-  const area = ensureNumber(surface);
-  let baseCost = 0;
-  
-  // Base costs for different project types
-  if (projectType === 'construction') {
-    baseCost = area * 1800; // 1800€/m² for new construction
-  } else if (projectType === 'renovation') {
-    baseCost = area * 1300; // 1300€/m² for renovation
-  } else if (projectType === 'extension') {
-    baseCost = area * 2000; // 2000€/m² for extension
-  }
-  
-  // Apply complexity factor
-  return baseCost * complexityFactor;
-};
-
-/**
- * Create a new montantT value by combining different costs
- */
-export const calculateNewMontantT = (
-  currentMontantT: number,
-  newCost: number,
-  operationType: 'add' | 'subtract' | 'multiply' | 'replace' = 'add'
-): number => {
-  const current = ensureNumber(currentMontantT);
-  const cost = ensureNumber(newCost);
-  
-  switch (operationType) {
-    case 'add':
-      return current + cost;
-    case 'subtract':
-      return Math.max(0, current - cost);
-    case 'multiply':
-      return current * cost;
-    case 'replace':
-      return cost;
-    default:
-      return current + cost;
+const getFacadeCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'paint': return 45;
+    case 'render': return 65;
+    case 'stone': return 220;
+    case 'brick': return 180;
+    case 'wood': return 150;
+    default: return 0;
   }
 };
+
+/**
+ * Calculate flooring costs
+ */
+export const calculateFlooringCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getFlooringCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different flooring types
+ */
+const getFlooringCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'laminate': return 30;
+    case 'engineered': return 70;
+    case 'solid': return 100;
+    case 'exotic': return 150;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate door costs
+ */
+export const calculateDoorCost = (type: string, count: number): number => {
+  const costPerDoor = getDoorCostPerUnit(type);
+  return costPerDoor * count;
+};
+
+/**
+ * Get cost per unit for different door types
+ */
+const getDoorCostPerUnit = (type: string): number => {
+  switch (type) {
+    case 'hollow': return 250;
+    case 'solid': return 450;
+    case 'glazed': return 600;
+    case 'custom': return 900;
+    default: return 0;
+  }
+};
+
+// Additional utility functions for other calculation needs
+
+/**
+ * Calculate landscaping costs
+ */
+export const calculateLandscapingCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getLandscapingCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different landscaping types
+ */
+const getLandscapingCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'UN PEU': return 40;
+    case 'BEAUCOUP': return 80;
+    case 'PASSIONNEMENT': return 120;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate fencing costs
+ */
+export const calculateFencingCost = (length: number): number => {
+  return 85 * length; // Average cost per linear meter
+};
+
+/**
+ * Calculate gate costs
+ */
+export const calculateGateCost = (length: number): number => {
+  return 300 * length; // Base cost plus per-meter cost
+};
+
+/**
+ * Calculate terrace costs
+ */
+export const calculateTerraceCost = (area: number): number => {
+  return 200 * area; // Cost per square meter
+};
+
+/**
+ * Calculate pool costs
+ */
+export const calculatePoolCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getPoolCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different pool types
+ */
+const getPoolCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'concrete': return 1500;
+    case 'fiberglass': return 1200;
+    case 'vinyl': return 800;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate pool heating costs
+ */
+export const calculatePoolHeatingCost = (hasHeating: boolean, area: number): number => {
+  if (!hasHeating) return 0;
+  return 120 * area; // Cost per square meter
+};
+
+/**
+ * Calculate jacuzzi costs
+ */
+export const calculateJacuzziCost = (type: string, area: number): number => {
+  switch (type) {
+    case 'builtin': return 8000 + (500 * area);
+    case 'portable': return 5000;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate carport costs
+ */
+export const calculateCarportCost = (type: string): number => {
+  switch (type) {
+    case 'standard': return 3500;
+    case 'premium': return 7000;
+    case 'custom': return 10000;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate demolition costs
+ */
+export const calculateDemolitionCost = (types: string[], areas: Record<string, number>): number => {
+  let totalCost = 0;
+  
+  for (const type of types) {
+    const area = areas[type] || 0;
+    const costPerSquareMeter = getDemolitionCostPerSquareMeter(type);
+    totalCost += costPerSquareMeter * area;
+  }
+  
+  return totalCost;
+};
+
+/**
+ * Get cost per square meter for different demolition types
+ */
+const getDemolitionCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'WALLS': return 80;
+    case 'FLOORS': return 60;
+    case 'CEILINGS': return 40;
+    case 'COMPLETE': return 150;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate wall construction costs
+ */
+export const calculateWallCost = (area: number): number => {
+  return 180 * area; // Cost per square meter
+};
+
+/**
+ * Calculate floor construction costs
+ */
+export const calculateFloorCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getFloorCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different floor construction types
+ */
+const getFloorCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'CONCRETE': return 120;
+    case 'WOODEN': return 150;
+    case 'ENGINEERED': return 180;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate costs for structural features
+ */
+export const calculateStructuralFeatureCost = (features: string[], values: Record<string, number>): number => {
+  let totalCost = 0;
+  
+  for (const feature of features) {
+    const value = values[feature] || 0;
+    const costPerUnit = getStructuralFeatureCostPerUnit(feature);
+    totalCost += costPerUnit * value;
+  }
+  
+  return totalCost;
+};
+
+/**
+ * Get cost per unit for different structural features
+ */
+const getStructuralFeatureCostPerUnit = (feature: string): number => {
+  switch (feature) {
+    case 'BEAMS': return 300;
+    case 'COLUMNS': return 250;
+    case 'STAIRS': return 2000;
+    case 'MEZZANINE': return 500;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate component costs for various construction components
+ */
+export const calculateComponentCost = (component: string, area: number): number => {
+  switch (component) {
+    case 'insulation': return 45 * area;
+    case 'drywall': return 35 * area;
+    case 'ceiling': return 40 * area;
+    case 'electrical': return 80 * area;
+    case 'plumbing': return 90 * area;
+    default: return 0;
+  }
+};
+
+// Re-export ensureNumber for backward compatibility
+export { ensureNumber };
