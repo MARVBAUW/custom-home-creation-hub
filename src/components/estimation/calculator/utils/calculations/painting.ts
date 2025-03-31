@@ -2,46 +2,6 @@
 import { ensureNumber } from '../typeConversions';
 
 /**
- * Calculate insulation costs based on type and area
- */
-export const calculateInsulationCost = (type: string, area: number | string): number => {
-  const areaNum = ensureNumber(area);
-  
-  switch (type) {
-    case 'base':
-      return areaNum * 60; // 60€ per m²
-    case 'performance':
-      return areaNum * 80; // 80€ per m²
-    case 'ultraPerformance':
-      return areaNum * 110; // 110€ per m²
-    case 'sansAvis':
-      return areaNum * 70; // 70€ per m² (average cost)
-    default:
-      return 0;
-  }
-};
-
-/**
- * Calculate plastering costs based on type and area
- */
-export const calculatePlasteringCost = (area: number | string, type: string): number => {
-  const areaNum = ensureNumber(area);
-  
-  switch (type) {
-    case 'base':
-      return areaNum * 60; // 60€ per m²
-    case 'specific':
-      return areaNum * 90; // 90€ per m²
-    case 'advanced':
-      return areaNum * 140; // 140€ per m²
-    case 'non_concerne':
-      return 0;
-    default:
-      return 0;
-  }
-};
-
-/**
  * Calculate painting costs based on types and surface area
  */
 export const calculatePaintingCost = (
@@ -78,4 +38,26 @@ export const calculatePaintingCost = (
   totalCost += (paintTypes.stoneCladding / 100) * wallArea * costPerType.stoneCladding;
   
   return totalCost;
+};
+
+/**
+ * Calculate wall covering costs for a specific type and area
+ */
+export const calculateWallCoveringCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'basic':
+      return areaNum * 25; // Basic paint
+    case 'decorative':
+      return areaNum * 45; // Decorative paint
+    case 'wallpaper':
+      return areaNum * 35; // Wallpaper
+    case 'woodPanel':
+      return areaNum * 90; // Wood paneling
+    case 'stone':
+      return areaNum * 150; // Stone cladding
+    default:
+      return 0;
+  }
 };

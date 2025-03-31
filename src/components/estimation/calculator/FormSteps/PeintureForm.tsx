@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
