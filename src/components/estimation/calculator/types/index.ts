@@ -69,9 +69,9 @@ export interface UnifiedFormData {
   demolitionTotalArea?: number | string;
   
   // Structural work
-  createWalls?: "OUI" | "NON" | boolean;
+  createWalls?: "OUI" | "NON" | boolean | string;
   wallArea?: number | string;
-  createFloors?: "OUI" | "NON" | boolean;
+  createFloors?: "OUI" | "NON" | boolean | string;
   floorType?: "BOIS" | "BETON" | string;
   floorArea?: number | string;
   structuralFeatures?: string[];
@@ -142,7 +142,15 @@ export interface UnifiedFormData {
   // Special requests
   additionalNotes?: string;
   
-  // Generated values - the critical field that's causing compatibility issues
+  // Facade details
+  stonePercentage?: string | number;
+  plasterPercentage?: string | number;
+  brickPercentage?: string | number;
+  metalCladdingPercentage?: string | number;
+  woodCladdingPercentage?: string | number;
+  stoneCladdingPercentage?: string | number;
+  
+  // Generated values
   terassementsViabilisation?: number | string | boolean;
   montantT?: number | string;
   totalAmount?: number | string;

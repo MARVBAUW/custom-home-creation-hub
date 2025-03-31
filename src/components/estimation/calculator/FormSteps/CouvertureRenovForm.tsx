@@ -11,8 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
-import { calculateRoofingRenovCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/montantUtils';
+import { calculateRoofingRenovCost, ensureNumber } from '../utils/montantUtils';
 
 // Schema for the form validation
 const formSchema = z.object({
@@ -52,7 +51,7 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
     updateFormData({
       roofType: values.roofType,
       roofArea: values.roofArea,
-      montantT: (formData.montantT || 0) + roofCost,
+      montantT: ensureNumber(formData.montantT, 0) + roofCost,
     });
     
     // Move to next step

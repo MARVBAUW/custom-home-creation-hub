@@ -1,6 +1,6 @@
 
 // FormTypes.ts
-import { EstimationFormData, EstimationResponseData } from '../types';
+import { EstimationFormData } from '../types';
 
 /**
  * Base props for form components
@@ -15,7 +15,7 @@ export interface BaseFormProps {
   onSubmit?: (data: any) => void;
 }
 
-// Extended FormData interface compatible with EstimationFormData
+// FormData interface compatible with EstimationFormData
 export interface FormData extends EstimationFormData {
   [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
 }

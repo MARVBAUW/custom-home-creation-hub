@@ -1,3 +1,4 @@
+
 /**
  * Type conversion utility functions
  */
@@ -152,4 +153,38 @@ export const toOuiNon = (value: any): "OUI" | "NON" => {
  */
 export const fromOuiNon = (value: "OUI" | "NON" | string): boolean => {
   return value === "OUI";
+};
+
+/**
+ * Ensure that the value conforms to certain type requirements
+ * @param value - The value to process
+ * @param expectedType - The expected type
+ * @returns The processed value
+ */
+export const ensureType = (value: any, expectedType: string): any => {
+  switch (expectedType) {
+    case 'string':
+      return ensureString(value);
+    case 'number':
+      return ensureNumber(value);
+    case 'boolean':
+      return ensureBoolean(value);
+    case 'array':
+      return Array.isArray(value) ? value : [value];
+    case 'stringArray':
+      return ensureStringArray(value);
+    default:
+      return value;
+  }
+};
+
+/**
+ * Calculate a new total by adding a cost to an existing total
+ * @param currentTotal - The current total (can be string, number or undefined)
+ * @param costToAdd - The cost to add
+ * @returns The new total as a number
+ */
+export const calculateNewTotal = (currentTotal: string | number | undefined, costToAdd: number): number => {
+  const total = ensureNumber(currentTotal, 0);
+  return total + costToAdd;
 };
