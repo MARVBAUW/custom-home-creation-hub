@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { DTUSchema } from './types';
 import { Card, CardContent } from "@/components/ui/card";
-import { ImageOff, ZoomIn } from 'lucide-react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ImageOff, ZoomIn, Download, ExternalLink, Info } from 'lucide-react';
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DTUSchemasProps {
   schemas: DTUSchema[];
@@ -11,12 +13,37 @@ interface DTUSchemasProps {
 
 export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
   const [selectedSchema, setSelectedSchema] = useState<DTUSchema | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
   
   if (!schemas || schemas.length === 0) return null;
 
   const handleOpenImage = (schema: DTUSchema) => {
     if (schema.imageUrl) {
       setSelectedSchema(schema);
+      setZoomLevel(1); // Reset zoom level when opening a new image
+    }
+  };
+
+  const handleZoomIn = () => {
+    setZoomLevel(prev => Math.min(prev + 0.25, 3)); // Max zoom 3x
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel(prev => Math.max(prev - 0.25, 0.5)); // Min zoom 0.5x
+  };
+
+  const handleZoomReset = () => {
+    setZoomLevel(1);
+  };
+
+  const handleDownload = () => {
+    if (selectedSchema?.imageUrl) {
+      const link = document.createElement('a');
+      link.href = selectedSchema.imageUrl;
+      link.download = `schema-${selectedSchema.id}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -25,7 +52,7 @@ export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
       <h3 className="text-lg font-semibold mb-4">Schémas techniques</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {schemas.map((schema) => (
-          <Card key={schema.id} className="overflow-hidden">
+          <Card key={schema.id} className="overflow-hidden hover:shadow-md transition-shadow">
             <CardContent className="p-0">
               <div className="p-4">
                 <h4 className="font-medium mb-1">{schema.title}</h4>
@@ -60,22 +87,108 @@ export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
         ))}
       </div>
       
-      {/* Image Zoom Dialog */}
+      {/* Image Zoom Dialog with enhanced controls */}
       <Dialog 
         open={!!selectedSchema} 
         onOpenChange={(open) => !open && setSelectedSchema(null)}
       >
         <DialogContent className="max-w-5xl max-h-[90vh] p-0 overflow-hidden">
           {selectedSchema?.imageUrl && (
-            <div className="relative w-full h-full max-h-[80vh] bg-black flex items-center justify-center p-1">
-              <img 
-                src={selectedSchema.imageUrl} 
-                alt={selectedSchema.title}
-                className="max-w-full max-h-full object-contain"
-              />
-              <div className="absolute bottom-2 left-2 right-2 bg-black bg-opacity-70 text-white p-2 rounded">
-                <h3 className="text-lg font-medium">{selectedSchema.title}</h3>
-                <p className="text-sm text-gray-300">{selectedSchema.description}</p>
+            <div className="relative w-full h-full bg-black">
+              {/* Image container with zoom */}
+              <div className="relative w-full max-h-[75vh] overflow-auto flex items-center justify-center bg-black">
+                <img 
+                  src={selectedSchema.imageUrl} 
+                  alt={selectedSchema.title}
+                  className="max-w-none object-contain transition-transform"
+                  style={{ 
+                    transform: `scale(${zoomLevel})`,
+                    transformOrigin: 'center',
+                  }}
+                />
+              </div>
+              
+              {/* Zoom controls */}
+              <div className="absolute top-2 right-2 flex space-x-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 bg-white/10 hover:bg-white/20 text-white"
+                        onClick={handleZoomIn}
+                      >
+                        <ZoomIn className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Zoom +</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 bg-white/10 hover:bg-white/20 text-white"
+                        onClick={handleZoomOut}
+                      >
+                        <ZoomIn className="h-4 w-4 rotate-180" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Zoom -</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 bg-white/10 hover:bg-white/20 text-white"
+                        onClick={handleZoomReset}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Réinitialiser</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-8 w-8 bg-white/10 hover:bg-white/20 text-white"
+                        onClick={handleDownload}
+                      >
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Télécharger</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              
+              {/* Schema info */}
+              <div className="absolute bottom-2 left-2 right-2 bg-black bg-opacity-70 text-white p-3 rounded">
+                <div className="flex items-start">
+                  <Info className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <DialogTitle className="text-lg font-medium mb-1">{selectedSchema.title}</DialogTitle>
+                    <p className="text-sm text-gray-300">{selectedSchema.description}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Zoom level indicator */}
+              <div className="absolute top-2 left-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
+                {Math.round(zoomLevel * 100)}%
               </div>
             </div>
           )}
