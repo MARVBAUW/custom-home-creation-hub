@@ -5,7 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEstimationCalculator } from './useEstimationCalculator';
 import EstimationResult from './EstimationResult';
 import { Card } from '@/components/ui/card';
+
+// Import all step components
 import ClientTypeStep from './steps/ClientTypeStep';
+import ProfessionalProjectDetailsStep from './steps/ProfessionalProjectDetailsStep';
+import IndividualProjectTypeStep from './steps/IndividualProjectTypeStep';
 import ProjectDetailsStep from './steps/ProjectDetailsStep';
 import TerrainDetailsStep from './steps/TerrainDetailsStep';
 import FinishDetailsStep from './steps/FinishDetailsStep';
@@ -68,7 +72,7 @@ const EstimationWizard: React.FC = () => {
     console.log("Rendering step:", step);
     
     switch (step) {
-      case 0: // Type de projet (première étape)
+      case 0: // Type de client (première étape)
         return (
           <ClientTypeStep
             formData={formData}
@@ -77,9 +81,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 1: // Professionnel - Infos projet
+      case 1: // Professionnel - Infos projet (deuxième étape pour pro)
         return (
-          <ProjectDetailsStep
+          <ProfessionalProjectDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -87,9 +91,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 2: // Individual Project Type (hidden in new flow)
+      case 2: // Individual Project Type (troisième étape pour particulier)
         return (
-          <ProjectDetailsStep
+          <IndividualProjectTypeStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -153,16 +157,6 @@ const EstimationWizard: React.FC = () => {
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={finalizeEstimation}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
-      case 29: // Demolition (for renovation)
-        return (
-          <FinishDetailsStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
