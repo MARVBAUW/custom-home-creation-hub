@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,15 +12,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
+// Modification du type Simulation pour permettre un type string qui sera validé
 interface Simulation {
   id?: string;
   title: string;
-  type: 'calculator' | 'simulation' | 'note';
+  type: 'calculator' | 'simulation' | 'note' | string; // Ajout de string pour la compatibilité
   content: any;
   created_at?: string;
   updated_at?: string;
   is_temporary: boolean;
 }
+
+// Fonction pour valider et convertir le type
+const validateSimulationType = (type: string): 'calculator' | 'simulation' | 'note' => {
+  if (type === 'calculator' || type === 'simulation' || type === 'note') {
+    return type as 'calculator' | 'simulation' | 'note';
+  }
+  // Valeur par défaut si le type n'est pas reconnu
+  return 'calculator';
+};
 
 const SimulationManager = () => {
   const { user } = useAuth();
@@ -62,11 +71,17 @@ const SimulationManager = () => {
         throw error;
       }
       
-      setSimulations(data || []);
+      // Validation des types pour assurer la compatibilité
+      const validatedData: Simulation[] = data?.map(item => ({
+        ...item,
+        type: validateSimulationType(item.type)
+      })) || [];
+      
+      setSimulations(validatedData);
       
       // S'il y a des simulations, définir la première comme courante
-      if (data && data.length > 0) {
-        setCurrentSimulation(data[0]);
+      if (validatedData.length > 0) {
+        setCurrentSimulation(validatedData[0]);
       }
     } catch (error) {
       console.error('Erreur lors du chargement des simulations:', error);
@@ -83,8 +98,11 @@ const SimulationManager = () => {
   const saveSimulation = async () => {
     setSaving(true);
     try {
+      // Assurer que le type est valide avant sauvegarde
       const simulationToSave = {
         ...currentSimulation,
+        // Valider le type pour être sûr qu'il est conforme
+        type: validateSimulationType(currentSimulation.type),
         updated_at: new Date().toISOString()
       };
       
@@ -98,7 +116,8 @@ const SimulationManager = () => {
               title: simulationToSave.title,
               content: simulationToSave.content,
               is_temporary: simulationToSave.is_temporary,
-              updated_at: simulationToSave.updated_at
+              updated_at: simulationToSave.updated_at,
+              type: simulationToSave.type // Assurer que le type est bien sauvegardé
             })
             .eq('id', currentSimulation.id);
           
@@ -125,7 +144,11 @@ const SimulationManager = () => {
           
           // Ajouter à la liste locale avec l'ID généré
           if (data && data.length > 0) {
-            const newSim = data[0];
+            const newSim = {
+              ...data[0],
+              type: validateSimulationType(data[0].type)
+            };
+            
             setCurrentSimulation(newSim);
             setSimulations([newSim, ...simulations]);
           }
