@@ -9,14 +9,9 @@ import { calculateEstimation } from './calculationUtils';
 
 // Initial form data
 const initialFormData: FormData = {
-  clientType: '',
-  contactMethod: '',
   projectType: '',
   surface: '',
   city: '',
-  budget: '',
-  timeframe: '',
-  location: '',
   landType: '',
   constructionType: '',
   constructionStyle: '',
@@ -35,6 +30,7 @@ const EstimationWizard = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   
   // Define the total number of steps based on form data and flow
   const getTotalSteps = (): number => {
@@ -55,6 +51,7 @@ const EstimationWizard = () => {
   // Navigate to next step
   const goToNextStep = () => {
     if (currentStep < totalSteps) {
+      setAnimationDirection('forward');
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     } else {
@@ -66,6 +63,7 @@ const EstimationWizard = () => {
   // Navigate to previous step
   const goToPreviousStep = () => {
     if (currentStep > 1) {
+      setAnimationDirection('backward');
       setCurrentStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
@@ -74,6 +72,7 @@ const EstimationWizard = () => {
   // Navigate to specific step
   const goToStep = (step: number) => {
     if (step >= 1 && step <= totalSteps) {
+      setAnimationDirection(step > currentStep ? 'forward' : 'backward');
       setCurrentStep(step);
       window.scrollTo(0, 0);
     }
@@ -99,6 +98,8 @@ const EstimationWizard = () => {
             formData={formData} 
             updateFormData={updateFormData} 
             goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
           />
         );
       case 2:
@@ -108,6 +109,7 @@ const EstimationWizard = () => {
             updateFormData={updateFormData} 
             goToNextStep={goToNextStep} 
             goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
           />
         );
       case 3:
@@ -117,6 +119,7 @@ const EstimationWizard = () => {
             updateFormData={updateFormData} 
             goToNextStep={goToNextStep} 
             goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
           />
         );
       case 4:
@@ -126,6 +129,7 @@ const EstimationWizard = () => {
             updateFormData={updateFormData} 
             goToNextStep={goToNextStep} 
             goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
           />
         );
       case 5:
@@ -135,6 +139,7 @@ const EstimationWizard = () => {
             updateFormData={updateFormData} 
             goToNextStep={goToNextStep} 
             goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
           />
         );
       case 6:
@@ -145,6 +150,7 @@ const EstimationWizard = () => {
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
             isLoading={isLoading}
+            animationDirection={animationDirection}
           />
         );
       default:
@@ -155,7 +161,7 @@ const EstimationWizard = () => {
   return (
     <Card className="bg-white/95 backdrop-blur-sm rounded-lg shadow-md">
       <CardContent className="p-6">
-        <ProgressBar progress={progress} />
+        <ProgressBar value={progress} />
         
         <div className="mt-4 text-right text-sm text-gray-500">
           Étape {currentStep} sur {totalSteps}
@@ -165,14 +171,12 @@ const EstimationWizard = () => {
           {renderStepContent()}
         </div>
         
-        {currentStep < totalSteps && (
-          <FormNavigation 
-            currentStep={currentStep} 
-            totalSteps={totalSteps} 
-            goToNextStep={goToNextStep} 
-            goToPreviousStep={goToPreviousStep} 
-          />
-        )}
+        <FormNavigation 
+          step={currentStep} 
+          totalSteps={totalSteps} 
+          goToNextStep={goToNextStep} 
+          goToPreviousStep={goToPreviousStep} 
+        />
       </CardContent>
     </Card>
   );
