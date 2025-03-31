@@ -1,6 +1,4 @@
 
-import { FormData } from '../types/formTypes';
-
 export interface CategoryCost {
   category: string;
   amount: number;
@@ -37,9 +35,14 @@ export interface FeeCosts {
   architect: number;
   engineeringFees: number;
   architectFees: number;
+  projectManagement: number;
   officialFees: number;
   inspectionFees: number;
   technicalStudies: number;
+  permits: number;
+  insurance: number;
+  contingency: number;
+  taxes: number;
   other: number;
   total: number;
 }

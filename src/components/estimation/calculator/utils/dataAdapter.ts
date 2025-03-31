@@ -1,211 +1,194 @@
-
-import { FormData } from '../types/formTypes';
+import { FormData } from '../types';
+import { EstimationResponseData } from '../types/estimationTypes';
 import { ensureNumber, ensureBoolean } from './typeConversions';
 
 /**
- * Create a function that updates form data while handling type conversions
+ * Creates a function that allows updating formData with automatic type conversions
  */
 export function createTypeAdaptingUpdater(
-  updateFn: (data: Partial<FormData>) => void
-): (data: Partial<FormData>) => void {
+  updater: (data: Partial<FormData>) => void
+) {
   return (data: Partial<FormData>) => {
-    // Create a copy we can modify
-    const adaptedData = { ...data };
+    // Convert numeric fields
+    const adaptedData: Partial<FormData> = { ...data };
     
-    // Handle numeric fields
-    if ('surface' in adaptedData) {
-      adaptedData.surface = ensureNumber(adaptedData.surface);
-    }
+    // Numeric fields to convert
+    const numericFields = [
+      'surface', 'budget', 'bedrooms', 'bathrooms', 'doorCount',
+      'montantT', 'kitchenSize', 'bathroomCount'
+    ];
     
-    if ('bedrooms' in adaptedData) {
-      adaptedData.bedrooms = ensureNumber(adaptedData.bedrooms);
-    }
+    // Boolean fields to convert
+    const booleanFields = [
+      'hasSmartHome', 'hasAirConditioning', 'hasDressingRoom',
+      'hasCustomClosets', 'hasElevator', 'hasHomeAutomation',
+      'hasSecuritySystem', 'hasHeatRecovery', 'pool', 'terrace',
+      'outdoorKitchen', 'formCompleted', 'termsAccepted',
+      'commercialAccepted'
+    ];
     
-    if ('bathrooms' in adaptedData) {
-      adaptedData.bathrooms = ensureNumber(adaptedData.bathrooms);
-    }
+    // Convert numeric fields if they exist in the data
+    numericFields.forEach(field => {
+      if (field in adaptedData) {
+        adaptedData[field] = ensureNumber(adaptedData[field]);
+      }
+    });
     
-    if ('budget' in adaptedData) {
-      adaptedData.budget = ensureNumber(adaptedData.budget);
-    }
+    // Convert boolean fields if they exist in the data
+    booleanFields.forEach(field => {
+      if (field in adaptedData) {
+        adaptedData[field] = ensureBoolean(adaptedData[field]);
+      }
+    });
     
-    if ('terraceArea' in adaptedData) {
-      adaptedData.terraceArea = ensureNumber(adaptedData.terraceArea);
-    }
-    
-    if ('landscapingArea' in adaptedData) {
-      adaptedData.landscapingArea = ensureNumber(adaptedData.landscapingArea);
-    }
-    
-    if ('fencingLength' in adaptedData) {
-      adaptedData.fencingLength = ensureNumber(adaptedData.fencingLength);
-    }
-    
-    if ('stonePercentage' in adaptedData) {
-      adaptedData.stonePercentage = ensureNumber(adaptedData.stonePercentage);
-    }
-    
-    if ('plasterPercentage' in adaptedData) {
-      adaptedData.plasterPercentage = ensureNumber(adaptedData.plasterPercentage);
-    }
-    
-    if ('brickPercentage' in adaptedData) {
-      adaptedData.brickPercentage = ensureNumber(adaptedData.brickPercentage);
-    }
-    
-    if ('metalCladdingPercentage' in adaptedData) {
-      adaptedData.metalCladdingPercentage = ensureNumber(adaptedData.metalCladdingPercentage);
-    }
-    
-    if ('woodCladdingPercentage' in adaptedData) {
-      adaptedData.woodCladdingPercentage = ensureNumber(adaptedData.woodCladdingPercentage);
-    }
-    
-    if ('stoneCladdingPercentage' in adaptedData) {
-      adaptedData.stoneCladdingPercentage = ensureNumber(adaptedData.stoneCladdingPercentage);
-    }
-    
-    // Handle boolean fields
-    if ('hasAirConditioning' in adaptedData) {
-      adaptedData.hasAirConditioning = ensureBoolean(adaptedData.hasAirConditioning);
-    }
-    
-    if ('hasSmartHome' in adaptedData) {
-      adaptedData.hasSmartHome = ensureBoolean(adaptedData.hasSmartHome);
-    }
-    
-    if ('hasDressingRoom' in adaptedData) {
-      adaptedData.hasDressingRoom = ensureBoolean(adaptedData.hasDressingRoom);
-    }
-    
-    if ('hasCustomClosets' in adaptedData) {
-      adaptedData.hasCustomClosets = ensureBoolean(adaptedData.hasCustomClosets);
-    }
-    
-    if ('hasElevator' in adaptedData) {
-      adaptedData.hasElevator = ensureBoolean(adaptedData.hasElevator);
-    }
-    
-    if ('hasHomeAutomation' in adaptedData) {
-      adaptedData.hasHomeAutomation = ensureBoolean(adaptedData.hasHomeAutomation);
-    }
-    
-    if ('hasSecuritySystem' in adaptedData) {
-      adaptedData.hasSecuritySystem = ensureBoolean(adaptedData.hasSecuritySystem);
-    }
-    
-    if ('hasHeatRecovery' in adaptedData) {
-      adaptedData.hasHeatRecovery = ensureBoolean(adaptedData.hasHeatRecovery);
-    }
-    
-    if ('pool' in adaptedData) {
-      adaptedData.pool = ensureBoolean(adaptedData.pool);
-    }
-    
-    if ('terrace' in adaptedData) {
-      adaptedData.terrace = ensureBoolean(adaptedData.terrace);
-    }
-    
-    if ('outdoorKitchen' in adaptedData) {
-      adaptedData.outdoorKitchen = ensureBoolean(adaptedData.outdoorKitchen);
-    }
-    
-    // Pass the properly typed data to the update function
-    updateFn(adaptedData);
+    updater(adaptedData);
   };
 }
 
 /**
- * Adapt form data to estimation response data
+ * Adapt FormData to EstimationFormData format
  */
-export function adaptToEstimationResponseData(formData: FormData) {
-  const totalEstimation = formData.budget || 250000; // Default if budget not set
+export function adaptToEstimationFormData(data: Partial<FormData>): any {
+  // Convert FormData to EstimationFormData
+  const adaptedData = { ...data };
+  
+  // Handle specific conversions here if needed
+  
+  return adaptedData;
+}
+
+/**
+ * Adapt EstimationFormData to FormData format
+ */
+export function adaptToFormData(data: any): Partial<FormData> {
+  // Convert EstimationFormData to FormData
+  const adaptedData = { ...data };
+  
+  // Handle specific conversions here if needed
+  
+  return adaptedData;
+}
+
+/**
+ * Converts FormData to EstimationResponseData
+ */
+export function adaptToEstimationResponseData(formData: FormData): EstimationResponseData {
+  const surface = ensureNumber(formData.surface);
+  const budget = ensureNumber(formData.budget);
+  
+  // Calculate base cost (either from budget or surface * average price)
+  const baseCost = budget > 0 ? budget : surface * 1500;
+  
+  // Example calculations - these should be replaced with actual logic
+  const structuralCosts = baseCost * 0.4;
+  const finishingCosts = baseCost * 0.3;
+  const technicalCosts = baseCost * 0.2;
+  const externalCosts = baseCost * 0.1;
+  
+  // Total construction costs
+  const totalConstructionCosts = structuralCosts + finishingCosts + technicalCosts + externalCosts;
+  
+  // Fees calculation
+  const architectFees = totalConstructionCosts * 0.05;
+  const engineeringFees = totalConstructionCosts * 0.03;
+  const projectManagement = totalConstructionCosts * 0.04;
+  const permits = totalConstructionCosts * 0.02;
+  const feesInsurance = totalConstructionCosts * 0.01;
+  const feesContingency = totalConstructionCosts * 0.03;
+  const feesTaxes = totalConstructionCosts * 0.02;
+  
+  const totalFees = architectFees + engineeringFees + projectManagement + 
+                   permits + feesInsurance + feesContingency + feesTaxes;
+  
+  // Other costs
+  const insurance = totalConstructionCosts * 0.02;
+  const contingency = totalConstructionCosts * 0.05;
+  const taxes = totalConstructionCosts * 0.03;
+  const miscellaneous = totalConstructionCosts * 0.02;
+  
+  const totalOtherCosts = insurance + contingency + taxes + miscellaneous;
+  
+  // Total amount
+  const totalAmount = totalConstructionCosts + totalFees + totalOtherCosts;
   
   return {
     projectType: formData.projectType || 'construction',
     projectDetails: {
-      surface: formData.surface || 0,
-      bedrooms: formData.bedrooms || 0,
-      bathrooms: formData.bathrooms || 0,
+      surface: ensureNumber(formData.surface) || 0,
+      location: formData.city || '',
+      projectType: formData.projectType || 'construction',
+      bedrooms: ensureNumber(formData.bedrooms) || 0,
+      bathrooms: ensureNumber(formData.bathrooms) || 0,
       city: formData.city || '',
-      constructionType: formData.constructionType || 'traditional',
-      clientType: formData.clientType || 'individual'
+      constructionType: formData.constructionType || 'traditional'
     },
-    estimatedCost: totalEstimation,
+    estimatedCost: totalAmount,
     dateGenerated: new Date().toISOString(),
     isComplete: true,
-    
     constructionCosts: {
-      structuralWork: totalEstimation * 0.4,
-      finishingWork: totalEstimation * 0.3,
-      technicalLots: totalEstimation * 0.2,
-      externalWorks: totalEstimation * 0.1,
-      total: totalEstimation
+      structuralWork: structuralCosts,
+      finishingWork: finishingCosts,
+      technicalLots: technicalCosts,
+      externalWorks: externalCosts,
+      total: totalConstructionCosts
     },
-    
     fees: {
-      architect: totalEstimation * 0.08,
-      engineeringFees: totalEstimation * 0.03,
-      projectManagement: totalEstimation * 0.05,
-      permits: totalEstimation * 0.02,
-      insurance: totalEstimation * 0.02,
-      contingency: totalEstimation * 0.05,
-      taxes: totalEstimation * 0.03,
-      total: totalEstimation * 0.28
+      architect: architectFees,
+      engineeringFees: engineeringFees,
+      architectFees: architectFees * 0.8, // Example calculation
+      projectManagement: projectManagement,
+      officialFees: permits * 0.5, // Example calculation
+      inspectionFees: permits * 0.3, // Example calculation
+      technicalStudies: engineeringFees * 0.5, // Example calculation
+      permits: permits,
+      insurance: feesInsurance,
+      contingency: feesContingency,
+      taxes: feesTaxes,
+      other: totalFees * 0.02, // Example calculation
+      total: totalFees
     },
-    
     otherCosts: {
-      insurance: totalEstimation * 0.02,
-      contingency: totalEstimation * 0.05,
-      taxes: totalEstimation * 0.03,
-      miscellaneous: totalEstimation * 0.02,
-      total: totalEstimation * 0.12
+      insurance,
+      contingency,
+      taxes,
+      miscellaneous,
+      total: totalOtherCosts
     },
-    
-    totalAmount: totalEstimation * 1.4,
-    
+    totalAmount,
     timeline: {
-      planning: { duration: '2 mois', startOffset: 0 },
-      permits: { duration: '3 mois', startOffset: 2 },
-      foundation: { duration: '1 mois', startOffset: 5 },
-      structure: { duration: '2 mois', startOffset: 6 },
-      envelope: { duration: '1.5 mois', startOffset: 8 },
-      interiors: { duration: '3 mois', startOffset: 9.5 },
-      finishing: { duration: '1.5 mois', startOffset: 12.5 },
-      total: '14 mois'
+      design: 2,
+      permits: 3,
+      bidding: 1,
+      construction: 8,
+      total: 14
     },
-    
     categories: [
-      { name: 'Gros œuvre', amount: totalEstimation * 0.4 },
-      { name: 'Second œuvre', amount: totalEstimation * 0.3 },
-      { name: 'Lots techniques', amount: totalEstimation * 0.2 },
-      { name: 'Extérieurs', amount: totalEstimation * 0.1 }
+      { category: 'Gros œuvre', amount: structuralCosts },
+      { category: 'Second œuvre', amount: finishingCosts },
+      { category: 'Lots techniques', amount: technicalCosts },
+      { category: 'Extérieurs', amount: externalCosts }
     ]
   };
 }
 
 /**
- * Adapt form data from another format (compatibility layer)
+ * Applies default values or type conversions to FormData
  */
-export function adaptFormData(externalData: any): Partial<FormData> {
-  const adaptedData: Partial<FormData> = {};
+export function adaptFormData(data: FormData): FormData {
+  // Create a copy of the data
+  const adaptedData = { ...data };
   
-  // Map fields based on common naming patterns
-  if (externalData.area || externalData.surface || externalData.surfaceArea) {
-    adaptedData.surface = ensureNumber(externalData.area || externalData.surface || externalData.surfaceArea);
-  }
+  // Apply default values for required fields
+  if (!adaptedData.surface) adaptedData.surface = 0;
+  if (!adaptedData.bedrooms) adaptedData.bedrooms = 0;
+  if (!adaptedData.bathrooms) adaptedData.bathrooms = 0;
+  if (!adaptedData.budget) adaptedData.budget = 0;
   
-  if (externalData.city || externalData.location) {
-    adaptedData.city = externalData.city || externalData.location;
-  }
-  
-  if (externalData.budget || externalData.cost || externalData.price) {
-    adaptedData.budget = ensureNumber(externalData.budget || externalData.cost || externalData.price);
-  }
-  
-  if (externalData.type || externalData.projectType) {
-    adaptedData.projectType = externalData.type || externalData.projectType;
-  }
+  // Convert types for certain fields
+  adaptedData.surface = ensureNumber(adaptedData.surface);
+  adaptedData.bedrooms = ensureNumber(adaptedData.bedrooms);
+  adaptedData.bathrooms = ensureNumber(adaptedData.bathrooms);
+  adaptedData.budget = ensureNumber(adaptedData.budget);
   
   return adaptedData;
 }

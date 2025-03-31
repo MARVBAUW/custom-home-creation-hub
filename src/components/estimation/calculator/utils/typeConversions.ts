@@ -4,17 +4,17 @@ import React from 'react';
 /**
  * Converts a value to a number
  */
-export function ensureNumber(value: any): number {
+export function ensureNumber(value: any, defaultValue: number = 0): number {
   if (typeof value === 'number') return value;
-  if (!value) return 0;
+  if (!value) return defaultValue;
   
   if (typeof value === 'string') {
     // Remove currency symbols, commas, etc.
     const cleanValue = value.replace(/[^0-9.-]+/g, '');
-    return parseFloat(cleanValue) || 0;
+    return parseFloat(cleanValue) || defaultValue;
   }
   
-  return 0;
+  return defaultValue;
 }
 
 /**
@@ -64,6 +64,23 @@ export function percentageToDecimal(value: string | number): number {
   // Remove % symbol if present
   const cleanValue = value.replace('%', '');
   return parseFloat(cleanValue) / 100 || 0;
+}
+
+/**
+ * Convert form input value to appropriate type based on context
+ */
+export function toFormValue(value: any, type: 'string' | 'number' | 'boolean' | 'array' = 'string'): any {
+  switch (type) {
+    case 'number':
+      return ensureNumber(value);
+    case 'boolean':
+      return ensureBoolean(value);
+    case 'array':
+      return ensureArray(value);
+    case 'string':
+    default:
+      return ensureString(value);
+  }
 }
 
 /**

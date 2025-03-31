@@ -1,61 +1,45 @@
 
 import React from 'react';
-import { CheckCircle, Circle } from 'lucide-react';
 
-interface StepIndicatorProps {
+export interface StepIndicatorProps {
   currentStep: number;
   totalSteps: number;
-  completedSteps?: number[];
+  goToStep?: (index: number) => void;
 }
 
-const StepIndicator: React.FC<StepIndicatorProps> = ({
-  currentStep,
+const StepIndicator: React.FC<StepIndicatorProps> = ({ 
+  currentStep, 
   totalSteps,
-  completedSteps = [],
+  goToStep
 }) => {
+  const steps = Array.from({ length: totalSteps }, (_, i) => i);
+
   return (
-    <div className="w-full py-4">
-      <div className="flex items-center justify-between">
-        {Array.from({ length: totalSteps }).map((_, index) => {
-          const isCompleted = completedSteps.includes(index) || index < currentStep;
-          const isCurrent = index === currentStep;
-          
-          return (
-            <React.Fragment key={index}>
-              {/* Step circle */}
+    <div className="flex justify-center mt-2 mb-6">
+      <div className="flex items-center space-x-2">
+        {steps.map((step, index) => (
+          <React.Fragment key={index}>
+            <div 
+              className={`rounded-full ${
+                index <= currentStep 
+                  ? 'bg-blue-500 text-white' 
+                  : 'bg-gray-200 text-gray-500'
+              } w-6 h-6 flex items-center justify-center text-xs font-medium cursor-pointer transition-colors`}
+              onClick={() => goToStep && goToStep(index)}
+              title={`Étape ${index + 1}`}
+            >
+              {index + 1}
+            </div>
+            
+            {index < steps.length - 1 && (
               <div 
-                className={`
-                  flex items-center justify-center w-8 h-8 rounded-full 
-                  ${isCompleted 
-                    ? 'bg-progineer-gold text-white' 
-                    : isCurrent 
-                      ? 'bg-white border-2 border-progineer-gold text-progineer-gold' 
-                      : 'bg-gray-100 border border-gray-300 text-gray-400'
-                  }
-                  transition-all duration-300
-                `}
-              >
-                {isCompleted ? (
-                  <CheckCircle className="w-5 h-5" />
-                ) : (
-                  <span className="text-sm font-medium">{index + 1}</span>
-                )}
-              </div>
-              
-              {/* Connector line (except for last item) */}
-              {index < totalSteps - 1 && (
-                <div className="flex-1 h-1 mx-2 bg-gray-200">
-                  <div 
-                    className="h-full bg-progineer-gold transition-all duration-300"
-                    style={{ 
-                      width: isCompleted ? '100%' : '0%' 
-                    }}
-                  />
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
+                className={`h-0.5 w-3 ${
+                  index < currentStep ? 'bg-blue-500' : 'bg-gray-200'
+                }`} 
+              />
+            )}
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

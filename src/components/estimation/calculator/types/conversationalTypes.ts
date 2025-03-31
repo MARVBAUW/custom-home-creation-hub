@@ -1,38 +1,28 @@
 
 export interface Message {
+  id?: string;
   content: string;
-  timestamp: Date;
-  isUser: boolean;
-  isProcessed?: boolean;
+  type: 'user' | 'assistant';
+  timestamp?: number;
 }
 
 export interface ConversationState {
   messages: Message[];
-  isLoading: boolean;
-  processingStatus: string | null;
-  currentQuestion: string | null;
-  conversationHistory: string[];
+  currentStep?: string;
+  completedFields?: Record<string, any>;
+  formData?: Record<string, any>;
 }
 
-export interface QuestionData {
-  question: string;
-  options?: string[];
-  type: 'text' | 'options' | 'number' | 'boolean' | 'date' | 'multiselect';
-  formField?: string;
-  nextQuestionBasedOn?: Record<string, string>;
-  defaultNextQuestion?: string;
+export interface MessageDisplayProps {
+  message: Message;
 }
 
-export interface ConversationContext {
-  estimationType?: string;
-  projectType?: string;
-  surfaceArea?: number;
-  budget?: number;
-  location?: string;
-  stages?: number;
-  timeframe?: string;
-  structuralWork?: boolean;
-  demolition?: boolean;
-  renovation?: boolean;
-  newConstruction?: boolean;
+export interface MessageProcessorProps {
+  content: string;
+  onProcessed: (processedContent: React.ReactNode) => void;
+}
+
+export interface ConversationAction {
+  type: 'ADD_MESSAGE' | 'UPDATE_FORM' | 'SET_STEP' | 'RESET';
+  payload?: any;
 }

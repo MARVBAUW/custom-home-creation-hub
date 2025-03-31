@@ -1,133 +1,61 @@
 
-import { useState } from 'react';
-import { FormData } from '../../types';
-import { 
-  calculateRoofingCost, 
-  calculateDetailedFacadeCost, 
-  calculateWindowsCost,
-  calculateInsulationCost
-} from '../../utils/montantUtils';
+import { useCallback } from 'react';
+import { FormData } from '../../types/formTypes';
+import { percentageToNumber, calculateFacadeCost, calculateDetailedFacadeCost } from '../../utils/montantUtils';
 import { ensureNumber } from '../../utils/typeConversions';
 
-export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data: Partial<FormData>) => void) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const handleCouvertureSubmit = (couvertureData: { roofingType: string }) => {
-    setIsSubmitting(true);
-    
-    try {
-      // Utiliser ensureNumber pour s'assurer que surface est un nombre
-      const surface = ensureNumber(formData.surface);
-      const roofCost = calculateRoofingCost(couvertureData.roofingType, surface);
-      
-      updateFormData({
-        ...couvertureData,
-        montantT: (formData.montantT || 0) + roofCost
-      });
-      
-      return true;
-    } catch (error) {
-      console.error('Error submitting couverture data:', error);
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  const handleIsolationSubmit = (isolationData: { insulationType: string }) => {
-    setIsSubmitting(true);
-    
-    try {
-      // Utiliser ensureNumber pour s'assurer que surface est un nombre
-      const surface = ensureNumber(formData.surface);
-      const insulationCost = calculateInsulationCost(isolationData.insulationType, surface);
-      
-      updateFormData({
-        ...isolationData,
-        montantT: (formData.montantT || 0) + insulationCost
-      });
-      
-      return true;
-    } catch (error) {
-      console.error('Error submitting isolation data:', error);
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  const handleFacadeSubmit = (facadeData: {
-    stonePercentage: number | string,
-    plasterPercentage: number | string,
-    brickPercentage: number | string,
-    metalCladdingPercentage: number | string,
-    woodCladdingPercentage: number | string,
-    stoneCladdingPercentage: number | string
+export const useEnvelopeSubmissions = (
+  formData: FormData,
+  updateFormData: (data: Partial<FormData>) => void
+) => {
+  // Handle submission for facade step
+  const handleFacadeSubmit = useCallback((data: {
+    stonePercentage: string;
+    plasterPercentage: string;
+    brickPercentage: string;
+    metalCladdingPercentage: string;
+    woodCladdingPercentage: string;
+    stoneCladdingPercentage: string;
   }) => {
-    setIsSubmitting(true);
+    const { 
+      stonePercentage,
+      plasterPercentage,
+      brickPercentage,
+      metalCladdingPercentage,
+      woodCladdingPercentage,
+      stoneCladdingPercentage
+    } = data;
     
-    try {
-      const facadeCost = calculateDetailedFacadeCost(
-        formData,
-        facadeData.stonePercentage,
-        facadeData.plasterPercentage,
-        facadeData.brickPercentage,
-        facadeData.metalCladdingPercentage,
-        facadeData.woodCladdingPercentage,
-        facadeData.stoneCladdingPercentage
-      );
-      
-      updateFormData({
-        stonePercentage: Number(facadeData.stonePercentage),
-        plasterPercentage: Number(facadeData.plasterPercentage),
-        brickPercentage: Number(facadeData.brickPercentage),
-        metalCladdingPercentage: Number(facadeData.metalCladdingPercentage),
-        woodCladdingPercentage: Number(facadeData.woodCladdingPercentage),
-        stoneCladdingPercentage: Number(facadeData.stoneCladdingPercentage),
-        montantT: (formData.montantT || 0) + facadeCost
-      });
-      
-      return true;
-    } catch (error) {
-      console.error('Error submitting facade data:', error);
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-  
-  const handleMenuiseriesExtSubmit = (menuiseriesData: {
-    windowType: string,
-    windowRenovationArea: number | string,
-    windowNewArea: number | string
-  }) => {
-    setIsSubmitting(true);
+    // Extract numeric percentages
+    const percentages = {
+      stone: percentageToNumber(stonePercentage),
+      plaster: percentageToNumber(plasterPercentage),
+      brick: percentageToNumber(brickPercentage),
+      metalCladding: percentageToNumber(metalCladdingPercentage),
+      woodCladding: percentageToNumber(woodCladdingPercentage),
+      stoneCladding: percentageToNumber(stoneCladdingPercentage)
+    };
     
-    try {
-      // Calculate total window area
-      const windowArea = ensureNumber(menuiseriesData.windowNewArea) + ensureNumber(menuiseriesData.windowRenovationArea);
-      const windowsCost = calculateWindowsCost(menuiseriesData.windowType, windowArea);
-      
-      updateFormData({
-        ...menuiseriesData,
-        montantT: (formData.montantT || 0) + windowsCost
-      });
-      
-      return true;
-    } catch (error) {
-      console.error('Error submitting menuiseries data:', error);
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    // Calculate cost based on facade percentages
+    const facadeCost = calculateDetailedFacadeCost(
+      ensureNumber(formData.surface),
+      percentages
+    );
+    
+    // Update form data with facade information and cost
+    updateFormData({
+      stonePercentage: percentages.stone,
+      plasterPercentage: percentages.plaster,
+      brickPercentage: percentages.brick,
+      metalCladdingPercentage: percentages.metalCladding,
+      woodCladdingPercentage: percentages.woodCladding,
+      stoneCladdingPercentage: percentages.stoneCladding,
+      montantT: ensureNumber(formData.montantT) + facadeCost
+    });
+    
+  }, [formData, updateFormData]);
   
   return {
-    isSubmitting,
-    handleCouvertureSubmit,
-    handleIsolationSubmit,
-    handleFacadeSubmit,
-    handleMenuiseriesExtSubmit
+    handleFacadeSubmit
   };
 };
-

@@ -2,74 +2,8 @@
 import { useState, useCallback } from 'react';
 import { FormData } from './types/formTypes';
 import { adaptToEstimationResponseData } from './utils/dataAdapter';
-import { ensureNumber } from './utils/typeConversions';
-
-export interface EstimationResponseData {
-  projectType: string;
-  projectDetails: {
-    surface: number;
-    bedrooms: number;
-    bathrooms: number;
-    city: string;
-    constructionType: string;
-    clientType: string;
-  };
-  estimatedCost: number;
-  dateGenerated: string;
-  isComplete: boolean;
-  constructionCosts: {
-    structuralWork: number;
-    finishingWork: number;
-    technicalLots: number;
-    externalWorks: number;
-    total: number;
-  };
-  fees: {
-    architect: number;
-    engineeringFees: number;
-    projectManagement: number;
-    permits: number;
-    insurance: number;
-    contingency: number;
-    taxes: number;
-    total: number;
-  };
-  otherCosts: {
-    insurance: number;
-    contingency: number;
-    taxes: number;
-    miscellaneous: number;
-    total: number;
-  };
-  totalAmount: number;
-  timeline: {
-    planning: { duration: string; startOffset: number };
-    permits: { duration: string; startOffset: number };
-    foundation: { duration: string; startOffset: number };
-    structure: { duration: string; startOffset: number };
-    envelope: { duration: string; startOffset: number };
-    interiors: { duration: string; startOffset: number };
-    finishing: { duration: string; startOffset: number };
-    total: string;
-  };
-  categories: Array<{
-    name: string;
-    amount: number;
-  }>;
-  
-  // For the report 
-  totalHT?: number;
-  totalTTC?: number;
-  vat?: number;
-  corpsEtat?: Record<string, { montantHT: number, details: string[] }>;
-  honorairesHT?: number;
-  coutGlobalHT?: number;
-  coutGlobalTTC?: number;
-  taxeAmenagement?: number;
-  garantieDecennale?: number;
-  etudesGeotechniques?: number;
-  etudeThermique?: number;
-}
+import { ensureNumber } from './utils/typeConvers+ions';
+import { EstimationResponseData } from './types/estimationTypes';
 
 // Move the function outside the hook
 export function generateEstimationResult(formData: FormData): EstimationResponseData {
