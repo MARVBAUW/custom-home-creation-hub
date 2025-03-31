@@ -12,6 +12,9 @@ export interface SavedEstimation {
   createdAt: string;
 }
 
+// Re-export the calculateEstimation function 
+export { calculateEstimation };
+
 // Fonction pour sauvegarder une estimation pour un utilisateur
 export const saveEstimationToUser = async (
   userId: string,
@@ -150,4 +153,75 @@ export const getSafeEstimation = (formData: FormData): number => {
     console.error('Erreur lors du calcul:', error);
     return 150000; // Valeur par défaut en cas d'erreur
   }
+};
+
+// Add generateEstimationReport function
+export const generateEstimationReport = (
+  formData: FormData,
+  estimationResult: number
+): {
+  clientInfo: {
+    clientType: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
+  projectInfo: {
+    type: string;
+    surface: string | number;
+    location: string;
+  };
+  estimationDetails: {
+    totalHT: number;
+    vat: number;
+    totalTTC: number;
+  };
+  categories: Array<{
+    name: string;
+    percentage: number;
+    amount: number;
+  }>;
+} => {
+  // Calculate VAT and TTC
+  const vat = estimationResult * 0.2;
+  const totalTTC = estimationResult + vat;
+
+  // Get name from form data
+  const name = [formData.firstName, formData.lastName]
+    .filter(Boolean)
+    .join(" ") || "Client";
+
+  // Create categories with default percentages
+  const categories = [
+    { name: "Gros œuvre", percentage: 30, amount: estimationResult * 0.3 },
+    { name: "Charpente / Couverture", percentage: 15, amount: estimationResult * 0.15 },
+    { name: "Menuiseries extérieures", percentage: 10, amount: estimationResult * 0.1 },
+    { name: "Cloisons / Isolation", percentage: 8, amount: estimationResult * 0.08 },
+    { name: "Électricité", percentage: 7, amount: estimationResult * 0.07 },
+    { name: "Plomberie", percentage: 7, amount: estimationResult * 0.07 },
+    { name: "Chauffage", percentage: 6, amount: estimationResult * 0.06 },
+    { name: "Revêtements", percentage: 10, amount: estimationResult * 0.1 },
+    { name: "Aménagements extérieurs", percentage: 5, amount: estimationResult * 0.05 },
+    { name: "Études et honoraires", percentage: 2, amount: estimationResult * 0.02 },
+  ];
+
+  return {
+    clientInfo: {
+      clientType: formData.clientType || "individual",
+      name: name,
+      email: formData.email || formData.contactEmail || "",
+      phone: formData.phone || "",
+    },
+    projectInfo: {
+      type: formData.projectType || "construction",
+      surface: formData.surface || "N/A",
+      location: formData.location || formData.city || "N/A",
+    },
+    estimationDetails: {
+      totalHT: estimationResult,
+      vat: vat,
+      totalTTC: totalTTC,
+    },
+    categories: categories,
+  };
 };

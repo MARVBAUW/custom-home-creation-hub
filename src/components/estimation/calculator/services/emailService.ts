@@ -107,17 +107,45 @@ export const generateEmailContent = (
 
 // Fonction pour envoyer l'email à l'utilisateur
 export const sendEstimationEmail = async (
-  email: string,
-  formData: FormData,
-  estimationResult: number,
+  to: string | FormData,
+  formDataOrEstimation: FormData | number,
+  estimationResultOrCategories?: number | CategoryAmount[],
   categoriesAmounts?: CategoryAmount[]
 ): Promise<{ success: boolean; message: string }> => {
   try {
-    // Générer le contenu de l'email
-    const emailContent = generateEmailContent(formData, estimationResult, categoriesAmounts);
+    let email: string;
+    let formData: FormData;
+    let estimationResult: number;
+    let categories: CategoryAmount[] | undefined;
+
+    // Handle different parameter patterns
+    if (typeof to === 'string') {
+      // Case: (email, formData, estimationResult, categories?)
+      email = to;
+      formData = formDataOrEstimation as FormData;
+      estimationResult = estimationResultOrCategories as number;
+      categories = categoriesAmounts;
+    } else {
+      // Case: (formData, estimationResult, categories?)
+      formData = to;
+      estimationResult = formDataOrEstimation as number;
+      categories = estimationResultOrCategories as CategoryAmount[] | undefined;
+      // Get email from formData
+      email = formData.email || formData.contactEmail || '';
+      
+      if (!email) {
+        return { 
+          success: false, 
+          message: 'Aucune adresse email fournie dans les données du formulaire' 
+        };
+      }
+    }
+
+    // Generate email content
+    const emailContent = generateEmailContent(formData, estimationResult, categories);
     
-    // Dans un environnement de production, vous appelleriez votre API ou service tiers ici
-    // Par exemple avec Supabase Edge Functions
+    // In a production environment, you would call your API or third-party service here
+    // For example with Supabase Edge Functions
     const response = await fetch('/api/send-estimation-email', {
       method: 'POST',
       headers: {
@@ -127,7 +155,7 @@ export const sendEstimationEmail = async (
         to: email,
         subject: 'Votre estimation de projet Progineer',
         html: emailContent,
-        cc: 'progineer.moe@gmail.com', // Copie à l'admin
+        cc: 'progineer.moe@gmail.com', // Admin copy
         formData,
         estimationAmount: estimationResult
       }),
@@ -137,7 +165,7 @@ export const sendEstimationEmail = async (
       throw new Error('Erreur lors de l\'envoi de l\'email');
     }
 
-    // Simuler l'envoi d'email en mode développement
+    // Simulate email sending in development mode
     console.log('Email envoyé à:', email);
     console.log('Copie envoyée à: progineer.moe@gmail.com');
     
