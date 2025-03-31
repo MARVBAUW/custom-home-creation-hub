@@ -43,5 +43,14 @@ export const formatImageUrl = (url?: string): string | undefined => {
     return `/${url}`;
   }
   
+  // Handle schema images consistently
+  if (url.includes('schemas/') && !url.startsWith('/images/')) {
+    if (url.startsWith('/schemas/')) {
+      return `/images${url}`;
+    } else if (url.startsWith('schemas/')) {
+      return `/images/${url}`;
+    }
+  }
+  
   return url;
 };
