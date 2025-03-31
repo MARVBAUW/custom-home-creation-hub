@@ -124,6 +124,17 @@ export const extractFormDataFromMessage = (message: string, existingData: FormDa
 };
 
 /**
+ * Extracts information from user message - alias for extractFormDataFromMessage for compatibility
+ * @param message The user input message
+ * @returns Extracted information
+ */
+export const extractInformation = (message: string): Partial<FormData> => {
+  // Simple implementation that works like extractFormDataFromMessage but without requiring existingData
+  const emptyData = {} as FormData;
+  return extractFormDataFromMessage(message, emptyData);
+};
+
+/**
  * Generates a conversational response based on the extracted information
  * @param extractedInfo The information extracted from the user's message
  * @returns A conversational response
@@ -164,4 +175,22 @@ export const generateConversationalResponse = (extractedInfo: ExtractedInfo): st
   response += "\n\nPour affiner votre estimation, j'aurais besoin de quelques informations supplémentaires.";
   
   return response;
+};
+
+/**
+ * Alias for generateConversationalResponse for compatibility
+ * @param formData FormData for generating a response
+ * @returns A conversational response
+ */
+export const generateResponse = (formData: Partial<FormData>): string => {
+  // Create an ExtractedInfo object from formData
+  const extractedInfo: ExtractedInfo = {
+    projectType: formData.projectType || null,
+    surface: formData.surface || null,
+    city: formData.city || null,
+    budget: formData.budget || null,
+    otherDetails: {}
+  };
+  
+  return generateConversationalResponse(extractedInfo);
 };

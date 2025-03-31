@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MessageProcessorProps, ExtractedInfo } from '../../types/conversationalTypes';
+import { MessageProcessorProps } from '../../types/conversationalTypes';
 import { EstimationFormData } from '../../types/estimationFormData';
 import { analyzeUserIntent, extractFormDataFromMessage } from '../../utils/conversationalUtils';
 
@@ -16,7 +16,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = (props) => {
     console.log('Analyse:', analysis);
     
     // Extraire et mettre à jour les données du formulaire
-    const updatedData = extractFormDataFromMessage(input, formData);
+    const updatedData = extractFormDataFromMessage(input, formData as EstimationFormData);
     
     // Mettre à jour les données si des mises à jour ont été détectées
     if (Object.keys(updatedData).length > 0) {
