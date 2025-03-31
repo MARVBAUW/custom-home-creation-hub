@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Building, Calendar, FileText, MessageSquare, Clock, Users } from 'lucide-react';
 import ClientFileManager from "@/components/admin/file-management/ClientFileManager";
+import ProjectGanttView from './ProjectGanttView';
 
 const ClientProjectDetail = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -215,69 +215,7 @@ const ClientProjectDetail = () => {
         </TabsContent>
         
         <TabsContent value="planning">
-          <Card>
-            <CardHeader>
-              <CardTitle>Planning du projet</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="bg-gray-50 border rounded-lg p-4">
-                  <h3 className="font-medium mb-2">Phase 1: Études préliminaires</h3>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>01/06/2023 - 15/07/2023</span>
-                    <span className="font-medium text-green-600">Terminé</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full">
-                    <div className="h-full bg-green-500 rounded-full w-full"></div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 border rounded-lg p-4">
-                  <h3 className="font-medium mb-2">Phase 2: Conception détaillée</h3>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>16/07/2023 - 30/09/2023</span>
-                    <span className="font-medium text-blue-600">En cours</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full">
-                    <div className="h-full bg-blue-500 rounded-full w-3/4"></div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 border rounded-lg p-4">
-                  <h3 className="font-medium mb-2">Phase 3: Permis de construire</h3>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>01/10/2023 - 31/12/2023</span>
-                    <span className="font-medium text-gray-600">À venir</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full">
-                    <div className="h-full bg-gray-400 rounded-full w-0"></div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 border rounded-lg p-4">
-                  <h3 className="font-medium mb-2">Phase 4: Appel d'offres</h3>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>01/01/2024 - 28/02/2024</span>
-                    <span className="font-medium text-gray-600">À venir</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full">
-                    <div className="h-full bg-gray-400 rounded-full w-0"></div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-50 border rounded-lg p-4">
-                  <h3 className="font-medium mb-2">Phase 5: Construction</h3>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>01/03/2024 - 30/11/2024</span>
-                    <span className="font-medium text-gray-600">À venir</span>
-                  </div>
-                  <div className="w-full h-2 bg-gray-200 rounded-full">
-                    <div className="h-full bg-gray-400 rounded-full w-0"></div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <ProjectGanttView project={project} />
         </TabsContent>
         
         <TabsContent value="team">
