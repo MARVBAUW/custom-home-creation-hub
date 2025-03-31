@@ -1,48 +1,67 @@
 
 /**
- * Formate un nombre en devise (EUR)
- * @param amount - Montant à formater
- * @returns Le montant formaté (ex: 1 234,56 €)
+ * Format a number as a currency string
+ * @param value The value to format
+ * @param locale The locale to use for formatting (default: fr-FR)
+ * @param currency The currency to use (default: EUR)
+ * @returns The formatted currency string
  */
-export const formatCurrency = (amount: number): string => {
+export const formatCurrency = (value: number | string): string => {
+  // Ensure we're working with a number
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  
+  // Handle invalid values
+  if (isNaN(numValue)) {
+    return '0,00 €';
+  }
+  
+  // Format with French locale and Euro currency
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(amount);
+  }).format(numValue);
 };
 
 /**
- * Formate une date au format français
- * @param date - Date à formater (string ou Date)
- * @returns La date formatée (ex: 01/01/2022)
+ * Format a number with thousands separators
+ * @param value The value to format
+ * @param locale The locale to use for formatting (default: fr-FR)
+ * @returns The formatted number string
  */
-export const formatDate = (date: string | Date): string => {
-  if (!date) return '';
+export const formatNumber = (value: number | string): string => {
+  // Ensure we're working with a number
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  
+  // Handle invalid values
+  if (isNaN(numValue)) {
+    return '0';
+  }
+  
+  // Format with French locale
+  return new Intl.NumberFormat('fr-FR').format(numValue);
+};
+
+/**
+ * Format a date string
+ * @param date The date to format
+ * @param locale The locale to use for formatting (default: fr-FR)
+ * @returns The formatted date string
+ */
+export const formatDate = (date: Date | string): string => {
+  // Ensure we're working with a Date object
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('fr-FR').format(dateObj);
-};
-
-/**
- * Formate une surface en mètres carrés
- * @param surface - Surface à formater
- * @returns La surface formatée (ex: 120 m²)
- */
-export const formatSurface = (surface: number | string): string => {
-  if (!surface) return '0 m²';
-  const surfaceNum = typeof surface === 'string' ? parseFloat(surface) : surface;
-  return `${surfaceNum.toLocaleString('fr-FR')} m²`;
-};
-
-/**
- * Tronque un texte s'il dépasse une certaine longueur
- * @param text - Texte à tronquer
- * @param maxLength - Longueur maximale
- * @returns Le texte tronqué
- */
-export const truncateText = (text: string, maxLength: number): string => {
-  if (!text) return '';
-  if (text.length <= maxLength) return text;
-  return text.substring(0, maxLength) + '...';
+  
+  // Handle invalid dates
+  if (isNaN(dateObj.getTime())) {
+    return '';
+  }
+  
+  // Format with French locale
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  }).format(dateObj);
 };

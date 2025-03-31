@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEstimationCalculator } from './useEstimationCalculator';
-import { EstimationFormData } from './types/estimationFormData';
 import EstimationResult from './EstimationResult';
 import EstimationForm from './EstimationForm';
 
@@ -95,6 +94,7 @@ const EstimationWizard: React.FC = () => {
             <EstimationResult 
               formData={formData}
               estimationResult={estimationResult}
+              onBack={() => setActiveTab('form')}
             />
           )}
         </TabsContent>
