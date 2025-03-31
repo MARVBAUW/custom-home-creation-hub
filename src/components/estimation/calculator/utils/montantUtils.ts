@@ -20,6 +20,21 @@ export function ensureNumber(value: any, defaultValue = 0): number {
 }
 
 /**
+ * Calculate a generic component cost based on surface area and rate
+ */
+export function calculateComponentCost(surface: number, ratePerM2: number): number {
+  return surface * ratePerM2;
+}
+
+/**
+ * Calculate new total amount after adding a component cost
+ */
+export function calculateNewMontantT(currentTotal: number | undefined, additionalCost: number): number {
+  const total = currentTotal || 0;
+  return total + additionalCost;
+}
+
+/**
  * Calculate insulation cost based on type and surface area
  */
 export function calculateInsulationCost(insulationType: string, surface: number): number {

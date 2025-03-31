@@ -50,7 +50,10 @@ const IsolationStep: React.FC<IsolationStepProps> = ({
     }
     
     // Calculate cost for the selected insulation
-    const insulationCost = calculateComponentCost(formData.surface, rate);
+    const surface = typeof formData.surface === 'string' 
+      ? parseFloat(formData.surface) 
+      : (formData.surface || 0);
+    const insulationCost = calculateComponentCost(surface, rate);
     
     // Calculate new total
     const newMontantT = calculateNewMontantT(formData.montantT, insulationCost);
