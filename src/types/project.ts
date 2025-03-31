@@ -11,6 +11,12 @@ export interface ProjectDates {
   construction?: DateRange;
   phases?: {
     [key: string]: DateRange;
+    feasibility?: DateRange;
+    dce?: DateRange;
+    act?: DateRange;
+    exe?: DateRange;
+    reception?: DateRange;
+    delivery?: DateRange;
   };
   feasibility?: DateRange;
   dce?: DateRange;

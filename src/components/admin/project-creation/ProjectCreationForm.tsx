@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useForm, FormProvider } from "react-hook-form";
 import { Tabs } from "@/components/ui/tabs";
@@ -19,6 +18,7 @@ import {
 import { saveProject } from '@/utils/projectStorage';
 
 const defaultValues: ProjectDetails = {
+  id: "",
   projectName: "",
   fileNumber: "",
   workAmount: "",
@@ -43,7 +43,10 @@ const defaultValues: ProjectDetails = {
   team: {},
   execution: {},
   technicalOffices: {},
-  trades: {}
+  trades: {},
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  description: ""
 };
 
 const ProjectCreationForm = () => {

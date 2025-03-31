@@ -6,11 +6,11 @@ import {
 } from "@/components/ui/card";
 import { CheckSquare, Circle, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ProjectPhase, ProjectPhases } from '@/types/project';
+import type { ProjectPhase, ProjectPhases as ProjectPhasesType } from '@/types/project';
 
 interface ProjectPhasesProps {
   projectId?: string;
-  phases?: ProjectPhases;
+  phases?: ProjectPhasesType;
 }
 
 const ProjectPhases = ({ projectId, phases }: ProjectPhasesProps) => {

@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { parseISO, addMonths, formatISO, addDays } from 'date-fns';
 import GanttTaskBar from './GanttTaskBar';
-import { ProjectDetails, ProjectPhase } from '@/types/project';
+import type { ProjectDetails, ProjectPhase } from '@/types/project';
 
 interface GanttProjectListProps {
   projects: ProjectDetails[];
@@ -23,6 +22,7 @@ const createDemoData = (startDate: Date, endDate: Date) => {
     const fileNumber = `P${2023}${i + 100}`;
     
     const demoProject: ProjectDetails = {
+      id: `demo-project-${i}`,
       projectName,
       fileNumber,
       workAmount: `${(150000 + i * 20000).toLocaleString('fr-FR')} €`,
@@ -47,52 +47,73 @@ const createDemoData = (startDate: Date, endDate: Date) => {
       team: {},
       execution: {},
       technicalOffices: {},
-      trades: {}
+      trades: {},
+      createdAt: formatISO(addDays(now, -60)),
+      updatedAt: formatISO(now),
+      description: ""
     };
     
     // Add dates for each phase
     if (demoProject.phases.feasibility) {
-      demoProject.dates.feasibility = {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
+      demoProject.dates.phases.feasibility = {
         startDate: formatISO(projectStartDate),
         endDate: formatISO(addDays(projectStartDate, 30))
       };
     }
     
     if (demoProject.phases.dce) {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
       const dceStart = addDays(projectStartDate, 35);
-      demoProject.dates.dce = {
+      demoProject.dates.phases.dce = {
         startDate: formatISO(dceStart),
         endDate: formatISO(addDays(dceStart, 45))
       };
     }
     
     if (demoProject.phases.act) {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
       const actStart = addDays(projectStartDate, 85);
-      demoProject.dates.act = {
+      demoProject.dates.phases.act = {
         startDate: formatISO(actStart),
         endDate: formatISO(addDays(actStart, 30))
       };
     }
     
     if (demoProject.phases.exe) {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
       const exeStart = addDays(projectStartDate, 120);
-      demoProject.dates.exe = {
+      demoProject.dates.phases.exe = {
         startDate: formatISO(exeStart),
         endDate: formatISO(addDays(exeStart, 60 + i * 10))
       };
     }
     
     if (demoProject.phases.reception) {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
       const receptionStart = addDays(projectStartDate, 185 + i * 10);
-      demoProject.dates.reception = {
+      demoProject.dates.phases.reception = {
         startDate: formatISO(receptionStart),
         endDate: formatISO(addDays(receptionStart, 15))
       };
     }
     
     if (demoProject.phases.delivery) {
+      if (!demoProject.dates.phases) {
+        demoProject.dates.phases = {};
+      }
       const deliveryStart = addDays(projectStartDate, 205 + i * 10);
-      demoProject.dates.delivery = {
+      demoProject.dates.phases.delivery = {
         startDate: formatISO(deliveryStart),
         endDate: formatISO(addDays(deliveryStart, 5))
       };
@@ -125,13 +146,13 @@ const GanttProjectList = ({ projects = [], startDate, endDate }: GanttProjectLis
                 .filter(([_, isActive]) => isActive)
                 .map(([phaseKey, _]) => {
                   const phase = phaseKey as ProjectPhase;
-                  if (!project.dates[phase]) return null;
+                  if (!project.dates.phases || !project.dates.phases[phase]) return null;
                   
                   return (
                     <GanttTaskBar 
                       key={phase} 
                       phase={phase} 
-                      dates={project.dates[phase]!} 
+                      dates={project.dates.phases[phase]!} 
                       startDate={startDate} 
                       endDate={endDate} 
                     />
