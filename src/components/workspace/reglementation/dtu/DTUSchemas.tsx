@@ -19,11 +19,19 @@ export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
   
   if (!schemas || schemas.length === 0) return null;
 
+  // Function to check if the image URL is valid (not empty and not undefined)
+  const isValidImageUrl = (url?: string): boolean => {
+    return !!url && url.trim() !== '';
+  };
+
   const handleOpenImage = (schema: DTUSchema) => {
-    if (schema.imageUrl && !imageError[schema.id]) {
+    // Only open if we have a valid URL and no previous error
+    if (isValidImageUrl(schema.imageUrl) && !imageError[schema.id]) {
       setSelectedSchema(schema);
       setZoomLevel(1); // Reset zoom level when opening a new image
+      console.log(`Opening schema: ${schema.id} with URL: ${schema.imageUrl}`);
     } else {
+      console.log(`Schema image unavailable: ${schema.id}`);
       toast.error("Image non disponible", {
         description: "L'image de ce schéma n'est pas disponible actuellement."
       });
@@ -64,14 +72,12 @@ export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
   };
 
   const handleImageError = (schemaId: string) => {
+    console.error(`Image loading error for schema: ${schemaId}`);
     setImageError(prev => ({
       ...prev,
       [schemaId]: true
     }));
   };
-
-  // Placeholder image URL (ensure this exists in your public folder)
-  const placeholderImageUrl = '/placeholder-image.jpg';
 
   return (
     <div className="mt-6">
@@ -83,10 +89,10 @@ export const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas }) => {
               <div className="p-4">
                 <h4 className="font-medium mb-1">{schema.title}</h4>
                 <div 
-                  className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${!imageError[schema.id] && schema.imageUrl ? 'cursor-pointer group' : ''}`}
-                  onClick={() => !imageError[schema.id] && schema.imageUrl && handleOpenImage(schema)}
+                  className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${isValidImageUrl(schema.imageUrl) && !imageError[schema.id] ? 'cursor-pointer group' : ''}`}
+                  onClick={() => isValidImageUrl(schema.imageUrl) && !imageError[schema.id] && handleOpenImage(schema)}
                 >
-                  {schema.imageUrl && !imageError[schema.id] ? (
+                  {isValidImageUrl(schema.imageUrl) && !imageError[schema.id] ? (
                     <>
                       <img 
                         src={schema.imageUrl} 

@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
   },
   
   // Configure proper MIME types for XML and handle routes correctly
-  assetsInclude: ['**/*.xml', '**/*.png', '**/*.jpg', '**/*.ico'],
+  assetsInclude: ['**/*.xml', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.svg', '**/*.ico'],
   
   // Ensure the XML file and favicon files are served with the correct content type
   build: {
@@ -49,6 +49,11 @@ export default defineConfig(({ mode }) => ({
                 assetInfo.name.includes('progineer-apple-touch-icon') || 
                 assetInfo.name === 'site.webmanifest') {
               return '[name][extname]';
+            }
+            // Handle image files in schemas directory
+            if (/\.(png|jpg|jpeg|gif|svg)$/.test(assetInfo.name) && 
+                assetInfo.name.includes('schemas')) {
+              return 'images/[name][extname]';
             }
           }
           return 'assets/[name]-[hash][extname]';
