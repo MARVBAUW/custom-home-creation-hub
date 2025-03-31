@@ -1,29 +1,25 @@
 
-import { EstimationTimeline, FeeCosts } from '../types';
+import { EstimationTimeline, FeeCosts } from './index';
 
-/**
- * Interface for estimation response data
- */
 export interface EstimationResponseData {
-  constructionCosts: {
-    structuralWork: number;
-    finishingWork: number;
-    technicalLots: number;
-    externalWorks: number;
-    total: number;
+  projectType: string;
+  projectDetails: {
+    surface: number;
+    city: string;
+    bedrooms: number;
+    bathrooms: number;
   };
-  fees: FeeCosts;
-  otherCosts: {
-    insurance: number;
-    contingency: number;
-    taxes: number;
-    miscellaneous: number;
+  estimatedCost: {
     total: number;
+    perSquareMeter: number;
+    breakdown: {
+      materials: number;
+      labor: number;
+      fees: number;
+    };
   };
-  totalAmount: number;
   timeline: EstimationTimeline;
-  categories: Array<{
-    category: string;
-    amount: number;
-  }>;
+  fees: FeeCosts;
+  dateGenerated: string;
+  isComplete: boolean;
 }

@@ -20,7 +20,7 @@ export const useTechnicalSubmissions = () => {
     return {
       electricalType: data.electricalType,
       hasSmartHome: data.hasSmartHome || false,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 
@@ -34,7 +34,7 @@ export const useTechnicalSubmissions = () => {
     
     return {
       plumbingType: data.plumbingType,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 
@@ -58,7 +58,7 @@ export const useTechnicalSubmissions = () => {
     return {
       heatingType: data.heatingType,
       hasAirConditioning: data.hasAirConditioning || false,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 

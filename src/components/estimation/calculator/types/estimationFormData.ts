@@ -1,215 +1,117 @@
 
-// Define standard form data type for estimation form
+/**
+ * Complete type definition for the estimation form data
+ */
 export interface EstimationFormData {
-  // Client information
-  clientType?: 'individual' | 'professional' | string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  company?: string;
-  address?: string;
+  // Project basics
+  estimationType?: string;
+  projectType?: string;
+  surface?: number;
   city?: string;
-  zipCode?: string;
-  budget?: number | string;
   
-  // Project basic information
-  projectType?: 'construction' | 'renovation' | 'extension' | 'division' | string;
-  projectDescription?: string;
-  projectLocation?: string;
-  projectDeadline?: string;
-  surface?: number | string;
-  levels?: number | string;
-  units?: number | string;
+  // Rooms information
+  bedrooms?: number;
+  bathrooms?: number;
+  doorCount?: number;
   
-  // Land information
-  landOwnership?: 'owned' | 'to-purchase' | string;
-  landArea?: number | string;
-  landType?: string;
-  landSlope?: string;
-  landAccess?: string;
-  landPrice?: number | string;
-  
-  // Construction details
-  constructionType?: string;
-  constructionStyle?: string;
-  bedrooms?: number | string;
-  bathrooms?: number | string;
-  basement?: boolean | string;
-  garage?: boolean | string;
-  atticType?: string;
-  roofType?: string;
-  roofArea?: number | string;
+  // Foundation and structure
   foundationType?: string;
-  landscapingType?: string | string[];
-  landscapingArea?: number | string;
-  fencingLength?: number | string;
-  gateLength?: number | string;
-  terraceArea?: number | string;
+  wallType?: string;
   
-  // Renovation details
-  renovationScope?: string;
+  // Renovations
+  needsRenovation?: boolean;
+  repairFoundation?: string;
+  repairStructure?: string;
+  repairFramework?: string;
+  structureType?: "BOIS" | "BETON";
   
   // Demolition
   demolitionTypes?: string[];
-  demolitionPercentages?: { [key: string]: string | number };
-  demolitionTotalArea?: number | string;
+  demolitionPercentages?: { [key: string]: string };
+  demolitionTotalArea?: number;
+  demolitionCost?: number;
+  demolitionDetailedCosts?: { [key: string]: number };
   
-  // Structural work
-  createWalls?: "OUI" | "NON" | boolean;
-  wallArea?: number | string;
-  createFloors?: "OUI" | "NON" | boolean;
-  floorType?: "BOIS" | "BETON" | string;
-  floorArea?: number | string;
-  structuralFeatures?: string[];
-  structuralFeatureValues?: { [key: string]: string | number };
+  // Facade
+  stonePercentage?: number;
+  plasterPercentage?: number;
+  brickPercentage?: number;
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
   
   // Roof
-  roofingType?: string;
-  roofingArea?: number | string;
+  roofType?: string;
+  roofArea?: string;
   
-  // Windows and doors
-  windowType?: string;
-  windowRenovationArea?: number | string;
-  windowNewArea?: number | string;
+  // Electrical systems
+  electricalType?: string;
+  hasSmartHome?: boolean;
   
   // Plumbing
   plumbingType?: string;
   
-  // Features
-  hasSwimmingPool?: boolean | string;
-  hasTerrace?: boolean | string;
-  hasSolarPanels?: boolean | string;
-  hasGeothermalEnergy?: boolean | string;
+  // Heating
+  heatingType?: string;
+  hasAirConditioning?: boolean;
+  
+  // Flooring
+  flooringType?: string;
+  flooringArea?: number;
+  
+  // Paintwork
+  paintSurface?: number;
+  paintTypes?: {
+    basicPaint: number;
+    decorativePaint: number;
+    wallpaper: number;
+    woodPaneling: number;
+    stoneCladding: number;
+  };
+  
+  // Kitchen
+  kitchenQuality?: string;
+  kitchenSize?: number;
+  
+  // Bathroom
+  bathroomQuality?: string;
+  bathroomCount?: number;
   
   // Interior details
-  doorType?: string;
-  interiorDoorType?: string;
-  doorCount?: number | string;
+  hasDressingRoom?: boolean;
+  hasCustomClosets?: boolean;
   
-  // Kitchen and bathroom
-  bathroomType?: string;
-  bathroomCount?: number | string;
-  kitchenType?: string;
-  kitchenCost?: number | string;
+  // Exterior features
+  pool?: boolean;
+  terrace?: boolean;
+  outdoorKitchen?: boolean;
   
-  // Options
-  carportType?: string;
-  poolType?: string;
-  poolArea?: number | string;
-  poolHeating?: boolean | string;
-  jacuzziType?: string;
-  jacuzziArea?: number | string;
+  // Landscaping
+  landscapingType?: string | string[];
+  landscapingArea?: string;
+  fencingLength?: string;
+  gateLength?: string;
+  terraceArea?: string;
+  includeLandscaping?: boolean;
   
-  // Environmental features
-  renewableEnergyType?: string;
-  environmentalSolutionType?: string;
+  // Special features
+  hasElevator?: boolean;
+  hasHomeAutomation?: boolean;
+  hasSecuritySystem?: boolean;
+  hasHeatRecovery?: boolean;
   
-  // Finishing details
-  flooringType?: string;
-  wallFinishType?: string;
-  ceilingFinishType?: string;
-  paintType?: string;
+  // Contact information
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
   
-  // Heating and cooling
-  heatingType?: string;
-  hasAirConditioning?: boolean | string;
+  // Total amount
+  montantT?: number;
   
-  // Budget and planning
-  desiredStartDate?: string;
-  desiredCompletionDate?: string;
-  totalBudget?: number | string;
+  // Environmental solutions
+  environmentalSolutions?: string[];
   
-  // Financing information
-  financingMethod?: string;
-  loanPercentage?: number | string;
-  loanTerm?: number | string;
-  interestRate?: number | string;
-  
-  // Special requests
-  additionalNotes?: string;
-  
-  // Generated values
-  terassementsViabilisation?: number | string;
-  montantT?: number | string;
-  totalAmount?: number | string;
-  budgetAvailable?: number | string;
-
-  // Contact form specific fields
-  projectPurpose?: string;
-  commercialAccepted?: boolean;
-  
-  // Flexible type fields for form handling
+  // Additional fields for the application
   [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
 }
-
-// Timeline for the estimation
-export enum EstimationTimeline {
-  Fast = 'fast',
-  Standard = 'standard',
-  Flexible = 'flexible'
-}
-
-// Response data from estimation calculation
-export interface EstimationResponseData {
-  constructionCosts: {
-    structuralWork: number;
-    finishingWork: number;
-    technicalLots: number;
-    externalWorks: number;
-    total: number;
-  };
-  fees: {
-    architect: number;
-    engineeringFees: number;
-    architectFees: number;
-    masterBuilderFees?: number;
-    safetyCoordination?: number;
-    technicalControl?: number;
-    insurance?: number;
-    officialFees?: number;
-    inspectionFees?: number;
-    technicalStudies?: number;
-    other?: number;
-    total: number;
-  };
-  otherCosts: {
-    landRegistry?: number;
-    urbanismTax?: number;
-    landTax?: number;
-    connectionFees?: number;
-    insurance?: number;
-    contingency?: number;
-    taxes?: number;
-    miscellaneous?: number;
-    total: number;
-  };
-  totalAmount: number;
-  categories: { category: string; amount: number; details?: string }[];
-  timeline: {
-    duration?: number;
-    startDate?: string;
-    endDate?: string;
-    type?: EstimationTimeline | string;
-    design?: number;
-    permits?: number;
-    bidding?: number;
-    construction?: number;
-    total?: number;
-  };
-}
-
-// Full data shape for form and calculation
-export interface FeeCosts {
-  architectFees: number;
-  masterBuilderFees?: number;
-  technicalStudies?: number;
-  insurance?: number;
-  taxAndPermits?: number;
-  officialFees?: number;
-  inspectionFees?: number;
-  other?: number;
-}
-
-// Export FormData for backward compatibility
-export type FormData = EstimationFormData;

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { BaseFormProps } from '../types';
+import { BaseFormProps } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";

@@ -5,25 +5,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon, ArrowRightIcon, Waves, UtensilsCrossed, Footprints } from 'lucide-react';
+import { ensureBoolean } from '../utils/typeConversions';
+import { BaseFormProps } from '../types/formTypes';
 
-interface ExteriorFeaturesFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: string;
-}
-
-const ExteriorFeaturesForm: React.FC<ExteriorFeaturesFormProps> = ({
+const ExteriorFeaturesForm: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection
 }) => {
-  const [pool, setPool] = React.useState<boolean>(formData.pool || false);
-  const [terrace, setTerrace] = React.useState<boolean>(formData.terrace || false);
-  const [outdoorKitchen, setOutdoorKitchen] = React.useState<boolean>(formData.outdoorKitchen || false);
+  const [pool, setPool] = React.useState<boolean>(ensureBoolean(formData.pool));
+  const [terrace, setTerrace] = React.useState<boolean>(ensureBoolean(formData.terrace));
+  const [outdoorKitchen, setOutdoorKitchen] = React.useState<boolean>(ensureBoolean(formData.outdoorKitchen));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +47,7 @@ const ExteriorFeaturesForm: React.FC<ExteriorFeaturesFormProps> = ({
                 <Checkbox 
                   id="pool" 
                   checked={pool}
-                  onCheckedChange={(checked) => setPool(checked as boolean)}
+                  onCheckedChange={(checked) => setPool(!!checked)}
                 />
                 <Label htmlFor="pool" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Waves className="h-4 w-4 text-blue-500" />
@@ -68,7 +62,7 @@ const ExteriorFeaturesForm: React.FC<ExteriorFeaturesFormProps> = ({
                 <Checkbox 
                   id="terrace" 
                   checked={terrace}
-                  onCheckedChange={(checked) => setTerrace(checked as boolean)}
+                  onCheckedChange={(checked) => setTerrace(!!checked)}
                 />
                 <Label htmlFor="terrace" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <Footprints className="h-4 w-4 text-amber-500" />
@@ -83,7 +77,7 @@ const ExteriorFeaturesForm: React.FC<ExteriorFeaturesFormProps> = ({
                 <Checkbox 
                   id="outdoorKitchen" 
                   checked={outdoorKitchen}
-                  onCheckedChange={(checked) => setOutdoorKitchen(checked as boolean)}
+                  onCheckedChange={(checked) => setOutdoorKitchen(!!checked)}
                 />
                 <Label htmlFor="outdoorKitchen" className="flex flex-1 items-center gap-2 cursor-pointer">
                   <UtensilsCrossed className="h-4 w-4 text-green-500" />

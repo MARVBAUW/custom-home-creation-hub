@@ -1,29 +1,12 @@
 
-import React, { useState } from 'react';
-import { z } from 'zod';
+import React from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { BaseFormProps } from '../types';
-import { ensureNumber, toFormValue } from '../utils/typeConversions';
-
-// Define the form schema for this step
-const formSchema = z.object({
-  constructionType: z.string().optional(),
-  constructionStyle: z.string().optional(),
-  surface: z.string().min(1, "La surface est requise"),
-  levels: z.string().min(1, "Le nombre de niveaux est requis"),
-  bedrooms: z.string().min(1, "Le nombre de chambres est requis"),
-  bathrooms: z.string().min(1, "Le nombre de salles de bain est requis"),
-  basement: z.boolean().optional(),
-  garage: z.boolean().optional(),
-});
+import { BaseFormProps } from '../types/formTypes';
+import { toFormValue, ensureNumber } from '../utils/typeConversions';
 
 const ConstructionDetailsForm: React.FC<BaseFormProps> = ({
   formData,
@@ -32,213 +15,50 @@ const ConstructionDetailsForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  // Create form with default values from formData
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      constructionType: formData.constructionType || "",
-      constructionStyle: formData.constructionStyle || "",
-      surface: toFormValue(formData.surface) || "",
-      levels: toFormValue(formData.levels) || "",
-      bedrooms: toFormValue(formData.bedrooms) || "",
-      bathrooms: toFormValue(formData.bathrooms) || "",
-      basement: formData.basement || false,
-      garage: formData.garage || false,
-    },
+      doorCount: toFormValue(formData.doorCount)
+    }
   });
 
-  // Handle form submission
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    // Convert string values to numbers where appropriate
+  const onSubmit = (data: any) => {
     updateFormData({
-      constructionType: values.constructionType,
-      constructionStyle: values.constructionStyle,
-      surface: ensureNumber(values.surface),
-      levels: ensureNumber(values.levels),
-      bedrooms: ensureNumber(values.bedrooms),
-      bathrooms: ensureNumber(values.bathrooms),
-      basement: values.basement,
-      garage: values.garage,
+      doorCount: ensureNumber(data.doorCount)
     });
-    
-    // Move to the next step
     goToNextStep();
   };
 
   return (
-    <Card className="bg-white/50 backdrop-blur transition-all duration-500">
-      <CardHeader>
-        <CardTitle className="text-xl text-center">Détails de construction</CardTitle>
-      </CardHeader>
-      
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="constructionType"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type de construction</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionnez un type de construction" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="traditional">Traditionnelle</SelectItem>
-                        <SelectItem value="contemporary">Contemporaine</SelectItem>
-                        <SelectItem value="eco">Écologique</SelectItem>
-                        <SelectItem value="modular">Modulaire</SelectItem>
-                        <SelectItem value="passive">Passive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="constructionStyle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Style architectural</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionnez un style" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="modern">Moderne</SelectItem>
-                        <SelectItem value="traditional">Traditionnel</SelectItem>
-                        <SelectItem value="mediterranean">Méditerranéen</SelectItem>
-                        <SelectItem value="industrial">Industriel</SelectItem>
-                        <SelectItem value="minimalist">Minimaliste</SelectItem>
-                        <SelectItem value="design">Design</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="surface"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Surface habitable (m²)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="100" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="levels"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre de niveaux</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="bedrooms"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre de chambres</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="3" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="bathrooms"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nombre de salles de bain</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="2" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="basement"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Sous-sol</FormLabel>
-                      <FormDescription>
-                        Inclure un sous-sol dans la construction
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="garage"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Garage</FormLabel>
-                      <FormDescription>
-                        Inclure un garage dans la construction
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Détails de construction</CardTitle>
+        </CardHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="doorCount">Nombre de portes</Label>
+              <Input
+                id="doorCount"
+                placeholder="Ex: 8"
+                type="number"
+                {...register("doorCount")}
               />
             </div>
-            
-            <div className="flex justify-between mt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={goToPreviousStep}
-              >
-                Précédent
-              </Button>
-              <Button type="submit">Continuer</Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              Précédent
+            </Button>
+            <Button type="submit">
+              Suivant
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
   );
 };
 

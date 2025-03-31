@@ -1,20 +1,26 @@
 
-// Re-export all type definitions for easy importing
-export { EstimationFormData } from './estimationFormData';
-export type { BaseFormProps } from './baseFormProps';
+// Use export type to avoid TS1205 when isolatedModules is enabled
 export type { FormData } from './formTypes';
-
-// Conversational types
-export * from './conversationalTypes';
-
-// Re-export other type definitions
-export * from './clientTypes';
-export * from './constructionTypes';
-export * from './renovationTypes';
-export * from './roomsTypes';
-export * from './envelopeTypes';
-export * from './interiorTypes';
-export * from './specialFeaturesTypes';
-export * from './pdf-types';
+export type { EstimationFormData } from './estimationFormData';
 export type { EstimationResponseData } from './estimationTypes';
-export * from './json';
+
+// Define interfaces still needed in the codebase
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
+}
+
+// Define FeeCosts for compatibility
+export interface FeeCosts {
+  architect: number;
+  engineeringFees: number;
+  architectFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  technicalStudies: number;
+  other: number;
+  total: number;
+}
