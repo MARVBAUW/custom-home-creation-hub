@@ -25,7 +25,7 @@ const PlatrerieForm: React.FC<BaseFormProps> = ({
     const surface = ensureNumber(formData.surface, 0);
     
     // Calculate the cost based on plastering type and surface
-    const additionalCost = calculatePlasteringCost(plasteringType, surface);
+    const additionalCost = calculatePlasteringCost(surface, plasteringType);
 
     // Update form data with plastering type and additional cost
     updateFormData({

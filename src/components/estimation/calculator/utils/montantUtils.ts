@@ -14,6 +14,12 @@ import {
   calculateInteriorCarpenteryCost
 } from './calculations/windows';
 
+import {
+  calculateInsulationCost as calculateInsulationCostBase,
+  calculatePlasteringCost as calculatePlasteringCostBase,
+  calculatePaintingCost as calculatePaintingCostBase
+} from './calculations/insulation';
+
 /**
  * Calculate a new total amount by adding a cost to the existing total
  */
@@ -71,7 +77,7 @@ export const calculateStructuralFeatureCost = (feature: string, value: number | 
     case 'RACCORDEMENT SANTAIRE RESEAU URBAIN':
       return valueNum * 180; // 180€ per linear meter
     default:
-      return 0;
+      return.0;
   }
 };
 
@@ -278,6 +284,63 @@ export const calculateInsulationCost = (type: string, surface: number | string):
   }
 };
 
+/**
+ * Implementation of calculatePlasteringCost directly in montantUtils.ts
+ * Calculate plastering costs based on type and area
+ */
+export const calculatePlasteringCost = (area: number | string, type: string): number => {
+  const surfaceNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'base':
+      return surfaceNum * 60; // 60€ per m²
+    case 'specific':
+      return surfaceNum * 90; // 90€ per m²
+    case 'advanced':
+      return surfaceNum * 140; // 140€ per m²
+    case 'non_concerne':
+      return 0;
+    default:
+      return 0;
+  }
+};
+
+/**
+ * Implementation of calculateParquetCost directly in montantUtils.ts
+ */
+export const calculateParquetCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'base':
+      return areaNum * 45; // 45€ per m²
+    case 'milieuDeGamme':
+      return areaNum * 75; // 75€ per m²
+    case 'hautDeGamme':
+      return areaNum * 120; // 120€ per m²
+    default:
+      return 0;
+  }
+};
+
+/**
+ * Implementation of calculateSoftFloorCost directly in montantUtils.ts
+ */
+export const calculateSoftFloorCost = (area: number | string, type: string): number => {
+  const areaNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'base':
+      return areaNum * 25; // 25€ per m²
+    case 'milieuDeGamme':
+      return areaNum * 40; // 40€ per m²
+    case 'hautDeGamme':
+      return areaNum * 60; // 60€ per m²
+    default:
+      return 0;
+  }
+};
+
 // Re-export technical calculation functions for backward compatibility
 export {
   calculateElectricalCost,
@@ -292,6 +355,13 @@ export {
   calculateWindowsCost,
   calculateDoorCost,
   calculateInteriorCarpenteryCost
+};
+
+// Re-export insulation calculation functions
+export {
+  calculateInsulationCostBase,
+  calculatePlasteringCostBase,
+  calculatePaintingCostBase
 };
 
 // Add ensureNumber export for backward compatibility
