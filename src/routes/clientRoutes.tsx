@@ -7,6 +7,10 @@ import SignIn from '@/pages/client/SignIn';
 import ClientOnboarding from '@/pages/client/ClientOnboarding';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ClientProjectDetail from '@/components/client/project-detail/ClientProjectDetail';
+import ClientMessages from '@/pages/client/ClientMessages';
+import ClientSettings from '@/pages/client/ClientSettings';
+import ClientProfile from '@/pages/client/ClientProfile';
+import ClientPlanning from '@/pages/client/ClientPlanning';
 
 export const clientRoutes: RouteObject[] = [
   {
@@ -35,14 +39,18 @@ export const clientRoutes: RouteObject[] = [
   },
   {
     path: "/workspace/client-area/messages",
-    element: <ProtectedRoute><div>Messages</div></ProtectedRoute>
+    element: <ProtectedRoute><ClientMessages /></ProtectedRoute>
   },
   {
     path: "/workspace/client-area/planning",
-    element: <ProtectedRoute><div>Planning</div></ProtectedRoute>
+    element: <ProtectedRoute><ClientPlanning /></ProtectedRoute>
   },
   {
     path: "/workspace/client-area/profile",
-    element: <ProtectedRoute><div>Profil</div></ProtectedRoute>
+    element: <ProtectedRoute><ClientProfile /></ProtectedRoute>
+  },
+  {
+    path: "/workspace/client-area/settings",
+    element: <ProtectedRoute><ClientSettings /></ProtectedRoute>
   }
 ];

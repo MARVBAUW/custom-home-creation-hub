@@ -1,117 +1,99 @@
 
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
-import { toast } from '@/hooks/use-toast';
-import { useClientAuth } from '@/hooks/useClientAuth';
 import ClientNavigation from '@/components/client/ClientNavigation';
-import ConversationsList from '@/components/client/messages/ConversationsList';
-import MessageDisplay from '@/components/client/messages/MessageDisplay';
-import { ConversationType, MessageType } from '@/types/messaging';
-import AdminSwitch from '@/components/client/AdminSwitch';
-
-// Sample messages data
-const conversations: ConversationType[] = [
-  {
-    id: 1,
-    contact: { 
-      name: 'Marie Dupont', 
-      role: 'Chef de projet', 
-      avatar: '',
-      status: 'online'
-    },
-    messages: [
-      { id: 1, text: 'Bonjour, je suis votre chef de projet attitré pour la construction de votre maison. N\'hésitez pas à me poser vos questions !', sender: 'them', date: '10/06/2023 09:32' },
-      { id: 2, text: 'Bonjour Marie, merci pour votre message. Pouvez-vous me dire quand est prévue la prochaine réunion de chantier ?', sender: 'me', date: '10/06/2023 10:15' },
-      { id: 3, text: 'Bien sûr ! La prochaine réunion de chantier est prévue le 15 juillet à 10h directement sur le site.', sender: 'them', date: '10/06/2023 10:22' },
-      { id: 4, text: 'Je vous ai également déposé le compte-rendu de la dernière réunion dans la section Documents.', sender: 'them', date: '10/06/2023 10:23' },
-      { id: 5, text: 'Parfait, merci beaucoup. Je l\'ai bien reçu et j\'y serai présent.', sender: 'me', date: '10/06/2023 11:05' },
-    ]
-  },
-  {
-    id: 2,
-    contact: { 
-      name: 'Alexandre Martin', 
-      role: 'Architecte', 
-      avatar: '',
-      status: 'offline'
-    },
-    messages: [
-      { id: 1, text: 'Bonjour, j\'ai terminé les plans modifiés suite à notre dernière discussion.', sender: 'them', date: '05/06/2023 14:22' },
-      { id: 2, text: 'Ils sont disponibles dans votre espace documents. Merci de me faire part de vos retours.', sender: 'them', date: '05/06/2023 14:23' },
-    ]
-  },
-];
+import { useClientAuth } from '@/hooks/useClientAuth';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Send, PlusCircle } from 'lucide-react';
+import Navbar from '@/components/layout/Navbar';
 
 const ClientMessages = () => {
   const { isLoaded, isSignedIn, user } = useClientAuth({ redirectIfUnauthenticated: true });
-  const [activeConversation, setActiveConversation] = useState(conversations[0]);
-  const [newMessage, setNewMessage] = useState('');
   const [isAdminMode, setIsAdminMode] = useState(false);
+  const [newMessage, setNewMessage] = useState('');
   
-  // Handle admin mode toggle
-  const handleAdminModeToggle = (checked: boolean) => {
-    setIsAdminMode(checked);
-    toast({
-      title: checked ? "Mode administrateur activé" : "Mode client activé",
-      description: checked 
-        ? "Vous pouvez maintenant gérer les dossiers et les clients." 
-        : "Vous voyez maintenant l'interface client standard.",
-    });
-  };
+  // Mock data for conversations and messages
+  const [conversations] = useState([
+    {
+      id: 1,
+      name: 'Martin Dupont',
+      role: 'Chef de projet',
+      lastMessage: 'Bonjour, comment puis-je vous aider ?',
+      time: '10:30',
+      unread: 2,
+      avatar: ''
+    },
+    {
+      id: 2,
+      name: 'Alice Bernard',
+      role: 'Architecte',
+      lastMessage: 'Les plans ont été mis à jour selon vos demandes.',
+      time: 'Hier',
+      unread: 0,
+      avatar: ''
+    },
+    {
+      id: 3,
+      name: 'Support Progineer',
+      role: 'Support',
+      lastMessage: 'N\'hésitez pas si vous avez d\'autres questions.',
+      time: 'Lun',
+      unread: 0,
+      avatar: ''
+    }
+  ]);
   
-  // Handle send message
+  const [messages] = useState([
+    {
+      id: 1,
+      sender: 'Martin Dupont',
+      content: 'Bonjour, comment puis-je vous aider concernant votre projet ?',
+      time: '10:30',
+      isMe: false
+    },
+    {
+      id: 2,
+      sender: 'Vous',
+      content: 'Bonjour, j\'aimerais savoir où en est l\'avancement des travaux pour la semaine prochaine.',
+      time: '10:32',
+      isMe: true
+    },
+    {
+      id: 3,
+      sender: 'Martin Dupont',
+      content: 'Nous avons terminé la phase de fondation et nous commencerons les murs la semaine prochaine. Tout se déroule selon le planning prévu.',
+      time: '10:35',
+      isMe: false
+    },
+    {
+      id: 4,
+      sender: 'Martin Dupont',
+      content: 'Souhaitez-vous que je vous envoie le planning détaillé ?',
+      time: '10:36',
+      isMe: false
+    }
+  ]);
+  
+  // Check localStorage for admin mode
+  React.useEffect(() => {
+    const savedMode = localStorage.getItem('adminMode');
+    if (savedMode === 'true') {
+      setIsAdminMode(true);
+    }
+  }, []);
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
-    
-    // In a real app, this would send a message to the server
-    // For demo purposes, we'll just add it to the local state
-    const updatedConversations = conversations.map(conv => {
-      if (conv.id === activeConversation.id) {
-        return {
-          ...conv,
-          messages: [
-            ...conv.messages,
-            {
-              id: conv.messages.length + 1,
-              text: newMessage,
-              sender: 'me' as const, // Explicitly type as 'me'
-              date: new Date().toLocaleString('fr-FR', { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }
-          ]
-        };
-      }
-      return conv;
-    });
-    
-    // Set the active conversation to the updated one
-    const updatedActiveConv = updatedConversations.find(c => c.id === activeConversation.id) as ConversationType;
-    if (updatedActiveConv) {
-      setActiveConversation(updatedActiveConv);
+    if (newMessage.trim()) {
+      // Here we would implement the send message logic
+      console.log('Sending message:', newMessage);
+      setNewMessage('');
     }
-    
-    // Reset the new message input
-    setNewMessage('');
-    
-    // Show success toast
-    toast({
-      title: "Message envoyé",
-      description: "Votre message a été envoyé avec succès.",
-    });
-    
-    // Update the global conversations array (in a real app, this would be handled by a state management system)
-    conversations.forEach((conv, idx) => {
-      if (conv.id === activeConversation.id) {
-        conversations[idx] = updatedActiveConv;
-      }
-    });
   };
 
   if (!isLoaded || !isSignedIn) {
@@ -124,33 +106,28 @@ const ClientMessages = () => {
     <>
       <Helmet>
         <title>Messages | Espace Client Progineer</title>
-        <meta name="description" content="Communiquez avec votre équipe projet Progineer." />
+        <meta name="description" content="Communiquez avec l'équipe de projet Progineer." />
       </Helmet>
 
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <Navbar />
+
+      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white dark:from-gray-900 dark:to-gray-950">
         <Container size="lg">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-            <div>
-              <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-                {isAdminMode ? 'Administration' : 'Espace Client'}
-              </div>
-              <h1 className="text-3xl md:text-4xl font-semibold mb-2">
-                {isAdminMode ? 'Gestion des messages' : 'Messages'}
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mb-8">
-                {isAdminMode 
-                  ? 'Gérez les conversations avec vos clients et collaborateurs.' 
-                  : 'Échangez avec vos interlocuteurs projet.'}
-              </p>
+          <div>
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 dark:bg-khaki-900 dark:text-khaki-100 text-sm font-medium">
+              Messages
             </div>
-            
-            {/* Admin Switch */}
-            <AdminSwitch isAdminMode={isAdminMode} onToggle={handleAdminModeToggle} />
+            <h1 className="text-3xl md:text-4xl font-semibold mb-2 text-gray-900 dark:text-white">
+              Messagerie
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mb-8">
+              Communiquez avec l'équipe en charge de votre projet.
+            </p>
           </div>
         </Container>
       </section>
 
-      <section className="py-16">
+      <section className="py-16 bg-white dark:bg-gray-950">
         <Container size="lg">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Sidebar Navigation */}
@@ -160,37 +137,108 @@ const ClientMessages = () => {
             
             {/* Main Content */}
             <div className="lg:col-span-3">
-              {isAdminMode ? (
-                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                  <h2 className="text-xl font-semibold mb-4">Panneau d'administration</h2>
-                  <p className="text-gray-600 mb-4">
-                    Cette interface vous permet de gérer les dossiers clients, les planifications, et les communications.
-                  </p>
-                  <div className="p-6 bg-red-50 border border-red-100 rounded-lg">
-                    <p className="text-sm text-red-700">
-                      Le mode administrateur est activé. Vous voyez maintenant l'interface de gestion complète.
-                    </p>
+              <Card className="border-gray-200">
+                <CardContent className="p-0">
+                  <div className="flex h-[600px]">
+                    {/* Conversations List */}
+                    <div className="w-1/3 border-r border-gray-200 dark:border-gray-700">
+                      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                        <h2 className="font-semibold">Conversations</h2>
+                        <Button variant="ghost" size="icon">
+                          <PlusCircle className="h-5 w-5" />
+                        </Button>
+                      </div>
+                      <div className="overflow-y-auto h-[calc(600px-64px)]">
+                        {conversations.map((conversation) => (
+                          <div 
+                            key={conversation.id}
+                            className="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer"
+                          >
+                            <div className="flex items-start space-x-3">
+                              <Avatar className="h-10 w-10">
+                                <AvatarImage src={conversation.avatar} alt={conversation.name} />
+                                <AvatarFallback className="bg-khaki-200 text-khaki-800">
+                                  {conversation.name.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start">
+                                  <h3 className="font-medium truncate">{conversation.name}</h3>
+                                  <span className="text-xs text-gray-500">{conversation.time}</span>
+                                </div>
+                                <p className="text-xs text-gray-500">{conversation.role}</p>
+                                <p className="text-sm truncate">{conversation.lastMessage}</p>
+                              </div>
+                              {conversation.unread > 0 && (
+                                <span className="inline-flex items-center justify-center w-5 h-5 bg-khaki-600 text-white text-xs rounded-full">
+                                  {conversation.unread}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Messages */}
+                    <div className="w-2/3 flex flex-col">
+                      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center space-x-3">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src="" alt="Martin Dupont" />
+                            <AvatarFallback className="bg-khaki-200 text-khaki-800">
+                              MD
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <h3 className="font-medium">Martin Dupont</h3>
+                            <p className="text-xs text-gray-500">Chef de projet</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                        {messages.map((message) => (
+                          <div 
+                            key={message.id} 
+                            className={`flex ${message.isMe ? 'justify-end' : 'justify-start'}`}
+                          >
+                            <div 
+                              className={`max-w-[70%] rounded-lg p-3 ${
+                                message.isMe 
+                                  ? 'bg-khaki-600 text-white rounded-br-none' 
+                                  : 'bg-gray-100 dark:bg-gray-800 rounded-bl-none'
+                              }`}
+                            >
+                              <p>{message.content}</p>
+                              <p className={`text-xs mt-1 ${message.isMe ? 'text-khaki-100' : 'text-gray-500'}`}>
+                                {message.time}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                        <form onSubmit={handleSendMessage} className="flex space-x-2">
+                          <Input
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            placeholder="Écrivez votre message..."
+                            className="flex-1"
+                          />
+                          <Button 
+                            type="submit" 
+                            className="bg-khaki-600 hover:bg-khaki-700 text-white"
+                          >
+                            <Send className="h-4 w-4" />
+                          </Button>
+                        </form>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
-                  {/* Conversations List */}
-                  <ConversationsList 
-                    conversations={conversations} 
-                    activeConversationId={activeConversation.id}
-                    onSelectConversation={setActiveConversation}
-                  />
-                  
-                  {/* Messages */}
-                  <MessageDisplay 
-                    conversation={activeConversation}
-                    newMessage={newMessage}
-                    setNewMessage={setNewMessage}
-                    onSendMessage={handleSendMessage}
-                    user={user}
-                  />
-                </div>
-              )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </Container>
