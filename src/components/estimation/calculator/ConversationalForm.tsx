@@ -41,13 +41,15 @@ const ConversationalForm: React.FC = () => {
   }, [toast]);
 
   // Gestion de la soumission du type de client
-  const onClientTypeSubmit = (data: any) => {
-    updateFormData({ clientType: data.clientType });
-    // Basculer vers le formulaire structuré si l'utilisateur a choisi un type de client
-    if (activeTab === 'conversational') {
-      setTimeout(() => {
-        setActiveTab('structured');
-      }, 1000);
+  const onClientTypeSubmit = (data: {clientType: string}) => {
+    if (data && data.clientType) {
+      updateFormData({ clientType: data.clientType });
+      // Basculer vers le formulaire structuré si l'utilisateur a choisi un type de client
+      if (activeTab === 'conversational') {
+        setTimeout(() => {
+          setActiveTab('structured');
+        }, 1000);
+      }
     }
   };
 

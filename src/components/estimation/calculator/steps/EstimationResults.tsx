@@ -1,385 +1,292 @@
+
 import React, { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, Mail, ArrowLeft } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Download, Share2, Printer, Send, ArrowLeft } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { FormData } from '../types';
 import { formatCurrency } from '@/utils/formatters';
-import { jsPDF } from 'jspdf';
 import { sendEstimationByEmail } from '../services/emailService';
-import { BaseFormProps } from '../types/formTypes';
 
-const EstimationResults = (props: BaseFormProps) => {
-  const { formData, estimationResult, goToPreviousStep, isLoading } = props;
+interface EstimationResultsProps {
+  estimation: number | null;
+  formData: FormData;
+  goToPreviousStep: () => void;
+  updateFormData?: (data: Partial<FormData>) => void;
+  goToNextStep?: () => void;
+}
+
+// Function to format a number with thousand separators
+const formatNumber = (num: number): string => {
+  return new Intl.NumberFormat('fr-FR').format(num);
+};
+
+const EstimationResults: React.FC<EstimationResultsProps> = ({
+  estimation,
+  formData,
+  goToPreviousStep
+}) => {
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [email, setEmail] = useState(formData.email || '');
+  const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("summary");
-  const [showEmailForm, setShowEmailForm] = useState(false);
-  const [emailAddress, setEmailAddress] = useState(formData.email || "");
-  const [isSendingEmail, setIsSendingEmail] = useState(false);
 
-  // Handle email sending
-  const handleSendEmail = async () => {
-    if (!emailAddress || !emailAddress.includes('@')) {
+  // Handle print PDF
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // Handle share by email
+  const handleShareByEmail = async () => {
+    if (!email) {
       toast({
-        title: "Email invalide",
+        title: "Email requis",
         description: "Veuillez entrer une adresse email valide.",
         variant: "destructive",
       });
       return;
     }
 
-    setIsSendingEmail(true);
+    setIsSending(true);
+    
     try {
-      const result = await sendEstimationByEmail(emailAddress, formData, 
-        typeof estimationResult === 'number' ? {
-          totalAmount: estimationResult,
-          constructionCosts: {
-            structuralWork: estimationResult * 0.3,
-            finishingWork: estimationResult * 0.3,
-            technicalLots: estimationResult * 0.2,
-            externalWorks: estimationResult * 0.1,
-            total: estimationResult * 0.9
-          },
-          fees: {
-            architectFees: estimationResult * 0.05,
-            engineeringFees: estimationResult * 0.025,
-            officialFees: estimationResult * 0.015,
-            inspectionFees: estimationResult * 0.01,
-            total: estimationResult * 0.1
-          },
-          otherCosts: {
-            insurance: estimationResult * 0.02,
-            contingency: estimationResult * 0.02,
-            taxes: estimationResult * 0.005,
-            miscellaneous: estimationResult * 0.005,
-            total: estimationResult * 0.05
-          },
-          timeline: {
-            design: 2,
-            permits: 3,
-            bidding: 1,
-            construction: 12,
-            total: 18
-          }
-        } : estimationResult
-      );
+      const result = await sendEstimationByEmail(email, formData, estimation || 0);
       
       if (result.success) {
         toast({
-          title: "Email envoyé",
-          description: "L'estimation a été envoyée à votre adresse email.",
+          title: "Estimation envoyée",
+          description: "Votre estimation a été envoyée à l'adresse email indiquée.",
         });
-        setShowEmailForm(false);
+        setShowShareDialog(false);
       } else {
-        throw new Error("Failed to send email");
+        toast({
+          title: "Erreur",
+          description: "Une erreur s'est produite lors de l'envoi de l'email.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi de l'email.",
+        description: "Une erreur s'est produite lors de l'envoi de l'email.",
         variant: "destructive",
       });
     } finally {
-      setIsSendingEmail(false);
+      setIsSending(false);
     }
   };
 
-  // Handle share functionality
-  const handleShareClick = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: "Estimation de projet Progineer",
-        text: `Mon estimation de projet: ${formatCurrency(typeof estimationResult === 'number' ? estimationResult : estimationResult?.totalAmount || 0)}`,
-        url: window.location.href,
-      }).catch((error) => console.log("Error sharing", error));
-    } else {
-      setShowEmailForm(true);
+  // Format estimation amount
+  const formattedEstimation = estimation ? formatCurrency(estimation) : '0 €';
+
+  // Get project type display name
+  const getProjectTypeDisplay = (type: string | undefined): string => {
+    if (!type) return 'Construction';
+    
+    switch (type.toLowerCase()) {
+      case 'construction': return 'Construction neuve';
+      case 'renovation': return 'Rénovation';
+      case 'extension': return 'Extension';
+      default: return type;
     }
   };
 
-  // Handle PDF download
-  const handleDownloadPDF = () => {
-    const doc = new jsPDF();
-    
-    // Add title
-    doc.setFontSize(20);
-    doc.text('Estimation de votre projet', 105, 15, { align: 'center' });
-    
-    // Add project info
-    doc.setFontSize(14);
-    doc.text('Informations du projet', 14, 30);
-    
-    // Create a table with project details
-    const projectInfo = [
-      ['Type de projet', formData.projectType || 'Non spécifié'],
-      ['Surface', `${formData.surface || 0} m²`],
-      ['Ville', formData.city || 'Non spécifiée'],
-      ['Type de terrain', formData.terrainType || 'Non spécifié'],
-      ['Complexité', formData.complexity || 'Standard'],
-      ['Standard de qualité', formData.qualityStandard || 'Standard']
-    ];
-    
-    doc.autoTable({
-      startY: 35,
-      head: [['Caractéristique', 'Valeur']],
-      body: projectInfo,
-    });
-    
-    // Add cost breakdown
-    doc.setFontSize(14);
-    doc.text('Coûts estimés', 14, (doc as any).autoTable.previous.finalY + 10);
-    
-    const totalAmount = typeof estimationResult === 'number' ? estimationResult : (estimationResult?.totalAmount || 0);
-    
-    const costBreakdown = [
-      ['Gros œuvre', formatCurrency(totalAmount * 0.3)],
-      ['Second œuvre', formatCurrency(totalAmount * 0.3)],
-      ['Lots techniques', formatCurrency(totalAmount * 0.2)],
-      ['Aménagements extérieurs', formatCurrency(totalAmount * 0.1)],
-      ['Honoraires et études', formatCurrency(totalAmount * 0.1)],
-      ['TOTAL', formatCurrency(totalAmount)],
-    ];
-    
-    doc.autoTable({
-      startY: (doc as any).autoTable.previous.finalY + 15,
-      head: [['Poste de dépense', 'Montant estimé (€)']],
-      body: costBreakdown,
-    });
-    
-    // Add timeline
-    doc.setFontSize(14);
-    doc.text('Calendrier prévisionnel', 14, (doc as any).autoTable.previous.finalY + 10);
-    
-    const timelineData = [
-      ['Conception et études', '2 mois'],
-      ['Autorisations administratives', '3 mois'],
-      ['Consultation des entreprises', '1 mois'],
-      ['Travaux', '12 mois'],
-      ['Durée totale', '18 mois'],
-    ];
-    
-    doc.autoTable({
-      startY: (doc as any).autoTable.previous.finalY + 15,
-      head: [['Phase', 'Durée estimée']],
-      body: timelineData,
-    });
-    
-    // Add footer with disclaimer
-    const pageCount = (doc as any).internal.getNumberOfPages();
-    doc.setFontSize(10);
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.text('Cette estimation est fournie à titre indicatif et peut varier en fonction des détails spécifiques du projet.', 105, 285, {
-        align: 'center'
-      });
-    }
-    
-    // Save the PDF
-    doc.save('estimation-projet.pdf');
-    
-    toast({
-      title: "PDF téléchargé",
-      description: "L'estimation a été téléchargée avec succès.",
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
-        <p className="text-gray-600">Calcul de l'estimation en cours...</p>
-      </div>
-    );
-  }
-
-  const totalAmount = typeof estimationResult === 'number' ? estimationResult : (estimationResult?.totalAmount || 0);
+  // Calculate detailed costs
+  const structuralWork = estimation ? Math.round(estimation * 0.35) : 0;
+  const finishingWork = estimation ? Math.round(estimation * 0.25) : 0;
+  const technicalLots = estimation ? Math.round(estimation * 0.20) : 0;
+  const externalWorks = estimation ? Math.round(estimation * 0.10) : 0;
+  const fees = estimation ? Math.round(estimation * 0.10) : 0;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-4">
-        <Button variant="outline" size="sm" onClick={goToPreviousStep}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour
-        </Button>
-        
-        <div className="flex space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleShareClick}
-          >
-            <Share2 className="mr-2 h-4 w-4" />
-            Partager
-          </Button>
-        </div>
-      </div>
-
-      <Card className="bg-khaki-50 border-khaki-200">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-xl text-khaki-800">Estimation totale</CardTitle>
+      <Button variant="outline" className="flex items-center gap-2" onClick={goToPreviousStep}>
+        <ArrowLeft className="h-4 w-4" />
+        Retour
+      </Button>
+      
+      <Card className="print:shadow-none">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-2xl flex items-center justify-between">
+            Résultats de l'estimation
+          </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="text-3xl font-bold text-khaki-900">
-            {formatCurrency(totalAmount)}
+        <CardContent className="space-y-6">
+          <div className="border-b pb-4">
+            <h3 className="font-semibold text-lg">Montant estimatif</h3>
+            <p className="text-3xl font-bold text-blue-600 mt-2">{formattedEstimation}</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Cette estimation est fournie à titre indicatif et peut varier selon les spécificités de votre projet.
+            </p>
           </div>
-          <p className="text-sm text-khaki-600 mt-1">
-            TVA incluse • Honoraires inclus • Frais annexes inclus
-          </p>
-        </CardContent>
-      </Card>
-
-      <Tabs defaultValue="breakdown" onValueChange={setActiveTab} value={activeTab}>
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="breakdown">Répartition des coûts</TabsTrigger>
-          <TabsTrigger value="timeline">Calendrier</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="breakdown" className="pt-4">
-          <Card>
-            <CardContent className="pt-6">
-              <ul className="space-y-3">
-                <li className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Gros œuvre</span>
-                  <span>{formatCurrency(totalAmount * 0.3)}</span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Second œuvre</span>
-                  <span>{formatCurrency(totalAmount * 0.3)}</span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Lots techniques</span>
-                  <span>{formatCurrency(totalAmount * 0.2)}</span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Aménagements extérieurs</span>
-                  <span>{formatCurrency(totalAmount * 0.1)}</span>
-                </li>
-                <li className="flex justify-between items-center pb-2 border-b">
-                  <span className="font-medium">Honoraires et études</span>
-                  <span>{formatCurrency(totalAmount * 0.1)}</span>
-                </li>
-                <li className="flex justify-between items-center pt-2 font-bold">
-                  <span>TOTAL</span>
-                  <span>{formatCurrency(totalAmount)}</span>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="timeline" className="pt-4">
-          <Card>
-            <CardContent className="pt-6">
-              <ul className="space-y-4">
-                <li className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Conception et études</span>
-                    <span>2 mois</span>
+          
+          <div className="border-b pb-4">
+            <h3 className="font-semibold text-lg mb-3">Caractéristiques du projet</h3>
+            <div className="grid grid-cols-2 gap-y-3 text-sm">
+              <div className="font-medium">Type de projet</div>
+              <div>{getProjectTypeDisplay(formData.projectType)}</div>
+              
+              <div className="font-medium">Surface</div>
+              <div>{formData.surface ? `${formData.surface} m²` : 'Non spécifiée'}</div>
+              
+              <div className="font-medium">Localisation</div>
+              <div>{formData.city || 'Non spécifiée'}</div>
+              
+              <div className="font-medium">Niveaux</div>
+              <div>{formData.levels || 'Non spécifié'}</div>
+              
+              <div className="font-medium">Nombre de pièces</div>
+              <div>{formData.roomCount || 'Non spécifié'}</div>
+              
+              <div className="font-medium">Qualité de finition</div>
+              <div>{formData.finishLevel || 'Standard'}</div>
+            </div>
+          </div>
+          
+          <div className="border-b pb-4">
+            <h3 className="font-semibold text-lg mb-3">Répartition des coûts</h3>
+            <div className="space-y-3">
+              <div className="flex items-center">
+                <div className="w-36 text-sm">Gros œuvre</div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-blue-600 rounded-full" style={{ width: '35%' }}></div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-500 h-2 rounded-full" style={{ width: '11%' }}></div>
-                  </div>
-                </li>
-                <li className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Autorisations administratives</span>
-                    <span>3 mois</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-amber-500 h-2 rounded-full" style={{ width: '17%' }}></div>
-                  </div>
-                </li>
-                <li className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Consultation des entreprises</span>
-                    <span>1 mois</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full" style={{ width: '6%' }}></div>
-                  </div>
-                </li>
-                <li className="space-y-1">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium">Travaux</span>
-                    <span>12 mois</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-500 h-2 rounded-full" style={{ width: '66%' }}></div>
-                  </div>
-                </li>
-                <li className="pt-4 border-t mt-4">
-                  <div className="flex justify-between items-center font-bold">
-                    <span>Durée totale estimée</span>
-                    <span>18 mois</span>
-                  </div>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-
-      <div className="flex flex-col sm:flex-row gap-3 mt-6">
-        <Button 
-          variant="outline" 
-          className="w-full" 
-          onClick={() => setShowEmailForm(true)}
-        >
-          <Mail className="mr-2 h-4 w-4" />
-          Recevoir par email
-        </Button>
-        
-        <Button 
-          className="w-full" 
-          onClick={handleDownloadPDF}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Télécharger en PDF
-        </Button>
-      </div>
-
-      {showEmailForm && (
-        <Card className="mt-4">
-          <CardHeader>
-            <CardTitle className="text-lg">Recevoir par email</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                  Adresse email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  className="w-full p-2 border rounded"
-                  value={emailAddress}
-                  onChange={(e) => setEmailAddress(e.target.value)}
-                  placeholder="votre@email.com"
-                />
+                </div>
+                <div className="w-24 text-right text-sm font-medium">{formatCurrency(structuralWork)}</div>
               </div>
               
-              <div className="flex justify-end space-x-2">
-                <Button 
-                  variant="outline"
-                  onClick={() => setShowEmailForm(false)}
-                >
-                  Annuler
-                </Button>
-                <Button 
-                  onClick={handleSendEmail} 
-                  disabled={isSendingEmail}
-                >
-                  {isSendingEmail ? "Envoi..." : "Envoyer"}
-                </Button>
+              <div className="flex items-center">
+                <div className="w-36 text-sm">Second œuvre</div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-green-500 rounded-full" style={{ width: '25%' }}></div>
+                  </div>
+                </div>
+                <div className="w-24 text-right text-sm font-medium">{formatCurrency(finishingWork)}</div>
+              </div>
+              
+              <div className="flex items-center">
+                <div className="w-36 text-sm">Lots techniques</div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-yellow-500 rounded-full" style={{ width: '20%' }}></div>
+                  </div>
+                </div>
+                <div className="w-24 text-right text-sm font-medium">{formatCurrency(technicalLots)}</div>
+              </div>
+              
+              <div className="flex items-center">
+                <div className="w-36 text-sm">Aménagements ext.</div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '10%' }}></div>
+                  </div>
+                </div>
+                <div className="w-24 text-right text-sm font-medium">{formatCurrency(externalWorks)}</div>
+              </div>
+              
+              <div className="flex items-center">
+                <div className="w-36 text-sm">Honoraires et frais</div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-red-500 rounded-full" style={{ width: '10%' }}></div>
+                  </div>
+                </div>
+                <div className="w-24 text-right text-sm font-medium">{formatCurrency(fees)}</div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      )}
+          </div>
+          
+          <div className="border-b pb-4">
+            <h3 className="font-semibold text-lg mb-3">Planning prévisionnel</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Conception et études</span>
+                <span className="font-medium">2 à 3 mois</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Dépôt et instruction du permis</span>
+                <span className="font-medium">2 à 5 mois</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Consultation des entreprises</span>
+                <span className="font-medium">1 à 2 mois</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span>Réalisation des travaux</span>
+                <span className="font-medium">6 à 12 mois</span>
+              </div>
+              <div className="flex justify-between text-sm font-medium">
+                <span>Durée totale</span>
+                <span>11 à 22 mois</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="print:hidden">
+            <h3 className="font-semibold text-lg mb-3">Partager cette estimation</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" className="flex items-center gap-2" onClick={() => setShowShareDialog(true)}>
+                <Share2 className="h-4 w-4" />
+                Partager par email
+              </Button>
+              
+              <Button variant="outline" className="flex items-center gap-2" onClick={handlePrint}>
+                <Printer className="h-4 w-4" />
+                Imprimer
+              </Button>
+              
+              <Button variant="default" className="flex items-center gap-2">
+                <Download className="h-4 w-4" />
+                Télécharger en PDF
+              </Button>
+            </div>
+          </div>
+          
+          <div className="pt-4 text-center text-xs text-gray-500 border-t">
+            <p>Cette estimation est calculée sur la base des informations fournies et représente un ordre de grandeur indicatif.</p>
+            <p>Pour une étude personnalisée, n'hésitez pas à prendre rendez-vous avec nos experts.</p>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Dialog open={showShareDialog} onOpenChange={setShowShareDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Partager l'estimation par email</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right">
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Adresse email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              disabled={isSending}
+              onClick={handleShareByEmail}
+              className="flex items-center gap-2"
+            >
+              <Send className="h-4 w-4" />
+              {isSending ? 'Envoi en cours...' : 'Envoyer'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

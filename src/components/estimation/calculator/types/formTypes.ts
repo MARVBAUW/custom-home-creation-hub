@@ -98,7 +98,7 @@ export interface ResultsFormProps {
   isLoading?: boolean;
 }
 
-// Add these interfaces to fix StepRendererProps and FormNavigationProps
+// Updated interface for StepRendererProps
 export interface StepRendererProps {
   step: number;
   totalSteps: number;
@@ -111,15 +111,16 @@ export interface StepRendererProps {
   onComplete: () => void;
 }
 
+// Updated interface for FormNavigationProps
 export interface FormNavigationProps {
-  step: number;
-  totalSteps: number;
+  step?: number;
+  totalSteps?: number; 
+  currentStep?: number;
   estimationResult?: number;
   showSummary?: boolean;
   onPreviousClick?: () => void;
   onNextClick?: () => void;
   onShowSummaryClick?: () => void;
-  currentStep?: number;
   onPrevStep?: () => void;
   onNextStep?: () => void;
   isSubmitting?: boolean;

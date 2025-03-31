@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -59,12 +58,22 @@ const WorkEstimationForm: React.FC = () => {
 
   // Function to handle client type submission from conversational estimator
   const onClientTypeSubmit = (data: any) => {
-    updateFormData({ clientType: data.clientType });
+    if (data && typeof data === 'object' && 'clientType' in data) {
+      updateFormData({ clientType: data.clientType });
+    }
   };
 
   // Process user input from conversational estimator
   const processUserInput = (input: string) => {
     console.log('Input processed:', input);
+  };
+
+  // Extract numeric value from estimation result for FormNavigation
+  const getNumericEstimation = () => {
+    if (!estimationResult) return 0;
+    return typeof estimationResult === 'number' 
+      ? estimationResult 
+      : estimationResult.totalAmount;
   };
 
   return (
@@ -85,15 +94,16 @@ const WorkEstimationForm: React.FC = () => {
         {/* Display estimation result or navigation buttons */}
         <ResultsSummary 
           showSummary={showSummary} 
-          estimationResult={estimationResult ? estimationResult.totalAmount : 0} 
+          estimationResult={getNumericEstimation()} 
           formData={formData} 
           onBackClick={() => setShowSummary(false)} 
         />
         
         <FormNavigation 
           step={step}
+          currentStep={step}
           totalSteps={totalSteps}
-          estimationResult={estimationResult ? estimationResult.totalAmount : 0}
+          estimationResult={getNumericEstimation()}
           showSummary={showSummary}
           onPreviousClick={goToPreviousStep}
           onNextClick={goToNextStep}

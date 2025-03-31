@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { FormData } from '../types';
 import { useToast } from '@/hooks/use-toast';
@@ -15,25 +15,47 @@ export interface Message {
 export interface ConversationState {
   messages: Message[];
   isTyping: boolean;
+  formProgress: number;
 }
 
-export const useConversationalEstimator = (
-  initialFormData: FormData = {},
-  updateFormData: (data: Partial<FormData>) => void
-) => {
-  const [conversation, setConversation] = useState<ConversationState>({
-    messages: [
-      {
-        id: uuidv4(),
-        text: "Bonjour ! Je suis votre assistant d'estimation. Comment puis-je vous aider avec votre projet de construction ou rénovation ?",
-        isUser: false,
-        createdAt: new Date()
-      }
-    ],
-    isTyping: false
+export interface ConversationalEstimatorProps {
+  onUserInput: (input: string) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  onClientTypeSubmit?: (data: {clientType: string}) => void;
+  goToStep?: (step: number) => void;
+}
+
+export const useConversationalEstimator = (props: ConversationalEstimatorProps) => {
+  const { onUserInput, formData, updateFormData } = props;
+  
+  const [userInput, setUserInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: uuidv4(),
+      text: "Bonjour ! Je suis votre assistant d'estimation. Comment puis-je vous aider avec votre projet de construction ou rénovation ?",
+      isUser: false,
+      createdAt: new Date()
+    }
+  ]);
+  
+  const [conversationState, setConversationState] = useState<{formProgress: number}>({
+    formProgress: 0
   });
   
   const { toast } = useToast();
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Helper to scroll to bottom of messages
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   // Helper to add a new message
   const addMessage = useCallback((text: string, isUser: boolean) => {
@@ -44,21 +66,18 @@ export const useConversationalEstimator = (
       createdAt: new Date()
     };
     
-    setConversation(prev => ({
-      ...prev,
-      messages: [...prev.messages, newMessage]
-    }));
+    setMessages(prev => [...prev, newMessage]);
     
     return newMessage;
   }, []);
 
   // Simulate assistant typing
   const simulateTyping = useCallback((duration: number = 1000) => {
-    setConversation(prev => ({ ...prev, isTyping: true }));
+    setLoading(true);
     
     return new Promise<void>(resolve => {
       setTimeout(() => {
-        setConversation(prev => ({ ...prev, isTyping: false }));
+        setLoading(false);
         resolve();
       }, duration);
     });
@@ -66,6 +85,8 @@ export const useConversationalEstimator = (
 
   // Process user input
   const processUserInput = useCallback(async (input: string) => {
+    if (!input.trim()) return;
+    
     // Add user message
     addMessage(input, true);
     
@@ -81,39 +102,93 @@ export const useConversationalEstimator = (
     } else if (input.toLowerCase().includes('maison')) {
       response = "Une maison ! Excellent. Quelle surface approximative envisagez-vous pour votre projet ?";
       updateFormData({ projectType: 'construction' });
+      updateProgress();
     } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('renovation')) {
       response = "Un projet de rénovation. Quelle est la surface à rénover et quel est l'état actuel du bien ?";
       updateFormData({ projectType: 'renovation' });
+      updateProgress();
     } else if (input.toLowerCase().includes('extension')) {
       response = "Une extension de votre habitation existante. Quelle surface souhaitez-vous ajouter ?";
       updateFormData({ projectType: 'extension' });
+      updateProgress();
     } else if (/\d+\s*m²/.test(input)) {
       const match = input.match(/(\d+)\s*m²/);
       if (match) {
         const surface = parseInt(match[1]);
         response = `Une surface de ${surface} m². C'est noté. Dans quelle ville ou région se situe votre projet ?`;
         updateFormData({ surface });
+        updateProgress();
       }
     } else if (input.toLowerCase().includes('budget')) {
       response = "Le budget est un élément important. Nous allons créer une estimation qui vous permettra d'avoir une vision claire des coûts associés à votre projet.";
     }
     
+    // Send the analyzed data to parent component
+    onUserInput(input);
+    
     // Add assistant response
     addMessage(response, false);
-  }, [addMessage, simulateTyping, updateFormData]);
+  }, [addMessage, simulateTyping, updateFormData, onUserInput]);
+
+  // Update progress based on collected information
+  const updateProgress = useCallback(() => {
+    // Count the number of essential fields that have been filled
+    const essentialFields = [
+      'projectType', 'surface', 'city', 'constructionType', 
+      'finishLevel', 'heatingType', 'wallType'
+    ];
+    
+    let filledFields = 0;
+    essentialFields.forEach(field => {
+      if (formData[field]) filledFields++;
+    });
+    
+    // Calculate progress percentage
+    const progress = Math.min(Math.round((filledFields / essentialFields.length) * 100), 100);
+    
+    setConversationState(prev => ({
+      ...prev,
+      formProgress: progress
+    }));
+  }, [formData]);
+
+  // User clicked on a suggested option
+  const handleOptionClick = useCallback((option: string) => {
+    setUserInput(option);
+    processUserInput(option);
+  }, [processUserInput]);
+
+  // User pressed enter in input field
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (userInput.trim()) {
+        processUserInput(userInput);
+        setUserInput('');
+      }
+    }
+  }, [userInput, processUserInput]);
+
+  // Handle send message button click
+  const handleSendMessage = useCallback(() => {
+    if (userInput.trim()) {
+      processUserInput(userInput);
+      setUserInput('');
+    }
+  }, [userInput, processUserInput]);
 
   // Suggest potential next actions
   const getSuggestions = useCallback(() => {
     const suggestions = [];
     
-    if (!initialFormData.projectType) {
+    if (!formData.projectType) {
       suggestions.push("Je veux construire une maison neuve");
       suggestions.push("Je souhaite rénover mon appartement");
       suggestions.push("Je cherche à faire une extension");
-    } else if (!initialFormData.surface) {
+    } else if (!formData.surface) {
       suggestions.push("La surface sera d'environ 100 m²");
       suggestions.push("Je prévois une surface de 150 m²");
-    } else if (!initialFormData.city) {
+    } else if (!formData.city) {
       suggestions.push("Le projet se situe à Paris");
       suggestions.push("Le projet est dans le Sud de la France");
     }
@@ -123,10 +198,18 @@ export const useConversationalEstimator = (
       "Quels sont les délais habituels pour un tel projet ?",
       "Quels sont les principaux postes de dépense ?"
     ];
-  }, [initialFormData]);
+  }, [formData]);
 
   return {
-    conversation,
+    messages,
+    loading,
+    userInput,
+    setUserInput,
+    messagesEndRef,
+    handleSendMessage,
+    handleOptionClick,
+    handleKeyPress,
+    conversationState,
     processUserInput,
     addMessage,
     simulateTyping,

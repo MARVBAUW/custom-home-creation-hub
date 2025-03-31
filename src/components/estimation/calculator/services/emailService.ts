@@ -1,39 +1,60 @@
 
 import { FormData, EstimationResponseData } from '../types';
-import { generateEstimationReport } from '../utils/generateEstimationReport';
 
-// Function to send estimation results by email
+// Result interface for email sending operations
+export interface EmailResult {
+  success: boolean;
+  message: string;
+}
+
+/**
+ * Sends the estimation details to the specified email address
+ * 
+ * @param email The recipient's email address
+ * @param formData The form data with project details
+ * @param estimationResult The calculated estimation results
+ * @returns A promise that resolves to the result of the email operation
+ */
 export const sendEstimationByEmail = async (
   email: string,
   formData: FormData,
-  estimationResult: EstimationResponseData
-) => {
+  estimationResult: EstimationResponseData | number
+): Promise<EmailResult> => {
   try {
-    // Generate a report for the email
-    const report = generateEstimationReport(formData, estimationResult);
+    // For demo purposes, we're just returning a success message
+    // In a real application, this would make an API call to a backend service
     
-    // In a real implementation, this would call an API to send the email
-    console.log('Sending estimation to email:', email);
-    console.log('Estimation report:', report);
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Convert estimation to the right format if needed
+    const estimation = typeof estimationResult === 'number' 
+      ? { totalAmount: estimationResult } 
+      : estimationResult;
     
+    // Log for debugging
+    console.log('Sending email with estimation:', {
+      to: email,
+      formData,
+      estimation
+    });
+    
+    // Return success result
     return {
       success: true,
-      message: `Estimation envoyée avec succès à ${email}`
+      message: `L'estimation a été envoyée avec succès à ${email}.`
     };
+    
   } catch (error) {
-    console.error('Error sending estimation by email:', error);
+    console.error('Error sending estimation email:', error);
+    
+    // Return error result
     return {
       success: false,
-      message: 'Une erreur est survenue lors de l\'envoi de l\'email'
+      message: 'Une erreur est survenue lors de l\'envoi de l\'email. Veuillez réessayer plus tard.'
     };
   }
 };
 
-// Function to generate a shareable link for the estimation
-export const generateShareableLink = (estimationId: string) => {
-  // In a real implementation, this would generate a unique, secure link
-  return `https://progineer.fr/estimation/share/${estimationId}`;
-};
+// Alias for backward compatibility
+export const sendEstimationEmail = sendEstimationByEmail;
