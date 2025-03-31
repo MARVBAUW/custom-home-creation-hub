@@ -24,6 +24,12 @@ export const SchemaCard: React.FC<SchemaCardProps> = ({
   // Additional validation check before attempting to display the image
   const shouldShowImage = isValidImage && !hasError && isLikelyValidImagePath(displayImageUrl);
   
+  const handleImageClick = () => {
+    if (shouldShowImage) {
+      onOpenImage(schema);
+    }
+  };
+  
   return (
     <Card key={schema.id} className="overflow-hidden hover:shadow-md transition-shadow">
       <CardContent className="p-0">
@@ -31,7 +37,6 @@ export const SchemaCard: React.FC<SchemaCardProps> = ({
           <h4 className="font-medium mb-1">{schema.title}</h4>
           <div 
             className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${shouldShowImage ? 'cursor-pointer group' : ''}`}
-            onClick={() => shouldShowImage && onOpenImage(schema)}
           >
             {shouldShowImage ? (
               <>
@@ -39,9 +44,9 @@ export const SchemaCard: React.FC<SchemaCardProps> = ({
                   src={displayImageUrl} 
                   alt={schema.title}
                   className="w-full h-full object-contain transition-transform group-hover:scale-105"
-                  onError={() => onOpenImage(schema)}
+                  onClick={handleImageClick}
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100" onClick={handleImageClick}>
                   <ZoomIn className="text-white h-8 w-8" />
                 </div>
               </>

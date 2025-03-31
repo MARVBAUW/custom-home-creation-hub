@@ -1,12 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilePlus2, FileSpreadsheet, FileText, FileCode, FileCheck } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
 
 // Import workspace components
 import WorkspaceGuides from '@/components/workspace/WorkspaceGuides';
@@ -38,8 +36,6 @@ const Workspace = () => {
         <meta name="description" content="Workspace Progineer - Ressources et outils pour vos projets de construction, rénovation et extension en région PACA." />
         <meta name="keywords" content="ressources construction, guides rénovation, outils maître d'œuvre, documentation architecture" />
       </Helmet>
-
-      <Navbar />
 
       {/* Hero section */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
@@ -154,8 +150,8 @@ const Workspace = () => {
           </div>
         </Container>
       </section>
-
-      <Footer />
+      
+      {/* Le footer a été supprimé d'ici car il est déjà présent dans le layout principal */}
     </>
   );
 };

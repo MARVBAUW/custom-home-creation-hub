@@ -25,7 +25,11 @@ export const routes = [
     element: <MainLayout />,
     children: publicRoutes,
   },
-  ...workspaceRoutes,
+  // Incluons maintenant les routes workspace dans le layout principal
+  {
+    element: <MainLayout />,
+    children: workspaceRoutes,
+  },
   ...clientRoutes,
   ...adminRoutes,
 ];
