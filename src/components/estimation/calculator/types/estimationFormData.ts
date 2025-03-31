@@ -5,7 +5,7 @@ export interface EstimationFormData {
   
   // Project details
   projectType?: string;
-  surface?: number;
+  surface?: number | string;
   city?: string;
   
   // Budget
@@ -16,6 +16,7 @@ export interface EstimationFormData {
   landPrice?: number;
   terrainType?: string;
   landType?: string;
+  terrainSurface?: number | string;
   
   // Construction details
   constructionType?: string;
@@ -24,9 +25,12 @@ export interface EstimationFormData {
   bathrooms?: number;
   kitchens?: number;
   livingRooms?: number;
+  livingRoomSize?: number | string;
+  livingRoomStyle?: string;
   
   // Finish details
   finishStandard?: string;
+  finishingLevel?: string;
   
   // Special features
   solarPanels?: boolean;
@@ -43,11 +47,20 @@ export interface EstimationFormData {
   includeCuisine?: boolean;
   includeBathroom?: boolean;
   
+  // Water and eco systems
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  
   // Exterior features
   pool?: boolean;
   terrace?: boolean;
   outdoorKitchen?: boolean;
   exteriorFeatures?: string[];
+  
+  // Garden and landscape
+  landscapingType?: string;
+  gardenSurface?: number | string;
+  landscapingBudget?: number | string;
   
   // Personal information
   firstName?: string;
@@ -105,25 +118,12 @@ export interface EstimationFormData {
   decorativePaintPercentage?: number | string;
   wallpaperPercentage?: number | string;
   
-  // Landscaping fields
-  landscapingType?: string;
-  gardenSurface?: number | string;
-  landscapingBudget?: number | string;
-  
-  // Renewable energy fields
-  
-  // Eco-friendly features
-  greywaterRecycling?: boolean;
-  ecoFriendlyInsulation?: boolean;
-  
-  // Additional properties for specific project types
+  // Project requirements
+  units?: number;
   needsDemolition?: boolean;
   demolitionType?: string;
-  units?: number;
-  terrainSurface?: number | string;
-  livingRoomSize?: number | string;
-  livingRoomStyle?: string;
-  finishingLevel?: string;
+  
+  // Room types
   bathroomType?: string;
   kitchenType?: string;
   
@@ -132,5 +132,61 @@ export interface EstimationFormData {
   garage?: boolean;
 }
 
-// For backward compatibility, create an alias
+// Pour la rétrocompatibilité
 export type FormData = EstimationFormData;
+
+// Définition de la réponse d'estimation
+export interface EstimationResponseData {
+  constructionCosts: {
+    structuralWork: number;
+    finishingWork: number;
+    technicalLots: number;
+    externalWorks: number;
+    total: number;
+  };
+  fees: {
+    architectFees?: number;
+    engineeringFees?: number;
+    officialFees?: number;
+    inspectionFees?: number;
+    architect?: number;
+    technicalStudies?: number;
+    other?: number;
+    total: number;
+  };
+  otherCosts: {
+    insurance: number;
+    contingency: number;
+    taxes: number;
+    miscellaneous: number;
+    total: number;
+  };
+  totalAmount: number;
+  timeline: {
+    design: number;
+    permits: number;
+    bidding: number;
+    construction: number;
+    total: number;
+  };
+}
+
+// Interface pour les options de génération PDF
+export interface PDFGenerationOptions {
+  includeDetails?: boolean;
+  includeLogo?: boolean;
+  includeContactInfo?: boolean;
+  includeBreakdown?: boolean;
+}
+
+// Pour FeeCosts qui est utilisé ailleurs
+export interface FeeCosts {
+  architectFees?: number;
+  engineeringFees?: number;
+  officialFees?: number;
+  inspectionFees?: number;
+  architect?: number;
+  technicalStudies?: number;
+  other?: number;
+  total: number;
+}

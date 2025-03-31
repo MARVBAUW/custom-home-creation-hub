@@ -19,3 +19,6 @@ export interface BaseStepProps {
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
 }
+
+// Re-export pour compatibility
+export type FormStepProps = BaseFormProps;

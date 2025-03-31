@@ -1,4 +1,6 @@
 
-// Export the calculation functions from their respective modules
+// Re-export des fonctions de calcul depuis leurs modules
+export { calculateSimpleEstimation as calculateEstimation } from './simpleEstimation';
 export { calculateDetailedEstimation } from './detailedEstimation';
-export { calculateEstimation } from './simpleEstimation';
+export { calculateMaterialCosts } from './materialCosts';
+export { calculateLaborCosts } from './laborCosts';
