@@ -198,12 +198,12 @@ export interface PDFGenerationOptions {
 
 // Pour FeeCosts qui est utilisé ailleurs
 export interface FeeCosts {
-  architect: number;
+  architect?: number;
   engineeringFees?: number;
   architectFees?: number;
   officialFees?: number;
   inspectionFees?: number;
-  technicalStudies: number;
-  other: number;
+  technicalStudies?: number;
+  other?: number;
   total: number;
 }

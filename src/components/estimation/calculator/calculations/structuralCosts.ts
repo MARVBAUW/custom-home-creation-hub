@@ -1,88 +1,66 @@
 
-import { EstimationFormData } from '../types';
+import { FormData } from '../types';
+import { WALL_MATERIAL_COSTS } from './materialCosts';
 
-// Calculate structural costs based on form data
-export const calculateStructuralCosts = (formData: EstimationFormData) => {
+// Function to calculate structural costs
+export const calculateStructuralCosts = (formData: FormData) => {
   const surface = typeof formData.surface === 'string' 
     ? parseFloat(formData.surface) 
     : (formData.surface || 0);
   
-  let baseStructuralCost = 900; // Default structural cost per m²
+  // Base structural cost per m²
+  let baseCost = 800; // Default
   
-  // Apply modifiers based on wall type
-  switch (formData.wallType) {
-    case 'concrete_blocks':
-      baseStructuralCost *= 1.0;
-      break;
-    case 'brick':
-      baseStructuralCost *= 1.15;
-      break;
-    case 'wood_frame':
-      baseStructuralCost *= 1.1;
-      break;
-    case 'concrete':
-      baseStructuralCost *= 1.05;
-      break;
-    case 'stone':
-      baseStructuralCost *= 1.4;
-      break;
-    case 'earth':
-      baseStructuralCost *= 1.25;
-      break;
-    case 'steel_frame':
-      baseStructuralCost *= 1.2;
-      break;
-    default:
-      // No adjustment
+  // Adjust for wall type if available
+  if (formData.wallType && WALL_MATERIAL_COSTS[formData.wallType as keyof typeof WALL_MATERIAL_COSTS]) {
+    baseCost = WALL_MATERIAL_COSTS[formData.wallType as keyof typeof WALL_MATERIAL_COSTS];
   }
   
-  // Apply modifiers based on foundation type
-  switch (formData.foundationType) {
-    case 'strip':
-      baseStructuralCost *= 1.0;
-      break;
-    case 'slab':
-      baseStructuralCost *= 1.05;
-      break;
-    case 'piles':
-      baseStructuralCost *= 1.2;
-      break;
-    case 'crawl_space':
-      baseStructuralCost *= 1.1;
-      break;
-    case 'basement':
-      baseStructuralCost *= 1.3;
-      break;
-    default:
-      // No adjustment
+  // Adjust for complexity and house type
+  if (formData.complexity === 'high') {
+    baseCost *= 1.3; // +30% for high complexity
+  } else if (formData.complexity === 'medium') {
+    baseCost *= 1.15; // +15% for medium complexity
   }
   
-  // Apply terrain type modifier
-  switch (formData.terrainType) {
-    case 'flat':
-      baseStructuralCost *= 1.0;
-      break;
-    case 'slight_slope':
-      baseStructuralCost *= 1.1;
-      break;
-    case 'steep_slope':
-      baseStructuralCost *= 1.25;
-      break;
-    case 'uneven':
-      baseStructuralCost *= 1.15;
-      break;
-    default:
-      // No adjustment
+  // For multi-level buildings, add complexity
+  const levels = typeof formData.levels === 'string' 
+    ? parseInt(formData.levels) 
+    : (formData.levels || 1);
+  
+  if (levels > 1) {
+    baseCost *= (1 + (levels - 1) * 0.1); // +10% per additional level
   }
   
-  // Calculate total structural cost
-  const totalStructuralCost = surface * baseStructuralCost;
+  // Foundation type adjustment
+  if (formData.foundationType) {
+    let foundationMultiplier = 1.0;
+    
+    switch (formData.foundationType) {
+      case 'slab':
+        foundationMultiplier = 1.0;
+        break;
+      case 'strip':
+        foundationMultiplier = 0.9;
+        break;
+      case 'piles':
+        foundationMultiplier = 1.4;
+        break;
+      case 'crawl_space':
+        foundationMultiplier = 1.1;
+        break;
+      case 'basement':
+        foundationMultiplier = 1.5;
+        break;
+      default:
+        foundationMultiplier = 1.0;
+    }
+    
+    baseCost *= foundationMultiplier;
+  }
   
-  return {
-    foundations: totalStructuralCost * 0.2,
-    walls: totalStructuralCost * 0.4,
-    floors: totalStructuralCost * 0.15,
-    roof: totalStructuralCost * 0.25,
-    total: totalStructuralCost
-  };
+  // Calculate the total structural costs
+  const totalStructuralCost = baseCost * surface;
+  
+  return totalStructuralCost;
 };

@@ -1,45 +1,94 @@
 
-import { EstimationFormData } from '../types';
+import { FormData } from '../types';
+import { FLOORING_MATERIAL_COSTS } from './materialCosts';
 
-// Calculate finishing costs based on form data
-export const calculateFinishingCosts = (formData: EstimationFormData) => {
+// Function to calculate finishing costs
+export const calculateFinishingCosts = (formData: FormData) => {
   const surface = typeof formData.surface === 'string' 
     ? parseFloat(formData.surface) 
     : (formData.surface || 0);
   
-  let baseFinishingCost = 600; // Default finishing cost per m²
+  // Base finishing cost per m²
+  let baseCost = 400; // Default
   
-  // Apply modifiers based on finishing level
-  switch (formData.finishLevel || formData.finishStandard || formData.finishingLevel) {
-    case 'basic':
-      baseFinishingCost *= 0.8;
-      break;
-    case 'standard':
-      baseFinishingCost *= 1.0;
-      break;
-    case 'medium':
-      baseFinishingCost *= 1.2;
-      break;
-    case 'high':
-      baseFinishingCost *= 1.5;
-      break;
-    case 'luxury':
-      baseFinishingCost *= 2.0;
-      break;
-    default:
-      // Default to standard
-      baseFinishingCost *= 1.0;
+  // Adjust for finish standard if available
+  if (formData.finishStandard || formData.finishLevel) {
+    const finishLevel = formData.finishStandard || formData.finishLevel;
+    
+    switch (finishLevel) {
+      case 'economic':
+      case 'basic':
+        baseCost = 300;
+        break;
+      case 'standard':
+      case 'medium':
+        baseCost = 400;
+        break;
+      case 'premium':
+      case 'high':
+        baseCost = 600;
+        break;
+      case 'luxury':
+        baseCost = 900;
+        break;
+      default:
+        baseCost = 400;
+    }
   }
   
-  // Calculate total finishing cost
-  const totalFinishingCost = surface * baseFinishingCost;
+  // Adjustments for specific elements
   
-  return {
-    flooring: totalFinishingCost * 0.25,
-    walls: totalFinishingCost * 0.2,
-    ceilings: totalFinishingCost * 0.1,
-    painting: totalFinishingCost * 0.15,
-    fixtures: totalFinishingCost * 0.3,
-    total: totalFinishingCost
-  };
+  // Flooring
+  let flooringCost = 0;
+  
+  if (formData.floorTileType) {
+    const tileQuality = formData.floorTileType.includes('luxury') ? 'luxury' 
+      : formData.floorTileType.includes('premium') ? 'premium' : 'standard';
+    
+    const floorTilePercentage = typeof formData.floorTilePercentage === 'string' 
+      ? parseFloat(formData.floorTilePercentage) / 100 
+      : (formData.floorTilePercentage || 0) / 100;
+    
+    if (FLOORING_MATERIAL_COSTS.tiles[tileQuality as keyof typeof FLOORING_MATERIAL_COSTS.tiles]) {
+      flooringCost += FLOORING_MATERIAL_COSTS.tiles[tileQuality as keyof typeof FLOORING_MATERIAL_COSTS.tiles] * surface * floorTilePercentage;
+    }
+  }
+  
+  if (formData.parquetType) {
+    const parquetQuality = formData.parquetType.includes('luxury') ? 'luxury' 
+      : formData.parquetType.includes('premium') ? 'premium' : 'standard';
+    
+    const parquetPercentage = typeof formData.parquetPercentage === 'string' 
+      ? parseFloat(formData.parquetPercentage) / 100 
+      : (formData.parquetPercentage || 0) / 100;
+    
+    if (FLOORING_MATERIAL_COSTS.parquet[parquetQuality as keyof typeof FLOORING_MATERIAL_COSTS.parquet]) {
+      flooringCost += FLOORING_MATERIAL_COSTS.parquet[parquetQuality as keyof typeof FLOORING_MATERIAL_COSTS.parquet] * surface * parquetPercentage;
+    }
+  }
+  
+  if (formData.softFloorType) {
+    const softQuality = formData.softFloorType.includes('luxury') ? 'luxury' 
+      : formData.softFloorType.includes('premium') ? 'premium' : 'standard';
+    
+    const softFloorPercentage = typeof formData.softFloorPercentage === 'string' 
+      ? parseFloat(formData.softFloorPercentage) / 100 
+      : (formData.softFloorPercentage || 0) / 100;
+    
+    if (FLOORING_MATERIAL_COSTS.soft_floor[softQuality as keyof typeof FLOORING_MATERIAL_COSTS.soft_floor]) {
+      flooringCost += FLOORING_MATERIAL_COSTS.soft_floor[softQuality as keyof typeof FLOORING_MATERIAL_COSTS.soft_floor] * surface * softFloorPercentage;
+    }
+  }
+  
+  // If no specific flooring was selected, use the base cost
+  if (flooringCost === 0) {
+    flooringCost = baseCost * surface * 0.2; // Assume flooring is 20% of finishing cost
+  }
+  
+  // Calculate the total finishing costs
+  // Base finishing without flooring (which we calculated separately)
+  const baseFinishingWithoutFlooring = baseCost * surface * 0.8;
+  const totalFinishingCost = baseFinishingWithoutFlooring + flooringCost;
+  
+  return totalFinishingCost;
 };

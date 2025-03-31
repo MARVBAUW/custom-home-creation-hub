@@ -1,6 +1,6 @@
 
 import { BaseSyntheticEvent } from 'react';
-import { EstimationFormData, EstimationResponseData } from './estimationFormData';
+import { EstimationFormData, EstimationResponseData, PDFGenerationOptions } from './estimationFormData';
 import { BaseFormProps } from './baseTypes';
 
 export type { BaseFormProps };
@@ -87,4 +87,11 @@ export interface ClientTypeStepProps {
 export interface ContactDetailsStepProps extends FormStepProps {
   onSubmit?: (data: Partial<EstimationFormData>) => void;
   animationDirection: 'forward' | 'backward';  // Make sure this is required
+}
+
+export interface DetailedEstimationReportProps {
+  formData: EstimationFormData;
+  estimation?: any; // Add this property
+  includeTerrainPrice?: boolean;
+  options?: PDFGenerationOptions;
 }

@@ -1,49 +1,32 @@
 
-import { jsPDF } from 'jspdf';
-import { UserOptions } from 'jspdf-autotable';
+// Type definitions for jsPDF and jspdf-autotable
+import jsPDF from 'jspdf';
 
-// Extended jsPDF type to include autoTable and other custom properties
-export interface JsPDFInternal {
-  events: any;
-  scaleFactor: number;
-  pageSize: {
-    width: number;
-    getWidth: () => number;
-    height: number;
-    getHeight: () => number;
-  };
-  pages: number[];
-  getEncryptor(objectId: number): (data: string) => string;
-  getNumberOfPages: () => number;
-  setPage: (pageNumber: number) => jsPDF;
+// Extend the jsPDF internal type
+declare module 'jspdf' {
+  interface jsPDF {
+    // Add getNumberOfPages method
+    internal: {
+      getNumberOfPages: () => number;
+      events: any;
+      scaleFactor: number;
+      pageSize: {
+        width: number;
+        getWidth: () => number;
+        height: number;
+        getHeight: () => number;
+      };
+      pages: number[];
+      getEncryptor(objectId: number): (data: string) => string;
+    };
+    // Add autoTable method
+    autoTable: (options: any) => any & {
+      previous: {
+        finalY: number;
+      };
+    };
+  }
 }
 
-// Extended jsPDF class with autoTable method
-export interface ExtendedJsPDF extends jsPDF {
-  autoTable: (options: UserOptions) => ExtendedJsPDF;
-  internal: JsPDFInternal;
-  getNumberOfPages: () => number;
-}
-
-// PDF generation options
-export interface PDFGenerationOptions {
-  includeDetails?: boolean;
-  includeTerrainPrice?: boolean;
-  includeTimeline?: boolean;
-  includeDetailedBreakdown?: boolean;
-  includeLogo?: boolean;
-  includeContactInfo?: boolean;
-  includeBreakdown?: boolean;
-  clientInfo?: boolean;
-  companyLogo?: boolean;
-  fileName?: string;
-}
-
-// PDF document section
-export interface PDFSection {
-  title: string;
-  content: Array<{
-    label: string;
-    value: string | number;
-  }>;
-}
+// Export enhanced jsPDF type
+export type EnhancedJsPDF = jsPDF;

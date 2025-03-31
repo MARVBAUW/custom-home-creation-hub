@@ -10,7 +10,7 @@ const ContactForm: React.FC<BaseFormProps> = (props) => {
     updateFormData={props.updateFormData} 
     goToNextStep={props.goToNextStep} 
     goToPreviousStep={props.goToPreviousStep}
-    animationDirection={props.animationDirection || 'forward'}
+    animationDirection={props.animationDirection as 'forward' | 'backward'}
   />;
 };
 
