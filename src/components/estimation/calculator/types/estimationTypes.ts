@@ -1,4 +1,9 @@
 
+import { EstimationTimeline, FeeCosts } from '../types';
+
+/**
+ * Interface for estimation response data
+ */
 export interface EstimationResponseData {
   constructionCosts: {
     structuralWork: number;
@@ -7,24 +12,18 @@ export interface EstimationResponseData {
     externalWorks: number;
     total: number;
   };
-  fees: {
-    architect: number;
-    technicalStudies: number;
-    other: number;
-    total: number;
-  };
+  fees: FeeCosts;
   otherCosts: {
     insurance: number;
-    taxes: number;
     contingency: number;
+    taxes: number;
+    miscellaneous: number;
     total: number;
   };
   totalAmount: number;
-  timeline: {
-    design: number;
-    permits: number;
-    bidding: number;
-    construction: number;
-    total: number;
-  };
+  timeline: EstimationTimeline;
+  categories: Array<{
+    category: string;
+    amount: number;
+  }>;
 }

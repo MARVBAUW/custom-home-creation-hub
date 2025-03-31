@@ -2,7 +2,9 @@
 import { z } from 'zod';
 
 // Re-export types from types/formTypes.ts for compatibility
-export { FormData, EstimationFormData, EstimationResponseData } from './types/formTypes';
+export type { FormData } from './types/formTypes';
+export type { EstimationFormData } from './types/estimationFormData';
+export type { EstimationResponseData } from './types/estimationTypes';
 
 // Define interfaces still needed in the codebase
 export interface EstimationTimeline {

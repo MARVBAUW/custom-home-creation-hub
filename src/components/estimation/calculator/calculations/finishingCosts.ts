@@ -1,12 +1,11 @@
 
 import { FormData } from '../types';
 import { FLOORING_MATERIAL_COSTS } from './materialCosts';
+import { ensureNumber, safeIncludes } from '../utils/typeConversions';
 
 // Function to calculate finishing costs
 export const calculateFinishingCosts = (formData: FormData) => {
-  const surface = typeof formData.surface === 'string' 
-    ? parseFloat(formData.surface) 
-    : (formData.surface || 0);
+  const surface = ensureNumber(formData.surface, 0);
   
   // Base finishing cost per m²
   let baseCost = 400; // Default
@@ -15,24 +14,17 @@ export const calculateFinishingCosts = (formData: FormData) => {
   if (formData.finishStandard || formData.finishLevel) {
     const finishLevel = formData.finishStandard || formData.finishLevel;
     
-    switch (finishLevel) {
-      case 'economic':
-      case 'basic':
-        baseCost = 300;
-        break;
-      case 'standard':
-      case 'medium':
-        baseCost = 400;
-        break;
-      case 'premium':
-      case 'high':
-        baseCost = 600;
-        break;
-      case 'luxury':
-        baseCost = 900;
-        break;
-      default:
-        baseCost = 400;
+    // Using safe string comparison
+    const finishLevelStr = String(finishLevel).toLowerCase();
+    
+    if (finishLevelStr.includes('economic') || finishLevelStr.includes('basic')) {
+      baseCost = 300;
+    } else if (finishLevelStr.includes('standard') || finishLevelStr.includes('medium')) {
+      baseCost = 400;
+    } else if (finishLevelStr.includes('premium') || finishLevelStr.includes('high')) {
+      baseCost = 600;
+    } else if (finishLevelStr.includes('luxury')) {
+      baseCost = 900;
     }
   }
   
@@ -42,12 +34,11 @@ export const calculateFinishingCosts = (formData: FormData) => {
   let flooringCost = 0;
   
   if (formData.floorTileType) {
-    const tileQuality = formData.floorTileType.includes('luxury') ? 'luxury' 
-      : formData.floorTileType.includes('premium') ? 'premium' : 'standard';
+    const floorTileTypeStr = String(formData.floorTileType);
+    const tileQuality = floorTileTypeStr.includes('luxury') ? 'luxury' 
+      : floorTileTypeStr.includes('premium') ? 'premium' : 'standard';
     
-    const floorTilePercentage = typeof formData.floorTilePercentage === 'string' 
-      ? parseFloat(formData.floorTilePercentage) / 100 
-      : (formData.floorTilePercentage || 0) / 100;
+    const floorTilePercentage = ensureNumber(formData.floorTilePercentage, 0) / 100;
     
     if (FLOORING_MATERIAL_COSTS.tiles[tileQuality as keyof typeof FLOORING_MATERIAL_COSTS.tiles]) {
       flooringCost += FLOORING_MATERIAL_COSTS.tiles[tileQuality as keyof typeof FLOORING_MATERIAL_COSTS.tiles] * surface * floorTilePercentage;
@@ -55,12 +46,11 @@ export const calculateFinishingCosts = (formData: FormData) => {
   }
   
   if (formData.parquetType) {
-    const parquetQuality = formData.parquetType.includes('luxury') ? 'luxury' 
-      : formData.parquetType.includes('premium') ? 'premium' : 'standard';
+    const parquetTypeStr = String(formData.parquetType);
+    const parquetQuality = parquetTypeStr.includes('luxury') ? 'luxury' 
+      : parquetTypeStr.includes('premium') ? 'premium' : 'standard';
     
-    const parquetPercentage = typeof formData.parquetPercentage === 'string' 
-      ? parseFloat(formData.parquetPercentage) / 100 
-      : (formData.parquetPercentage || 0) / 100;
+    const parquetPercentage = ensureNumber(formData.parquetPercentage, 0) / 100;
     
     if (FLOORING_MATERIAL_COSTS.parquet[parquetQuality as keyof typeof FLOORING_MATERIAL_COSTS.parquet]) {
       flooringCost += FLOORING_MATERIAL_COSTS.parquet[parquetQuality as keyof typeof FLOORING_MATERIAL_COSTS.parquet] * surface * parquetPercentage;
@@ -68,12 +58,11 @@ export const calculateFinishingCosts = (formData: FormData) => {
   }
   
   if (formData.softFloorType) {
-    const softQuality = formData.softFloorType.includes('luxury') ? 'luxury' 
-      : formData.softFloorType.includes('premium') ? 'premium' : 'standard';
+    const softFloorTypeStr = String(formData.softFloorType);
+    const softQuality = softFloorTypeStr.includes('luxury') ? 'luxury' 
+      : softFloorTypeStr.includes('premium') ? 'premium' : 'standard';
     
-    const softFloorPercentage = typeof formData.softFloorPercentage === 'string' 
-      ? parseFloat(formData.softFloorPercentage) / 100 
-      : (formData.softFloorPercentage || 0) / 100;
+    const softFloorPercentage = ensureNumber(formData.softFloorPercentage, 0) / 100;
     
     if (FLOORING_MATERIAL_COSTS.soft_floor[softQuality as keyof typeof FLOORING_MATERIAL_COSTS.soft_floor]) {
       flooringCost += FLOORING_MATERIAL_COSTS.soft_floor[softQuality as keyof typeof FLOORING_MATERIAL_COSTS.soft_floor] * surface * softFloorPercentage;

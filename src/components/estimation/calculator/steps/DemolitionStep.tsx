@@ -7,6 +7,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { ensureNumber, ensureBoolean } from '../utils/typeConversions';
 
 interface DemolitionStepProps {
   formData: FormData;
@@ -29,10 +30,10 @@ const DemolitionStep: React.FC<DemolitionStepProps> = ({
   // Calculate demolition costs
   const calculateDemolitionCosts = (): number => {
     if (demolitionType === 'none') {
-      return formData.montantT || 0; // No change
+      return ensureNumber(formData.montantT, 0); // No change
     }
     
-    const existingSurfaceValue = typeof existingSurface === 'string' ? parseFloat(existingSurface) : (existingSurface || 0);
+    const existingSurfaceValue = ensureNumber(existingSurface, 0);
     let demolitionMultiplier = 0;
     
     // Set the multiplier based on the demolition type
@@ -58,7 +59,7 @@ const DemolitionStep: React.FC<DemolitionStepProps> = ({
     const demolitionCost = demolitionArea * 185; // Price per m² for demolition
     
     // Add to the existing montantT or initialize it
-    const currentMontantT = formData.montantT || 0;
+    const currentMontantT = ensureNumber(formData.montantT, 0);
     return currentMontantT + demolitionCost;
   };
   
@@ -178,7 +179,7 @@ const DemolitionStep: React.FC<DemolitionStepProps> = ({
       </div>
       
       <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-        Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
+        Total travaux : {formData.montantT ? ensureNumber(formData.montantT, 0).toLocaleString() : 0} €/HT
       </div>
       
       <div className="flex justify-between pt-6">

@@ -1,7 +1,7 @@
 
 // Re-export all type definitions for easy importing
 export { EstimationFormData } from './estimationFormData';
-export type { BaseFormProps } from './formTypes';
+export type { BaseFormProps } from './baseFormProps';
 export type { FormData } from './formTypes';
 
 // Conversational types

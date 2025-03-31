@@ -76,6 +76,15 @@ export const toFormValue = (value: any, fieldType: string = 'string'): any => {
 };
 
 /**
+ * Stringify a value for JSON storage, handling special cases
+ */
+export const stringifyForJson = (value: any): string => {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'object') return JSON.stringify(value);
+  return String(value);
+};
+
+/**
  * Convert EstimationFormData object to proper types for each field
  */
 export const convertFormData = (data: Partial<EstimationFormData>): Partial<EstimationFormData> => {
@@ -89,7 +98,7 @@ export const convertFormData = (data: Partial<EstimationFormData>): Partial<Esti
     // Convert based on field type hints in the key name
     if (key.includes('Count') || key.includes('Area') || key.includes('surface') || 
         key.includes('budget') || key.includes('price') || key.includes('cost') ||
-        key.includes('Length')) {
+        key.includes('Length') || key === 'montantT') {
       result[key as keyof EstimationFormData] = toNumber(value);
     }
     else if (key.startsWith('has') || key.includes('is')) {
@@ -117,6 +126,15 @@ export const formatValueForDisplay = (value: any): string => {
   return String(value);
 };
 
+/**
+ * Helper to safely check if a value includes a substring
+ */
+export const safeIncludes = (value: any, searchString: string): boolean => {
+  if (value === undefined || value === null) return false;
+  if (typeof value !== 'string') return false;
+  return value.includes(searchString);
+};
+
 export default {
   toString,
   toNumber,
@@ -126,5 +144,7 @@ export default {
   convertFormData,
   formatValueForDisplay,
   ensureNumber,
-  ensureBoolean
+  ensureBoolean,
+  safeIncludes,
+  stringifyForJson
 };

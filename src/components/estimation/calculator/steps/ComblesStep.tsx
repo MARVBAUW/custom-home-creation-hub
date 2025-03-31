@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ensureNumber } from '../utils/typeConversions';
 
 interface ComblesStepProps {
   formData: FormData;
@@ -27,17 +28,17 @@ const ComblesStep: React.FC<ComblesStepProps> = ({
   // Calculate the montantT value based on selection and surface
   const calculateMontantT = (selectedAtticType: string): number => {
     if (selectedAtticType !== 'amenageables') {
-      return formData.montantT || 0; // No change for "combles perdus"
+      return ensureNumber(formData.montantT, 0); // No change for "combles perdus"
     }
     
-    const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
-    const levels = typeof formData.levels === 'string' ? parseFloat(formData.levels) : (formData.levels || 1);
+    const surface = ensureNumber(formData.surface, 0);
+    const levels = ensureNumber(formData.levels, 1);
     
     // Calculate for "combles amenageables" - ENTRAIT PORTEUR formula
     const additionalAmount = (surface / levels) * 70;
     
     // Add to the existing montantT or initialize it
-    const currentMontantT = formData.montantT || 0;
+    const currentMontantT = ensureNumber(formData.montantT, 0);
     return currentMontantT + additionalAmount;
   };
   
@@ -94,7 +95,7 @@ const ComblesStep: React.FC<ComblesStepProps> = ({
       </div>
       
       <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-        Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
+        Total travaux : {formData.montantT ? ensureNumber(formData.montantT, 0).toLocaleString() : 0} €/HT
       </div>
       
       <div className="flex justify-between pt-6">

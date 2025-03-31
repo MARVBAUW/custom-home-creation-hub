@@ -15,10 +15,12 @@ export interface DTU {
     title: string;
     content: string;
   }[];
-  schemas?: {
-    id: string;
-    title: string;
-    imageUrl: string;
-    description: string;
-  }[];
+  schemas?: DTUSchema[];
+}
+
+export interface DTUSchema {
+  id: string;
+  title: string;
+  imageUrl: string;
+  description: string;
 }

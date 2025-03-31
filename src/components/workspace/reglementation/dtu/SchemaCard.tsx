@@ -1,65 +1,62 @@
 
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { ImageOff, ZoomIn } from 'lucide-react';
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { DTUSchema } from './types';
-import { formatImageUrl, isLikelyValidImagePath } from './imageUtils';
+import SchemaZoomDialog from './SchemaZoomDialog';
+import { Maximize2 } from 'lucide-react';
 
 interface SchemaCardProps {
   schema: DTUSchema;
-  isValidImage: boolean;
-  hasError: boolean;
-  onOpenImage: (schema: DTUSchema) => void;
 }
 
-export const SchemaCard: React.FC<SchemaCardProps> = ({
-  schema,
-  isValidImage,
-  hasError,
-  onOpenImage,
-}) => {
-  // Pre-format the image URL for display
-  const displayImageUrl = formatImageUrl(schema.imageUrl);
-  
-  // Additional validation check before attempting to display the image
-  const shouldShowImage = isValidImage && !hasError && isLikelyValidImagePath(displayImageUrl);
-  
-  const handleImageClick = () => {
-    if (shouldShowImage) {
-      onOpenImage(schema);
-    }
-  };
-  
+const SchemaCard: React.FC<SchemaCardProps> = ({ schema }) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   return (
-    <Card key={schema.id} className="overflow-hidden hover:shadow-md transition-shadow">
-      <CardContent className="p-0">
-        <div className="p-4">
-          <h4 className="font-medium mb-1">{schema.title}</h4>
-          <div 
-            className={`relative aspect-video bg-gray-100 overflow-hidden mb-2 ${shouldShowImage ? 'cursor-pointer group' : ''}`}
+    <>
+      <Card className="overflow-hidden transition-all hover:shadow-md">
+        <div className="relative overflow-hidden h-48 bg-gray-100">
+          <img 
+            src={schema.imageUrl} 
+            alt={schema.title} 
+            className="w-full h-full object-cover object-center"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/images/schema-placeholder.png';
+            }}
+          />
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
+            onClick={() => setIsDialogOpen(true)}
           >
-            {shouldShowImage ? (
-              <>
-                <img 
-                  src={displayImageUrl} 
-                  alt={schema.title}
-                  className="w-full h-full object-contain transition-transform group-hover:scale-105"
-                  onClick={handleImageClick}
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100" onClick={handleImageClick}>
-                  <ZoomIn className="text-white h-8 w-8" />
-                </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full">
-                <ImageOff className="h-12 w-12 text-gray-400 mb-2" />
-                <p className="text-sm text-gray-500">Image non disponible</p>
-              </div>
-            )}
-          </div>
-          <p className="text-sm text-gray-600">{schema.description}</p>
+            <Maximize2 className="h-4 w-4 mr-1" />
+            Agrandir
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+        <CardContent className="p-4">
+          <CardTitle className="text-md font-medium mb-1 line-clamp-1">{schema.title}</CardTitle>
+          <CardDescription className="line-clamp-2 text-xs">{schema.description}</CardDescription>
+        </CardContent>
+        <CardFooter className="p-4 pt-0">
+          <Button 
+            variant="ghost" 
+            className="w-full text-sm"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            Voir en détail
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <SchemaZoomDialog 
+        schema={schema} 
+        isOpen={isDialogOpen} 
+        onClose={() => setIsDialogOpen(false)} 
+      />
+    </>
   );
 };
+
+export default SchemaCard;

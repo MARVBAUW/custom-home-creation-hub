@@ -1,92 +1,47 @@
 
 import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { DTUSchema } from './types';
-import { SchemaCard } from './SchemaCard';
-import { SchemaZoomDialog } from './SchemaZoomDialog';
-import { useDTUSchemas } from './useDTUSchemas';
-import { DTUEmptyState } from './DTUEmptyState';
+import SchemaCard from './SchemaCard';
 
 interface DTUSchemasProps {
   schemas: DTUSchema[];
-  isLoading?: boolean;
-  error?: Error | null;
+  searchTerm?: string;
 }
 
-export const DTUSchemas: React.FC<DTUSchemasProps> = ({ 
-  schemas, 
-  isLoading = false,
-  error = null
-}) => {
-  const {
-    selectedSchema,
-    zoomLevel,
-    imageError,
-    isValidImageUrl,
-    handleOpenImage,
-    handleZoomIn,
-    handleZoomOut,
-    handleZoomReset,
-    handleCloseDialog,
-    handleImageError
-  } = useDTUSchemas(schemas);
-  
-  // Handle loading state
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  // Handle error state
-  if (error) {
-    return (
-      <DTUEmptyState 
-        type="error" 
-        message="Erreur de chargement des schémas" 
-        description={error.message} 
-      />
-    );
-  }
-
-  // Handle empty state
+const DTUSchemas: React.FC<DTUSchemasProps> = ({ schemas, searchTerm = '' }) => {
   if (!schemas || schemas.length === 0) {
+    return null;
+  }
+
+  // Filter schemas based on search term if provided
+  const filteredSchemas = searchTerm 
+    ? schemas.filter(schema => 
+        schema.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        schema.description.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : schemas;
+
+  if (filteredSchemas.length === 0) {
     return (
-      <DTUEmptyState 
-        type="empty" 
-        message="Aucun schéma technique disponible" 
-        description="Les schémas techniques pour cette section n'ont pas encore été ajoutés." 
-      />
+      <Card className="mt-6">
+        <CardContent className="p-6">
+          <p className="text-center text-gray-500">Aucun schéma trouvé pour "{searchTerm}"</p>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-semibold mb-4">Schémas techniques</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {schemas.map((schema) => (
-          <SchemaCard
-            key={schema.id}
-            schema={schema}
-            isValidImage={isValidImageUrl(schema.imageUrl)}
-            hasError={!!imageError[schema.id]}
-            onOpenImage={handleOpenImage}
-          />
+      <h3 className="font-semibold text-xl mb-4">Schémas techniques</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+        {filteredSchemas.map(schema => (
+          <SchemaCard key={schema.id} schema={schema} />
         ))}
       </div>
-      
-      {/* Image Zoom Dialog */}
-      <SchemaZoomDialog
-        selectedSchema={selectedSchema}
-        isOpen={!!selectedSchema}
-        onClose={handleCloseDialog}
-        zoomLevel={zoomLevel}
-        onZoomIn={handleZoomIn}
-        onZoomOut={handleZoomOut}
-        onZoomReset={handleZoomReset}
-        onImageError={handleImageError}
-      />
     </div>
   );
 };
+
+export default DTUSchemas;

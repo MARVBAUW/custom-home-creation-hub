@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ensureNumber } from '../utils/typeConversions';
 
 interface CouvertureStepProps {
   formData: FormData;
@@ -26,7 +27,7 @@ const CouvertureStep: React.FC<CouvertureStepProps> = ({
   
   // Calculate the montantT value based on selection and surface
   const calculateMontantT = (selectedRoofingType: string): number => {
-    const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
+    const surface = ensureNumber(formData.surface, 0);
     let rate = 0;
     
     switch (selectedRoofingType) {
@@ -66,7 +67,7 @@ const CouvertureStep: React.FC<CouvertureStepProps> = ({
     const additionalAmount = surface * rate;
     
     // Add to the existing montantT or initialize it
-    const currentMontantT = formData.montantT || 0;
+    const currentMontantT = ensureNumber(formData.montantT, 0);
     return currentMontantT + additionalAmount;
   };
   
@@ -193,7 +194,7 @@ const CouvertureStep: React.FC<CouvertureStepProps> = ({
       </div>
       
       <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-        Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
+        Total travaux : {formData.montantT ? ensureNumber(formData.montantT, 0).toLocaleString() : 0} €/HT
       </div>
       
       <div className="flex justify-between pt-6">
