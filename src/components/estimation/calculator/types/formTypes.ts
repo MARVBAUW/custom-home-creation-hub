@@ -15,5 +15,10 @@ export interface BaseFormProps {
   onSubmit?: (data: any) => void;
 }
 
-// Type aliases for backward compatibility
-export type FormData = EstimationFormData;
+// Extended FormData interface to include contact form fields
+export interface FormData extends EstimationFormData {
+  projectDescription?: string;
+  projectPurpose?: string;
+  commercialAccepted?: boolean;
+  budget?: string;
+}
