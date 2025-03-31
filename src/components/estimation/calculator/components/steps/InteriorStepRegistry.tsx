@@ -11,7 +11,7 @@ import { FormData } from '../../types';
 // Registry for interior finishings steps
 export const createInteriorStepRegistry = (
   formData: FormData,
-  onPlatrerieSubmit: (data: { plasteringType: string }) => void,
+  onPlatrerieSubmit: (data: any) => void,
   onMenuiseriesIntSubmit: (data: any) => void,
   onCarrelageSubmit: (data: any) => void,
   onParquetSubmit: (data: any) => void,
@@ -23,7 +23,8 @@ export const createInteriorStepRegistry = (
       <PlatrerieForm
         formData={formData}
         updateFormData={(data) => onPlatrerieSubmit({
-          plasteringType: data.plasteringType || ''
+          plasteringType: data.plasteringType || '',
+          interiorFittings: data.interiorFittings || 'standard'
         })}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
@@ -35,6 +36,7 @@ export const createInteriorStepRegistry = (
         formData={formData}
         updateFormData={(data) => onMenuiseriesIntSubmit({
           doorType: data.doorType || '',
+          interiorDoorsType: data.interiorDoorsType || '',
           hasMoldings: data.hasMoldings || false,
           hasCustomFurniture: data.hasCustomFurniture || false
         })}

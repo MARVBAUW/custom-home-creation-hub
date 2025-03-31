@@ -1,22 +1,45 @@
 
 import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
-import { calculateParquetCost, calculateSoftFloorCost } from '../../utils/montantUtils';
+import { 
+  calculateParquetCost, 
+  calculateSoftFloorCost,
+  calculatePlasteringCost,
+  calculateInteriorCarpenteryCost
+} from '../../utils/montantUtils';
 
 export const useInteriorSubmissions = () => {
   // Function to handle platrerie submission
-  const handlePlatrerieSubmit = (data: any) => {
+  const handlePlatrerieSubmit = (data: any, formData: FormData) => {
+    const surface = ensureNumber(formData.surface, 0);
+    const additionalCost = calculatePlasteringCost(
+      data.plasteringType,
+      surface
+    );
+    
     return {
       plasteringType: data.plasteringType,
-      interiorFittings: data.interiorFittings || 'standard'
+      interiorFittings: data.interiorFittings || 'standard',
+      montantT: (formData.montantT || 0) + additionalCost
     };
   };
 
   // Function to handle menuiseries intérieures submission
-  const handleMenuiseriesIntSubmit = (data: any) => {
+  const handleMenuiseriesIntSubmit = (data: any, formData: FormData) => {
+    const surface = ensureNumber(formData.surface, 0);
+    const additionalCost = calculateInteriorCarpenteryCost(
+      data.doorType, 
+      data.hasMoldings || false, 
+      data.hasCustomFurniture || false, 
+      surface
+    );
+    
     return {
       doorType: data.doorType,
       interiorDoorsType: data.interiorDoorsType,
+      hasMoldings: data.hasMoldings || false,
+      hasCustomFurniture: data.hasCustomFurniture || false,
+      montantT: (formData.montantT || 0) + additionalCost
     };
   };
 
