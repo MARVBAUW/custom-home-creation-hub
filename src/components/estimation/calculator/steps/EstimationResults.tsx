@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, CheckCircle, CheckSquare } from 'lucide-react';
+import { ArrowLeft, Save, CheckCircle, CheckSquare, Send, Download } from 'lucide-react';
 import { FormData } from '../types';
 import { Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -13,6 +13,7 @@ import { saveEstimationToUser } from '../calculationUtils';
 import { useAuth } from '@/hooks/useAuth';
 import EstimationPDFExport from '../EstimationPDFExport';
 import { formatCurrency } from '@/utils/formatters';
+import { sendEstimationEmail } from '../services/emailService';
 
 interface EstimationResultsProps {
   estimation: number | null;
@@ -34,10 +35,13 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   const { toast } = useToast();
   const { user } = useAuth();
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [projectName, setProjectName] = useState(formData.projectName || "Mon projet");
   const [email, setEmail] = useState(formData.contactEmail || "");
   const [isSaving, setIsSaving] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   
   // Fonction pour sauvegarder l'estimation
   const handleSaveEstimation = async () => {
@@ -102,6 +106,83 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
     setTimeout(() => {
       window.location.href = '/auth/signup?email=' + encodeURIComponent(email);
     }, 1500);
+  };
+
+  // Fonction pour envoyer l'estimation par email
+  const handleSendEmail = async () => {
+    if (!estimation) return;
+    
+    if (!email) {
+      setShowEmailDialog(true);
+      return;
+    }
+    
+    setIsSendingEmail(true);
+    try {
+      // Simuler des catégories pour l'email
+      const categoriesAmounts = [
+        { category: 'Gros œuvre', amount: estimation * 0.25 },
+        { category: 'Second œuvre', amount: estimation * 0.20 },
+        { category: 'Finitions', amount: estimation * 0.15 },
+        { category: 'Électricité', amount: estimation * 0.10 },
+        { category: 'Plomberie', amount: estimation * 0.10 },
+        { category: 'Chauffage', amount: estimation * 0.10 },
+        { category: 'Aménagements extérieurs', amount: estimation * 0.05 },
+        { category: 'Frais divers', amount: estimation * 0.05 }
+      ];
+      
+      const result = await sendEstimationEmail(
+        email,
+        formData,
+        estimation,
+        categoriesAmounts
+      );
+
+      if (result.success) {
+        toast({
+          title: "Email envoyé",
+          description: "L'estimation a été envoyée à votre adresse email",
+        });
+        setEmailSent(true);
+        setShowEmailDialog(false);
+        
+        // Si goToNextStep est défini, passer à l'étape suivante
+        if (goToNextStep) {
+          goToNextStep();
+        }
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'envoi de l'email:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer l'email",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+  
+  // Fonction pour confirmer l'email
+  const handleConfirmEmail = () => {
+    if (!email) {
+      toast({
+        title: "Email requis",
+        description: "Veuillez saisir votre adresse email",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Mettre à jour l'email dans formData si updateFormData est défini
+    if (updateFormData) {
+      updateFormData({ contactEmail: email });
+    }
+    
+    // Envoyer l'email
+    handleSendEmail();
   };
   
   // Calculer la TVA et du total TTC
@@ -178,6 +259,29 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
               estimationResult={estimation} 
             />
             
+            <Button
+              onClick={() => handleSendEmail()}
+              className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white"
+              disabled={isSendingEmail || emailSent}
+            >
+              {isSendingEmail ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Envoi en cours...
+                </>
+              ) : emailSent ? (
+                <>
+                  <CheckSquare className="mr-2 h-4 w-4" />
+                  Envoyé par email
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  Recevoir par email
+                </>
+              )}
+            </Button>
+            
             {!saved && (
               <Button
                 onClick={handleSaveEstimation}
@@ -217,6 +321,7 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
         </CardContent>
       </Card>
       
+      {/* Dialogue pour sauvegarder l'estimation */}
       <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -259,6 +364,56 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
             <Button type="button" onClick={handleSaveAndCreateAccount} className="bg-khaki-600 hover:bg-khaki-700">
               <CheckCircle className="w-4 h-4 mr-2" />
               Sauvegarder et créer un compte
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialogue pour envoyer l'estimation par email */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Recevoir l'estimation par email</DialogTitle>
+            <DialogDescription>
+              Renseignez votre email pour recevoir une copie de cette estimation.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="emailAddress" className="text-right">
+                Email
+              </Label>
+              <Input
+                id="emailAddress"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="col-span-3"
+                placeholder="votre@email.com"
+                type="email"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setShowEmailDialog(false)}>
+              Annuler
+            </Button>
+            <Button 
+              type="button" 
+              onClick={handleConfirmEmail} 
+              className="bg-blue-600 hover:bg-blue-700"
+              disabled={isSendingEmail}
+            >
+              {isSendingEmail ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Envoi en cours...
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Envoyer
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

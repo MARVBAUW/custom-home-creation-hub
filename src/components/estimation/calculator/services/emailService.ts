@@ -11,7 +11,7 @@ interface CategoryAmount {
 export const generateEmailContent = (
   formData: FormData, 
   estimationResult: number, 
-  categoriesAmounts: CategoryAmount[]
+  categoriesAmounts?: CategoryAmount[]
 ): string => {
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(price);
@@ -57,37 +57,45 @@ export const generateEmailContent = (
           <h2>Estimation de votre projet</h2>
           <p class="total">${formatPrice(estimationResult)}</p>
           
-          <h3>Détails par corps d'état</h3>
+          <h3>Détails de l'estimation</h3>
+          <div class="estimation-details">
+            <p><span class="info-label">Montant HT:</span> ${formatPrice(estimationResult)}</p>
+            <p><span class="info-label">TVA (20%):</span> ${formatPrice(estimationResult * 0.2)}</p>
+            <p><span class="info-label">Montant TTC:</span> ${formatPrice(estimationResult * 1.2)}</p>
+          </div>
   `;
 
-  // Ajouter chaque corps d'état
-  categoriesAmounts.forEach(category => {
-    const percentage = Math.round((category.amount / estimationResult) * 100);
-    
+  // Ajouter les catégories si disponibles
+  if (categoriesAmounts && categoriesAmounts.length > 0) {
     emailContent += `
-      <div class="category">
-        <div class="category-header">
-          <span class="category-name">${category.category}</span>
-          <span class="category-amount">${formatPrice(category.amount)} (${percentage}%)</span>
-        </div>
-        ${category.details ? `<p class="category-details">${category.details}</p>` : ''}
+      <h3>Détail par corps d'état</h3>
+      <div class="categories">
+    `;
+
+    categoriesAmounts.forEach(category => {
+      if (category.amount > 0) {
+        emailContent += `
+          <div class="category">
+            <div class="category-header">
+              <span class="category-name">${category.category}</span>
+              <span class="category-amount">${formatPrice(category.amount)}</span>
+            </div>
+            ${category.details ? `<div class="category-details">${category.details}</div>` : ''}
+          </div>
+        `;
+      }
+    });
+
+    emailContent += `
       </div>
     `;
-  });
+  }
 
-  // Ajouter le pied de page
+  // Ajouter le footer
   emailContent += `
           <div class="footer">
-            <p>
-              * Prix approximatif TTC hors terrain, frais de notaire, étude géotechnique, 
-              honoraires de maîtrise d'œuvre, taxe d'aménagement, taxe archéologique, 
-              assurance dommage ouvrage.
-            </p>
-            <p>
-              Pour toute question concernant cette estimation, n'hésitez pas à nous contacter:
-              <br>Email: contact@progineer.fr
-              <br>Téléphone: 04 XX XX XX XX
-            </p>
+            <p>Ceci est une estimation automatique basée sur les informations que vous avez fournies. Pour une étude plus précise, notre équipe est à votre disposition.</p>
+            <p>© ${new Date().getFullYear()} Progineer - Tous droits réservés</p>
           </div>
         </div>
       </body>
@@ -97,51 +105,45 @@ export const generateEmailContent = (
   return emailContent;
 };
 
-// Fonction pour envoyer l'email
+// Fonction pour envoyer l'email à l'utilisateur
 export const sendEstimationEmail = async (
-  formData: FormData, 
-  estimationResult: number, 
-  categoriesAmounts: CategoryAmount[]
-): Promise<boolean> => {
+  email: string,
+  formData: FormData,
+  estimationResult: number,
+  categoriesAmounts?: CategoryAmount[]
+): Promise<{ success: boolean; message: string }> => {
   try {
-    console.log("Envoi de l'email en cours...");
-    
-    // En production, vous devriez utiliser un service d'envoi d'email comme EmailJS, SendGrid, etc.
-    // Pour l'instant, on simule un envoi réussi et on affiche le contenu dans la console
-    
+    // Générer le contenu de l'email
     const emailContent = generateEmailContent(formData, estimationResult, categoriesAmounts);
-    console.log("Contenu de l'email:", emailContent);
     
-    // Endpoint fictif pour simuler l'envoi d'email (à remplacer par un vrai service)
-    const emailData = {
-      to: [formData.email, "progineer.moe@gmail.com"],
-      subject: "Estimation de votre projet - Progineer",
-      html: emailContent,
-      from: "estimation@progineer.fr"
-    };
-    
-    console.log("Données de l'email:", emailData);
-    
-    // Simulation d'un appel API réussi
-    // En production, vous utiliseriez un service d'email réel
-    
-    /*
-    const response = await fetch('https://api.emailservice.com/send', {
+    // Dans un environnement de production, vous appelleriez votre API ou service tiers ici
+    // Par exemple avec Supabase Edge Functions
+    const response = await fetch('/api/send-estimation-email', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(emailData),
+      body: JSON.stringify({
+        to: email,
+        subject: 'Votre estimation de projet Progineer',
+        html: emailContent,
+        cc: 'progineer.moe@gmail.com', // Copie à l'admin
+        formData,
+        estimationAmount: estimationResult
+      }),
     });
-    
+
     if (!response.ok) {
-      throw new Error(`Erreur lors de l'envoi de l'email: ${response.status}`);
+      throw new Error('Erreur lors de l\'envoi de l\'email');
     }
-    */
+
+    // Simuler l'envoi d'email en mode développement
+    console.log('Email envoyé à:', email);
+    console.log('Copie envoyée à: progineer.moe@gmail.com');
     
-    return true;
+    return { success: true, message: 'Email envoyé avec succès' };
   } catch (error) {
-    console.error("Erreur lors de l'envoi de l'email:", error);
-    return false;
+    console.error('Erreur d\'envoi d\'email:', error);
+    return { success: false, message: error instanceof Error ? error.message : 'Une erreur est survenue' };
   }
 };
