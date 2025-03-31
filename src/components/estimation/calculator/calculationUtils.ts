@@ -1,228 +1,171 @@
 
-import { FormData } from "./types";
-import { ensureNumber } from "./utils/typeConversions";
-import { calculateEstimation } from './calculations/simpleEstimation';
+import { FormData } from './types';
 
-// Type for saved estimations
-export interface SavedEstimation {
-  id: string;
-  userId: string;
-  projectName: string;
-  formData: FormData;
-  estimationAmount: number;
-  createdAt: string;
-}
-
-// Re-export the calculateEstimation function explicitly
-export { calculateEstimation };
-
-// Fonction pour sauvegarder une estimation pour un utilisateur
-export const saveEstimationToUser = async (
-  userId: string,
-  formData: FormData,
-  estimationAmount: number
-): Promise<{ success: boolean; message: string; id?: string }> => {
+// Calculer l'estimation en fonction des données du formulaire
+export const calculateEstimation = (formData: FormData): number => {
   try {
-    // En production, vous utiliseriez Supabase ou une autre base de données
-    // Ici, nous simulerons la sauvegarde dans localStorage
-    const estimationId = `est_${Date.now()}`;
-    const savedEstimation: SavedEstimation = {
-      id: estimationId,
-      userId,
-      projectName: formData.projectName || "Mon projet",
-      formData,
-      estimationAmount,
-      createdAt: new Date().toISOString(),
-    };
-
-    // Récupérer les estimations existantes
-    const existingEstimationsStr = localStorage.getItem(`estimations_${userId}`);
-    const existingEstimations: SavedEstimation[] = existingEstimationsStr
-      ? JSON.parse(existingEstimationsStr)
-      : [];
-
-    // Ajouter la nouvelle estimation
-    existingEstimations.push(savedEstimation);
-
-    // Sauvegarder dans localStorage
-    localStorage.setItem(
-      `estimations_${userId}`,
-      JSON.stringify(existingEstimations)
-    );
-
-    console.log("Estimation sauvegardée:", savedEstimation);
-
-    return {
-      success: true,
-      message: "Estimation sauvegardée avec succès",
-      id: estimationId,
-    };
-  } catch (error) {
-    console.error("Erreur lors de la sauvegarde de l'estimation:", error);
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Une erreur est survenue lors de la sauvegarde",
-    };
-  }
-};
-
-// Fonction pour récupérer toutes les estimations d'un utilisateur
-export const getUserEstimations = async (
-  userId: string
-): Promise<SavedEstimation[]> => {
-  try {
-    // En production, vous utiliseriez Supabase ou une autre base de données
-    // Ici, nous récupérons depuis localStorage
-    const estimationsStr = localStorage.getItem(`estimations_${userId}`);
-    const estimations: SavedEstimation[] = estimationsStr
-      ? JSON.parse(estimationsStr)
-      : [];
-
-    // Trier par date de création (plus récent en premier)
-    return estimations.sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération des estimations:", error);
-    return [];
-  }
-};
-
-// Fonction pour récupérer une estimation spécifique
-export const getEstimationById = async (
-  userId: string,
-  estimationId: string
-): Promise<SavedEstimation | null> => {
-  try {
-    const estimations = await getUserEstimations(userId);
-    return estimations.find((est) => est.id === estimationId) || null;
-  } catch (error) {
-    console.error("Erreur lors de la récupération de l'estimation:", error);
-    return null;
-  }
-};
-
-// Fonction pour supprimer une estimation
-export const deleteEstimation = async (
-  userId: string,
-  estimationId: string
-): Promise<{ success: boolean; message: string }> => {
-  try {
-    // Récupérer les estimations existantes
-    const estimations = await getUserEstimations(userId);
+    // Base de calcul : prix au m²
+    let basePrice = 1500;
     
-    // Filtrer pour supprimer l'estimation spécifiée
-    const updatedEstimations = estimations.filter(
-      (est) => est.id !== estimationId
-    );
+    // Convertir la surface en nombre
+    const surface = typeof formData.surface === 'string' 
+      ? parseFloat(formData.surface) 
+      : (formData.surface || 100);
     
-    // Sauvegarder la liste mise à jour
-    localStorage.setItem(
-      `estimations_${userId}`,
-      JSON.stringify(updatedEstimations)
-    );
+    // Ajustements en fonction du type de projet
+    if (formData.projectType === 'construction') {
+      basePrice = 1800;
+    } else if (formData.projectType === 'renovation') {
+      basePrice = 1200;
+    } else if (formData.projectType === 'extension') {
+      basePrice = 1600;
+    }
     
-    return {
-      success: true,
-      message: "Estimation supprimée avec succès",
-    };
+    // Ajustements en fonction du type de client
+    if (formData.clientType === 'professional') {
+      basePrice *= 0.9; // 10% de réduction pour les professionnels
+    }
+    
+    // Ajustements en fonction du niveau de finition
+    if (formData.finishLevel === 'high') {
+      basePrice *= 1.2; // +20% pour finitions haut de gamme
+    } else if (formData.finishLevel === 'luxury') {
+      basePrice *= 1.5; // +50% pour finitions luxueuses
+    }
+    
+    // Calcul final
+    return Math.round(basePrice * surface);
   } catch (error) {
-    console.error("Erreur lors de la suppression de l'estimation:", error);
-    return {
-      success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Une erreur est survenue lors de la suppression",
-    };
+    console.error("Erreur lors du calcul de l'estimation:", error);
+    return 50000; // Valeur par défaut en cas d'erreur
   }
 };
 
-// Fonction pour éviter les erreurs dans le calcul de l'estimation
+// Obtenir une estimation sécurisée (avec gestion d'erreurs)
 export const getSafeEstimation = (formData: FormData): number => {
   try {
-    const result = calculateEstimation(formData);
-    if (typeof result !== 'number' || isNaN(result)) {
-      console.error('Calcul invalide, utilisation d\'une valeur par défaut');
-      return 150000; // Valeur par défaut en cas d'erreur
-    }
-    return result;
+    return calculateEstimation(formData);
   } catch (error) {
-    console.error('Erreur lors du calcul:', error);
-    return 150000; // Valeur par défaut en cas d'erreur
+    console.error("Erreur lors du calcul de l'estimation:", error);
+    return 50000; // Valeur par défaut en cas d'erreur
   }
 };
 
-// Add generateEstimationReport function
-export const generateEstimationReport = (
-  formData: FormData,
-  estimationResult: number
-): {
-  clientInfo: {
-    clientType: string;
-    name: string;
-    email: string;
-    phone: string;
+// Générer un rapport complet d'estimation pour PDF et email
+export const generateEstimationReport = (formData: FormData, estimationAmount: number) => {
+  // Calculer TVA et montant TTC
+  const tvaRate = 0.2; // 20%
+  const totalHT = estimationAmount;
+  const vat = totalHT * tvaRate;
+  const totalTTC = totalHT + vat;
+  
+  // Préparer les informations client
+  const clientInfo = {
+    clientType: formData.clientType || 'individual',
+    name: `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || 'Client',
+    email: formData.email || formData.contactEmail || 'Non spécifié',
+    phone: formData.phone || 'Non spécifié',
+    company: formData.company || '',
   };
-  projectInfo: {
-    type: string;
-    surface: string | number;
-    location: string;
+  
+  // Préparer les informations du projet
+  const projectInfo = {
+    type: getProjectTypeLabel(formData.projectType || ''),
+    surface: formData.surface || 'Non spécifiée',
+    location: formData.city || 'Non spécifiée',
+    constructionType: formData.constructionType || 'standard',
+    constructionStyle: formData.constructionStyle || '',
   };
-  estimationDetails: {
-    totalHT: number;
-    vat: number;
-    totalTTC: number;
+  
+  // Préparer les détails financiers
+  const estimationDetails = {
+    totalHT,
+    vat,
+    totalTTC,
+    paymentSchedule: generatePaymentSchedule(totalTTC),
   };
-  categories: Array<{
-    name: string;
-    percentage: number;
-    amount: number;
-  }>;
-} => {
-  // Calculate VAT and TTC
-  const vat = estimationResult * 0.2;
-  const totalTTC = estimationResult + vat;
-
-  // Get name from form data
-  const name = [formData.firstName, formData.lastName]
-    .filter(Boolean)
-    .join(" ") || "Client";
-
-  // Create categories with default percentages
-  const categories = [
-    { name: "Gros œuvre", percentage: 30, amount: estimationResult * 0.3 },
-    { name: "Charpente / Couverture", percentage: 15, amount: estimationResult * 0.15 },
-    { name: "Menuiseries extérieures", percentage: 10, amount: estimationResult * 0.1 },
-    { name: "Cloisons / Isolation", percentage: 8, amount: estimationResult * 0.08 },
-    { name: "Électricité", percentage: 7, amount: estimationResult * 0.07 },
-    { name: "Plomberie", percentage: 7, amount: estimationResult * 0.07 },
-    { name: "Chauffage", percentage: 6, amount: estimationResult * 0.06 },
-    { name: "Revêtements", percentage: 10, amount: estimationResult * 0.1 },
-    { name: "Aménagements extérieurs", percentage: 5, amount: estimationResult * 0.05 },
-    { name: "Études et honoraires", percentage: 2, amount: estimationResult * 0.02 },
-  ];
-
+  
+  // Calculer la répartition des coûts par catégorie
+  const categories = calculateCostBreakdown(totalHT, formData);
+  
+  // Retourner le rapport complet
   return {
-    clientInfo: {
-      clientType: formData.clientType || "individual",
-      name: name,
-      email: formData.email || formData.contactEmail || "",
-      phone: formData.phone || "",
-    },
-    projectInfo: {
-      type: formData.projectType || "construction",
-      surface: formData.surface || "N/A",
-      location: formData.location || formData.city || "N/A",
-    },
-    estimationDetails: {
-      totalHT: estimationResult,
-      vat: vat,
-      totalTTC: totalTTC,
-    },
-    categories: categories,
+    clientInfo,
+    projectInfo,
+    estimationDetails,
+    categories,
+    date: new Date().toISOString(),
   };
+};
+
+// Générer un échéancier de paiement
+const generatePaymentSchedule = (totalAmount: number) => {
+  return [
+    { phase: 'Signature du contrat', percentage: 5, amount: totalAmount * 0.05 },
+    { phase: 'Validation des plans', percentage: 15, amount: totalAmount * 0.15 },
+    { phase: 'Début des travaux', percentage: 30, amount: totalAmount * 0.3 },
+    { phase: 'Gros œuvre terminé', percentage: 25, amount: totalAmount * 0.25 },
+    { phase: 'Second œuvre terminé', percentage: 20, amount: totalAmount * 0.2 },
+    { phase: 'Réception des travaux', percentage: 5, amount: totalAmount * 0.05 },
+  ];
+};
+
+// Calculer la répartition des coûts par catégorie
+const calculateCostBreakdown = (totalEstimation: number, formData: FormData) => {
+  // Répartition par défaut
+  const defaultBreakdown = [
+    { name: 'Terrassement & Fondations', percentage: 15 },
+    { name: 'Gros Œuvre', percentage: 25 },
+    { name: 'Charpente & Couverture', percentage: 15 },
+    { name: 'Menuiseries', percentage: 10 },
+    { name: 'Plomberie & Électricité', percentage: 15 },
+    { name: 'Isolation & Plâtrerie', percentage: 10 },
+    { name: 'Finitions & Revêtements', percentage: 8 },
+    { name: 'Divers & Imprévus', percentage: 2 },
+  ];
+  
+  // Ajuster la répartition en fonction du type de projet
+  let breakdown = [...defaultBreakdown];
+  
+  if (formData.projectType === 'renovation') {
+    breakdown = [
+      { name: 'Démolition & Préparation', percentage: 10 },
+      { name: 'Gros Œuvre', percentage: 20 },
+      { name: 'Menuiseries', percentage: 15 },
+      { name: 'Plomberie & Électricité', percentage: 20 },
+      { name: 'Isolation & Plâtrerie', percentage: 15 },
+      { name: 'Finitions & Revêtements', percentage: 15 },
+      { name: 'Divers & Imprévus', percentage: 5 },
+    ];
+  } else if (formData.projectType === 'extension') {
+    breakdown = [
+      { name: 'Terrassement & Fondations', percentage: 12 },
+      { name: 'Gros Œuvre', percentage: 25 },
+      { name: 'Charpente & Couverture', percentage: 15 },
+      { name: 'Raccords au bâtiment existant', percentage: 8 },
+      { name: 'Menuiseries', percentage: 10 },
+      { name: 'Plomberie & Électricité', percentage: 13 },
+      { name: 'Isolation & Plâtrerie', percentage: 10 },
+      { name: 'Finitions & Revêtements', percentage: 7 },
+    ];
+  }
+  
+  // Calculer les montants pour chaque catégorie
+  return breakdown.map(category => ({
+    ...category,
+    amount: (totalEstimation * category.percentage) / 100
+  }));
+};
+
+// Fonction utilitaire pour obtenir un libellé lisible pour le type de projet
+export const getProjectTypeLabel = (projectType: string): string => {
+  const projectTypes: Record<string, string> = {
+    'construction': 'Construction neuve',
+    'renovation': 'Rénovation',
+    'extension': 'Extension',
+    'division': 'Division de propriété',
+    'design': 'Design d\'intérieur',
+  };
+  
+  return projectTypes[projectType] || projectType;
 };

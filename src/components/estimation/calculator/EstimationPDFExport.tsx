@@ -1,7 +1,7 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Printer, Mail } from 'lucide-react';
+import { Download, Printer, Mail, Save } from 'lucide-react';
 import { FormData } from './types';
 import { generateEstimationReport } from './calculationUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -9,6 +9,12 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { formatCurrency } from '@/utils/formatters';
 import { sendEstimationEmail } from './services/emailService';
+import { useEstimationStorage } from './services/estimationStorageService';
+import { useAuth } from '@/hooks/useAuth';
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 
 interface EstimationPDFExportProps {
   formData: FormData;
@@ -23,6 +29,13 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
 }) => {
   const { toast } = useToast();
   const reportRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+  const { saveEstimation } = useEstimationStorage();
+  const navigate = useNavigate();
+  const [isSaving, setIsSaving] = useState(false);
+  const [isEmailSending, setIsEmailSending] = useState(false);
+  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
   
   const handlePrint = () => {
     if (reportRef.current) {
@@ -91,6 +104,27 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
         body: tableRows,
       });
       
+      // Ajouter l'échéancier de paiement
+      if (report.estimationDetails.paymentSchedule) {
+        const paymentStartY = doc.lastAutoTable?.finalY || 280;
+        
+        doc.setFontSize(14);
+        doc.text("Échéancier de paiement", 20, paymentStartY + 20);
+        
+        const paymentTable = report.estimationDetails.paymentSchedule.map(payment => [
+          payment.phase,
+          `${payment.percentage}%`,
+          formatCurrency(payment.amount)
+        ]);
+        
+        // @ts-ignore
+        doc.autoTable({
+          startY: paymentStartY + 30,
+          head: [["Phase", "Pourcentage", "Montant TTC"]],
+          body: paymentTable,
+        });
+      }
+      
       // Ajouter la date et le pied de page
       const date = new Date().toLocaleDateString('fr-FR');
       const pageCount = doc.getNumberOfPages();
@@ -131,6 +165,8 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       return;
     }
     
+    setIsEmailSending(true);
+    
     try {
       const result = await sendEstimationEmail(
         userEmail,
@@ -157,7 +193,55 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
         description: "Impossible d'envoyer l'email: " + (error instanceof Error ? error.message : "Erreur inconnue"),
         variant: "destructive"
       });
+    } finally {
+      setIsEmailSending(false);
     }
+  };
+  
+  const handleSaveEstimation = async () => {
+    if (!estimationResult) {
+      toast({
+        title: "Erreur",
+        description: "Aucune estimation disponible à sauvegarder",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Si l'utilisateur n'est pas connecté, afficher le dialogue de connexion
+    if (!user) {
+      setIsLoginDialogOpen(true);
+      return;
+    }
+    
+    setIsSaving(true);
+    
+    try {
+      const estimationId = await saveEstimation(formData, estimationResult);
+      
+      if (estimationId) {
+        toast({
+          title: "Estimation sauvegardée",
+          description: "Votre estimation a été sauvegardée dans votre compte",
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde de l'estimation:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder l'estimation",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  
+  const handleLoginForSave = () => {
+    // Rediriger vers la page de connexion avec un paramètre de retour
+    // pour revenir à l'estimation après la connexion
+    navigate(`/auth/login?redirect=/estimations&email=${encodeURIComponent(loginEmail)}`);
+    setIsLoginDialogOpen(false);
   };
   
   return (
@@ -188,12 +272,54 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
           <Button 
             onClick={handleSendByEmail} 
             className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 flex-1"
+            disabled={isEmailSending}
           >
             <Mail className="h-4 w-4" />
-            Envoyer par email
+            {isEmailSending ? 'Envoi en cours...' : 'Envoyer par email'}
           </Button>
         )}
+        
+        <Button
+          onClick={handleSaveEstimation}
+          className="flex items-center justify-center gap-2 bg-khaki-600 hover:bg-khaki-700 flex-1"
+          disabled={isSaving}
+        >
+          <Save className="h-4 w-4" />
+          {isSaving ? 'Sauvegarde...' : 'Sauvegarder dans mon compte'}
+        </Button>
       </div>
+      
+      {/* Login Dialog */}
+      <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+        <DialogContent>
+          <DialogTitle>Connexion requise</DialogTitle>
+          <DialogDescription>
+            Vous devez être connecté pour sauvegarder une estimation. Veuillez vous connecter ou créer un compte.
+          </DialogDescription>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="votre@email.com" 
+                value={loginEmail} 
+                onChange={(e) => setLoginEmail(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsLoginDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleLoginForSave}>
+              Se connecter
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

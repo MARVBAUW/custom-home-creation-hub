@@ -1,177 +1,189 @@
 
 import { FormData } from '../types';
+import { generateEstimationReport } from '../calculationUtils';
+import { formatCurrency } from '@/utils/formatters';
 
-interface CategoryAmount {
-  category: string;
-  amount: number;
-  details?: string;
+interface EmailResponse {
+  success: boolean;
+  message: string;
 }
 
-// Fonction pour générer le contenu HTML de l'email
-export const generateEmailContent = (
-  formData: FormData, 
-  estimationResult: number, 
-  categoriesAmounts?: CategoryAmount[]
-): string => {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(price);
-  };
-
-  // Générer le contenu HTML de l'email
-  let emailContent = `
-    <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; color: #333; line-height: 1.6; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background-color: #f5f5f5; padding: 20px; border-bottom: 3px solid #d4af37; }
-          .title { color: #d4af37; margin: 0; }
-          .subtitle { color: #666; margin-top: 5px; }
-          .total { font-size: 24px; font-weight: bold; color: #d4af37; margin: 20px 0; }
-          .category { background-color: #f9f9f9; padding: 10px; margin-bottom: 10px; border-radius: 4px; }
-          .category-header { display: flex; justify-content: space-between; }
-          .category-name { font-weight: bold; }
-          .category-amount { font-weight: bold; }
-          .category-details { font-size: 13px; color: #666; margin-top: 5px; }
-          .footer { background-color: #f5f5f5; padding: 20px; margin-top: 20px; font-size: 12px; color: #666; }
-          .client-info { margin: 20px 0; }
-          .info-label { font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h1 class="title">Progineer - Estimation de projet</h1>
-            <p class="subtitle">Récapitulatif de votre estimation</p>
-          </div>
-          
-          <div class="client-info">
-            <p><span class="info-label">Nom:</span> ${formData.lastName || '-'}</p>
-            <p><span class="info-label">Prénom:</span> ${formData.firstName || '-'}</p>
-            <p><span class="info-label">Email:</span> ${formData.email || '-'}</p>
-            <p><span class="info-label">Téléphone:</span> ${formData.phone || '-'}</p>
-            <p><span class="info-label">Type de projet:</span> ${formData.projectType || '-'}</p>
-            <p><span class="info-label">Surface:</span> ${formData.surface || '-'} m²</p>
-          </div>
-          
-          <h2>Estimation de votre projet</h2>
-          <p class="total">${formatPrice(estimationResult)}</p>
-          
-          <h3>Détails de l'estimation</h3>
-          <div class="estimation-details">
-            <p><span class="info-label">Montant HT:</span> ${formatPrice(estimationResult)}</p>
-            <p><span class="info-label">TVA (20%):</span> ${formatPrice(estimationResult * 0.2)}</p>
-            <p><span class="info-label">Montant TTC:</span> ${formatPrice(estimationResult * 1.2)}</p>
-          </div>
-  `;
-
-  // Ajouter les catégories si disponibles
-  if (categoriesAmounts && categoriesAmounts.length > 0) {
-    emailContent += `
-      <h3>Détail par corps d'état</h3>
-      <div class="categories">
-    `;
-
-    categoriesAmounts.forEach(category => {
-      if (category.amount > 0) {
-        emailContent += `
-          <div class="category">
-            <div class="category-header">
-              <span class="category-name">${category.category}</span>
-              <span class="category-amount">${formatPrice(category.amount)}</span>
-            </div>
-            ${category.details ? `<div class="category-details">${category.details}</div>` : ''}
-          </div>
-        `;
-      }
-    });
-
-    emailContent += `
-      </div>
-    `;
-  }
-
-  // Ajouter le footer
-  emailContent += `
-          <div class="footer">
-            <p>Ceci est une estimation automatique basée sur les informations que vous avez fournies. Pour une étude plus précise, notre équipe est à votre disposition.</p>
-            <p>© ${new Date().getFullYear()} Progineer - Tous droits réservés</p>
-          </div>
-        </div>
-      </body>
-    </html>
-  `;
-
-  return emailContent;
-};
-
-// Fonction pour envoyer l'email à l'utilisateur
+/**
+ * Envoie un email avec l'estimation du projet au client et en copie à l'administrateur
+ */
 export const sendEstimationEmail = async (
-  toOrFormData: string | FormData,
-  formDataOrEstimation: FormData | number,
-  estimationResultOrCategories?: number | CategoryAmount[],
-  categoriesAmounts?: CategoryAmount[]
-): Promise<{ success: boolean; message: string }> => {
+  to: string,
+  formData: FormData,
+  estimationAmount: number
+): Promise<EmailResponse> => {
   try {
-    let email: string;
-    let formData: FormData;
-    let estimationResult: number;
-    let categories: CategoryAmount[] | undefined;
-
-    // Handle different parameter patterns
-    if (typeof toOrFormData === 'string') {
-      // Case: (email, formData, estimationResult, categories?)
-      email = toOrFormData;
-      formData = formDataOrEstimation as FormData;
-      estimationResult = estimationResultOrCategories as number;
-      categories = categoriesAmounts;
-    } else {
-      // Case: (formData, estimationResult, categories?)
-      formData = toOrFormData;
-      estimationResult = formDataOrEstimation as number;
-      categories = estimationResultOrCategories as CategoryAmount[] | undefined;
-      // Get email from formData
-      email = formData.email || formData.contactEmail || '';
-      
-      if (!email) {
-        return { 
-          success: false, 
-          message: 'Aucune adresse email fournie dans les données du formulaire' 
-        };
-      }
-    }
-
-    // Generate email content
-    const emailContent = generateEmailContent(formData, estimationResult, categories);
+    const adminEmail = 'progineer.moe@gmail.com';
+    const report = generateEstimationReport(formData, estimationAmount);
     
-    // In a production environment, you would call your API or third-party service here
-    // For example with Supabase Edge Functions
-    const response = await fetch('/api/send-estimation-email', {
+    // Générer le contenu HTML de l'email
+    const html = generateEstimationEmailHTML(formData, estimationAmount, report);
+    
+    // Configurer la requête pour l'Edge Function Supabase
+    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-estimation-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({
-        to: email,
-        subject: 'Votre estimation de projet Progineer',
-        html: emailContent,
-        cc: 'progineer.moe@gmail.com', // Admin copy
+        to,
+        subject: `Votre estimation de projet Progineer - ${formatCurrency(estimationAmount)}`,
+        html,
+        cc: adminEmail,
         formData,
-        estimationAmount: estimationResult
-      }),
+        estimationAmount
+      })
     });
-
-    if (!response.ok) {
-      throw new Error('Erreur lors de l\'envoi de l\'email');
-    }
-
-    // Simulate email sending in development mode
-    console.log('Email envoyé à:', email);
-    console.log('Copie envoyée à: progineer.moe@gmail.com');
     
-    return { success: true, message: 'Email envoyé avec succès' };
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Erreur lors de l\'envoi de l\'email');
+    }
+    
+    const result = await response.json();
+    return {
+      success: true,
+      message: 'Email envoyé avec succès'
+    };
   } catch (error) {
-    console.error('Erreur d\'envoi d\'email:', error);
-    return { success: false, message: error instanceof Error ? error.message : 'Une erreur est survenue' };
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Erreur inconnue'
+    };
   }
+};
+
+/**
+ * Génère le contenu HTML pour l'email d'estimation
+ */
+const generateEstimationEmailHTML = (
+  formData: FormData,
+  estimationAmount: number,
+  report: any
+): string => {
+  // Date formatée
+  const date = new Date().toLocaleDateString('fr-FR');
+  
+  // Informations client
+  const clientType = formData.clientType === 'professional' ? 'Professionnel' : 'Particulier';
+  const clientName = `${formData.firstName || ''} ${formData.lastName || ''}`.trim() || 'Client';
+  
+  // Détails du projet
+  const projectType = getProjectTypeLabel(formData.projectType || '');
+  const surface = formData.surface ? `${formData.surface} m²` : 'Non spécifiée';
+  const location = formData.city || 'Non spécifiée';
+  
+  // Valeurs financières
+  const totalHT = formatCurrency(report.estimationDetails.totalHT);
+  const vat = formatCurrency(report.estimationDetails.vat);
+  const totalTTC = formatCurrency(report.estimationDetails.totalTTC);
+  
+  // Générer les lignes du tableau pour les catégories
+  const categoriesRows = report.categories.map((category: any) => 
+    `<tr>
+      <td style="padding: 8px; border: 1px solid #ddd;">${category.name}</td>
+      <td style="padding: 8px; border: 1px solid #ddd;">${category.percentage}%</td>
+      <td style="padding: 8px; border: 1px solid #ddd;">${formatCurrency(category.amount)}</td>
+    </tr>`
+  ).join('');
+  
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .logo { max-width: 200px; }
+        h1 { color: #A28554; }
+        h2 { color: #666; font-size: 18px; margin-top: 20px; }
+        .section { margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { background-color: #A28554; color: white; padding: 10px; text-align: left; }
+        td { padding: 8px; border: 1px solid #ddd; }
+        .total { font-weight: bold; background-color: #f2f2f2; }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #888; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>Estimation de Projet Progineer</h1>
+          <p>Date: ${date}</p>
+        </div>
+        
+        <div class="section">
+          <h2>Informations Client</h2>
+          <p><strong>Type de client:</strong> ${clientType}</p>
+          <p><strong>Nom:</strong> ${clientName}</p>
+          <p><strong>Email:</strong> ${formData.email || formData.contactEmail || 'Non spécifié'}</p>
+          <p><strong>Téléphone:</strong> ${formData.phone || 'Non spécifié'}</p>
+        </div>
+        
+        <div class="section">
+          <h2>Informations Projet</h2>
+          <p><strong>Type de projet:</strong> ${projectType}</p>
+          <p><strong>Surface:</strong> ${surface}</p>
+          <p><strong>Localisation:</strong> ${location}</p>
+        </div>
+        
+        <div class="section">
+          <h2>Estimation Financière</h2>
+          <p><strong>Montant HT:</strong> ${totalHT}</p>
+          <p><strong>TVA (20%):</strong> ${vat}</p>
+          <p><strong>Montant TTC:</strong> ${totalTTC}</p>
+        </div>
+        
+        <div class="section">
+          <h2>Détails par Catégorie</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Catégorie</th>
+                <th>Pourcentage</th>
+                <th>Montant HT</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${categoriesRows}
+            </tbody>
+          </table>
+        </div>
+        
+        <div class="section">
+          <h2>Prochaines Étapes</h2>
+          <p>Un de nos experts vous contactera dans les plus brefs délais pour discuter des détails de votre projet et affiner cette estimation.</p>
+          <p>N'hésitez pas à nous contacter pour toute question à <a href="mailto:progineer.moe@gmail.com">progineer.moe@gmail.com</a> ou au 01.23.45.67.89.</p>
+        </div>
+        
+        <div class="footer">
+          <p>Progineer - Solutions d'ingénierie et construction - www.progineer.fr</p>
+          <p>Cette estimation est fournie à titre indicatif et pourra être ajustée après étude approfondie du projet.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+/**
+ * Retourne un libellé lisible pour le type de projet
+ */
+const getProjectTypeLabel = (projectType: string): string => {
+  const projectTypes: Record<string, string> = {
+    'construction': 'Construction neuve',
+    'renovation': 'Rénovation',
+    'extension': 'Extension',
+    'division': 'Division de propriété',
+    'design': 'Design d\'intérieur',
+  };
+  
+  return projectTypes[projectType] || projectType;
 };
