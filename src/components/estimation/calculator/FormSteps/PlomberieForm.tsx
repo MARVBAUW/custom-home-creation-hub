@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Pipette, Droplet, Droplets } from 'lucide-react';
+import { Droplet, Waves, Gem } from 'lucide-react';
+import { calculatePlumbingCost, ensureNumber } from '../utils/montantUtils';
 
 const PlomberieForm: React.FC<BaseFormProps> = ({
   formData,
@@ -19,28 +20,19 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
-    // Calculate the additional cost based on plumbing type
-    let additionalCost = 0;
-    const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
+    // Get the surface area
+    const surface = ensureNumber(formData.surface, 0);
     
-    switch (plumbingType) {
-      case 'base':
-        additionalCost = surface * 80; // PRESTATIONS DE BASE
-        break;
-      case 'advanced':
-        additionalCost = surface * 100; // PRESTATIONS AVANCEES
-        break;
-      case 'premium':
-        additionalCost = surface * 125; // PRESTATIONS HAUT DE GAMME
-        break;
-      default:
-        additionalCost = surface * 80; // Default to base
-    }
+    // Calculate the cost based on plumbing type and surface
+    const additionalCost = calculatePlumbingCost(plumbingType, surface);
 
+    // Update form data with plumbing type and additional cost
     updateFormData({
       plumbingType,
       montantT: (formData.montantT || 0) + additionalCost
     });
+    
+    // Move to the next step
     goToNextStep();
   };
 
@@ -63,11 +55,11 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('base')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Pipette className="h-8 w-8 text-blue-500 mb-2" />
+                <Droplet className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="base" id="plumbing-base" className="sr-only" />
-                <Label htmlFor="plumbing-base" className="font-medium">Prestation de base</Label>
+                <Label htmlFor="plumbing-base" className="font-medium">Prestations de base</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Installation standard
+                  Installation sanitaire standard
                 </p>
               </CardContent>
             </Card>
@@ -77,11 +69,11 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('advanced')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Droplet className="h-8 w-8 text-blue-500 mb-2" />
+                <Waves className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="advanced" id="plumbing-advanced" className="sr-only" />
                 <Label htmlFor="plumbing-advanced" className="font-medium">Prestations avancées</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Matériaux de meilleure qualité
+                  Équipements sanitaires améliorés
                 </p>
               </CardContent>
             </Card>
@@ -91,11 +83,11 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
               onClick={() => setPlumbingType('premium')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Droplets className="h-8 w-8 text-blue-500 mb-2" />
+                <Gem className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="premium" id="plumbing-premium" className="sr-only" />
                 <Label htmlFor="plumbing-premium" className="font-medium">Prestations haut de gamme</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Installation premium avec matériaux supérieurs
+                  Équipements sanitaires premium et options avancées
                 </p>
               </CardContent>
             </Card>

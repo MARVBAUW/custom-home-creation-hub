@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, BatteryMedium, Zap, Lightning } from 'lucide-react';
+import { Lightbulb, BatteryMedium, Zap, Bolt } from 'lucide-react';
 
 const ElectriciteForm: React.FC<BaseFormProps> = ({
   formData,
@@ -108,7 +108,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
               onClick={() => setElectricalType('domotique')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Lightning className="h-8 w-8 text-blue-500 mb-2" />
+                <Bolt className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="domotique" id="electrical-domotique" className="sr-only" />
                 <Label htmlFor="electrical-domotique" className="font-medium">HG + Domotique</Label>
                 <p className="text-xs text-gray-500 mt-1">
