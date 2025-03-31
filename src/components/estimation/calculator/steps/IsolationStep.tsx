@@ -1,20 +1,19 @@
 
-import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from '@/components/ui/label';
-import { Layers } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { Leaf, ThermometerSnowflake, ShieldCheck, Award } from 'lucide-react';
 import { FormData } from '../types';
-import { calculateComponentCost, calculateNewMontantT } from '../utils/montantUtils';
+import { useEstimationCalculator } from '../useEstimationCalculator';
 
 interface IsolationStepProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  animationDirection: string;
+  animationDirection: 'forward' | 'backward';
 }
 
 const IsolationStep: React.FC<IsolationStepProps> = ({
@@ -24,120 +23,100 @@ const IsolationStep: React.FC<IsolationStepProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    defaultValues: {
-      insulationType: formData.insulationType || ''
-    }
-  });
+  const [insulationType, setInsulationType] = useState<string>(formData.insulationType || 'standard');
   
-  const onSubmit = (data: { insulationType: string }) => {
-    // Calculate cost based on selected insulation type
-    let rate = 100; // Default to ISO+ (performance)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     
-    switch (data.insulationType) {
-      case 'base':
-        rate = 80; // ISO DE BASE
-        break;
-      case 'performance':
-        rate = 100; // ISO+
-        break;
-      case 'ultraPerformance':
-        rate = 120; // ISO++
-        break;
-      case 'non_concerne':
-        rate = 0; // No insulation
-        break;
-    }
-    
-    // Calculate cost for the selected insulation
-    const surface = typeof formData.surface === 'string' 
-      ? parseFloat(formData.surface) 
-      : (formData.surface || 0);
-    const insulationCost = calculateComponentCost(surface, rate);
-    
-    // Calculate new total
-    const newMontantT = calculateNewMontantT(formData.montantT, insulationCost);
-    
-    // Update form data
     updateFormData({
-      insulationType: data.insulationType,
-      montantT: newMontantT
+      insulationType,
     });
-    
-    // Go to next step
     goToNextStep();
   };
-
+  
   return (
-    <Card className={`transform transition-all duration-300 ${
+    <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
     }`}>
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Isolation</CardTitle>
-      </CardHeader>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Type d'isolation souhaitée</Label>
-            <RadioGroup className="grid gap-2" defaultValue={formData.insulationType}>
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="base" id="base" {...register('insulationType', { required: 'Veuillez sélectionner un type d\'isolation' })} />
-                <Label htmlFor="base" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Layers className="h-5 w-5 text-blue-500" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Isolation thermique réglementaire (base)</p>
-                    <p className="text-sm text-gray-500">Isolation conforme aux normes actuelles</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="performance" id="performance" {...register('insulationType')} />
-                <Label htmlFor="performance" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Layers className="h-5 w-5 text-green-500" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Isolation thermique performante</p>
-                    <p className="text-sm text-gray-500">Isolation renforcée pour économies d'énergie</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="ultraPerformance" id="ultraPerformance" {...register('insulationType')} />
-                <Label htmlFor="ultraPerformance" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Layers className="h-5 w-5 text-purple-500" />
-                  <div className="space-y-1">
-                    <p className="font-medium">Isolation thermique ultra performante</p>
-                    <p className="text-sm text-gray-500">Isolation premium pour maison passive/basse consommation</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="non_concerne" id="non_concerne" {...register('insulationType')} />
-                <Label htmlFor="non_concerne" className="cursor-pointer">Sans avis / Non concerné</Label>
-              </div>
-            </RadioGroup>
-            {errors.insulationType && (
-              <p className="text-sm text-red-500">{errors.insulationType.message as string}</p>
-            )}
-          </div>
+      <h2 className="text-xl font-semibold mb-4">Isolation</h2>
+      <p className="text-sm text-gray-600 mb-6">
+        Choisissez le type d'isolation pour votre projet.
+      </p>
+      
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-6">
+          <RadioGroup 
+            value={insulationType} 
+            onValueChange={(value) => setInsulationType(value)}
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+          >
+            <div className="flex items-center space-x-2 rounded-md border p-4">
+              <RadioGroupItem value="standard" id="standard" />
+              <Label htmlFor="standard" className="flex flex-1 items-center gap-2 cursor-pointer">
+                <ShieldCheck className="h-4 w-4 text-blue-500" />
+                <div>
+                  <p>Standard (RT2012)</p>
+                  <p className="text-sm text-gray-500">Isolation réglementaire</p>
+                </div>
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2 rounded-md border p-4">
+              <RadioGroupItem value="reinforced" id="reinforced" />
+              <Label htmlFor="reinforced" className="flex flex-1 items-center gap-2 cursor-pointer">
+                <ShieldCheck className="h-4 w-4 text-green-500" />
+                <div>
+                  <p>Renforcée (RE2020)</p>
+                  <p className="text-sm text-gray-500">Meilleure performance thermique</p>
+                </div>
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2 rounded-md border p-4">
+              <RadioGroupItem value="passive" id="passive" />
+              <Label htmlFor="passive" className="flex flex-1 items-center gap-2 cursor-pointer">
+                <Award className="h-4 w-4 text-amber-500" />
+                <div>
+                  <p>Maison passive</p>
+                  <p className="text-sm text-gray-500">Performance thermique maximale</p>
+                </div>
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2 rounded-md border p-4">
+              <RadioGroupItem value="ecological" id="ecological" />
+              <Label htmlFor="ecological" className="flex flex-1 items-center gap-2 cursor-pointer">
+                <Leaf className="h-4 w-4 text-green-600" />
+                <div>
+                  <p>Matériaux écologiques</p>
+                  <p className="text-sm text-gray-500">Matériaux naturels et biosourcés</p>
+                </div>
+              </Label>
+            </div>
+            
+            <div className="flex items-center space-x-2 rounded-md border p-4">
+              <RadioGroupItem value="renovation" id="renovation" />
+              <Label htmlFor="renovation" className="flex flex-1 items-center gap-2 cursor-pointer">
+                <ThermometerSnowflake className="h-4 w-4 text-blue-600" />
+                <div>
+                  <p>Rénovation standard</p>
+                  <p className="text-sm text-gray-500">Isolation pour rénovation</p>
+                </div>
+              </Label>
+            </div>
+          </RadioGroup>
           
-          <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-            Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
+          <div className="flex justify-between pt-4">
+            <Button type="button" variant="outline" onClick={goToPreviousStep}>
+              Précédent
+            </Button>
+            <Button type="submit">
+              Suivant
+            </Button>
           </div>
-        </CardContent>
-        
-        <CardFooter className="flex justify-between">
-          <Button type="button" variant="outline" onClick={goToPreviousStep}>
-            Précédent
-          </Button>
-          <Button type="submit">
-            Suivant
-          </Button>
-        </CardFooter>
+        </div>
       </form>
-    </Card>
+    </div>
   );
 };
 
