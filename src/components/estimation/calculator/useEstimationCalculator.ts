@@ -3,25 +3,28 @@ import { useState, useEffect } from 'react';
 import { FormData, EstimationResponseData } from './types';
 import { determineNextStep, determinePreviousStep, recalculateEstimation } from './utils/navigationPathUtils';
 import { calculateEstimation } from './calculationUtils';
-import { toast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 export const useEstimationCalculator = () => {
   const [step, setStep] = useState<number>(0);
-  const [totalSteps, setTotalSteps] = useState<number>(20); // Default number of steps
+  const [totalSteps, setTotalSteps] = useState<number>(8); // Set fixed number of steps
   const [formData, setFormData] = useState<FormData>({});
   const [estimationResult, setEstimationResult] = useState<EstimationResponseData | null>(null);
   const [showResultDialog, setShowResultDialog] = useState<boolean>(false);
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const { toast } = useToast();
   
   // Function to update form data
   const updateFormData = (data: Partial<FormData>) => {
-    setFormData(prevData => ({
-      ...prevData,
-      ...data
-    }));
-    
-    console.log("Form data updated:", data);
+    setFormData(prevData => {
+      const newData = {
+        ...prevData,
+        ...data
+      };
+      console.log("Form data updated:", data);
+      return newData;
+    });
   };
   
   // Calculate the estimation result
@@ -73,6 +76,11 @@ export const useEstimationCalculator = () => {
     const nextStep = determineNextStep(step, formData);
     setAnimationDirection('forward');
     
+    // If we're already at the next step, don't animate
+    if (nextStep === step) {
+      return;
+    }
+    
     // Delay to allow animation
     setTimeout(() => {
       setStep(nextStep);
@@ -84,33 +92,21 @@ export const useEstimationCalculator = () => {
     const prevStep = determinePreviousStep(step, formData);
     setAnimationDirection('backward');
     
+    // If we're already at the previous step, don't animate
+    if (prevStep === step) {
+      return;
+    }
+    
     // Delay to allow animation
     setTimeout(() => {
       setStep(prevStep);
     }, 200);
   };
   
-  // Update the total steps when the form data changes
+  // Log current step changes for debugging
   useEffect(() => {
-    // Recalculate the total number of steps based on the form data
-    let newTotalSteps = 20; // Base number of steps
-    
-    // Adjust total steps based on client type
-    if (formData.clientType === 'professional') {
-      newTotalSteps = 3; // Professional flow is shorter
-    }
-    
-    // Adjust total steps based on project type
-    if (formData.projectType === 'optimisation' || formData.projectType === 'design') {
-      newTotalSteps = 3; // Direct contact flow
-    } else if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
-      newTotalSteps = 8; // Quick estimation flow
-    } else if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-      newTotalSteps = 48; // Renovation has additional steps
-    }
-    
-    setTotalSteps(newTotalSteps);
-  }, [formData.clientType, formData.projectType, formData.estimationType]);
+    console.log(`Current step: ${step}, Client Type: ${formData.clientType}, Project Type: ${formData.projectType}`);
+  }, [step, formData.clientType, formData.projectType]);
   
   return {
     step,

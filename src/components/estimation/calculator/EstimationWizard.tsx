@@ -1,10 +1,19 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEstimationCalculator } from './useEstimationCalculator';
 import EstimationResult from './EstimationResult';
 import EstimationForm from './EstimationForm';
+import { Card } from '@/components/ui/card';
+import ClientTypeStep from './steps/ClientTypeStep';
+import ProjectDetailsStep from './steps/ProjectDetailsStep';
+import TerrainDetailsStep from './steps/TerrainDetailsStep';
+import FinishDetailsStep from './steps/FinishDetailsStep';
+import RoomsDetailsStep from './steps/RoomsDetailsStep';
+import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
+import SpecialFeaturesStep from './steps/SpecialFeaturesStep';
+import ContactDetailsStep from './steps/ContactDetailsStep';
 
 // Animation variants for page transitions
 const pageVariants = {
@@ -49,11 +58,105 @@ const EstimationWizard: React.FC = () => {
   } = useEstimationCalculator();
   
   // Switch to results tab when estimation is calculated
-  React.useEffect(() => {
+  useEffect(() => {
     if (estimationResult) {
       setActiveTab('results');
     }
   }, [estimationResult]);
+
+  // Function to render the current step component
+  const renderCurrentStep = () => {
+    switch (step) {
+      case 0:
+        return (
+          <ClientTypeStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 1:
+        return (
+          <ProjectDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 2:
+        return (
+          <TerrainDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 3:
+        return (
+          <RoomsDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 4:
+        return (
+          <FinishDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 5:
+        return (
+          <ExteriorFeaturesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 6:
+        return (
+          <SpecialFeaturesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 7:
+        return (
+          <ContactDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      default:
+        return (
+          <ClientTypeStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            animationDirection={animationDirection}
+          />
+        );
+    }
+  };
   
   return (
     <div className="w-full">
@@ -78,13 +181,9 @@ const EstimationWizard: React.FC = () => {
               exit="exit"
               className="w-full"
             >
-              <EstimationForm 
-                formData={formData}
-                updateFormData={updateFormData}
-                goToNextStep={goToNextStep}
-                goToPreviousStep={goToPreviousStep}
-                animationDirection={animationDirection}
-              />
+              <Card className="w-full shadow-md border p-6">
+                {renderCurrentStep()}
+              </Card>
             </motion.div>
           </AnimatePresence>
         </TabsContent>

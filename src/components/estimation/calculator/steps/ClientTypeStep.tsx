@@ -17,12 +17,14 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
   goToNextStep,
   animationDirection
 }) => {
-  const [clientType, setClientType] = React.useState<string>(formData.clientType || '');
-
   const handleSelect = (type: string) => {
-    setClientType(type);
+    // First update the form data
     updateFormData({ clientType: type });
-    goToNextStep();
+    
+    // Then proceed to next step after a short delay
+    setTimeout(() => {
+      goToNextStep();
+    }, 100);
   };
 
   return (
@@ -33,7 +35,7 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'individual' ? 'border-blue-500 bg-blue-50' : ''}`}
+          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'individual' ? 'border-blue-500 bg-blue-50' : ''}`}
           onClick={() => handleSelect('individual')}
         >
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
@@ -46,7 +48,7 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
         </Card>
         
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'professional' ? 'border-blue-500 bg-blue-50' : ''}`}
+          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'professional' ? 'border-blue-500 bg-blue-50' : ''}`}
           onClick={() => handleSelect('professional')}
         >
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">

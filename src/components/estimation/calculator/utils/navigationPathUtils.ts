@@ -9,99 +9,48 @@ import { FormData } from '../types';
 export const determineNextStep = (currentStep: number, formData: FormData): number => {
   console.log(`Determining next step from ${currentStep} for project type: ${formData.projectType}, client type: ${formData.clientType}`);
   
-  // Page 1: Choix du profil
+  // Page 0: Choix du profil (Client Type)
   if (currentStep === 0) {
-    return 1; // Aller à la page 1 - Ceci est déjà l'étape 1 dans notre programmation (index 0)
-  }
-  
-  // Selon le type de client
-  if (currentStep === 1) {
     if (formData.clientType === 'professional') {
-      return 2; // Professionnel -> Page 2
-    } else {
-      return 3; // Particulier -> Page 3
+      return 1; // Professionnel -> Page 1 (Project Details)
+    } else if (formData.clientType === 'individual') {
+      return 2; // Particulier -> Page 2 (Project Type)
     }
+    return 0; // Stay on same page if no choice made
   }
   
-  // Page 2: Professionnel - Infos projet
+  // Page 1: Professionnel - Infos projet
+  if (currentStep === 1) {
+    return 7; // Aller directement au formulaire de contact (Page 7)
+  }
+  
+  // Page 2: Particulier - Choix du projet (Project Type)
   if (currentStep === 2) {
-    return 45; // Aller directement au formulaire de contact (Page 45)
-  }
-  
-  // Page 3: Particulier - Choix du projet
-  if (currentStep === 3) {
     // Les projets qui n'ont pas besoin d'estimation
-    if (formData.projectType === 'optimisation' || formData.projectType === 'design') {
-      return 45; // Aller directement au formulaire de contact (Page 45)
+    if (formData.projectType === 'optimization' || formData.projectType === 'design') {
+      return 7; // Aller directement au formulaire de contact (Page 7)
     }
-    return 4; // Sinon continuer normalement vers la page 4
+    return 3; // Sinon continuer normalement vers la page 3 (Room Details)
   }
   
-  // Page 4: Type d'estimation (Rapide/Précise)
-  if (currentStep === 4) {
-    if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
-      if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-        return 44; // Rénovation/Division Rapide -> Page 44 (Prestations concernées)
-      }
-    }
-    return 5; // Normalement vers la page 5 (Détails du projet)
+  // Pages 3-6: Diff details steps
+  if (currentStep >= 3 && currentStep <= 6) {
+    return currentStep + 1; // Go to next step
   }
   
-  // Page 5: Détails du projet (surface, ville)
-  if (currentStep === 5) {
-    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-      if (formData.estimationType === 'Précise 15 mins (précision à + ou- 5%)') {
-        return 29; // Rénovation/Division Précise -> Page 29 (spécifique à la rénovation)
-      } else {
-        return 44; // Rénovation/Division Rapide -> Page 44
-      }
-    }
-    return 6; // Construction/Extension -> Page 6 (Terrain)
-  }
-  
-  // Page 29: Spécifique rénovation/division
-  if (currentStep === 29) {
-    return 6; // Après les questions spécifiques de rénovation, aller à la page 6
-  }
-  
-  // Page 44: Prestations pour estimation rapide
-  if (currentStep === 44) {
-    return 45; // Aller au formulaire de contact
-  }
-  
-  // Page 6-43: Pages de détails selon le type de projet
-  if (currentStep >= 6 && currentStep <= 43) {
-    // Logique pour sauter des pages selon les options choisies
-    // Par exemple, si certaines options ne sont pas sélectionnées
-    if (currentStep === 23 && !formData.includeEcoSolutions) {
-      return 25; // Sauter la page 24
-    }
-    if (currentStep === 24 && !formData.includeRenewableEnergy) {
-      return 26; // Sauter la page 25
-    }
-    // etc.
-    
-    // Si on arrive à la dernière page de détails
-    if (currentStep === 43) {
-      return 45; // Aller au formulaire de contact
-    }
-    
-    return currentStep + 1; // Par défaut, aller à la page suivante
-  }
-  
-  // Page 45: Formulaire de contact
-  if (currentStep === 45) {
+  // Page 7: Contact Details
+  if (currentStep === 7) {
     // Si projet sans estimation, ne pas aller à la page d'estimation
-    if (formData.projectType === 'optimisation' || 
+    if (formData.projectType === 'optimization' || 
         formData.projectType === 'design' || 
         formData.clientType === 'professional') {
-      return 45; // Rester sur la même page ou finaliser
+      return 7; // Rester sur la même page ou finaliser
     }
-    return 46; // Sinon aller à la page d'estimation
+    return 8; // Sinon aller à la page d'estimation (Results)
   }
   
   // Par défaut, passer à l'étape suivante
-  return currentStep + 1;
+  return Math.min(currentStep + 1, 8);
 };
 
 /**
@@ -111,59 +60,32 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
  * @returns Le numéro de l'étape précédente
  */
 export const determinePreviousStep = (currentStep: number, formData: FormData): number => {
-  // Chemin inverse depuis la page 3 (Particulier - Choix du projet)
-  if (currentStep === 3) {
-    return 1; // Retour à la page 1 (Choix du profil)
+  // Chemin inverse depuis la page des détails de projet (page 1)
+  if (currentStep === 1) {
+    return 0; // Retour à la page 0 (Client Type)
   }
   
-  // Chemin inverse depuis la page 45 (Contact)
-  if (currentStep === 45) {
+  // Chemin inverse depuis la page du type de projet (page 2)
+  if (currentStep === 2) {
+    return 0; // Retour à la page 0 (Client Type)
+  }
+  
+  // Chemin inverse depuis la page de contact (page 7)
+  if (currentStep === 7) {
     if (formData.clientType === 'professional') {
-      return 2; // Retour à la page 2 pour les professionnels
+      return 1; // Retour à la page 1 pour les professionnels
     }
     
-    if (formData.projectType === 'optimisation' || formData.projectType === 'design') {
-      return 3; // Retour à la page 3 pour les projets sans estimation
+    if (formData.projectType === 'optimization' || formData.projectType === 'design') {
+      return 2; // Retour à la page 2 pour les projets sans estimation
     }
     
-    if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
-      return 44; // Retour à la page 44 pour l'estimation rapide
-    }
-    
-    // Pour les autres cas, retrouver la dernière page de détails visitée
-    return 43; // La dernière page de détails
+    return 6; // Retour à la page précédente (Special Features)
   }
   
-  // Chemin inverse depuis la page 46 (Estimation)
-  if (currentStep === 46) {
-    return 45; // Retour à la page de contact
-  }
-  
-  // Chemin inverse depuis la page 44 (Prestations pour estimation rapide)
-  if (currentStep === 44) {
-    return 5; // Retour à la page 5 (Détails du projet)
-  }
-  
-  // Chemin inverse depuis la page 5 (Détails du projet)
-  if (currentStep === 5) {
-    return 4; // Retour à la page 4 (Type d'estimation)
-  }
-  
-  // Chemin inverse depuis la page 4 (Type d'estimation)
-  if (currentStep === 4) {
-    return 3; // Retour à la page 3 (Choix du projet)
-  }
-  
-  // Cas particulier pour les pages de détails (6-43)
-  if (currentStep >= 6 && currentStep <= 43) {
-    // Logique pour sauter certaines pages en retour
-    if (currentStep === 25 && !formData.includeEcoSolutions) {
-      return 23; // Sauter la page 24 en retour
-    }
-    if (currentStep === 26 && !formData.includeRenewableEnergy) {
-      return 24; // Sauter la page 25 en retour
-    }
-    // etc.
+  // Chemin inverse depuis la page de résultats (page 8)
+  if (currentStep === 8) {
+    return 7; // Retour à la page de contact
   }
   
   // Par défaut, retourner à l'étape précédente
