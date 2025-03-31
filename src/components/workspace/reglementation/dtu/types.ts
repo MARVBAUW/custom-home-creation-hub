@@ -1,28 +1,24 @@
 
-export interface DTURule {
-  title: string;
-  content: string;
-  type: 'standard' | 'warning' | 'tip';
-}
-
-export interface DTUSchema {
-  id: string;
-  title: string;
-  imageUrl?: string;
-  description: string;
-}
-
 export interface DTU {
   id: string;
   title: string;
   category: string;
   description: string;
   lastUpdate: string;
-  rules: DTURule[];
-  sections: {
+  selected?: boolean;
+  rules: {
+    title: string;
+    content: string;
+    type: "standard" | "warning" | "tip" | "alert";
+  }[];
+  sections?: {
     title: string;
     content: string;
   }[];
-  schemas?: DTUSchema[];
-  selected?: boolean;
+  schemas?: {
+    id: string;
+    title: string;
+    imageUrl: string;
+    description: string;
+  }[];
 }

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { dtuRecaps } from './data/dtu';
+import { allDTUs } from './data/dtu';
 import { SearchAndFilterBar } from './dtu/SearchAndFilterBar';
 import { DTUGridList } from './dtu/DTUGridList';
 import { DTUDetailDialog } from './dtu/DTUDetailDialog';
@@ -11,7 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export const DTURecapSection = () => {
-  const [allDtus, setAllDtus] = useState<DTU[]>(dtuRecaps.map(dtu => ({ ...dtu, selected: false })));
+  const [allDtus, setAllDtus] = useState<DTU[]>(allDTUs.map(dtu => ({ ...dtu, selected: false })));
   
   const { 
     searchTerm, 

@@ -3,231 +3,154 @@ import { DTU } from '../../dtu/types';
 
 export const ratingClassificationsDTUs: DTU[] = [
   {
-    id: "dtu-ratings-1",
+    id: "classification-upec-1",
     title: "Classification UPEC des revêtements de sol",
-    category: "Classifications",
-    description: "Système d'évaluation des performances des revêtements de sol",
-    lastUpdate: "Juin 2023",
+    category: "Classifications UPEC",
+    description: "Système de classification des revêtements de sol selon leurs performances d'usage",
+    lastUpdate: "Janvier 2023",
     rules: [
       {
-        title: "U - Usure",
-        content: "Résistance à l'usure par abrasion et trafic. U2 (usage domestique modéré), U3 (usage domestique intensif ou commercial modéré), U4 (usage commercial intense).",
+        title: "Signification",
+        content: "U: Usure à la marche; P: Poinçonnement; E: Comportement à l'eau et à l'humidité; C: Résistance aux agents chimiques et taches.",
         type: "standard"
       },
       {
-        title: "P - Poinçonnement",
-        content: "Résistance aux charges fixes et mobiles. P2 (mobilier domestique et usage pieds nus), P3 (trafic fréquent, charges légères), P4 (trafic intense, charges lourdes).",
+        title: "Indices",
+        content: "Chaque lettre est suivie d'un indice de 1 à 4 (parfois avec un '+'), indiquant le niveau croissant de performance. Ex: U4P3E2C2.",
         type: "standard"
       },
       {
-        title: "E - Eau",
-        content: "Résistance à l'eau et à l'humidité. E1 (entretien occasionnel à la serpillière), E2 (entretien humide fréquent), E3 (présence d'eau fréquente).",
-        type: "standard"
-      },
-      {
-        title: "C - Produits Chimiques",
-        content: "Résistance aux agents chimiques et taches. C0 (aucune exigence), C1 (résistance aux produits ménagers), C2 (résistance aux produits spécifiques).",
-        type: "standard"
-      },
-      {
-        title: "Applications",
-        content: "Cuisine/SDB: minimum U3P2E2C1. Séjour/Chambre: minimum U2P2E1C0. Commerce: minimum U3P3E1C2. Industrie: U4P4E3C2.",
-        type: "tip"
-      }
-    ],
-    sections: [
-      {
-        title: "Sélection d'un revêtement",
-        content: "Le classement d'un local définit le niveau d'exigence UPEC minimum. Le revêtement choisi doit avoir un classement supérieur ou égal à celui exigé pour le local. Exemple: pour un local classé U3P2E1C0, on peut choisir un revêtement classé U3P3E2C1."
-      },
-      {
-        title: "Carreaux céramiques",
-        content: "Classés selon norme EN 14411. L'indice UPEC prend en compte la nature du carreau et le système de pose. La classe PEI (Porcelain Enamel Institute) complète souvent le classement pour l'abrasion des surfaces émaillées."
-      },
-      {
-        title: "Revêtements PVC",
-        content: "Classement selon EN ISO 10582 et 10581. Peuvent atteindre des valeurs élevées (U4P4) pour les produits homogènes épais ou à couche d'usure renforcée. PVC hétérogènes: performances variables selon couche d'usure."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-upec-1",
-        title: "Classification UPEC des locaux",
-        imageUrl: "/images/schemas/classification-upec.png",
-        description: "Tableau des classements UPEC recommandés pour différents types de locaux."
-      }
-    ]
-  },
-  {
-    id: "dtu-ratings-2",
-    title: "Classification AEV des menuiseries",
-    category: "Classifications",
-    description: "Classement des performances des fenêtres et portes-fenêtres",
-    lastUpdate: "Mai 2023",
-    rules: [
-      {
-        title: "A - Perméabilité à l'air",
-        content: "A*1 (standard), A*2 (amélioré), A*3 (renforcé), A*4 (exceptionnel). Le classement A*4 est le plus performant, obligatoire en BBC et passif.",
-        type: "standard"
-      },
-      {
-        title: "E - Étanchéité à l'eau",
-        content: "E*1A à E*9A (pression croissante sans ruissellement) ou E*1B à E*7B (avec ruissellement). Zone exposée: minimum E*5A recommandé.",
-        type: "standard"
-      },
-      {
-        title: "V - Résistance au vent",
-        content: "V*A1 à V*A5 (déformation sous vent) et V*1 à V*3 (résistance). Zones côtières ou bâtiments élevés: minimum V*A3V*2 recommandé.",
+        title: "Locaux classés",
+        content: "Les locaux sont eux-mêmes classés selon leur niveau d'exigence. Le revêtement choisi doit avoir des indices UPEC ≥ à ceux du local.",
         type: "warning"
-      },
-      {
-        title: "Sélection selon zone",
-        content: "Zone littorale ou montagne > 900m: minimum A*3E*7BV*A3. Zone urbaine: minimum A*3E*5BV*A2. Zone rurale: minimum A*2E*4BV*A2.",
-        type: "tip"
-      },
-      {
-        title: "RT2012 et RE2020",
-        content: "Perméabilité à l'air renforcée: A*4 recommandé pour respecter les performances énergétiques réglementaires.",
-        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Tests de classement",
-        content: "Tests normalisés selon EN 12207 (air), EN 12208 (eau), EN 12210 (vent). Réalisés par des laboratoires accrédités. Le classement est valable pour un type de menuiserie, pas pour un fabricant."
+        title: "Classification des locaux",
+        content: "Chambres/séjours individuels: U2P2E1C0; Cuisines individuelles: U3P2E2C2; Couloirs circulation collective: U4P3E2C1; Commerces/bureaux: U3P3E1C2 à U4P3E2C2."
       },
       {
-        title: "Influence sur les performances thermiques",
-        content: "La perméabilité à l'air A* impacte directement les déperditions énergétiques. Une menuiserie A*4 permet de réduire significativement les infiltrations d'air et d'améliorer le Uw (coefficient de transmission thermique)."
+        title: "Exemples de revêtements",
+        content: "Carrelage grès cérame: U4P4E3C2; Moquette: U2P2E1C0 à U3P2E1C0; PVC sur mousse: U2P2E2C1 à U3P3E2C2; Parquet: U2/3P2/3E1C0 selon essence et finition."
       },
       {
-        title: "Certification et documentation",
-        content: "Les menuiseries doivent être accompagnées d'un certificat de classement AEV. Le marquage CE et les DoP (Déclarations de Performances) indiquent également ces performances."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-aev-1",
-        title: "Classification AEV des fenêtres",
-        imageUrl: "/images/schemas/classification-aev.png",
-        description: "Schéma explicatif des différents niveaux de classement AEV et leurs applications selon les zones géographiques."
+        title: "Certification",
+        content: "Les caractéristiques UPEC sont certifiées par le CSTB et font l'objet d'un certificat. Tous les revêtements de sol ne disposent pas nécessairement d'un classement UPEC."
       }
     ]
   },
   {
-    id: "dtu-ratings-3",
+    id: "classification-aev-1",
+    title: "Classification AEV des fenêtres",
+    category: "Classifications AEV",
+    description: "Système de classification des fenêtres selon leur étanchéité à l'air, à l'eau et leur résistance au vent",
+    lastUpdate: "Février 2023",
+    rules: [
+      {
+        title: "Perméabilité à l'Air (A)",
+        content: "De A*1 (basique) à A*4 (excellente). A*4: débit de fuite inférieur à 3 m³/h/m² sous 100 Pa.",
+        type: "standard"
+      },
+      {
+        title: "Étanchéité à l'Eau (E)",
+        content: "De E*1A (basique) à E*9A (excellente). Ex: E*5A: étanche jusqu'à 200 Pa, E*7A: étanche jusqu'à 300 Pa.",
+        type: "standard"
+      },
+      {
+        title: "Résistance au Vent (V)",
+        content: "Pression d'essai: de V*1 (400 Pa) à V*5 (2000 Pa). Flèche du cadre: de A (≤1/150) à C (≤1/300).",
+        type: "warning"
+      }
+    ],
+    sections: [
+      {
+        title: "Classification minimale selon exposition",
+        content: "Bâtiment protégé, hauteur ≤ 6m: A*2 E*4B V*A2; Bâtiment exposé, hauteur 10-18m: A*3 E*5B V*A2; Bâtiment très exposé, hauteur > 18m: A*4 E*7B V*A3."
+      },
+      {
+        title: "Tests et certification",
+        content: "Les essais AEV sont réalisés selon les normes européennes EN 1026, EN 1027 et EN 12211. Les résultats sont certifiés par des organismes comme le CSTB (certification NF)."
+      },
+      {
+        title: "Impact sur la performance énergétique",
+        content: "Une fenêtre A*4 peut réduire les pertes de chaleur dues aux infiltrations d'air jusqu'à 80% par rapport à une fenêtre A*1. L'étanchéité à l'air contribue significativement à la performance thermique globale."
+      }
+    ]
+  },
+  {
+    id: "classification-revetir-1",
     title: "Classification REVETIR des façades",
-    category: "Classifications",
-    description: "Classement des systèmes d'isolation thermique extérieure par enduit",
+    category: "Classifications REVETIR",
+    description: "Système de classification des enduits et revêtements de façades selon leurs performances techniques",
+    lastUpdate: "Mars 2023",
+    rules: [
+      {
+        title: "Signification",
+        content: "R: Réparation des supports; E: Étanchéité à l'eau; V: Résistance au vieillissement; E: Stabilité aux états thermiques; T: Résistance aux chocs thermiques; I: Isolation thermique; R: Résistance aux chocs mécaniques.",
+        type: "standard"
+      },
+      {
+        title: "Notation",
+        content: "Chaque critère est évalué de 1 à 5, du niveau le plus faible au plus performant. Ex: R3E5V2E4T3I2R4.",
+        type: "standard"
+      },
+      {
+        title: "Application",
+        content: "Ce classement permet de choisir un système de façade adapté aux contraintes spécifiques du bâtiment: exposition, sollicitations mécaniques, exigences thermiques, etc.",
+        type: "tip"
+      }
+    ],
+    sections: [
+      {
+        title: "Critères d'évaluation détaillés",
+        content: "R1-R5: capacité à masquer les fissures de 0,2 mm à 2 mm; E1-E5: perméabilité à l'eau de 0,5 kg/m² à 0,1 kg/m²; V1-V5: résistance aux UV et intempéries; E1-E5: comportement aux chocs thermiques; T1-T5: comportement aux cycles gel/dégel; I1-I5: résistance thermique; R1-R5: résistance aux chocs de 3 à 50 joules."
+      },
+      {
+        title: "Exigences selon l'exposition",
+        content: "Façade protégée en zone calme: E2V2T2R2; Façade exposée en zone urbaine: E4V3T3R3; Façade très exposée (bord de mer): E5V4T4R4; Soubassements accessibles: R4 minimum."
+      },
+      {
+        title: "Cas des ETICS",
+        content: "Pour les systèmes d'isolation thermique par l'extérieur (ETICS), la classification REVETIR prend en compte l'ensemble du système (isolant + enduit). Le critère I est particulièrement important et varie selon l'épaisseur et la nature de l'isolant."
+      }
+    ]
+  },
+  {
+    id: "classification-feu-1",
+    title: "Euroclasses de réaction au feu",
+    category: "Classifications Feu",
+    description: "Classification européenne des produits de construction selon leur comportement au feu",
     lastUpdate: "Avril 2023",
     rules: [
       {
-        title: "R - Résistance aux chocs",
-        content: "R1 (chocs faibles, zone inaccessible), R2 (chocs moyens, < 2m du sol, zone privée), R3 (chocs forts, zone publique), R4 (chocs très forts, zone exposée).",
+        title: "Classes principales",
+        content: "A1, A2: Incombustibles; B: Très difficilement inflammables; C: Difficilement inflammables; D: Moyennement inflammables; E: Facilement inflammables; F: Non classés ou très inflammables.",
+        type: "warning"
+      },
+      {
+        title: "Sous-classifications",
+        content: "s1, s2, s3: Production de fumée (smoke) de faible à forte; d0, d1, d2: Gouttelettes/débris enflammés (droplets) de aucun à nombreux.",
         type: "standard"
       },
       {
-        title: "E - Étanchéité à l'eau",
-        content: "E1 à E5 (croissant). E5 obligatoire pour zones très exposées. E1/E2: façades protégées. E3/E4: façades normalement exposées.",
-        type: "standard"
-      },
-      {
-        title: "V - Résistance à la vapeur d'eau",
-        content: "V1 (très perméable, Sd < 0,10m), V2 (perméable, Sd 0,10 à 0,40m), V3 (moyennement perméable, Sd 0,40 à 1,4m), V4 (peu perméable, Sd > 1,4m).",
-        type: "standard"
-      },
-      {
-        title: "E - Résistance aux mouvements",
-        content: "T1 (résistance limitée), T2 (résistance normale), T3 (résistance améliorée aux mouvements du support), T4 (haute résistance).",
-        type: "standard"
-      },
-      {
-        title: "I - Résistance aux intempéries",
-        content: "I1 (normal), I2 (amélioré), I3 (fort), I4 (très fort). Impact sur le vieillissement et la durabilité de l'aspect.",
-        type: "standard"
-      },
-      {
-        title: "R - Réparation et entretien",
-        content: "r1 (difficile), r2 (moyenne), r3 (facile). Facilité d'entretien et de réparation des dégradations localisées.",
+        title: "Correspondance M/Euroclasses",
+        content: "M0 ≈ A1, A2-s1,d0; M1 ≈ B-s3,d1; M2 ≈ C-s3,d1; M3 ≈ D-s3,d1; M4 ≈ E, E-d2; NC ≈ F.",
         type: "tip"
       }
     ],
     sections: [
       {
-        title: "Choix selon exposition",
-        content: "Façades en zones urbaines exposées: minimum R3E4V2T3I3r2. Façades courantes en résidentiel: minimum R2E3V2T2I2r2. Façades protégées: minimum R1E2V1T1I1r1."
+        title: "Exigences réglementaires",
+        content: "ERP (établissements recevant du public): Plafonds: B-s3,d0 ou C-s3,d0 selon local; Murs: B-s2,d0 à D-s2,d0; Sols: Dfl-s1 à Cfl-s1. Habitations: Façades: B-s3,d0 à D-s3,d0 selon hauteur; Cages d'escalier: A2-s1,d0 à C-s3,d0."
       },
       {
-        title: "Impact sur l'aspect",
-        content: "Le classement I influence la résistance à l'encrassement et aux salissures. I3 et I4 sont recommandés pour les zones polluées, littorales ou très exposées aux intempéries."
+        title: "Tests de classement",
+        content: "SBI (Single Burning Item) pour classes B à D; Test d'incombustibilité pour A1 et A2; Small flame test pour classe E; Essai au four radiateur pour les sols (classes Afl à Ffl)."
       },
       {
-        title: "Certification et garantie",
-        content: "Les systèmes ITE sous enduit doivent être posés par des entreprises qualifiées. La certification QB ETICS du CSTB valide les performances REVETIR des systèmes complets."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-revetir-1",
-        title: "Classification REVETIR",
-        imageUrl: "/images/schemas/classification-revetir.png",
-        description: "Tableau explicatif des différents critères du classement REVETIR pour les systèmes d'ITE sous enduit."
-      }
-    ]
-  },
-  {
-    id: "dtu-ratings-4",
-    title: "Classification des bétons selon NF EN 206/CN",
-    category: "Classifications",
-    description: "Désignation normalisée des bétons selon leur destination et performances",
-    lastUpdate: "Juillet 2023",
-    rules: [
-      {
-        title: "Classes d'exposition",
-        content: "X0 (aucun risque), XC (carbonatation), XD (chlorures autres que mer), XS (chlorures marins), XF (gel/dégel), XA (attaques chimiques).",
-        type: "standard"
-      },
-      {
-        title: "Classes de résistance",
-        content: "C16/20 à C100/115 pour béton normal. Premier chiffre = résistance cylindrique (MPa), second = résistance cubique (MPa).",
-        type: "standard"
-      },
-      {
-        title: "Classes de consistance",
-        content: "S1 (ferme: affaissement 10-40mm), S2 (plastique: 50-90mm), S3 (très plastique: 100-150mm), S4 (fluide: 160-210mm), S5 (très fluide: >220mm).",
-        type: "standard"
-      },
-      {
-        title: "Dimension maximale des granulats",
-        content: "Dmax en mm. Typiquement 10, 16, 20 ou 22,4mm selon application. Doit être compatible avec l'enrobage des armatures.",
-        type: "standard"
-      },
-      {
-        title: "Classes de chlorures",
-        content: "Cl 0,20 (béton armé standard), Cl 0,40 (béton non armé), Cl 0,10 (béton précontraint). Teneur maximale en chlorures (%).",
-        type: "warning"
-      }
-    ],
-    sections: [
-      {
-        title: "Exemple de désignation",
-        content: "BPS NF EN 206/CN C25/30 XC1 (F) Cl0,40 Dmax16 S3. Signifie: béton à propriétés spécifiées selon norme, résistance 25/30 MPa, pour environnement intérieur sec, chlorures ≤0,40%, granulats max 16mm, consistance très plastique."
-      },
-      {
-        title: "Exigences selon ouvrages",
-        content: "Fondations courantes: min C25/30 XC2 S3. Dallages industriels: min C30/37 XC4 XF1 S3. Ouvrages maritimes: min C35/45 XS3 S3. Ouvrages d'art: min C35/45 XF2 à XF4 selon exposition."
-      },
-      {
-        title: "Contrôles et conformité",
-        content: "Résistance vérifiée par essais à 28 jours. Consistance contrôlée au cône d'Abrams. Certification NF-BPE pour les centrales de production. Traçabilité obligatoire par bons de livraison."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-betons-1",
-        title: "Classes d'exposition des bétons",
-        imageUrl: "/images/schemas/classification-beton.png",
-        description: "Tableau des classes d'exposition des bétons selon NF EN 206/CN et leurs domaines d'application."
+        title: "Documentation et preuve",
+        content: "Le classement au feu doit être attesté par un PV (procès-verbal) d'essai ou un rapport de classement émis par un laboratoire accrédité. Pour les produits standardisés, le DoP (Declaration of Performance) mentionne l'Euroclasse."
       }
     ]
   }
