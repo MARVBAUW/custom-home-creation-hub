@@ -112,13 +112,6 @@ export interface EstimationFormData {
   softFloorType?: string;
   softFloorPercentage?: number | string;
   
-  // Wall and structure related properties
-  wallType?: string;
-  foundationType?: string;
-  
-  // Construction units
-  atticType?: string;
-  
   // Personal information
   firstName?: string;
   lastName?: string;
@@ -128,8 +121,6 @@ export interface EstimationFormData {
   
   // Additional fields for specific steps
   constructionStyle?: string;
-  roofType?: string;
-  roofingType?: string;
   insulationType?: string;
   
   // Facade fields

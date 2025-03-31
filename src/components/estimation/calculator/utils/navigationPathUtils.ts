@@ -73,12 +73,17 @@ export const determineNextStep = (currentStep: number, formData: FormData): numb
     if (formData.projectType === 'renovation' || formData.projectType === 'division') {
       return 11; // Renovation specific step
     }
-    return 12; // Rooms details step
+    return 12; // Isolation step
   }
   
   // If current step is renovation specific (step 11)
   if (currentStep === 11) {
-    return 12; // Rooms details step
+    return 12; // Isolation step
+  }
+  
+  // If current step is isolation (step 12)
+  if (currentStep === 12) {
+    return 13; // Facade step
   }
   
   // For remaining steps, just increment
@@ -104,9 +109,14 @@ export const determinePreviousStep = (currentStep: number, formData: FormData): 
     return 10;
   }
   
-  // If at step 12 (rooms details) and renovation/division, go back to renovation specific
+  // If at step 12 (isolation) and renovation/division, go back to renovation specific
   if (currentStep === 12 && (formData.projectType === 'renovation' || formData.projectType === 'division')) {
     return 11;
+  }
+  
+  // If at step 12 (isolation) and not renovation/division, go back to couverture
+  if (currentStep === 12 && !(formData.projectType === 'renovation' || formData.projectType === 'division')) {
+    return 10;
   }
   
   // For all other steps, just decrement

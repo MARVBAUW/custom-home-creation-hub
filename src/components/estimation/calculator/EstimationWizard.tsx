@@ -19,6 +19,8 @@ import CharpenteStep from './steps/CharpenteStep';
 import ComblesStep from './steps/ComblesStep';
 import CouvertureStep from './steps/CouvertureStep';
 import RenovationSpecificStep from './steps/RenovationSpecificStep';
+import IsolationStep from './steps/IsolationStep';
+import FacadeStep from './steps/FacadeStep';
 import FinishDetailsStep from './steps/FinishDetailsStep';
 import RoomsDetailsStep from './steps/RoomsDetailsStep';
 import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
@@ -198,7 +200,27 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 12: // Rooms Details
+      case 12: // Isolation
+        return (
+          <IsolationStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 13: // Facade
+        return (
+          <FacadeStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 14: // Rooms Details
         return (
           <RoomsDetailsStep
             formData={formData}
@@ -208,7 +230,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 13: // Finish Details
+      case 15: // Finish Details
         return (
           <FinishDetailsStep
             formData={formData}
@@ -218,7 +240,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 14: // Exterior Features
+      case 16: // Exterior Features
         return (
           <ExteriorFeaturesStep
             formData={formData}
@@ -228,7 +250,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 15: // Special Features
+      case 17: // Special Features
         return (
           <SpecialFeaturesStep
             formData={formData}
@@ -238,7 +260,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 16: // Contact Details
+      case 18: // Contact Details
         return (
           <ContactDetailsStep
             formData={formData}
