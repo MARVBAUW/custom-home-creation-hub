@@ -52,7 +52,7 @@ export const calculateStructuralFeatureCost = (
 };
 
 // Roofing calculation
-export const calculateRoofingCost = (area: string | number, type: string = 'standard'): number => {
+export const calculateRoofingCost = (type: string = 'standard', area: string | number = 0): number => {
   const base = ensureNumber(area) * (
     type === 'tile' ? 120 :
     type === 'slate' ? 180 :
@@ -83,18 +83,32 @@ export const calculateRoofingRenovCost = (area: string | number, type: string = 
 };
 
 // Facade calculation
-export const calculateDetailedFacadeCost = (area: string | number, type: string = 'standard'): number => {
-  const base = ensureNumber(area) * (
-    type === 'painted' ? 60 :
-    type === 'stone' ? 200 :
-    type === 'brick' ? 150 :
-    type === 'wood' ? 180 : 100
-  );
-  return Math.round(base);
+export const calculateDetailedFacadeCost = (
+  formData: any,
+  stonePercentage: string | number = 0,
+  plasterPercentage: string | number = 0,
+  brickPercentage: string | number = 0,
+  metalCladdingPercentage: string | number = 0,
+  woodCladdingPercentage: string | number = 0,
+  stoneCladdingPercentage: string | number = 0
+): number => {
+  const surface = ensureNumber(formData.surface);
+  const facadeSurface = surface * 2.8; // Approximate facade surface based on floor area
+  
+  const stoneCost = (ensureNumber(stonePercentage) / 100) * facadeSurface * 200;
+  const plasterCost = (ensureNumber(plasterPercentage) / 100) * facadeSurface * 60;
+  const brickCost = (ensureNumber(brickPercentage) / 100) * facadeSurface * 150;
+  const metalCladdingCost = (ensureNumber(metalCladdingPercentage) / 100) * facadeSurface * 180;
+  const woodCladdingCost = (ensureNumber(woodCladdingPercentage) / 100) * facadeSurface * 160;
+  const stoneCladdingCost = (ensureNumber(stoneCladdingPercentage) / 100) * facadeSurface * 190;
+  
+  const totalCost = stoneCost + plasterCost + brickCost + metalCladdingCost + woodCladdingCost + stoneCladdingCost;
+  
+  return Math.round(totalCost);
 };
 
 // Windows calculation
-export const calculateWindowsCost = (area: string | number, type: string = 'standard'): number => {
+export const calculateWindowsCost = (type: string = 'standard', area: string | number = 0): number => {
   const base = ensureNumber(area) * (
     type === 'double-glazed' ? 350 :
     type === 'triple-glazed' ? 500 :
@@ -112,6 +126,28 @@ export const calculateIsolationCost = (area: string | number, type: string = 'st
     type === 'standard' ? 60 : 70
   );
   return Math.round(base);
+};
+
+// Add the missing function that's being imported in IsolationForm.tsx
+export const calculateInsulationCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getInsulationCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+// Add helper function needed by calculateInsulationCost
+const getInsulationCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 80;
+    case 'reinforced': return 100;
+    case 'passive': return 120;
+    case 'ecological': return 110;
+    case 'renovation': return 90;
+    case 'base': return 80;
+    case 'performance': return 100;
+    case 'ultraPerformance': return 120;
+    case 'non_concerne': return 0;
+    default: return 0;
+  }
 };
 
 // Plumbing calculation
@@ -304,4 +340,56 @@ export const calculateNewMontantT = (formData: any, newItemCost: number): number
   montantT += newItemCost;
   
   return montantT;
+};
+
+// Add function to calculate demolition costs
+export const calculateDemolitionCost = (demolitionType: string, area: number, percentage: number): number => {
+  const surfaceToDemo = area * (percentage / 100);
+  
+  let costPerSqMeter = 0;
+  switch (demolitionType) {
+    case 'GROS OEUVRE (MACONNERIE, DALLE..)':
+      costPerSqMeter = 150;
+      break;
+    case 'REVETEMENT DE FACADE':
+      costPerSqMeter = 60;
+      break;
+    case 'PLATRERIE':
+      costPerSqMeter = 40;
+      break;
+    case 'REVETEMENTS DE SOL':
+      costPerSqMeter = 30;
+      break;
+    case 'MENUISERIES INTERIEURES':
+      costPerSqMeter = 50;
+      break;
+    case 'MENUISERIES EXTERIEURES':
+      costPerSqMeter = 70;
+      break;
+    case 'PLOMBERIE':
+      costPerSqMeter = 80;
+      break;
+    case 'EQUIPEMENTS SANITAIRES':
+      costPerSqMeter = 60;
+      break;
+    case 'ELECTRICITE':
+      costPerSqMeter = 45;
+      break;
+    case 'CLIMATISATION':
+      costPerSqMeter = 55;
+      break;
+    case 'VENTILATION':
+      costPerSqMeter = 40;
+      break;
+    case 'CHAUFFAGE':
+      costPerSqMeter = 60;
+      break;
+    case 'TOTALITE HORS GROS OEUVRE':
+      costPerSqMeter = 300; // For complete demolition excluding structural work
+      break;
+    default:
+      costPerSqMeter = 0;
+  }
+  
+  return Math.round(surfaceToDemo * costPerSqMeter);
 };

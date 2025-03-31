@@ -18,6 +18,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     try {
       // Utiliser ensureNumber pour s'assurer que surface est un nombre
       const surface = ensureNumber(formData.surface, 0);
+      // Note the argument order matches the updated function signature
       const roofCost = calculateRoofingCost(couvertureData.roofingType, surface);
       
       updateFormData({
@@ -99,6 +100,7 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
+      // Note the argument order matches the updated function signature
       const windowsCost = calculateWindowsCost(
         menuiseriesData.windowType,
         ensureNumber(menuiseriesData.windowNewArea) + ensureNumber(menuiseriesData.windowRenovationArea)
