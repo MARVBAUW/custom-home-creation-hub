@@ -60,3 +60,42 @@ export const safeIncludes = (arr: any[] | undefined | null, value: any): boolean
   if (!arr || !Array.isArray(arr)) return false;
   return arr.includes(value);
 };
+
+/**
+ * Safe type casting utility for React components
+ * Makes object properties safe for use in React JSX
+ */
+export const ensureReactNode = (value: any): React.ReactNode => {
+  // Handle objects that are not valid React nodes
+  if (value !== null && typeof value === 'object' && !React.isValidElement(value)) {
+    return JSON.stringify(value);
+  }
+  return value;
+};
+
+/**
+ * Ensures a value is a string array
+ * @param value The value to convert to a string array
+ * @returns string[]
+ */
+export const ensureStringArray = (value: any): string[] => {
+  if (Array.isArray(value)) {
+    return value.map(item => String(item));
+  }
+  if (value === undefined || value === null) {
+    return [];
+  }
+  return [String(value)];
+};
+
+/**
+ * Ensures a value is a string
+ * @param value The value to convert to a string
+ * @returns string
+ */
+export const ensureString = (value: any): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  return String(value);
+};

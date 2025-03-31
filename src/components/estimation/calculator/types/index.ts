@@ -1,19 +1,10 @@
 
-// Use export type to avoid TS1205 when isolatedModules is enabled
+// Re-export types from sub-modules
 export type { FormData } from './formTypes';
-export type { EstimationFormData } from './estimationFormData';
-export type { EstimationResponseData } from './estimationTypes';
+export type { BaseFormProps } from './formTypes';
+export type { EstimationResponseData, EstimationTimeline, CategoryCost } from './estimationTypes';
 
 // Define interfaces still needed in the codebase
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  bidding: number;
-  construction: number;
-  total: number;
-}
-
-// Define FeeCosts for compatibility
 export interface FeeCosts {
   architect: number;
   engineeringFees: number;

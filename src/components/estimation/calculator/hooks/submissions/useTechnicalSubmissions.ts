@@ -1,5 +1,5 @@
 
-import { FormData } from '../../types';
+import { FormData } from '../../types/formTypes';
 import { ensureNumber } from '../../utils/typeConversions';
 import { 
   calculateElectricalCost, 

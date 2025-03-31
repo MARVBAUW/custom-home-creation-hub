@@ -1,23 +1,133 @@
 
-import { EstimationFormData } from './estimationFormData';
-
 /**
- * Base props for form components
+ * Base form props interface used by all form components
  */
 export interface BaseFormProps {
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward' | string;
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
+  animationDirection: 'forward' | 'backward';
 }
 
-// FormData interface compatible with EstimationFormData
-export interface FormData extends EstimationFormData {
-  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
+/**
+ * Main form data structure used throughout the application
+ */
+export interface FormData {
+  // Base project information
+  estimationType?: string;
+  projectType?: string;
+  surface?: number;
+  city?: string;
+  clientType?: string;
+  
+  // Client information
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  
+  // Construction details
+  constructionType?: string;
+  foundationType?: string;
+  wallType?: string;
+  roofType?: string;
+  atticType?: string;
+  doorCount?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  
+  // Technical systems
+  electricalType?: string;
+  plumbingType?: string;
+  heatingType?: string;
+  hasAirConditioning?: boolean;
+  hasSmartHome?: boolean;
+  
+  // Interior finishes
+  flooringType?: string;
+  flooringArea?: number;
+  plasteringType?: string;
+  paintSurface?: number;
+  
+  // Special features
+  hasDressingRoom?: boolean;
+  hasCustomClosets?: boolean;
+  hasElevator?: boolean;
+  hasHomeAutomation?: boolean;
+  hasSecuritySystem?: boolean;
+  hasHeatRecovery?: boolean;
+  
+  // Exterior features
+  pool?: boolean;
+  terrace?: boolean;
+  outdoorKitchen?: boolean;
+  terraceArea?: number;
+  landscapingType?: string | string[];
+  landscapingArea?: number;
+  fencingLength?: number;
+  gateLength?: number;
+  
+  // Facade information
+  stonePercentage?: number;
+  plasterPercentage?: number;
+  brickPercentage?: number;
+  metalCladdingPercentage?: number;
+  woodCladdingPercentage?: number;
+  stoneCladdingPercentage?: number;
+  
+  // Demolition & renovation specifics
+  createWalls?: "OUI" | "NON";
+  wallArea?: number;
+  createFloors?: "OUI" | "NON";
+  floorType?: "BOIS" | "BETON";
+  floorArea?: number;
+  wallCost?: number;
+  floorCost?: number;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: { [key: string]: string };
+  structuralFeatureCosts?: { [key: string]: number };
+  structuralFeaturesTotal?: number;
+  structuralWorkTotal?: number;
+  demolitionTypes?: string[];
+  demolitionPercentages?: { [key: string]: string };
+  demolitionTotalArea?: number;
+  demolitionCost?: number;
+  demolitionDetailedCosts?: { [key: string]: number };
+  
+  // Environment & energy
+  environmentalSolutions?: string[];
+  
+  // Form state
+  formCompleted?: boolean;
+  termsAccepted?: boolean;
+  commercialAccepted?: boolean;
+  
+  // Kitchen & bathroom specifics
+  kitchenQuality?: string;
+  kitchenSize?: number;
+  bathroomQuality?: string;
+  bathroomCount?: number;
+  
+  // Paint information
+  paintTypes?: {
+    basicPaint: number;
+    decorativePaint: number;
+    wallpaper: number;
+    woodPaneling: number;
+    stoneCladding: number;
+  };
+  
+  // Project timing
+  projectStart?: Date;
+  projectEnd?: Date;
+  
+  // Cost and budget tracking
+  montantT?: number;
+  budget?: number;
+  landPrice?: number;
+  
+  // Allow for additional dynamic fields
+  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined | Date;
 }
-
-// Export type aliases for backward compatibility
-export type { EstimationFormData } from './estimationFormData';

@@ -1,42 +1,59 @@
 
-import { EstimationTimeline, FeeCosts } from './index';
+import { EstimationTimeline, FeeCosts } from '../types';
 
-export interface EstimationResponseData {
+export interface CategoryCost {
+  category: string;
+  amount: number;
+}
+
+export interface ConstructionCosts {
+  structuralWork: number;
+  finishingWork: number;
+  technicalLots: number;
+  externalWorks: number;
+  total: number;
+}
+
+export interface OtherCosts {
+  insurance: number;
+  contingency: number;
+  taxes: number;
+  miscellaneous: number;
+  total: number;
+}
+
+export interface ProjectDetails {
+  surface: number;
+  location: string;
   projectType: string;
-  projectDetails: {
-    surface: number;
-    city: string;
-    bedrooms: number;
-    bathrooms: number;
-  };
-  estimatedCost: {
-    total: number;
-    perSquareMeter: number;
-    breakdown: {
-      materials: number;
-      labor: number;
-      fees: number;
-    };
-  };
-  // Added these properties to match what the components are expecting
-  constructionCosts: {
-    structuralWork: number;
-    finishingWork: number;
-    technicalLots: number;
-    externalWorks: number;
-    total: number;
-  };
-  otherCosts: {
-    insurance: number;
-    contingency: number;
-    taxes: number;
-    miscellaneous: number;
-    total: number;
-  };
-  totalAmount: number;
-  categories?: Array<{ category: string; amount: number }>;
-  timeline: EstimationTimeline;
+  constructionType?: string;
+  [key: string]: any;
+}
+
+/**
+ * Complete estimation response data format
+ */
+export interface EstimationResponseData {
+  constructionCosts: ConstructionCosts;
   fees: FeeCosts;
+  otherCosts: OtherCosts;
+  totalAmount: number;
+  timeline: EstimationTimeline;
+  categories: CategoryCost[];
+  
+  // Additional fields needed by components
+  projectType: string;
+  projectDetails: ProjectDetails;
+  estimatedCost: number;
   dateGenerated: string;
   isComplete: boolean;
+}
+
+// Export EstimationTimeline to resolve the missing export error
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
 }

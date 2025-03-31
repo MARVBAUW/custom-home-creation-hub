@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,8 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
-import { calculateRoofFrameworkRenovCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/montantUtils';
+import { calculateRoofFrameworkRenovCost, ensureNumber } from '../utils/montantUtils';
 
 // Schema for the form validation
 const formSchema = z.object({
@@ -51,8 +49,8 @@ const CharpenteRenovForm: React.FC<BaseFormProps> = ({
     // Update form data with values and calculated cost
     updateFormData({
       roofType: values.roofType,
-      roofArea: values.roofArea,
-      montantT: (formData.montantT || 0) + roofCost,
+      roofArea: ensureNumber(values.roofArea),
+      montantT: ensureNumber(formData.montantT, 0) + roofCost,
     });
     
     // Move to next step
