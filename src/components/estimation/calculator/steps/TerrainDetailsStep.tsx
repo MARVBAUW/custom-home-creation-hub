@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -21,7 +22,7 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [landIncluded, setLandIncluded] = React.useState<string | boolean>(formData.landIncluded || 'true');
+  const [landIncluded, setLandIncluded] = React.useState<string>(formData.landIncluded ? formData.landIncluded.toString() : 'true');
   const [landPrice, setLandPrice] = React.useState<string>(formData.landPrice ? formData.landPrice.toString() : '');
   const [terrainType, setTerrainType] = React.useState<string>(formData.terrainType || '');
 
@@ -34,8 +35,6 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
     goToNextStep();
   };
 
-  const landIncludedValue = formData.landIncluded ? formData.landIncluded.toString() : 'true';
-
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
@@ -47,7 +46,7 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="landIncluded">Terrain inclus ?</Label>
-            <Select value={landIncludedValue} onValueChange={(value) => setLandIncluded(value)}>
+            <Select value={landIncluded} onValueChange={(value) => setLandIncluded(value)}>
               <SelectTrigger id="landIncluded">
                 <SelectValue placeholder="Sélectionnez une option" />
               </SelectTrigger>

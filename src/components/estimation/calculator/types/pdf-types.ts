@@ -27,9 +27,13 @@ export interface ExtendedJsPDF extends jsPDF {
 
 // PDF generation options
 export interface PDFGenerationOptions {
+  includeDetails?: boolean;
   includeTerrainPrice?: boolean;
   includeTimeline?: boolean;
   includeDetailedBreakdown?: boolean;
+  includeLogo?: boolean;
+  includeContactInfo?: boolean;
+  includeBreakdown?: boolean;
   clientInfo?: boolean;
   companyLogo?: boolean;
   fileName?: string;

@@ -1,21 +1,8 @@
 
-import { EstimationFormData } from '../types';
-import { calculateEstimation } from './estimationCalculator';
-import { calculateStructuralCosts } from './structuralCosts';
-import { calculateFinishingCosts } from './finishingCosts';
-import { calculateMaterialCosts } from './materialCosts';
-import { calculateLaborCosts } from './laborCosts';
+import { EstimationFormData, EstimationResponseData } from '../types';
 
-export {
-  calculateEstimation,
-  calculateStructuralCosts,
-  calculateFinishingCosts,
-  calculateMaterialCosts,
-  calculateLaborCosts
-};
-
-// Simplified calculation function
-export const calculateSimpleEstimation = (formData: EstimationFormData) => {
+// Main calculation function for estimation
+export const calculateEstimation = (formData: EstimationFormData): EstimationResponseData => {
   const surface = typeof formData.surface === 'string' 
     ? parseFloat(formData.surface) 
     : (formData.surface || 0);

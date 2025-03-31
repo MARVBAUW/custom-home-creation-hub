@@ -156,11 +156,11 @@ export interface EstimationResponseData {
     total: number;
   };
   fees: {
-    architectFees?: number;
+    architect: number;
     engineeringFees?: number;
+    architectFees?: number;
     officialFees?: number;
     inspectionFees?: number;
-    architect: number;
     technicalStudies: number;
     other: number;
     total: number;
@@ -198,11 +198,11 @@ export interface PDFGenerationOptions {
 
 // Pour FeeCosts qui est utilisé ailleurs
 export interface FeeCosts {
-  architectFees?: number;
+  architect: number;
   engineeringFees?: number;
+  architectFees?: number;
   officialFees?: number;
   inspectionFees?: number;
-  architect: number;
   technicalStudies: number;
   other: number;
   total: number;

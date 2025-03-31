@@ -81,7 +81,7 @@ export interface ClientTypeStepProps {
   updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep?: () => void;  // Make this optional
-  animationDirection: 'forward' | 'backward';
+  animationDirection: string;
 }
 
 export interface ContactDetailsStepProps extends FormStepProps {
