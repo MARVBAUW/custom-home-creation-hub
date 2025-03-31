@@ -16,9 +16,11 @@ export interface BaseFormProps {
 }
 
 // Extended FormData interface to include contact form fields
-export interface FormData extends EstimationFormData {
+export interface FormData extends Omit<EstimationFormData, 'budget' | 'poolHeating' | 'surface'> {
+  surface?: number | string;
   projectDescription?: string;
   projectPurpose?: string;
   commercialAccepted?: boolean;
-  budget?: string;
+  budget?: number | string;
+  poolHeating?: boolean | string;
 }

@@ -1,18 +1,18 @@
 
 // Re-export all types from individual files
 export * from './baseTypes';
+export * from './formTypes';
+export * from './estimationFormData';
 
 // Create a unified type definition to resolve incompatibilities between FormData and EstimationFormData
 import { EstimationFormData as OriginalEstimationFormData, 
         EstimationResponseData as OriginalEstimationResponseData, 
         FeeCosts as OriginalFeeCosts,
         EstimationTimeline } from './estimationFormData';
-import { FormData as OriginalFormData, 
-        EstimationResponseData as LegacyEstimationResponseData,
-        FeeCosts as LegacyFeeCosts } from '../types';
+import { FormData as ExtendedFormData } from './formTypes';
 
 // Create unified types that combine both versions
-export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating'> {
+export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating' | 'surface'> {
   // Add properties with flexible types to handle mixed data types
   surface?: number | string;
   poolHeating?: boolean | string;

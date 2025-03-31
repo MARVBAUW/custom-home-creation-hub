@@ -36,7 +36,7 @@ const ProfessionalContactStep: React.FC<ProfessionalContactStepProps> = ({
   const [city, setCity] = useState(formData.city || '');
   const [projectDescription, setProjectDescription] = useState(formData.projectDescription || '');
   const [startDate, setStartDate] = useState(formData.startDate || '');
-  const [budget, setBudget] = useState(formData.budget || '');
+  const [budget, setBudget] = useState(typeof formData.budget === 'undefined' ? '' : String(formData.budget));
   const [termsAccepted, setTermsAccepted] = useState<boolean>(formData.termsAccepted === true);
   const [commercialAccepted, setCommercialAccepted] = useState<boolean>(formData.commercialAccepted === true);
   

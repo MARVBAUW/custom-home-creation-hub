@@ -8,24 +8,34 @@ import { EstimationFormData, EstimationResponseData, EstimationTimeline } from '
 export const normalizeFormData = (formData: any): EstimationFormData => {
   const result: EstimationFormData = { ...formData };
   
-  // Ensure numeric values are numbers
-  if (typeof result.surface === 'string') {
-    result.surface = parseFloat(result.surface) || 0;
+  // Ensure numeric values are normalized
+  if (typeof result.surface === 'string' && !isNaN(parseFloat(result.surface))) {
+    result.surface = parseFloat(result.surface);
   }
   
-  if (typeof result.levels === 'string') {
-    result.levels = parseFloat(result.levels) || 0;
+  if (typeof result.levels === 'string' && !isNaN(parseFloat(result.levels))) {
+    result.levels = parseFloat(result.levels);
   }
   
-  if (typeof result.units === 'string') {
-    result.units = parseFloat(result.units) || 0;
+  if (typeof result.units === 'string' && !isNaN(parseFloat(result.units))) {
+    result.units = parseFloat(result.units);
   }
   
-  // Ensure specific format for boolean fields
+  if (typeof result.budget === 'string' && !isNaN(parseFloat(result.budget))) {
+    result.budget = parseFloat(result.budget);
+  }
+  
+  // Ensure boolean values are normalized
   if (typeof result.hasAirConditioning === 'string') {
     result.hasAirConditioning = result.hasAirConditioning === 'true' || 
                                result.hasAirConditioning === 'OUI' ||
                                result.hasAirConditioning === '1';
+  }
+  
+  if (typeof result.poolHeating === 'string') {
+    result.poolHeating = result.poolHeating === 'true' || 
+                        result.poolHeating === 'OUI' ||
+                        result.poolHeating === '1';
   }
   
   // Normalize array fields
@@ -128,6 +138,14 @@ export const convertEstimationResponseData = (result: any): EstimationResponseDa
 };
 
 /**
+ * Helper function to convert any value to string format suitable for form inputs
+ */
+export const toFormValue = (value: any): string => {
+  if (value === undefined || value === null) return '';
+  return String(value);
+};
+
+/**
  * Generates default categories based on a total amount
  */
 const generateDefaultCategories = (totalAmount: number): { category: string; amount: number; details?: string }[] => {
@@ -139,11 +157,11 @@ const generateDefaultCategories = (totalAmount: number): { category: string; amo
     { category: 'Isolation', amount: totalAmount * 0.06 },
     { category: 'Plâtrerie', amount: totalAmount * 0.05 },
     { category: 'Électricité', amount: totalAmount * 0.05 },
-    { category: 'Plomberie', amount: totalAmount * 0.05 },
+    { category: 'Plomberie', amount: totalAmount * 0.04 },
     { category: 'Chauffage', amount: totalAmount * 0.06 },
-    { category: 'Carrelage', amount: totalAmount * 0.04 },
-    { category: 'Peinture', amount: totalAmount * 0.03 },
-    { category: 'Aménagements extérieurs', amount: totalAmount * 0.04 },
-    { category: 'Frais annexes', amount: totalAmount * 0.02 },
+    { category: 'Revêtements', amount: totalAmount * 0.05 },
+    { category: 'Frais d\'études', amount: totalAmount * 0.04 },
+    { category: 'Frais administratifs', amount: totalAmount * 0.03 },
+    { category: 'Divers', amount: totalAmount * 0.02 }
   ];
 };
