@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 export interface EstimationFormData {
@@ -210,6 +209,43 @@ export interface EstimationFormData {
   complexity?: string;
   qualityStandard?: string;
   name?: string;
+  
+  // Roof framework (charpente) and roofing
+  roofType?: string;
+  roofArea?: number | string;
+  atticType?: string;
+  roofingType?: string;
+  roofingArea?: number | string;
+  
+  // Window details
+  windowType?: string;
+  windowRenovationArea?: number | string;
+  windowNewArea?: number | string;
+  
+  // Plumbing and Kitchen
+  plumbingType?: string;
+  kitchenType?: string;
+  kitchenCost?: number;
+  
+  // Bathroom
+  bathroomType?: string;
+  bathroomCount?: number | string;
+  bathroomCost?: number;
+  
+  // Demolition specific
+  demolitionTypes?: string[];
+  demolitionPercentages?: { [key: string]: number };
+  demolitionTotalArea?: number | string;
+  demolitionCost?: number;
+  
+  // Structural renovation
+  createWalls?: boolean;
+  wallArea?: number | string;
+  createFloors?: boolean;
+  floorType?: string;
+  floorArea?: number | string;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: { [key: string]: number | string };
 }
 
 // For backwards compatibility, FormData is an alias of EstimationFormData

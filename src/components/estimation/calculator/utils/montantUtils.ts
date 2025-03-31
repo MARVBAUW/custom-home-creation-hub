@@ -1,4 +1,5 @@
-import { ensureNumber, toFormValue } from './typeConversions';
+// Re-export the utility functions from typeConversions.ts
+export { ensureNumber, toFormValue } from './typeConversions';
 
 /**
  * Calculate the cost of kitchen based on type and unit count
@@ -535,3 +536,328 @@ export const calculateWindowsCost = (type: string, area: number | string): numbe
   
   return baseCost * areaNum;
 };
+
+/**
+ * Calculate new total montant by adding a cost
+ * @param currentMontant Current montant value
+ * @param additionalCost Cost to add
+ * @returns The new total montant
+ */
+export const calculateNewMontantT = (currentMontant: number | undefined, additionalCost: number): number => {
+  const current = currentMontant || 0;
+  return current + additionalCost;
+};
+
+/**
+ * Calculate component cost based on surface and rate
+ * @param surface Surface area
+ * @param rate Rate per square meter
+ * @returns The calculated cost
+ */
+export const calculateComponentCost = (surface: number | string | undefined, rate: number): number => {
+  const surfaceNum = ensureNumber(surface, 0);
+  return surfaceNum * rate;
+};
+
+/**
+ * Calculate insulation cost based on type and surface
+ * @param surface Surface area
+ * @param insulationType Type of insulation
+ * @returns The calculated cost
+ */
+export const calculateInsulationCost = (surface: number | string | undefined, insulationType: string): number => {
+  const surfaceNum = ensureNumber(surface, 0);
+  let rate = 100; // Default to ISO+ (performance)
+  
+  switch (insulationType) {
+    case 'base':
+      rate = 80; // ISO DE BASE
+      break;
+    case 'performance':
+      rate = 100; // ISO+
+      break;
+    case 'ultraPerformance':
+      rate = 120; // ISO++
+      break;
+    case 'non_concerne':
+      rate = 0; // No insulation
+      break;
+  }
+  
+  return surfaceNum * rate;
+};
+
+/**
+ * Calculate electrical installation cost
+ * @param type Type of electrical system
+ * @param surface Surface area
+ * @returns The calculated cost
+ */
+export const calculateElectricalCost = (type: string, surface: number | string): number => {
+  const surfaceNum = ensureNumber(surface, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'basic':
+      baseCost = 45;
+      break;
+    case 'standard':
+      baseCost = 60;
+      break;
+    case 'premium':
+      baseCost = 80;
+      break;
+    case 'smart_home':
+      baseCost = 120;
+      break;
+    default:
+      baseCost = 50;
+  }
+  
+  return baseCost * surfaceNum;
+};
+
+/**
+ * Calculate facade materials cost
+ * @param formData Form data containing surface
+ * @param stonePercentage Stone percentage
+ * @param plasterPercentage Plaster percentage
+ * @param brickPercentage Brick percentage
+ * @param metalCladdingPercentage Metal cladding percentage
+ * @param woodCladdingPercentage Wood cladding percentage
+ * @param stoneCladdingPercentage Stone cladding percentage
+ * @returns The calculated cost
+ */
+export const calculateFacadeCost = (
+  formData: any,
+  stonePercentage: number | string,
+  plasterPercentage: number | string,
+  brickPercentage: number | string,
+  metalCladdingPercentage: number | string,
+  woodCladdingPercentage: number | string,
+  stoneCladdingPercentage: number | string
+): number => {
+  const surface = ensureNumber(formData.surface, 0);
+  
+  // Calculate total facade surface (assuming 3m height per level)
+  const levels = ensureNumber(formData.levels, 1);
+  const facadeSurface = Math.sqrt(surface) * 4 * 3 * levels;
+  
+  // Calculate the cost of each material
+  const stonePerc = ensureNumber(stonePercentage, 0) / 100;
+  const plasterPerc = ensureNumber(plasterPercentage, 0) / 100;
+  const brickPerc = ensureNumber(brickPercentage, 0) / 100;
+  const metalPerc = ensureNumber(metalCladdingPercentage, 0) / 100;
+  const woodPerc = ensureNumber(woodCladdingPercentage, 0) / 100;
+  const stoneCladdingPerc = ensureNumber(stoneCladdingPercentage, 0) / 100;
+  
+  const stoneCost = stonePerc * facadeSurface * 180;
+  const plasterCost = plasterPerc * facadeSurface * 60;
+  const brickCost = brickPerc * facadeSurface * 90;
+  const metalCost = metalPerc * facadeSurface * 120;
+  const woodCost = woodPerc * facadeSurface * 150;
+  const stoneCladdingCost = stoneCladdingPerc * facadeSurface * 160;
+  
+  return stoneCost + plasterCost + brickCost + metalCost + woodCost + stoneCladdingCost;
+};
+
+/**
+ * Calculate masonry wall cost
+ * @param area Wall area in m²
+ * @returns The calculated cost
+ */
+export const calculateMasonryWallCost = (area: number | string): number => {
+  return 120 * ensureNumber(area, 0);
+};
+
+/**
+ * Calculate floor cost
+ * @param type Type of floor
+ * @param area Floor area in m²
+ * @returns The calculated cost
+ */
+export const calculateFloorCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  
+  if (type === 'BOIS') {
+    return 80 * areaNum;
+  } else if (type === 'BETON') {
+    return 120 * areaNum;
+  }
+  
+  return 0;
+};
+
+/**
+ * Calculate structural feature cost
+ * @param feature Feature name
+ * @param value Feature value
+ * @returns The calculated cost
+ */
+export const calculateStructuralFeatureCost = (feature: string, value: number | string): number => {
+  const valueNum = ensureNumber(value, 0);
+  
+  const costCoefficients: { [key: string]: number } = {
+    'RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE': 120,
+    'DEMOLITION MUR PORTEUR': 120,
+    'POSE D\'UN IPN': 850,
+    'OUVERTURE EN FACADE/MUR PORTEUR': 120,
+    'CREATION D\'UNE TREMIE* (ouverture dans un plancher pour accéder à un étage supérieur)': 90,
+    'FONDATION SEMELLE': 80,
+    'FONDATION MASSIF': 110,
+    'CHAPE': 22,
+    'RACCORDEMENT SANTAIRE RESEAU URBAIN': 145
+  };
+  
+  return (costCoefficients[feature] || 0) * valueNum;
+};
+
+/**
+ * Calculate window cost
+ * @param windowType Window type
+ * @param area Window area
+ * @returns The calculated cost
+ */
+export const calculateWindowCost = (windowType: string, area: number | string): number => {
+  return calculateWindowsCost(windowType, area);
+};
+
+/**
+ * Calculate floor tiling cost
+ * @param type Type of floor tile
+ * @param area Area in m²
+ * @returns The calculated cost
+ */
+export const calculateFloorTilingCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'base':
+      baseCost = 60;
+      break;
+    case 'mid':
+      baseCost = 90;
+      break;
+    case 'premium':
+      baseCost = 130;
+      break;
+    default:
+      baseCost = 60;
+  }
+  
+  return baseCost * areaNum;
+};
+
+/**
+ * Calculate wall tiling cost
+ * @param type Type of wall tile
+ * @param area Area in m²
+ * @returns The calculated cost
+ */
+export const calculateWallTilingCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'base':
+      baseCost = 70;
+      break;
+    case 'mid':
+      baseCost = 100;
+      break;
+    case 'premium':
+      baseCost = 150;
+      break;
+    default:
+      baseCost = 70;
+  }
+  
+  return baseCost * areaNum;
+};
+
+/**
+ * Calculate plastering cost
+ * @param type Type of plastering
+ * @param area Area in m²
+ * @returns The calculated cost
+ */
+export const calculatePlasteringCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'basic':
+      baseCost = 30;
+      break;
+    case 'standard':
+      baseCost = 40;
+      break;
+    case 'premium':
+      baseCost = 55;
+      break;
+    default:
+      baseCost = 35;
+  }
+  
+  return baseCost * areaNum;
+};
+
+/**
+ * Calculate interior carpentry cost
+ * @param type Type of carpentry
+ * @param area Area in m²
+ * @returns The calculated cost
+ */
+export const calculateInteriorCarpenteryCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'basic':
+      baseCost = 120;
+      break;
+    case 'standard':
+      baseCost = 180;
+      break;
+    case 'premium':
+      baseCost = 250;
+      break;
+    default:
+      baseCost = 150;
+  }
+  
+  return baseCost * areaNum;
+};
+
+/**
+ * Calculate heating cost
+ * @param type Type of heating
+ * @param area Area in m²
+ * @returns The calculated cost
+ */
+export const calculateHeatingCost = (type: string, area: number | string): number => {
+  const areaNum = ensureNumber(area, 0);
+  let baseCost = 0;
+  
+  switch (type) {
+    case 'electric':
+      baseCost = 70;
+      break;
+    case 'gas':
+      baseCost = 90;
+      break;
+    case 'heat_pump':
+      baseCost = 150;
+      break;
+    default:
+      baseCost = 80;
+  }
+  
+  return baseCost * areaNum;
+};
+
+/**
+ * Calculate fencing cost (renamed from calculateFencingCost for consistency)
+ */
+export const calculateFencingCost = calculateFenceCost;
