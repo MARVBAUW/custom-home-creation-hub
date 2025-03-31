@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ensureNumber } from '../utils/montantUtils';
-import { PanelTop, Ban, ExclamationTriangle } from 'lucide-react';
+import { PanelTop, Ban, AlertTriangle } from 'lucide-react';
 
 const ParquetForm: React.FC<BaseFormProps> = ({
   formData,
@@ -311,7 +310,7 @@ const ParquetForm: React.FC<BaseFormProps> = ({
         {/* Error message */}
         {errorMessage && (
           <Alert variant="destructive" className="mb-4">
-            <ExclamationTriangle className="h-4 w-4" />
+            <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
               {errorMessage}
             </AlertDescription>
