@@ -10,9 +10,12 @@ export interface FormStepProps extends BaseFormProps {
   // This is a base interface for form components
 }
 
-export interface ClientTypeStepProps extends BaseFormProps {
-  // Specific props for ClientTypeStep
-  goToPreviousStep?: () => void; // Make this optional since it might not be needed in the first step
+export interface ClientTypeStepProps {
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep?: () => void; // Optional for the first step
+  animationDirection: string;
 }
 
 export interface ExtendedFormProps extends FormStepProps {

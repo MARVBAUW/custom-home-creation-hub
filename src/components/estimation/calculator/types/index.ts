@@ -25,4 +25,5 @@ export type {
 } from './formTypes';
 
 // Also export PDFGenerationOptions from pdf-types explicitly
-export type { PDFGenerationOptions as PDFOptions, EnhancedJsPDF } from './pdf-types';
+export { PDFGenerationOptions } from './pdf-types';
+export type { EnhancedJsPDF } from './pdf-types';

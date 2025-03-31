@@ -3,7 +3,7 @@
 import jsPDF from 'jspdf';
 import { UserOptions } from 'jspdf-autotable';
 
-// Fix PDFGenerationOptions interface
+// Export PDFGenerationOptions interface
 export interface PDFGenerationOptions {
   includeDetails?: boolean;
   includeLogo?: boolean;

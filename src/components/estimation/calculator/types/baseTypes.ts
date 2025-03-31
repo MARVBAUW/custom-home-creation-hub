@@ -1,20 +1,10 @@
 
-import { EstimationFormData } from './estimationFormData';
-
-export interface BaseStepProps {
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: string;
-}
+import { FormData } from './estimationFormData';
 
 export interface BaseFormProps {
-  formData: EstimationFormData;
-  updateFormData: (data: Partial<EstimationFormData>) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: string;
-  defaultValues?: Partial<EstimationFormData>;
-  onSubmit?: (data: Partial<EstimationFormData>) => void;
 }
