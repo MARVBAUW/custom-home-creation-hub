@@ -8,6 +8,12 @@ import {
   calculateElectricityCost
 } from './calculations/technical';
 
+import {
+  calculateWindowsCost,
+  calculateDoorCost,
+  calculateInteriorCarpenteryCost
+} from './calculations/windows';
+
 /**
  * Calculate a new total amount by adding a cost to the existing total
  */
@@ -226,6 +232,52 @@ export const calculateTerraceCost = (area: number | string): number => {
   return ensureNumber(area) * 180; // 180€ per square meter
 };
 
+// Calculate roofing cost based on type and surface
+export const calculateRoofingCost = (type: string, surface: number | string): number => {
+  const surfaceNum = ensureNumber(surface);
+  
+  switch (type) {
+    case 'tuilePlate':
+      return surfaceNum * 120; // 120€ per m²
+    case 'tuileRonde':
+      return surfaceNum * 95; // 95€ per m²
+    case 'ardoise':
+      return surfaceNum * 150; // 150€ per m²
+    case 'zinc':
+      return surfaceNum * 185; // 185€ per m²
+    case 'chaume':
+      return surfaceNum * 220; // 220€ per m²
+    case 'bacAcier':
+      return surfaceNum * 85; // 85€ per m²
+    case 'bitume':
+      return surfaceNum * 70; // 70€ per m²
+    case 'vegetalisee':
+      return surfaceNum * 160; // 160€ per m²
+    case 'gravillonnee':
+      return surfaceNum * 75; // 75€ per m²
+    default:
+      return 0;
+  }
+};
+
+// Calculate insulation cost based on type and surface
+export const calculateInsulationCost = (type: string, surface: number | string): number => {
+  const surfaceNum = ensureNumber(surface);
+  
+  switch (type) {
+    case 'base':
+      return surfaceNum * 60; // 60€ per m²
+    case 'performance':
+      return surfaceNum * 80; // 80€ per m²
+    case 'ultraPerformance':
+      return surfaceNum * 110; // 110€ per m²
+    case 'sansAvis':
+      return surfaceNum * 70; // 70€ per m² (average cost)
+    default:
+      return 0;
+  }
+};
+
 // Re-export technical calculation functions for backward compatibility
 export {
   calculateElectricalCost,
@@ -233,6 +285,13 @@ export {
   calculatePlumbingCost,
   calculateHeatingCost,
   calculateAirConditioningCost
+};
+
+// Re-export window/door calculation functions
+export {
+  calculateWindowsCost,
+  calculateDoorCost,
+  calculateInteriorCarpenteryCost
 };
 
 // Add ensureNumber export for backward compatibility

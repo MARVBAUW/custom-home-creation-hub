@@ -100,11 +100,9 @@ export const useEnvelopeSubmissions = (formData: FormData, updateFormData: (data
     setIsSubmitting(true);
     
     try {
-      // Note the argument order matches the updated function signature
-      const windowsCost = calculateWindowsCost(
-        menuiseriesData.windowType,
-        ensureNumber(menuiseriesData.windowNewArea) + ensureNumber(menuiseriesData.windowRenovationArea)
-      );
+      // Calculate total window area
+      const windowArea = ensureNumber(menuiseriesData.windowNewArea) + ensureNumber(menuiseriesData.windowRenovationArea);
+      const windowsCost = calculateWindowsCost(menuiseriesData.windowType, windowArea);
       
       updateFormData({
         ...menuiseriesData,
