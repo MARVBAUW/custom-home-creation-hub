@@ -1,76 +1,148 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { List, Building, User, CheckCircle2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { BaseFormProps } from '../types/formTypes';
-import EstimationBreakdown from '../EstimationBreakdown';
-import { calculateEstimation } from '../calculationUtils';
 
-const ResultsForm: React.FC<BaseFormProps> = ({
-  formData,
-  goToPreviousStep,
-  isLoading = false,
-  animationDirection
+const ResultsForm: React.FC<BaseFormProps> = ({ 
+  formData, 
+  goToPreviousStep, 
+  animationDirection,
+  isLoading,
+  estimationResult,
+  categoriesAmounts
 }) => {
-  const [estimation, setEstimation] = React.useState(() => calculateEstimation(formData));
-
-  // Recalculate estimation when form data changes
-  React.useEffect(() => {
-    setEstimation(calculateEstimation(formData));
-  }, [formData]);
+  // Créer des catégories fictives pour la démo si aucune n'est fournie
+  const displayCategories = categoriesAmounts || [
+    { category: 'Gros oeuvre', amount: 120000 },
+    { category: 'Second oeuvre', amount: 80000 },
+    { category: 'Électricité', amount: 25000 },
+    { category: 'Plomberie', amount: 25000 },
+    { category: 'Menuiseries', amount: 35000 },
+    { category: 'Isolation', amount: 30000 },
+    { category: 'Finitions', amount: 40000 },
+    { category: 'Frais annexes', amount: 20000 }
+  ];
+  
+  // Calculer le montant total à partir des catégories
+  const totalAmount = displayCategories.reduce((sum, item) => sum + item.amount, 0);
+  
+  // Formater les nombres en euros
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
+  };
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-progineer-gold"></div>
+      </div>
+    );
+  }
+  
+  const displayAmount = typeof estimationResult === 'number' 
+    ? estimationResult 
+    : estimationResult?.totalAmount || totalAmount;
 
   return (
-    <div className={`transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    <div className={`transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'
     }`}>
-      <div className="space-y-6">
-        <h2 className="text-2xl font-bold text-center mb-4">
-          Estimation détaillée de votre projet
-        </h2>
-        
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center p-8">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-500 mb-4" />
-            <p className="text-gray-500">Calcul de l'estimation en cours...</p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <EstimationBreakdown estimation={estimation} />
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-between mt-8">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={goToPreviousStep}
-                className="w-full sm:w-auto"
-              >
-                Modifier mon estimation
-              </Button>
-              
-              <Button 
-                type="button"
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
-                onClick={() => window.print()}
-              >
-                Imprimer l'estimation
-              </Button>
-              
-              <Button 
-                type="button"
-                className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
-              >
-                Demander un devis détaillé
-              </Button>
+      <Card className="bg-white shadow-md">
+        <CardHeader className="bg-gray-50 rounded-t-lg">
+          <CardTitle className="text-2xl font-bold text-center">
+            Estimation de votre projet
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6">
+          {/* Récapitulatif du projet */}
+          <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+            <h3 className="text-lg font-semibold mb-3 flex items-center">
+              <List className="mr-2 text-blue-600" />
+              Récapitulatif du projet
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="flex items-start">
+                <div className="mr-2 mt-1 text-blue-600">
+                  <Building size={16} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Type de projet</p>
+                  <p className="text-sm">{formData.projectType === 'construction' ? 'Construction neuve' : 
+                     formData.projectType === 'renovation' ? 'Rénovation' : 
+                     formData.projectType === 'extension' ? 'Extension' : 'Non spécifié'}</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-2 mt-1 text-blue-600">
+                  <User size={16} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Type de client</p>
+                  <p className="text-sm">{formData.clientType === 'individual' ? 'Particulier' : 
+                     formData.clientType === 'professional' ? 'Professionnel' : 'Non spécifié'}</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-2 mt-1 text-blue-600">
+                  <CheckCircle2 size={16} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Surface</p>
+                  <p className="text-sm">{formData.surface ? `${formData.surface} m²` : 'Non spécifiée'}</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <div className="mr-2 mt-1 text-blue-600">
+                  <CheckCircle2 size={16} />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Localisation</p>
+                  <p className="text-sm">{formData.city || 'Non spécifiée'}</p>
+                </div>
+              </div>
             </div>
-            
-            <div className="text-center text-sm text-gray-500 mt-4 pt-4 border-t">
-              <p>Cette estimation est donnée à titre indicatif et peut varier en fonction des spécificités de votre projet.</p>
-              <p>Contactez-nous pour un devis personnalisé et une étude détaillée de votre projet.</p>
+          </div>
+          
+          {/* Montant total estimé */}
+          <div className="mb-6 text-center p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium">Montant total estimé</h3>
+            <p className="text-3xl font-bold text-progineer-gold">
+              {formatCurrency(displayAmount)}
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              * Cette estimation est fournie à titre indicatif et pourra être affinée lors d'un rendez-vous avec nos experts.
+            </p>
+          </div>
+          
+          {/* Détail des coûts par catégorie */}
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-3">Détail par corps d'état</h3>
+            <div className="space-y-2">
+              {displayCategories.map((item, index) => (
+                <div key={index} className="flex justify-between py-2 border-b">
+                  <span className="font-medium">{item.category}</span>
+                  <span>{formatCurrency(item.amount)}</span>
+                </div>
+              ))}
             </div>
           </div>
-        )}
-      </div>
+          
+          {/* Boutons d'action */}
+          <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+            <Button onClick={goToPreviousStep} variant="outline">
+              Modifier l'estimation
+            </Button>
+            <Button className="bg-progineer-gold hover:bg-progineer-gold/90">
+              Télécharger le PDF
+            </Button>
+            <Button>
+              Prendre rendez-vous
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

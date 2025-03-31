@@ -1,24 +1,21 @@
 
-// Base type definitions that might be reused across the application
+import { EstimationFormData } from './index';
 
-export interface BaseResponse {
-  success: boolean;
-  message?: string;
-  error?: string;
+export interface BaseFormProps {
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+  isLoading?: boolean;
 }
 
-export type ResponseStatus = 'success' | 'error' | 'loading' | 'idle';
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
+export interface BaseStepProps {
+  step: number;
+  totalSteps: number;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
-
-export interface StringKeyObject {
-  [key: string]: any;
-}
-
-export type CallbackFunction = (...args: any[]) => void;

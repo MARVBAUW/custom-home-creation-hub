@@ -1,73 +1,102 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, CheckCircle, ListChecks } from 'lucide-react';
 import { FormNavigationProps } from '../types/formTypes';
 
 const FormNavigation: React.FC<FormNavigationProps> = ({
   step,
   totalSteps,
-  currentStep,
   estimationResult,
   showSummary,
+  onPreviousClick,
+  onNextClick,
+  onShowSummaryClick,
+  currentStep,
   onPrevStep,
   onNextStep,
   isSubmitting,
   isComplete,
-  onComplete,
-  onPreviousClick,
-  onNextClick,
-  onShowSummaryClick
+  onComplete
 }) => {
-  // Handle backward compatibility with both old and new prop naming
-  const handlePrevious = onPrevStep || onPreviousClick;
-  const handleNext = onNextStep || onNextClick;
-  
+  // Use either the direct click handlers or the step handlers
+  const handlePrevious = onPreviousClick || onPrevStep;
+  const handleNext = onNextClick || onNextStep;
+  const handleComplete = onComplete || onShowSummaryClick;
+
+  // Show different buttons based on whether we're showing the summary
   if (showSummary) {
-    return null;
+    return (
+      <div className="flex justify-between mt-6">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onPreviousClick}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          Retour
+        </Button>
+      </div>
+    );
   }
-  
-  return (
-    <div className="flex justify-between mt-6">
-      {/* Previous button, shown for all steps except the first */}
-      {(step !== undefined && step > 0) && (
+
+  // If we're at the last step and have a result
+  if (step === totalSteps - 1 && estimationResult) {
+    return (
+      <div className="flex justify-between mt-6">
         <Button
           type="button"
           variant="outline"
           onClick={handlePrevious}
-          disabled={isSubmitting}
           className="flex items-center gap-2"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeftIcon className="w-4 h-4" />
           Précédent
         </Button>
-      )}
-      
-      {/* For the first step, show just a spacer */}
-      {(step !== undefined && step === 0) && <div></div>}
-      
-      {/* Next button, or Complete button for last step */}
-      {!isComplete ? (
         <Button
           type="button"
-          onClick={handleNext}
-          disabled={isSubmitting}
+          onClick={onShowSummaryClick}
           className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
         >
-          {isSubmitting ? 'Traitement...' : 'Suivant'}
-          <ArrowRight className="h-4 w-4" />
+          <ListChecks className="w-4 h-4" />
+          Voir le récapitulatif
         </Button>
-      ) : (
-        <Button
-          type="button"
-          onClick={onComplete}
-          disabled={isSubmitting}
-          className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
-        >
-          <Check className="h-4 w-4" />
-          Terminer
-        </Button>
-      )}
+      </div>
+    );
+  }
+
+  // Default navigation buttons
+  return (
+    <div className="flex justify-between mt-6">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handlePrevious}
+        className="flex items-center gap-2"
+        disabled={step === 0}
+      >
+        <ArrowLeftIcon className="w-4 h-4" />
+        Précédent
+      </Button>
+      <Button
+        type="button"
+        onClick={isComplete ? handleComplete : handleNext}
+        className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
+        disabled={isSubmitting}
+      >
+        {isComplete ? (
+          <>
+            <CheckCircle className="w-4 h-4" />
+            Terminer
+          </>
+        ) : (
+          <>
+            Suivant
+            <ArrowRightIcon className="w-4 h-4" />
+          </>
+        )}
+      </Button>
     </div>
   );
 };

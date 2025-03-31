@@ -14,6 +14,9 @@ export interface BaseFormProps extends FormStepProps {
   // This is a base interface for form components
   onSubmit?: (data: Partial<EstimationFormData>) => void;
   defaultValues?: Partial<EstimationFormData>;
+  isLoading?: boolean;
+  estimationResult?: EstimationResponseData | number | null;
+  categoriesAmounts?: Array<{ category: string; amount: number }>;
 }
 
 export interface ResultsFormProps extends FormStepProps {
@@ -57,6 +60,7 @@ export interface FormSubmitContext {
 
 export interface ConstructionDetailsStepProps extends BaseFormProps {
   // Add any construction-specific props here
+  estimationType?: string;
 }
 
 export interface StepRendererProps {
@@ -66,4 +70,8 @@ export interface StepRendererProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  totalSteps?: number;
+  isSubmitting?: boolean;
+  goToStep?: (step: number) => void;
+  onComplete?: () => void;
 }

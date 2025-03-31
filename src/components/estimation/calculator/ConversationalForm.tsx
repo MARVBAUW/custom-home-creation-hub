@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
-import { EstimationFormData as FormData } from './types';
+import { EstimationFormData } from './types';
 import { useEstimationCalculator } from './useEstimationCalculator';
 import { useToast } from '@/hooks/use-toast';
 

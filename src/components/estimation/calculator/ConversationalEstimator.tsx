@@ -6,7 +6,8 @@ import { User, Bot, Send } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { v4 as uuidv4 } from 'uuid';
-import { Message, ConversationalProps } from './types';
+import { ConversationalProps, Message, EstimationFormData } from './types';
+import { analyzeUserIntent, generateConversationalResponse } from './utils/conversationalUtils';
 
 const ConversationalEstimator: React.FC<ConversationalProps> = ({
   onUserInput,
@@ -80,7 +81,7 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
       
       let responseText = '';
       let responseOptions: string[] = [];
-      let dataToUpdate: Partial<FormData> = {};
+      let dataToUpdate: Partial<EstimationFormData> = {};
       
       // Very basic intent detection
       if (lowerInput.includes("particulier")) {

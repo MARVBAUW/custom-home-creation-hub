@@ -31,13 +31,24 @@ export interface AutoTableInstance {
   (options: UserOptions): any;
 }
 
-// Extend the jsPDF typing to include autoTable plugin
+// Define the jsPDF interface
+export interface JSPDF {
+  autoTable: AutoTableInstance;
+  internal: JsPDFInternal;
+  // Add other jsPDF methods here as needed
+  text: (text: string, x: number, y: number, options?: any) => JSPDF;
+  line: (x1: number, y1: number, x2: number, y2: number, style?: any) => JSPDF;
+  addPage: () => JSPDF;
+  setFontSize: (size: number) => JSPDF;
+  setFont: (fontName: string, fontStyle?: string) => JSPDF;
+  setTextColor: (r: number, g: number, b: number) => JSPDF;
+  // ...add other methods as needed
+}
+
+// Extend the global jspdf namespace
 declare global {
   namespace jspdf {
-    interface jsPDF {
-      autoTable: AutoTableInstance;
-      internal: JsPDFInternal;
-    }
+    interface jsPDF extends JSPDF {}
   }
 }
 

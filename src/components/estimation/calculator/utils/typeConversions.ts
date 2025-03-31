@@ -51,6 +51,31 @@ export const ensureBoolean = (value: any, defaultValue: boolean = false): boolea
 };
 
 /**
+ * Converts a form value to the appropriate type for the form
+ * @param value - The value to convert
+ * @returns The converted value suitable for form use
+ */
+export const toFormValue = (value: any): string | number | boolean => {
+  if (typeof value === 'string') {
+    return value;
+  }
+  
+  if (typeof value === 'number') {
+    return value;
+  }
+  
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  return String(value);
+};
+
+/**
  * Formats a number as a Euro currency string
  * @param value - The number to format
  * @returns Formatted string with Euro symbol

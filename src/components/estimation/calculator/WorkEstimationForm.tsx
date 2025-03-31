@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -7,7 +6,7 @@ import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
 import FormNavigation from './components/FormNavigation';
-import { EstimationFormData as FormData } from './types';
+import { EstimationFormData } from './types';
 
 const WorkEstimationForm: React.FC = () => {
   const formWrapper = useRef<HTMLDivElement>(null);
@@ -61,7 +60,7 @@ const WorkEstimationForm: React.FC = () => {
   // Function to handle client type submission from conversational estimator
   const onClientTypeSubmit = (data: { clientType: string }) => {
     if (data && typeof data === 'object' && 'clientType' in data) {
-      updateFormData(data);
+      updateFormData({ clientType: data.clientType });
     }
   };
 
