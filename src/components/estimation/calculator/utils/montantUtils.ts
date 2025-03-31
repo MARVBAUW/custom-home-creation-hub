@@ -53,6 +53,36 @@ export function calculateInsulationCost(insulationType: string, surface: number)
 }
 
 /**
+ * Calculate electrical cost based on type and surface area
+ */
+export function calculateElectricalCost(electricalType: string, surface: number): number {
+  let costPerM2 = 0;
+  
+  // Determine cost per square meter based on electrical type
+  switch (electricalType) {
+    case 'basic':
+      costPerM2 = 70; // Basic electrical installation
+      break;
+    case 'standard':
+      costPerM2 = 90; // Standard electrical installation
+      break;
+    case 'premium':
+      costPerM2 = 120; // Premium electrical installation
+      break;
+    case 'smart_home':
+      costPerM2 = 160; // Smart home electrical installation
+      break;
+    case 'non_concerne':
+    default:
+      costPerM2 = 0; // No electrical work
+      break;
+  }
+  
+  // Calculate total cost
+  return costPerM2 * surface;
+}
+
+/**
  * Calculate interior carpentry cost based on selected options
  */
 export function calculateInteriorCarpenteryCost(
@@ -134,10 +164,33 @@ export function calculatePoolCost(poolType: string, area: number): number {
 }
 
 /**
- * Calculate pool heating cost based on pool area
+ * Calculate plumbing cost based on type and surface area
  */
-export function calculatePoolHeatingCost(area: number): number {
-  return 150 * area;
+export function calculatePlumbingCost(plumbingType: string, surface: number): number {
+  let costPerM2 = 0;
+  
+  // Determine cost per square meter based on plumbing type
+  switch (plumbingType) {
+    case 'basic':
+      costPerM2 = 65; // Basic plumbing installation
+      break;
+    case 'standard':
+      costPerM2 = 85; // Standard plumbing installation
+      break;
+    case 'premium':
+      costPerM2 = 110; // Premium plumbing installation
+      break;
+    case 'renovation':
+      costPerM2 = 90; // Renovation plumbing work
+      break;
+    case 'non_concerne':
+    default:
+      costPerM2 = 0; // No plumbing work
+      break;
+  }
+  
+  // Calculate total cost
+  return costPerM2 * surface;
 }
 
 /**
