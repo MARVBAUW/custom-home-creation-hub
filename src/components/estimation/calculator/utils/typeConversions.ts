@@ -1,221 +1,107 @@
 
-/**
- * Type conversion utility functions
- */
+import { EstimationFormData } from '../types/estimationFormData';
 
 /**
- * Ensures a value is a number, with fallback to defaultValue if conversion fails
- * @param value - The value to ensure is a number
- * @param defaultValue - The default value to use if conversion fails (default: 0)
- * @returns The value as a number
+ * Convert a value to a string, or empty string if undefined/null
  */
-export const ensureNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === undefined || value === null) return defaultValue;
-  
-  // If value is already a number, return it
-  if (typeof value === 'number') return value;
-  
-  // If value is a boolean, convert to 0 or 1
-  if (typeof value === 'boolean') return value ? 1 : 0;
-  
-  // Try to parse as number
-  const parsed = Number(value);
-  return isNaN(parsed) ? defaultValue : parsed;
-};
-
-/**
- * Ensures a value is a boolean, with logic for string conversions
- * @param value - The value to ensure is a boolean
- * @param defaultValue - The default value to use if conversion is ambiguous (default: false)
- * @returns The value as a boolean
- */
-export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
-  if (value === undefined || value === null) return defaultValue;
-  
-  // If value is already a boolean, return it
-  if (typeof value === 'boolean') return value;
-  
-  // Handle string values
-  if (typeof value === 'string') {
-    const lowercased = value.toLowerCase();
-    if (lowercased === 'true' || lowercased === 'yes' || lowercased === 'oui' || lowercased === '1' || lowercased === 'oui') {
-      return true;
-    }
-    if (lowercased === 'false' || lowercased === 'no' || lowercased === 'non' || lowercased === '0') {
-      return false;
-    }
-  }
-  
-  // For numbers, 0 is false, anything else is true
-  if (typeof value === 'number') {
-    return value !== 0;
-  }
-  
-  return defaultValue;
-};
-
-/**
- * Ensures a value is a string
- * @param value - The value to ensure is a string
- * @param defaultValue - The default value to use if conversion is ambiguous (default: '')
- * @returns The value as a string
- */
-export const ensureString = (value: any, defaultValue: string = ''): string => {
-  if (value === undefined || value === null) return defaultValue;
-  
-  // If value is already a string, return it
-  if (typeof value === 'string') return value;
-  
-  // Convert other types to string
-  return String(value);
-};
-
-/**
- * Helper function to convert any value to string format suitable for form inputs
- * @param value - The value to convert to a form-friendly string
- * @returns The value as a string suitable for form inputs
- */
-export const toFormValue = (value: any): string => {
+export const toString = (value: any): string => {
   if (value === undefined || value === null) return '';
   return String(value);
 };
 
 /**
- * Converts a value to a string[] array if it's not already
- * @param value - The value to ensure is a string array
- * @param defaultValue - Default value if conversion fails
- * @returns The value as a string array
+ * Convert a value to a number, or 0 if NaN
  */
-export const ensureStringArray = (value: any, defaultValue: string[] = []): string[] => {
-  if (value === undefined || value === null) return defaultValue;
-  
-  // If already an array, ensure all elements are strings
-  if (Array.isArray(value)) {
-    return value.map(item => ensureString(item));
-  }
-  
-  // If it's a string with commas, split it
-  if (typeof value === 'string' && value.includes(',')) {
-    return value.split(',').map(item => item.trim());
-  }
-  
-  // Otherwise, wrap in array
-  return [ensureString(value)];
+export const toNumber = (value: any): number => {
+  if (value === undefined || value === null) return 0;
+  const num = Number(value);
+  return isNaN(num) ? 0 : num;
 };
 
 /**
- * Ensures an object has string values
- * @param obj - The object to process
- * @returns An object with string values
+ * Convert a value to a boolean
  */
-export const ensureStringRecord = (obj: Record<string, any>): Record<string, string> => {
-  const result: Record<string, string> = {};
-  
-  if (!obj) return result;
-  
-  for (const key in obj) {
-    result[key] = ensureString(obj[key]);
-  }
-  
-  return result;
+export const toBoolean = (value: any): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (value === 'true' || value === 'OUI') return true;
+  if (value === 'false' || value === 'NON') return false;
+  return Boolean(value);
 };
 
 /**
- * Ensures an object has number values
- * @param obj - The object to process
- * @returns An object with number values
+ * Convert a value to an array, or empty array if undefined/null
  */
-export const ensureNumberRecord = (obj: Record<string, any>): Record<string, number> => {
-  const result: Record<string, number> = {};
-  
-  if (!obj) return result;
-  
-  for (const key in obj) {
-    result[key] = ensureNumber(obj[key]);
-  }
-  
-  return result;
+export const toArray = (value: any): any[] => {
+  if (value === undefined || value === null) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
 };
 
 /**
- * Convert a value to OUI/NON format
- * @param value - The value to convert
- * @returns "OUI" or "NON"
+ * Convert a value to a proper form value based on field type
  */
-export const toOuiNon = (value: any): "OUI" | "NON" => {
-  return ensureBoolean(value) ? "OUI" : "NON";
-};
-
-/**
- * Convert OUI/NON to boolean
- * @param value - The OUI/NON value
- * @returns true or false
- */
-export const fromOuiNon = (value: "OUI" | "NON" | string): boolean => {
-  return value === "OUI";
-};
-
-/**
- * Ensure that the value conforms to certain type requirements
- * @param value - The value to process
- * @param expectedType - The expected type
- * @returns The processed value
- */
-export const ensureType = (value: any, expectedType: string): any => {
-  switch (expectedType) {
-    case 'string':
-      return ensureString(value);
+export const toFormValue = (value: any, fieldType: string): any => {
+  switch (fieldType) {
     case 'number':
-      return ensureNumber(value);
+      return toNumber(value);
     case 'boolean':
-      return ensureBoolean(value);
+      return toBoolean(value);
     case 'array':
-      return Array.isArray(value) ? value : [value];
-    case 'stringArray':
-      return ensureStringArray(value);
+      return toArray(value);
+    case 'string':
     default:
-      return value;
+      return toString(value);
   }
 };
 
 /**
- * Calculate a new total by adding a cost to an existing total
- * @param currentTotal - The current total (can be string, number or undefined)
- * @param costToAdd - The cost to add
- * @returns The new total as a number
+ * Convert EstimationFormData object to proper types for each field
  */
-export const calculateNewTotal = (currentTotal: string | number | undefined, costToAdd: number): number => {
-  const total = ensureNumber(currentTotal, 0);
-  return total + costToAdd;
+export const convertFormData = (data: Partial<EstimationFormData>): Partial<EstimationFormData> => {
+  const result: Partial<EstimationFormData> = {};
+  
+  // Process each field with appropriate conversion
+  Object.entries(data).forEach(([key, value]) => {
+    // Skip undefined values
+    if (value === undefined) return;
+    
+    // Convert based on field type hints in the key name
+    if (key.includes('Count') || key.includes('Area') || key.includes('surface') || 
+        key.includes('budget') || key.includes('price') || key.includes('cost') ||
+        key.includes('Length')) {
+      result[key as keyof EstimationFormData] = toNumber(value);
+    }
+    else if (key.startsWith('has') || key.includes('is')) {
+      result[key as keyof EstimationFormData] = toBoolean(value);
+    }
+    else if (key.includes('Types') || key.endsWith('s') && !key.includes('address')) {
+      result[key as keyof EstimationFormData] = toArray(value);
+    }
+    else {
+      result[key as keyof EstimationFormData] = value;
+    }
+  });
+  
+  return result;
 };
 
 /**
- * Converts a string or number to string
- * @param value - The value to convert
- * @returns The value as a string
+ * Convert any value to appropriate string format for display
  */
-export const toString = (value: string | number): string => {
-  return typeof value === 'number' ? value.toString() : value;
+export const formatValueForDisplay = (value: any): string => {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'boolean') return value ? 'Oui' : 'Non';
+  if (Array.isArray(value)) return value.join(', ');
+  if (typeof value === 'number') return value.toLocaleString('fr-FR');
+  return String(value);
 };
 
-/**
- * Ensures a value is compatible with OUI/NON enum type
- * @param value - The value to ensure compatibility with OUI/NON
- * @returns "OUI" | "NON"
- */
-export const ensureOuiNon = (value: any): "OUI" | "NON" => {
-  return toOuiNon(value);
-};
-
-/**
- * Ensures a value is compatible with specific enum type
- * @param value - The value to ensure compatibility
- * @param defaultValue - Default value if conversion fails
- * @param validValues - Array of valid enum values
- * @returns A value from the valid values list
- */
-export const ensureEnum = <T extends string>(value: any, defaultValue: T, validValues: T[]): T => {
-  if (value === undefined || value === null) return defaultValue;
-  const strValue = String(value);
-  return validValues.includes(strValue as T) ? strValue as T : defaultValue;
+export default {
+  toString,
+  toNumber,
+  toBoolean,
+  toArray,
+  toFormValue,
+  convertFormData,
+  formatValueForDisplay
 };

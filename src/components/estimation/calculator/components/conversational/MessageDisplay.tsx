@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { MessageDisplayProps } from './types';
+import { MessageDisplayProps } from '../../types/conversationalTypes';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Bot, User, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 

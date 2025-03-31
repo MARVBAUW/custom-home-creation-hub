@@ -1,5 +1,5 @@
 
-import { EstimationFormData } from '../types';
+import { EstimationFormData } from './estimationFormData';
 
 /**
  * Base props for form components
@@ -18,3 +18,6 @@ export interface BaseFormProps {
 export interface FormData extends EstimationFormData {
   [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
 }
+
+// Export type aliases for backward compatibility
+export type { EstimationFormData } from './estimationFormData';

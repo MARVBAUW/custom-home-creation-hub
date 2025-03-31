@@ -136,7 +136,7 @@ export const useConversationalEstimator = (initialFormData?: Partial<FormData>) 
         if (lowerInput.includes('k€') || lowerInput.includes('k euros')) {
           budget *= 1000;
         }
-        dataToUpdate.budget = budget;
+        dataToUpdate.budgetAvailable = budget;
         response = `Je note un budget de ${budget.toLocaleString('fr-FR')} €. Où se situe votre projet ?`;
         setConversationState(prev => ({ ...prev, currentStep: 'location' }));
       }
@@ -276,3 +276,5 @@ export const useConversationalEstimator = (initialFormData?: Partial<FormData>) 
     resetConversation
   };
 };
+
+export default useConversationalEstimator;
