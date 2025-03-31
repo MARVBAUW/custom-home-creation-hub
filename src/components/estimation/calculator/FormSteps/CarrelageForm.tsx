@@ -17,7 +17,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
   animationDirection
 }) => {
   const [floorTileType, setFloorTileType] = useState<string>(
-    formData.floorTileType || 'standard'
+    formData.floorTileType?.toString() || 'standard'
   );
   
   const [floorTilePercentage, setFloorTilePercentage] = useState<number>(
@@ -25,7 +25,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
   );
   
   const [wallTileType, setWallTileType] = useState<string>(
-    formData.wallTileType || 'standard'
+    formData.wallTileType?.toString() || 'standard'
   );
 
   const handleSubmit = () => {
@@ -48,7 +48,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
       floorTileType,
       floorTilePercentage,
       wallTileType,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Move to the next step
@@ -201,7 +201,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
         
         {formData.montantT && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+            <p className="text-sm font-medium">Total estimé: {Number(formData.montantT).toLocaleString()} €</p>
           </div>
         )}
       </div>

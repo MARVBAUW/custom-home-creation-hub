@@ -10,13 +10,13 @@ export const adaptToEstimationFormData = (data: Partial<FormData>): Partial<Esti
   if (data.createWalls !== undefined) {
     result.createWalls = data.createWalls === true ? "OUI" : 
                         data.createWalls === false ? "NON" : 
-                        data.createWalls as string;
+                        String(data.createWalls);
   }
 
   if (data.createFloors !== undefined) {
     result.createFloors = data.createFloors === true ? "OUI" : 
                         data.createFloors === false ? "NON" : 
-                        data.createFloors as string;
+                        String(data.createFloors);
   }
 
   // Convert other boolean values to appropriate string representations
@@ -27,8 +27,17 @@ export const adaptToEstimationFormData = (data: Partial<FormData>): Partial<Esti
   ]) {
     if (data[key] !== undefined) {
       result[key] = typeof data[key] === 'boolean' ? 
-                   (data[key] ? "OUI" : "NON") : 
+                   (data[key] === true ? "OUI" : "NON") : 
                    data[key];
+    }
+  }
+
+  // Handle terassementsViabilisation specifically
+  if (data.terassementsViabilisation !== undefined) {
+    if (typeof data.terassementsViabilisation === 'boolean') {
+      result.terassementsViabilisation = data.terassementsViabilisation ? 1 : 0;
+    } else {
+      result.terassementsViabilisation = data.terassementsViabilisation;
     }
   }
 
@@ -38,7 +47,7 @@ export const adaptToEstimationFormData = (data: Partial<FormData>): Partial<Esti
     'landscapingArea', 'fencingLength', 'gateLength', 'terraceArea',
     'wallArea', 'floorArea', 'windowRenovationArea', 'windowNewArea',
     'doorCount', 'bathroomCount', 'kitchenCost', 'poolArea',
-    'terassementsViabilisation', 'montantT', 'totalAmount'
+    'montantT', 'totalAmount'
   ]) {
     if (data[key] !== undefined) {
       result[key] = typeof data[key] === 'number' ? 
@@ -74,9 +83,20 @@ export const adaptToFormData = (data: Partial<EstimationFormData>): Partial<Form
     'commercialAccepted'
   ]) {
     if (data[key] !== undefined) {
-      result[key] = data[key] === "OUI" ? true : 
-                   data[key] === "NON" ? false : 
-                   data[key];
+      result[key] = data[key] === "OUI" || data[key] === true ? true : 
+                   data[key] === "NON" || data[key] === false ? false : 
+                   Boolean(data[key]);
+    }
+  }
+
+  // Handle terassementsViabilisation specifically
+  if (data.terassementsViabilisation !== undefined) {
+    if (data.terassementsViabilisation === "1" || data.terassementsViabilisation === 1) {
+      result.terassementsViabilisation = true;
+    } else if (data.terassementsViabilisation === "0" || data.terassementsViabilisation === 0) {
+      result.terassementsViabilisation = false;
+    } else {
+      result.terassementsViabilisation = toNumber(data.terassementsViabilisation);
     }
   }
 
@@ -86,7 +106,7 @@ export const adaptToFormData = (data: Partial<EstimationFormData>): Partial<Form
     'landscapingArea', 'fencingLength', 'gateLength', 'terraceArea',
     'wallArea', 'floorArea', 'windowRenovationArea', 'windowNewArea',
     'doorCount', 'bathroomCount', 'kitchenCost', 'poolArea',
-    'terassementsViabilisation', 'montantT', 'totalAmount'
+    'montantT', 'totalAmount'
   ]) {
     if (data[key] !== undefined) {
       result[key] = typeof data[key] === 'string' ? 

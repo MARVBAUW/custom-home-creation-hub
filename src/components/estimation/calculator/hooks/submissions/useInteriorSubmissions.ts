@@ -26,7 +26,8 @@ export const useInteriorSubmissions = () => {
 
   // Function to handle menuiseries intérieures submission
   const handleMenuiseriesIntSubmit = (data: any, formData: FormData) => {
-    const doorCount = ensureNumber(formData.doorCount, 0);
+    // Ensure doorCount exists or use a default value of 0
+    const doorCount = formData.doorCount !== undefined ? ensureNumber(formData.doorCount, 0) : 0;
     const additionalCost = calculateInteriorCarpenteryCost(
       doorCount,
       data.doorType

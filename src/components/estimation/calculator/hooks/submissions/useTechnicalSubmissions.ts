@@ -3,27 +3,33 @@ import { FormData } from '../../types';
 import { ensureNumber } from '../../utils/typeConversions';
 import { 
   calculateElectricityCost, 
-  calculatePlumbingCost, 
-  calculatePlasteringCost, 
-  calculateInteriorCarpenteryCost 
+  calculatePlumbingCost,
+  calculateHeatingCost
 } from '../../utils/montantUtils';
 
 export const useTechnicalSubmissions = () => {
-  // Function to handle electricite submission
-  const handleElectriciteSubmit = (data: { electricalType: string }, formData: FormData) => {
+  // Function to handle electricity submission
+  const handleElectriciteSubmit = (data: any, formData: FormData) => {
     const surface = ensureNumber(formData.surface, 0);
-    const additionalCost = calculateElectricityCost(surface, data.electricalType);
+    const additionalCost = calculateElectricityCost(
+      data.electricalType,
+      surface
+    );
     
     return {
       electricalType: data.electricalType,
+      hasSmartHome: data.hasSmartHome || false,
       montantT: (formData.montantT || 0) + additionalCost
     };
   };
 
-  // Function to handle plomberie submission
-  const handlePlomberieSubmit = (data: { plumbingType: string }, formData: FormData) => {
+  // Function to handle plumbing submission
+  const handlePlomberieSubmit = (data: any, formData: FormData) => {
     const surface = ensureNumber(formData.surface, 0);
-    const additionalCost = calculatePlumbingCost(surface, data.plumbingType);
+    const additionalCost = calculatePlumbingCost(
+      data.plumbingType,
+      surface
+    );
     
     return {
       plumbingType: data.plumbingType,
@@ -31,30 +37,21 @@ export const useTechnicalSubmissions = () => {
     };
   };
 
-  // Function to handle platrerie submission
-  const handlePlatrerieSubmit = (data: { plasteringType: string }, formData: FormData) => {
+  // Function to handle heating submission
+  const handleChauffageSubmit = (data: any, formData: FormData) => {
+    // Use doorCount if available, otherwise default to 0
+    const doorCount = formData.doorCount ? ensureNumber(formData.doorCount, 0) : 0;
     const surface = ensureNumber(formData.surface, 0);
-    const additionalCost = calculatePlasteringCost(surface, data.plasteringType);
+    
+    let additionalCost = 0;
+    
+    if (data.heatingType) {
+      additionalCost += calculateHeatingCost(data.heatingType, surface);
+    }
     
     return {
-      plasteringType: data.plasteringType,
-      montantT: (formData.montantT || 0) + additionalCost
-    };
-  };
-
-  // Function to handle menuiseries intérieures submission
-  const handleMenuiseriesIntSubmit = (data: { 
-    doorType: string, 
-    hasMoldings: boolean,
-    hasCustomFurniture: boolean 
-  }, formData: FormData) => {
-    const doorCount = ensureNumber(formData.doorCount, 0);
-    const additionalCost = calculateInteriorCarpenteryCost(doorCount, data.doorType);
-    
-    return {
-      doorType: data.doorType,
-      hasMoldings: data.hasMoldings,
-      hasCustomFurniture: data.hasCustomFurniture,
+      heatingType: data.heatingType,
+      hasAirConditioning: data.hasAirConditioning || false,
       montantT: (formData.montantT || 0) + additionalCost
     };
   };
@@ -62,7 +59,6 @@ export const useTechnicalSubmissions = () => {
   return {
     handleElectriciteSubmit,
     handlePlomberieSubmit,
-    handlePlatrerieSubmit,
-    handleMenuiseriesIntSubmit,
+    handleChauffageSubmit
   };
 };
