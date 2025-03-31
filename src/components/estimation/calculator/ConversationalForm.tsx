@@ -7,9 +7,11 @@ import ConversationalEstimator from './ConversationalEstimator';
 import StructuredEstimator from './StructuredEstimator';
 import { FormData } from './types';
 import { useEstimationCalculator } from './hooks/useEstimationCalculator';
+import { useToast } from '@/hooks/use-toast';
 
 const ConversationalForm: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('conversational');
+  const { toast } = useToast();
   
   const {
     step,
@@ -23,6 +25,18 @@ const ConversationalForm: React.FC = () => {
     goToPreviousStep,
     finalizeEstimation
   } = useEstimationCalculator();
+
+  // Afficher un toast au chargement du composant
+  React.useEffect(() => {
+    // Message informant l'utilisateur du formulaire d'estimation conversationnel
+    setTimeout(() => {
+      toast({
+        title: "Estimation personnalisée disponible",
+        description: "Vous pouvez obtenir une estimation détaillée de votre projet en discutant avec notre assistant virtuel ou en utilisant notre formulaire structuré.",
+        duration: 5000,
+      });
+    }, 1000);
+  }, [toast]);
 
   // Gestion de la soumission du type de client
   const onClientTypeSubmit = (data: {clientType: string}) => {
@@ -38,7 +52,24 @@ const ConversationalForm: React.FC = () => {
   // Traitement de l'entrée utilisateur depuis le bot conversationnel
   const processUserInput = (input: string) => {
     console.log('Input traité par le bot conversationnel:', input);
-    // La logique de traitement est maintenant dans useConversationalEstimator
+    
+    // Analyser l'entrée pour extraire les données du formulaire
+    if (input.toLowerCase().includes('maison') || input.toLowerCase().includes('construction')) {
+      updateFormData({ projectType: 'construction' });
+    } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('renovation')) {
+      updateFormData({ projectType: 'renovation' });
+    } else if (input.toLowerCase().includes('extension')) {
+      updateFormData({ projectType: 'extension' });
+    }
+    
+    // Extraire les informations de surface si mentionnées
+    const surfaceMatch = input.match(/(\d+)\s*m²/);
+    if (surfaceMatch && surfaceMatch[1]) {
+      updateFormData({ surface: parseInt(surfaceMatch[1]) });
+    }
+    
+    // Extraire d'autres informations comme le lieu, le budget, etc.
+    // ...
   };
 
   return (
