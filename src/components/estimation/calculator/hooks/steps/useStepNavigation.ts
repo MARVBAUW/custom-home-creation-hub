@@ -1,94 +1,109 @@
-
 import { useState } from 'react';
-import { FormData } from '../../types';
+import { FormData } from '../../types/formTypes';
 
 export const useStepNavigation = (currentStep: number, formData: FormData) => {
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   
-  // Naviguer vers l'étape suivante
+  // Navigate to the next step
   const goToNextStep = () => {
     setAnimationDirection('forward');
     
     let nextStep = currentStep + 1;
     
-    // --- Routing spécifique selon le type de client ---
+    // --- Routing based on client type ---
     if (formData.clientType === "individual") {
-      // Si le choix est "particulier", sauter l'étape "projet professionnel"
+      // If the choice is "individual", skip the "professional project" step
       if (currentStep === 1) {
-        nextStep = 3; // Aller directement à l'étape "projet particulier"
+        nextStep = 3; // Go directly to "individual project" step
       }
     } else if (formData.clientType === "professional") {
-      // Si le choix est "professionnel", sauter l'étape "projet particulier"
+      // If the choice is "professional", skip the "individual project" step
       if (currentStep === 2) {
-        nextStep = 4; // Aller directement à l'étape "type d'estimation"
+        nextStep = 4; // Go directly to "estimation type" step
       }
     }
     
-    // --- Routing spécifique selon le type de projet ---
+    // --- Routing based on project type ---
     if (formData.projectType === "design") {
-      // Pour les projets de design d'espace, aller directement à l'étape de contact
+      // For design projects, go directly to the contact step
       return {
-        nextStep: 28, // Étape finale (contact)
+        nextStep: 28, // Final contact step
         animationDirection: 'forward' as const
       };
     }
     
-    // --- Routing spécifique selon estimation rapide/précise ---
-    if (formData.estimationType && formData.estimationType.includes("Rapide")) {
-      if (currentStep === 4) {
-        // Pour estimation rapide, aller à la page des prestations
-        nextStep = 44; // Page des prestations concernées par le projet
+    // --- Routing based on estimation type ---
+    if (formData.estimationType === "quick") {
+      if (currentStep === 3) {
+        // For quick estimation, go to the page of features selection (page 44)
+        nextStep = 44;
       }
     }
     
-    // --- Chemins spécifiques construction/extension vs rénovation/division ---
+    // --- Handle navigation from the features selection page ---
+    if (currentStep === 44) {
+      // If a next page is specified in formData, use that
+      if (formData.nextPage) {
+        nextStep = formData.nextPage;
+      } else {
+        // Otherwise, go to the contact page
+        nextStep = 45;
+      }
+    }
+    
+    // --- Handle navigation from contact page to thank you page ---
+    if (currentStep === 45) {
+      nextStep = 46; // Thank you page
+    }
+    
+    // --- Routing for construction/extension vs renovation/division ---
     if (formData.projectType === "construction" || formData.projectType === "extension") {
-      // Sauter l'étape des questions spécifiques à la rénovation
+      // Skip the renovation-specific step
       if (nextStep === 29) {
-        nextStep = 30; // Sauter la page dédiée à la démolition en rénovation
+        nextStep = 30; // Skip the demolition page in renovation
       }
       
-      // Gérer les sauts pour les options spécifiques en fonction des choix
+      // Handle skips for specific options based on choices
       if (nextStep === 24 && !formData.includeRenewableEnergy) {
-        nextStep = 25; // Sauter aux aménagements paysagers
+        nextStep = 25; // Skip to landscaping
       }
       if (nextStep === 25 && !formData.includeLandscaping) {
-        nextStep = 26; // Sauter aux options
+        nextStep = 26; // Skip to options
       }
       if (nextStep === 26 && !formData.includeOptions) {
-        nextStep = 27; // Sauter à la cuisine
+        nextStep = 27; // Skip to kitchen
       }
       if (nextStep === 27 && !formData.includeCuisine) {
-        nextStep = 28; // Sauter à la salle de bain
+        nextStep = 28; // Skip to bathroom
       }
       if (nextStep === 28 && !formData.includeBathroom) {
-        nextStep = 45; // Aller au formulaire de contact
+        nextStep = 45; // Go to contact form
       }
     } else if (formData.projectType === "renovation" || formData.projectType === "division") {
-      // Pour les projets de rénovation/division
+      // For renovation/division projects
       if (currentStep === 22 && !formData.includeEcoSolutions) {
-        nextStep = 23; // Sauter aux énergies renouvelables
+        nextStep = 23; // Skip to renewable energy
       }
       if (nextStep === 23 && !formData.includeRenewableEnergy) {
-        nextStep = 24; // Sauter aux aménagements paysagers
+        nextStep = 24; // Skip to landscaping
       }
       if (nextStep === 24 && !formData.includeLandscaping) {
-        nextStep = 25; // Sauter aux options
+        nextStep = 25; // Skip to options
       }
       if (nextStep === 25 && !formData.includeOptions) {
-        nextStep = 26; // Sauter à la cuisine
+        nextStep = 26; // Skip to kitchen
       }
       if (nextStep === 26 && !formData.includeCuisine) {
-        nextStep = 27; // Sauter à la salle de bain
+        nextStep = 27; // Skip to bathroom
       }
       if (nextStep === 27 && !formData.includeBathroom) {
-        nextStep = 45; // Aller au formulaire de contact
+        nextStep = 45; // Go to contact form
       }
     }
     
-    // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
-    if (nextStep > 45) {
-      nextStep = 45; // Étape finale (contact)
+    // Make sure not to exceed the total number of available steps
+    if (nextStep > 46) {
+      nextStep = 46; // Final step (thank you page)
     }
     
     return {
@@ -97,34 +112,39 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     };
   };
 
-  // Naviguer vers l'étape précédente
+  // Navigate to the previous step
   const goToPreviousStep = () => {
     setAnimationDirection('backward');
     
-    // Logique similaire pour la navigation en arrière
+    // Similar logic for the navigation in reverse
     let prevStep = currentStep - 1;
     
-    // --- Gestion des chemins pour le retour en arrière ---
+    // --- Handle navigation from thank you page back to contact page ---
+    if (currentStep === 46) {
+      prevStep = 45; // Go back to contact page
+    }
+    
+    // --- Client type specific navigation ---
     if (formData.clientType === "individual") {
-      // Si on revient de l'étape "projet particulier" vers la première étape
+      // If coming back from "individual project" step to client type
       if (currentStep === 3) {
-        prevStep = 1; // Retourner à l'étape "type de client"
+        prevStep = 1; // Go back to client type step
       }
     } else if (formData.clientType === "professional") {
-      // Si on revient de l'étape "type d'estimation" vers l'étape "projet professionnel"
+      // If coming back from "estimation type" to "professional project"
       if (currentStep === 4) {
-        prevStep = 2; // Retourner à l'étape "projet professionnel"
+        prevStep = 2; // Go back to professional project step
       }
     }
     
-    // --- Gestion des chemins selon le type de projet ---
+    // --- Project type specific navigation ---
     if (formData.projectType === "construction" || formData.projectType === "extension") {
-      // Éviter de revenir aux pages spécifiques de rénovation
+      // Avoid going back to renovation-specific pages
       if (prevStep === 29) {
-        prevStep = 28; // Éviter la page de démolition
+        prevStep = 28; // Skip the demolition page
       }
       
-      // Gestion du retour pour les options
+      // Handle back navigation for options
       if (prevStep === 28 && !formData.includeBathroom) {
         prevStep = 27;
       }
@@ -141,7 +161,7 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
         prevStep = 23;
       }
     } else if (formData.projectType === "renovation" || formData.projectType === "division") {
-      // Gestion du retour pour les options en rénovation
+      // Handle back navigation for options in renovation
       if (prevStep === 28 && !formData.includeBathroom) {
         prevStep = 27;
       }
@@ -162,7 +182,17 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
       }
     }
     
-    // S'assurer qu'on ne descend pas en dessous de l'étape 1
+    // --- Special case for quick estimation features page ---
+    if (currentStep === 44) {
+      prevStep = 3; // Go back to estimation type selection
+    }
+    
+    // --- Special case for contact page in quick flow ---
+    if (currentStep === 45 && formData.estimationType === "quick") {
+      prevStep = 44; // Go back to features selection
+    }
+    
+    // Make sure not to go below step 1
     prevStep = Math.max(prevStep, 1);
     
     return {

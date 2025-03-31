@@ -26,6 +26,10 @@ import RoomsDetailsStep from './steps/RoomsDetailsStep';
 import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
 import SpecialFeaturesStep from './steps/SpecialFeaturesStep';
 import ContactDetailsStep from './steps/ContactDetailsStep';
+import QuickEstimationStep from './steps/QuickEstimationStep';
+import QuickEstimationFeaturesStep from './steps/QuickEstimationFeaturesStep';
+import QuickContactStep from './steps/QuickContactStep';
+import ThankYouStep from './steps/ThankYouStep';
 
 // Animation variants for page transitions
 const pageVariants = {
@@ -266,6 +270,44 @@ const EstimationWizard: React.FC = () => {
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={finalizeEstimation}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 44: // Quick Estimation Features selection
+        return (
+          <QuickEstimationFeaturesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 45: // Quick Contact Form
+        return (
+          <QuickContactStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+            finalizeEstimation={finalizeEstimation}
+          />
+        );
+      case 46: // Thank You Page
+        return (
+          <ThankYouStep
+            formData={formData}
+            animationDirection={animationDirection}
+          />
+        );
+      case 19: // Quick Estimation (for rapid estimates)
+        return (
+          <QuickEstimationStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
             goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />

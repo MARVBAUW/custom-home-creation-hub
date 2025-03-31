@@ -1,50 +1,49 @@
 
 /**
- * Ensures that the provided value is converted to a number
- * If the value is not a valid number, the default value is returned
+ * Ensures a value is a number, converting strings to numbers if possible.
+ * Returns 0 if the value cannot be converted to a number.
  * 
- * @param value Value to convert to number
- * @param defaultValue Default value to return if conversion fails
- * @returns The numeric value or the default value
+ * @param value The value to convert to a number
+ * @returns A number representation of the value
  */
-export const ensureNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  // If it's already a number, return it
+export function ensureNumber(value: any): number {
   if (typeof value === 'number') {
     return value;
   }
   
-  // Try to convert to a number
-  const parsedValue = Number(value);
-  
-  // Check if the conversion resulted in a valid number
-  if (!isNaN(parsedValue)) {
-    return parsedValue;
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
   }
   
-  // Return the default if conversion failed
-  return defaultValue;
-};
+  return 0;
+}
 
 /**
- * Converts a value to a form-friendly string value
+ * Converts a value to a form-compatible value (string for inputs)
  * 
- * @param value Value to convert to string
- * @returns A string representation suitable for form inputs
+ * @param value The value to convert
+ * @returns A string representation of the value, or empty string if null/undefined
  */
-export const toFormValue = (value: any): string => {
+export function toFormValue(value: any): string {
   if (value === null || value === undefined) {
     return '';
   }
   
-  // If it's already a string, return it
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  // Convert to string
   return String(value);
-};
+}
+
+/**
+ * Converts a string to a boolean
+ * 
+ * @param value The string value to convert
+ * @returns A boolean representation of the value
+ */
+export function stringToBoolean(value: string | undefined): boolean {
+  if (!value) return false;
+  
+  return value.toLowerCase() === 'true' || 
+         value.toLowerCase() === 'yes' || 
+         value.toLowerCase() === 'oui' || 
+         value === '1';
+}

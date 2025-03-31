@@ -61,6 +61,36 @@ export interface FormData {
   email?: string;
   phone?: string;
   acceptTerms?: boolean;
+  
+  // Quick Estimation Navigation
+  selectedFeatures?: string[];
+  nextPage?: number;
+  
+  // Feature flags for controlling navigation
+  includeEcoSolutions?: boolean;
+  includeRenewableEnergy?: boolean;
+  includeLandscaping?: boolean;
+  includeOptions?: boolean;
+  includeCuisine?: boolean;
+  includeBathroom?: boolean;
+  
+  // For location information
+  city?: string;
+  
+  // For property details
+  levels?: number;
+  finishLevel?: string;
+  units?: number;
+  
+  // For estimation complexity
+  complexity?: string;
+  qualityStandard?: string;
+  
+  // For room counts
+  bedrooms?: number;
+  bathrooms?: number;
+  kitchens?: number;
+  livingRooms?: number;
 }
 
 // Base form props that all form steps will use
