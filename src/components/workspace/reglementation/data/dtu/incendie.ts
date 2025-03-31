@@ -1,8 +1,15 @@
 
 import { DTU } from '../../dtu/types';
 import { parkingDTUs } from './incendie/parking';
+import { erpDTUs } from './incendie/erp';
+import { logementDTUs } from './incendie/logement';
+import { buildingClassificationsDTUs } from './incendie/building-classifications';
+import { desenfumageDTUs } from './incendie/desenfumage';
+import { incendieSystemsDTUs } from './incendie/systems';
 
+// Exporter tous les DTUs incendie combinés
 export const incendieDTUs: DTU[] = [
+  // Première section: Généralités
   {
     id: "dtu-incendie-1",
     title: "Sécurité incendie des ERP",
@@ -243,5 +250,11 @@ export const incendieDTUs: DTU[] = [
       }
     ]
   },
-  ...parkingDTUs
+  ...erpDTUs,
+  ...logementDTUs,
+  ...parkingDTUs,
+  ...buildingClassificationsDTUs,
+  ...desenfumageDTUs,
+  ...incendieSystemsDTUs
 ];
+

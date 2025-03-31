@@ -7,7 +7,7 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Building, Home, ParkingCircle, Flame } from 'lucide-react';
+import { Building, Home, ParkingCircle, Flame, FileText, AlertTriangle, Gauge, Fire, Scale } from 'lucide-react';
 
 export const IncendieRecapSection = () => {
   const { 
@@ -21,7 +21,7 @@ export const IncendieRecapSection = () => {
   
   const [selectedDTU, setSelectedDTU] = useState<DTU | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [incendieTab, setIncendieTab] = useState("erp");
+  const [incendieTab, setIncendieTab] = useState("general");
   
   const handleDTUClick = (dtu: DTU) => {
     setSelectedDTU(dtu);
@@ -29,9 +29,13 @@ export const IncendieRecapSection = () => {
   };
 
   // Filter DTUs by subcategory
+  const generalDTUs = filteredDTUs.filter(dtu => !dtu.category.includes("ERP") && !dtu.category.includes("Logement") && !dtu.category.includes("Parking") && !dtu.category.includes("Classification") && !dtu.category.includes("Désenfumage") && !dtu.category.includes("Systèmes"));
   const erpDTUs = filteredDTUs.filter(dtu => dtu.category.includes("ERP"));
   const logementDTUs = filteredDTUs.filter(dtu => dtu.category.includes("Logement"));
   const parkingDTUs = filteredDTUs.filter(dtu => dtu.category.includes("Parking"));
+  const classificationDTUs = filteredDTUs.filter(dtu => dtu.category.includes("Classification"));
+  const desenfumageDTUs = filteredDTUs.filter(dtu => dtu.category.includes("Désenfumage"));
+  const systemesDTUs = filteredDTUs.filter(dtu => dtu.category.includes("Systèmes"));
 
   return (
     <div className="space-y-6">
@@ -42,7 +46,7 @@ export const IncendieRecapSection = () => {
         </h3>
         <p className="text-amber-700 text-sm">
           Cette section rassemble toutes les réglementations incendie pour différents types de bâtiments.
-          Consultez les règles spécifiques pour les ERP, logements et parkings.
+          Consultez les règles spécifiques pour les ERP, logements, parkings, systèmes de désenfumage et moyens de secours.
         </p>
       </div>
 
@@ -55,7 +59,15 @@ export const IncendieRecapSection = () => {
       />
 
       <Tabs value={incendieTab} onValueChange={setIncendieTab} className="mt-6">
-        <TabsList className="mb-6 bg-amber-50">
+        <TabsList className="mb-6 bg-amber-50 flex flex-wrap gap-1">
+          <TabsTrigger value="general" className="data-[state=active]:bg-white">
+            <FileText className="h-4 w-4 mr-2" />
+            <span>Principes généraux</span>
+          </TabsTrigger>
+          <TabsTrigger value="classifications" className="data-[state=active]:bg-white">
+            <Scale className="h-4 w-4 mr-2" />
+            <span>Classifications</span>
+          </TabsTrigger>
           <TabsTrigger value="erp" className="data-[state=active]:bg-white">
             <Building className="h-4 w-4 mr-2" />
             <span>ERP</span>
@@ -68,7 +80,31 @@ export const IncendieRecapSection = () => {
             <ParkingCircle className="h-4 w-4 mr-2" />
             <span>Parking</span>
           </TabsTrigger>
+          <TabsTrigger value="desenfumage" className="data-[state=active]:bg-white">
+            <Gauge className="h-4 w-4 mr-2" />
+            <span>Désenfumage</span>
+          </TabsTrigger>
+          <TabsTrigger value="systemes" className="data-[state=active]:bg-white">
+            <AlertTriangle className="h-4 w-4 mr-2" />
+            <span>Systèmes de sécurité</span>
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="general" className="space-y-6">
+          <DTUGridList 
+            dtus={generalDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
+        <TabsContent value="classifications" className="space-y-6">
+          <DTUGridList 
+            dtus={classificationDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
 
         <TabsContent value="erp" className="space-y-6">
           <DTUGridList 
@@ -89,6 +125,22 @@ export const IncendieRecapSection = () => {
         <TabsContent value="parking" className="space-y-6">
           <DTUGridList 
             dtus={parkingDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
+        <TabsContent value="desenfumage" className="space-y-6">
+          <DTUGridList 
+            dtus={desenfumageDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
+        <TabsContent value="systemes" className="space-y-6">
+          <DTUGridList 
+            dtus={systemesDTUs} 
             onViewDetails={handleDTUClick} 
             searchTerm={searchTerm}
           />

@@ -4,225 +4,119 @@ import { DTU } from '../../../dtu/types';
 export const desenfumageDTUs: DTU[] = [
   {
     id: "dtu-desenfumage-1",
-    title: "Principes généraux du désenfumage",
+    title: "Désenfumage des bâtiments",
     category: "Incendie Désenfumage",
-    description: "Objectifs et principes du désenfumage dans les bâtiments",
-    lastUpdate: "Juillet 2023",
+    description: "Principes et méthodes de désenfumage dans les différents types de bâtiments",
+    lastUpdate: "Mars 2023",
     rules: [
       {
-        title: "Objectifs du désenfumage",
-        content: "Évacuer les fumées et gaz de combustion, abaisser la température des gaz, permettre l'évacuation des personnes et l'intervention des services de secours.",
+        title: "Principes fondamentaux",
+        content: "Évacuer fumées et gaz chauds, maintenir praticables chemins d'évacuation, limiter propagation, faciliter intervention pompiers. Naturel (tirage thermique) ou mécanique (ventilateurs).",
         type: "standard"
       },
       {
-        title: "Types de désenfumage",
-        content: "Naturel (tirage thermique via des ouvrants), mécanique (extraction et soufflage mécaniques), ou combiné. Le choix dépend du type de bâtiment et de sa configuration.",
+        title: "Locaux à désenfumer",
+        content: "Circulation >5m en habitation. Locaux >300m² ou circulations horizontales en ERP. Locaux >100m² à risques ou sans vision directe sur l'extérieur. Cas spécifiques IGH.",
         type: "standard"
       },
       {
-        title: "Règle générale",
-        content: "Un local est désenfumable si : Ratio surface d'évacuation/surface au sol ≥ 1/200 pour le naturel, ou débit d'extraction ≥ 1 m³/s pour 100 m² en mécanique.",
-        type: "standard"
-      },
-      {
-        title: "Calcul surface utile",
-        content: "Surface géométrique × coefficient d'efficacité. Coefficient variant de 0,1 à 0,9 selon l'ouvrant (vertical, en toiture, à lamelles...).",
-        type: "tip"
-      },
-      {
-        title: "Activation",
-        content: "Manuelle (commande accessible au niveau d'accès) et/ou automatique (sur détection incendie). Obligation de réarmement manuel pour le désenfumage.",
+        title: "Surfaces d'ouverture",
+        content: "Désenfumage naturel: 1/100ème surface (ERP), 1/200ème surface (habitations 3ème et 4ème famille, circulations). Écart entre ouvertures ≤10m (circulations).",
         type: "warning"
+      },
+      {
+        title: "Débits d'extraction",
+        content: "Mécanique: 1 volume/h en habitation, 0,5 m³/s en ERP non compartimenté, 0,5 m³/s par 100m² en IGH, 1 m³/s par cage d'escalier en IGH. Vitesse max 5m/s.",
+        type: "standard"
+      },
+      {
+        title: "Commandes",
+        content: "Manuelles et accessibles pour occupants et secours. Position de sécurité normalement ouverte sur rupture. Automatisation par SSI de catégorie A obligatoire en IGH.",
+        type: "tip"
       }
     ],
     sections: [
       {
-        title: "Cantonage",
-        content: "Division des volumes en cantons de désenfumage par des écrans de cantonnement. Surface max d'un canton : 1600 m². Hauteur des écrans ≥ 0,5 m, descendant au minimum à 0,5 m sous le point le plus bas du plafond/toiture."
+        title: "Cantons de désenfumage",
+        content: "Surface max 1600m² en ERP. Écrans de cantonnement fixes ou mobiles, hauteur minimum 0,5m sous plafond. Volume des réserves de fumées ≥ 0,1% du volume du canton. Implantation pour limiter propagation latérale des fumées."
       },
       {
-        title: "Ouvrants en façade",
-        content: "Situés dans le tiers supérieur du local, à au moins 1,80 m du plancher. Ouverture ≥ 60° pour les châssis à soufflet. Commandes mécaniques, pneumatiques, électriques ou électropneumatiques."
+        title: "Entrées d'air",
+        content: "Amenées d'air neuf en partie basse, surface ≥ surface d'extraction (naturel) ou 0,5m² par 1000m³/h (mécanique). Vitesse d'entrée ≤5m/s. Positionnées pour ne pas gêner l'évacuation et favoriser un balayage efficace."
       },
       {
-        title: "Exutoires de fumée",
-        content: "Surface unitaire ≥ 1 m². Si plusieurs exutoires, répartition uniforme. Distance entre points éloignés < 30 m. Classement de réaction au feu des exutoires en toiture ≥ B-s1,d0."
+        title: "Conduits et gaines",
+        content: "Résistance au feu: CF 15 min en habitation, CF 30 min en ERP/IGH pour desservir un seul local. Traversées d'autres locaux: CF 60 min à 120 min selon bâtiment. Conduits collecteurs verticaux obligatoirement avec trappe NF."
+      },
+      {
+        title: "Cas des parkings",
+        content: "Écrans de cantonnement pour volume >5000m³. Débit min 600m³/h par véhicule (900m³/h automatisés), avec minimum 15m³/h/m² de surface. Distance extraction/tout point ≤25m. Double alimentation électrique obligatoire."
       }
     ],
     schemas: [
       {
         id: "schema-desenfumage-1",
-        title: "Principe du désenfumage naturel",
+        title: "Principes de désenfumage naturel",
         imageUrl: "/images/schemas/desenfumage-naturel.png",
-        description: "Schéma illustrant le principe du désenfumage naturel avec entrées d'air basses et évacuation haute des fumées."
+        description: "Schéma illustrant les principes du désenfumage naturel avec les exutoires en toiture et les entrées d'air en partie basse."
+      },
+      {
+        id: "schema-desenfumage-2",
+        title: "Cantons de désenfumage",
+        imageUrl: "/images/schemas/cantons-desenfumage.png",
+        description: "Principe de division en cantons de désenfumage avec écrans de cantonnement pour un grand volume."
       }
     ]
   },
   {
     id: "dtu-desenfumage-2",
-    title: "Désenfumage des ERP",
+    title: "Méthodes de calcul et dimensionnement du désenfumage",
     category: "Incendie Désenfumage",
-    description: "Réglementation du désenfumage spécifique aux établissements recevant du public",
-    lastUpdate: "Juin 2023",
+    description: "Règles de calcul pour le dimensionnement du désenfumage des bâtiments",
+    lastUpdate: "Février 2023",
     rules: [
       {
-        title: "Locaux nécessitant désenfumage",
-        content: "Locaux de superficie > 300 m², locaux à risques particuliers, locaux aveugles > 100 m², ainsi que les circulations horizontales et verticales selon les cas.",
+        title: "Surface utile d'exutoires",
+        content: "Naturel: SUE = α × Surface géométrique. Coefficients α: 0,3 à 0,65 selon pente, forme et orientation. Valeur totale requise: 1/100ème du local ou 1/200ème des circulations.",
         type: "standard"
       },
       {
-        title: "Circulations horizontales",
-        content: "Désenfumage obligatoire pour les circulations de longueur > 5 m desservant des locaux accessibles au public et les circulations encloisonnées de plus de 30 m de longueur.",
+        title: "Vitesse d'extraction",
+        content: "Mécanique: v ≤ 5 m/s pour éviter remous et turbulences. Vitesse moyenne 3-4 m/s recommandée dans les conduits horizontaux, 7-8 m/s en vertical.",
+        type: "standard"
+      },
+      {
+        title: "Cheminement aéraulique",
+        content: "Longueur max conduits: 20-25m habitation, 30m ERP/IGH. Débouchés extérieurs à min 8m de toute baie ou prise d'air. Sections décroissantes recommandées vers l'extérieur.",
         type: "warning"
       },
       {
-        title: "Escaliers encloisonnés",
-        content: "Désenfumage obligatoire pour tous les escaliers encloisonnés desservant les sous-sols et pour ceux desservant plus de 2 étages en superstructure.",
-        type: "warning"
-      },
-      {
-        title: "Commande désenfumage",
-        content: "Commande manuelle (niveau d'accès et dernier niveau desservi) et automatique pour les catégories A et B de SSI. Commande groupée par zone pour les circulations.",
-        type: "tip"
-      },
-      {
-        title: "Désenfumage naturel circulations",
-        content: "Section évacuation ≥ 1 m² par tranche de 25 m de longueur (mini 1 m² par canton). Surface totale des amenées d'air ≥ surface exutoires.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Désenfumage des escaliers",
-        content: "Ouvrant en partie haute ≥ 1 m² de surface utile, avec dispositif d'ouverture commande manuelle au niveau d'évacuation. Amenée d'air en partie basse (≥ surface exutoire)."
-      },
-      {
-        title: "Désenfumage mécanique des circulations",
-        content: "Débit d'extraction ≥ 0,5 m³/s par tranche de 10 m de longueur (mini 1,5 m³/s par bouche). Vitesse de passage aux bouches < 5 m/s. Amenée d'air mécanique si naturel insuffisant."
-      },
-      {
-        title: "Désenfumage des atriums",
-        content: "Désenfumage spécifique obligatoire. Surface d'exutoires ≥ 2% de la section horizontale. Étude spécifique souvent requise pour déterminer les caractéristiques exactes."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-desenfumage-2",
-        title: "Désenfumage des circulations horizontales",
-        imageUrl: "/images/schemas/desenfumage-circulation.png",
-        description: "Schéma illustrant le principe du désenfumage des circulations horizontales avec amenées d'air et extraction."
-      }
-    ]
-  },
-  {
-    id: "dtu-desenfumage-3",
-    title: "Désenfumage des habitations",
-    category: "Incendie Désenfumage",
-    description: "Réglementation du désenfumage dans les bâtiments d'habitation collective",
-    lastUpdate: "Avril 2023",
-    rules: [
-      {
-        title: "Circulations horizontales",
-        content: "Désenfumage obligatoire pour toutes les circulations horizontales encloisonnées de la 3ème et 4ème famille. Surface libre des ouvrants ≥ 1 m² pour les circulations < 25 m, puis +0,5 m² par tranche de 10 m supplémentaire.",
+        title: "Exutoires en toiture",
+        content: "Dimension minimale: 1m de côté. Surface unitaire: 1 à 6m². Distance entre exutoires: max 30m. Nombre minimal: 2 par canton. Implantation à >4m des murs séparatifs CF.",
         type: "standard"
       },
       {
-        title: "Escaliers encloisonnés",
-        content: "Désenfumage en partie haute (≥ 1 m²) pour les habitations 3ème et 4ème famille. Commande manuelle depuis le niveau d'accès et le dernier étage.",
-        type: "standard"
-      },
-      {
-        title: "Circulations 2ème famille",
-        content: "Pas de désenfumage obligatoire, mais baies ouvrantes donnant sur l'extérieur recommandées (0,3 m² par tranche de 15 m de longueur).",
-        type: "tip"
-      },
-      {
-        title: "Commande désenfumage",
-        content: "Commande manuelle accessible depuis les circulations communes, facilement repérable. Réarmement manuel obligatoire pour les exutoires ou les bouches.",
-        type: "standard"
-      },
-      {
-        title: "Désenfumage mécanique",
-        content: "Possible en alternative au désenfumage naturel si celui-ci est impossible. Extraction ≥ 8 volumes/heure. Amenée d'air naturel ou mécanique.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Conduits collectifs",
-        content: "Conduits collectifs obligatoires pour les circulations de la 3ème famille B et 4ème famille sans façade en contact avec l'extérieur. Résistance au feu (CF) 1/4h à 1/2h selon la famille."
-      },
-      {
-        title: "Bouches de désenfumage",
-        content: "Une bouche au minimum par niveau. Débit minimum de 0,5 m³/s pour les conduits collectifs shunt en 3ème famille, 1 m³/s en 4ème famille."
-      },
-      {
-        title: "Amenées d'air",
-        content: "Surface libre égale à celle des évacuations. Prise directe sur l'extérieur ou par conduits. Positionnées en partie basse, à maximum 1 m du sol."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-desenfumage-3",
-        title: "Désenfumage des circulations en habitation",
-        imageUrl: "/images/schemas/desenfumage-habitation.png",
-        description: "Schéma illustrant le dispositif de désenfumage dans une circulation horizontale d'immeuble d'habitation."
-      }
-    ]
-  },
-  {
-    id: "dtu-desenfumage-4",
-    title: "Désenfumage des parcs de stationnement",
-    category: "Incendie Désenfumage",
-    description: "Systèmes de désenfumage adaptés aux parcs de stationnement couverts",
-    lastUpdate: "Mai 2023",
-    rules: [
-      {
-        title: "Principe",
-        content: "Extraction des fumées à débit suffisant pour limiter leur propagation et permettre l'évacuation des occupants et l'intervention des secours.",
-        type: "standard"
-      },
-      {
-        title: "Désenfumage naturel",
-        content: "Possible si ouvertures permanentes en façade ≥ 1/100 de la surface de chaque niveau avec moitié en partie haute et moitié en partie basse.",
-        type: "standard"
-      },
-      {
-        title: "Désenfumage mécanique",
-        content: "Débit d'extraction minimum de 900 m³/h par véhicule pour les parcs < 4000 m², 600 m³/h au-delà. Répartition homogène des bouches (4000 m² max par ventilateur).",
-        type: "warning"
-      },
-      {
-        title: "Compartimentage désenfumage",
-        content: "Un compartiment de désenfumage ne peut excéder 3000 m². Écrans de cantonnement fixes, stables au feu 1/4h, descendant au minimum à 0,5 m du plafond.",
-        type: "warning"
-      },
-      {
-        title: "Commande",
-        content: "Manuelle depuis le poste de sécurité ou l'entrée, et automatique par DAI. Double alimentation électrique. Ventilateurs conformes à 400°C-2h.",
+        title: "Calcul tirage thermique",
+        content: "ΔP = 0,04 × h × ΔT où h est la hauteur (m) entre entrée/sortie d'air et ΔT la différence de température (°C). Valeur ΔT design: 200-400°C selon risque.",
         type: "tip"
       }
     ],
     sections: [
       {
-        title: "Conduits et gaines",
-        content: "Conduits collecteurs CF selon traversée: 60 min en traversée d'autres compartiments. Gaines d'amenée d'air CF 1/2h. Clapets CF aux traversées de parois CF."
+        title: "Méthode Ingénierie du désenfumage",
+        content: "Approche performantielle: modélisation numérique CFD (Computational Fluid Dynamics). Scénarios d'incendie normalisés (puissance 1-5MW). Critères d'acceptabilité: hauteur libre de fumée, visibilité, température, opacité des fumées. Application pour grands volumes ou configurations complexes."
       },
       {
-        title: "Amenée d'air",
-        content: "Débit d'amenée d'air ≥ 0,5 fois le débit extrait. Vitesse d'entrée d'air < 5 m/s. Amenées d'air mécaniques ou naturelles selon la configuration."
+        title: "Installations surpression",
+        content: "Cage d'escalier: différentiel 20-80 Pa. Sas: 10-50 Pa par rapport local desservi. Soufflage admis 0,5 m³/s par porte ouverte + 0,1 m³/s par mètre de fuite. Vitesse au passage de porte ≥ 0,5 m/s. Débit global calculé selon méthode des fuites cumulées."
       },
       {
-        title: "Cas des petits parcs",
-        content: "Parcs de moins de 250 m² à un seul niveau: possible simple ventilation par ouvertures totalisant 5% de la surface, naturellement réparties en partie haute et basse."
-      }
-    ],
-    schemas: [
+        title: "Dispositifs d'évacuation naturelle",
+        content: "Ouvrants en façade: surface libre ≥ 10% surface du local (industries), 5% (habitation). Position haute: bord inférieur ≥ 1,80m du sol, ou 30cm sous plafond. Commandes: hauteur 1-2m, accessibles depuis circulation. Mécanismes: pneumatique, électrique ou fusible thermique."
+      },
       {
-        id: "schema-desenfumage-4",
-        title: "Désenfumage mécanique d'un parking",
-        imageUrl: "/images/schemas/desenfumage-parking.png",
-        description: "Schéma de principe du système de désenfumage mécanique d'un parc de stationnement couvert."
+        title: "Ventilateurs de désenfumage",
+        content: "Certification: 400°C-2h (ERP/IGH/ICPE), 600°C-2h (parkings). Caractéristiques: pression 300-500 Pa, tension 400V triphasé. Installation: local CF 2h, conduits CF 1h minimum. Maintenance: test mensuel de démarrage, vérification annuelle complète."
       }
     ]
   }

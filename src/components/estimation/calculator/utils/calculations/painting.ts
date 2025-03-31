@@ -61,3 +61,39 @@ export const calculateWallCoveringCost = (type: string, area: number | string): 
       return 0;
   }
 };
+
+/**
+ * Calculate ceiling painting cost based on area and type
+ */
+export const calculateCeilingPaintCost = (area: number | string, type: string): number => {
+  const areaNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'basic':
+      return areaNum * 20; // Basic ceiling paint
+    case 'acoustic':
+      return areaNum * 45; // Acoustic ceiling treatment
+    case 'decorative':
+      return areaNum * 65; // Decorative ceiling (moldings, etc.)
+    default:
+      return areaNum * 20; // Default to basic
+  }
+};
+
+/**
+ * Calculate trim/molding painting cost
+ */
+export const calculateTrimPaintCost = (linearMeters: number | string, type: string): number => {
+  const length = ensureNumber(linearMeters);
+  
+  switch (type) {
+    case 'basic':
+      return length * 15; // Basic trim painting
+    case 'decorative':
+      return length * 30; // Decorative trim with complex finish
+    case 'premium':
+      return length * 45; // Premium trim with multiple coats/special finish
+    default:
+      return length * 15; // Default to basic
+  }
+};

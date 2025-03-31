@@ -3,226 +3,182 @@ import { DTU } from '../../../dtu/types';
 
 export const incendieSystemsDTUs: DTU[] = [
   {
-    id: "dtu-incendie-systems-1",
-    title: "Système de Sécurité Incendie (SSI)",
+    id: "dtu-securite-systemes-1",
+    title: "Systèmes de Sécurité Incendie (SSI)",
     category: "Incendie Systèmes",
-    description: "Catégories et fonctionnalités des Systèmes de Sécurité Incendie",
-    lastUpdate: "Juin 2023",
+    description: "Caractéristiques et exigences techniques des Systèmes de Sécurité Incendie",
+    lastUpdate: "Avril 2023",
     rules: [
       {
-        title: "5 catégories de SSI",
-        content: "A (automatique complet), B (automatique partiel), C (mise en sécurité manuelle avec SDI), D et E (manuel sans SDI). Plus la catégorie est élevée (A), plus le système est automatisé.",
+        title: "Catégories de SSI",
+        content: "SSI A: 2 sous-systèmes SDI+SMSI complets. SSI B: SDI+SMSI partiel. SSI C: SDI+SMSI manuel. SSI D: SMSI avec DM. SSI E: SMSI manuel simple.",
         type: "standard"
       },
       {
-        title: "SSI Catégorie A",
-        content: "Comprend un SDI et un SMSI avec toutes les fonctions de mise en sécurité (compartimentage, désenfumage, évacuation) automatiques. Obligatoire pour les IGH, ERP avec locaux à sommeil.",
-        type: "alert"
+        title: "SDI (Système Détection Incendie)",
+        content: "Composé d'ECS (équipement central), détecteurs automatiques, déclencheurs manuels, indicateurs d'action, diffuseurs d'alarme. Zones de max 600m² par niveau.",
+        type: "standard"
       },
       {
-        title: "SSI Catégorie B",
-        content: "Comprend un SDI et un SMSI partiel. Certaines fonctions sont automatiques, d'autres manuelles. Pour ERP type L,P,Y,M,S,T,W de 1ère et 2ème catégorie sans sommeil.",
+        title: "SMSI (Système Mise en Sécurité Incendie)",
+        content: "CMSI (Centralisateur): gestion DAS (Dispositifs Actionnés Sécurité), évacuation, alerte. Volet compartimentage + volet désenfumage + volet évacuation.",
         type: "warning"
       },
       {
-        title: "SSI Catégorie C",
-        content: "Comprend un SDI mais mise en sécurité entièrement manuelle. Pour ERP de 3ème et 4ème catégorie sans sommeil.",
-        type: "standard"
+        title: "Critères d'installation",
+        content: "Alimentation électrique secours (12h autonomie pour SSI A). Capotage min IP30. CMSI à proximité poste de sécurité. Liaisons électriques surveillées.",
+        type: "tip"
       },
       {
-        title: "SSI Catégorie D et E",
-        content: "Sans SDI, uniquement des commandes manuelles pour quelques fonctions. D pour mise en sécurité d'un bâtiment, E pour un seul local spécifique.",
+        title: "Câblage électrique",
+        content: "C2 minimum pour liaisons. CR1 pour fonctions maintenues en sécurité (désenfumage, compartimentage). Cheminements distincts des autres câbles.",
         type: "standard"
       }
     ],
     sections: [
       {
-        title: "Composants d'un SSI",
-        content: "SDI (Système de Détection Incendie), SMSI (Système de Mise en Sécurité Incendie), CMSI (Centralisateur de Mise en Sécurité Incendie), DAS (Dispositifs Actionnés de Sécurité), DCMR (Dispositif de Commandes Manuelles Regroupées)."
+        title: "Schémas normalisés",
+        content: "4 types de configurations: alarme générale (AG), alarme sélective (AS), alarme générale sélective (AGS), alarme restreinte (AR). Avec ou sans temporisation: T1 (confirmation), T2 (reconnaissance), T3 (évacuation), T4 (sécurité)."
       },
       {
-        title: "Zonage de détection",
-        content: "Division en ZD (Zones de Détection) de 1600 m² max par niveau. Déclenchement d'une ZD active les fonctions de sécurité dans une ou plusieurs ZS (Zones de Sécurité) correspondantes."
+        title: "Détecteurs automatiques",
+        content: "Types: optique fumée, thermique, thermostatique, thermovélocimétrique, flamme, multiponctuel, linéaire. Surface par détecteur limitée: 60-80m². Hauteur sous plafond 15m maximum sans dispositions particulières."
       },
       {
-        title: "Fonctions de sécurité",
-        content: "Compartimentage (C), Désenfumage (D), Évacuation (E), Extinction automatique (Ext), etc. Chaque fonction est gérée par zone de sécurité. Une ZS peut regrouper plusieurs ZD."
+        title: "Asservissements",
+        content: "Compartimentage (portes coupe-feu), désenfumage (ouvrants, extracteurs), arrêt installations techniques (ventilation, ascenseurs), déblocage issues secours, non-stop ascenseurs. Réarmement manuel uniquement, après disparition du feu."
+      },
+      {
+        title: "Diffuseurs sonores et visuels",
+        content: "Niveau sonore: 70dB(A) minimum, ou +10dB par rapport au bruit ambiant. Signal conforme NF S 32-001. Fréquence: 500Hz-1000Hz. Complément visuel obligatoire en présence de malentendants (flash 0,5Hz-2Hz)."
       }
     ],
     schemas: [
       {
         id: "schema-ssi-1",
-        title: "Architecture d'un SSI catégorie A",
-        imageUrl: "/images/schemas/schema-ssi-a.png",
-        description: "Schéma de principe d'un Système de Sécurité Incendie de catégorie A avec tous ses composants."
+        title: "Architecture SSI catégorie A",
+        imageUrl: "/images/schemas/architecture-ssi.png",
+        description: "Architecture d'un Système de Sécurité Incendie de catégorie A complète avec SDI et SMSI."
       }
     ]
   },
   {
-    id: "dtu-incendie-systems-2",
-    title: "Détection Automatique d'Incendie (DAI)",
+    id: "dtu-securite-systemes-2",
+    title: "Alarme et alerte incendie",
     category: "Incendie Systèmes",
-    description: "Composants et principes des systèmes de détection automatique d'incendie",
-    lastUpdate: "Mai 2023",
+    description: "Types d'alarme et systèmes d'alerte incendie",
+    lastUpdate: "Février 2023",
     rules: [
       {
-        title: "Types de détecteurs",
-        content: "Détecteurs de fumée (optiques ou ioniques), de chaleur (thermostatiques ou thermovélocimétriques), de flamme (infrarouge ou ultraviolet), multi-capteurs. Choix selon risque et environnement.",
+        title: "Types d'alarme",
+        content: "Type 1: SDI+SMSI complet (ERP 1-2, IGH, locaux sommeil). Type 2a: avec surveillance (ERP 3-4, sans sommeil). Type 2b: sans surveillance (petits ERP). Type 3: sans surveillance (ERP 5). Type 4: autonome (habitation).",
         type: "standard"
       },
       {
-        title: "Couverture des détecteurs",
-        content: "Surface max de 60 à 80 m² par détecteur selon le type. Distance entre détecteurs < 10 à 15 m. Détecteurs éloignés de 0,5 m minimum des obstacles.",
-        type: "standard"
-      },
-      {
-        title: "Déclencheurs manuels",
-        content: "Hauteur de 0,90 à 1,30 m du sol. Maximum 30 m entre deux déclencheurs. Implantation près des issues et dans les circulations principales.",
+        title: "Temporisations",
+        content: "Durée max: 5min en général, 0min si détecteurs dans locaux à sommeil. Temps reconnu d'investigation: 3min. Acquittement obligatoire sur site.",
         type: "warning"
       },
       {
-        title: "Centrale incendie",
-        content: "Localise le départ de feu, gère les alarmes, les défauts et les mises en sécurité. 2 sources d'alimentation autonomes (secteur + batterie avec 12h d'autonomie en veille).",
+        title: "Emplacements DM",
+        content: "Hauteur 0,90m-1,30m. Tous niveaux près escaliers/sorties. Distance max 30m en circulations. Signalisation visible à 10m minimum. Rouge NF EN 54-11.",
         type: "standard"
       },
       {
-        title: "Temporisation d'alarme",
-        content: "Maximum 5 minutes en présence humaine permanente, pour vérification avant évacuation générale. Confirmation ou inhibition possible. Interdite sans personnel de sécurité.",
+        title: "Diffusion alarme évacuation",
+        content: "Audible en tout point avec caractéristiques normalisées. Autonomie 5min min. Signal distinct de tous autres. Message vocal possible en plus.",
         type: "tip"
+      },
+      {
+        title: "Alerte aux secours",
+        content: "Ligne téléphonique dédiée pour ERP avec personnel permanent. Message enregistré pour locaux sans personnel permanent. Affichage consignes à proximité.",
+        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Implantation des détecteurs",
-        content: "En plafond, éloignés de 0,5 m minimum des parois et obstacles. Positionnés de préférence au droit des chemins d'évacuation. Adaptés à la configuration des locaux et à la hauteur sous plafond."
+        title: "Son normalisé NF S 32-001",
+        content: "Caractéristiques: signal principal 554Hz (±44Hz), signal secondaire 440Hz (±44Hz). Séquence: 0,5s signal principal + 0,5s signal secondaire + 0,5s silence. Puissance: dépassant le niveau ambiant d'au moins 10dB(A), et ≥65dB(A)."
       },
       {
-        title: "Indicateurs d'action",
-        content: "Obligatoires pour les détecteurs installés dans des locaux fermés à clé ou masqués. Doivent être visibles depuis les circulations communes. Permettent de localiser rapidement le sinistre."
+        title: "Détection automatique",
+        content: "Détecteurs adaptés aux risques: optiques (feux couvants, fumées), thermiques (feux vifs), flamme (feux rapides), spécifiques (gaz). Règles d'implantation: distance murs ≥0,5m, hauteur variable selon type, surface surveillée 30-80m² selon type."
       },
       {
-        title: "Maintenance",
-        content: "Vérification annuelle complète obligatoire. Tests fonctionnels réguliers (cycles trimestriels par zone). Registre de sécurité tenu à jour. Remplacement des détecteurs tous les 10 ans."
+        title: "Tableaux de signalisation",
+        content: "Indication visuelle distincte et séparée pour: alarme feu, dérangement, hors service, alimentation. Signalisation par zone. Commandes accessibles selon niveau d'accès (1 à 4). Alimentation secours interne ou externe (AES)."
+      },
+      {
+        title: "Dispositifs d'alarme visuels",
+        content: "Obligatoires dans locaux où l'efficacité des signaux sonores est affectée (bruit >90dB) ou pour personnes malentendantes. Flash blanc ou rouge, fréquence 0,5Hz minimum. Implantation en hauteur visible de tous points, intensité lumineuse adaptée au local."
       }
     ],
     schemas: [
       {
-        id: "schema-dai-1",
-        title: "Implantation des détecteurs incendie",
-        imageUrl: "/images/schemas/schema-detecteurs.png",
-        description: "Schéma montrant l'implantation correcte des détecteurs selon leur type et la configuration des locaux."
+        id: "schema-ssi-2",
+        title: "Zones de détection et temporisation",
+        imageUrl: "/images/schemas/zones-detection.png",
+        description: "Principes de zonage et de temporisation dans les systèmes d'alarme incendie."
       }
     ]
   },
   {
-    id: "dtu-incendie-systems-3",
-    title: "Alarme incendie",
+    id: "dtu-securite-systemes-3",
+    title: "Extincteurs et installations d'extinction",
     category: "Incendie Systèmes",
-    description: "Typologie et caractéristiques des systèmes d'alarme incendie",
-    lastUpdate: "Avril 2023",
+    description: "Équipements et systèmes d'extinction d'incendie",
+    lastUpdate: "Mars 2023",
     rules: [
       {
-        title: "Alarme type 1",
-        content: "Système d'alarme le plus complet avec DAI, temporisation optionnelle, report au service sécurité. Obligatoire pour ERP 1ère catégorie, IGH et locaux à sommeil.",
-        type: "alert"
+        title: "Classes de feux",
+        content: "A: solides (bois, papier). B: liquides (hydrocarbures). C: gaz. D: métaux. F: huiles/graisses cuisine. Agents adaptés: A→eau, AB→mousse/poudre, BC→CO2/poudre, D→poudres spéciales.",
+        type: "standard"
       },
       {
-        title: "Alarme type 2a",
-        content: "Sans détection automatique mais avec surveillance du tableau et des déclencheurs manuels. Pour certains ERP 2ème catégorie sans locaux à sommeil.",
+        title: "Extincteurs portatifs",
+        content: "Capacité minimale: 6L (eau), 6kg (poudre), 2kg (CO2). Distance entre extincteurs: 15m max. Signalisation normalisée. Contrôle annuel obligatoire.",
+        type: "standard"
+      },
+      {
+        title: "Robinets d'Incendie Armés",
+        content: "Diamètres: DN19/20 (30l/min) ou DN33 (60l/min). Pression dynamique: 2,5 à 7 bars. Couverture: 40m (longueur tuyau + 5m jet). Zone protégée ≤ 800m².",
         type: "warning"
       },
       {
-        title: "Alarme type 2b",
-        content: "Sans surveillance permanente des déclencheurs manuels, mais autocontrôle du tableau. Pour ERP 3ème et 4ème catégorie sans locaux à sommeil.",
-        type: "standard"
+        title: "Sprinkleurs",
+        content: "Types installations: sous eau, sous air, alternatives, déluge. Risques: léger RL (225m²/tête), ordinaire RO (12m²/tête), grave RS (9m²/tête). Autonomie: 1h-1h30.",
+        type: "tip"
       },
       {
-        title: "Alarme type 3",
-        content: "Système simple sans autocontrôle, avec déclencheurs manuels et tableau d'alarme. Pour établissements particuliers ou certains ERP 4ème catégorie.",
-        type: "standard"
-      },
-      {
-        title: "Alarme type 4",
-        content: "Système d'alarme élémentaire (cloche, sifflet, trompe) autonome. Pour ERP 5ème catégorie sans locaux à sommeil et petits établissements.",
+        title: "Systèmes gaz",
+        content: "Agents: CO2, gaz inertes (IG01, IG55, IG100, IG541), chimiques (FK-5-1-12, HFC227ea). Local étanche. Concentration: 34-60% selon agent. Évacuation avant émission.",
         type: "standard"
       }
     ],
     sections: [
       {
-        title: "Signal d'alarme général",
-        content: "Son conforme à la norme NF S 32-001 (fréquence 554 Hz ±44 Hz, modulation 4 Hz ±0,5 Hz). Niveau sonore 65 dB(A) minimum et 120 dB(A) maximum. Audible en tout point du bâtiment."
+        title: "Règles d'implantation extincteurs",
+        content: "Visibles, accessibles, proximité des risques, hauteur 1,20m max (poignée). Nombre minimum: 1 par niveau, 1 pour 200m² (ERP), 1 pour 150m² (industriel). Types selon risques: eau+additif (classe A), CO2 (risques électriques), poudre (classes ABC), spéciaux (cuisines, métaux)."
       },
       {
-        title: "Signal d'évacuation",
-        content: "Même caractéristique que l'alarme générale. Durée minimale de 5 min. Dispositifs lumineux complémentaires obligatoires dans les locaux à forte ambiance sonore (>90 dB) ou pour personnes malentendantes."
+        title: "Installations sprinkleurs",
+        content: "Sources d'eau: simple/double (réservoir sous pression, réservoir gravitaire, pompes). Supervision: pressostat, contrôleurs débit, alarme. Espacement: 2-4,6m entre têtes. Température déclenchement: 68°C standard, 93-141°C locaux chauds. Audit complet tous les 3 ans."
       },
       {
-        title: "Alimentation",
-        content: "Double alimentation obligatoire pour type 1 et 2 (secteur + batterie). Autonomie: 12h en veille + 5 min en alarme (type 1), 12h (type 2), 1h (type 3)."
+        title: "Systèmes à brouillard d'eau",
+        content: "Haute pression (>35 bars), moyenne pression (12-35 bars), basse pression (<12 bars). Avantages: faible consommation eau, dégâts limités, refroidissement efficace. Applications: data centers, musées, hôpitaux, tunnels. Règles dimensionnement: essais CNPP ou FM/VdS."
+      },
+      {
+        title: "Colonnes sèches/humides",
+        content: "Colonnes sèches: bâtiments Z>8m. Prise en pied (diamètre 65mm) et à chaque niveau (diamètre 40mm). Colonnes humides: pressions permanentes 4,5-8,5 bars, débits 1000-2000l/min. Contrôle technique annuel. Signalisation normalisée. Bouches incendie: 1 par tranche de 60m."
       }
     ],
     schemas: [
       {
-        id: "schema-alarme-1",
-        title: "Types d'alarmes incendie",
-        imageUrl: "/images/schemas/schema-alarmes.png",
-        description: "Schéma comparatif des différents types d'alarme incendie et leurs principales caractéristiques."
-      }
-    ]
-  },
-  {
-    id: "dtu-incendie-systems-4",
-    title: "Systèmes d'extinction automatique",
-    category: "Incendie Systèmes",
-    description: "Caractéristiques des systèmes d'extinction automatique incendie",
-    lastUpdate: "Juillet 2023",
-    rules: [
-      {
-        title: "Sprinkleurs à eau",
-        content: "Buses thermosensibles déclenchées individuellement à température prédéfinie (68°C standard). Une tête couvre 9 à 12 m² selon risque. Pression réseau 3 à 7 bars.",
-        type: "standard"
-      },
-      {
-        title: "Brouillard d'eau",
-        content: "Gouttelettes fines (< 1000 µm) refroidissant l'air, réduisant l'oxygène, bloquant rayonnement thermique. Consommation d'eau réduite. Haute (> 35 bars) ou basse pression.",
-        type: "standard"
-      },
-      {
-        title: "Systèmes à gaz",
-        content: "Gaz inertes (argon, azote, CO₂) ou inhibiteurs chimiques. Extinction par réduction d'oxygène ou rupture de réaction chimique. Pour locaux clos uniquement.",
-        type: "warning"
-      },
-      {
-        title: "Systèmes à mousse",
-        content: "Mélange eau + émulseur formant une couche isolante sur liquides inflammables. Types: haut, moyen ou bas foisonnement selon expansion. Efficace sur feux de classe B.",
-        type: "standard"
-      },
-      {
-        title: "Systèmes à poudre",
-        content: "Poudres chimiques sèches (ABC ou BC) projetées sous pression. Action chimique inhibant combustion. Efficaces mais nettoyage difficile. Pour risques spécifiques.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Classement des risques sprinkleurs",
-        content: "RO (Risque Ordinaire), RS (Risque Standard), REA (Risque Extra), RT (Risque Très sévère). Dimensionnement (surface impliquée, nombre de têtes, débit, réserve d'eau) selon classement."
-      },
-      {
-        title: "Installation sprinkleurs",
-        content: "Sous réseaux (RIA haute pression, pré-action, déluge), sous air (antigel pour zones froides), ESFR (suppression rapide), résidentiel. Certification APSAD R1 obligatoire pour assurances."
-      },
-      {
-        title: "Sources d'eau",
-        content: "Minimum 2 sources indépendantes pour RS/REA/RT. Capacité de la réserve selon risque et durée réglementaire (60 à 90 min). Essais hebdomadaires et contrôle semestriel obligatoires."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-extinction-1",
-        title: "Système de sprinkleurs",
-        imageUrl: "/images/schemas/schema-sprinkleurs.png",
-        description: "Schéma de principe d'une installation de sprinkleurs avec poste de contrôle et réseau de distribution."
+        id: "schema-ssi-3",
+        title: "Installation de sprinkleurs",
+        imageUrl: "/images/schemas/installation-sprinkleur.png",
+        description: "Schéma d'une installation complète de sprinkleurs avec ses différents composants."
       }
     ]
   }

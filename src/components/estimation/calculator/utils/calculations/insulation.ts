@@ -42,40 +42,84 @@ export const calculatePlasteringCost = (area: number | string, type: string): nu
 };
 
 /**
- * Calculate painting costs based on types and surface area
+ * Calculate wall insulation cost for specific thermal requirements
  */
-export const calculatePaintingCost = (
-  paintTypes: {
-    basicPaint: number;
-    decorativePaint: number;
-    wallpaper: number;
-    woodPaneling: number;
-    stoneCladding: number;
-  },
-  surface: number | string
-): number => {
-  const surfaceNum = ensureNumber(surface);
+export const calculateWallInsulationCost = (type: string, area: number | string, thickness: number = 10): number => {
+  const areaNum = ensureNumber(area);
+  let baseCost = 0;
   
-  // Define cost per square meter for each paint type
-  const costPerType: { [key: string]: number } = {
-    'basicPaint': 25,          // 25€ per m²
-    'decorativePaint': 45,     // 45€ per m²
-    'wallpaper': 35,           // 35€ per m²
-    'woodPaneling': 90,        // 90€ per m²
-    'stoneCladding': 150       // 150€ per m²
-  };
+  switch (type) {
+    case 'mineral_wool':
+      baseCost = 45; // Base cost for mineral wool
+      break;
+    case 'polystyrene':
+      baseCost = 50; // Base cost for polystyrene
+      break;
+    case 'polyurethane':
+      baseCost = 70; // Base cost for polyurethane
+      break;
+    case 'natural_fiber':
+      baseCost = 85; // Base cost for natural fibers (hemp, flax, etc.)
+      break;
+    case 'reflective':
+      baseCost = 60; // Base cost for reflective insulation
+      break;
+    default:
+      baseCost = 45;
+  }
   
-  // Calculate wall area (typically 2.5x floor area for standard ceiling height)
-  const wallArea = surfaceNum * 2.5;
+  // Adjust cost based on thickness (default is 10cm)
+  const thicknessMultiplier = thickness / 10;
   
-  // Calculate total cost based on percentage of each type
-  let totalCost = 0;
+  return areaNum * baseCost * thicknessMultiplier;
+};
+
+/**
+ * Calculate roof insulation cost
+ */
+export const calculateRoofInsulationCost = (area: number | string, type: string, thickness: number = 30): number => {
+  const areaNum = ensureNumber(area);
+  let baseCost = 0;
   
-  totalCost += (paintTypes.basicPaint / 100) * wallArea * costPerType.basicPaint;
-  totalCost += (paintTypes.decorativePaint / 100) * wallArea * costPerType.decorativePaint;
-  totalCost += (paintTypes.wallpaper / 100) * wallArea * costPerType.wallpaper;
-  totalCost += (paintTypes.woodPaneling / 100) * wallArea * costPerType.woodPaneling;
-  totalCost += (paintTypes.stoneCladding / 100) * wallArea * costPerType.stoneCladding;
+  switch (type) {
+    case 'mineral_wool':
+      baseCost = 55; // Base cost for roof mineral wool
+      break;
+    case 'polyurethane':
+      baseCost = 80; // Base cost for roof polyurethane
+      break;
+    case 'cellulose':
+      baseCost = 65; // Base cost for cellulose insulation
+      break;
+    case 'natural_fiber':
+      baseCost = 90; // Base cost for natural fibers
+      break;
+    default:
+      baseCost = 55;
+  }
   
-  return totalCost;
+  // Adjust cost based on thickness (default is 30cm for roof)
+  const thicknessMultiplier = thickness / 30;
+  
+  return areaNum * baseCost * thicknessMultiplier;
+};
+
+/**
+ * Calculate floor insulation cost
+ */
+export const calculateFloorInsulationCost = (area: number | string, type: string): number => {
+  const areaNum = ensureNumber(area);
+  
+  switch (type) {
+    case 'polystyrene':
+      return areaNum * 40; // Base cost for floor polystyrene
+    case 'polyurethane':
+      return areaNum * 60; // Base cost for floor polyurethane
+    case 'mineral_wool':
+      return areaNum * 45; // Base cost for floor mineral wool
+    case 'none':
+      return 0;
+    default:
+      return areaNum * 40;
+  }
 };
