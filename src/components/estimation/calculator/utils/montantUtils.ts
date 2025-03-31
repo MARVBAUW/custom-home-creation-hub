@@ -142,6 +142,10 @@ export const calculateHeatingCost = (heatingType: string, surface: number): numb
     if (!heatingType) return 0;
 
     const basePrice = {
+        'standard': 120,
+        'eco': 180,
+        'economic': 90,
+        'sans_avis': 130,
         'electric': 50,
         'gas': 70,
         'heat_pump': 90,
@@ -151,7 +155,13 @@ export const calculateHeatingCost = (heatingType: string, surface: number): numb
     return basePrice * surface;
 };
 
-// Function to calculate the cost of facade work
+// Function to calculate air conditioning costs
+export const calculateAirConditioningCost = (hasAirConditioning: boolean, area: number): number => {
+    if (!hasAirConditioning) return 0;
+    return 180 * ensureNumber(area);
+};
+
+// Function to calculate facade work
 export const calculateFacadeCost = (facadeType: string, surface: number): number => {
     if (!facadeType) return 0;
 
@@ -165,7 +175,7 @@ export const calculateFacadeCost = (facadeType: string, surface: number): number
     return basePrice * surface;
 };
 
-// Function to calculate the cost of roofing
+// Function to calculate roofing
 export const calculateRoofingCost = (roofingType: string, area: number): number => {
     if (!roofingType) return 0;
 
@@ -179,7 +189,7 @@ export const calculateRoofingCost = (roofingType: string, area: number): number 
     return basePrice * area;
 };
 
-// Function to calculate the cost of insulation
+// Function to calculate insulation
 export const calculateInsulationCost = (insulationType: string, area: number): number => {
     if (!insulationType) return 0;
 
@@ -192,7 +202,7 @@ export const calculateInsulationCost = (insulationType: string, area: number): n
     return basePrice * area;
 };
 
-// Function to calculate the cost of windows
+// Function to calculate windows
 export const calculateWindowsCost = (windowType: string, area: number): number => {
     if (!windowType) return 0;
 
@@ -205,7 +215,7 @@ export const calculateWindowsCost = (windowType: string, area: number): number =
     return basePrice * area;
 };
 
-// Function to calculate the cost of flooring
+// Function to calculate flooring
 export const calculateFlooringCost = (flooringType: string, area: number): number => {
     if (!flooringType) return 0;
 
@@ -218,7 +228,7 @@ export const calculateFlooringCost = (flooringType: string, area: number): numbe
     return basePrice * area;
 };
 
-// Function to calculate the cost of wall covering
+// Function to calculate wall covering
 export const calculateWallCoveringCost = (wallCoveringType: string, area: number): number => {
     if (!wallCoveringType) return 0;
 
@@ -231,7 +241,7 @@ export const calculateWallCoveringCost = (wallCoveringType: string, area: number
     return basePrice * area;
 };
 
-// Function to calculate the cost of a terrace
+// Function to calculate a terrace
 export const calculateTerraceCost = (terraceType: string, area: number): number => {
     if (!terraceType) return 0;
 
@@ -244,7 +254,7 @@ export const calculateTerraceCost = (terraceType: string, area: number): number 
     return basePrice * area;
 };
 
-// Function to calculate the cost of a pool
+// Function to calculate a pool
 export const calculatePoolCost = (poolType: string, area: number): number => {
     if (!poolType) return 0;
 
@@ -257,7 +267,7 @@ export const calculatePoolCost = (poolType: string, area: number): number => {
     return basePrice * area;
 };
 
-// Function to calculate the cost of a fence
+// Function to calculate a fence
 export const calculateFenceCost = (fenceType: string, length: number): number => {
     if (!fenceType) return 0;
 
@@ -270,7 +280,7 @@ export const calculateFenceCost = (fenceType: string, length: number): number =>
     return basePrice * length;
 };
 
-// Function to calculate the cost of a gate
+// Function to calculate a gate
 export const calculateGateCost = (gateType: string, length: number): number => {
     if (!gateType) return 0;
 
@@ -283,7 +293,7 @@ export const calculateGateCost = (gateType: string, length: number): number => {
     return basePrice * length;
 };
 
-// Function to calculate the cost of a driveway
+// Function to calculate a driveway
 export const calculateDrivewayCost = (drivewayType: string, area: number): number => {
     if (!drivewayType) return 0;
 
@@ -296,7 +306,7 @@ export const calculateDrivewayCost = (drivewayType: string, area: number): numbe
     return basePrice * area;
 };
 
-// Function to calculate the cost of demolition work
+// Function to calculate demolition work
 export const calculateDemolitionWorkCost = (demolitionType: string, area: number): number => {
     if (!demolitionType) return 0;
 
@@ -309,7 +319,7 @@ export const calculateDemolitionWorkCost = (demolitionType: string, area: number
     return basePrice * area;
 };
 
-// Function to calculate the cost of structural work
+// Function to calculate structural work
 export const calculateStructuralWorkCost = (structuralWorkType: string, area: number): number => {
     if (!structuralWorkType) return 0;
 
@@ -419,3 +429,157 @@ export const ensureProperType = (value: any, defaultValue: any) => {
 
 // Fix any other missing functions or type inconsistencies
 export const calculateElectricalCost = calculateElectricityCost;
+
+// Function to calculate pool heating costs
+export const calculatePoolHeatingCost = (hasHeating: boolean, area: number): number => {
+    if (!hasHeating) return 0;
+    return 120 * area; // Cost per square meter
+};
+
+// Function to calculate carport costs
+export const calculateCarportCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'basic': 200,
+        'standard': 300,
+        'premium': 450
+    }[type] || 200;
+    
+    return basePrice * area;
+};
+
+// Function to calculate roof framework renovation costs
+export const calculateRoofFrameworkRenovCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'repair': 80,
+        'partial_replacement': 150,
+        'total_replacement': 250
+    }[type] || 150;
+    
+    return basePrice * area;
+};
+
+// Function to calculate roofing renovation costs
+export const calculateRoofingRenovCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'tiles': 90,
+        'slate': 160,
+        'metal': 110,
+        'green_roof': 180
+    }[type] || 90;
+    
+    return basePrice * area;
+};
+
+// Function to calculate painting costs
+export const calculatePaintingCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'basic': 20,
+        'standard': 35,
+        'premium': 50
+    }[type] || 35;
+    
+    return basePrice * area;
+};
+
+// Function to calculate environmental solutions costs
+export const calculateEnvironmentalSolutionsCost = (type: string): number => {
+    switch (type) {
+        case 'rainwater': return 3000;
+        case 'greywater': return 5000;
+        case 'greenroof': return 8000;
+        default: return 0;
+    }
+};
+
+// Function to calculate renewable energy costs
+export const calculateRenewableEnergyCost = (type: string, area: number): number => {
+    switch (type) {
+        case 'solar': return 300 * area;
+        case 'geothermal': return 10000 + (100 * area);
+        case 'windmill': return 15000;
+        default: return 0;
+    }
+};
+
+// Function to calculate masonry wall costs
+export const calculateMasonryWallCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'brick': 120,
+        'concrete_block': 100,
+        'stone': 180
+    }[type] || 120;
+    
+    return basePrice * area;
+};
+
+// Function to calculate floor costs
+export const calculateFloorCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'concrete': 80,
+        'wood': 120,
+        'reinforced': 150
+    }[type] || 100;
+    
+    return basePrice * area;
+};
+
+// Function to calculate structural feature costs
+export const calculateStructuralFeatureCost = (type: string, area: number): number => {
+    if (!type || type === 'none') return 0;
+    
+    const basePrice = {
+        'beam': 200,
+        'column': 180,
+        'arch': 250
+    }[type] || 200;
+    
+    return basePrice * area;
+};
+
+// Function to calculate fencing costs
+export const calculateFenceCost = calculateFencingCost;
+
+// Function to calculate fencing costs
+export function calculateFencingCost(fenceType: string, length: number): number {
+    if (!fenceType) return 0;
+
+    const basePrice = {
+        'wood': 80,
+        'concrete': 120,
+        'metal': 100
+    }[fenceType] || 80;
+
+    return basePrice * length;
+};
+
+// Function to calculate kitchen costs including island options
+export const calculateKitchenCost = (kitchenType: string, hasIsland: boolean = false): number => {
+    if (!kitchenType) return 0;
+
+    const basePrice = {
+        'basic': 3000,
+        'standard': 5000,
+        'premium': 8000,
+        'luxury': 15000
+    }[kitchenType] || 3000;
+
+    // Add cost for island if selected
+    const islandCost = hasIsland ? 1500 : 0;
+    
+    return basePrice + islandCost;
+};
+
+// Export ensureNumber for use in other files
+export { ensureNumber };

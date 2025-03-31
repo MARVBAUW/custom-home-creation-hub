@@ -4,7 +4,8 @@ import { ensureNumber } from '../../utils/typeConversions';
 import { 
   calculateElectricityCost, 
   calculatePlumbingCost,
-  calculateHeatingCost
+  calculateHeatingCost,
+  calculateAirConditioningCost
 } from '../../utils/montantUtils';
 
 export const useTechnicalSubmissions = () => {
@@ -47,6 +48,11 @@ export const useTechnicalSubmissions = () => {
     
     if (data.heatingType) {
       additionalCost += calculateHeatingCost(data.heatingType, surface);
+    }
+    
+    // Add air conditioning cost if selected
+    if (data.hasAirConditioning) {
+      additionalCost += calculateAirConditioningCost(data.hasAirConditioning, surface);
     }
     
     return {

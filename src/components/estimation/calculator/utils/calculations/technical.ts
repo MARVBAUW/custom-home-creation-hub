@@ -18,6 +18,10 @@ const getHeatingCostPerSquareMeter = (type: string): number => {
     case 'eco': return 180;
     case 'economic': return 90;
     case 'sans_avis': return 130;
+    case 'electric': return 50;
+    case 'gas': return 70;
+    case 'heat_pump': return 90;
+    case 'solar': return 120;
     default: return 0;
   }
 };
@@ -94,3 +98,6 @@ export const calculateComponentCost = (component: string, area: number): number 
     default: return 0;
   }
 };
+
+// Add alias for compatibility
+export { calculateElectricalCost as calculateElectricityCost };
