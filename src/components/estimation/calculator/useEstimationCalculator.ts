@@ -1,9 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import { FormData, EstimationResponseData } from './types';
-import { determineNextStep, determinePreviousStep, recalculateEstimation } from './utils/navigationPathUtils';
+import { determineNextStep, determinePreviousStep } from './utils/navigationPathUtils';
 import { calculateEstimation } from './calculations/estimationCalculator';
 import { useToast } from '@/hooks/use-toast';
+import { convertEstimationResponseData, normalizeFormData } from './utils/typeHelpers';
 
 export const useEstimationCalculator = () => {
   const [step, setStep] = useState<number>(0);
@@ -32,21 +33,27 @@ export const useEstimationCalculator = () => {
     try {
       setIsSubmitting(true);
       
+      // Normalize form data to ensure consistent types
+      const normalizedFormData = normalizeFormData(formData);
+      
       // Calculate the estimation based on the form data
-      const result = calculateEstimation(formData);
+      const result = calculateEstimation(normalizedFormData);
+      
+      // Convert to standard response format
+      const standardResult = convertEstimationResponseData(result);
       
       // Update the estimation result
-      setEstimationResult(result);
+      setEstimationResult(standardResult);
       
       // Show the result dialog
       setShowResultDialog(true);
       
       toast({
         title: "Estimation calculée",
-        description: `Total estimé : ${result.totalAmount.toLocaleString()} €`,
+        description: `Total estimé : ${standardResult.totalAmount.toLocaleString()} €`,
       });
       
-      return result;
+      return standardResult;
     } catch (error) {
       console.error("Error calculating estimation:", error);
       

@@ -1,11 +1,152 @@
 
-// Import the FormData interface from formTypes
-import { FormData } from "./formTypes";
+// Define standard form data type for estimation form
+export interface EstimationFormData {
+  // Client information
+  clientType?: 'individual' | 'professional' | string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  address?: string;
+  city?: string;
+  zipCode?: string;
+  budget?: number;
+  
+  // Project basic information
+  projectType?: 'construction' | 'renovation' | 'extension' | 'division' | string;
+  projectDescription?: string;
+  projectLocation?: string;
+  projectDeadline?: string;
+  surface?: number;
+  levels?: number;
+  units?: number;
+  
+  // Land information
+  landOwnership?: 'owned' | 'to-purchase' | string;
+  landArea?: number;
+  landType?: string;
+  landSlope?: string;
+  landAccess?: string;
+  landPrice?: number;
+  
+  // Construction details
+  constructionType?: string;
+  constructionStyle?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  basement?: boolean;
+  garage?: boolean;
+  atticType?: string;
+  roofType?: string;
+  roofArea?: number;
+  foundationType?: string;
+  landscapingType?: string | string[];
+  landscapingArea?: number;
+  fencingLength?: number;
+  gateLength?: number;
+  terraceArea?: number;
+  
+  // Renovation details
+  renovationScope?: string;
+  
+  // Demolition
+  demolitionTypes?: string[];
+  demolitionPercentages?: { [key: string]: string };
+  demolitionTotalArea?: number;
+  
+  // Structural work
+  createWalls?: "OUI" | "NON";
+  wallArea?: number;
+  createFloors?: "OUI" | "NON";
+  floorType?: "BOIS" | "BETON";
+  floorArea?: number;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: { [key: string]: string };
+  
+  // Roof
+  roofingType?: string;
+  roofingArea?: number;
+  
+  // Windows and doors
+  windowType?: string;
+  windowRenovationArea?: number;
+  windowNewArea?: number;
+  
+  // Plumbing
+  plumbingType?: string;
+  
+  // Features
+  hasSwimmingPool?: boolean;
+  hasTerrace?: boolean;
+  hasSolarPanels?: boolean;
+  hasGeothermalEnergy?: boolean;
+  
+  // Interior details
+  doorType?: string;
+  interiorDoorType?: string;
+  doorCount?: number;
+  
+  // Kitchen and bathroom
+  bathroomType?: string;
+  bathroomCount?: number;
+  kitchenType?: string;
+  kitchenCost?: number;
+  
+  // Options
+  carportType?: string;
+  poolType?: string;
+  poolArea?: number;
+  poolHeating?: boolean;
+  jacuzziType?: string;
+  jacuzziArea?: number;
+  
+  // Environmental features
+  renewableEnergyType?: string;
+  environmentalSolutionType?: string;
+  
+  // Finishing details
+  flooringType?: string;
+  wallFinishType?: string;
+  ceilingFinishType?: string;
+  paintType?: string;
+  
+  // Heating and cooling
+  heatingType?: string;
+  hasAirConditioning?: boolean;
+  
+  // Budget and planning
+  desiredStartDate?: string;
+  desiredCompletionDate?: string;
+  totalBudget?: number;
+  
+  // Financing information
+  financingMethod?: string;
+  loanPercentage?: number;
+  loanTerm?: number;
+  interestRate?: number;
+  
+  // Special requests
+  additionalNotes?: string;
+  
+  // Generated values
+  terassementsViabilisation?: number;
+  montantT?: number;
+  totalAmount?: number;
+  budgetAvailable?: number;
+  
+  // Additional fields for compatibility (can be boolean or number)
+  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
+}
 
-// EstimationFormData is an alias of FormData for compatibility
-export type EstimationFormData = FormData;
+// Timeline for the estimation
+export enum EstimationTimeline {
+  Fast = 'fast',
+  Standard = 'standard',
+  Flexible = 'flexible'
+}
 
-// Definition of the estimation response
+// Response data from estimation calculation
 export interface EstimationResponseData {
   constructionCosts: {
     structuralWork: number;
@@ -18,47 +159,37 @@ export interface EstimationResponseData {
     architect: number;
     engineeringFees: number;
     architectFees: number;
-    officialFees: number;
-    inspectionFees: number;
-    technicalStudies: number;
-    other: number;
+    masterBuilderFees: number;
+    safetyCoordination: number;
+    technicalControl: number;
+    insurance: number;
     total: number;
   };
   otherCosts: {
-    insurance: number;
-    contingency: number;
-    taxes: number;
-    miscellaneous: number;
+    landRegistry: number;
+    urbanismTax: number;
+    landTax: number;
+    connectionFees: number;
     total: number;
   };
   totalAmount: number;
+  categories: { category: string; amount: number; details?: string }[];
   timeline: {
-    design: number;
-    permits: number;
-    bidding: number;
-    construction: number;
-    total: number;
+    duration: number;
+    startDate?: string;
+    endDate?: string;
+    type: EstimationTimeline;
   };
-  categories: Array<{ category: string; amount: number; details?: string }> | Array<{ name: string; amount: number }>;
 }
 
-// For FeeCosts used elsewhere
+// Full data shape for form and calculation
 export interface FeeCosts {
-  architect: number;
-  engineeringFees: number;
   architectFees: number;
-  officialFees: number;
-  inspectionFees: number;
+  masterBuilderFees: number;
   technicalStudies: number;
-  other: number;
-  total: number;
+  insurance: number;
+  taxAndPermits: number;
 }
 
-// For Timeline
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  bidding: number;
-  construction: number;
-  total: number;
-}
+// Export type aliases for backward compatibility
+export type FormData = EstimationFormData;

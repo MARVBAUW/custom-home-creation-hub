@@ -1,43 +1,149 @@
 
-import { EstimationResponseData as AppEstimationResponseData } from '../types';
-import { EstimationResponseData as EstimFormEstimationResponseData, FeeCosts } from '../types/estimationFormData';
+import { EstimationFormData, EstimationResponseData, EstimationTimeline } from '../types/estimationFormData';
 
 /**
- * Helper function to convert between different EstimationResponseData types
- * Used to ensure compatibility when the interface is defined in multiple places
+ * Converts a generic FormData object to the standardized EstimationFormData 
+ * to ensure compatibility between different component versions
  */
-export const convertEstimationResponseData = (data: AppEstimationResponseData): EstimFormEstimationResponseData => {
-  return {
-    constructionCosts: data.constructionCosts,
-    fees: {
-      architect: data.fees.architect || 0,
-      engineeringFees: data.fees.engineeringFees || 0,
-      architectFees: data.fees.architectFees || 0,
-      officialFees: data.fees.officialFees || 0,
-      inspectionFees: data.fees.inspectionFees || 0,
-      technicalStudies: data.fees.technicalStudies || 0,
-      other: data.fees.other || 0,
-      total: data.fees.total || 0
-    },
-    otherCosts: data.otherCosts,
-    totalAmount: data.totalAmount,
-    timeline: data.timeline
-  };
+export const normalizeFormData = (formData: any): EstimationFormData => {
+  const result: EstimationFormData = { ...formData };
+  
+  // Ensure numeric values are numbers
+  if (typeof result.surface === 'string') {
+    result.surface = parseFloat(result.surface) || 0;
+  }
+  
+  if (typeof result.levels === 'string') {
+    result.levels = parseFloat(result.levels) || 0;
+  }
+  
+  if (typeof result.units === 'string') {
+    result.units = parseFloat(result.units) || 0;
+  }
+  
+  // Ensure specific format for boolean fields
+  if (typeof result.hasAirConditioning === 'string') {
+    result.hasAirConditioning = result.hasAirConditioning === 'true' || 
+                               result.hasAirConditioning === 'OUI' ||
+                               result.hasAirConditioning === '1';
+  }
+  
+  // Normalize array fields
+  if (typeof result.landscapingType === 'string' && result.landscapingType.includes(',')) {
+    result.landscapingType = result.landscapingType.split(',').map(t => t.trim());
+  }
+  
+  return result;
 };
 
 /**
- * Helper function to ensure all FeeCosts properties are defined
- * Used to fix compatibility issues between different FeeCosts interfaces
+ * Converts the calculation result to the expected EstimationResponseData format
  */
-export const ensureFullFeeCosts = (fees: Partial<FeeCosts>): FeeCosts => {
-  return {
-    architect: fees.architect || 0,
-    engineeringFees: fees.engineeringFees || 0,
-    architectFees: fees.architectFees || 0,
-    officialFees: fees.officialFees || 0,
-    inspectionFees: fees.inspectionFees || 0,
-    technicalStudies: fees.technicalStudies || 0,
-    other: fees.other || 0,
-    total: fees.total || 0
+export const convertEstimationResponseData = (result: any): EstimationResponseData => {
+  const baseResponse: EstimationResponseData = {
+    constructionCosts: {
+      structuralWork: 0,
+      finishingWork: 0,
+      technicalLots: 0,
+      externalWorks: 0,
+      total: 0,
+    },
+    fees: {
+      architect: 0,
+      engineeringFees: 0,
+      architectFees: 0,
+      masterBuilderFees: 0,
+      safetyCoordination: 0,
+      technicalControl: 0,
+      insurance: 0,
+      total: 0,
+    },
+    otherCosts: {
+      landRegistry: 0,
+      urbanismTax: 0,
+      landTax: 0,
+      connectionFees: 0,
+      total: 0,
+    },
+    totalAmount: 0,
+    categories: [],
+    timeline: {
+      duration: 12,
+      type: EstimationTimeline.Standard
+    }
   };
+  
+  // If we have a valid object, merge it
+  if (result && typeof result === 'object') {
+    // Handle construction costs
+    if (result.constructionCosts) {
+      baseResponse.constructionCosts = {
+        ...baseResponse.constructionCosts,
+        ...result.constructionCosts
+      };
+    }
+    
+    // Handle fees
+    if (result.fees) {
+      baseResponse.fees = {
+        ...baseResponse.fees,
+        ...result.fees
+      };
+    }
+    
+    // Handle other costs
+    if (result.otherCosts) {
+      baseResponse.otherCosts = {
+        ...baseResponse.otherCosts,
+        ...result.otherCosts
+      };
+    }
+    
+    // Set total amount
+    if (typeof result.totalAmount === 'number') {
+      baseResponse.totalAmount = result.totalAmount;
+    }
+    
+    // Set timeline
+    if (result.timeline) {
+      baseResponse.timeline = {
+        ...baseResponse.timeline,
+        ...result.timeline
+      };
+    }
+    
+    // Generate categories if not present
+    if (!result.categories || !Array.isArray(result.categories) || result.categories.length === 0) {
+      baseResponse.categories = generateDefaultCategories(baseResponse.totalAmount);
+    } else {
+      baseResponse.categories = result.categories;
+    }
+  } else if (typeof result === 'number') {
+    // If the result is just a number, use it as the total amount
+    baseResponse.totalAmount = result;
+    baseResponse.categories = generateDefaultCategories(result);
+  }
+  
+  return baseResponse;
+};
+
+/**
+ * Generates default categories based on a total amount
+ */
+const generateDefaultCategories = (totalAmount: number): { category: string; amount: number; details?: string }[] => {
+  return [
+    { category: 'Gros œuvre', amount: totalAmount * 0.35 },
+    { category: 'Charpente', amount: totalAmount * 0.10 },
+    { category: 'Couverture', amount: totalAmount * 0.08 },
+    { category: 'Menuiseries extérieures', amount: totalAmount * 0.07 },
+    { category: 'Isolation', amount: totalAmount * 0.06 },
+    { category: 'Plâtrerie', amount: totalAmount * 0.05 },
+    { category: 'Électricité', amount: totalAmount * 0.05 },
+    { category: 'Plomberie', amount: totalAmount * 0.05 },
+    { category: 'Chauffage', amount: totalAmount * 0.06 },
+    { category: 'Carrelage', amount: totalAmount * 0.04 },
+    { category: 'Peinture', amount: totalAmount * 0.03 },
+    { category: 'Aménagements extérieurs', amount: totalAmount * 0.04 },
+    { category: 'Frais annexes', amount: totalAmount * 0.02 },
+  ];
 };

@@ -1,3 +1,4 @@
+
 /**
  * Ensures a value is a number or zero if undefined/null/NaN
  * 
@@ -88,4 +89,113 @@ export const parseStringValue = (value: string): string | number | boolean => {
   
   // Otherwise return as string
   return value;
+};
+
+/**
+ * Converts any value to a form-friendly string representation
+ * 
+ * @param value The value to convert to a form value
+ * @param defaultValue Default value to use if value is undefined/null
+ * @returns A string representation for form fields
+ */
+export const toFormValue = (
+  value: string | number | boolean | undefined | null,
+  defaultValue: string = ''
+): string => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  return String(value);
+};
+
+/**
+ * Ensures a string value is properly formatted for an OUI/NON type
+ * 
+ * @param value The value to convert to OUI/NON
+ * @param defaultValue Default value to use
+ * @returns Either "OUI" or "NON"
+ */
+export const ensureOuiNon = (
+  value: string | boolean | undefined | null,
+  defaultValue: "OUI" | "NON" = "NON"
+): "OUI" | "NON" => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  if (typeof value === 'boolean') {
+    return value ? "OUI" : "NON";
+  }
+  
+  if (typeof value === 'string') {
+    const normalized = value.toUpperCase().trim();
+    if (normalized === 'OUI' || normalized === 'YES' || normalized === 'TRUE' || normalized === '1') {
+      return "OUI";
+    }
+    if (normalized === 'NON' || normalized === 'NO' || normalized === 'FALSE' || normalized === '0') {
+      return "NON";
+    }
+  }
+  
+  return defaultValue;
+};
+
+/**
+ * Ensures a percentage value is within the valid 0-100 range
+ * 
+ * @param value The value to convert to percentage
+ * @param defaultValue Default value to use if conversion fails
+ * @returns A number between 0 and 100
+ */
+export const ensurePercentage = (
+  value: string | number | undefined | null,
+  defaultValue: number = 0
+): number => {
+  const num = ensureNumber(value, defaultValue);
+  return Math.max(0, Math.min(100, num));
+};
+
+/**
+ * Converts array or comma-separated string values to proper string array
+ * 
+ * @param value The value to convert to a string array
+ * @returns An array of strings
+ */
+export const ensureStringArray = (
+  value: string | string[] | undefined | null
+): string[] => {
+  if (value === undefined || value === null) {
+    return [];
+  }
+  
+  if (Array.isArray(value)) {
+    return value.map(String);
+  }
+  
+  // If it's a comma-separated string, split it
+  if (typeof value === 'string' && value.includes(',')) {
+    return value.split(',').map(item => item.trim());
+  }
+  
+  return [String(value)];
+};
+
+/**
+ * Creates a tuple with at least one required element
+ * 
+ * @param items Array of items to convert to tuple
+ * @param defaultFirst Default value for the first item if array is empty
+ * @returns A tuple with at least one required element
+ */
+export const createRequiredTuple = <T>(
+  items: T[],
+  defaultFirst: T
+): [T, ...T[]] => {
+  if (!items.length) {
+    return [defaultFirst];
+  }
+  
+  const [first, ...rest] = items;
+  return [first, ...rest];
 };
