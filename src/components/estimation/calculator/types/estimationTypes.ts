@@ -18,6 +18,23 @@ export interface EstimationResponseData {
       fees: number;
     };
   };
+  // Added these properties to match what the components are expecting
+  constructionCosts: {
+    structuralWork: number;
+    finishingWork: number;
+    technicalLots: number;
+    externalWorks: number;
+    total: number;
+  };
+  otherCosts: {
+    insurance: number;
+    contingency: number;
+    taxes: number;
+    miscellaneous: number;
+    total: number;
+  };
+  totalAmount: number;
+  categories?: Array<{ category: string; amount: number }>;
   timeline: EstimationTimeline;
   fees: FeeCosts;
   dateGenerated: string;

@@ -49,3 +49,14 @@ export const ensureBoolean = (value: any): boolean => {
   if (value === 'true' || value === true || value === 1 || value === '1') return true;
   return false;
 };
+
+/**
+ * Safely check if an array includes a value
+ * @param arr The array to check
+ * @param value The value to check for
+ * @returns boolean indicating if the array includes the value
+ */
+export const safeIncludes = (arr: any[] | undefined | null, value: any): boolean => {
+  if (!arr || !Array.isArray(arr)) return false;
+  return arr.includes(value);
+};
