@@ -1,64 +1,59 @@
 
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Download } from 'lucide-react';
 import { DTUSchema } from './types';
-import { Button } from '@/components/ui/button';
-import { Download, X } from 'lucide-react';
 
 interface SchemaZoomDialogProps {
-  schema: DTUSchema;
+  schema: DTUSchema | null;
   isOpen: boolean;
-  onClose: () => void;
+  onOpenChange: (open: boolean) => void;
 }
 
-const SchemaZoomDialog: React.FC<SchemaZoomDialogProps> = ({ schema, isOpen, onClose }) => {
-  // Function to download image
+const SchemaZoomDialog: React.FC<SchemaZoomDialogProps> = ({ 
+  schema, 
+  isOpen, 
+  onOpenChange 
+}) => {
+  if (!schema) return null;
+
   const handleDownload = () => {
-    // Create a link element
+    // Create a link to download the image
     const link = document.createElement('a');
     link.href = schema.imageUrl;
-    link.download = `schema-${schema.id}.jpg`;
+    link.download = `schema-${schema.id}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl w-full">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{schema.title}</DialogTitle>
-          <DialogDescription>{schema.description}</DialogDescription>
+          <DialogTitle className="text-xl">{schema.title}</DialogTitle>
         </DialogHeader>
         
-        <div className="my-4 flex justify-center">
-          <img 
-            src={schema.imageUrl} 
-            alt={schema.title} 
-            className="max-h-[70vh] max-w-full object-contain"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/schema-placeholder.png';
-            }}
-          />
+        <div className="my-4">
+          <AspectRatio ratio={16/9} className="bg-gray-50 rounded-md border">
+            <img 
+              src={schema.imageUrl} 
+              alt={schema.title}
+              className="w-full h-full object-contain p-2"
+            />
+          </AspectRatio>
         </div>
         
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} className="mr-2">
-            <X className="h-4 w-4 mr-2" />
-            Fermer
-          </Button>
-          <Button onClick={handleDownload}>
-            <Download className="h-4 w-4 mr-2" />
+        <p className="text-gray-600 my-4">{schema.description}</p>
+        
+        <div className="flex justify-end">
+          <Button variant="outline" onClick={handleDownload} className="gap-2">
+            <Download className="h-4 w-4" />
             Télécharger
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

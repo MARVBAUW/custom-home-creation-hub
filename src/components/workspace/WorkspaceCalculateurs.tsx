@@ -1,182 +1,194 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { Calculator, AreaChart, Home, Percent, FileCheck, Droplets, Flame, Accessibility, Thermometer, Volume } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler, Volume2, Thermometer, Droplets, Hammer, Briefcase } from 'lucide-react';
+import { FraisNotaireCalculator } from './calculators/FraisNotaireCalculator';
+import { RentabiliteLocativeCalculator } from './calculators/RentabiliteLocativeCalculator';
+import { CapaciteEmpruntCalculator } from './calculators/CapaciteEmpruntCalculator';
+import { SurfaceHabitableCalculator } from './calculators/SurfaceHabitableCalculator';
+import { AcoustiqueCalculator } from './calculators/AcoustiqueCalculator';
+import { DpeCalculator } from './calculators/DpeCalculator';
+import { EurocodesCalculator } from './calculators/EurocodesCalculator';
+import SimulationManager from './calculateurs/simulation/SimulationManager';
+import { useToast } from '@/hooks/use-toast';
 
-// Import calculators
-import RentabiliteLocativeCalculator from './calculators/RentabiliteLocativeCalculator';
-import CapaciteEmpruntCalculator from './calculators/CapaciteEmpruntCalculator';
-import FraisNotaireCalculator from './calculators/FraisNotaireCalculator';
-import RendementCalculator from './calculators/RendementCalculator';
-import AcoustiqueCalculator from './calculators/AcoustiqueCalculator';
-import DpeCalculator from './calculators/DpeCalculator';
-import LoanComparatorCalculator from './calculators/LoanComparatorCalculator';
-import RegulatoryCalculators from './calculators/RegulatoryCalculators';
-import EurocodeCalculators from './calculators/eurocode/EurocodeCalculators';
-
-// Import specific regulatory calculators
-import HygrometryCalculator from './calculators/hygrometry/HygrometryCalculator';
-import ThermalResistanceCalculator from './calculators/thermal/ThermalResistanceCalculator';
-import AcousticInsulationCalculator from './calculators/acoustic/AcousticInsulationCalculator';
-import FireEscapeCalculator from './calculators/fire/FireEscapeCalculator';
-import AccessibilityRampCalculator from './calculators/accessibility/AccessibilityRampCalculator';
-
-const WorkspaceCalculateurs: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('rentabilite');
+const WorkspaceCalculateurs = () => {
+  const { toast } = useToast();
+  const [activeTab, setActiveTab] = useState("immobilier");
 
   return (
-    <div className="w-full p-4 md:p-6 space-y-6">
-      <h1 className="text-2xl font-bold flex items-center gap-2">
-        <Calculator className="h-6 w-6" />
-        Mes Calculateurs Immobiliers
-      </h1>
-      
-      <Card>
-        <CardContent className="p-0">
-          <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="flex w-full h-auto flex-wrap justify-start p-0 bg-transparent border-b">
-              <TabsTrigger 
-                value="rentabilite" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Rentabilité Locative
-              </TabsTrigger>
-              <TabsTrigger 
-                value="capacite" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Capacité d'Emprunt
-              </TabsTrigger>
-              <TabsTrigger 
-                value="comparateur" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Comparateur Prêts
-              </TabsTrigger>
-              <TabsTrigger 
-                value="frais-notaire" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Frais de Notaire
-              </TabsTrigger>
-              <TabsTrigger 
-                value="rendement" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Rendement
-              </TabsTrigger>
-              <TabsTrigger 
-                value="regulatory" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                <FileCheck className="h-4 w-4 mr-1" />
-                Réglementation
-              </TabsTrigger>
-              <TabsTrigger 
-                value="eurocode" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                <Calculator className="h-4 w-4 mr-1" />
-                Eurocodes
-              </TabsTrigger>
-              <TabsTrigger 
-                value="acoustique" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                Acoustique
-              </TabsTrigger>
-              <TabsTrigger 
-                value="dpe" 
-                className="data-[state=active]:bg-background rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-              >
-                DPE
-              </TabsTrigger>
-            </TabsList>
-
-            <div className="p-4">
-              <TabsContent value="rentabilite" className="mt-0">
-                <RentabiliteLocativeCalculator />
-              </TabsContent>
-              
-              <TabsContent value="capacite" className="mt-0">
-                <CapaciteEmpruntCalculator />
-              </TabsContent>
-              
-              <TabsContent value="comparateur" className="mt-0">
-                <LoanComparatorCalculator />
-              </TabsContent>
-              
-              <TabsContent value="frais-notaire" className="mt-0">
-                <FraisNotaireCalculator />
-              </TabsContent>
-              
-              <TabsContent value="rendement" className="mt-0">
-                <RendementCalculator />
-              </TabsContent>
-              
-              <TabsContent value="regulatory" className="mt-0">
-                <RegulatoryCalculators />
-              </TabsContent>
-              
-              <TabsContent value="eurocode" className="mt-0">
-                <EurocodeCalculators />
-              </TabsContent>
-              
-              <TabsContent value="acoustique" className="mt-0">
-                <AcoustiqueCalculator />
-              </TabsContent>
-              
-              <TabsContent value="dpe" className="mt-0">
-                <DpeCalculator />
-              </TabsContent>
-            </div>
-          </Tabs>
-        </CardContent>
-      </Card>
-      
-      {/* Individual Calculator Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Droplets className="h-5 w-5 text-blue-500" />
-            Hygrométrie
-          </h2>
-          <HygrometryCalculator />
-        </div>
-        
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Thermometer className="h-5 w-5 text-teal-500" />
-            Thermique
-          </h2>
-          <ThermalResistanceCalculator />
-        </div>
-        
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Volume className="h-5 w-5 text-purple-500" />
-            Acoustique
-          </h2>
-          <AcousticInsulationCalculator />
-        </div>
-        
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Flame className="h-5 w-5 text-red-500" />
-            Sécurité Incendie
-          </h2>
-          <FireEscapeCalculator />
-        </div>
-        
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Accessibility className="h-5 w-5 text-indigo-500" />
-            Accessibilité
-          </h2>
-          <AccessibilityRampCalculator />
-        </div>
+    <div className="space-y-6">
+      <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 mb-6">
+        <h3 className="text-zinc-800 font-medium flex items-center gap-2 mb-2">
+          <Calculator className="h-5 w-5" />
+          Calculateurs et Simulations
+        </h3>
+        <p className="text-zinc-700 text-sm">
+          Accédez à nos outils de calcul spécialisés pour différents aspects de vos projets.
+          Ces calculateurs vous aideront à estimer les coûts, dimensionner vos espaces et vérifier la conformité réglementaire.
+        </p>
       </div>
+
+      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-zinc-100 p-1 flex flex-wrap">
+          <TabsTrigger value="immobilier" className="data-[state=active]:bg-white flex items-center gap-2">
+            <HomeIcon className="h-4 w-4" />
+            <span>Immobilier</span>
+          </TabsTrigger>
+          <TabsTrigger value="projet" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Building2 className="h-4 w-4" />
+            <span>Projet</span>
+          </TabsTrigger>
+          <TabsTrigger value="financier" className="data-[state=active]:bg-white flex items-center gap-2">
+            <PiggyBank className="h-4 w-4" />
+            <span>Financier</span>
+          </TabsTrigger>
+          <TabsTrigger value="reglementaire" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            <span>Réglementaire</span>
+          </TabsTrigger>
+          <TabsTrigger value="technique" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Hammer className="h-4 w-4" />
+            <span>Technique</span>
+          </TabsTrigger>
+          <TabsTrigger value="simulations" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Briefcase className="h-4 w-4" />
+            <span>Mes simulations</span>
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Onglet Immobilier */}
+        <TabsContent value="immobilier">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Surface habitable</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SurfaceHabitableCalculator />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Frais de notaire</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <FraisNotaireCalculator />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Onglet Projet */}
+        <TabsContent value="projet">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">DPE prévisionnel</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DpeCalculator />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Eurocodes</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <EurocodesCalculator />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Acoustique</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AcoustiqueCalculator />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Onglet Financier */}
+        <TabsContent value="financier">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Capacité d'emprunt</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CapaciteEmpruntCalculator />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Rentabilité locative</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RentabiliteLocativeCalculator />
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Onglet Réglementaire */}
+        <TabsContent value="reglementaire">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Vérification accessibilité</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Tableau de classification ERP</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Onglet Technique */}
+        <TabsContent value="technique">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Dimensionnement rampe</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Calcul descente de charge</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Onglet Mes simulations */}
+        <TabsContent value="simulations">
+          <SimulationManager />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

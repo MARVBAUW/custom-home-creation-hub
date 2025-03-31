@@ -7,7 +7,7 @@ import { DTUDetailDialog } from './dtu/DTUDetailDialog';
 import { useDTUSearch } from './dtu/useDTUSearch';
 import { DTU } from './dtu/types';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Building, Home, Store, School, Accessibility } from 'lucide-react';
+import { Building, Home, Store, School, Accessibility, Calendar, CalendarDays, Ruler, FileText } from 'lucide-react';
 
 export const AccessibiliteRecapSection = () => {
   const { 
@@ -21,12 +21,19 @@ export const AccessibiliteRecapSection = () => {
   
   const [selectedDTU, setSelectedDTU] = useState<DTU | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  const [accessibiliteTab, setAccessibiliteTab] = useState("erp");
+  const [accessibiliteTab, setAccessibiliteTab] = useState("general");
   
   const handleDTUClick = (dtu: DTU) => {
     setSelectedDTU(dtu);
     setIsDetailOpen(true);
   };
+
+  // Filtrer les DTUs par type
+  const erpDTUs = filteredDTUs.filter(dtu => dtu.id.includes('erp'));
+  const logementDTUs = filteredDTUs.filter(dtu => dtu.id.includes('logement'));
+  const dimensionnementDTUs = filteredDTUs.filter(dtu => dtu.id.includes('dimension'));
+  const adApDTUs = filteredDTUs.filter(dtu => dtu.id.includes('adap'));
+  const specificDTUs = filteredDTUs.filter(dtu => dtu.id.includes('specifiques'));
 
   return (
     <div className="space-y-6">
@@ -50,7 +57,11 @@ export const AccessibiliteRecapSection = () => {
       />
       
       <Tabs value={accessibiliteTab} onValueChange={setAccessibiliteTab} className="mt-6">
-        <TabsList className="mb-6 bg-blue-50">
+        <TabsList className="mb-6 bg-blue-50 flex flex-wrap">
+          <TabsTrigger value="general" className="data-[state=active]:bg-white">
+            <FileText className="h-4 w-4 mr-2" />
+            <span>Vue générale</span>
+          </TabsTrigger>
           <TabsTrigger value="erp" className="data-[state=active]:bg-white">
             <Store className="h-4 w-4 mr-2" />
             <span>ERP</span>
@@ -59,15 +70,31 @@ export const AccessibiliteRecapSection = () => {
             <Home className="h-4 w-4 mr-2" />
             <span>Logement</span>
           </TabsTrigger>
-          <TabsTrigger value="etablissements" className="data-[state=active]:bg-white">
-            <School className="h-4 w-4 mr-2" />
-            <span>Établissements spécifiques</span>
+          <TabsTrigger value="dimensions" className="data-[state=active]:bg-white">
+            <Ruler className="h-4 w-4 mr-2" />
+            <span>Règles dimensionnelles</span>
+          </TabsTrigger>
+          <TabsTrigger value="adap" className="data-[state=active]:bg-white">
+            <CalendarDays className="h-4 w-4 mr-2" />
+            <span>Agenda Ad'AP</span>
+          </TabsTrigger>
+          <TabsTrigger value="specifiques" className="data-[state=active]:bg-white">
+            <Building className="h-4 w-4 mr-2" />
+            <span>ERP Spécifiques</span>
           </TabsTrigger>
         </TabsList>
 
+        <TabsContent value="general" className="space-y-6">
+          <DTUGridList 
+            dtus={filteredDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
         <TabsContent value="erp" className="space-y-6">
           <DTUGridList 
-            dtus={filteredDTUs.filter(dtu => dtu.id.includes('erp'))} 
+            dtus={erpDTUs} 
             onViewDetails={handleDTUClick} 
             searchTerm={searchTerm}
           />
@@ -75,17 +102,34 @@ export const AccessibiliteRecapSection = () => {
 
         <TabsContent value="logement" className="space-y-6">
           <DTUGridList 
-            dtus={filteredDTUs.filter(dtu => dtu.id.includes('logement'))} 
+            dtus={logementDTUs} 
             onViewDetails={handleDTUClick} 
             searchTerm={searchTerm}
           />
         </TabsContent>
 
-        <TabsContent value="etablissements" className="space-y-6">
-          <p className="text-center text-gray-500 my-12">
-            Cette section est en cours de développement.
-            Elle contiendra les règles d'accessibilité pour les établissements spécifiques.
-          </p>
+        <TabsContent value="dimensions" className="space-y-6">
+          <DTUGridList 
+            dtus={dimensionnementDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
+        <TabsContent value="adap" className="space-y-6">
+          <DTUGridList 
+            dtus={adApDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
+        </TabsContent>
+
+        <TabsContent value="specifiques" className="space-y-6">
+          <DTUGridList 
+            dtus={specificDTUs} 
+            onViewDetails={handleDTUClick} 
+            searchTerm={searchTerm}
+          />
         </TabsContent>
       </Tabs>
       

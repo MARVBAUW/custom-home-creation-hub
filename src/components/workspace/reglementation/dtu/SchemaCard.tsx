@@ -1,61 +1,48 @@
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { DTUSchema } from './types';
-import SchemaZoomDialog from './SchemaZoomDialog';
 import { Maximize2 } from 'lucide-react';
+import { highlightSearchTerm } from './searchUtils';
 
 interface SchemaCardProps {
   schema: DTUSchema;
+  searchTerm?: string;
+  onClick: () => void;
 }
 
-const SchemaCard: React.FC<SchemaCardProps> = ({ schema }) => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+const SchemaCard: React.FC<SchemaCardProps> = ({ schema, searchTerm = '', onClick }) => {
   return (
-    <>
-      <Card className="overflow-hidden transition-all hover:shadow-md">
-        <div className="relative overflow-hidden h-48 bg-gray-100">
-          <img 
-            src={schema.imageUrl} 
-            alt={schema.title} 
-            className="w-full h-full object-cover object-center"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/images/schema-placeholder.png';
-            }}
-          />
-          <Button 
-            variant="secondary" 
-            size="sm" 
-            className="absolute bottom-2 right-2 bg-white/80 hover:bg-white"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <Maximize2 className="h-4 w-4 mr-1" />
-            Agrandir
-          </Button>
+    <Card 
+      className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
+      onClick={onClick}
+    >
+      <CardContent className="p-0">
+        <div className="relative">
+          <AspectRatio ratio={4/3} className="bg-gray-100 border-b">
+            <div className="w-full h-full flex items-center justify-center">
+              <img 
+                src={schema.imageUrl} 
+                alt={schema.title}
+                className="max-w-full max-h-full object-contain"
+              />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <Maximize2 className="h-8 w-8 text-white bg-black/50 p-1.5 rounded-full" />
+              </div>
+            </div>
+          </AspectRatio>
         </div>
-        <CardContent className="p-4">
-          <CardTitle className="text-md font-medium mb-1 line-clamp-1">{schema.title}</CardTitle>
-          <CardDescription className="line-clamp-2 text-xs">{schema.description}</CardDescription>
-        </CardContent>
-        <CardFooter className="p-4 pt-0">
-          <Button 
-            variant="ghost" 
-            className="w-full text-sm"
-            onClick={() => setIsDialogOpen(true)}
-          >
-            Voir en détail
-          </Button>
-        </CardFooter>
-      </Card>
-
-      <SchemaZoomDialog 
-        schema={schema} 
-        isOpen={isDialogOpen} 
-        onClose={() => setIsDialogOpen(false)} 
-      />
-    </>
+        <div className="p-4">
+          <h4 className="font-medium mb-1">
+            {highlightSearchTerm(schema.title, searchTerm)}
+          </h4>
+          <p className="text-sm text-gray-600">
+            {highlightSearchTerm(schema.description, searchTerm)}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
