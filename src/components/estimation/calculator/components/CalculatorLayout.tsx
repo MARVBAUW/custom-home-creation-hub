@@ -1,57 +1,96 @@
 
-import React from 'react';
-import ProgressBar from '../ProgressBar';
-import StepContext from '../StepContext';
+import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import StepRenderer from './StepRenderer';
+import FormNavigation from './FormNavigation';
+import { FormData, EstimationResponseData } from '../types';
+import { useEstimationCalculator } from '../hooks/useEstimationCalculator';
 import EstimationResult from '../EstimationResult';
-import { getStepIcon, getStepTitle } from '../steps';
-import { FormData } from '../types';
+import { calculateEstimation } from '../calculationUtils';
 
-type CalculatorLayoutProps = {
-  step: number;
+interface CalculatorLayoutProps {
+  currentStep: number;
   totalSteps: number;
+  onNextStep: () => void;
+  onPrevStep: () => void;
   formData: FormData;
-  estimationResult: number | null;
-  showResultDialog: boolean;
-  setShowResultDialog: (show: boolean) => void;
-  children: React.ReactNode;
-};
+  updateFormData: (data: Partial<FormData>) => void;
+  isSubmitting: boolean;
+  goToStep: (step: number) => void;
+}
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
-  step,
+  currentStep,
   totalSteps,
+  onNextStep,
+  onPrevStep,
   formData,
-  estimationResult,
-  showResultDialog,
-  setShowResultDialog,
-  children
+  updateFormData,
+  isSubmitting,
+  goToStep,
 }) => {
-  return (
-    <div className="w-full max-w-4xl mx-auto">
-      {/* Barre de progression */}
-      <ProgressBar currentStep={step} totalSteps={totalSteps} />
+  const [showResultDialog, setShowResultDialog] = useState(false);
+  const { estimationResult } = useEstimationCalculator(formData);
+  const progress = Math.round((currentStep / totalSteps) * 100);
 
-      {/* Contenu de l'étape avec visualisateur */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
-        <div className="md:col-span-2 bg-white shadow-sm border rounded-lg p-6 estimation-form-container">
-          {children}
+  // Handler for when the form is completely filled out
+  const handleComplete = () => {
+    const sampleEstimation = calculateEstimation(formData);
+    setShowResultDialog(true);
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="mb-6">
+        <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div
+            className="bg-gradient-to-r from-khaki-500 to-khaki-600 h-2.5 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          ></div>
         </div>
-        
-        <StepContext
-          step={step}
-          title={getStepTitle(step)}
-          icon={getStepIcon(step)}
+        <div className="text-right text-xs text-gray-500 mt-1">
+          Étape {currentStep} sur {totalSteps}
+        </div>
+      </div>
+
+      <div className="min-h-[300px]">
+        <StepRenderer
+          step={currentStep}
           formData={formData}
-          totalSteps={totalSteps}
+          updateFormData={updateFormData}
+          goToNextStep={onNextStep}
+          goToPreviousStep={onPrevStep}
+          isSubmitting={isSubmitting}
+          goToStep={goToStep}
+          onComplete={handleComplete}
         />
       </div>
-      
-      {/* Résultat de l'estimation avec animation et données du formulaire */}
-      <EstimationResult
-        showResultDialog={showResultDialog}
-        setShowResultDialog={setShowResultDialog}
-        estimationResult={estimationResult}
-        formData={formData}
+
+      <FormNavigation
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        onPrevStep={onPrevStep}
+        onNextStep={onNextStep}
+        isSubmitting={isSubmitting}
+        isComplete={currentStep === totalSteps}
+        onComplete={handleComplete}
       />
+
+      <Dialog open={showResultDialog} onOpenChange={setShowResultDialog}>
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-semibold">Estimation de votre projet</DialogTitle>
+          </DialogHeader>
+          <EstimationResult
+            estimation={calculateEstimation(formData)}
+            formData={formData}
+          />
+          <div className="mt-4 flex justify-end">
+            <Button onClick={() => setShowResultDialog(false)}>Fermer</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

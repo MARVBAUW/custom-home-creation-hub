@@ -7,7 +7,6 @@ import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
 import { FormData, EstimationResponseData } from './types';
 import { formatCurrency } from '@/utils/formatters';
-import logo from '@/assets/images/progineer-logo.png';
 
 // Add autoTable to jsPDF prototype
 declare module 'jspdf' {
@@ -36,31 +35,38 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
     const doc = new jsPDF();
     
     try {
-      // Add logo
-      const logoWidth = 50;
-      doc.addImage(logo, 'PNG', (doc.internal.pageSize.width - logoWidth) / 2, 10, logoWidth, logoWidth / 3);
+      // Instead of trying to use an imported image, we'll draw a simple text logo
+      // This avoids issues with image imports
+      doc.setFontSize(22);
+      doc.setTextColor(88, 80, 55); // Khaki color
+      doc.text("PROGINEER", doc.internal.pageSize.width / 2, 20, { align: 'center' });
+      
+      // Add subtitle
+      doc.setFontSize(12);
+      doc.setTextColor(100, 100, 100);
+      doc.text("MAÎTRISE D'OEUVRE", doc.internal.pageSize.width / 2, 30, { align: 'center' });
       
       // Add title
       doc.setFontSize(18);
       doc.setTextColor(66, 66, 66);
-      doc.text('Estimation de projet', doc.internal.pageSize.width / 2, 40, { align: 'center' });
+      doc.text("Estimation de projet", doc.internal.pageSize.width / 2, 50, { align: 'center' });
       
       // Add subtitle
       doc.setFontSize(12);
-      doc.text(`Référence: EST-${Date.now().toString().slice(-6)}`, doc.internal.pageSize.width / 2, 48, { align: 'center' });
-      doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, doc.internal.pageSize.width / 2, 54, { align: 'center' });
+      doc.text(`Référence: EST-${Date.now().toString().slice(-6)}`, doc.internal.pageSize.width / 2, 58, { align: 'center' });
+      doc.text(`Date: ${new Date().toLocaleDateString('fr-FR')}`, doc.internal.pageSize.width / 2, 64, { align: 'center' });
       
       // Project details
       doc.setFontSize(14);
       doc.setTextColor(88, 80, 55); // Khaki color
-      doc.text('Détails du projet', 14, 70);
+      doc.text("Détails du projet", 14, 80);
       
       doc.setFontSize(10);
       doc.setTextColor(66, 66, 66);
       
       // Project details table
-      autoTable(doc, {
-        startY: 75,
+      doc.autoTable({
+        startY: 85,
         head: [['Caractéristique', 'Valeur']],
         body: [
           ['Type de projet', formData.projectType || 'Non spécifié'],
@@ -77,10 +83,10 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       // Estimation results
       doc.setFontSize(14);
       doc.setTextColor(88, 80, 55);
-      doc.text('Résultats de l\'estimation', 14, doc.lastAutoTable.finalY + 15);
+      doc.text("Résultats de l'estimation", 14, doc.lastAutoTable.finalY + 15);
       
       // Cost breakdown table
-      autoTable(doc, {
+      doc.autoTable({
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Poste de dépense', 'Montant estimé (€)']],
         body: [
@@ -100,10 +106,10 @@ const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({
       // Timeline
       doc.setFontSize(14);
       doc.setTextColor(88, 80, 55);
-      doc.text('Calendrier prévisionnel', 14, doc.lastAutoTable.finalY + 15);
+      doc.text("Calendrier prévisionnel", 14, doc.lastAutoTable.finalY + 15);
       
       // Timeline table
-      autoTable(doc, {
+      doc.autoTable({
         startY: doc.lastAutoTable.finalY + 20,
         head: [['Phase', 'Durée estimée']],
         body: [

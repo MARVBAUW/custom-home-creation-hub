@@ -1,174 +1,121 @@
 
 import { FormData, EstimationResponseData } from './types';
 
+/**
+ * Generate an estimation report text for email or other text-based formats
+ */
+export const generateEstimationReport = (formData: FormData, estimation: EstimationResponseData): string => {
+  const formatNumber = (num: number): string => {
+    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(num);
+  };
+  
+  let report = `ESTIMATION DE PROJET - PROGINEER\n`;
+  report += `Date: ${new Date().toLocaleDateString('fr-FR')}\n`;
+  report += `Référence: EST-${Date.now().toString().slice(-6)}\n\n`;
+  
+  report += `DÉTAILS DU PROJET\n`;
+  report += `Type de projet: ${formData.projectType || 'Non spécifié'}\n`;
+  report += `Surface: ${formData.surface || 0} m²\n`;
+  report += `Ville: ${formData.city || 'Non spécifié'}\n`;
+  report += `Type de terrain: ${formData.landType || 'Non spécifié'}\n`;
+  report += `Complexité: ${formData.complexity || 'Standard'}\n`;
+  report += `Standard de qualité: ${formData.qualityStandard || 'Standard'}\n\n`;
+  
+  report += `ESTIMATION DES COÛTS\n`;
+  report += `Gros œuvre: ${formatNumber(estimation.constructionCosts.structuralWork)}\n`;
+  report += `Second œuvre: ${formatNumber(estimation.constructionCosts.finishingWork)}\n`;
+  report += `Lots techniques: ${formatNumber(estimation.constructionCosts.technicalLots)}\n`;
+  report += `Aménagements extérieurs: ${formatNumber(estimation.constructionCosts.externalWorks)}\n`;
+  report += `Honoraires et études: ${formatNumber(estimation.fees.total)}\n`;
+  report += `Autres frais: ${formatNumber(estimation.otherCosts.total)}\n`;
+  report += `TOTAL GLOBAL: ${formatNumber(estimation.totalAmount)}\n\n`;
+  
+  report += `CALENDRIER PRÉVISIONNEL\n`;
+  report += `Conception et études: ${estimation.timeline.design} mois\n`;
+  report += `Autorisations administratives: ${estimation.timeline.permits} mois\n`;
+  report += `Consultation des entreprises: ${estimation.timeline.bidding} mois\n`;
+  report += `Travaux: ${estimation.timeline.construction} mois\n`;
+  report += `DURÉE TOTALE: ${estimation.timeline.total} mois\n\n`;
+  
+  report += `Cette estimation est fournie à titre indicatif et peut varier selon les spécificités du projet.\n`;
+  report += `Pour plus d'informations, n'hésitez pas à contacter Progineer au 04.XX.XX.XX.XX ou contact@progineer.fr\n`;
+  
+  return report;
+};
+
+/**
+ * Calculate a sample estimation based on form data
+ * This is a simplified version that creates sample data for testing
+ */
 export const calculateEstimation = (formData: FormData): EstimationResponseData => {
-  // Default base price per m² depending on project type
-  let basePricePerSqm = 0;
+  // Base surface area cost in euros per square meter
+  const baseCostPerSqm = formData.projectType === 'construction' ? 1500 :
+                          formData.projectType === 'renovation' ? 1000 :
+                          formData.projectType === 'extension' ? 1300 : 1200;
+                          
+  const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 100);
   
-  switch (formData.projectType) {
-    case 'construction':
-      basePricePerSqm = 1500;
-      break;
-    case 'renovation':
-      basePricePerSqm = 800;
-      break;
-    case 'extension':
-      basePricePerSqm = 1300;
-      break;
-    default:
-      basePricePerSqm = 1000;
-  }
+  // Complexity multiplier
+  const complexityMultiplier = formData.complexity === 'simple' ? 0.9 :
+                              formData.complexity === 'complex' ? 1.2 : 1.0;
+                              
+  // Quality standard multiplier
+  const qualityMultiplier = formData.qualityStandard === 'economic' ? 0.85 :
+                            formData.qualityStandard === 'premium' ? 1.3 : 1.0;
   
-  // Apply adjustments based on complexity
-  const complexityMultipliers = {
-    'simple': 0.8,
-    'standard': 1.0,
-    'complex': 1.3,
-    'very-complex': 1.6,
-  };
+  // Calculate total construction cost
+  const totalConstructionCost = surface * baseCostPerSqm * complexityMultiplier * qualityMultiplier;
   
-  // Apply adjustments based on quality standard
-  const qualityMultipliers = {
-    'basic': 0.8,
-    'standard': 1.0,
-    'premium': 1.5,
-    'luxury': 2.0,
-  };
+  // Calculate cost breakdown for construction
+  const structuralWork = totalConstructionCost * 0.4;
+  const finishingWork = totalConstructionCost * 0.3;
+  const technicalLots = totalConstructionCost * 0.2;
+  const externalWorks = totalConstructionCost * 0.1;
   
-  // Get multipliers (default to standard if not specified)
-  const complexityMultiplier = formData.complexity ? 
-    complexityMultipliers[formData.complexity as keyof typeof complexityMultipliers] || 1.0 : 1.0;
+  // Calculate professional fees
+  const architectFee = totalConstructionCost * 0.08;
+  const technicalStudies = totalConstructionCost * 0.03;
+  const otherFees = totalConstructionCost * 0.02;
   
-  const qualityMultiplier = formData.qualityStandard ? 
-    qualityMultipliers[formData.qualityStandard as keyof typeof qualityMultipliers] || 1.0 : 1.0;
+  // Calculate other costs
+  const insurance = totalConstructionCost * 0.02;
+  const taxes = totalConstructionCost * 0.03;
+  const contingency = totalConstructionCost * 0.05;
   
-  // Apply size adjustment (smaller projects are more expensive per m²)
-  const surface = typeof formData.surface === 'number' ? formData.surface : 
-                  typeof formData.surface === 'string' ? parseFloat(formData.surface) : 100;
+  // Calculate project timeline in months
+  const designMonths = Math.max(2, Math.ceil(surface / 100));
+  const permitsMonths = formData.projectType === 'renovation' ? 2 : 4;
+  const biddingMonths = 2;
+  const constructionMonths = Math.max(3, Math.ceil(totalConstructionCost / 100000));
   
-  let sizeMultiplier = 1.0;
-  if (surface < 50) {
-    sizeMultiplier = 1.4;
-  } else if (surface < 100) {
-    sizeMultiplier = 1.2;
-  } else if (surface > 200) {
-    sizeMultiplier = 0.9;
-  } else if (surface > 500) {
-    sizeMultiplier = 0.8;
-  }
-  
-  // Calculate the adjusted price per m²
-  const adjustedPricePerSqm = basePricePerSqm * complexityMultiplier * qualityMultiplier * sizeMultiplier;
-  
-  // Calculate construction cost
-  const constructionCost = adjustedPricePerSqm * surface;
-  
-  // Distribute costs based on typical project breakdowns
-  const structuralWorkPercentage = formData.projectType === 'renovation' ? 0.3 : 0.45;
-  const finishingWorkPercentage = formData.projectType === 'renovation' ? 0.4 : 0.25;
-  const technicalLotsPercentage = 0.2;
-  const externalWorksPercentage = formData.projectType === 'renovation' ? 0.1 : 0.1;
-  
-  // Calculate construction costs breakdown
-  const structuralWork = constructionCost * structuralWorkPercentage;
-  const finishingWork = constructionCost * finishingWorkPercentage;
-  const technicalLots = constructionCost * technicalLotsPercentage;
-  const externalWorks = constructionCost * externalWorksPercentage;
-  
-  // Calculate fees (typically 10-15% of construction cost)
-  const feesPercentage = surface < 100 ? 0.15 : surface < 200 ? 0.12 : 0.10;
-  const fees = constructionCost * feesPercentage;
-  
-  // Distribute fees
-  const architectFees = fees * 0.6;
-  const technicalStudiesFees = fees * 0.3;
-  const otherFees = fees * 0.1;
-  
-  // Calculate other costs (insurances, taxes, etc. - typically 5-8% of construction cost)
-  const otherCostsPercentage = 0.07;
-  const otherCosts = constructionCost * otherCostsPercentage;
-  
-  // Distribute other costs
-  const insuranceCosts = otherCosts * 0.4;
-  const taxesCosts = otherCosts * 0.3;
-  const contingencyCosts = otherCosts * 0.3;
-  
-  // Calculate total amount
-  const totalAmount = constructionCost + fees + otherCosts;
-  
-  // Calculate timeline (in months)
-  let designDuration = 2;
-  let permitsDuration = 3;
-  let biddingDuration = 1;
-  let constructionDuration = 0;
-  
-  // Adjust timeline based on project size and complexity
-  if (surface < 100) {
-    constructionDuration = 4;
-  } else if (surface < 200) {
-    constructionDuration = 6;
-  } else if (surface < 500) {
-    constructionDuration = 9;
-  } else {
-    constructionDuration = 12;
-  }
-  
-  // Adjust for complexity
-  if (complexityMultiplier > 1.2) {
-    designDuration += 1;
-    permitsDuration += 1;
-    constructionDuration = Math.round(constructionDuration * 1.25);
-  }
-  
-  // Renovation projects typically have shorter durations for permits
-  if (formData.projectType === 'renovation') {
-    permitsDuration = 2;
-  }
-  
-  // Calculate total timeline
-  const totalTimeline = designDuration + permitsDuration + biddingDuration + constructionDuration;
-  
-  // Create and return the estimation response
+  // Create and return the estimation result
   return {
     constructionCosts: {
       structuralWork,
       finishingWork,
       technicalLots,
       externalWorks,
-      total: constructionCost
+      total: structuralWork + finishingWork + technicalLots + externalWorks
     },
     fees: {
-      architect: architectFees,
-      technicalStudies: technicalStudiesFees,
+      architect: architectFee,
+      technicalStudies,
       other: otherFees,
-      total: fees
+      total: architectFee + technicalStudies + otherFees
     },
     otherCosts: {
-      insurance: insuranceCosts,
-      taxes: taxesCosts,
-      contingency: contingencyCosts,
-      total: otherCosts
+      insurance,
+      taxes,
+      contingency,
+      total: insurance + taxes + contingency
     },
-    totalAmount,
+    totalAmount: totalConstructionCost + architectFee + technicalStudies + otherFees + insurance + taxes + contingency,
     timeline: {
-      design: designDuration,
-      permits: permitsDuration,
-      bidding: biddingDuration,
-      construction: constructionDuration,
-      total: totalTimeline
+      design: designMonths,
+      permits: permitsMonths,
+      bidding: biddingMonths,
+      construction: constructionMonths,
+      total: designMonths + permitsMonths + biddingMonths + constructionMonths
     }
   };
-};
-
-// Utility function to ensure we always get a valid estimation object
-export const getSafeEstimation = (estimation: EstimationResponseData | number | null, formData: FormData): EstimationResponseData => {
-  if (estimation === null) {
-    return calculateEstimation(formData);
-  }
-  
-  if (typeof estimation === 'number') {
-    return calculateEstimation(formData);
-  }
-  
-  return estimation;
 };
