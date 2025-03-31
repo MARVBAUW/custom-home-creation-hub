@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, CheckCircle2, AlertTriangle, Lightbulb } from 'lucide-react';
 import { DTU } from './types';
-import { DTUSchemas } from './DTUSchemas';
+import DTUSchemas from './DTUSchemas';
 import { highlightSearchTerm } from './searchUtils';
 
 interface DTUDetailDialogProps {
@@ -29,6 +29,8 @@ export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({
         return <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0" />;
       case 'tip':
         return <Lightbulb className="h-4 w-4 text-blue-500 flex-shrink-0" />;
+      case 'alert':
+        return <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />;
       default:
         return <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0" />;
     }
@@ -62,7 +64,8 @@ export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({
               {dtu.rules.map((rule, index) => (
                 <li key={index} className={`p-4 rounded-md ${
                   rule.type === 'warning' ? 'bg-amber-50' : 
-                  rule.type === 'tip' ? 'bg-blue-50' : 'bg-green-50'
+                  rule.type === 'tip' ? 'bg-blue-50' : 
+                  rule.type === 'alert' ? 'bg-red-50' : 'bg-green-50'
                 }`}>
                   <div className="flex gap-3">
                     {getRuleIcon(rule.type)}
@@ -88,7 +91,7 @@ export const DTUDetailDialog: React.FC<DTUDetailDialogProps> = ({
             </div>
           )}
           
-          {dtu.schemas && <DTUSchemas schemas={dtu.schemas} />}
+          {dtu.schemas && <DTUSchemas schemas={dtu.schemas} searchTerm={searchTerm} />}
         </div>
       </DialogContent>
     </Dialog>
