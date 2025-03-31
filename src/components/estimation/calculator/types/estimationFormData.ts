@@ -48,6 +48,9 @@ export interface EstimationFormData {
   
   // Demolition details
   demolitionType?: string;
+  demolitionTypes?: string[];
+  demolitionPercentages?: { [key: string]: number };
+  demolitionTotalArea?: number | string;
   existingSurface?: number | string;
   surfaceDemo?: number;
   demoCost?: number;
@@ -55,15 +58,24 @@ export interface EstimationFormData {
   // Gros oeuvre
   wallType?: string;
   foundationType?: string;
+  createWalls?: boolean;
+  wallArea?: number | string;
+  createFloors?: boolean;
+  floorType?: string;
+  floorArea?: number | string;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: { [key: string]: number | string };
   
   // Charpente
   roofType?: string;
+  roofArea?: number | string;
   
   // Combles
   atticType?: string;
   
   // Couverture
   roofingType?: string;
+  roofingArea?: number | string;
   
   // Amount calculations
   montantT?: number;
@@ -97,12 +109,22 @@ export interface EstimationFormData {
   
   // Exterior features
   pool?: boolean;
+  poolType?: string;
+  poolArea?: number | string;
+  poolHeating?: string;
   terrace?: boolean;
   outdoorKitchen?: boolean;
+  carportType?: string;
+  jacuzziType?: string;
+  jacuzziArea?: number | string;
   exteriorFeatures?: string[];
   
   // Garden and landscape
   landscapingType?: string;
+  landscapingArea?: number | string;
+  fencingLength?: number | string;
+  gateLength?: number | string;
+  terraceArea?: number | string;
   gardenSurface?: number | string;
   landscapingBudget?: number | string;
   
@@ -172,7 +194,9 @@ export interface EstimationFormData {
   
   // Room types
   bathroomType?: string;
+  bathroomCount?: number | string;
   kitchenType?: string;
+  kitchenCost?: number;
   
   // Additional properties
   basement?: boolean;
@@ -188,10 +212,10 @@ export interface EstimationFormData {
   name?: string;
 }
 
-// Pour la rétrocompatibilité, FormData est un alias d'EstimationFormData
+// For backwards compatibility, FormData is an alias of EstimationFormData
 export type FormData = EstimationFormData;
 
-// Définition de la réponse d'estimation
+// Definition of the estimation response
 export interface EstimationResponseData {
   constructionCosts: {
     structuralWork: number;
@@ -228,7 +252,7 @@ export interface EstimationResponseData {
   categories?: Array<{ category: string; amount: number; details?: string }>;
 }
 
-// Pour FeeCosts qui est utilisé ailleurs
+// For FeeCosts used elsewhere
 export interface FeeCosts {
   architect: number;
   engineeringFees: number;
@@ -237,5 +261,14 @@ export interface FeeCosts {
   inspectionFees: number;
   technicalStudies: number;
   other: number;
+  total: number;
+}
+
+// For Timeline
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
   total: number;
 }
