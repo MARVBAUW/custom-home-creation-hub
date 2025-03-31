@@ -9,28 +9,17 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, ArrowRight, Layers, BarChart } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
 import { calculateRoofingRenovCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/typeConversions';
+import { ensureNumber } from '../utils/montantUtils';
 
 // Schema for the form validation
 const formSchema = z.object({
-  roofingType: z.enum([
-    'TUILE PLATE', 
-    'TUILE RONDE', 
-    'ARDOISE', 
-    'ZINC JOINT DEBOUT', 
-    'TOIT DE CHAUME', 
-    'BAC ACIER', 
-    'ETANCHEITE BITUME (TOITURE PLATE)', 
-    'TOITURE VEGETALISE (TOITURE PLATE)', 
-    'TOITURE GRAVILLONNEE (TOITURE PLATE)', 
-    'NON CONCERNE'
-  ], {
+  roofType: z.enum(['TUILES', 'ARDOISES', 'ZINC', 'BACS ACIER', 'NON CONCERNE'], {
     required_error: "Veuillez sélectionner un type de couverture",
   }),
-  roofingArea: z.string().optional().transform(val => val === '' ? '0' : val),
+  roofArea: z.string().optional().transform(val => val === '' ? '0' : val),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -46,24 +35,24 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      roofingType: formData.roofingType as any || undefined,
-      roofingArea: formData.roofingArea ? String(formData.roofingArea) : '',
+      roofType: formData.roofType as any || undefined,
+      roofArea: formData.roofArea ? String(formData.roofArea) : '',
     },
   });
 
   // Function to handle form submission
   const onSubmit = (values: FormValues) => {
-    // Calculate the cost based on the roofing type and area
-    const roofingCost = calculateRoofingRenovCost(
-      values.roofingType,
-      values.roofingArea
+    // Calculate the cost based on the roof type and area
+    const roofCost = calculateRoofingRenovCost(
+      values.roofType,
+      values.roofArea
     );
     
     // Update form data with values and calculated cost
     updateFormData({
-      roofingType: values.roofingType,
-      roofingArea: values.roofingArea,
-      montantT: (formData.montantT || 0) + roofingCost,
+      roofType: values.roofType,
+      roofArea: values.roofArea,
+      montantT: (formData.montantT || 0) + roofCost,
     });
     
     // Move to next step
@@ -71,36 +60,20 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
   };
 
   // Watch the form values to update cost preview
-  const watchRoofingType = form.watch('roofingType');
-  const watchRoofingArea = form.watch('roofingArea');
+  const watchRoofType = form.watch('roofType');
+  const watchRoofArea = form.watch('roofArea');
 
   // Calculate the estimated cost in real-time
   const estimatedCost = React.useMemo(() => {
-    if (!watchRoofingType || watchRoofingType === 'NON CONCERNE') return 0;
-    return calculateRoofingRenovCost(watchRoofingType, watchRoofingArea);
-  }, [watchRoofingType, watchRoofingArea]);
-
-  // Get the price per m² based on the selected roofing type
-  const getPricePerM2 = (type: string): number => {
-    switch (type) {
-      case 'TUILE PLATE': return 125;
-      case 'TUILE RONDE': return 130;
-      case 'ARDOISE': return 180;
-      case 'ZINC JOINT DEBOUT': return 200;
-      case 'TOIT DE CHAUME': return 250;
-      case 'BAC ACIER': return 115;
-      case 'ETANCHEITE BITUME (TOITURE PLATE)': return 125;
-      case 'TOITURE VEGETALISE (TOITURE PLATE)': return 186;
-      case 'TOITURE GRAVILLONNEE (TOITURE PLATE)': return 145;
-      default: return 0;
-    }
-  };
+    if (!watchRoofType || watchRoofType === 'NON CONCERNE') return 0;
+    return calculateRoofingRenovCost(watchRoofType, watchRoofArea);
+  }, [watchRoofType, watchRoofArea]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-2 text-2xl font-semibold text-primary">
-        <Layers className="h-6 w-6" />
-        <h2>Couverture / Étanchéité (Reprise Rénovation)</h2>
+        <Home className="h-6 w-6" />
+        <h2>Couverture (Rénovation / Reprise)</h2>
       </div>
       
       <Card>
@@ -109,7 +82,7 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="roofingType"
+                name="roofType"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
                     <FormLabel className="text-base">Type de couverture à rénover *</FormLabel>
@@ -117,194 +90,102 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        className="flex flex-col space-y-3"
                       >
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="TUILE PLATE" id="tuile-plate" />
+                        <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <RadioGroupItem value="TUILES" id="tuiles" />
+                          <div className="grid gap-1.5 leading-none">
                             <Label
-                              htmlFor="tuile-plate"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              htmlFor="tuiles"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              Tuile plate
+                              Tuiles
                             </Label>
+                            <div className="mt-2">
+                              <img 
+                                src="https://storage.tally.so/c64da9c0-11bb-441a-aad3-ef7c4c62ac07/tuiles.jpg" 
+                                alt="Tuiles" 
+                                className="h-24 w-auto object-cover rounded-md"
+                              />
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              120 € / m²
+                            </p>
                           </div>
-                          <img 
-                            src="https://storage.tally.so/3faa0ac4-67a3-4bdc-88d7-0cdd0011af19/toiture_dune_maison.jpg" 
-                            alt="Tuile plate" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            125 € / m²
-                          </p>
                         </div>
                         
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="TUILE RONDE" id="tuile-ronde" />
+                        <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <RadioGroupItem value="ARDOISES" id="ardoises" />
+                          <div className="grid gap-1.5 leading-none">
                             <Label
-                              htmlFor="tuile-ronde"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              htmlFor="ardoises"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              Tuile ronde
+                              Ardoises
                             </Label>
+                            <div className="mt-2">
+                              <img 
+                                src="https://storage.tally.so/22e9ed03-c32c-40af-aaec-eb5bf8ec57b5/ardoises.jpg" 
+                                alt="Ardoises" 
+                                className="h-24 w-auto object-cover rounded-md"
+                              />
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              240 € / m²
+                            </p>
                           </div>
-                          <img 
-                            src="https://storage.tally.so/bf4955e0-2e61-44e2-954f-96fb74b88a94/images-3-.jpg" 
-                            alt="Tuile ronde" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            130 € / m²
-                          </p>
                         </div>
                         
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="ARDOISE" id="ardoise" />
-                            <Label
-                              htmlFor="ardoise"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Ardoise
-                            </Label>
-                          </div>
-                          <img 
-                            src="https://storage.tally.so/8149bd44-67ad-46b2-832a-9f7614399bdb/telecharger-5-.jpg" 
-                            alt="Ardoise" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            180 € / m²
-                          </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="ZINC JOINT DEBOUT" id="zinc" />
+                        <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <RadioGroupItem value="ZINC" id="zinc" />
+                          <div className="grid gap-1.5 leading-none">
                             <Label
                               htmlFor="zinc"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              Zinc joint debout
+                              Zinc
                             </Label>
+                            <div className="mt-2">
+                              <img 
+                                src="https://storage.tally.so/8ca09df2-cd04-4db3-9e26-a1d2fb92a0de/zinc.jpg" 
+                                alt="Zinc" 
+                                className="h-24 w-auto object-cover rounded-md"
+                              />
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              180 € / m²
+                            </p>
                           </div>
-                          <img 
-                            src="https://storage.tally.so/a0bc6578-a067-4229-b498-ba3d9000d813/DSCN0270-scaled.jpg" 
-                            alt="Zinc joint debout" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            200 € / m²
-                          </p>
                         </div>
                         
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="TOIT DE CHAUME" id="chaume" />
+                        <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <RadioGroupItem value="BACS ACIER" id="bacsacier" />
+                          <div className="grid gap-1.5 leading-none">
                             <Label
-                              htmlFor="chaume"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              htmlFor="bacsacier"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
-                              Toit de chaume
+                              Bacs acier
                             </Label>
+                            <div className="mt-2">
+                              <img 
+                                src="https://storage.tally.so/dd3acb08-7d2a-45a4-a02c-a0dcbed74fe0/bacs-acier.jpg" 
+                                alt="Bacs acier" 
+                                className="h-24 w-auto object-cover rounded-md"
+                              />
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              110 € / m²
+                            </p>
                           </div>
-                          <img 
-                            src="https://storage.tally.so/12152575-8de9-47c7-b7ec-e2f880a49a3f/toiture_chaume.webp" 
-                            alt="Toit de chaume" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            250 € / m²
-                          </p>
                         </div>
                         
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="BAC ACIER" id="bac-acier" />
-                            <Label
-                              htmlFor="bac-acier"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Bac acier
-                            </Label>
-                          </div>
-                          <img 
-                            src="https://storage.tally.so/6caab145-3ae3-4a26-8e1b-c5aa22293147/bac-acier-toiture.jpg" 
-                            alt="Bac acier" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            115 € / m²
-                          </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="ETANCHEITE BITUME (TOITURE PLATE)" id="bitume" />
-                            <Label
-                              htmlFor="bitume"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Étanchéité bitume (toiture plate)
-                            </Label>
-                          </div>
-                          <img 
-                            src="https://storage.tally.so/7e20cf08-76a7-4734-9a6f-3e3898401825/images-2-.jpg" 
-                            alt="Étanchéité bitume" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            125 € / m²
-                          </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="TOITURE VEGETALISE (TOITURE PLATE)" id="vegetalise" />
-                            <Label
-                              htmlFor="vegetalise"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Toiture végétalisée (toiture plate)
-                            </Label>
-                          </div>
-                          <img 
-                            src="https://storage.tally.so/447602be-4e30-4349-ace1-102bb434bd01/telecharger-4-.jpg" 
-                            alt="Toiture végétalisée" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            186 € / m²
-                          </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="TOITURE GRAVILLONNEE (TOITURE PLATE)" id="gravillonnee" />
-                            <Label
-                              htmlFor="gravillonnee"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              Toiture gravillonnée (toiture plate)
-                            </Label>
-                          </div>
-                          <img 
-                            src="https://storage.tally.so/e89b21f9-1a52-4ee2-9ec2-7016ff0db2c1/telecharger-3-.jpg" 
-                            alt="Toiture gravillonnée" 
-                            className="h-32 w-full object-cover rounded-md"
-                          />
-                          <p className="text-sm text-muted-foreground">
-                            145 € / m²
-                          </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-start space-y-2 rounded-md border p-4">
-                          <div className="flex items-center w-full">
-                            <RadioGroupItem value="NON CONCERNE" id="non-concerne" />
+                        <div className="flex items-start space-x-3 space-y-0 rounded-md border p-4">
+                          <RadioGroupItem value="NON CONCERNE" id="non-concerne" />
+                          <div className="grid gap-1.5 leading-none">
                             <Label
                               htmlFor="non-concerne"
-                              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             >
                               Non concerné
                             </Label>
@@ -317,10 +198,10 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
                 )}
               />
               
-              {watchRoofingType && watchRoofingType !== 'NON CONCERNE' && (
+              {watchRoofType && watchRoofType !== 'NON CONCERNE' && (
                 <FormField
                   control={form.control}
-                  name="roofingArea"
+                  name="roofArea"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Surface à rénover en m² *</FormLabel>
@@ -331,7 +212,7 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
-                            form.trigger('roofingArea');
+                            form.trigger('roofArea');
                           }}
                         />
                       </FormControl>
@@ -341,17 +222,17 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
                 />
               )}
               
-              {watchRoofingType && watchRoofingType !== 'NON CONCERNE' && watchRoofingArea && Number(watchRoofingArea) > 0 && (
+              {watchRoofType && watchRoofType !== 'NON CONCERNE' && watchRoofArea && Number(watchRoofArea) > 0 && (
                 <div className="rounded-md bg-slate-50 p-4 mt-4">
                   <div className="flex items-center">
-                    <BarChart className="h-5 w-5 mr-2 text-amber-600" />
+                    <Home className="h-5 w-5 mr-2 text-amber-600" />
                     <span className="font-medium">Coût estimé: </span>
                     <span className="ml-2">
                       {estimatedCost.toLocaleString()} €
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Ce montant correspond à la rénovation de {ensureNumber(watchRoofingArea, 0)} m² de {watchRoofingType.toLowerCase()} à {getPricePerM2(watchRoofingType)} € / m²
+                    Ce montant correspond à la rénovation de {ensureNumber(watchRoofArea)} m² de couverture en {watchRoofType.toLowerCase()}
                   </p>
                 </div>
               )}

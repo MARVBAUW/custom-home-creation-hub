@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
 import { calculateRoofFrameworkRenovCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/typeConversions';
+import { ensureNumber } from '../utils/montantUtils';
 
 // Schema for the form validation
 const formSchema = z.object({
@@ -232,7 +232,7 @@ const CharpenteRenovForm: React.FC<BaseFormProps> = ({
                     </span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Ce montant correspond à la rénovation de {ensureNumber(watchRoofArea, 0)} m² de {watchRoofType.toLowerCase()}
+                    Ce montant correspond à la rénovation de {ensureNumber(watchRoofArea)} m² de {watchRoofType.toLowerCase()}
                   </p>
                 </div>
               )}

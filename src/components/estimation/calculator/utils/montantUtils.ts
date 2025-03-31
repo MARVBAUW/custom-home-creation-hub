@@ -75,7 +75,7 @@ export const calculateFacadeCost = (
 // Calculate windows cost
 export const calculateWindowsCost = (
   formData: FormData,
-  windowType: string,
+  windowType: string = 'standard', 
   renovationArea: number | string = 0,
   newArea: number | string = 0
 ): number => {
@@ -203,7 +203,7 @@ export const calculateRoofFrameworkCost = (formData: FormData, type: string): nu
   return surface * 0.7 * baseCost; // Assume roof area is 70% of floor area
 };
 
-export const calculateRoofFrameworkRenovCost = (formData: FormData, type: string, area: number | string): number => {
+export const calculateRoofFrameworkRenovCost = (type: string, area: number | string): number => {
   const roofArea = typeof area === 'string' ? parseFloat(area) : area;
   let baseCost = 150; // cost per m² for renovation
   
@@ -218,7 +218,7 @@ export const calculateRoofFrameworkRenovCost = (formData: FormData, type: string
   return roofArea * baseCost;
 };
 
-export const calculateRoofingRenovCost = (formData: FormData, type: string, area: number | string): number => {
+export const calculateRoofingRenovCost = (type: string, area: number | string): number => {
   const roofingArea = typeof area === 'string' ? parseFloat(area) : area;
   let baseCost = 120; // cost per m² for renovation
   
@@ -424,6 +424,48 @@ export const calculatePoolCost = (type: string, area: number = 0): number => {
   return area * baseCost;
 };
 
+export const calculatePoolHeatingCost = (type: string, area: number = 0): number => {
+  let baseCost = 200; // cost per m²
+  
+  if (type === 'premium') {
+    baseCost = 350;
+  } else if (type === 'solar') {
+    baseCost = 300;
+  } else if (type === 'standard') {
+    baseCost = 200;
+  }
+  
+  return area * baseCost;
+};
+
+export const calculateJacuzziCost = (type: string, area: number = 0): number => {
+  let baseCost = 5000; // base cost
+  
+  if (type === 'premium') {
+    baseCost = 8000;
+  } else if (type === 'luxury') {
+    baseCost = 12000;
+  } else if (type === 'standard') {
+    baseCost = 5000;
+  }
+  
+  return baseCost + (area * 500); // Additional cost based on size
+};
+
+export const calculateCarportCost = (type: string, area: number = 0): number => {
+  let baseCost = 300; // cost per m²
+  
+  if (type === 'premium') {
+    baseCost = 450;
+  } else if (type === 'standard') {
+    baseCost = 300;
+  } else if (type === 'economic') {
+    baseCost = 200;
+  }
+  
+  return area * baseCost;
+};
+
 export const calculateDemolitionCost = (types: string[], area: number = 0): number => {
   let baseCost = 80; // cost per m²
   
@@ -451,6 +493,12 @@ export const calculateLandscapingCost = (type: string, area: number = 0): number
     baseCost = 200;
   } else if (type === 'standard') {
     baseCost = 50;
+  } else if (type === 'UN PEU') {
+    baseCost = 70;
+  } else if (type === 'BEAUCOUP') {
+    baseCost = 120;
+  } else if (type === 'PASSIONNEMENT') {
+    baseCost = 180;
   }
   
   return area * baseCost;
@@ -542,3 +590,6 @@ export const calculateStructuralFeatureCost = (features: string[]): number => {
   
   return totalCost;
 };
+
+// Add window cost calculation alias for compatibility
+export const calculateWindowCost = calculateWindowsCost;

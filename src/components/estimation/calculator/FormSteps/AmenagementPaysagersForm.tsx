@@ -12,7 +12,7 @@ import {
   calculateTerraceCost,
   ensureNumber 
 } from '../utils/montantUtils';
-import { Tree, Fence, Gate, Footprints } from 'lucide-react';
+import { Trees, Fence, GalleryVertical, Footprints } from 'lucide-react';
 
 const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
   formData,
@@ -28,16 +28,16 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
 
   // Initialize state for area values
   const [landscapingArea, setLandscapingArea] = useState<string>(
-    formData.landscapingArea || ''
+    formData.landscapingArea ? String(formData.landscapingArea) : ''
   );
   const [fencingLength, setFencingLength] = useState<string>(
-    formData.fencingLength || ''
+    formData.fencingLength ? String(formData.fencingLength) : ''
   );
   const [gateLength, setGateLength] = useState<string>(
-    formData.gateLength || ''
+    formData.gateLength ? String(formData.gateLength) : ''
   );
   const [terraceArea, setTerraceArea] = useState<string>(
-    formData.terraceArea || ''
+    formData.terraceArea ? String(formData.terraceArea) : ''
   );
 
   // Determine what fields to show based on selections
@@ -153,7 +153,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
               onClick={() => toggleLandscapingType('UN PEU')}
             >
               <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                <Tree className="h-8 w-8 text-green-500" />
+                <Trees className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="font-medium">Un peu</p>
                   <p className="text-xs text-gray-500">Quelques plantations et aménagements basiques</p>
@@ -171,7 +171,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
               onClick={() => toggleLandscapingType('BEAUCOUP')}
             >
               <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                <Tree className="h-8 w-8 text-green-500" />
+                <Trees className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="font-medium">Beaucoup</p>
                   <p className="text-xs text-gray-500">Aménagement paysager élaboré</p>
@@ -189,7 +189,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
               onClick={() => toggleLandscapingType('PASSIONNEMENT')}
             >
               <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                <Tree className="h-8 w-8 text-green-500" />
+                <Trees className="h-8 w-8 text-green-500" />
                 <div>
                   <p className="font-medium">Passionnément</p>
                   <p className="text-xs text-gray-500">Aménagement paysager haut de gamme</p>
@@ -207,7 +207,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
               onClick={() => toggleLandscapingType('PAS DU TOUT')}
             >
               <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                <Tree className="h-8 w-8 text-gray-400" />
+                <Trees className="h-8 w-8 text-gray-400" />
                 <div>
                   <p className="font-medium">Pas du tout</p>
                   <p className="text-xs text-gray-500">Aucun aménagement paysager</p>
@@ -245,7 +245,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
               onClick={() => toggleLandscapingType('PORTAIL')}
             >
               <CardContent className="pt-4 pb-4 flex items-center space-x-4">
-                <Gate className="h-8 w-8 text-brown-500" />
+                <GalleryVertical className="h-8 w-8 text-brown-500" />
                 <div>
                   <p className="font-medium">Portail</p>
                   <p className="text-xs text-gray-500">Installation d'un portail</p>
@@ -266,7 +266,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
                 <Footprints className="h-8 w-8 text-brown-500" />
                 <div>
                   <p className="font-medium">Terrasse</p>
-                  <p className="text-xs text-gray-500">Création d'une terrasse</p>
+                  <p className="text-xs text-gray-500">Construction d'une terrasse</p>
                 </div>
                 <Checkbox 
                   checked={landscapingTypes.includes('TERRASSE')}
@@ -277,10 +277,9 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
             </Card>
           </div>
           
-          {/* Conditionally show area inputs based on selections */}
           {(showLittleArea || showMuchArea || showPassionatelyArea) && (
-            <div className="mt-4">
-              <Label htmlFor="landscapingArea">Surface de l'aménagement paysager (m²)</Label>
+            <div className="pt-4">
+              <Label htmlFor="landscapingArea">Surface d'aménagement paysager (m²)</Label>
               <Input
                 id="landscapingArea"
                 type="number"
@@ -288,41 +287,44 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
                 onChange={(e) => setLandscapingArea(e.target.value)}
                 placeholder="Surface en m²"
                 className="mt-1"
+                min="0"
               />
             </div>
           )}
           
           {showFencingLength && (
-            <div className="mt-4">
-              <Label htmlFor="fencingLength">Longueur de la clôture (ml)</Label>
+            <div className="pt-4">
+              <Label htmlFor="fencingLength">Longueur de clôture (m)</Label>
               <Input
                 id="fencingLength"
                 type="number"
                 value={fencingLength}
                 onChange={(e) => setFencingLength(e.target.value)}
-                placeholder="Longueur en mètres linéaires"
+                placeholder="Longueur en m"
                 className="mt-1"
+                min="0"
               />
             </div>
           )}
           
           {showGateLength && (
-            <div className="mt-4">
-              <Label htmlFor="gateLength">Longueur du portail (ml)</Label>
+            <div className="pt-4">
+              <Label htmlFor="gateLength">Largeur du portail (m)</Label>
               <Input
                 id="gateLength"
                 type="number"
                 value={gateLength}
                 onChange={(e) => setGateLength(e.target.value)}
-                placeholder="Longueur en mètres linéaires"
+                placeholder="Largeur en m"
                 className="mt-1"
+                min="0"
               />
             </div>
           )}
           
           {showTerraceArea && (
-            <div className="mt-4">
-              <Label htmlFor="terraceArea">Surface de la terrasse (m²)</Label>
+            <div className="pt-4">
+              <Label htmlFor="terraceArea">Surface de terrasse (m²)</Label>
               <Input
                 id="terraceArea"
                 type="number"
@@ -330,6 +332,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
                 onChange={(e) => setTerraceArea(e.target.value)}
                 placeholder="Surface en m²"
                 className="mt-1"
+                min="0"
               />
             </div>
           )}
@@ -339,19 +342,10 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
           <Button variant="outline" onClick={goToPreviousStep}>
             Précédent
           </Button>
-          <Button 
-            onClick={handleSubmit}
-            disabled={!isValid()}
-          >
+          <Button onClick={handleSubmit} disabled={!isValid()}>
             Continuer
           </Button>
         </div>
-        
-        {formData.montantT && (
-          <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
-          </div>
-        )}
       </div>
     </div>
   );
