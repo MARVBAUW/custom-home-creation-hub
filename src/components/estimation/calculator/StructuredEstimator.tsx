@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -63,28 +64,33 @@ const StructuredEstimator = () => {
   
   const { methods } = useEstimationForm();
   
+  // Calculate values for categories based on estimation result
+  const calculateCategoryAmount = (percentage: number): number => {
+    return estimationResult ? Number(estimationResult.totalAmount) * percentage : 0;
+  };
+  
   // Simuler des catégories d'estimation basées sur les données du formulaire
   const categoriesAmounts = [
-    { category: 'Terrassement', amount: estimationResult ? estimationResult * 0.05 : 0 },
-    { category: 'Fondations', amount: estimationResult ? estimationResult * 0.08 : 0 },
-    { category: 'Élévation des murs', amount: estimationResult ? estimationResult * 0.12 : 0 },
-    { category: 'Charpente', amount: estimationResult ? estimationResult * 0.1 : 0 },
-    { category: 'Couverture', amount: estimationResult ? estimationResult * 0.08 : 0 },
-    { category: 'Menuiseries extérieures', amount: estimationResult ? estimationResult * 0.07 : 0 },
-    { category: 'Isolation', amount: estimationResult ? estimationResult * 0.06 : 0 },
-    { category: 'Plomberie', amount: estimationResult ? estimationResult * 0.05 : 0 },
-    { category: 'Électricité', amount: estimationResult ? estimationResult * 0.05 : 0 },
-    { category: 'Chauffage', amount: estimationResult ? estimationResult * 0.06 : 0 },
-    { category: 'Revêtements de sol', amount: estimationResult ? estimationResult * 0.06 : 0 },
-    { category: 'Revêtements muraux', amount: estimationResult ? estimationResult * 0.04 : 0 },
-    { category: 'Peinture', amount: estimationResult ? estimationResult * 0.03 : 0 },
-    { category: 'Aménagements extérieurs', amount: estimationResult ? estimationResult * 0.05 : 0 },
-    { category: 'Frais annexes', amount: estimationResult ? estimationResult * 0.03 : 0 },
-    { category: 'Honoraires architecte', amount: estimationResult ? estimationResult * 0.03 : 0 },
-    { category: 'Taxe aménagement', amount: estimationResult ? estimationResult * 0.02 : 0 },
-    { category: 'Études géotechniques', amount: estimationResult ? estimationResult * 0.01 : 0 },
-    { category: 'Étude thermique', amount: estimationResult ? estimationResult * 0.01 : 0 },
-    { category: 'Garantie décennale', amount: estimationResult ? estimationResult * 0.01 : 0 },
+    { category: 'Terrassement', amount: calculateCategoryAmount(0.05) },
+    { category: 'Fondations', amount: calculateCategoryAmount(0.08) },
+    { category: 'Élévation des murs', amount: calculateCategoryAmount(0.12) },
+    { category: 'Charpente', amount: calculateCategoryAmount(0.1) },
+    { category: 'Couverture', amount: calculateCategoryAmount(0.08) },
+    { category: 'Menuiseries extérieures', amount: calculateCategoryAmount(0.07) },
+    { category: 'Isolation', amount: calculateCategoryAmount(0.06) },
+    { category: 'Plomberie', amount: calculateCategoryAmount(0.05) },
+    { category: 'Électricité', amount: calculateCategoryAmount(0.05) },
+    { category: 'Chauffage', amount: calculateCategoryAmount(0.06) },
+    { category: 'Revêtements de sol', amount: calculateCategoryAmount(0.06) },
+    { category: 'Revêtements muraux', amount: calculateCategoryAmount(0.04) },
+    { category: 'Peinture', amount: calculateCategoryAmount(0.03) },
+    { category: 'Aménagements extérieurs', amount: calculateCategoryAmount(0.05) },
+    { category: 'Frais annexes', amount: calculateCategoryAmount(0.03) },
+    { category: 'Honoraires architecte', amount: calculateCategoryAmount(0.03) },
+    { category: 'Taxe aménagement', amount: calculateCategoryAmount(0.02) },
+    { category: 'Études géotechniques', amount: calculateCategoryAmount(0.01) },
+    { category: 'Étude thermique', amount: calculateCategoryAmount(0.01) },
+    { category: 'Garantie décennale', amount: calculateCategoryAmount(0.01) },
   ];
   
   // Gérer le changement d'étape en fonction du corps d'état actuel
@@ -333,16 +339,16 @@ const StructuredEstimator = () => {
               <div ref={printRef}>
                 <EstimationReport 
                   estimation={{
-                    totalHT: estimationResult || 0,
-                    totalTTC: (estimationResult || 0) * 1.2,
-                    vat: (estimationResult || 0) * 0.2,
-                    coutGlobalHT: (estimationResult || 0) * 1.15,
-                    coutGlobalTTC: (estimationResult || 0) * 1.15 * 1.2,
-                    honorairesHT: (estimationResult || 0) * 0.1,
-                    taxeAmenagement: (estimationResult || 0) * 0.03,
-                    garantieDecennale: (estimationResult || 0) * 0.01,
-                    etudesGeotechniques: (estimationResult || 0) * 0.005,
-                    etudeThermique: (estimationResult || 0) * 0.005,
+                    totalHT: estimationResult.totalAmount || 0,
+                    totalTTC: (estimationResult.totalAmount || 0) * 1.2,
+                    vat: (estimationResult.totalAmount || 0) * 0.2,
+                    coutGlobalHT: (estimationResult.totalAmount || 0) * 1.15,
+                    coutGlobalTTC: (estimationResult.totalAmount || 0) * 1.15 * 1.2,
+                    honorairesHT: (estimationResult.totalAmount || 0) * 0.1,
+                    taxeAmenagement: (estimationResult.totalAmount || 0) * 0.03,
+                    garantieDecennale: (estimationResult.totalAmount || 0) * 0.01,
+                    etudesGeotechniques: (estimationResult.totalAmount || 0) * 0.005,
+                    etudeThermique: (estimationResult.totalAmount || 0) * 0.005,
                     corpsEtat: categoriesAmounts.reduce((acc, cat) => ({
                       ...acc,
                       [cat.category]: {
@@ -363,7 +369,7 @@ const StructuredEstimator = () => {
             <TabsContent value="summary" className="mt-0">
               <EstimationSummaryReport 
                 formData={formData}
-                estimationResult={estimationResult}
+                estimationResult={estimationResult.totalAmount}
                 categoriesAmounts={categoriesAmounts}
               />
             </TabsContent>
@@ -371,7 +377,7 @@ const StructuredEstimator = () => {
             <TabsContent value="quote" className="mt-0">
               <ProfessionalQuoteReport 
                 formData={formData}
-                estimationResult={estimationResult}
+                estimationResult={estimationResult.totalAmount}
                 onPrint={handlePrint}
               />
             </TabsContent>

@@ -1,98 +1,198 @@
 
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import StepRenderer from './StepRenderer';
-import FormNavigation from './FormNavigation';
-import { FormData, EstimationResponseData } from '../types';
-import { useEstimationCalculator } from '../hooks/useEstimationCalculator';
-import EstimationResult from '../EstimationResult';
-import { calculateEstimation } from '../calculationUtils';
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
+import { StepRendererProps, FormNavigationProps } from '../types/formTypes';
+import { FormData } from '../types';
 
-interface CalculatorLayoutProps {
-  currentStep: number;
-  totalSteps: number;
-  onNextStep: () => void;
-  onPrevStep: () => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  isSubmitting: boolean;
-  goToStep: (step: number) => void;
-}
-
-const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
-  currentStep,
+// Step Renderer Component
+const StepRenderer: React.FC<StepRendererProps> = ({
+  step,
   totalSteps,
-  onNextStep,
-  onPrevStep,
   formData,
   updateFormData,
+  goToNextStep,
+  goToPreviousStep,
   isSubmitting,
   goToStep,
+  onComplete
 }) => {
-  const [showResultDialog, setShowResultDialog] = useState(false);
-  const { estimationResult } = useEstimationCalculator(formData);
-  const progress = Math.round((currentStep / totalSteps) * 100);
+  // Render different step components based on the current step
+  switch (step) {
+    case 1:
+      return (
+        <div className="step-container">
+          <h2>Step 1: Client Information</h2>
+          {/* Client information form fields here */}
+        </div>
+      );
+    case 2:
+      return (
+        <div className="step-container">
+          <h2>Step 2: Project Details</h2>
+          {/* Project details form fields here */}
+        </div>
+      );
+    // Add cases for additional steps
+    case totalSteps:
+      return (
+        <div className="step-container">
+          <h2>Review and Submit</h2>
+          {/* Final review step */}
+          <Button onClick={onComplete} disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit Estimation'}
+          </Button>
+        </div>
+      );
+    default:
+      return (
+        <div className="step-container">
+          <h2>Step {step}</h2>
+          <p>Content for step {step}</p>
+        </div>
+      );
+  }
+};
 
-  // Handler for when the form is completely filled out
-  const handleComplete = () => {
-    const sampleEstimation = calculateEstimation(formData);
-    setShowResultDialog(true);
-  };
+// Form Navigation Component
+const FormNavigation: React.FC<FormNavigationProps> = ({
+  step,
+  totalSteps,
+  onPreviousClick,
+  onNextClick,
+  onShowSummaryClick,
+  showSummary,
+  estimationResult,
+  currentStep,
+  onPrevStep,
+  onNextStep,
+  isSubmitting,
+  isComplete,
+  onComplete
+}) => {
+  // Use the appropriate previous and next handlers
+  const handlePrevious = onPreviousClick || onPrevStep;
+  const handleNext = onNextClick || onNextStep;
+  const stepToUse = step !== undefined ? step : (currentStep !== undefined ? currentStep : 1);
+  const isLastStep = stepToUse === totalSteps;
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
-      <div className="mb-6">
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div
-            className="bg-gradient-to-r from-khaki-500 to-khaki-600 h-2.5 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
-        <div className="text-right text-xs text-gray-500 mt-1">
-          Étape {currentStep} sur {totalSteps}
-        </div>
-      </div>
-
-      <div className="min-h-[300px]">
-        <StepRenderer
-          step={currentStep}
-          formData={formData}
-          updateFormData={updateFormData}
-          goToNextStep={onNextStep}
-          goToPreviousStep={onPrevStep}
-          isSubmitting={isSubmitting}
-          goToStep={goToStep}
-          onComplete={handleComplete}
-        />
-      </div>
-
-      <FormNavigation
-        currentStep={currentStep}
-        totalSteps={totalSteps}
-        onPrevStep={onPrevStep}
-        onNextStep={onNextStep}
-        isSubmitting={isSubmitting}
-        isComplete={currentStep === totalSteps}
-        onComplete={handleComplete}
-      />
-
-      <Dialog open={showResultDialog} onOpenChange={setShowResultDialog}>
-        <DialogContent className="sm:max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-semibold">Estimation de votre projet</DialogTitle>
-          </DialogHeader>
-          <EstimationResult
-            estimation={calculateEstimation(formData)}
-            formData={formData}
-          />
-          <div className="mt-4 flex justify-end">
-            <Button onClick={() => setShowResultDialog(false)}>Fermer</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+    <div className="flex justify-between mt-6">
+      {stepToUse > 1 && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handlePrevious}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeftIcon className="w-4 h-4" />
+          Précédent
+        </Button>
+      )}
+      
+      {!isLastStep ? (
+        <Button
+          type="button"
+          onClick={handleNext}
+          className="flex items-center gap-2 ml-auto"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Traitement...' : 'Suivant'}
+          <ArrowRightIcon className="w-4 h-4" />
+        </Button>
+      ) : (
+        <Button
+          type="button"
+          onClick={onComplete}
+          className="flex items-center gap-2 ml-auto"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Traitement...' : 'Finaliser'}
+          <CheckIcon className="w-4 h-4" />
+        </Button>
+      )}
+      
+      {estimationResult && showSummary === false && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onShowSummaryClick}
+          className="ml-2"
+        >
+          Voir le résumé
+        </Button>
+      )}
     </div>
   );
 };
 
-export default CalculatorLayout;
+// Calculator Layout Component
+const CalculatorLayout: React.FC<{
+  step: number;
+  totalSteps: number;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  isSubmitting: boolean;
+  goToStep: (step: number) => void;
+  onComplete: () => void;
+}> = ({
+  step,
+  totalSteps,
+  formData,
+  updateFormData,
+  goToNextStep,
+  goToPreviousStep,
+  isSubmitting,
+  goToStep,
+  onComplete
+}) => {
+  const progress = ((step) / totalSteps) * 100;
+  
+  return (
+    <Card className="w-full">
+      <CardContent className="p-6">
+        {/* Progress bar */}
+        <div className="w-full h-2 bg-gray-200 rounded-full mb-6">
+          <div
+            className="h-2 bg-blue-500 rounded-full"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        
+        {/* Step indicator */}
+        <div className="text-sm text-gray-500 mb-4">
+          Étape {step} sur {totalSteps}
+        </div>
+        
+        {/* Step content */}
+        <StepRenderer
+          step={step}
+          totalSteps={totalSteps}
+          formData={formData}
+          updateFormData={updateFormData}
+          goToNextStep={goToNextStep}
+          goToPreviousStep={goToPreviousStep}
+          isSubmitting={isSubmitting}
+          goToStep={goToStep}
+          onComplete={onComplete}
+        />
+        
+        {/* Navigation buttons */}
+        <FormNavigation
+          currentStep={step}
+          totalSteps={totalSteps}
+          onPrevStep={goToPreviousStep}
+          onNextStep={goToNextStep}
+          isSubmitting={isSubmitting}
+          isComplete={step === totalSteps}
+          onComplete={onComplete}
+        />
+      </CardContent>
+    </Card>
+  );
+};
+
+export { CalculatorLayout, StepRenderer, FormNavigation };

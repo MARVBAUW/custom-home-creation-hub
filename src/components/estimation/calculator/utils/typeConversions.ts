@@ -1,41 +1,65 @@
 
 /**
- * Convert any value to a form-friendly value
+ * Ensures a value is converted to a number.
+ * If the conversion fails, returns 0 or the provided defaultValue.
+ * 
+ * @param value - The value to convert to a number
+ * @param defaultValue - Optional default value to return if conversion fails
+ * @returns A number representation of the value or the default
  */
-export const toFormValue = (value: any): string => {
-  if (value === undefined || value === null) {
-    return '';
-  }
-  return String(value);
-};
-
-/**
- * Convert a string value to a number if possible, otherwise return the original value
- */
-export const toNumber = (value: string): number | string => {
-  const parsed = parseFloat(value);
-  return isNaN(parsed) ? value : parsed;
-};
-
-/**
- * Convert a string representation of a boolean to an actual boolean
- */
-export const toBoolean = (value: string | boolean): boolean => {
-  if (typeof value === 'boolean') return value;
-  return value === 'true' || value === '1' || value === 'yes';
-};
-
-/**
- * Ensure a value is a number, converting from string if necessary
- * @param value - The value to convert
- * @param defaultValue - Default value if conversion fails
- * @returns A number
- */
-export const ensureNumber = (value: any, defaultValue = 0): number => {
+export const ensureNumber = (value: string | number | undefined, defaultValue: number = 0): number => {
   if (value === undefined || value === null || value === '') {
     return defaultValue;
   }
   
-  const parsed = parseFloat(value);
-  return isNaN(parsed) ? defaultValue : parsed;
+  // If it's already a number, return it
+  if (typeof value === 'number') {
+    return isNaN(value) ? defaultValue : value;
+  }
+  
+  // Try to convert string to number
+  const num = Number(value);
+  return isNaN(num) ? defaultValue : num;
+};
+
+/**
+ * Ensures a value is converted to a string.
+ * 
+ * @param value - The value to convert to a string
+ * @param defaultValue - Optional default value to return if conversion fails
+ * @returns A string representation of the value or the default
+ */
+export const ensureString = (value: any, defaultValue: string = ''): string => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  return String(value);
+};
+
+/**
+ * Ensures a value is converted to a boolean.
+ * 
+ * @param value - The value to convert to a boolean
+ * @param defaultValue - Optional default value to return if conversion fails
+ * @returns A boolean representation of the value or the default
+ */
+export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true' || value === '1';
+  }
+  
+  if (typeof value === 'number') {
+    return value === 1;
+  }
+  
+  return Boolean(value);
 };

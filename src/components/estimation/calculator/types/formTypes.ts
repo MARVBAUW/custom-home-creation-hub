@@ -11,6 +11,7 @@ export interface BaseFormProps {
   onSubmit?: (data: any) => void;
   isLoading?: boolean;
   estimationResult?: number | EstimationResponseData;
+  categoriesAmounts?: { category: string; amount: number }[];
 }
 
 export interface ClientTypeStepProps {
@@ -111,11 +112,17 @@ export interface StepRendererProps {
 }
 
 export interface FormNavigationProps {
-  currentStep: number;
+  step: number;
   totalSteps: number;
-  onPrevStep: () => void;
-  onNextStep: () => void;
-  isSubmitting: boolean;
-  isComplete: boolean;
-  onComplete: () => void;
+  estimationResult?: number;
+  showSummary?: boolean;
+  onPreviousClick?: () => void;
+  onNextClick?: () => void;
+  onShowSummaryClick?: () => void;
+  currentStep?: number;
+  onPrevStep?: () => void;
+  onNextStep?: () => void;
+  isSubmitting?: boolean;
+  isComplete?: boolean;
+  onComplete?: () => void;
 }

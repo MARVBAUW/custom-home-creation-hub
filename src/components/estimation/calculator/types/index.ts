@@ -19,6 +19,7 @@ export interface FormData {
   // Construction Details
   surface?: number | string;
   levels?: number | string;
+  storyCount?: string;
   units?: number | string;
   constructionType?: string;
   constructionStyle?: string;
@@ -27,7 +28,6 @@ export interface FormData {
   terrainType?: string;
   terrainSurface?: number | string;
   terrainAccess?: string;
-  storyCount?: string; // Added missing property
   
   // Rooms & Layout
   roomCount?: number | string;
@@ -154,6 +154,10 @@ export interface FormData {
   // Construction processes
   demolitionType?: string;
   existingSurface?: number | string;
+  
+  // Complexity
+  complexity?: string;
+  qualityStandard?: string;
   
   // Any additional custom fields
   [key: string]: any;
