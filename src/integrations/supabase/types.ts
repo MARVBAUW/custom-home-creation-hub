@@ -23,6 +23,7 @@ export type Database = {
           project_type: string
           status: string | null
           surface: number | null
+          timeline: Json | null
           updated_at: string | null
         }
         Insert: {
@@ -38,6 +39,7 @@ export type Database = {
           project_type: string
           status?: string | null
           surface?: number | null
+          timeline?: Json | null
           updated_at?: string | null
         }
         Update: {
@@ -53,6 +55,7 @@ export type Database = {
           project_type?: string
           status?: string | null
           surface?: number | null
+          timeline?: Json | null
           updated_at?: string | null
         }
         Relationships: [
@@ -161,6 +164,7 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          role: string | null
           updated_at: string | null
           username: string | null
         }
@@ -172,6 +176,7 @@ export type Database = {
           full_name?: string | null
           id: string
           phone?: string | null
+          role?: string | null
           updated_at?: string | null
           username?: string | null
         }
@@ -183,8 +188,92 @@ export type Database = {
           full_name?: string | null
           id?: string
           phone?: string | null
+          role?: string | null
           updated_at?: string | null
           username?: string | null
+        }
+        Relationships: []
+      }
+      project_phases: {
+        Row: {
+          color: string | null
+          completed: boolean
+          created_at: string
+          end_date: string | null
+          id: string
+          notes: string | null
+          order_index: number
+          project_id: string | null
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          completed?: boolean
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          order_index: number
+          project_id?: string | null
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          completed?: boolean
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          order_index?: number
+          project_id?: string | null
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_phases_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "admin_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_simulations: {
+        Row: {
+          content: Json
+          created_at: string
+          id: string
+          is_temporary: boolean
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: Json
+          created_at?: string
+          id?: string
+          is_temporary?: boolean
+          title: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: Json
+          created_at?: string
+          id?: string
+          is_temporary?: boolean
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

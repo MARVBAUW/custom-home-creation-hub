@@ -1,315 +1,192 @@
 
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Calendar, FileText, UserPlus, DollarSign, ChevronLeft, 
-  PenSquare, ClipboardList, User, Building, MapPin, Clock
-} from "lucide-react";
-
+import { Building, Calendar, Users, FileText, Settings } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import ProjectTools from './ProjectTools';
-import { CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import ProjectGeneralForm from '../forms/ProjectGeneralForm';
-import ProjectPhaseForm from '../forms/ProjectPhaseForm';
-import ProjectDateForm from '../forms/ProjectDateForm';
-import ProjectTeamForm from '../forms/ProjectTeamForm';
-import ProjectExecutionForm from '../forms/ProjectExecutionForm';
-import ProjectTechnicalForm from '../forms/ProjectTechnicalForm';
-
-// Mock project data for demonstration
-const mockProject = {
-  id: "1",
-  projectName: "Villa Méditerranée",
-  fileNumber: "PRJ-2023-001",
-  clientName: "Jean Dupont",
-  clientEmail: "jean.dupont@example.com",
-  clientPhone: "06 12 34 56 78",
-  clientAssigned: true,
-  createdAt: "2023-06-15",
-  projectType: "residential",
-  location: "Marseille, PACA",
-  workAmount: "450000",
-  budget: "450 000 €",
-  status: "active",
-  progress: 65,
-  projectOwner: "SCI Les Oliviers",
-  adminAuthorization: "building_permit",
-  phases: {
-    feasibility: true,
-    dce: true,
-    act: true,
-    exe: true,
-    reception: false,
-    delivery: false
-  },
-  dates: {
-    global: {
-      startDate: "2023-06-20",
-      endDate: "2024-05-15"
-    },
-    feasibility: {
-      startDate: "2023-06-20",
-      endDate: "2023-07-20"
-    },
-    dce: {
-      startDate: "2023-07-25",
-      endDate: "2023-09-10"
-    },
-    act: {
-      startDate: "2023-09-15",
-      endDate: "2023-10-15"
-    },
-    exe: {
-      startDate: "2023-10-20",
-      endDate: "2024-04-20"
-    }
-  },
-  team: {
-    projectManager: "Sophie Martin",
-    technicalDirector: "Philippe Durand",
-    draftsman: "Lucas Bernard",
-    workSupervisor: "Emma Dubois"
-  }
-};
+import ProjectPhases from './ProjectPhases';
 
 const ProjectDetail = () => {
   const { projectId } = useParams<{ projectId: string }>();
-  const [activeTab, setActiveTab] = useState("general");
-  
-  // In a real app, fetch project details based on projectId
-  const project = mockProject;
-  
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
+  const { toast } = useToast();
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (projectId) {
+      loadProject();
+    }
+  }, [projectId]);
+
+  const loadProject = async () => {
+    setLoading(true);
+    try {
+      // Charger les détails du projet depuis Supabase
+      const { data, error } = await supabase
+        .from('admin_projects')
+        .select(`
+          *,
+          profiles(*)
+        `)
+        .eq('id', projectId)
+        .single();
+      
+      if (error) {
+        throw error;
+      }
+      
+      setProject(data);
+    } catch (error) {
+      console.error('Erreur lors du chargement du projet:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Impossible de charger les détails du projet.',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+      </div>
+    );
+  }
+
+  if (!project) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <div className="text-center py-8">
+            <h3 className="text-xl font-medium text-gray-900 mb-2">Projet non trouvé</h3>
+            <p className="text-gray-500">
+              Le projet demandé n'existe pas ou vous n'avez pas les permissions nécessaires pour y accéder.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between gap-4 items-start md:items-center">
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" size="sm" asChild className="h-9">
-            <Link to="/workspace/client-area/admin/projects">
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Retour
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-semibold text-gray-900">{project.projectName}</h1>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <FileText className="h-4 w-4" />
-              <span>{project.fileNumber}</span>
-              <Badge className="bg-green-100 text-green-800 ml-2">
-                En cours
-              </Badge>
+      {/* Entête du projet */}
+      <Card>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div>
+              <CardTitle className="text-2xl">{project.project_title}</CardTitle>
+              <p className="text-gray-500 mt-1">
+                {project.project_type === 'residential' ? 'Résidentiel' : 
+                 project.project_type === 'commercial' ? 'Commercial' : 
+                 project.project_type === 'industrial' ? 'Industriel' : 'Autre'}
+                {' • '}
+                {project.construction_type === 'new' ? 'Construction neuve' : 
+                 project.construction_type === 'renovation' ? 'Rénovation' : 
+                 project.construction_type === 'extension' ? 'Extension' : 'Autre'}
+              </p>
+              <div className="flex items-center mt-2">
+                <span className="text-sm font-medium mr-2">Client:</span>
+                <span className="text-sm text-gray-600">
+                  {project.profiles?.full_name || 'Non attribué'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3">
+              <ProjectTools projectId={projectId || ''} />
             </div>
           </div>
-        </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {!project.clientAssigned ? (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-9"
-              asChild
-            >
-              <Link to={`/workspace/client-area/admin/projects/${projectId}/assign-client`}>
-                <UserPlus className="h-4 w-4 mr-2" />
-                Assigner un client
-              </Link>
-            </Button>
-          ) : (
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="h-9"
-              asChild
-            >
-              <Link to={`/workspace/client-area/admin/client/${projectId}`}>
-                <User className="h-4 w-4 mr-2" />
-                Voir le client
-              </Link>
-            </Button>
-          )}
-          
-          <Button 
-            size="sm" 
-            className="h-9 bg-khaki-600 hover:bg-khaki-700 text-white"
-            asChild
-          >
-            <Link to={`/workspace/client-area/admin/projects/${projectId}/estimate`}>
-              <DollarSign className="h-4 w-4 mr-2" />
-              Gérer le devis
-            </Link>
-          </Button>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
       
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-1 space-y-4">
-          <Card className="border-gray-200">
-            <CardHeader className="pb-3 border-b border-gray-100">
-              <CardTitle className="text-lg">Détails du projet</CardTitle>
+      {/* Contenu du projet */}
+      <Tabs defaultValue="phases" className="space-y-6">
+        <TabsList className="bg-white border border-gray-200 p-1">
+          <TabsTrigger value="phases" className="data-[state=active]:bg-khaki-50">
+            <Calendar className="h-4 w-4 mr-2" />
+            Planning
+          </TabsTrigger>
+          <TabsTrigger value="documents" className="data-[state=active]:bg-khaki-50">
+            <FileText className="h-4 w-4 mr-2" />
+            Documents
+          </TabsTrigger>
+          <TabsTrigger value="team" className="data-[state=active]:bg-khaki-50">
+            <Users className="h-4 w-4 mr-2" />
+            Équipe
+          </TabsTrigger>
+          <TabsTrigger value="partners" className="data-[state=active]:bg-khaki-50">
+            <Building className="h-4 w-4 mr-2" />
+            Partenaires
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="data-[state=active]:bg-khaki-50">
+            <Settings className="h-4 w-4 mr-2" />
+            Paramètres
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="phases">
+          <ProjectPhases projectId={projectId || ''} />
+        </TabsContent>
+        
+        <TabsContent value="documents">
+          <Card>
+            <CardHeader>
+              <CardTitle>Documents du projet</CardTitle>
             </CardHeader>
-            <CardContent className="pt-4 space-y-4">
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">Client</h3>
-                {project.clientAssigned ? (
-                  <div className="text-sm">
-                    <div className="font-medium">{project.clientName}</div>
-                    <div className="text-gray-600">{project.clientEmail}</div>
-                    <div className="text-gray-600">{project.clientPhone}</div>
-                  </div>
-                ) : (
-                  <div className="flex items-center text-amber-600 text-sm">
-                    <UserPlus className="h-3.5 w-3.5 mr-1.5" />
-                    Non assigné
-                  </div>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="text-gray-500 flex items-center">
-                    <Building className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
-                    Type
-                  </div>
-                  <div>{project.projectType === 'residential' ? 'Résidentiel' : project.projectType}</div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="text-gray-500 flex items-center">
-                    <MapPin className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
-                    Localisation
-                  </div>
-                  <div>{project.location}</div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="text-gray-500 flex items-center">
-                    <DollarSign className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
-                    Budget
-                  </div>
-                  <div>{project.budget}</div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="text-gray-500 flex items-center">
-                    <Building className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
-                    Maître d'ouvrage
-                  </div>
-                  <div>{project.projectOwner}</div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm">
-                  <div className="text-gray-500 flex items-center">
-                    <Clock className="h-3.5 w-3.5 mr-1.5 text-khaki-600" />
-                    Créé le
-                  </div>
-                  <div>{formatDate(project.createdAt)}</div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">Dates clés</h3>
-                <div className="space-y-1 text-sm">
-                  <div className="flex items-center justify-between">
-                    <div className="text-gray-600">Début</div>
-                    <div>{formatDate(project.dates.global.startDate)}</div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="text-gray-600">Fin prévue</div>
-                    <div>{formatDate(project.dates.global.endDate)}</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-1">Progression</h3>
-                <div className="mt-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <div className="text-xs text-gray-600">Avancement global</div>
-                    <div className="text-xs font-medium">{project.progress}%</div>
-                  </div>
-                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-khaki-500 rounded-full"
-                      style={{ width: `${project.progress}%` }}
-                    ></div>
-                  </div>
-                </div>
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                Fonctionnalité de gestion des documents en cours de développement.
               </div>
             </CardContent>
           </Card>
-          
-          {/* Intégration des outils du projet */}
-          <ProjectTools projectId={projectId || ''} />
-        </div>
+        </TabsContent>
         
-        <div className="lg:col-span-3">
-          <Card className="border-gray-200">
-            <CardHeader className="border-b border-gray-100 pb-0">
-              <Tabs defaultValue="general" value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="mb-0 w-full justify-start">
-                  <TabsTrigger value="general" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <PenSquare className="h-3.5 w-3.5 mr-1.5" />
-                    Général
-                  </TabsTrigger>
-                  <TabsTrigger value="phases" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <ClipboardList className="h-3.5 w-3.5 mr-1.5" />
-                    Phases
-                  </TabsTrigger>
-                  <TabsTrigger value="dates" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                    Dates
-                  </TabsTrigger>
-                  <TabsTrigger value="team" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <User className="h-3.5 w-3.5 mr-1.5" />
-                    Équipe
-                  </TabsTrigger>
-                  <TabsTrigger value="execution" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <Building className="h-3.5 w-3.5 mr-1.5" />
-                    Exécution
-                  </TabsTrigger>
-                  <TabsTrigger value="technical" className="data-[state=active]:bg-khaki-50 data-[state=active]:text-khaki-900">
-                    <FileText className="h-3.5 w-3.5 mr-1.5" />
-                    Technique
-                  </TabsTrigger>
-                </TabsList>
-              
-                {/* Make sure TabsContent components are inside the Tabs component */}
-                <TabsContent value="general" className="m-0 pt-6">
-                  <ProjectGeneralForm />
-                </TabsContent>
-                <TabsContent value="phases" className="m-0 pt-6">
-                  <ProjectPhaseForm />
-                </TabsContent>
-                <TabsContent value="dates" className="m-0 pt-6">
-                  <ProjectDateForm />
-                </TabsContent>
-                <TabsContent value="team" className="m-0 pt-6">
-                  <ProjectTeamForm />
-                </TabsContent>
-                <TabsContent value="execution" className="m-0 pt-6">
-                  <ProjectExecutionForm />
-                </TabsContent>
-                <TabsContent value="technical" className="m-0 pt-6">
-                  <ProjectTechnicalForm />
-                </TabsContent>
-              </Tabs>
+        <TabsContent value="team">
+          <Card>
+            <CardHeader>
+              <CardTitle>Équipe du projet</CardTitle>
             </CardHeader>
-            {/* Remove the CardContent since we're now rendering content directly in TabsContent */}
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                Fonctionnalité de gestion d'équipe en cours de développement.
+              </div>
+            </CardContent>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+        
+        <TabsContent value="partners">
+          <Card>
+            <CardHeader>
+              <CardTitle>Partenaires du projet</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                Fonctionnalité de gestion des partenaires en cours de développement.
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="settings">
+          <Card>
+            <CardHeader>
+              <CardTitle>Paramètres du projet</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center py-8 text-gray-500">
+                Fonctionnalité de paramétrage du projet en cours de développement.
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
