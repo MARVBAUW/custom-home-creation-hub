@@ -96,7 +96,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:image" content={ogImage} />
 
       {/* Favicon */}
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/progineer-favicon.ico" />
       <link rel="apple-touch-icon" sizes="180x180" href="/progineer-apple-touch-icon.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="/progineer-icon-32x32.png" />
       <link rel="icon" type="image/png" sizes="16x16" href="/progineer-icon-16x16.png" />

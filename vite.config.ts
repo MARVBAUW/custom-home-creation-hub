@@ -47,7 +47,8 @@ export default defineConfig(({ mode }) => ({
             }
             if (assetInfo.name.includes('progineer-icon') || 
                 assetInfo.name.includes('progineer-apple-touch-icon') || 
-                assetInfo.name === 'site.webmanifest') {
+                assetInfo.name === 'site.webmanifest' || 
+                assetInfo.name === 'progineer-favicon.ico') {
               return '[name][extname]';
             }
             // Handle image files in schemas directory
