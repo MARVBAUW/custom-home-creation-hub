@@ -1,5 +1,5 @@
 
-import { EstimationFormData as FormData } from './index';
+import { EstimationFormData } from './index';
 
 export interface Message {
   id: string;
@@ -22,8 +22,8 @@ export interface ConversationState {
 
 export interface ConversationalProps {
   onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   onClientTypeSubmit: (data: {clientType: string}) => void;
   goToStep: (step: number) => void;
 }
@@ -40,4 +40,17 @@ export interface InputAreaProps {
   setUserInput: (input: string) => void;
   handleSendMessage: () => void;
   handleKeyPress: (e: React.KeyboardEvent) => void;
+}
+
+export interface MessageProcessorProps {
+  onUserInput: (input: string) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+}
+
+export interface ExtractedInfo {
+  intent: string;
+  entities: {
+    [key: string]: any;
+  };
 }

@@ -1,74 +1,65 @@
 
-// Utility functions for type conversion
+/**
+ * Utility functions for type conversions and validations
+ */
 
-// Convert any value to number, handling strings, nulls, etc.
-export const ensureNumber = (value: any): number => {
-  if (value === null || value === undefined) return 0;
-  if (typeof value === 'number') return value;
-  
-  // Try to convert from string
-  if (typeof value === 'string') {
-    // Remove any non-numeric characters except decimal point
-    const cleanValue = value.replace(/[^\d.-]/g, '');
-    const result = parseFloat(cleanValue);
-    return isNaN(result) ? 0 : result;
+/**
+ * Ensures a value is a number
+ * @param value - The value to convert to a number
+ * @param defaultValue - Optional default value if conversion fails (defaults to 0)
+ * @returns The converted number or default value
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (typeof value === 'number') {
+    return isNaN(value) ? defaultValue : value;
   }
   
-  return 0;
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value.replace(/,/g, '.').replace(/\s/g, ''));
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+  
+  return defaultValue;
 };
 
-// Format a number as currency (Euro)
-export const formatCurrency = (value: number | string): string => {
-  const numValue = ensureNumber(value);
+/**
+ * Ensures a value is a boolean
+ * @param value - The value to convert to a boolean
+ * @param defaultValue - Optional default value if conversion is ambiguous
+ * @returns The converted boolean
+ */
+export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  
+  if (typeof value === 'string') {
+    const lowerValue = value.toLowerCase();
+    if (['true', 'yes', 'oui', '1'].includes(lowerValue)) {
+      return true;
+    }
+    if (['false', 'no', 'non', '0'].includes(lowerValue)) {
+      return false;
+    }
+  }
+  
+  if (typeof value === 'number') {
+    return value === 1;
+  }
+  
+  return defaultValue;
+};
+
+/**
+ * Formats a number as a Euro currency string
+ * @param value - The number to format
+ * @returns Formatted string with Euro symbol
+ */
+export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(numValue);
-};
-
-// Convert a value to boolean
-export const ensureBoolean = (value: any): boolean => {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'string') {
-    const lowercaseValue = value.toLowerCase();
-    return lowercaseValue === 'true' || lowercaseValue === 'yes' || lowercaseValue === 'oui' || lowercaseValue === '1';
-  }
-  return Boolean(value);
-};
-
-// Format a date string to a readable format
-export const formatDate = (dateString: string): string => {
-  if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).format(date);
-  } catch (e) {
-    return dateString;
-  }
-};
-
-// Convert a form value to a string representation
-export const toFormValue = (value: any): string => {
-  if (value === null || value === undefined) return '';
-  if (typeof value === 'string') return value;
-  if (typeof value === 'number') return value.toString();
-  if (typeof value === 'boolean') return value ? 'true' : 'false';
-  
-  // If it's an object or array, stringify it
-  if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value);
-    } catch (e) {
-      return '';
-    }
-  }
-  
-  return String(value);
+  }).format(value);
 };

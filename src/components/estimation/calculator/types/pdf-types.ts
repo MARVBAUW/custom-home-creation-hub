@@ -25,15 +25,24 @@ export interface JsPDFInternal {
   [key: string]: any;
 }
 
-export interface AutoTable {
+// Define a proper interface for autoTable
+export interface AutoTableInstance {
   previous?: any;
   (options: UserOptions): any;
 }
 
 // Extend the jsPDF typing to include autoTable plugin
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: AutoTable;
-    internal: JsPDFInternal;
+declare global {
+  namespace jspdf {
+    interface jsPDF {
+      autoTable: AutoTableInstance;
+      internal: JsPDFInternal;
+    }
   }
+}
+
+// Export to match the previous interface but with corrected types
+export interface AutoTable {
+  previous?: any;
+  (options: UserOptions): any;
 }

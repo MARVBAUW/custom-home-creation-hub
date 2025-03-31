@@ -1,7 +1,7 @@
 
 import { BaseSyntheticEvent } from 'react';
 
-// Define the EstimationResponseData interface that's missing
+// Define the EstimationResponseData interface
 export interface ConstructionCosts {
   structuralWork: number;
   finishingWork: number;
@@ -59,7 +59,7 @@ export interface EstimationFormData {
   
   // Construction Details
   surface?: number | string;
-  levels?: number | string;
+  levels?: number | string | any;
   storyCount?: string;
   units?: number | string;
   constructionType?: string;

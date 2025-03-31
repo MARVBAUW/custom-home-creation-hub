@@ -1,13 +1,19 @@
 
 import { BaseSyntheticEvent } from 'react';
-import { EstimationFormData as FormData, EstimationResponseData } from './index';
+import { EstimationFormData, EstimationResponseData } from './index';
 
 export interface FormStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+}
+
+export interface BaseFormProps extends FormStepProps {
+  // This is a base interface for form components
+  onSubmit?: (data: Partial<EstimationFormData>) => void;
+  defaultValues?: Partial<EstimationFormData>;
 }
 
 export interface ResultsFormProps extends FormStepProps {
@@ -17,8 +23,8 @@ export interface ResultsFormProps extends FormStepProps {
 }
 
 export interface EstimationCalculatorProps {
-  initialData?: Partial<FormData>;
-  onComplete?: (data: FormData, result: EstimationResponseData) => void;
+  initialData?: Partial<EstimationFormData>;
+  onComplete?: (data: EstimationFormData, result: EstimationResponseData) => void;
   showEmbeddedResults?: boolean;
 }
 
@@ -30,6 +36,12 @@ export interface FormNavigationProps {
   onPreviousClick: () => void;
   onNextClick: () => void;
   onShowSummaryClick?: () => void;
+  currentStep?: number;
+  onPrevStep?: () => void;
+  onNextStep?: () => void;
+  isSubmitting?: boolean;
+  isComplete?: boolean;
+  onComplete?: () => void;
 }
 
 export interface EstimationValidationError {
@@ -41,4 +53,17 @@ export interface FormSubmitContext {
   event?: BaseSyntheticEvent;
   isValid: boolean;
   errors: Record<string, any>;
+}
+
+export interface ConstructionDetailsStepProps extends BaseFormProps {
+  // Add any construction-specific props here
+}
+
+export interface StepRendererProps {
+  step: number;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
