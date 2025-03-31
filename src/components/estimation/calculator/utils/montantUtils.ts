@@ -116,6 +116,10 @@ export function calculateInsulationCost(type: string, area: number): number {
     case 'passive':
     case 'ISOLATION THERMIQUE ULTRA PERFORMANTE':
       return 120 * area; // High performance insulation cost
+    case 'ecological':
+      return 110 * area; // Ecological materials insulation cost
+    case 'renovation':
+      return 90 * area; // Renovation standard insulation cost
     case 'non_concerne':
     case 'NON CONCERNE':
     default:
@@ -158,4 +162,29 @@ export function calculateFacadeCost(materials: Record<string, number>, area: num
   }
   
   return totalCost;
+}
+
+/**
+ * Calculate cost for windows based on the window type and area
+ * @param type Type of windows (bois, pvc, alu, mixte, pvc_colore)
+ * @param area Surface area of windows in square meters
+ * @returns Cost of windows in euros
+ */
+export function calculateWindowsCost(type: string, area: number): number {
+  switch (type) {
+    case 'bois':
+      return 650 * area;
+    case 'pvc':
+      return 390 * area;
+    case 'alu':
+      return 620 * area;
+    case 'mixte':
+      return 690 * area;
+    case 'pvc_colore':
+      return 410 * area;
+    case 'sans_avis':
+    case 'non_concerne':
+    default:
+      return 0;
+  }
 }
