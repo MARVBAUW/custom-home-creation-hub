@@ -12,13 +12,15 @@ interface DTUCardProps {
   onViewDetails: (dtu: DTU) => void;
   onSelect?: (dtu: DTU, selected: boolean) => void;
   searchTerm?: string;
+  selectionMode?: boolean;
 }
 
 export const DTUCard: React.FC<DTUCardProps> = ({ 
   dtu, 
   onViewDetails, 
   onSelect,
-  searchTerm = '' 
+  searchTerm = '',
+  selectionMode = false
 }) => {
   const handleViewDetails = () => {
     onViewDetails(dtu);
@@ -32,7 +34,7 @@ export const DTUCard: React.FC<DTUCardProps> = ({
 
   return (
     <Card className="h-full flex flex-col relative">
-      {onSelect && (
+      {selectionMode && onSelect && (
         <div className="absolute top-2 left-2 z-10">
           <Checkbox 
             checked={dtu.selected} 
@@ -41,7 +43,7 @@ export const DTUCard: React.FC<DTUCardProps> = ({
           />
         </div>
       )}
-      <CardHeader className={onSelect ? "pl-10" : ""}>
+      <CardHeader className={selectionMode ? "pl-10" : ""}>
         <div className="flex justify-between items-start">
           <Badge variant="outline" className="mb-2 bg-gray-100">
             {dtu.category}
