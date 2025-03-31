@@ -2,7 +2,7 @@
 import React from 'react';
 import { DTU } from './types';
 import { DTUCard } from './DTUCard';
-import { FileText } from 'lucide-react';
+import { DTUEmptyState } from './DTUEmptyState';
 
 interface DTUGridListProps {
   dtus: DTU[];
@@ -12,33 +12,39 @@ interface DTUGridListProps {
   selectionMode?: boolean;
 }
 
-export const DTUGridList: React.FC<DTUGridListProps> = ({ 
-  dtus, 
-  onViewDetails, 
+export const DTUGridList: React.FC<DTUGridListProps> = ({
+  dtus,
+  onViewDetails,
   onSelectDTU,
   searchTerm,
-  selectionMode = false
+  selectionMode = false,
 }) => {
+  // Show empty state if no results are found from a search
+  if (dtus.length === 0 && searchTerm && searchTerm.trim() !== '') {
+    return (
+      <DTUEmptyState 
+        type="noResults" 
+        description={`Aucun résultat trouvé pour "${searchTerm}". Essayez d'autres termes de recherche.`}
+      />
+    );
+  }
+
+  // Show empty state if there are no DTUs at all
   if (dtus.length === 0) {
     return (
-      <div className="text-center py-8">
-        <FileText className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-        <h3 className="text-lg font-medium text-gray-500">Aucun document trouvé</h3>
-        <p className="text-gray-400 mt-2">
-          Essayez de modifier votre recherche ou de changer de catégorie
-        </p>
-      </div>
+      <DTUEmptyState type="empty" />
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {dtus.map((dtu) => (
-        <DTUCard 
-          key={dtu.id} 
-          dtu={dtu} 
-          onViewDetails={onViewDetails} 
-          onSelect={selectionMode ? onSelectDTU : undefined}
+        <DTUCard
+          key={dtu.id}
+          dtu={dtu}
+          onViewDetails={onViewDetails}
+          onSelect={onSelectDTU}
+          selectionMode={selectionMode}
           searchTerm={searchTerm}
         />
       ))}
