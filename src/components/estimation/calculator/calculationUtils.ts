@@ -1,3 +1,4 @@
+
 import { FormData } from "./types";
 import { ensureNumber } from "./utils/typeConversions";
 import { calculateEstimation } from './calculations/simpleEstimation';
