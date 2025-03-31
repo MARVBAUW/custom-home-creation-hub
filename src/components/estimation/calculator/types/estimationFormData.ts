@@ -152,6 +152,13 @@ export interface EstimationFormData {
   hasMoldings?: boolean;
   hasCustomFurniture?: boolean;
   
+  // Paint and wall coverings
+  paintType?: string;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
+  paintSurface?: number | string;
+  
   // Project requirements
   needsDemolition?: boolean;
   
