@@ -22,12 +22,14 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
   const [clientType, setClientType] = React.useState<string>(formData.clientType || '');
 
   const handleSelect = (type: string) => {
-    // First update the form data
+    // Mettre à jour le type de client
     updateFormData({ 
-      clientType: type
+      clientType: type,
+      // Réinitialiser les champs de navigation pour éviter des problèmes de routage
+      skipToContact: false
     });
     
-    // Then proceed to next step after a short delay
+    // Passer à l'étape suivante après un court délai
     setTimeout(() => {
       goToNextStep();
     }, 100);
@@ -48,6 +50,9 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <User className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Particulier</h3>
+            <p className="text-sm text-gray-600">
+              Je suis un particulier avec un projet personnel
+            </p>
           </CardContent>
         </Card>
         
@@ -58,6 +63,9 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Building className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Professionnel</h3>
+            <p className="text-sm text-gray-600">
+              Je représente une entreprise ou une organisation
+            </p>
           </CardContent>
         </Card>
       </div>

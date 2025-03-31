@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { FormData } from '../../types/formTypes';
+import { FormData } from '../../types';
 
 export const useStepNavigation = (currentStep: number, formData: FormData) => {
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
@@ -11,100 +12,103 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
     let nextStep = currentStep + 1;
     
     // --- Routing based on client type ---
-    if (formData.clientType === "individual") {
-      // If the choice is "individual", skip the "professional project" step
-      if (currentStep === 1) {
-        nextStep = 3; // Go directly to "individual project" step
-      }
-    } else if (formData.clientType === "professional") {
-      // If the choice is "professional", skip the "individual project" step
-      if (currentStep === 2) {
-        nextStep = 4; // Go directly to "estimation type" step
+    if (currentStep === 0) {
+      if (formData.clientType === "professional") {
+        // Si c'est un professionnel, aller directement au formulaire professionnel (étape 1)
+        nextStep = 1;
+      } else if (formData.clientType === "individual") {
+        // Si c'est un particulier, aller au choix du type de projet (étape 2)
+        nextStep = 2;
       }
     }
     
-    // --- Routing based on project type ---
-    if (formData.projectType === "design") {
-      // For design projects, go directly to the contact step
-      return {
-        nextStep: 28, // Final contact step
-        animationDirection: 'forward' as const
-      };
+    // --- After client type selection (professional) ---
+    if (currentStep === 1) {
+      // Rediriger vers l'étape d'estimation (3) après le formulaire professionnel
+      nextStep = 3;
+    }
+    
+    // --- After project type selection (individual) ---
+    if (currentStep === 2) {
+      // Pour design d'espace ou optimisation, diriger vers le formulaire de contact
+      if (formData.projectType === "design" || formData.projectType === "optimization") {
+        // Aller directement au formulaire de contact (étape 45)
+        nextStep = 45; 
+        // Marquer qu'il s'agit d'un projet spécial nécessitant un contact direct
+        updateFormData({ skipToContact: true });
+      } else {
+        // Pour les autres types, aller à l'étape type d'estimation
+        nextStep = 3;
+      }
     }
     
     // --- Routing based on estimation type ---
-    if (formData.estimationType === "quick") {
-      if (currentStep === 3) {
-        // For quick estimation, go to the page of features selection (page 44)
+    if (currentStep === 3) {
+      if (formData.estimationType === "quick") {
+        // Pour l'estimation rapide, aller à la sélection des caractéristiques
         nextStep = 44;
+      } else if (formData.estimationType === "detailed" || formData.estimationType === "standard") {
+        // Pour l'estimation détaillée ou standard, suivre le chemin normal
+        nextStep = 4;
       }
     }
     
-    // --- Handle navigation from the features selection page ---
+    // --- Handle navigation from the features selection page (quick estimation) ---
     if (currentStep === 44) {
-      // If a next page is specified in formData, use that
-      if (formData.nextPage) {
-        nextStep = formData.nextPage;
-      } else {
-        // Otherwise, go to the contact page
-        nextStep = 45;
-      }
+      // Aller au formulaire de contact
+      nextStep = 45;
     }
     
     // --- Handle navigation from contact page to thank you page ---
     if (currentStep === 45) {
-      nextStep = 46; // Thank you page
+      nextStep = 46; // Page de remerciement
     }
     
-    // --- Routing for construction/extension vs renovation/division ---
+    // --- Routing pour construction/extension vs rénovation/division ---
     if (formData.projectType === "construction" || formData.projectType === "extension") {
-      // Skip the renovation-specific step
-      if (nextStep === 29) {
-        nextStep = 30; // Skip the demolition page in renovation
-      }
-      
-      // Handle skips for specific options based on choices
-      if (nextStep === 24 && !formData.includeRenewableEnergy) {
-        nextStep = 25; // Skip to landscaping
-      }
-      if (nextStep === 25 && !formData.includeLandscaping) {
-        nextStep = 26; // Skip to options
-      }
-      if (nextStep === 26 && !formData.includeOptions) {
-        nextStep = 27; // Skip to kitchen
-      }
-      if (nextStep === 27 && !formData.includeCuisine) {
-        nextStep = 28; // Skip to bathroom
-      }
-      if (nextStep === 28 && !formData.includeBathroom) {
-        nextStep = 45; // Go to contact form
-      }
-    } else if (formData.projectType === "renovation" || formData.projectType === "division") {
-      // For renovation/division projects
-      if (currentStep === 22 && !formData.includeEcoSolutions) {
-        nextStep = 23; // Skip to renewable energy
-      }
-      if (nextStep === 23 && !formData.includeRenewableEnergy) {
-        nextStep = 24; // Skip to landscaping
-      }
-      if (nextStep === 24 && !formData.includeLandscaping) {
-        nextStep = 25; // Skip to options
-      }
-      if (nextStep === 25 && !formData.includeOptions) {
-        nextStep = 26; // Skip to kitchen
-      }
-      if (nextStep === 26 && !formData.includeCuisine) {
-        nextStep = 27; // Skip to bathroom
-      }
-      if (nextStep === 27 && !formData.includeBathroom) {
-        nextStep = 45; // Go to contact form
+      // Skip la page spécifique à la rénovation
+      if (nextStep === 11) {
+        nextStep = 12; // Aller directement à l'isolation
       }
     }
     
-    // Make sure not to exceed the total number of available steps
-    if (nextStep > 46) {
-      nextStep = 46; // Final step (thank you page)
+    // --- Vérifier les étapes optionnelles ---
+    // Sauter les étapes si les options correspondantes ne sont pas choisies
+    if (nextStep === 23 && !formData.includeEcoSolutions) {
+      nextStep = formData.includeRenewableEnergy ? 24 : 25;
     }
+    
+    if (nextStep === 24 && !formData.includeRenewableEnergy) {
+      nextStep = formData.includeLandscaping ? 25 : 26;
+    }
+    
+    if (nextStep === 25 && !formData.includeLandscaping) {
+      nextStep = formData.includeOptions ? 26 : 27;
+    }
+    
+    if (nextStep === 26 && !formData.includeOptions) {
+      nextStep = formData.includeCuisine ? 27 : 28;
+    }
+    
+    if (nextStep === 27 && !formData.includeCuisine) {
+      nextStep = formData.includeBathroom ? 28 : 45;
+    }
+    
+    if (nextStep === 28 && !formData.includeBathroom) {
+      nextStep = 45; // Aller au formulaire de contact
+    }
+    
+    // S'assurer de ne pas dépasser le nombre total d'étapes disponibles
+    if (nextStep > 46) {
+      nextStep = 46; // Dernière étape (page de remerciement)
+    }
+    
+    const updateFormData = (data: Partial<FormData>) => {
+      // Cette fonction sera injectée depuis le composant parent
+      // C'est une référence à la fonction updateFormData du hook useEstimationCalculator
+      console.log("Navigation update form data:", data);
+      // La vraie implémentation est gérée par le composant parent
+    };
     
     return {
       nextStep,
@@ -116,84 +120,64 @@ export const useStepNavigation = (currentStep: number, formData: FormData) => {
   const goToPreviousStep = () => {
     setAnimationDirection('backward');
     
-    // Similar logic for the navigation in reverse
+    // Logique similaire pour la navigation en arrière
     let prevStep = currentStep - 1;
     
     // --- Handle navigation from thank you page back to contact page ---
     if (currentStep === 46) {
-      prevStep = 45; // Go back to contact page
+      prevStep = 45; // Retour à la page de contact
     }
     
-    // --- Client type specific navigation ---
-    if (formData.clientType === "individual") {
-      // If coming back from "individual project" step to client type
-      if (currentStep === 3) {
-        prevStep = 1; // Go back to client type step
-      }
-    } else if (formData.clientType === "professional") {
-      // If coming back from "estimation type" to "professional project"
-      if (currentStep === 4) {
-        prevStep = 2; // Go back to professional project step
+    // --- Retour depuis le formulaire de contact ---
+    if (currentStep === 45) {
+      if (formData.estimationType === "quick") {
+        prevStep = 44; // Retour à la sélection des caractéristiques
+      } else if (formData.projectType === "design" || formData.projectType === "optimization") {
+        prevStep = 2; // Retour à la sélection du type de projet
+      } else if (formData.includeBathroom) {
+        prevStep = 28; // Retour à la salle de bain
+      } else if (formData.includeCuisine) {
+        prevStep = 27; // Retour à la cuisine
+      } else if (formData.includeOptions) {
+        prevStep = 26; // Retour aux options
+      } else if (formData.includeLandscaping) {
+        prevStep = 25; // Retour à l'aménagement paysager
+      } else if (formData.includeRenewableEnergy) {
+        prevStep = 24; // Retour aux énergies renouvelables
+      } else if (formData.includeEcoSolutions) {
+        prevStep = 23; // Retour aux solutions écologiques
+      } else {
+        prevStep = 22; // Retour à la dernière étape standard
       }
     }
     
-    // --- Project type specific navigation ---
+    // --- Navigation spécifique type client ---
+    if (currentStep === 3) {
+      if (formData.clientType === "professional") {
+        prevStep = 1; // Retour au formulaire professionnel
+      } else {
+        prevStep = 2; // Retour à la sélection du type de projet
+      }
+    }
+    
+    if (currentStep === 2) {
+      prevStep = 0; // Retour à la sélection du type de client
+    }
+    
+    if (currentStep === 1) {
+      prevStep = 0; // Retour à la sélection du type de client
+    }
+    
+    // --- Navigation spécifique type projet ---
     if (formData.projectType === "construction" || formData.projectType === "extension") {
-      // Avoid going back to renovation-specific pages
-      if (prevStep === 29) {
-        prevStep = 28; // Skip the demolition page
-      }
-      
-      // Handle back navigation for options
-      if (prevStep === 28 && !formData.includeBathroom) {
-        prevStep = 27;
-      }
-      if (prevStep === 27 && !formData.includeCuisine) {
-        prevStep = 26;
-      }
-      if (prevStep === 26 && !formData.includeOptions) {
-        prevStep = 25;
-      }
-      if (prevStep === 25 && !formData.includeLandscaping) {
-        prevStep = 24;
-      }
-      if (prevStep === 24 && !formData.includeRenewableEnergy) {
-        prevStep = 23;
-      }
-    } else if (formData.projectType === "renovation" || formData.projectType === "division") {
-      // Handle back navigation for options in renovation
-      if (prevStep === 28 && !formData.includeBathroom) {
-        prevStep = 27;
-      }
-      if (prevStep === 27 && !formData.includeCuisine) {
-        prevStep = 26;
-      }
-      if (prevStep === 26 && !formData.includeOptions) {
-        prevStep = 25;
-      }
-      if (prevStep === 25 && !formData.includeLandscaping) {
-        prevStep = 24;
-      }
-      if (prevStep === 24 && !formData.includeRenewableEnergy) {
-        prevStep = 23;
-      }
-      if (prevStep === 23 && !formData.includeEcoSolutions) {
-        prevStep = 22;
+      // Éviter de revenir à des pages spécifiques à la rénovation
+      if (prevStep === 11) {
+        prevStep = 10; // Sauter l'étape spécifique à la rénovation
       }
     }
     
-    // --- Special case for quick estimation features page ---
-    if (currentStep === 44) {
-      prevStep = 3; // Go back to estimation type selection
-    }
-    
-    // --- Special case for contact page in quick flow ---
-    if (currentStep === 45 && formData.estimationType === "quick") {
-      prevStep = 44; // Go back to features selection
-    }
-    
-    // Make sure not to go below step 1
-    prevStep = Math.max(prevStep, 1);
+    // Ne pas descendre en dessous de l'étape 0
+    prevStep = Math.max(0, prevStep);
     
     return {
       prevStep,

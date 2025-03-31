@@ -17,7 +17,17 @@ export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budge
   surface?: number | string;
   poolHeating?: boolean | string;
   budget?: number | string;
-  [key: string]: any; // Allow for dynamic properties
+  // Champs spécifiques pour la navigation
+  skipToContact?: boolean;
+  // Champs spécifiques pour les formulaires professionnels et projets spéciaux
+  companyName?: string;
+  projectDescription?: string;
+  projectPurpose?: string;
+  startDate?: string;
+  commercialAccepted?: boolean;
+  formCompleted?: boolean;
+  // Allow for dynamic properties
+  [key: string]: any;
 }
 
 // Export the unified types with the original names for backward compatibility

@@ -24,21 +24,20 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
   const [projectType, setProjectType] = React.useState<string>(formData.projectType || '');
 
   const handleSelect = (type: string) => {
-    // Update the form data
+    // Mettre à jour les données du formulaire avec le type de projet
     updateFormData({ 
       projectType: type,
     });
     
-    // For optimization or design projects, handle special routing
-    if (type === 'optimization' || type === 'design') {
-      // Jump directly to contact page in the next step
+    // Pour les projets de design ou d'optimisation, marquer comme nécessitant un formulaire de contact direct
+    if (type === 'design' || type === 'optimization') {
       updateFormData({
         projectType: type,
         skipToContact: true
       });
     }
     
-    // Proceed to next step with a slight delay for animation
+    // Passer à l'étape suivante avec un léger délai pour l'animation
     setTimeout(() => {
       goToNextStep();
     }, 100);
@@ -64,6 +63,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Home className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Construction</h3>
+            <p className="text-xs text-gray-600">
+              Construction d'une maison ou d'un bâtiment neuf
+            </p>
           </CardContent>
         </Card>
         
@@ -74,6 +76,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Hammer className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Rénovation</h3>
+            <p className="text-xs text-gray-600">
+              Rénovation d'un bâtiment existant
+            </p>
           </CardContent>
         </Card>
         
@@ -84,6 +89,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Maximize className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Extension</h3>
+            <p className="text-xs text-gray-600">
+              Extension d'un bâtiment existant
+            </p>
           </CardContent>
         </Card>
         
@@ -94,6 +102,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Printer className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Optimisation</h3>
+            <p className="text-xs text-gray-600">
+              Optimisation d'un espace existant
+            </p>
           </CardContent>
         </Card>
         
@@ -104,6 +115,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Scissors className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Division</h3>
+            <p className="text-xs text-gray-600">
+              Division d'un bâtiment en plusieurs unités
+            </p>
           </CardContent>
         </Card>
         
@@ -114,6 +128,9 @@ const IndividualProjectTypeStep: React.FC<IndividualProjectTypeStepProps> = ({
           <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
             <Columns className="h-12 w-12 text-blue-500 mb-4" />
             <h3 className="text-lg font-medium mb-2">Design d'espace / décoration</h3>
+            <p className="text-xs text-gray-600">
+              Conception et décoration d'espace
+            </p>
           </CardContent>
         </Card>
       </div>

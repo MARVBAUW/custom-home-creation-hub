@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,6 +29,8 @@ import QuickEstimationStep from './steps/QuickEstimationStep';
 import QuickEstimationFeaturesStep from './steps/QuickEstimationFeaturesStep';
 import QuickContactStep from './steps/QuickContactStep';
 import ThankYouStep from './steps/ThankYouStep';
+import ProfessionalContactStep from './steps/ProfessionalContactStep';
+import ProjectContactStep from './steps/ProjectContactStep';
 
 // Animation variants for page transitions
 const pageVariants = {
@@ -80,9 +81,22 @@ const EstimationWizard: React.FC = () => {
     }
   }, [estimationResult]);
 
+  // Function to determine if the current step should show a contact form based on the selected path
+  const shouldShowContactForm = () => {
+    if (formData.clientType === 'professional') {
+      return true; // Pour les professionnels, toujours montrer un formulaire de contact adapté
+    }
+    
+    if (formData.projectType === 'design' || formData.projectType === 'optimization') {
+      return true; // Pour les projets de design ou d'optimisation, montrer un formulaire de contact
+    }
+    
+    return false;
+  };
+
   // Function to render the current step component
   const renderCurrentStep = () => {
-    console.log("Rendering step:", step, "Project Type:", formData.projectType);
+    console.log("Rendering step:", step, "Project Type:", formData.projectType, "Client Type:", formData.clientType);
     
     switch (step) {
       case 0: // Type de client (première étape)
@@ -95,8 +109,9 @@ const EstimationWizard: React.FC = () => {
           />
         );
       case 1: // Professionnel - Infos projet (deuxième étape pour pro)
+        // Pour les professionnels, utiliser le formulaire de contact professionnel
         return (
-          <ProfessionalProjectDetailsStep
+          <ProfessionalContactStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -284,7 +299,22 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 45: // Quick Contact Form
+      case 45: // Contact Form
+        // Si c'est un projet professionnel ou design/optimisation, utiliser le formulaire de contact projet
+        if (formData.projectType === 'design' || formData.projectType === 'optimization') {
+          return (
+            <ProjectContactStep
+              formData={formData}
+              updateFormData={updateFormData}
+              goToNextStep={goToNextStep}
+              goToPreviousStep={goToPreviousStep}
+              animationDirection={animationDirection}
+              finalizeEstimation={finalizeEstimation}
+            />
+          );
+        }
+        
+        // Sinon utiliser le formulaire de contact standard
         return (
           <QuickContactStep
             formData={formData}
@@ -295,6 +325,7 @@ const EstimationWizard: React.FC = () => {
             finalizeEstimation={finalizeEstimation}
           />
         );
+        
       case 46: // Thank You Page
         return (
           <ThankYouStep
@@ -302,16 +333,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 19: // Quick Estimation (for rapid estimates)
-        return (
-          <QuickEstimationStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
+        
       default:
         return (
           <ClientTypeStep
