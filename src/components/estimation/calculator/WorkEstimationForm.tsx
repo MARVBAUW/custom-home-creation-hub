@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -7,7 +6,7 @@ import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
 import FormNavigation from './components/FormNavigation';
-import { EstimationFormData } from './types';
+import { FormData } from './types/formTypes';
 import { createTypeAdaptingUpdater } from './utils/dataAdapter';
 
 const WorkEstimationForm: React.FC = () => {

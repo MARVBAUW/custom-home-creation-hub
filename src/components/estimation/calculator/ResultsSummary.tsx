@@ -35,7 +35,10 @@ const ResultsSummary: React.FC<ResultsSummaryProps> = ({
           honorairesHT: estimationResult * 0.12,
           coutGlobalHT: estimationResult * 1.12,
           coutGlobalTTC: estimationResult * 1.12 * 1.2,
-          taxeAmenagement: estimationResult * 0.05
+          taxeAmenagement: estimationResult * 0.05,
+          garantieDecennale: estimationResult * 0.01,
+          etudesGeotechniques: estimationResult * 0.005,
+          etudeThermique: estimationResult * 0.005
         }}
         formData={formData}
         includeTerrainPrice={formData.landIncluded === "yes"}

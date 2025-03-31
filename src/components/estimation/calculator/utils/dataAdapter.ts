@@ -1,86 +1,137 @@
-
 import { FormData } from '../types/formTypes';
 import { EstimationResponseData } from '../types/estimationTypes';
-import { ensureNumber, ensureString, ensureBoolean } from './typeConversions';
 
 /**
- * Adapts raw form data to properly typed estimation response data
+ * Create a function that handles type conversions automatically when updating form data
  */
-export const adaptToEstimationResponseData = (data: any): EstimationResponseData => {
-  return {
-    constructionCosts: {
-      structuralWork: ensureNumber(data.constructionCosts?.structuralWork),
-      finishingWork: ensureNumber(data.constructionCosts?.finishingWork),
-      technicalLots: ensureNumber(data.constructionCosts?.technicalLots),
-      externalWorks: ensureNumber(data.constructionCosts?.externalWorks),
-      total: ensureNumber(data.constructionCosts?.total)
-    },
-    fees: {
-      architect: ensureNumber(data.fees?.architect),
-      engineeringFees: ensureNumber(data.fees?.engineeringFees),
-      architectFees: ensureNumber(data.fees?.architectFees),
-      officialFees: ensureNumber(data.fees?.officialFees),
-      inspectionFees: ensureNumber(data.fees?.inspectionFees),
-      technicalStudies: ensureNumber(data.fees?.technicalStudies),
-      other: ensureNumber(data.fees?.other),
-      total: ensureNumber(data.fees?.total)
-    },
-    otherCosts: {
-      insurance: ensureNumber(data.otherCosts?.insurance),
-      contingency: ensureNumber(data.otherCosts?.contingency),
-      taxes: ensureNumber(data.otherCosts?.taxes),
-      miscellaneous: ensureNumber(data.otherCosts?.miscellaneous),
-      total: ensureNumber(data.otherCosts?.total)
-    },
-    totalAmount: ensureNumber(data.totalAmount),
-    categories: Array.isArray(data.categories) ? data.categories : [],
-    timeline: {
-      design: ensureNumber(data.timeline?.design),
-      permits: ensureNumber(data.timeline?.permits),
-      bidding: ensureNumber(data.timeline?.bidding),
-      construction: ensureNumber(data.timeline?.construction),
-      total: ensureNumber(data.timeline?.total)
-    },
-    projectType: ensureString(data.projectType),
-    projectDetails: {
-      surface: ensureNumber(data.projectDetails?.surface),
-      location: ensureString(data.projectDetails?.location || data.city),
-      projectType: ensureString(data.projectDetails?.projectType || data.projectType),
-      city: ensureString(data.projectDetails?.city || data.city),
-      bedrooms: ensureNumber(data.projectDetails?.bedrooms),
-      bathrooms: ensureNumber(data.projectDetails?.bathrooms)
-    },
-    estimatedCost: ensureNumber(data.estimatedCost),
-    dateGenerated: ensureString(data.dateGenerated || new Date().toISOString()),
-    isComplete: ensureBoolean(data.isComplete)
+export const createTypeAdaptingUpdater = (
+  updateFunction: (data: Partial<FormData>) => void
+) => {
+  return (partialData: Partial<any>) => {
+    // Create a new object to store converted values
+    const convertedData: Partial<FormData> = {};
+    
+    // Process each property for appropriate type conversion
+    Object.entries(partialData).forEach(([key, value]) => {
+      if (key === 'surface' || key === 'bedrooms' || key === 'bathrooms' || key === 'budget') {
+        // Convert string to number for numeric fields
+        if (typeof value === 'string' && value.trim() !== '') {
+          convertedData[key] = parseFloat(value);
+        } else if (typeof value === 'number') {
+          convertedData[key] = value;
+        }
+      } else if (typeof value === 'boolean' || typeof value === 'string' || Array.isArray(value)) {
+        // Keep boolean, string, and array values as they are
+        convertedData[key] = value;
+      } else if (value instanceof Date) {
+        // Keep Date objects as they are
+        convertedData[key] = value;
+      } else if (typeof value === 'object' && value !== null) {
+        // For objects, keep them as they are
+        convertedData[key] = value;
+      } else if (typeof value === 'number') {
+        // Keep number values as they are
+        convertedData[key] = value;
+      }
+    });
+    
+    // Call the update function with properly typed data
+    updateFunction(convertedData);
   };
 };
 
 /**
- * Adapts form data between different types or formats
+ * Adapts form data to the estimation response data format
  */
-export const adaptFormData = (data: any): FormData => {
-  return {
-    ...data,
-    surface: ensureNumber(data.surface),
-    bedrooms: ensureNumber(data.bedrooms),
-    bathrooms: ensureNumber(data.bathrooms),
-    budget: ensureNumber(data.budget),
-    terraceArea: ensureNumber(data.terraceArea),
-    landscapingArea: ensureNumber(data.landscapingArea),
-    fencingLength: ensureNumber(data.fencingLength),
-    gateLength: ensureNumber(data.gateLength),
-    stonePercentage: ensureNumber(data.stonePercentage),
-    plasterPercentage: ensureNumber(data.plasterPercentage),
-    brickPercentage: ensureNumber(data.brickPercentage),
-    metalCladdingPercentage: ensureNumber(data.metalCladdingPercentage),
-    woodCladdingPercentage: ensureNumber(data.woodCladdingPercentage),
-    stoneCladdingPercentage: ensureNumber(data.stoneCladdingPercentage),
-    termsAccepted: ensureBoolean(data.termsAccepted),
-    commercialAccepted: ensureBoolean(data.commercialAccepted),
-    hasElevator: ensureBoolean(data.hasElevator),
-    hasHomeAutomation: ensureBoolean(data.hasHomeAutomation),
-    hasSecuritySystem: ensureBoolean(data.hasSecuritySystem),
-    hasHeatRecovery: ensureBoolean(data.hasHeatRecovery)
+export const adaptToEstimationResponseData = (formData: FormData, calculationResult: any): EstimationResponseData => {
+  // Ensure the data has all required properties
+  const response: EstimationResponseData = {
+    projectType: formData.projectType || '',
+    projectDetails: {
+      surface: typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0),
+      location: formData.city || '',
+      projectType: formData.projectType || '',
+      city: formData.city || '',
+      bedrooms: typeof formData.bedrooms === 'string' ? parseInt(formData.bedrooms as string) : (formData.bedrooms || 0),
+      bathrooms: typeof formData.bathrooms === 'string' ? parseInt(formData.bathrooms as string) : (formData.bathrooms || 0),
+    },
+    estimatedCost: calculationResult.totalAmount || 0,
+    constructionCosts: calculationResult.constructionCosts || {
+      structuralWork: 0,
+      finishingWork: 0,
+      technicalLots: 0,
+      externalWorks: 0,
+      total: 0
+    },
+    otherCosts: calculationResult.otherCosts || {
+      insurance: 0,
+      contingency: 0,
+      taxes: 0,
+      miscellaneous: 0,
+      total: 0
+    },
+    totalAmount: calculationResult.totalAmount || 0,
+    categories: calculationResult.categories || [],
+    timeline: calculationResult.timeline || {
+      design: 0,
+      permits: 0,
+      bidding: 0,
+      construction: 0,
+      total: 0
+    },
+    fees: calculationResult.fees || {
+      architect: 0,
+      engineeringFees: 0,
+      architectFees: 0,
+      officialFees: 0,
+      inspectionFees: 0,
+      technicalStudies: 0,
+      other: 0,
+      total: 0
+    },
+    dateGenerated: calculationResult.dateGenerated || new Date().toISOString(),
+    isComplete: calculationResult.isComplete || false
   };
+  
+  return response;
+};
+
+/**
+ * Convert any value to a number, with a fallback to a default value
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (typeof value === 'number') {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim() !== '') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? defaultValue : parsed;
+  }
+  return defaultValue;
+};
+
+/**
+ * Convert any value to a boolean
+ */
+export const ensureBoolean = (value: any): boolean => {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true' || value === '1' || value === 'yes';
+  }
+  if (typeof value === 'number') {
+    return value === 1;
+  }
+  return false;
+};
+
+/**
+ * Convert any value to a string
+ */
+export const ensureString = (value: any): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  return String(value);
 };

@@ -2,11 +2,10 @@
 import { FormData, EstimationResponseData, FeeCosts } from '../types';
 
 /**
- * Calculate a complete estimation based on the provided form data
- * @param data The form data
- * @returns The estimated amount and breakdown
+ * Generate a complete estimation based on the provided form data
+ * This is the main function used by the estimation calculator
  */
-export const calculateEstimation = (data: FormData): EstimationResponseData => {
+export const generateEstimationResult = (data: FormData): EstimationResponseData => {
   // Calculate construction costs
   const constructionCosts = calculateConstructionCosts(data);
   
@@ -21,22 +20,45 @@ export const calculateEstimation = (data: FormData): EstimationResponseData => {
   
   // Calculate timeline
   const timeline = calculateTimeline(data);
-  
+
+  // Return complete estimation response data
   return {
     constructionCosts,
     fees,
     otherCosts,
     totalAmount,
     timeline,
-    categories: [ // Add categories to match EstimationResponseData interface
+    categories: [
       { category: 'Structural Work', amount: constructionCosts.structuralWork },
       { category: 'Finishing Work', amount: constructionCosts.finishingWork },
       { category: 'Technical Lots', amount: constructionCosts.technicalLots },
       { category: 'External Works', amount: constructionCosts.externalWorks },
       { category: 'Fees', amount: fees.total },
       { category: 'Other Costs', amount: otherCosts.total }
-    ]
+    ],
+    // Additional required fields for EstimationResponseData
+    projectType: data.projectType || '',
+    projectDetails: {
+      surface: typeof data.surface === 'string' ? parseFloat(data.surface) : (data.surface || 0),
+      location: data.city || '',
+      projectType: data.projectType || '',
+      city: data.city || '',
+      bedrooms: typeof data.bedrooms === 'string' ? parseInt(data.bedrooms) : (data.bedrooms || 0),
+      bathrooms: typeof data.bathrooms === 'string' ? parseInt(data.bathrooms) : (data.bathrooms || 0),
+    },
+    estimatedCost: totalAmount,
+    dateGenerated: new Date().toISOString(),
+    isComplete: true
   };
+};
+
+/**
+ * Calculate a complete estimation based on the provided form data
+ * @param data The form data
+ * @returns The estimated amount and breakdown
+ */
+export const calculateEstimation = (data: FormData): EstimationResponseData => {
+  return generateEstimationResult(data);
 };
 
 const calculateConstructionCosts = (data: FormData) => {

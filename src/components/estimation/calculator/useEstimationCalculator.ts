@@ -3,7 +3,6 @@ import { useState, useCallback } from 'react';
 import { FormData } from './types/formTypes';
 import { EstimationResponseData } from './types/estimationTypes';
 import { generateEstimationResult } from './calculations/estimationCalculator';
-import { adaptToEstimationResponseData } from './utils/dataAdapter';
 import { ensureNumber } from './utils/typeConversions';
 
 export const useEstimationCalculator = () => {
@@ -75,30 +74,14 @@ export const useEstimationCalculator = () => {
   const finalizeEstimation = useCallback(() => {
     const result = calculateEstimationResult();
     
-    // Add additional data needed for the response
-    const completeResult: EstimationResponseData = {
-      ...result,
-      projectType: formData.projectType || '',
-      projectDetails: {
-        surface: ensureNumber(formData.surface),
-        location: formData.city || '',
-        projectType: formData.projectType || '',
-        city: formData.city || '',
-        bedrooms: ensureNumber(formData.bedrooms),
-        bathrooms: ensureNumber(formData.bathrooms),
-      },
-      estimatedCost: result.totalAmount,
-      dateGenerated: new Date().toISOString(),
-      isComplete: true
-    };
-    
-    setEstimationResult(completeResult);
+    // Complete result is already created in generateEstimationResult
+    setEstimationResult(result);
     
     // Move to the results step
     goToNextStep();
     
-    return completeResult;
-  }, [calculateEstimationResult, formData, goToNextStep]);
+    return result;
+  }, [calculateEstimationResult, goToNextStep]);
 
   return {
     step,
