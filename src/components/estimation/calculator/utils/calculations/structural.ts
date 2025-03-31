@@ -63,3 +63,26 @@ const getStructuralFeatureCostPerUnit = (feature: string): number => {
     default: return 0;
   }
 };
+
+/**
+ * Calculate masonry wall costs
+ */
+export const calculateMasonryWallCost = (wallType: string, area: number): number => {
+  const costPerSquareMeter = getMasonryWallCostPerSquareMeter(wallType);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different masonry wall types
+ */
+const getMasonryWallCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'briques': return 590;
+    case 'parpaing': return 580;
+    case 'porotherme': return 430;
+    case 'pierre': return 730;
+    case 'beton': return 500;
+    case 'beton_cellulaire': return 433;
+    default: return 0;
+  }
+};
