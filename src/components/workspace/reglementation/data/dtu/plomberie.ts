@@ -3,234 +3,326 @@ import { DTU } from '../../dtu/types';
 
 export const plomberieDTUs: DTU[] = [
   {
-    id: "dtu-60-1",
+    id: "dtu-plomberie-1",
     title: "DTU 60.1 - Plomberie sanitaire",
     category: "Plomberie",
-    description: "Installation des réseaux d'alimentation en eau et d'évacuation des eaux usées",
-    lastUpdate: "Mars 2023",
+    description: "Plomberie sanitaire pour bâtiments à usage d'habitation",
+    lastUpdate: "Décembre 2023",
     rules: [
       {
-        title: "Dimensionnement réseaux eau froide",
-        content: "Vitesse maximale : 2 m/s en colonnes, 1,5 m/s en distribution secondaire. Dimensionnement selon débits probables : ∑de (0,8×débit total cumulé).",
+        title: "Dimensionnement des canalisations",
+        content: "Diamètre minimal des canalisations : 12 mm pour distribution EF/ECS, 32 mm pour évacuation lavabo, 100 mm pour chute EU/EV principales",
         type: "standard"
       },
       {
-        title: "Diamètre minimal évacuation",
-        content: "Diamètre minimal des canalisations d'évacuation : lavabo 32 mm, douche 40 mm, baignoire 40 mm, WC 100 mm, évier 40 mm.",
+        title: "Pente d'évacuation",
+        content: "Pente minimale de 1% pour les collecteurs d'évacuation d'eaux usées, 2% recommandé pour un fonctionnement optimal",
         type: "standard"
       },
       {
-        title: "Pente des évacuations",
-        content: "Pente minimale des canalisations d'évacuation horizontales : 1 cm/m pour les eaux usées, 0,5 cm/m pour les eaux pluviales.",
+        title: "Protection contre le gel",
+        content: "Protection contre le gel obligatoire pour les canalisations situées dans des locaux non chauffés ou en extérieur, par calorifugeage ou traçage",
         type: "warning"
       },
       {
-        title: "Rosaces de finition",
-        content: "Toute traversée de paroi visible doit être équipée d'une rosace de finition, fixée à la canalisation ou à la paroi.",
+        title: "Anti-bélier",
+        content: "Dispositif anti-bélier obligatoire en point haut des colonnes montantes et recommandé sur les circuits alimetnant robinetterie à fermeture rapide",
         type: "tip"
       },
       {
-        title: "Disconnexion",
-        content: "Tout réseau d'eau potable doit être protégé contre les retours d'eau par un dispositif de protection adapté au risque (EA, EB, CA, BA ou AA selon NF EN 1717).",
+        title: "Vitesse d'écoulement",
+        content: "Vitesse d'écoulement dans les canalisations limitée à 2 m/s pour éviter bruits et érosion (1,5 m/s recommandé en pratique)",
         type: "standard"
+      },
+      {
+        title: "Dilatation des tubes",
+        content: "Prévoir des lyres, boucles ou compensateurs de dilatation pour absorber la dilatation thermique des tubes (cuivre : 0,017 mm/m/°C)",
+        type: "warning"
       }
     ],
     sections: [
       {
+        title: "Domaine d'application",
+        content: "Le DTU 60.1 s'applique aux installations de plomberie sanitaire (distribution d'eau et évacuation) dans les bâtiments à usage d'habitation, bureaux et ERP."
+      },
+      {
         title: "Matériaux autorisés",
-        content: "Pour l'eau potable : cuivre, PER, multicouche, PP, PVC-C. Pour l'évacuation : PVC, fonte, PE. Compatibilité obligatoire avec la nature de l'eau distribuée (notamment pour l'eau chaude)."
+        content: "Distribution : cuivre, PER, multicouche, PVCC, acier galvanisé. Évacuation : PVC, fonte, PE-HD, PP. Chaque matériau a ses contraintes spécifiques."
       },
       {
-        title: "Isolation des canalisations",
-        content: "Isolation thermique obligatoire pour l'eau chaude (épaisseur selon diamètre) et pour éviter la condensation sur les tuyaux d'eau froide. Protection contre le gel pour les parties exposées."
+        title: "Débit de base",
+        content: "Les débits de base normalisés (lavabo 0,2 L/s, douche 0,2 L/s, baignoire 0,33 L/s, évier 0,2 L/s, WC 0,1 L/s) permettent le dimensionnement des canalisations."
       },
       {
-        title: "Ventilation du réseau d'évacuation",
-        content: "Ventilation primaire (prolongation de la chute jusqu'en toiture) obligatoire. Ventilation secondaire nécessaire pour les chutes > 10 m ou desservant plus de 6 niveaux."
+        title: "Protection sanitaire",
+        content: "Dispositifs de protection contre les retours d'eau obligatoires selon le niveau de risque (EA, EB, HA, HB, HC) défini par la norme NF EN 1717."
       },
       {
-        title: "Fixation des canalisations",
-        content: "Espacement maximal des supports : 2,5 m pour le PVC, 0,5 m pour le PER nu, 1,3 à 2,0 m pour le cuivre selon diamètre. Dilatation à prendre en compte (lyres ou compensateurs)."
+        title: "Isolation acoustique",
+        content: "Fixation des canalisations par colliers isophoniques, désolidarisation des traversées de parois, et limitation des vitesses d'écoulement pour limiter le bruit."
       }
     ],
     schemas: [
       {
         id: "schema-plomberie-1",
-        title: "Schéma de principe",
-        imageUrl: "/images/schemas/plomberie-principe.png",
-        description: "Schéma de principe d'une installation de plomberie en habitation avec alimentation et évacuation."
+        title: "Réseau de distribution",
+        imageUrl: "/images/schemas/reseau-plomberie.png",
+        description: "Schéma d'un réseau de distribution d'eau froide et chaude avec nourrice de distribution et bouclage ECS."
+      },
+      {
+        id: "schema-plomberie-2",
+        title: "Évacuation salle de bains",
+        imageUrl: "/images/schemas/evacuation-sdb.png",
+        description: "Détail des évacuations d'une salle de bains avec siphons, pentes et raccordement à la chute."
+      },
+      {
+        id: "schema-plomberie-3",
+        title: "Anti-bélier",
+        imageUrl: "/images/schemas/anti-belier.png",
+        description: "Installation d'un dispositif anti-bélier en point haut d'une colonne montante."
       }
     ]
   },
   {
-    id: "dtu-60-11",
-    title: "DTU 60.11 - Dimensionnement plomberie",
+    id: "dtu-plomberie-2",
+    title: "DTU 60.5 - Canalisations en cuivre",
     category: "Plomberie",
-    description: "Règles de calcul des installations de plomberie sanitaire et d'eaux pluviales",
-    lastUpdate: "Février 2023",
+    description: "Distribution d'eau en tubes de cuivre",
+    lastUpdate: "Novembre 2023",
     rules: [
       {
-        title: "Débits de base",
-        content: "Débits minimaux aux points de puisage : Lavabo 0,20 L/s, Évier 0,20 L/s, Douche 0,20 L/s, Baignoire 0,33 L/s, WC 0,12 L/s.",
+        title: "Cintrage des tubes",
+        content: "Rayon de cintrage minimal égal à 3 fois le diamètre extérieur pour cintrage à froid avec cintreuse, 8 fois pour cintrage manuel",
         type: "standard"
       },
       {
-        title: "Calcul du débit probable",
-        content: "Pour 'n' appareils identiques : Qp = Q × y où y = 0,8 × √n-1 (pour les logements) ou y = 0,5 × √n-1 (pour locaux à forte simultanéité).",
-        type: "standard"
-      },
-      {
-        title: "Diamètre des collecteurs",
-        content: "Pour les collecteurs d'évacuation horizontaux, le taux de remplissage ne doit pas dépasser 50% pour les EU/EV et 70% pour les EP.",
-        type: "warning"
-      },
-      {
-        title: "Abaque de Bazin",
-        content: "Utiliser l'abaque de Bazin pour déterminer rapidement les diamètres en fonction des débits et des pertes de charge linéaires acceptables.",
-        type: "tip"
-      },
-      {
-        title: "Pression résiduelle",
-        content: "Pression résiduelle minimale au point de puisage le plus défavorisé : 1,0 bar pour robinetterie courante, 1,5 bar pour chauffe-eau instantané.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Dimensionnement des chutes EU/EV",
-        content: "Le diamètre des chutes EU/EV est déterminé selon le nombre d'équipements sanitaires desservis et leur débit de base cumulé, avec un remplissage maximal de 1/3 du diamètre."
-      },
-      {
-        title: "Dispositifs anti-bélier",
-        content: "Installer des dispositifs anti-bélier pour limiter les coups de bélier dans les installations avec robinets à fermeture rapide, électrovannes ou surpresseurs, dimensionnés selon formule spécifique."
-      },
-      {
-        title: "Pertes de charge singulières",
-        content: "Les pertes de charge singulières (coudes, tés, vannes) peuvent être évaluées soit par addition des longueurs équivalentes, soit en majorant de 20 à 50% les pertes linéaires."
-      },
-      {
-        title: "Calibrage des compteurs",
-        content: "Le calibre du compteur doit être choisi selon le débit probable de l'installation, en évitant le surdimensionnement qui réduit la sensibilité aux petits débits."
-      }
-    ]
-  },
-  {
-    id: "dtu-65-10",
-    title: "DTU 65.10 - Canalisations eau chaude",
-    category: "Plomberie",
-    description: "Canalisations d'eau chaude ou froide sous pression",
-    lastUpdate: "Janvier 2023",
-    rules: [
-      {
-        title: "Température maximale",
-        content: "Pour la distribution d'ECS, la température maximale de stockage est de 65°C et distribution à 50-55°C pour limiter les risques de brûlure.",
+        title: "Brasage",
+        content: "Brasage fort (≥ 450°C) obligatoire pour les installations de gaz, brasage tendre (< 450°C) autorisé pour les installations sanitaires",
         type: "standard"
       },
       {
         title: "Dilatation thermique",
-        content: "Prévoir 0,7 mm/m pour 10°C de variation pour le PVC, 0,15 mm/m/10°C pour le cuivre, 1,5 mm/m/10°C pour le PE et 2,0 mm/m/10°C pour le PER.",
-        type: "standard"
-      },
-      {
-        title: "Boucle de récirculation",
-        content: "Obligatoire si la distance entre production et point de puisage > 8 m. Dimensionnement pour assurer une température > 50°C en tout point.",
+        content: "Prévoir un point fixe et un point coulissant tous les 25 m maximum pour absorber la dilatation thermique (coefficient 0,017 mm/m/°C)",
         type: "warning"
       },
       {
-        title: "Isolation thermique",
-        content: "Épaisseur minimale d'isolant de classe au moins 2 selon EN ISO 12241 : 20 mm pour Ø ≤ 42mm, 30 mm pour Ø > 42mm, majorée en extérieur.",
+        title: "Fixation des tubes",
+        content: "Espacement maximal entre supports : 1,25 m pour diamètre 10-12 mm, 1,80 m pour diamètre 14-18 mm, 2,50 m pour diamètre > 42 mm",
         type: "tip"
       },
       {
-        title: "Protection contre la légionelle",
-        content: "Éviter les bras morts, maintenir > 55°C dans le réseau, > 60°C en production. Choc thermique périodique recommandé à 70°C pendant 30 minutes.",
+        title: "Protection contre l'électrolyse",
+        content: "Manchons isolants obligatoires aux jonctions entre cuivre et autres métaux (acier, fonte) pour éviter la corrosion galvanique",
         type: "standard"
+      },
+      {
+        title: "Protection contre le gel",
+        content: "Calorifugeage avec épaisseur mini de 9 mm en locaux chauffés et 13 mm en locaux non chauffés, 19 mm en extérieur",
+        type: "warning"
       }
     ],
     sections: [
       {
-        title: "Compatibilité des matériaux",
-        content: "La compatibilité électrochimique doit être vérifiée pour éviter la corrosion galvanique entre métaux différents. Utiliser des raccords diélectriques entre cuivre et acier galvanisé."
+        title: "Domaine d'application",
+        content: "Le DTU 60.5 s'applique aux conduites d'alimentation d'eau froide et d'eau chaude sanitaire en tubes de cuivre, à l'exclusion des tubes pré-isolés et pré-gainés."
       },
       {
-        title: "Réseaux ECS collectifs",
-        content: "Les réseaux ECS collectifs doivent comporter des organes d'équilibrage pour assurer une distribution homogène. Chaque colonne doit être équipée d'un robinet d'arrêt et de vidange."
+        title: "Nature des tubes",
+        content: "Tubes en cuivre conformes à la norme NF EN 1057, avec trois états de livraison : écroui (rigide), demi-écroui et recuit (flexible), selon les usages."
       },
       {
-        title: "Fixation et supports",
-        content: "Les canalisations doivent être fixées avec des supports adaptés à leur nature et à leur poids, permettant la dilatation tout en maintenant la pente requise."
+        title: "Modes d'assemblage",
+        content: "Assemblage par raccords à braser, à compression mécanique, à sertir ou à emboîture, chacun avec ses contraintes de mise en œuvre et domaines d'emploi."
       },
       {
-        title: "Acoustique",
-        content: "Pour limiter les nuisances sonores, la vitesse d'écoulement doit être ≤ 1,5 m/s et les traversées de parois doivent être désolidarisées par des fourreaux souples dépassant de 2 cm."
+        title: "Protection des tubes",
+        content: "Fourreaux obligatoires pour traversées de parois, planchers et pour les canalisations encastrées, avec diamètre intérieur supérieur de 5 mm au diamètre extérieur du tube."
+      },
+      {
+        title: "Essais",
+        content: "Essai d'étanchéité à l'eau froide obligatoire à 1,5 fois la pression de service sans dépasser 10 bars, maintenue pendant 2 heures avec contrôle visuel."
       }
     ],
     schemas: [
       {
-        id: "schema-ecs-1",
-        title: "Principe bouclage ECS",
-        imageUrl: "/images/schemas/bouclage-ecs.png",
-        description: "Schéma de principe d'une installation ECS avec boucle de récirculation et équilibrage."
+        id: "schema-plomberie-4",
+        title: "Assemblage par brasage",
+        imageUrl: "/images/schemas/brasage-cuivre.png",
+        description: "Étapes d'un assemblage par brasage capillaire : préparation, flux, chauffage et introduction de l'alliage."
+      },
+      {
+        id: "schema-plomberie-5",
+        title: "Lyre de dilatation",
+        imageUrl: "/images/schemas/lyre-dilatation.png",
+        description: "Dimensionnement d'une lyre de dilatation en fonction de la longueur de tube et de l'écart de température."
+      },
+      {
+        id: "schema-plomberie-6",
+        title: "Protection électrolytique",
+        imageUrl: "/images/schemas/protection-electrolytique.png",
+        description: "Détail d'un manchon isolant à la jonction entre un tube cuivre et un tube acier."
       }
     ]
   },
   {
-    id: "dtu-65-12",
-    title: "DTU 65.12 - Installations solaires thermiques",
+    id: "dtu-plomberie-3",
+    title: "DTU 60.31 - Canalisations en PVC",
     category: "Plomberie",
-    description: "Réalisation des installations de capteurs solaires pour eau chaude sanitaire",
-    lastUpdate: "Avril 2023",
+    description: "Travaux de canalisations en PVC non plastifié pour évacuation",
+    lastUpdate: "Août 2023",
     rules: [
       {
-        title: "Orientation capteurs",
-        content: "Orientation optimale plein sud (±15°), inclinaison optimale = latitude ±10° (environ 30 à 45° en France métropolitaine).",
+        title: "Pente d'écoulement",
+        content: "Pente minimale de 1 cm/m pour eaux usées, 0,5 cm/m pour eaux pluviales, pour garantir un auto-curage efficace",
         type: "standard"
       },
       {
-        title: "Dimensionnement capteurs",
-        content: "Surface capteurs ECS : 1 m² par personne en habitat collectif, 1,2 m² par personne en habitat individuel pour couverture solaire de 50 à 60%.",
+        title: "Dilatation thermique",
+        content: "Coefficient de dilatation du PVC : 0,08 mm/m/°C. Prévoir un manchon coulissant tous les 12 m ou compenser par battement",
         type: "standard"
       },
       {
-        title: "Surchauffe estivale",
-        content: "Prévoir une protection contre les surchauffes : vase d'expansion surdimensionné, système autovidangeable ou aérorefroidisseur automatique.",
+        title: "Fixation des tubes",
+        content: "Espacement maximal entre colliers : 0,50 m pour Ø ≤ 50 mm, 0,80 m pour Ø ≤ 110 mm, 1,20 m pour Ø ≤ 160 mm",
         type: "warning"
       },
       {
-        title: "Fluide caloporteur",
-        content: "Utiliser un fluide caloporteur avec antigel adapté à la température minimale locale (-15 à -20°C), avec vérification annuelle du pH (>7).",
+        title: "Assemblage par collage",
+        content: "Pour un assemblage par collage efficace, chanfreiner l'extrémité du tube à 15°, nettoyer et décaper les surfaces, encoller uniformément",
         type: "tip"
       },
       {
-        title: "Stockage thermique",
-        content: "Volume de stockage ECS : 50 à 70 litres par m² de capteur solaire, avec stratification thermique favorisée par une hauteur > 2 fois le diamètre.",
+        title: "Protection contre le feu",
+        content: "En traversée de paroi coupe-feu, prévoir un dispositif intumescent pour maintenir le degré coupe-feu de la paroi",
         type: "standard"
+      },
+      {
+        title: "Coudes et changements de direction",
+        content: "Coudes à 87,30° préférables aux coudes à 90° pour faciliter l'écoulement. Pour Ø > 110 mm, utiliser deux coudes à 45° avec tronçon droit intermédiaire",
+        type: "warning"
       }
     ],
     sections: [
       {
-        title: "Types de capteurs",
-        content: "Le DTU couvre les capteurs plans vitrés, les capteurs sous vide et les capteurs auto-stockeurs, avec des spécificités de mise en œuvre pour chaque technologie."
+        title: "Domaine d'application",
+        content: "Le DTU 60.31 s'applique aux canalisations en PVC-U pour l'évacuation des eaux usées et eaux vannes à écoulement libre dans les bâtiments."
       },
       {
-        title: "Implantation",
-        content: "Les capteurs peuvent être implantés en toiture (intégrés ou surimposés), en terrasse, en façade ou au sol, avec des règles d'ancrage et d'étanchéité spécifiques à chaque cas."
+        title: "Types de tubes",
+        content: "Tubes et raccords en PVC-U conformes aux normes NF EN 1329-1 (usage intérieur) et NF EN 1401-1 (usage enterré), avec différentes classes de rigidité."
       },
       {
-        title: "Composants hydrauliques",
-        content: "Circuit primaire avec circulateur solaire haute température, vase d'expansion fermé (capacité ≥ 6% du volume total), soupape tarée à 6 bar et purgeurs d'air automatiques à clapet."
+        title: "Méthodes d'assemblage",
+        content: "Assemblage par collage (emboîture à coller), par joint élastomère ou par joint mixte (collage + joint), selon les contraintes d'installation et de démontage."
       },
       {
-        title: "Monitoring",
-        content: "Installation de compteurs d'énergie obligatoire pour les installations > 20 m², recommandée pour toutes les installations, avec relevé des températures et pressions aux points clés."
+        title: "Ventilation primaire",
+        content: "La ventilation primaire (prolongement de la chute en toiture) est obligatoire, avec diamètre identique à celui de la chute sur toute sa hauteur."
+      },
+      {
+        title: "Ventilation secondaire",
+        content: "La ventilation secondaire (décompression des siphons) est nécessaire pour les chutes de hauteur > 10 m ou desservant plus de 6 niveaux."
       }
     ],
     schemas: [
       {
-        id: "schema-solaire-1",
-        title: "Schéma installation solaire",
-        imageUrl: "/images/schemas/installation-solaire.png",
-        description: "Schéma de principe d'une installation solaire thermique pour ECS avec échangeur externe."
+        id: "schema-plomberie-7",
+        title: "Évacuation sanitaire",
+        imageUrl: "/images/schemas/evacuation-sanitaire.png",
+        description: "Schéma d'un réseau d'évacuation sanitaire en PVC avec chute, ventilation primaire et collecteur."
+      },
+      {
+        id: "schema-plomberie-8",
+        title: "Dilatation des tubes PVC",
+        imageUrl: "/images/schemas/dilatation-pvc.png",
+        description: "Dispositifs de compensation de dilatation thermique pour tubes PVC : manchons coulissants et battements."
+      },
+      {
+        id: "schema-plomberie-9",
+        title: "Raccordement à la cuve",
+        imageUrl: "/images/schemas/raccordement-cuve.png",
+        description: "Détail de raccordement d'une canalisation PVC à une cuve ou un siphon de sol."
+      }
+    ]
+  },
+  {
+    id: "dtu-plomberie-4",
+    title: "DTU 65.10 - Canalisations d'eau chaude",
+    category: "Plomberie",
+    description: "Canalisations d'eau chaude sous pression",
+    lastUpdate: "Avril 2023",
+    rules: [
+      {
+        title: "Température maximale",
+        content: "Température maximale de service continu : 60°C en distribution ECS, 80°C en chauffage central pour tubes thermoplastiques",
+        type: "standard"
+      },
+      {
+        title: "Calorifugeage",
+        content: "Calorifugeage obligatoire pour limiter les pertes thermiques : classe 2 (λ ≤ 0,035 W/m.K, épaisseur selon diamètre) en volume chauffé",
+        type: "standard"
+      },
+      {
+        title: "Bouclage ECS",
+        content: "Bouclage obligatoire si distance > 8 m entre production et point de puisage (ou contenance > 3L) pour limiter temps d'attente et gaspillage",
+        type: "warning"
+      },
+      {
+        title: "Choix des matériaux",
+        content: "Compatibilité des matériaux avec la qualité de l'eau (dureté, pH, chlorures) pour éviter corrosion. Consulter les données locales de l'eau",
+        type: "tip"
+      },
+      {
+        title: "Fixation des tubes",
+        content: "Supports tous les 0,80 m pour PER et multicouche en apparent, avec points fixes et coulissants pour gérer la dilatation",
+        type: "standard"
+      },
+      {
+        title: "Protection contre les brûlures",
+        content: "Limiteur de température réglé à 50°C max obligatoire en aval des points de puisage pour éviter les risques de brûlure",
+        type: "warning"
+      }
+    ],
+    sections: [
+      {
+        title: "Domaine d'application",
+        content: "Le DTU 65.10 s'applique aux canalisations d'eau chaude sous pression pour le chauffage central et la distribution d'eau chaude sanitaire."
+      },
+      {
+        title: "Protection contre l'entartrage",
+        content: "Pour les eaux dures (TH > 25°f), prévoir un traitement anti-tartre (adoucisseur, traitement sur polyphosphates) pour les températures > 55°C."
+      },
+      {
+        title: "Traitement anti-légionelles",
+        content: "Maintien de l'eau > 55°C dans la boucle, choc thermique périodique à 70°C, purges des bras morts et entretien régulier des installations."
+      },
+      {
+        title: "Calorifugeage",
+        content: "Classes d'isolation selon emplacement : classe 2 en volume chauffé, classe 4 en volume non chauffé, classe 5 en extérieur, avec barrière anti-vapeur si nécessaire."
+      },
+      {
+        title: "Maintenance",
+        content: "Prévoir des organes d'isolement et de vidange sur les tronçons principaux pour faciliter la maintenance. Vannes tous les 20 m recommandées."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-plomberie-10",
+        title: "Bouclage ECS",
+        imageUrl: "/images/schemas/bouclage-ecs.png",
+        description: "Schéma d'un bouclage d'eau chaude sanitaire avec circulateur, équilibrage et traçage des températures."
+      },
+      {
+        id: "schema-plomberie-11",
+        title: "Dilatation multicouche",
+        imageUrl: "/images/schemas/dilatation-multicouche.png",
+        description: "Techniques de gestion de la dilatation pour tubes multicouches : lyre, changement de direction, compensateur."
+      },
+      {
+        id: "schema-plomberie-12",
+        title: "Limiteur de température",
+        imageUrl: "/images/schemas/limiteur-temperature.png",
+        description: "Installation d'un limiteur de température pour point de puisage avec réglage et sécurité anti-brûlure."
       }
     ]
   }

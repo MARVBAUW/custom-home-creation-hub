@@ -6,59 +6,80 @@ export const revetementsDTUs: DTU[] = [
     id: "dtu-revetement-1",
     title: "DTU 52.2 - Pose collée des revêtements céramiques",
     category: "Revêtements",
-    description: "Pose de carrelage et assimilés en intérieur et extérieur",
-    lastUpdate: "Janvier 2023",
+    description: "Pose de carrelage céramique et assimilés - pierre naturelle - en travaux neufs",
+    lastUpdate: "Janvier 2024",
     rules: [
       {
         title: "Planéité du support",
-        content: "Tolérance de planéité: 5 mm sous la règle de 2 m et 2 mm sous le réglet de 20 cm pour pose traditionnelle, 3 mm et 1 mm pour pose collée.",
+        content: "Tolérance de planéité 5 mm sous la règle de 2 m et 2 mm sous le réglet de 20 cm pour pose collée standard",
         type: "standard"
-      },
-      {
-        title: "Choix du mortier-colle",
-        content: "C2 minimum pour les grands formats (>60×60 cm), murs extérieurs, sols chauffants et piscines. C2S requis en façade et C2E exigé en terrasse extérieure.",
-        type: "standard"
-      },
-      {
-        title: "Double encollage",
-        content: "Double encollage obligatoire pour les carreaux de surface >500 cm² au mur et >1100 cm² au sol intérieur, >400 cm² au sol extérieur.",
-        type: "warning"
-      },
-      {
-        title: "Joints minimum",
-        content: "Largeur minimale des joints: 2 mm en murs intérieurs, 3 mm en sols intérieurs, 4 mm en extérieur, 5 mm pour les pierres naturelles.",
-        type: "tip"
       },
       {
         title: "Fractionnement",
-        content: "Joints de fractionnement tous les 40 m² en intérieur (ou 8 m linéaires), 20 m² en extérieur (ou 5 m linéaires), et à chaque seuil de porte.",
+        content: "Joints de fractionnement obligatoires tous les 40 m² en intérieur (8 m max entre joints) et 20 m² en extérieur (5 m max)",
         type: "standard"
+      },
+      {
+        title: "Choix de la colle",
+        content: "Utiliser une colle adaptée au support, au format, à la porosité des carreaux et à la destination des locaux (C2S minimum en extérieur)",
+        type: "warning"
+      },
+      {
+        title: "Double encollage",
+        content: "Double encollage obligatoire pour les carreaux > 500 cm² en murs intérieurs, > 1100 cm² en murs extérieurs et > 500 cm² en sols extérieurs",
+        type: "tip"
+      },
+      {
+        title: "Largeur des joints",
+        content: "Largeur minimale des joints entre carreaux : 2 mm en intérieur, 4 mm en extérieur, 5 mm pour pierres naturelles",
+        type: "standard"
+      },
+      {
+        title: "Délais avant jointoiement",
+        content: "Respecter un délai de séchage de 24h à 48h après la pose des carreaux avant de réaliser les joints, selon le type de colle utilisé",
+        type: "warning"
       }
     ],
     sections: [
       {
-        title: "Classification des supports",
-        content: "Supports classés selon leur porosité, stabilité et exposition à l'eau: supports neufs (béton, chape, enduit), supports existants (ancien carrelage, peinture), supports spéciaux (bois, métal)."
+        title: "Classification des locaux",
+        content: "Le DTU classe les locaux selon leur exposition à l'eau : EA (locaux secs), EB (faible exposition), EB+ privé (salle de bains), EB+ collectif (douches collectives), EC (cuisines collectives)."
       },
       {
-        title: "Exposition à l'eau",
-        content: "Quatre niveaux d'exposition: EA (faible), EB (moyenne), EB+ (forte intermittente) et EC (forte permanente), déterminant les produits et techniques à utiliser, notamment l'étanchéité."
+        title: "Supports admissibles",
+        content: "Béton, chape, ancien carrelage, dalles semi-flexibles (sous conditions), enduit à base de ciment, plaque de plâtre hydrofuge (en local EB+ privé uniquement)."
       },
       {
         title: "Préparation des supports",
-        content: "Délai minimal avant pose: 28 jours pour dallage, 2 mois pour plancher béton, 3 semaines pour chape ou enduit. Primaire d'adhérence obligatoire sur supports fermés."
+        content: "Les supports doivent être propres, cohésifs, plans, secs (humidité < 5% pour supports base ciment) et stables. Primaire d'accrochage selon les cas."
       },
       {
-        title: "Formats et types de pose",
-        content: "Les formats admissibles varient selon le support et la technique de pose. La pose à joints décalés (>1/3) est limitée aux formats <30 cm, sinon joints alignés obligatoires."
+        title: "Protection à l'eau",
+        content: "SPEC (Système de Protection à l'Eau sous Carrelage) obligatoire dans les zones exposées à l'eau en EB+ privatif sur supports sensibles à l'eau, et en EB+ collectif."
+      },
+      {
+        title: "Tolérances esthétiques",
+        content: "Désaffleur maximal entre carreaux : 1 mm + 0,5 mm pour des joints < 6 mm. Alignement des joints : écart maximal de 2 mm sous une règle de 2 m."
       }
     ],
     schemas: [
       {
-        id: "schema-revetement-1",
-        title: "Détail pose carrelage",
-        imageUrl: "/images/schemas/pose-carrelage.png",
-        description: "Coupe montrant la structure d'un carrelage collé avec traitement périphérique et joint de fractionnement."
+        id: "schema-carrelage-1",
+        title: "Pose collée sur chape",
+        imageUrl: "/images/schemas/pose-collee-chape.png",
+        description: "Coupe verticale montrant les différentes couches d'une pose collée sur chape : support, colle, carreau et joint."
+      },
+      {
+        id: "schema-carrelage-2",
+        title: "Joint de fractionnement",
+        imageUrl: "/images/schemas/joint-fractionnement.png",
+        description: "Détail d'un joint de fractionnement dans un revêtement carrelé avec profilé spécifique."
+      },
+      {
+        id: "schema-carrelage-3",
+        title: "Double encollage",
+        imageUrl: "/images/schemas/double-encollage.png",
+        description: "Technique du double encollage : application de colle sur le support et sur l'envers du carreau."
       }
     ]
   },
@@ -66,179 +87,161 @@ export const revetementsDTUs: DTU[] = [
     id: "dtu-revetement-2",
     title: "DTU 51.2 - Parquets collés",
     category: "Revêtements",
-    description: "Parquets et revêtements de sol en bois collés",
+    description: "Pose de parquets collés",
     lastUpdate: "Mars 2023",
     rules: [
       {
         title: "Humidité du support",
-        content: "Humidité maximale du support: 3% pour chape ciment, 0,5% pour chape anhydrite. Mesure obligatoire au bombe à carbure avant pose.",
+        content: "Humidité maximale du support : 3% pour chape ciment, 0,5% pour chape anhydrite (sulfate de calcium)",
         type: "standard"
       },
       {
         title: "Humidité du bois",
-        content: "Humidité des parquets à la livraison: 7 à 11% en moyenne sur un lot, écart maximal de ±2% entre lames. Contrôle par humidimètre à pointes.",
+        content: "Humidité du parquet à la livraison : 7% à 11%, avec écart maximal de 2% entre lames pour limiter les déformations ultérieures",
         type: "standard"
       },
       {
-        title: "Joints périphériques",
-        content: "Joint périphérique obligatoire de 8 mm minimum, augmenté de 0,15% de la largeur de la pièce (>1,5 cm pour pièce >10 m), masqué par plinthe.",
+        title: "Jeu périphérique",
+        content: "Jeu périphérique obligatoire de 8 mm minimum pour permettre la dilatation du parquet, masqué par une plinthe ou un profilé",
         type: "warning"
       },
       {
-        title: "Collage adapté",
-        content: "Colle élastique pour grands formats (>70 cm) ou sur sol chauffant. Application sur toute la surface avec spatule dentée adaptée.",
+        title: "Choix de la colle",
+        content: "Colle adaptée au support et au type de parquet. Colles polyuréthanes recommandées pour supports difficiles et grands formats",
         type: "tip"
       },
       {
-        title: "Zone d'effet seuil",
-        content: "Fractionnement par joint de dilatation sous les portes (au droit de l'axe) si surface >40 m² ou longueur >8 m dans une direction.",
+        title: "Primaire d'accrochage",
+        content: "Primaire obligatoire sur chapes à base de sulfate de calcium et recommandé sur supports poreux pour améliorer l'adhérence",
         type: "standard"
+      },
+      {
+        title: "Stabilisation thermique",
+        content: "Les lames de parquet doivent être entreposées dans la pièce de pose au moins 48h avant installation pour s'acclimater",
+        type: "warning"
       }
     ],
     sections: [
       {
-        title: "Types de parquets",
-        content: "Trois types principaux: parquets contrecollés (2 ou 3 plis), parquets massifs (épaisseur ≥14 mm) et parquets mosaïques, chacun avec des règles de pose spécifiques."
+        title: "Types de parquets admis",
+        content: "Parquets contrecollés (EN 13489), massifs à chants droits ≤ 90 mm de large (EN 13226), mosaïques (EN 13488) et en bois debout (EN 14761)."
       },
       {
         title: "Supports admissibles",
-        content: "Supports admissibles: chapes ciment, dalles béton, chapes anhydrite, panneaux dérivés du bois, ancien parquet, avec exigences de planéité de 5 mm sous règle de 2 m."
+        content: "Chapes à base de ciment, chapes fluides à base de sulfate de calcium, planchers béton, anciens revêtements adhérents (carrelage, dalles plastiques, anciens parquets)."
+      },
+      {
+        title: "Planéité requise",
+        content: "7 mm sous la règle de 2 m et 2 mm sous le réglet de 20 cm. Si non conforme, application d'un enduit de ragréage de classe P3 minimum."
+      },
+      {
+        title: "Mise en œuvre",
+        content: "Calepinage préalable, collage en plein avec peigne adapté (consommation selon préconisation du fabricant), marouflage et lestage si nécessaire."
       },
       {
         title: "Compatibilité sol chauffant",
-        content: "Sol chauffant: température de surface limitée à 28°C, mise en température progressive (5°C/jour), arrêt 48h avant pose, redémarrage progressif 7 jours après. Essences denses déconseillées."
-      },
-      {
-        title: "Finition et entretien",
-        content: "Finitions possibles: vernis, huile, cire, avec première application 24h minimum après pose. Entretien régulier selon type de finition, avec produits spécifiques non abrasifs."
+        content: "Parquet compatible sol chauffant : épaisseur totale ≤ 15 mm, bois de masse volumique ≥ 500 kg/m³. Mise en chauffe progressive avant et arrêt 48h avant pose."
       }
     ],
     schemas: [
       {
-        id: "schema-revetement-2",
+        id: "schema-parquet-1",
         title: "Coupe parquet collé",
         imageUrl: "/images/schemas/parquet-colle.png",
-        description: "Détail en coupe d'un parquet collé avec joint périphérique et jonction entre lames."
+        description: "Coupe type d'un parquet collé montrant le support, la colle, le parquet et le jeu périphérique."
+      },
+      {
+        id: "schema-parquet-2",
+        title: "Jonction avec autre revêtement",
+        imageUrl: "/images/schemas/jonction-parquet.png",
+        description: "Détail de jonction entre un parquet collé et un autre revêtement de sol (carrelage) avec profilé de transition."
+      },
+      {
+        id: "schema-parquet-3",
+        title: "Calepinage de parquet",
+        imageUrl: "/images/schemas/calepinage-parquet.png",
+        description: "Exemple de calepinage de parquet pour optimiser la disposition des lames et minimiser les chutes."
       }
     ]
   },
   {
     id: "dtu-revetement-3",
-    title: "DTU 53.2 - Revêtements de sol PVC",
+    title: "DTU 53.2 - Revêtements de sol PVC collés",
     category: "Revêtements",
-    description: "Revêtements de sol PVC collés",
-    lastUpdate: "Février 2023",
+    description: "Pose de revêtements de sol PVC collés",
+    lastUpdate: "Octobre 2023",
     rules: [
       {
-        title: "Support très plan",
-        content: "Tolérance de planéité: 3 mm sous la règle de 2 m et 1 mm sous le réglet de 20 cm, avec ragréage obligatoire si non conforme.",
+        title: "Humidité du support",
+        content: "Humidité maximale du support : 4,5% pour chape ciment, 0,5% pour chape anhydrite. Mesure obligatoire à la bombe à carbure",
         type: "standard"
       },
       {
-        title: "Humidité résiduelle",
-        content: "Humidité maximale du support: 4,5% pour dalle/chape ciment, 0,5% pour chape anhydrite. Test à la bombe à carbure obligatoire.",
+        title: "Température minimale",
+        content: "Température du local et du support ≥ 12°C pour la pose, avec maintien à ≥ 15°C pendant 48h après pose",
         type: "standard"
       },
       {
-        title: "Température de pose",
-        content: "Température du support et de l'air ambiant ≥ 12°C, jamais inférieure au point de rosée pour éviter la condensation sous le revêtement.",
+        title: "Remontée d'humidité",
+        content: "En présence de terre-plein sans barrière anti-remontée capillaire, prévoir un système de protection contre les remontées d'humidité",
         type: "warning"
+      },
+      {
+        title: "Marouflage",
+        content: "Marouflage soigné obligatoire, d'abord manuel puis avec un rouleau lesté (50 kg minimum) pour assurer un transfert optimal de la colle",
+        type: "tip"
+      },
+      {
+        title: "Joints entre lés",
+        content: "Joints soudés à chaud obligatoires dans les locaux humides (E2 et E3) et recommandés dans les autres pour garantir l'étanchéité",
+        type: "standard"
+      },
+      {
+        title: "Traitement des rives",
+        content: "En locaux humides, traitement des rives avec mastic MS Polymère après arasement du revêtement à 3 mm du mur",
+        type: "warning"
+      }
+    ],
+    sections: [
+      {
+        title: "Types de revêtements",
+        content: "Le DTU couvre les revêtements PVC homogènes et hétérogènes en lés, en dalles et en lames, conformes aux normes NF EN ISO 10581, 10582, 10595 et 10874."
+      },
+      {
+        title: "Classification des locaux",
+        content: "UPEC pour caractériser l'intensité d'usage, et E1, E2, E3 pour les locaux selon leur exposition à l'eau. Le choix du revêtement doit être adapté au classement."
+      },
+      {
+        title: "Préparation des supports",
+        content: "Enduit de préparation de sol obligatoire (ragréage autolissant de classe P3 minimum), avec primaire adapté au support. Ponçage et dépoussiérage avant pose."
+      },
+      {
+        title: "Choix de la colle",
+        content: "Colles acryliques (A1 ou A2) selon porosité du support, colle réactive (PU bi-composant) pour zones exposées à l'humidité ou aux fortes sollicitations."
       },
       {
         title: "Délai de mise en service",
-        content: "Délai minimal avant mise en service: 24h pour trafic piétonnier, 48h pour aménagement, 72h pour mise en place des meubles lourds.",
-        type: "tip"
-      },
-      {
-        title: "Traitement des joints",
-        content: "Traitement des joints par soudure à chaud (≥ 24h après collage) obligatoire en locaux humides (E2, E3), recommandé pour tous les lés PVC homogènes.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Types de revêtements PVC",
-        content: "Différents types: PVC homogène, hétérogène, compact ou sur mousse, en lés (2m), en dalles (30×30 à 60×60 cm) ou en lames (10×100 à 20×120 cm), avec classements UPEC."
-      },
-      {
-        title: "Colles compatibles",
-        content: "Colles acryliques, réactives (PU, époxy) ou alcool, selon le type de support, l'exposition à l'humidité et aux variations de température. Application à la spatule dentée fine."
-      },
-      {
-        title: "Remontées en plinthe",
-        content: "En locaux humides (E2, E3), remontée en plinthe obligatoire sur 7 cm minimum, avec forme d'appui (gorge) et fixation en partie haute par colle ou profil."
-      },
-      {
-        title: "Protection des sols",
-        content: "Protection obligatoire sous meubles (patins), éviter le caoutchouc (migration), maintenir humidité relative 40-60% et température 15-28°C en exploitation."
+        content: "24h minimum après pose pour un trafic pédestre normal, 48h pour aménagement des mobiliers, 72h pour mise en service complète."
       }
     ],
     schemas: [
       {
-        id: "schema-revetement-3",
-        title: "Détail remontée en plinthe",
-        imageUrl: "/images/schemas/remontee-plinthe.png",
-        description: "Principe de remontée en plinthe d'un revêtement PVC en local humide avec détail d'angle."
-      }
-    ]
-  },
-  {
-    id: "dtu-revetement-4",
-    title: "DTU 59.1 - Travaux de peinture",
-    category: "Revêtements",
-    description: "Travaux de peinture des bâtiments",
-    lastUpdate: "Avril 2023",
-    rules: [
-      {
-        title: "Conditions climatiques",
-        content: "Température minimale pour application: +8°C pour peintures aqueuses, +5°C pour peintures solvantées. Humidité relative <65% pour peintures sensibles.",
-        type: "standard"
+        id: "schema-pvc-1",
+        title: "Coupe sol PVC collé",
+        imageUrl: "/images/schemas/pvc-colle.png",
+        description: "Coupe d'un sol PVC collé avec préparation de support, colle et revêtement."
       },
       {
-        title: "État des supports",
-        content: "Supports secs: humidité <5% en masse pour mortiers/bétons, <12% pour bois. Supports non pulvérulents, cohésifs, propres et sans alcalinité résiduelle.",
-        type: "standard"
+        id: "schema-pvc-2",
+        title: "Traitement des rives en pièce humide",
+        imageUrl: "/images/schemas/rive-pvc.png",
+        description: "Détail du traitement d'étanchéité périphérique en local humide (mastic, plinthe)."
       },
       {
-        title: "Délai entre couches",
-        content: "Délai minimal entre couches de peinture: 12-24h pour glycéro, 2-6h pour acrylique, mais jamais moins que prescrit par le fabricant. Ponçage intermédiaire selon besoin.",
-        type: "warning"
-      },
-      {
-        title: "Échantillonnage préalable",
-        content: "Réaliser des échantillons de 1 m² minimum pour valider teinte, aspect (mat, satiné, brillant) et adhérence sur support représentatif.",
-        type: "tip"
-      },
-      {
-        title: "Aspect final",
-        content: "Aspect final évalué à 2 m de distance en lumière non rasante. Niveau de finition A (soigné), B (courant) ou C (économique) selon cahier des charges.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Types de peintures",
-        content: "Peintures acryliques, glycérophtaliques, polyuréthanes, époxy, minérales, chacune avec domaine d'emploi spécifique selon exposition (intérieur/extérieur) et contraintes."
-      },
-      {
-        title: "Travaux préparatoires",
-        content: "Les travaux préparatoires comprennent: égrenage, époussetage, lessivage, grattage, rebouchage, enduit de lissage, impression. Leur niveau dépend de la finition souhaitée."
-      },
-      {
-        title: "Systèmes de peinture",
-        content: "Système minimal: 1 couche d'impression + 2 couches de finition. Consommation totale minimale: 250 g/m² sur murs intérieurs, 400 g/m² en extérieur."
-      },
-      {
-        title: "Finition des boiseries",
-        content: "Boiseries: ponçage au grain 120 puis 180 avant impression. Rebouchage des nœuds et fentes avec produits spécifiques. Égrenage entre chaque couche au grain 240."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-revetement-4",
-        title: "Système complet de peinture",
-        imageUrl: "/images/schemas/systeme-peinture.png",
-        description: "Représentation des différentes couches d'un système complet de peinture sur diverses surfaces."
+        id: "schema-pvc-3",
+        title: "Soudure à chaud",
+        imageUrl: "/images/schemas/soudure-pvc.png",
+        description: "Étapes de réalisation d'une soudure à chaud entre lés de PVC : chanfreinage, soudure, arasage."
       }
     ]
   }

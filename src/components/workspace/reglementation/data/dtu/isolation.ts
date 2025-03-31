@@ -4,241 +4,325 @@ import { DTU } from '../../dtu/types';
 export const isolationDTUs: DTU[] = [
   {
     id: "dtu-isolation-1",
-    title: "DTU 45.1 - Isolation thermique des bâtiments",
+    title: "DTU 45.11 - Isolation thermique des bâtiments",
     category: "Isolation",
-    description: "Isolation thermique par l'intérieur des murs",
-    lastUpdate: "Décembre 2022",
+    description: "Isolation thermique de combles par soufflage d'isolant en vrac",
+    lastUpdate: "Juillet 2023",
     rules: [
       {
-        title: "Résistance thermique minimale",
-        content: "R ≥ 2,9 m².K/W pour les murs en rénovation (MaPrimeRénov'), R ≥ 4,5 m².K/W pour les murs neufs (RE2020).",
+        title: "Épaisseur minimale",
+        content: "Épaisseur minimale après tassement de 20 cm pour respecter les exigences thermiques actuelles (R ≥ 6 m².K/W)",
         type: "standard"
       },
       {
-        title: "Pare-vapeur",
-        content: "Pare-vapeur du côté chaud de l'isolant, Sd ≥ 18 m en climat de plaine, Sd ≥ 57 m en climat de montagne (>900 m).",
+        title: "Repérage de l'épaisseur",
+        content: "Installation de repères d'épaisseur (piges) régulièrement répartis, au minimum 1 pour 10 m² de combles",
         type: "standard"
       },
       {
-        title: "Risque de condensation",
-        content: "La position du pare-vapeur est cruciale: toujours du côté chaud (intérieur) de l'isolant, avec jonctions étanches à l'air.",
+        title: "Ventilation des combles",
+        content: "Section totale de ventilation ≥ 1/500 de la surface projetée en combles perdus, répartie entre partie basse et partie haute",
         type: "warning"
       },
       {
-        title: "Continuité d'isolation",
-        content: "Traiter soigneusement les ponts thermiques aux jonctions murs/planchers, murs/menuiseries et refends pour limiter les déperditions.",
+        title: "Distance aux conduits",
+        content: "Respecter un écart de 18 cm minimum avec les conduits de fumée et autres sources de chaleur (spots, moteurs)",
         type: "tip"
       },
       {
-        title: "Vide technique",
-        content: "Prévoir un vide technique de 25-45 mm entre le pare-vapeur et le parement pour le passage des réseaux sans percer le pare-vapeur.",
+        title: "Protection des spots",
+        content: "Capots de protection obligatoires autour des spots encastrés, dépassant de 10 cm au-dessus de l'isolant",
+        type: "warning"
+      },
+      {
+        title: "Étanchéité à l'air",
+        content: "Membrane d'étanchéité à l'air avec continuité assurée (chevauchements collés, raccordements périphériques) avant soufflage",
         type: "standard"
       }
     ],
     sections: [
       {
-        title: "Matériaux isolants",
-        content: "Le DTU couvre les isolants minéraux (laines de verre, de roche), synthétiques (PSE, XPS, PU) et biosourcés (fibre de bois, ouate de cellulose), sous forme de panneaux ou rouleaux."
+        title: "Domaine d'application",
+        content: "Le DTU 45.11 s'applique à l'isolation thermique des combles perdus non aménagés par soufflage d'isolant en vrac (laines minérales, ouate de cellulose, etc.)."
       },
       {
-        title: "Techniques de pose",
-        content: "Trois techniques principales: ossature métallique et plaques de plâtre, ossature bois et parement divers, ou complexes de doublage isolant-plaque de plâtre collés."
+        title: "Conditions préalables",
+        content: "Les conditions préalables incluent une toiture étanche, une charpente saine et dimensionnée pour supporter le poids de l'isolant, et un plancher de combles continu."
+      },
+      {
+        title: "Mise en œuvre",
+        content: "Le soufflage doit être réalisé avec une machine adaptée au produit, en respectant la masse volumique et l'épaisseur préconisées pour atteindre la résistance thermique visée."
       },
       {
         title: "Traitement des points singuliers",
-        content: "Points singuliers à traiter: menuiseries (tableau, appui), jonctions murs/planchers, angles sortants/rentrants, traversées de paroi (gaines, conduits), avec détails spécifiques."
+        content: "Traitement spécifique des trappes d'accès (isolation et étanchéité à l'air), des parois verticales (rehausse ou déflecteur) et des parties non isolées (coffrage)."
       },
       {
-        title: "Transferts hygrométriques",
-        content: "La gestion des transferts hygrométriques varie selon le type de paroi support et d'isolant, avec des règles spécifiques pour les supports peu perméables à la vapeur d'eau."
+        title: "Chemin de circulation",
+        content: "En cas d'accès régulier aux combles, prévoir des chemins de circulation surélevés au-dessus de l'isolant par planches ou panneaux sur plots ou suspentes."
       }
     ],
     schemas: [
       {
         id: "schema-isolation-1",
-        title: "Doublage sur ossature",
-        imageUrl: "/images/schemas/doublage-ossature.png",
-        description: "Coupe verticale montrant le principe d'un doublage sur ossature avec isolant et parement en plaque de plâtre."
+        title: "Soufflage en combles perdus",
+        imageUrl: "/images/schemas/soufflage-combles.png",
+        description: "Vue en coupe d'un comble isolé par soufflage avec membrane d'étanchéité, isolant en vrac et ventilation de la toiture."
+      },
+      {
+        id: "schema-isolation-2",
+        title: "Protection spot encastré",
+        imageUrl: "/images/schemas/protection-spot.png",
+        description: "Détail de la protection des spots encastrés par capot de protection dépassant de l'isolant."
+      },
+      {
+        id: "schema-isolation-3",
+        title: "Traitement trappe d'accès",
+        imageUrl: "/images/schemas/trappe-isolee.png",
+        description: "Traitement d'une trappe d'accès aux combles avec isolation rapportée et joint d'étanchéité périphérique."
       }
     ]
   },
   {
     id: "dtu-isolation-2",
-    title: "DTU 45.3 - Isolation par l'intérieur des planchers",
+    title: "DTU 45.10 - Isolation des combles",
     category: "Isolation",
-    description: "Isolation thermique et acoustique par l'intérieur des planchers",
+    description: "Isolation thermique des combles par panneaux ou rouleaux",
     lastUpdate: "Février 2023",
     rules: [
       {
-        title: "Résistance thermique minimale",
-        content: "R ≥ 2,5 m².K/W pour les planchers bas sur vide sanitaire ou local non chauffé, R ≥ 3,0 m².K/W pour les planchers sur terre-plein.",
+        title: "Mise en œuvre en deux couches",
+        content: "Pose en deux couches croisées recommandée pour limiter les ponts thermiques et atteindre des résistances thermiques élevées",
         type: "standard"
       },
       {
-        title: "Fixation mécanique",
-        content: "Fixation mécanique obligatoire pour les isolants en sous-face, avec au moins 5 fixations par m² et disposition en quinconce.",
+        title: "Continuité de l'isolant",
+        content: "Assurer la continuité de l'isolation entre les différentes parois (murs, planchers, toiture) pour éviter les ponts thermiques",
         type: "standard"
       },
       {
-        title: "Protection contre l'humidité",
-        content: "Film polyéthylène de 200 μm minimum sous isolant pour les planchers sur terre-plein, remontant de 20 cm sur les murs périphériques.",
+        title: "Lame d'air sous couverture",
+        content: "Lame d'air ventilée obligatoire de 2 cm minimum entre l'isolant et la sous-face de la couverture pour évacuer l'humidité",
         type: "warning"
       },
       {
-        title: "Planchers chauffants",
-        content: "Pour les planchers chauffants, isolant avec résistance à la compression ≥ 60 kPa (SC1 a2 Ch) et film réfléchissant sur l'isolant.",
+        title: "Recouvrement des lés",
+        content: "Recouvrement des lés de membrane d'étanchéité à l'air de 10 cm minimum avec ruban adhésif spécifique",
         type: "tip"
       },
       {
-        title: "Isolation acoustique",
-        content: "L'indice d'amélioration acoustique ΔRw+C doit être ≥ 6 dB pour les bruits aériens et ΔLw ≥ 19 dB pour les bruits d'impact.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Types d'isolation",
-        content: "Le DTU décrit l'isolation en sous-face de plancher (plafond suspendu ou isolant collé/fixé), l'isolation sous chape flottante, et l'isolation intégrée dans le plancher."
-      },
-      {
-        title: "Compatibilité avec les réseaux",
-        content: "Les réseaux (électricité, plomberie) peuvent être intégrés dans l'isolation sous conditions: distance minimale des conduits chauds, gaines électriques protégées."
-      },
-      {
-        title: "Chapes flottantes",
-        content: "Les chapes flottantes sur isolant doivent avoir une épaisseur minimale de 5 cm (traditionnelle) ou 3 cm (fluide), avec treillis de renfort et bandes périphériques."
-      },
-      {
-        title: "Ventilation des plénum",
-        content: "Les plénums formés par les plafonds suspendus doivent être ventilés pour éviter la condensation, avec des ouvertures totalisant au moins 5 cm² par m²."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-isolation-2",
-        title: "Chape flottante sur isolant",
-        imageUrl: "/images/schemas/chape-flottante.png",
-        description: "Coupe montrant le principe d'une chape flottante sur isolation thermique et acoustique."
-      }
-    ]
-  },
-  {
-    id: "dtu-isolation-3",
-    title: "DTU 45.5 - Isolation thermique des équipements",
-    category: "Isolation",
-    description: "Isolation thermique des équipements et réseaux",
-    lastUpdate: "Mars 2023",
-    rules: [
-      {
-        title: "Épaisseurs minimales isolant",
-        content: "Pour les canalisations chauffage: 30 mm pour Ø ≤ 42 mm, 40 mm pour Ø > 42 mm. Pour les gaines aérauliques: 25 mm en intérieur, 50 mm en extérieur.",
-        type: "standard"
-      },
-      {
-        title: "Coefficient de conductivité",
-        content: "Les isolants doivent avoir un λ ≤ 0,04 W/m.K à 10°C pour les réseaux d'eau froide et ≤ 0,035 W/m.K à 40°C pour les réseaux de chauffage.",
+        title: "Fixation des suspentes",
+        content: "Fixation des suspentes de plafond dimensionnée pour supporter 3 fois le poids du complexe isolant + parement",
         type: "standard"
       },
       {
         title: "Risque de condensation",
-        content: "Pour éviter la condensation sur les réseaux d'eau froide: isolant étanche à la vapeur d'eau avec Sd > 100 m et continuité de l'isolation.",
+        content: "Pose du pare-vapeur du côté chaud de l'isolation (sous l'isolant côté intérieur) pour éviter les risques de condensation dans l'isolant",
         type: "warning"
-      },
-      {
-        title: "Fixation des isolants",
-        content: "Fixation des coquilles par fil acier galvanisé ou inox (Ø 0,8 mm), tous les 30 cm et à chaque accessoire. Bande adhésive aluminium pour les gaines.",
-        type: "tip"
-      },
-      {
-        title: "Protection en extérieur",
-        content: "En extérieur, prévoir une protection mécanique contre les UV et intempéries: revêtement aluminium, tôle galvanisée ou matériau composite.",
-        type: "standard"
       }
     ],
     sections: [
       {
-        title: "Types d'isolants",
-        content: "Isolants adaptés aux réseaux: coquilles en laine minérale, mousses synthétiques élastomères ou PE, avec ou sans revêtement pare-vapeur selon l'application."
+        title: "Domaine d'application",
+        content: "Le DTU 45.10 s'applique à l'isolation thermique des combles perdus et aménagés par panneaux ou rouleaux souples (laines minérales, fibres végétales ou animales)."
       },
       {
-        title: "Classes de température",
-        content: "Choix de l'isolant selon la température du fluide: -50 à +5°C (froid), +5 à +90°C (chauffage), +90 à +300°C (vapeur), avec compatibilité thermique vérifiée."
+        title: "Performances thermiques",
+        content: "Les résistances thermiques minimales recommandées sont : 8 m².K/W en combles perdus, 6 m².K/W en combles aménagés, à adapter selon les exigences réglementaires locales."
       },
       {
-        title: "Isolation des accessoires",
-        content: "Les accessoires (vannes, filtres, échangeurs) doivent être isolés avec des housses amovibles préfabriquées ou isolés sur place avec surépaisseur de 20%."
+        title: "Mise en œuvre entre fermettes",
+        content: "En combles aménagés, l'épaisseur d'isolant est limitée par la hauteur des fermettes. Compléter si nécessaire par une seconde couche croisée avec ossature métallique."
       },
       {
-        title: "Traversées de parois",
-        content: "Les traversées de parois nécessitent un fourreau étanche et une surépaisseur d'isolant sur 40 cm de part et d'autre pour assurer la continuité thermique."
-      }
-    ],
-    schemas: [
-      {
-        id: "schema-isolation-3",
-        title: "Isolation canalisation",
-        imageUrl: "/images/schemas/isolation-canalisation.png",
-        description: "Détail de l'isolation d'une canalisation avec coquille et protection extérieure."
-      }
-    ]
-  },
-  {
-    id: "dtu-isolation-4",
-    title: "DTU 25.41 - Ouvrages en plaques de plâtre",
-    category: "Isolation",
-    description: "Plafonds, cloisons et doublages en plaques de plâtre",
-    lastUpdate: "Octobre 2022",
-    rules: [
-      {
-        title: "Entraxe des ossatures",
-        content: "Entraxe maximal de 60 cm pour plafonds à simple parement BA13, 50 cm pour BA10. Réduit à 40 cm en zones sismiques ou pour carrelage mural.",
-        type: "standard"
+        title: "Étanchéité à l'air",
+        content: "La membrane d'étanchéité à l'air doit être continue, avec traitement soigné des jonctions, traversées, et raccordements aux parois verticales et au sol."
       },
       {
-        title: "Fixation des plaques",
-        content: "Vis espacées de 30 cm maximum sur ossatures verticales/horizontales et 20 cm aux extrémités des plaques. Distance au bord ≥ 10 mm.",
-        type: "standard"
-      },
-      {
-        title: "Joints entre plaques",
-        content: "Joints entre plaques décalés d'au moins 40 cm en cas de double parement. Pas de joint aux angles d'ouvertures (découpe en L).",
-        type: "warning"
-      },
-      {
-        title: "Traitement des angles",
-        content: "Utiliser des bandes armées pour les angles sortants et des bandes papier pour les angles rentrants, avec cueillie en tête de cloison.",
-        type: "tip"
-      },
-      {
-        title: "Supports lourds",
-        content: "Charge ponctuelle maximale: 30 kg par cheville dans BA13 simple, 10 kg dans BA13 hydro. Au-delà, prévoir renfort dans l'ossature.",
-        type: "standard"
-      }
-    ],
-    sections: [
-      {
-        title: "Types de plaques",
-        content: "Standard (A), Haute dureté (I), Hydrofuge (H), Feu (F), Acoustique (perforée), avec épaisseurs de 9,5 à 25 mm et bords amincis, carrés ou arrondis selon application."
-      },
-      {
-        title: "Ossatures métalliques",
-        content: "Rails, montants, fourrures et suspentes dimensionnés selon portées et charges, avec protection contre la corrosion adaptée à l'exposition et l'hygrométrie du local."
-      },
-      {
-        title: "Cloisons sur ossature",
-        content: "Cloisons simples, à double parement, ou alvéolaires, avec performance variées (acoustique, feu, résistance aux chocs) selon composition et épaisseur totale."
-      },
-      {
-        title: "Doublages isolants",
-        content: "Complexes de doublage (plaque+isolant) collés ou sur ossature, avec règles spécifiques pour la pose, le calepinage et le traitement des points singuliers."
+        title: "Prescriptions acoustiques",
+        content: "Pour l'isolation acoustique des bruits aériens, privilégier des isolants denses (> 15 kg/m³) et prévoir un système masse-ressort-masse avec désolidarisation."
       }
     ],
     schemas: [
       {
         id: "schema-isolation-4",
-        title: "Principe cloison plaque de plâtre",
-        imageUrl: "/images/schemas/cloison-placo.png",
-        description: "Coupe horizontale d'une cloison en plaques de plâtre sur ossature métallique avec isolation."
+        title: "Isolation combles aménagés",
+        imageUrl: "/images/schemas/isolation-combles-amenages.png",
+        description: "Coupe d'isolation de combles aménagés avec deux couches d'isolant, membrane d'étanchéité et parement intérieur."
+      },
+      {
+        id: "schema-isolation-5",
+        title: "Détail de pied de fermette",
+        imageUrl: "/images/schemas/pied-fermette.png",
+        description: "Traitement du pied de fermette avec continuité de l'isolation et de l'étanchéité à l'air."
+      },
+      {
+        id: "schema-isolation-6",
+        title: "Jonction avec fenêtre de toit",
+        imageUrl: "/images/schemas/jonction-fenetre-toit.png",
+        description: "Détail de raccordement de l'isolation et de l'étanchéité autour d'une fenêtre de toit."
+      }
+    ]
+  },
+  {
+    id: "dtu-isolation-3",
+    title: "DTU 31.2 - Isolation des murs à ossature bois",
+    category: "Isolation",
+    description: "Construction de maisons et bâtiments à ossature bois",
+    lastUpdate: "Mai 2023",
+    rules: [
+      {
+        title: "Humidité du bois",
+        content: "Humidité maximale du bois de 18% à la mise en œuvre, mesurée avec un humidimètre électrique",
+        type: "standard"
+      },
+      {
+        title: "Isolation entre montants",
+        content: "Isolation semi-rigide entre montants d'ossature avec épaisseur égale à celle des montants et mise en œuvre sans tassement",
+        type: "standard"
+      },
+      {
+        title: "Protection contre les remontées",
+        content: "Barrière d'étanchéité (film polyester, polyéthylène ou EPDM) entre le soubassement et l'ossature bois pour éviter les remontées d'humidité",
+        type: "warning"
+      },
+      {
+        title: "Pare-vapeur",
+        content: "Pare-vapeur côté intérieur avec valeur Sd ≥ 18 m pour les laines minérales et ≥ 90 m pour les isolants biosourcés hygroscopiques",
+        type: "tip"
+      },
+      {
+        title: "Contreventement",
+        content: "Voile de contreventement en panneaux (OSB, contreplaqué) d'épaisseur minimale 9 mm, avec fixations tous les 15 cm en périphérie",
+        type: "standard"
+      },
+      {
+        title: "Isolant en fonction du pare-pluie",
+        content: "Si pare-pluie non HPV (Sd > 0,1 m), prévoir une lame d'air ventilée de 2 cm minimum entre l'isolant et le pare-pluie",
+        type: "warning"
+      }
+    ],
+    sections: [
+      {
+        title: "Système constructif",
+        content: "Le DTU 31.2 couvre les murs à ossature bois constitués de montants verticaux espacés de 40 à 60 cm, avec contreventement, isolation intercalée, barrières d'étanchéité."
+      },
+      {
+        title: "Performances thermiques",
+        content: "La composition courante (isolant entre montants + isolant extérieur) permet d'atteindre des résistances thermiques supérieures à 4 m².K/W, adaptables selon besoin."
+      },
+      {
+        title: "Transfert de vapeur d'eau",
+        content: "Le principe de conception repose sur un gradient de perméabilité à la vapeur d'eau de l'intérieur vers l'extérieur (Sd intérieur > 5 × Sd extérieur)."
+      },
+      {
+        title: "Revêtement extérieur",
+        content: "Le revêtement extérieur (bardage, enduit) doit être séparé du pare-pluie par une lame d'air ventilée de 2 cm minimum, avec entrées et sorties d'air dimensionnées."
+      },
+      {
+        title: "Isolant complémentaire extérieur",
+        content: "Un isolant rigide en panneau peut être ajouté côté extérieur, fixé à travers l'ossature, pour renforcer la performance thermique et limiter les ponts thermiques."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-isolation-7",
+        title: "Coupe mur ossature bois",
+        imageUrl: "/images/schemas/mur-ossature-bois.png",
+        description: "Coupe complète d'un mur à ossature bois avec isolation entre montants, pare-vapeur, contreventement et bardage ventilé."
+      },
+      {
+        id: "schema-isolation-8",
+        title: "Jonction mur-plancher",
+        imageUrl: "/images/schemas/jonction-mur-plancher.png",
+        description: "Détail de jonction entre un mur à ossature bois et un plancher intermédiaire, avec continuité de l'isolation et de l'étanchéité à l'air."
+      },
+      {
+        id: "schema-isolation-9",
+        title: "Intégration menuiserie",
+        imageUrl: "/images/schemas/menuiserie-ossature-bois.png",
+        description: "Détail d'intégration d'une menuiserie dans un mur à ossature bois avec étanchéité à l'air et à l'eau."
+      }
+    ]
+  },
+  {
+    id: "dtu-isolation-4",
+    title: "DTU 25.41 - Isolation des cloisons",
+    category: "Isolation",
+    description: "Ouvrages en plaques de plâtre avec isolation intégrée",
+    lastUpdate: "Janvier 2023",
+    rules: [
+      {
+        title: "Entraxe des montants",
+        content: "Entraxe des montants 40, 50 ou 60 cm selon l'épaisseur des plaques et la hauteur des cloisons",
+        type: "standard"
+      },
+      {
+        title: "Jeu en tête de cloison",
+        content: "Jeu en tête de cloison de 1 à 2 cm pour absorber les déformations du support, à combler avec une bande résiliente",
+        type: "standard"
+      },
+      {
+        title: "Fixation des plaques",
+        content: "Fixation des plaques par vis tous les 30 cm, à 1 cm des bords pour les bords longitudinaux et 1,5 cm pour les bords transversaux",
+        type: "warning"
+      },
+      {
+        title: "Isolation phonique",
+        content: "Pour une bonne isolation phonique, utiliser des laines minérales denses (≥ 15 kg/m³) et des plaques haute densité ou à performance acoustique",
+        type: "tip"
+      },
+      {
+        title: "Joint entre plaques",
+        content: "Joint entre plaques de 3 à 5 mm, à combler avec un enduit adapté et une bande à joint, sans chevauchement des joints entre couches",
+        type: "standard"
+      },
+      {
+        title: "Prises électriques",
+        content: "Boîtiers électriques décalés d'au moins 50 cm de part et d'autre de la cloison pour éviter les ponts phoniques",
+        type: "warning"
+      }
+    ],
+    sections: [
+      {
+        title: "Types de cloisons",
+        content: "Le DTU 25.41 couvre les cloisons de distribution, de doublage et plafonds en plaques de plâtre sur ossature métallique avec ou sans isolant intégré."
+      },
+      {
+        title: "Performances acoustiques",
+        content: "Les performances acoustiques dépendent de la masse des parements, de l'épaisseur et la densité de l'isolant, et du système constructif (simple ou double ossature)."
+      },
+      {
+        title: "Résistance aux chocs",
+        content: "Différents niveaux de résistance aux chocs selon le nombre et type de plaques : standard (1 BA13), renforcé (2 BA13 ou 1 BA18), très renforcé (2 BA18 ou 3 BA13)."
+      },
+      {
+        title: "Résistance à l'humidité",
+        content: "En locaux humides (EB+ privatifs minimum), utiliser des plaques hydrofugées H1 avec traitement complémentaire des pieds de cloisons et joints."
+      },
+      {
+        title: "Résistance au feu",
+        content: "La résistance au feu (EI 30 à EI 120) est obtenue par le nombre et type de plaques, la nature de l'isolant et le respect des règles de mise en œuvre spécifiques."
+      }
+    ],
+    schemas: [
+      {
+        id: "schema-isolation-10",
+        title: "Cloison 98/48",
+        imageUrl: "/images/schemas/cloison-isolation.png",
+        description: "Coupe d'une cloison 98/48 (98 mm d'épaisseur totale avec montants de 48 mm) avec isolation intégrée."
+      },
+      {
+        id: "schema-isolation-11",
+        title: "Jonction cloison-plafond",
+        imageUrl: "/images/schemas/jonction-cloison-plafond.png",
+        description: "Détail de jonction entre une cloison et un plafond suspendu avec joint souple en tête."
+      },
+      {
+        id: "schema-isolation-12",
+        title: "Double ossature acoustique",
+        imageUrl: "/images/schemas/double-ossature.png",
+        description: "Cloison à double ossature indépendante pour performance acoustique renforcée, avec isolants et parements multiples."
       }
     ]
   }
