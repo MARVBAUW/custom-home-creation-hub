@@ -64,7 +64,7 @@ const PDFGenerator: React.FC<PDFGeneratorProps> = ({
     });
     
     // Add footer with disclaimer
-    const pageCount = doc.internal.getNumberOfPages();
+    const pageCount = (doc.internal as any).getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(10);
@@ -82,18 +82,6 @@ const PDFGenerator: React.FC<PDFGeneratorProps> = ({
     
     // Save the PDF directly
     doc.save('estimation-projet.pdf');
-    
-    // Alternative method to convert jsPDF to a Blob download
-    // Instead of passing the jsPDF object directly, convert it to a Blob first
-    /*
-    const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
-    const url = URL.createObjectURL(pdfBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'estimation-projet.pdf';
-    a.click();
-    URL.revokeObjectURL(url);
-    */
   };
 
   return (

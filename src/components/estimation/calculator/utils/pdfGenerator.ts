@@ -1,8 +1,7 @@
 
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import { FormData } from '../types';
-import { PDFGenerationOptions } from '../types/pdf-types';
+import { FormData, PDFGenerationOptions } from '../types';
 
 export const generateEstimationPDF = (formData: FormData, estimation: any, options: PDFGenerationOptions = {}) => {
   const doc = new jsPDF();
@@ -101,7 +100,7 @@ export const generateEstimationPDF = (formData: FormData, estimation: any, optio
   });
   
   // Add footer
-  const pageCount = doc.internal.getNumberOfPages();
+  const pageCount = (doc.internal as any).getNumberOfPages();
   doc.setFontSize(10);
   
   for (let i = 1; i <= pageCount; i++) {
@@ -125,5 +124,5 @@ export const savePDF = (doc: jsPDF, fileName: string = 'estimation-projet.pdf') 
 
 // Helper function to get PDF as blob
 export const getPDFBlob = (doc: jsPDF) => {
-  return new Blob([doc.output('blob')], { type: 'application/pdf' });
+  return doc.output('blob');
 };

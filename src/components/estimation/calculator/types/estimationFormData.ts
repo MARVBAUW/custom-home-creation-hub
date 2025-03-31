@@ -96,7 +96,6 @@ export interface EstimationFormData {
   estimationType?: string;
   constructionStyle?: string;
   roofType?: string;
-  atticType?: string;
   roofingType?: string;
   insulationType?: string;
   
@@ -144,6 +143,14 @@ export interface EstimationFormData {
   complexity?: string;
   qualityStandard?: string;
   name?: string;
+  
+  // Paint related properties
+  paintType?: string;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
+  woodCladPercentage?: number | string;
+  stoneCladPercentage?: number | string;
 }
 
 // Pour la rétrocompatibilité
