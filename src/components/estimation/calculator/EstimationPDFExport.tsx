@@ -1,144 +1,152 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileDown, Printer } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Download, FileText, Send, Share } from 'lucide-react';
+import { FormData } from './types';
+import { PDFGenerationOptions } from './types/pdf-types';
 import { generateEstimationPDF } from './utils/pdfGenerator';
-import { FormData, PDFGenerationOptions } from './types';
 
 interface EstimationPDFExportProps {
   formData: FormData;
-  estimation?: any;
+  estimation: any;
 }
 
 const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({ formData, estimation }) => {
-  const [includeDetails, setIncludeDetails] = useState(true);
-  const [includeLogo, setIncludeLogo] = useState(true);
-  const [includeContactInfo, setIncludeContactInfo] = useState(true);
-  const [includeBreakdown, setIncludeBreakdown] = useState(true);
-  const [includeTerrainPrice, setIncludeTerrainPrice] = useState(true);
-  const [includeTimeline, setIncludeTimeline] = useState(true);
-  const [includeDetailedBreakdown, setIncludeDetailedBreakdown] = useState(false);
-  const [clientInfo, setClientInfo] = useState(true);
-  const [companyLogo, setCompanyLogo] = useState(true);
+  const [options, setOptions] = useState<PDFGenerationOptions>({
+    includeDetails: true,
+    includeLogo: true,
+    includeContactInfo: true,
+    includeBreakdown: true,
+    includeTerrainPrice: !!formData.landPrice,
+    includeTimeline: true,
+    clientInfo: true,
+    companyLogo: true,
+    fileName: `Estimation_${formData.clientType}_${formData.projectType}_${new Date().toISOString().split('T')[0]}`
+  });
 
-  const handleExportPDF = () => {
-    if (!estimation) return;
+  const handleOptionChange = (option: keyof PDFGenerationOptions) => {
+    setOptions(prev => ({
+      ...prev,
+      [option]: !prev[option]
+    }));
+  };
 
-    const options: PDFGenerationOptions = {
-      includeDetails,
-      includeLogo,
-      includeContactInfo,
-      includeBreakdown,
-      includeTerrainPrice,
-      includeTimeline,
-      includeDetailedBreakdown,
-      clientInfo,
-      companyLogo,
-    };
+  const handleGeneratePDF = () => {
+    const pdf = generateEstimationPDF(formData, estimation, options);
+    pdf.save(`${options.fileName || 'Estimation'}.pdf`);
+  };
 
-    const doc = generateEstimationPDF(formData, estimation, options);
-    doc.save(`estimation-projet-${formData.clientType}-${Date.now()}.pdf`);
+  const handleSendEmail = () => {
+    // Email sending logic would go here
+    alert('Fonctionnalité d\'envoi par email en cours de développement');
   };
 
   return (
-    <Card className="mt-8">
-      <CardHeader>
-        <CardTitle className="text-xl">Exporter votre estimation</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeDetails" 
-              checked={includeDetails} 
-              onCheckedChange={(checked) => setIncludeDetails(checked === true)}
-            />
-            <label htmlFor="includeDetails">Inclure les détails du projet</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeLogo" 
-              checked={includeLogo} 
-              onCheckedChange={(checked) => setIncludeLogo(checked === true)}
-            />
-            <label htmlFor="includeLogo">Inclure le logo</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeContactInfo" 
-              checked={includeContactInfo} 
-              onCheckedChange={(checked) => setIncludeContactInfo(checked === true)}
-            />
-            <label htmlFor="includeContactInfo">Inclure vos coordonnées</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeBreakdown" 
-              checked={includeBreakdown} 
-              onCheckedChange={(checked) => setIncludeBreakdown(checked === true)}
-            />
-            <label htmlFor="includeBreakdown">Ventilation par corps d'état</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeTerrainPrice" 
-              checked={includeTerrainPrice} 
-              onCheckedChange={(checked) => setIncludeTerrainPrice(checked === true)}
-            />
-            <label htmlFor="includeTerrainPrice">Intégrer le prix du terrain</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeTimeline" 
-              checked={includeTimeline} 
-              onCheckedChange={(checked) => setIncludeTimeline(checked === true)}
-            />
-            <label htmlFor="includeTimeline">Calendrier prévisionnel</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="includeDetailedBreakdown" 
-              checked={includeDetailedBreakdown} 
-              onCheckedChange={(checked) => setIncludeDetailedBreakdown(checked === true)}
-            />
-            <label htmlFor="includeDetailedBreakdown">Détail technique</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="clientInfo" 
-              checked={clientInfo} 
-              onCheckedChange={(checked) => setClientInfo(checked === true)}
-            />
-            <label htmlFor="clientInfo">Informations client</label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox 
-              id="companyLogo" 
-              checked={companyLogo} 
-              onCheckedChange={(checked) => setCompanyLogo(checked === true)}
-            />
-            <label htmlFor="companyLogo">Logo de l'entreprise</label>
-          </div>
+    <Card className="bg-blue-50/50">
+      <CardContent className="pt-6 space-y-6">
+        <div className="space-y-2">
+          <h3 className="text-lg font-medium">Options d'export</h3>
+          <p className="text-sm text-gray-600">Personnalisez votre document d'estimation</p>
         </div>
 
-        <div className="flex justify-center space-x-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="includeDetails" 
+                checked={options.includeDetails} 
+                onCheckedChange={() => handleOptionChange('includeDetails')} 
+              />
+              <Label htmlFor="includeDetails">Détails du projet</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="includeBreakdown" 
+                checked={options.includeBreakdown} 
+                onCheckedChange={() => handleOptionChange('includeBreakdown')} 
+              />
+              <Label htmlFor="includeBreakdown">Détail par corps d'état</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="includeTimeline" 
+                checked={options.includeTimeline} 
+                onCheckedChange={() => handleOptionChange('includeTimeline')} 
+              />
+              <Label htmlFor="includeTimeline">Planning prévisionnel</Label>
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="includeContactInfo" 
+                checked={options.includeContactInfo} 
+                onCheckedChange={() => handleOptionChange('includeContactInfo')} 
+              />
+              <Label htmlFor="includeContactInfo">Coordonnées client</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Checkbox 
+                id="includeLogo" 
+                checked={options.includeLogo} 
+                onCheckedChange={() => handleOptionChange('includeLogo')} 
+              />
+              <Label htmlFor="includeLogo">Logo Progineer</Label>
+            </div>
+            
+            {formData.landPrice && (
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="includeTerrainPrice" 
+                  checked={options.includeTerrainPrice} 
+                  onCheckedChange={() => handleOptionChange('includeTerrainPrice')} 
+                />
+                <Label htmlFor="includeTerrainPrice">Prix du terrain</Label>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
+          <Button 
+            onClick={handleGeneratePDF}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+          >
+            <Download className="h-4 w-4" />
+            Télécharger PDF
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            onClick={handleSendEmail}
+            className="flex items-center gap-2"
+          >
+            <Send className="h-4 w-4" />
+            Envoyer par email
+          </Button>
+          
           <Button 
             variant="outline" 
             className="flex items-center gap-2"
-            onClick={() => window.print()}
+            onClick={() => alert('Fonctionnalité de partage en cours de développement')}
           >
-            <Printer className="h-4 w-4" />
-            Imprimer
+            <Share className="h-4 w-4" />
+            Partager
           </Button>
-          <Button 
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            onClick={handleExportPDF}
-          >
-            <FileDown className="h-4 w-4" />
-            Télécharger PDF
-          </Button>
+        </div>
+        
+        <div className="flex items-start mt-6 bg-blue-100 p-3 rounded-md">
+          <FileText className="h-5 w-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-blue-800">
+            Ce document d'estimation est généré à titre indicatif. Pour obtenir une estimation détaillée et personnalisée, nous vous recommandons de prendre rendez-vous avec un de nos experts Progineer.
+          </p>
         </div>
       </CardContent>
     </Card>

@@ -3,8 +3,26 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
-import { DetailedEstimationReportProps } from './types';
 import { formatCurrency } from '@/lib/utils';
+import { FormData } from './types';
+
+interface DetailedEstimationReportProps {
+  formData: FormData;
+  estimation: any;
+  includeTerrainPrice?: boolean;
+  options?: {
+    includeDetails?: boolean;
+    includeLogo?: boolean;
+    includeContactInfo?: boolean;
+    includeBreakdown?: boolean;
+    includeTerrainPrice?: boolean;
+    includeTimeline?: boolean;
+    includeDetailedBreakdown?: boolean;
+    clientInfo?: boolean;
+    companyLogo?: boolean;
+    fileName?: string;
+  };
+}
 
 const DetailedEstimationReport: React.FC<DetailedEstimationReportProps> = ({ 
   formData, 
