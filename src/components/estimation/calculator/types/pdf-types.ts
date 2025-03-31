@@ -17,7 +17,7 @@ interface PDFInternal {
 }
 
 // Extended jsPDF with additional methods used in our application
-export interface EnhancedJsPDF extends jsPDF {
+export interface EnhancedJsPDF extends Omit<jsPDF, 'setTextColor'> {
   autoTable: (options: any) => any;
   internal: PDFInternal;
   setTextColor: (r: number, g: number, b: number) => any;

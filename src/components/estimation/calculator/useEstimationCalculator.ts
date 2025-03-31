@@ -1,123 +1,117 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FormData, EstimationResponseData } from './types';
-import { useEstimationSteps } from './hooks/useEstimationSteps';
-import { useEstimationForm } from './hooks/useEstimationForm';
-import { useEstimationResult } from './hooks/useEstimationResult';
-import { useFormSubmissions } from './hooks/useFormSubmissions';
+import { determineNextStep, determinePreviousStep, recalculateEstimation } from './utils/navigationPathUtils';
+import { calculateEstimation } from './calculationUtils';
+import { toast } from '@/hooks/use-toast';
 
 export const useEstimationCalculator = () => {
-  // Form data state
-  const { formData, updateFormData } = useEstimationForm();
-  
-  // Step navigation state
-  const { 
-    step, 
-    setStep, 
-    totalSteps, 
-    animationDirection, 
-    visibleSteps, 
-    goToNextStep, 
-    goToPreviousStep 
-  } = useEstimationSteps(formData);
-  
-  // Estimation result state
+  const [step, setStep] = useState<number>(0);
+  const [totalSteps, setTotalSteps] = useState<number>(20); // Default number of steps
+  const [formData, setFormData] = useState<FormData>({});
   const [estimationResult, setEstimationResult] = useState<EstimationResponseData | null>(null);
-  const [isCalculating, setIsCalculating] = useState(false);
-  const [showResultDialog, setShowResultDialog] = useState(false);
-  const [error, setError] = useState('');
+  const [showResultDialog, setShowResultDialog] = useState<boolean>(false);
+  const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
-  // Function to calculate the estimation result
+  // Function to update form data
+  const updateFormData = (data: Partial<FormData>) => {
+    setFormData(prevData => ({
+      ...prevData,
+      ...data
+    }));
+    
+    console.log("Form data updated:", data);
+  };
+  
+  // Calculate the estimation result
   const calculateEstimationResult = () => {
-    setIsCalculating(true);
-    // Simulate API call with timeout
-    setTimeout(() => {
-      try {
-        // Create a simulated estimation result
-        const result: EstimationResponseData = {
-          constructionCosts: {
-            structuralWork: 120000,
-            finishingWork: 80000,
-            technicalLots: 45000,
-            externalWorks: 35000,
-            total: 280000
-          },
-          fees: {
-            architectFees: 30000,
-            engineeringFees: 15000,
-            officialFees: 8000,
-            inspectionFees: 7000,
-            total: 60000
-          },
-          otherCosts: {
-            insurance: 5000,
-            contingency: 15000,
-            taxes: 10000,
-            miscellaneous: 5000,
-            total: 35000
-          },
-          totalAmount: 375000,
-          timeline: {
-            design: 2,
-            permits: 3,
-            bidding: 1,
-            construction: 12,
-            total: 18
-          }
-        };
-        
-        setEstimationResult(result);
-        setIsCalculating(false);
-      } catch (err) {
-        setError('Error calculating estimation');
-        setIsCalculating(false);
-      }
-    }, 1500);
+    try {
+      setIsSubmitting(true);
+      
+      // Calculate the estimation based on the form data
+      const result = calculateEstimation(formData);
+      
+      // Update the estimation result
+      setEstimationResult(result);
+      
+      // Show the result dialog
+      setShowResultDialog(true);
+      
+      toast({
+        title: "Estimation calculée",
+        description: `Total estimé : ${result.totalAmount.toLocaleString()} €`,
+      });
+      
+      return result;
+    } catch (error) {
+      console.error("Error calculating estimation:", error);
+      
+      toast({
+        title: "Erreur de calcul",
+        description: "Une erreur est survenue lors du calcul de l'estimation.",
+        variant: "destructive",
+      });
+      
+      return null;
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
-  // Function to finalize the estimation
+  // Finalize the estimation process
   const finalizeEstimation = () => {
-    calculateEstimationResult();
-    setShowResultDialog(true);
+    // Only calculate if no result exists yet
+    if (!estimationResult) {
+      return calculateEstimationResult();
+    }
+    return estimationResult;
   };
   
-  // Get form submissions functions
-  const { 
-    onClientTypeSubmit, 
-    onProfessionalProjectSubmit, 
-    onIndividualProjectSubmit, 
-    onEstimationTypeSubmit, 
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit,
-    onCouvertureSubmit,
-    onIsolationSubmit,
-    onFacadeSubmit,
-    onMenuiseriesExtSubmit,
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit,
-    onPlatrerieSubmit,
-    onMenuiseriesIntSubmit,
-    onCarrelageSubmit,
-    onParquetSubmit,
-    onPeintureSubmit,
-    onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit,
-    onOptionsSubmit,
-    onCuisineSubmit,
-    onSalleDeBainSubmit,
-    onDemolitionSubmit,
-    onGrosOeuvreRenovSubmit,
-    onCharpenteRenovSubmit,
-    onCouvertureRenovSubmit,
-    onFacadeRenovSubmit,
-    onContactSubmit 
-  } = useFormSubmissions(formData, updateFormData, setStep, goToNextStep, finalizeEstimation);
-
+  // Function to go to the next step
+  const goToNextStep = () => {
+    const nextStep = determineNextStep(step, formData);
+    setAnimationDirection('forward');
+    
+    // Delay to allow animation
+    setTimeout(() => {
+      setStep(nextStep);
+    }, 200);
+  };
+  
+  // Function to go to the previous step
+  const goToPreviousStep = () => {
+    const prevStep = determinePreviousStep(step, formData);
+    setAnimationDirection('backward');
+    
+    // Delay to allow animation
+    setTimeout(() => {
+      setStep(prevStep);
+    }, 200);
+  };
+  
+  // Update the total steps when the form data changes
+  useEffect(() => {
+    // Recalculate the total number of steps based on the form data
+    let newTotalSteps = 20; // Base number of steps
+    
+    // Adjust total steps based on client type
+    if (formData.clientType === 'professional') {
+      newTotalSteps = 3; // Professional flow is shorter
+    }
+    
+    // Adjust total steps based on project type
+    if (formData.projectType === 'optimisation' || formData.projectType === 'design') {
+      newTotalSteps = 3; // Direct contact flow
+    } else if (formData.estimationType === 'Rapide 5 mins (Précision à + ou - 10%)') {
+      newTotalSteps = 8; // Quick estimation flow
+    } else if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+      newTotalSteps = 48; // Renovation has additional steps
+    }
+    
+    setTotalSteps(newTotalSteps);
+  }, [formData.clientType, formData.projectType, formData.estimationType]);
+  
   return {
     step,
     setStep,
@@ -125,48 +119,12 @@ export const useEstimationCalculator = () => {
     formData,
     estimationResult,
     showResultDialog,
-    setShowResultDialog,
     animationDirection,
-    isCalculating,
-    error,
-    visibleSteps,
+    isSubmitting,
     updateFormData,
     goToNextStep,
     goToPreviousStep,
     calculateEstimationResult,
-    finalizeEstimation,
-    onClientTypeSubmit,
-    onProfessionalProjectSubmit,
-    onIndividualProjectSubmit,
-    onEstimationTypeSubmit,
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit,
-    onCouvertureSubmit,
-    onIsolationSubmit,
-    onFacadeSubmit,
-    onMenuiseriesExtSubmit,
-    onElectriciteSubmit,
-    onPlomberieSubmit,
-    onChauffageSubmit,
-    onPlatrerieSubmit,
-    onMenuiseriesIntSubmit,
-    onCarrelageSubmit,
-    onParquetSubmit,
-    onPeintureSubmit,
-    onEnergiesRenouvelablesSubmit,
-    onSolutionsEnvironSubmit,
-    onAmenagementPaysagerSubmit,
-    onOptionsSubmit,
-    onCuisineSubmit,
-    onSalleDeBainSubmit,
-    onDemolitionSubmit,
-    onGrosOeuvreRenovSubmit,
-    onCharpenteRenovSubmit,
-    onCouvertureRenovSubmit,
-    onFacadeRenovSubmit,
-    onContactSubmit,
+    finalizeEstimation
   };
 };

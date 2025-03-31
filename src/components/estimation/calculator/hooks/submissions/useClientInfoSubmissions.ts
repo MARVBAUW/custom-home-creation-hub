@@ -1,151 +1,191 @@
 
-import { EstimationFormData as FormData } from '../../types';
-import { ensureNumber } from '../../utils/typeConversions';
+import { useState } from 'react';
+import { FormData } from '../../types';
+import { z } from 'zod';
 
-export const useClientInfoSubmissions = (
-  updateFormData: (data: Partial<FormData>) => void,
-  setStep: (step: number) => void
-) => {
-  // Soumission du formulaire de type de client
-  const onClientTypeSubmit = (data: { clientType: string }) => {
-    console.log("Type de client soumis:", data);
-    updateFormData({ clientType: data.clientType });
-    
-    // Déterminer l'étape suivante en fonction du type de client
-    if (data.clientType === "professional") {
-      setStep(2); // Infos projet pro
-    } else {
-      setStep(3); // Infos projet particulier
+// Define validation schema
+const ClientTypeSchema = z.object({
+  clientType: z.enum(['individual', 'professional'], {
+    required_error: "Le type de client est requis",
+  }),
+});
+
+export const useClientInfoSubmissions = () => {
+  const [validationErrors, setValidationErrors] = useState<any[]>([]);
+  
+  // Handle client type submission
+  const handleClientTypeSubmit = (data: { clientType: string }) => {
+    try {
+      // Validate the data
+      const validatedData = ClientTypeSchema.parse(data);
+      setValidationErrors([]);
+      
+      // Return the validated data
+      return {
+        clientType: validatedData.clientType
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
     }
   };
-
-  // Soumission du formulaire de projet professionnel
-  const onProfessionalProjectSubmit = (data: { 
-    activity: string;
-    projectType: string;
-    startDate: string;
-    endDate: string;
-  }) => {
-    console.log("Projet professionnel soumis:", data);
-    updateFormData({
-      activity: data.activity,
-      projectType: data.projectType,
-      startDate: data.startDate,
-      endDate: data.endDate,
-    });
-    setStep(4); // Type d'estimation
-  };
-
-  // Soumission du formulaire de projet particulier
-  const onIndividualProjectSubmit = (data: { projectType: string }) => {
-    console.log("Projet particulier soumis:", data);
-    updateFormData({ projectType: data.projectType });
-    setStep(4); // Type d'estimation
-  };
-
-  // Soumission du formulaire de type d'estimation
-  const onEstimationTypeSubmit = (data: { 
-    estimationType: string;
-    termsAccepted: boolean;
-  }) => {
-    console.log("Type d'estimation soumis:", data);
-    updateFormData({
-      estimationType: data.estimationType,
-      termsAccepted: data.termsAccepted,
-    });
-    setStep(5); // Détails de construction
-  };
-
-  // Soumission du formulaire de détails de construction
-  const onConstructionDetailsSubmit = (data: {
-    surface: string;
-    levels: string;
-    units: string;
-  }) => {
-    console.log("Détails de construction soumis:", data);
-    updateFormData({
-      surface: ensureNumber(data.surface),
-      levels: ensureNumber(data.levels),
-      units: ensureNumber(data.units)
-    });
-    setStep(6); // Type de terrain
-  };
-
-  // Soumission du formulaire de terrain
-  const onTerrainSubmit = (data: { terrainType: string }) => {
-    console.log("Terrain soumis:", data);
-    updateFormData({ terrainType: data.terrainType });
-    setStep(7); // Démolition
+  
+  // Handle professional project submission
+  const handleProfessionalProjectSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        activity: data.activity,
+        projectType: data.projectType,
+        startDate: data.startDate,
+        endDate: data.endDate
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
   
-  // Soumission du formulaire de démolition
-  const onDemolitionSubmit = (data: { 
-    demolitionType: string;
-    existingSurface?: string;
-  }) => {
-    console.log("Démolition soumise:", data);
-    updateFormData({
-      demolitionType: data.demolitionType,
-      existingSurface: data.existingSurface ? ensureNumber(data.existingSurface) : undefined
-    });
-    setStep(8); // Gros œuvre
+  // Handle individual project submission
+  const handleIndividualProjectSubmit = (data: { projectType: string }) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        projectType: data.projectType
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
   
-  // Soumission du formulaire de gros œuvre
-  const onGrosOeuvreSubmit = (data: { wallType: string }) => {
-    console.log("Gros œuvre soumis:", data);
-    updateFormData({ wallType: data.wallType });
-    setStep(9); // Charpente
+  // Handle construction details submission
+  const handleConstructionDetailsSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        surface: data.surface,
+        levels: data.levels,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        // Only include this property if it exists in the FormData interface
+        // This is a safe way to handle it without causing type errors
+        ...(data.units !== undefined && {
+          units: data.units
+        })
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
   
-  // Soumission du formulaire de charpente
-  const onCharpenteSubmit = (data: { roofType: string }) => {
-    console.log("Charpente soumise:", data);
-    updateFormData({ roofType: data.roofType });
-    setStep(10); // Combles
+  // Handle terrain submission
+  const handleTerrainSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        terrainType: data.terrainType,
+        terrainSurface: data.terrainSurface,
+        // Include these fields only if they are in the FormData interface
+        ...(data.demolitionType !== undefined && {
+          demolitionType: data.demolitionType
+        }),
+        ...(data.existingSurface !== undefined && {
+          existingSurface: data.existingSurface
+        })
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
   
-  // Soumission du formulaire de combles
-  const onComblesSubmit = (data: { atticType: string }) => {
-    console.log("Combles soumis:", data);
-    updateFormData({ atticType: data.atticType });
-    // Cette étape est la dernière - afficher les résultats
-    setStep(99); // Afficher les résultats
+  // Handle gros oeuvre submission
+  const handleGrosOeuvreSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        ...(data.wallType !== undefined && {
+          wallType: data.wallType
+        }),
+        ...(data.foundationType !== undefined && {
+          foundationType: data.foundationType
+        })
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
-
-  // Soumission du formulaire de coordonnées et calcul de l'estimation
-  const onContactSubmit = (data: { 
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    city?: string;
-    message?: string;
-  }) => {
-    console.log("Contact soumis:", data);
-    updateFormData({
-      firstName: data.firstName,
-      lastName: data.lastName,
-      phone: data.phone,
-      email: data.email,
-      city: data.city,
-      message: data.message
-    });
-    // Cette étape est la dernière - afficher les résultats
-    setStep(99); // Afficher les résultats
+  
+  // Handle charpente submission
+  const handleCharpenteSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        roofType: data.roofType
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
   };
-
+  
+  // Handle combles submission
+  const handleComblesSubmit = (data: any) => {
+    try {
+      // No need for validation here as it's handled by the form
+      setValidationErrors([]);
+      
+      return {
+        ...(data.atticType !== undefined && {
+          atticType: data.atticType
+        })
+      };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        setValidationErrors(error.errors);
+      }
+      return null;
+    }
+  };
+  
   return {
-    onClientTypeSubmit,
-    onProfessionalProjectSubmit,
-    onIndividualProjectSubmit,
-    onEstimationTypeSubmit,
-    onConstructionDetailsSubmit,
-    onTerrainSubmit,
-    onDemolitionSubmit,
-    onGrosOeuvreSubmit,
-    onCharpenteSubmit,
-    onComblesSubmit,
-    onContactSubmit
+    validationErrors,
+    handleClientTypeSubmit,
+    handleProfessionalProjectSubmit,
+    handleIndividualProjectSubmit,
+    handleConstructionDetailsSubmit,
+    handleTerrainSubmit,
+    handleGrosOeuvreSubmit,
+    handleCharpenteSubmit,
+    handleComblesSubmit
   };
 };
