@@ -326,7 +326,7 @@ const RegulatoryCalculators = () => {
                     <div>20-50</div>
                     
                     <div>Film polyéthylène</div>
-                    <div>> 100 000</div>
+                    <div>{">"}100 000</div>
                     
                     <div>Frein-vapeur</div>
                     <div>2 000-20 000</div>
