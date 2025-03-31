@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowRightIcon, ArrowLeftIcon, Palette, Droplet, Star } from 'lucide-react';
+import { ArrowRightIcon, ArrowLeftIcon, Star, Stars, Sparkles } from 'lucide-react';
 import { FormData } from '../types';
 
 interface FinishDetailsStepProps {
@@ -22,7 +22,7 @@ const FinishDetailsStep: React.FC<FinishDetailsStepProps> = ({
   animationDirection
 }) => {
   const [finishStandard, setFinishStandard] = React.useState<string>(formData.finishStandard || 'standard');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -41,53 +41,43 @@ const FinishDetailsStep: React.FC<FinishDetailsStepProps> = ({
       
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">
+          {/* Finish Standard */}
           <div className="space-y-3">
-            <Label className="text-base font-medium">Choisissez le niveau de finition souhaité</Label>
+            <Label className="text-base font-medium">Quel niveau de finition souhaitez-vous ?</Label>
             <RadioGroup 
               value={finishStandard} 
               onValueChange={setFinishStandard}
               className="grid grid-cols-1 gap-4"
             >
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="basic" id="basic" />
-                <Label htmlFor="basic" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Droplet className="h-4 w-4 text-blue-400" />
+                <RadioGroupItem value="economic" id="finishEconomic" />
+                <Label htmlFor="finishEconomic" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Star className="h-4 w-4 text-yellow-500" />
                   <div>
-                    <p className="font-medium">Basique</p>
-                    <p className="text-sm text-gray-500">Matériaux standards, finitions simples</p>
+                    <p>Économique</p>
+                    <p className="text-sm text-gray-500">Matériaux basiques, finitions simples</p>
                   </div>
                 </Label>
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="standard" id="standard" />
-                <Label htmlFor="standard" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Palette className="h-4 w-4 text-green-500" />
+                <RadioGroupItem value="standard" id="finishStandard" />
+                <Label htmlFor="finishStandard" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Stars className="h-4 w-4 text-yellow-500" />
                   <div>
-                    <p className="font-medium">Standard</p>
-                    <p className="text-sm text-gray-500">Bon rapport qualité/prix, matériaux de qualité moyenne</p>
+                    <p>Standard</p>
+                    <p className="text-sm text-gray-500">Bon rapport qualité/prix, finitions soignées</p>
                   </div>
                 </Label>
               </div>
               
               <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="premium" id="premium" />
-                <Label htmlFor="premium" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Star className="h-4 w-4 text-amber-500" />
+                <RadioGroupItem value="premium" id="finishPremium" />
+                <Label htmlFor="finishPremium" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Sparkles className="h-4 w-4 text-yellow-500" />
                   <div>
-                    <p className="font-medium">Premium</p>
-                    <p className="text-sm text-gray-500">Matériaux haut de gamme, finitions soignées</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="luxury" id="luxury" />
-                <Label htmlFor="luxury" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Star className="h-4 w-4 text-purple-600" />
-                  <div>
-                    <p className="font-medium">Luxe</p>
-                    <p className="text-sm text-gray-500">Matériaux d'exception, finitions sur mesure</p>
+                    <p>Premium</p>
+                    <p className="text-sm text-gray-500">Matériaux haut de gamme, finitions luxueuses</p>
                   </div>
                 </Label>
               </div>

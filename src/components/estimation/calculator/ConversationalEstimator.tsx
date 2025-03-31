@@ -6,7 +6,7 @@ import { Send, Loader2 } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { ConversationalProps, Message } from './types/conversationalTypes';
 import { EstimationFormData } from './types/estimationFormData';
-import { generateConversationalResponse, analyzeUserIntent, extractFormDataFromMessage } from './utils/conversationalUtils';
+import { analyzeUserIntent, extractInformation, generateResponse } from './utils/conversationalUtils';
 
 const ConversationalEstimator: React.FC<ConversationalProps> = ({
   onUserInput,
@@ -80,11 +80,11 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
     onUserInput(content);
     
     // Extract data from user message
-    const updatedData = extractFormDataFromMessage(content, formData);
+    const extractedData = extractInformation(content);
     
     // Update form data if we extracted something
-    if (Object.keys(updatedData).length > 0) {
-      updateFormData(updatedData);
+    if (Object.keys(extractedData).length > 0) {
+      updateFormData(extractedData);
     }
     
     // Check for clientType in the message
@@ -96,17 +96,8 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
       onClientTypeSubmit({ clientType: 'professional' });
     }
     
-    // Check for project type
-    if (content.toLowerCase().includes('construire') || content.toLowerCase().includes('construction')) {
-      updateFormData({ projectType: 'construction' });
-    } else if (content.toLowerCase().includes('rénover') || content.toLowerCase().includes('renovation') || content.toLowerCase().includes('rénovation')) {
-      updateFormData({ projectType: 'renovation' });
-    } else if (content.toLowerCase().includes('extension') || content.toLowerCase().includes('agrandir')) {
-      updateFormData({ projectType: 'extension' });
-    }
-    
     // Generate assistant response
-    const response = generateConversationalResponse(content, formData);
+    const response = generateResponse({...formData, ...extractedData});
     
     // Add assistant message
     const assistantMessage: Message = {

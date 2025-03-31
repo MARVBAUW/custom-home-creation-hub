@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRightIcon, ArrowLeftIcon, Zap, Droplets, HomeIcon, Lightbulb } from 'lucide-react';
 import { FormData } from '../types';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { ArrowLeftIcon, ArrowRightIcon, Zap, Droplets, HomeIcon, Lightbulb } from 'lucide-react';
 
-interface SpecialFeaturesStepProps {
+interface SpecialFeaturesFormProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
@@ -14,7 +14,7 @@ interface SpecialFeaturesStepProps {
   animationDirection: string;
 }
 
-const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({
+const SpecialFeaturesForm: React.FC<SpecialFeaturesFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
@@ -139,4 +139,4 @@ const SpecialFeaturesStep: React.FC<SpecialFeaturesStepProps> = ({
   );
 };
 
-export default SpecialFeaturesStep;
+export default SpecialFeaturesForm;

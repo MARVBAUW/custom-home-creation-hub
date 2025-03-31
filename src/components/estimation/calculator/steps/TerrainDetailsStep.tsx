@@ -4,8 +4,7 @@ import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRightIcon, ArrowLeftIcon, Globe } from 'lucide-react';
+import { ArrowRightIcon, ArrowLeftIcon, Globe, Mountain, Water } from 'lucide-react';
 import { FormData } from '../types';
 
 interface TerrainDetailsStepProps {
@@ -23,20 +22,17 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [landIncluded, setLandIncluded] = React.useState<boolean>(
-    typeof formData.landIncluded === 'boolean' ? formData.landIncluded : 
-    formData.landIncluded === 'true'
-  );
+  const [landIncluded, setLandIncluded] = React.useState<string>(formData.landIncluded || 'yes');
   const [landPrice, setLandPrice] = React.useState<string | number>(formData.landPrice || '');
   const [terrainType, setTerrainType] = React.useState<string>(formData.terrainType || 'flat');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     updateFormData({
       landIncluded,
-      landPrice: landIncluded ? (typeof landPrice === 'string' ? parseFloat(landPrice) || 0 : landPrice) : 0,
-      terrainType: landIncluded ? terrainType : ''
+      landPrice: typeof landPrice === 'string' ? parseFloat(landPrice) || 0 : landPrice,
+      terrainType
     });
     
     goToNextStep();
@@ -51,73 +47,87 @@ const TerrainDetailsStep: React.FC<TerrainDetailsStepProps> = ({
       <form onSubmit={handleSubmit}>
         <div className="space-y-6">
           {/* Land Included */}
-          <div className="space-y-2">
-            <div className="flex items-start space-x-3">
-              <Checkbox 
-                id="landIncluded" 
-                checked={landIncluded}
-                onCheckedChange={(checked) => setLandIncluded(!!checked)}
-              />
-              <div>
-                <Label htmlFor="landIncluded" className="text-base font-medium">
-                  Terrain inclus dans le projet
+          <div className="space-y-3">
+            <Label className="text-base font-medium">Terrain inclus dans le projet ?</Label>
+            <RadioGroup 
+              value={landIncluded} 
+              onValueChange={setLandIncluded}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
+              <div className="flex items-center space-x-2 rounded-md border p-4">
+                <RadioGroupItem value="yes" id="landYes" />
+                <Label htmlFor="landYes" className="flex flex-1 cursor-pointer">
+                  <span>Oui, le terrain est inclus</span>
                 </Label>
-                <p className="text-sm text-gray-500 mt-1">
-                  Cochez si vous avez déjà un terrain ou si vous souhaitez inclure le prix du terrain dans l'estimation
-                </p>
-              </div>
-            </div>
-          </div>
-          
-          {landIncluded && (
-            <>
-              {/* Land Price */}
-              <div className="space-y-2">
-                <Label htmlFor="landPrice" className="text-base font-medium">Prix du terrain (€)</Label>
-                <Input
-                  id="landPrice"
-                  type="number"
-                  min="0"
-                  value={landPrice}
-                  onChange={(e) => setLandPrice(e.target.value)}
-                  placeholder="Ex: 120000"
-                  className="w-full"
-                />
               </div>
               
-              {/* Terrain Type */}
-              <div className="space-y-3">
-                <Label className="text-base font-medium">Type de terrain</Label>
-                <RadioGroup 
-                  value={terrainType} 
-                  onValueChange={setTerrainType}
-                  className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-                >
-                  <div className="flex items-center space-x-2 rounded-md border p-4">
-                    <RadioGroupItem value="flat" id="flat" />
-                    <Label htmlFor="flat" className="flex flex-1 items-center gap-2 cursor-pointer">
-                      <Globe className="h-4 w-4 text-green-500" />
-                      <div>
-                        <p>Terrain plat</p>
-                        <p className="text-sm text-gray-500">Sans différence de niveau significative</p>
-                      </div>
-                    </Label>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 rounded-md border p-4">
-                    <RadioGroupItem value="sloped" id="sloped" />
-                    <Label htmlFor="sloped" className="flex flex-1 items-center gap-2 cursor-pointer">
-                      <Globe className="h-4 w-4 text-amber-500" />
-                      <div>
-                        <p>Terrain en pente</p>
-                        <p className="text-sm text-gray-500">Avec différence de niveau significative</p>
-                      </div>
-                    </Label>
-                  </div>
-                </RadioGroup>
+              <div className="flex items-center space-x-2 rounded-md border p-4">
+                <RadioGroupItem value="no" id="landNo" />
+                <Label htmlFor="landNo" className="flex flex-1 cursor-pointer">
+                  <span>Non, j'ai déjà un terrain</span>
+                </Label>
               </div>
-            </>
+            </RadioGroup>
+          </div>
+          
+          {/* Land Price (if included) */}
+          {landIncluded === 'yes' && (
+            <div className="space-y-2">
+              <Label htmlFor="landPrice" className="text-base font-medium">Prix du terrain (€)</Label>
+              <Input
+                id="landPrice"
+                type="number"
+                min="0"
+                value={landPrice}
+                onChange={(e) => setLandPrice(e.target.value)}
+                placeholder="Ex: 150000"
+                className="w-full"
+              />
+            </div>
           )}
+          
+          {/* Terrain Type */}
+          <div className="space-y-3">
+            <Label className="text-base font-medium">Type de terrain</Label>
+            <RadioGroup 
+              value={terrainType} 
+              onValueChange={setTerrainType}
+              className="grid grid-cols-1 md:grid-cols-3 gap-4"
+            >
+              <div className="flex items-center space-x-2 rounded-md border p-4">
+                <RadioGroupItem value="flat" id="terrainFlat" />
+                <Label htmlFor="terrainFlat" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Globe className="h-4 w-4 text-blue-500" />
+                  <div>
+                    <p>Terrain plat</p>
+                    <p className="text-sm text-gray-500">Aucune pente significative</p>
+                  </div>
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2 rounded-md border p-4">
+                <RadioGroupItem value="sloped" id="terrainSloped" />
+                <Label htmlFor="terrainSloped" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Mountain className="h-4 w-4 text-amber-500" />
+                  <div>
+                    <p>Terrain en pente</p>
+                    <p className="text-sm text-gray-500">Présence d'une pente</p>
+                  </div>
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2 rounded-md border p-4">
+                <RadioGroupItem value="waterfront" id="terrainWaterfront" />
+                <Label htmlFor="terrainWaterfront" className="flex flex-1 items-center gap-2 cursor-pointer">
+                  <Water className="h-4 w-4 text-green-500" />
+                  <div>
+                    <p>Front de mer/lac</p>
+                    <p className="text-sm text-gray-500">À proximité d'un plan d'eau</p>
+                  </div>
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
           
           {/* Navigation buttons */}
           <div className="flex justify-between pt-4">

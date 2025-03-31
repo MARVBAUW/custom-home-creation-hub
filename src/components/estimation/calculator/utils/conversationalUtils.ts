@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 
 /**
@@ -75,6 +74,25 @@ export const extractInformation = (message: string): Partial<FormData> => {
 };
 
 /**
+ * Extracts form data from the user message and merges with existing form data
+ */
+export const extractFormDataFromMessage = (message: string, existingData: FormData): Partial<FormData> => {
+  const extractedData = extractInformation(message);
+  
+  // We don't want to override existing data with undefined values
+  const result: Partial<FormData> = {};
+  
+  // Only include properties that were extracted
+  Object.keys(extractedData).forEach(key => {
+    if (extractedData[key as keyof FormData] !== undefined) {
+      result[key as keyof FormData] = extractedData[key as keyof FormData];
+    }
+  });
+  
+  return result;
+};
+
+/**
  * Generates a meaningful response based on the form data
  */
 export const generateResponse = (formData: Partial<FormData>): string => {
@@ -110,4 +128,50 @@ export const generateResponse = (formData: Partial<FormData>): string => {
   response += ".\n\nPour affiner votre estimation, pourriez-vous me préciser d'autres détails comme le nombre de pièces, le niveau de finition souhaité ou si vous avez des besoins spécifiques ?";
   
   return response;
+};
+
+/**
+ * Generates a conversational response based on user input and existing form data
+ */
+export const generateConversationalResponse = (userInput: string, formData: FormData): string => {
+  // First, analyze the user's intent
+  const intent = analyzeUserIntent(userInput);
+  
+  // Generate a personalized response based on the intent and extracted data
+  switch (intent) {
+    case 'construction':
+      return "Je comprends que vous êtes intéressé par un projet de construction. Pour vous fournir une estimation précise, pourriez-vous me préciser la surface approximative et la localisation de votre projet ?";
+    
+    case 'renovation':
+      return "Pour votre projet de rénovation, il me faudrait quelques détails supplémentaires. Quelle est la surface à rénover et quels types de travaux envisagez-vous (cuisine, salle de bain, rénovation complète) ?";
+    
+    case 'extension':
+      return "Une extension est un excellent moyen d'agrandir votre espace de vie. Quelle surface d'extension envisagez-vous et quel type d'espace souhaitez-vous créer (chambre supplémentaire, cuisine, salon) ?";
+    
+    case 'budget':
+      if (formData.budget) {
+        return `Votre budget de ${formData.budget.toLocaleString('fr-FR')} € est noté. Pour vous proposer des solutions adaptées, pourriez-vous me préciser le type de projet et la surface envisagée ?`;
+      } else {
+        return "Pour vous aider à établir un budget, pourriez-vous me donner une idée du type de projet et de la surface envisagée ?";
+      }
+    
+    case 'surface':
+      if (formData.surface) {
+        return `J'ai bien noté une surface de ${formData.surface} m². Quel type de projet envisagez-vous pour cette surface (construction, rénovation, extension) ?`;
+      } else {
+        return "La surface est un élément important pour l'estimation. Quelle surface approximative envisagez-vous pour votre projet ?";
+      }
+    
+    case 'terrain':
+      return "Concernant le terrain, disposez-vous déjà d'un terrain ou êtes-vous en recherche ? Si vous avez un terrain, connaissez-vous sa superficie et sa localisation ?";
+    
+    default:
+      // If we have enough information, generate a summary response
+      if (Object.keys(formData).length > 2) {
+        return generateResponse(formData);
+      }
+      
+      // Otherwise, ask for more information
+      return "Pour vous fournir une estimation précise, j'aurais besoin de quelques informations supplémentaires. Pouvez-vous me préciser le type de projet (construction, rénovation, extension), la surface approximative et la localisation ?";
+  }
 };

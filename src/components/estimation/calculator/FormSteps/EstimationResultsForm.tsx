@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeftIcon, Download, Mail, FileClock } from 'lucide-react';
 import { FormData } from '../types';
 
-interface EstimationResultsProps {
+interface EstimationResultsFormProps {
   estimation: number;
   formData: FormData;
   goToPreviousStep: () => void;
@@ -12,7 +12,7 @@ interface EstimationResultsProps {
   goToNextStep: () => void;
 }
 
-const EstimationResults: React.FC<EstimationResultsProps> = ({
+const EstimationResultsForm: React.FC<EstimationResultsFormProps> = ({
   estimation,
   formData,
   goToPreviousStep,
@@ -164,4 +164,4 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   );
 };
 
-export default EstimationResults;
+export default EstimationResultsForm;

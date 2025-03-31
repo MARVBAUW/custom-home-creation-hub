@@ -49,6 +49,82 @@ export interface EstimationFormData {
   lastName?: string;
   email?: string;
   phone?: string;
+  message?: string;
+  termsAccepted?: boolean;
+  
+  // Additional fields for specific steps
+  activity?: string;
+  startDate?: string;
+  endDate?: string;
+  estimationType?: string;
+  constructionStyle?: string;
+  wallType?: string;
+  foundationType?: string;
+  roofType?: string;
+  atticType?: string;
+  roofingType?: string;
+  insulationType?: string;
+  
+  // Facade fields
+  stonePercentage?: number | string;
+  plasterPercentage?: number | string;
+  brickPercentage?: number | string;
+  metalCladdingPercentage?: number | string;
+  woodCladdingPercentage?: number | string;
+  stoneCladdingPercentage?: number | string;
+  
+  // Windows and doors
+  windowType?: string;
+  windowRenovationArea?: number | string;
+  windowNewArea?: number | string;
+  
+  // Technical systems
+  electricalType?: string;
+  plumbingType?: string;
+  heatingType?: string;
+  hasAirConditioning?: boolean;
+  
+  // Interior finishings
+  plasteringType?: string;
+  doorType?: string;
+  interiorDoorsType?: string;
+  floorTileType?: string;
+  floorTilePercentage?: number | string;
+  wallTileType?: string;
+  parquetType?: string;
+  parquetPercentage?: number | string;
+  softFloorType?: string;
+  softFloorPercentage?: number | string;
+  paintType?: string;
+  basicPaintPercentage?: number | string;
+  decorativePaintPercentage?: number | string;
+  wallpaperPercentage?: number | string;
+  
+  // Landscaping fields
+  landscapingType?: string;
+  gardenSurface?: number | string;
+  landscapingBudget?: number | string;
+  
+  // Renewable energy fields
+  solarPanelType?: string;
+  solarPanelSurface?: number | string;
+  windTurbineType?: string;
+  
+  // Eco-friendly features
+  greywaterRecycling?: boolean;
+  ecoFriendlyInsulation?: boolean;
+  
+  // Additional properties for specific project types
+  needsDemolition?: boolean;
+  demolitionType?: string;
+  exteriorFeatures?: string[];
+  units?: number;
+  terrainSurface?: number | string;
+  livingRoomSize?: number | string;
+  livingRoomStyle?: string;
+  finishingLevel?: string;
+  bathroomType?: string;
+  kitchenType?: string;
 }
 
 // For backward compatibility, create an alias

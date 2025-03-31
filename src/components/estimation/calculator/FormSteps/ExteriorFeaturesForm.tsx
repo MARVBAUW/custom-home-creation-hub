@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ArrowRightIcon, ArrowLeftIcon, Waves, UtensilsCrossed, Footprints } from 'lucide-react';
 import { FormData } from '../types';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { ArrowLeftIcon, ArrowRightIcon, Waves, UtensilsCrossed, Footprints } from 'lucide-react';
 
-interface ExteriorFeaturesStepProps {
+interface ExteriorFeaturesFormProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
@@ -14,7 +14,7 @@ interface ExteriorFeaturesStepProps {
   animationDirection: string;
 }
 
-const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
+const ExteriorFeaturesForm: React.FC<ExteriorFeaturesFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
@@ -122,4 +122,4 @@ const ExteriorFeaturesStep: React.FC<ExteriorFeaturesStepProps> = ({
   );
 };
 
-export default ExteriorFeaturesStep;
+export default ExteriorFeaturesForm;
