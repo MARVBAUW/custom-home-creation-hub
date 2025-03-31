@@ -26,10 +26,11 @@ export interface UnifiedFormData {
   budget?: number | string;
   
   // Project basic information
-  projectType?: 'construction' | 'renovation' | 'extension' | 'division' | string;
+  projectType?: 'construction' | 'renovation' | 'extension' | 'division' | 'design' | 'optimization' | string;
   projectDescription?: string;
   projectLocation?: string;
   projectDeadline?: string;
+  projectPurpose?: string;
   surface?: number | string;
   levels?: number | string;
   units?: number | string;
@@ -148,7 +149,6 @@ export interface UnifiedFormData {
   budgetAvailable?: number | string;
 
   // Contact form specific fields
-  projectPurpose?: string;
   commercialAccepted?: boolean;
   
   // Add an index signature to allow for string indexing
