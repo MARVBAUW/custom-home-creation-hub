@@ -2,12 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { FormData } from '../types';
 import { calculateDetailedFacadeCost, calculateNewMontantT } from '../utils/montantUtils';
+import FacadeOptions, { FacadeOption } from './facade/FacadeOptions';
+import PercentageIndicator from './facade/PercentageIndicator';
 
 interface FacadeStepProps {
   formData: FormData;
@@ -34,7 +33,7 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
   const [totalPercentage, setTotalPercentage] = useState<number>(0);
   const [error, setError] = useState<string>('');
 
-  const facadeOptions = [
+  const facadeOptions: FacadeOption[] = [
     {
       id: 'pierre',
       label: 'Pierre nue',
@@ -135,7 +134,7 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
       return;
     }
     
-    // Calculate facade cost - using the renamed function
+    // Calculate facade cost
     const facadeCost = calculateDetailedFacadeCost(
       formData,
       selectedFacades.includes('pierre') ? stonePercentage : '0',
@@ -176,69 +175,16 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
           Sélectionnez les types de façade et indiquez leur pourcentage. La somme doit être égale à 100%.
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {facadeOptions.map((option) => (
-            <div 
-              key={option.id}
-              className={`border rounded-lg overflow-hidden transition-all ${
-                selectedFacades.includes(option.id) ? 'border-blue-500 shadow-md' : 'border-gray-200'
-              }`}
-            >
-              <div className="h-40 overflow-hidden">
-                <img 
-                  src={option.image} 
-                  alt={option.label}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Checkbox 
-                    id={option.id}
-                    checked={selectedFacades.includes(option.id)}
-                    onCheckedChange={() => handleFacadeToggle(option.id)}
-                  />
-                  <Label htmlFor={option.id} className="font-medium cursor-pointer">
-                    {option.label}
-                  </Label>
-                </div>
-                
-                {selectedFacades.includes(option.id) && (
-                  <div className="mt-3 flex items-center space-x-2">
-                    <Input
-                      type="number"
-                      min="0"
-                      max="100"
-                      className="w-20"
-                      value={option.percentage}
-                      onChange={(e) => option.setPercentage(e.target.value)}
-                    />
-                    <span>%</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        <FacadeOptions 
+          options={facadeOptions}
+          selectedFacades={selectedFacades}
+          onFacadeToggle={handleFacadeToggle}
+        />
         
-        <div className={`p-4 mt-4 rounded-lg ${
-          totalPercentage > 100 ? 'bg-red-50 border border-red-200' : 'bg-gray-50 border border-gray-200'
-        }`}>
-          <div className="flex justify-between items-center">
-            <span className="font-medium">Total:</span>
-            <span className={`font-bold ${
-              totalPercentage > 100 ? 'text-red-600' : totalPercentage === 100 ? 'text-green-600' : ''
-            }`}>
-              {totalPercentage}%
-            </span>
-          </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-          {totalPercentage < 100 && totalPercentage > 0 && (
-            <p className="text-amber-600 text-sm mt-2">
-              La somme des pourcentages devrait être égale à 100%.
-            </p>
-          )}
-        </div>
+        <PercentageIndicator 
+          totalPercentage={totalPercentage}
+          error={error}
+        />
         
         <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
           Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
@@ -270,4 +216,3 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
 };
 
 export default FacadeStep;
-
