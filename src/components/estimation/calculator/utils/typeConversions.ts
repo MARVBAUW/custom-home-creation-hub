@@ -89,3 +89,23 @@ export function formatCurrency(value: number, locale: string = 'fr-FR', currency
     maximumFractionDigits: 0,
   }).format(value);
 }
+
+/**
+ * Converts any value to a form-friendly value (string)
+ * @param value The value to convert for form use
+ * @param defaultValue Default value if value is undefined or null
+ * @returns A string representation of the value for form usage
+ */
+export function toFormValue(value: any, defaultValue: string = ''): string {
+  if (value === undefined || value === null) return defaultValue;
+  
+  if (typeof value === 'number' && !isNaN(value)) {
+    return value.toString();
+  }
+  
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  
+  return String(value);
+}
