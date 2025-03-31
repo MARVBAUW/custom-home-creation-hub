@@ -6,9 +6,7 @@ import ClientProjects from '@/pages/client/ClientProjects';
 import SignIn from '@/pages/client/SignIn';
 import ClientOnboarding from '@/pages/client/ClientOnboarding';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-
-// Create placeholder component for client project detail
-const ClientProjectDetail = () => <div className="p-8"><h1 className="text-2xl">Détail du projet</h1></div>;
+import ClientProjectDetail from '@/components/client/project-detail/ClientProjectDetail';
 
 export const clientRoutes: RouteObject[] = [
   {
