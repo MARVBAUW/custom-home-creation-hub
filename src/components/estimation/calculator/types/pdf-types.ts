@@ -1,52 +1,39 @@
 
-import { jsPDF } from 'jspdf';
+import { PubSub } from 'jspdf';
 
-// Define AutoTable type
-export interface AutoTableSettings {
+// For extending jsPDF with autoTable
+interface AutoTableConfig {
   startY?: number;
-  head?: any[][];
-  body?: any[][];
-  foot?: any[][];
-  styles?: any;
-  headStyles?: any;
-  bodyStyles?: any;
-  footStyles?: any;
-  alternateRowStyles?: any;
-  columnStyles?: any;
-  margin?: any;
-  theme?: string;
+  margin?: { top?: number; right?: number; bottom?: number; left?: number };
+  styles?: { cellPadding?: number; fontSize?: number; font?: string; textColor?: string; fillColor?: string };
+  headStyles?: { fillColor?: string; textColor?: string; fontStyle?: string; halign?: string };
+  bodyStyles?: { fillColor?: string; textColor?: string; fontStyle?: string; halign?: string };
+  alternateRowStyles?: { fillColor?: string };
+  columnStyles?: { [key: string]: { cellWidth?: number; halign?: string; fontStyle?: string } };
+  head?: Array<Array<any>>;
+  body?: Array<Array<any>>;
+  foot?: Array<Array<any>>;
+  didDrawPage?: (data: any) => void;
+  didParseCell?: (data: any) => void;
+  willDrawCell?: (data: any) => void;
+  didDrawCell?: (data: any) => void;
+  theme?: 'striped' | 'grid' | 'plain';
   tableWidth?: string | number;
   showHead?: 'everyPage' | 'firstPage' | 'never';
   showFoot?: 'everyPage' | 'lastPage' | 'never';
-  tableLineWidth?: number;
-  tableLineColor?: number | string;
-  pageBreak?: 'auto' | 'avoid';
-  rowPageBreak?: 'auto' | 'avoid';
-  horizontalPageBreak?: boolean;
-  horizontalPageBreakRepeat?: number | string;
-  didDrawPage?: (data: any) => void;
-  didDrawCell?: (data: any) => void;
-  willDrawCell?: (data: any) => void;
-  didParseCell?: (data: any) => void;
-  [key: string]: any;
 }
 
-// Extend AutoTable with previous property
-export interface AutoTable {
-  (options: AutoTableSettings): any;
-  previous: {
-    finalY: number;
-    pageNumber: number;
-  };
+interface AutoTable {
+  (options: AutoTableConfig): any;
+  previous: (options: any) => any;
 }
 
-// Define the types for jspdf-autotable
 declare module 'jspdf' {
   interface jsPDF {
     autoTable: AutoTable;
     internal: {
-      getNumberOfPages: () => number;
       [key: string]: any;
+      getNumberOfPages: () => number;
     };
   }
 }

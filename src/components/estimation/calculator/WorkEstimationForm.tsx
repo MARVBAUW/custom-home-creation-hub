@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -57,9 +58,9 @@ const WorkEstimationForm: React.FC = () => {
   };
 
   // Function to handle client type submission from conversational estimator
-  const onClientTypeSubmit = (data: any) => {
+  const onClientTypeSubmit = (data: { clientType: string }) => {
     if (data && typeof data === 'object' && 'clientType' in data) {
-      updateFormData({ clientType: data.clientType });
+      updateFormData({ ...data });
     }
   };
 
@@ -101,7 +102,6 @@ const WorkEstimationForm: React.FC = () => {
         
         <FormNavigation 
           step={step}
-          currentStep={step}
           totalSteps={totalSteps}
           estimationResult={getNumericEstimation()}
           showSummary={showSummary}

@@ -1,99 +1,74 @@
 
-/**
- * Ensures a value is converted to a number.
- * If the conversion fails, returns 0 or the provided defaultValue.
- * 
- * @param value - The value to convert to a number
- * @param defaultValue - Optional default value to return if conversion fails
- * @returns A number representation of the value or the default
- */
-export const ensureNumber = (value: string | number | undefined, defaultValue: number = 0): number => {
-  if (value === undefined || value === null || value === '') {
-    return defaultValue;
-  }
-  
-  // If it's already a number, return it
-  if (typeof value === 'number') {
-    return isNaN(value) ? defaultValue : value;
-  }
-  
-  // Try to convert string to number
-  const num = Number(value);
-  return isNaN(num) ? defaultValue : num;
-};
+// Utility functions for type conversion
 
-/**
- * Ensures a value is converted to a string.
- * 
- * @param value - The value to convert to a string
- * @param defaultValue - Optional default value to return if conversion fails
- * @returns A string representation of the value or the default
- */
-export const ensureString = (value: any, defaultValue: string = ''): string => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
+// Convert any value to number, handling strings, nulls, etc.
+export const ensureNumber = (value: any): number => {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'number') return value;
   
-  return String(value);
-};
-
-/**
- * Ensures a value is converted to a boolean.
- * 
- * @param value - The value to convert to a boolean
- * @param defaultValue - Optional default value to return if conversion fails
- * @returns A boolean representation of the value or the default
- */
-export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  
+  // Try to convert from string
   if (typeof value === 'string') {
-    return value.toLowerCase() === 'true' || value === '1';
+    // Remove any non-numeric characters except decimal point
+    const cleanValue = value.replace(/[^\d.-]/g, '');
+    const result = parseFloat(cleanValue);
+    return isNaN(result) ? 0 : result;
   }
   
-  if (typeof value === 'number') {
-    return value === 1;
+  return 0;
+};
+
+// Format a number as currency (Euro)
+export const formatCurrency = (value: number | string): string => {
+  const numValue = ensureNumber(value);
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(numValue);
+};
+
+// Convert a value to boolean
+export const ensureBoolean = (value: any): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    const lowercaseValue = value.toLowerCase();
+    return lowercaseValue === 'true' || lowercaseValue === 'yes' || lowercaseValue === 'oui' || lowercaseValue === '1';
   }
-  
   return Boolean(value);
 };
 
-/**
- * Converts a value to a string form value for use with react-hook-form.
- * 
- * @param value - The value to convert to a form value
- * @param defaultValue - Optional default value to return if conversion fails
- * @returns A string representation of the value suitable for forms
- */
-export const toFormValue = (value: any, defaultValue: string = ''): string => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
+// Format a date string to a readable format
+export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
   
-  // Convert numbers and booleans to strings for form inputs
-  if (typeof value === 'number') {
-    return isNaN(value) ? defaultValue : String(value);
-  }
-  
-  if (typeof value === 'boolean') {
-    return value ? 'true' : 'false';
-  }
-  
-  // If it's already a string, return it
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  // For any other type, convert to string
   try {
-    return String(value);
-  } catch (error) {
-    return defaultValue;
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(date);
+  } catch (e) {
+    return dateString;
   }
+};
+
+// Convert a form value to a string representation
+export const toFormValue = (value: any): string => {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return value.toString();
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  
+  // If it's an object or array, stringify it
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return '';
+    }
+  }
+  
+  return String(value);
 };

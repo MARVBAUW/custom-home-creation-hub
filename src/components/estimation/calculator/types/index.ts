@@ -1,4 +1,3 @@
-
 import { BaseSyntheticEvent } from 'react';
 
 // Define the comprehensive FormData type with all possible properties

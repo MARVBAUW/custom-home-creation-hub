@@ -3,10 +3,11 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { FileDown } from 'lucide-react';
 import { generatePDF } from '../utils/pdfGenerator';
+import { FormData } from '../types';
 
 interface PDFGeneratorProps {
   documentTitle: string;
-  data: any;
+  data: FormData | any;
   fileName?: string;
   buttonLabel?: string;
   variant?: 'default' | 'outline' | 'secondary' | 'destructive' | 'ghost' | 'link';

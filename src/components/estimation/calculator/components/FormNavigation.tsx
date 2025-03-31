@@ -1,57 +1,71 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
-
-interface FormNavigationProps {
-  step: number;
-  estimationResult: number | null;
-  showSummary: boolean;
-  onPreviousClick: () => void;
-  onNextClick: () => void;
-  onShowSummaryClick: () => void;
-}
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
+import { FormNavigationProps } from '../types/formTypes';
 
 const FormNavigation: React.FC<FormNavigationProps> = ({
   step,
+  totalSteps,
+  currentStep,
   estimationResult,
   showSummary,
+  onPrevStep,
+  onNextStep,
+  isSubmitting,
+  isComplete,
+  onComplete,
   onPreviousClick,
   onNextClick,
   onShowSummaryClick
 }) => {
-  if (showSummary) return null;
+  // Handle backward compatibility with both old and new prop naming
+  const handlePrevious = onPrevStep || onPreviousClick;
+  const handleNext = onNextStep || onNextClick;
+  
+  if (showSummary) {
+    return null;
+  }
   
   return (
-    <div className="flex justify-between mt-4">
-      {step > 1 && (
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={onPreviousClick}
-          className="flex items-center"
+    <div className="flex justify-between mt-6">
+      {/* Previous button, shown for all steps except the first */}
+      {(step !== undefined && step > 0) && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={isSubmitting}
+          className="flex items-center gap-2"
         >
-          <ArrowLeftIcon className="mr-2 h-4 w-4" /> 
+          <ArrowLeft className="h-4 w-4" />
           Précédent
         </Button>
       )}
-      {estimationResult > 0 && (
-        <Button 
+      
+      {/* For the first step, show just a spacer */}
+      {(step !== undefined && step === 0) && <div></div>}
+      
+      {/* Next button, or Complete button for last step */}
+      {!isComplete ? (
+        <Button
           type="button"
-          onClick={onShowSummaryClick}
-          className="ml-auto bg-progineer-gold hover:bg-progineer-gold/90"
+          onClick={handleNext}
+          disabled={isSubmitting}
+          className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
         >
-          Voir le résumé
+          {isSubmitting ? 'Traitement...' : 'Suivant'}
+          <ArrowRight className="h-4 w-4" />
         </Button>
-      )}
-      {!estimationResult && (
-        <Button 
+      ) : (
+        <Button
           type="button"
-          onClick={onNextClick}
-          className="ml-auto flex items-center bg-progineer-gold hover:bg-progineer-gold/90"
+          onClick={onComplete}
+          disabled={isSubmitting}
+          className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
         >
-          Suivant
-          <ArrowRightIcon className="ml-2 h-4 w-4" />
+          <Check className="h-4 w-4" />
+          Terminer
         </Button>
       )}
     </div>

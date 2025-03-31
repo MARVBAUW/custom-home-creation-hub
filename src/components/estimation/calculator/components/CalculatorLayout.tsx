@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { FormNavigation } from './FormNavigation';
-import { StepRenderer } from './StepRenderer';
+import FormNavigation from './FormNavigation';
+import StepRenderer from './StepRenderer';
 import { FormData } from '../types';
 
 interface CalculatorLayoutProps {

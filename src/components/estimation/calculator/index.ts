@@ -1,7 +1,9 @@
 
-// Exporter le composant principal
+// Export the main component
 export { default } from './EstimationCalculator';
 
-// Exporter les hooks et utilitaires
+// Export hooks and utilities
 export * from './hooks';
 export * from './types';
+export * from './components';
+export * from './utils/typeConversions';

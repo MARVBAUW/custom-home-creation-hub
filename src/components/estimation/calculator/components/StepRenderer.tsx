@@ -1,109 +1,26 @@
-
 import React from 'react';
-import { AnimatePresence } from 'framer-motion';
-import ClientTypeForm from '../FormSteps/ClientTypeForm';
-import DefaultStepContent from '../DefaultStepContent';
-import { FormData } from '../types';
-import AnimatedStepTransition from '@/components/estimation/AnimatedStepTransition';
-
-type StepRendererProps = {
-  step: number;
-  totalSteps: number;
-  animationDirection: 'forward' | 'backward';
-  formData: FormData;
-  visibleSteps: any[];
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  onClientTypeSubmit: (data: { clientType: string }) => void;
-  onProfessionalProjectSubmit: (data: any) => void;
-  onIndividualProjectSubmit: (data: { projectType: string }) => void;
-  onEstimationTypeSubmit: (data: any) => void;
-  onConstructionDetailsSubmit: (data: any) => void;
-  onTerrainSubmit: (data: { terrainType: string }) => void;
-  onGrosOeuvreSubmit: (data: { wallType: string }) => void;
-  onCharpenteSubmit: (data: { roofType: string }) => void;
-  onComblesSubmit: (data: { atticType: string }) => void;
-  onCouvertureSubmit: (data: { roofingType: string }) => void;
-  onIsolationSubmit: (data: { insulationType: string }) => void;
-  onFacadeSubmit: (data: any) => void;
-  onMenuiseriesExtSubmit: (data: any) => void;
-  onElectriciteSubmit: (data: { electricalType: string }) => void;
-  onPlomberieSubmit: (data: { plumbingType: string }) => void;
-  onChauffageSubmit: (data: any) => void;
-  onPlatrerieSubmit: (data: { plasteringType: string }) => void;
-  onMenuiseriesIntSubmit: (data: any) => void;
-  onCarrelageSubmit: (data: any) => void;
-  onParquetSubmit: (data: any) => void;
-  onPeintureSubmit: (data: any) => void;
-  onContactSubmit: (data: any) => void;
-};
+import { StepRendererProps } from '../types/formTypes';
 
 const StepRenderer: React.FC<StepRendererProps> = ({
   step,
   totalSteps,
-  animationDirection,
   formData,
-  visibleSteps,
+  updateFormData,
   goToNextStep,
   goToPreviousStep,
-  onClientTypeSubmit,
-  onProfessionalProjectSubmit,
-  onIndividualProjectSubmit,
-  onEstimationTypeSubmit,
-  onConstructionDetailsSubmit,
-  onTerrainSubmit,
-  onGrosOeuvreSubmit,
-  onCharpenteSubmit,
-  onComblesSubmit,
-  onCouvertureSubmit,
-  onIsolationSubmit,
-  onFacadeSubmit,
-  onMenuiseriesExtSubmit,
-  onElectriciteSubmit,
-  onPlomberieSubmit,
-  onChauffageSubmit,
-  onPlatrerieSubmit,
-  onMenuiseriesIntSubmit,
-  onCarrelageSubmit,
-  onParquetSubmit,
-  onPeintureSubmit,
-  onContactSubmit,
+  isSubmitting,
+  goToStep,
+  onComplete
 }) => {
-  console.log("Current step:", step, "Total steps:", totalSteps);
-  
-  // Rendu conditionnel des formulaires en fonction de l'étape actuelle
-  const renderFormStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <ClientTypeForm 
-            formData={formData}
-            updateFormData={(data) => onClientTypeSubmit(data as { clientType: string })}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
-      // Pour l'instant, toutes les autres étapes utilisent le DefaultStepContent
-      // À mesure que vous développez les autres formulaires d'étape, vous pouvez les ajouter ici
-      default:
-        return (
-          <DefaultStepContent
-            step={step}
-            visibleSteps={visibleSteps}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            totalSteps={totalSteps}
-            animationDirection={animationDirection}
-          />
-        );
-    }
-  };
-
+  // This component should be implemented with actual step content
   return (
-    <AnimatePresence mode="wait">
-      {renderFormStep()}
-    </AnimatePresence>
+    <div className="space-y-4">
+      <p>Étape {step + 1} sur {totalSteps}</p>
+      {/* Here you would render the appropriate step component based on the current step */}
+      <div className="p-4 border rounded">
+        <p>Contenu de l'étape {step + 1}</p>
+      </div>
+    </div>
   );
 };
 
