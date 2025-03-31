@@ -107,7 +107,7 @@ export const generateEmailContent = (
 
 // Fonction pour envoyer l'email à l'utilisateur
 export const sendEstimationEmail = async (
-  to: string | FormData,
+  toOrFormData: string | FormData,
   formDataOrEstimation: FormData | number,
   estimationResultOrCategories?: number | CategoryAmount[],
   categoriesAmounts?: CategoryAmount[]
@@ -119,15 +119,15 @@ export const sendEstimationEmail = async (
     let categories: CategoryAmount[] | undefined;
 
     // Handle different parameter patterns
-    if (typeof to === 'string') {
+    if (typeof toOrFormData === 'string') {
       // Case: (email, formData, estimationResult, categories?)
-      email = to;
+      email = toOrFormData;
       formData = formDataOrEstimation as FormData;
       estimationResult = estimationResultOrCategories as number;
       categories = categoriesAmounts;
     } else {
       // Case: (formData, estimationResult, categories?)
-      formData = to;
+      formData = toOrFormData;
       estimationResult = formDataOrEstimation as number;
       categories = estimationResultOrCategories as CategoryAmount[] | undefined;
       // Get email from formData

@@ -13,7 +13,7 @@ export interface SavedEstimation {
   createdAt: string;
 }
 
-// Re-export the calculateEstimation function 
+// Re-export the calculateEstimation function explicitly
 export { calculateEstimation };
 
 // Fonction pour sauvegarder une estimation pour un utilisateur
