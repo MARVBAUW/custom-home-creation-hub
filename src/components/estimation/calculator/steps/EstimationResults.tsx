@@ -5,22 +5,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Download, Mail, ArrowLeft, Share2 } from "lucide-react";
 import { formatCurrency } from "@/utils/formatters";
-import { FormData } from "../types";
+import { FormData, EstimationResponseData } from "../types";
 import EstimationPDFExport from "../EstimationPDFExport";
 import EstimationBreakdown from "../EstimationBreakdown";
 import EstimationTimeline from "../EstimationTimeline";
-import { calculateEstimation } from "../calculationUtils";
 import { toast } from "@/components/ui/use-toast";
 import { sendEstimationEmail } from "../services/emailService";
 
 interface EstimationResultsProps {
   formData: FormData;
+  estimation: EstimationResponseData;
   goToPreviousStep: () => void;
   isLoading?: boolean;
 }
 
 const EstimationResults: React.FC<EstimationResultsProps> = ({
   formData,
+  estimation,
   goToPreviousStep,
   isLoading = false,
 }) => {
@@ -28,9 +29,6 @@ const EstimationResults: React.FC<EstimationResultsProps> = ({
   const [activeTab, setActiveTab] = useState("summary");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [emailAddress, setEmailAddress] = useState(formData.email || "");
-
-  // Calculate the estimation result based on form data
-  const estimation = calculateEstimation(formData);
 
   const handleSendEmail = async () => {
     if (!emailAddress || !emailAddress.includes('@')) {

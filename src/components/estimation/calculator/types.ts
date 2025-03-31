@@ -1,54 +1,60 @@
 
-import { BaseSyntheticEvent } from 'react';
-import { FormData as FormDataFromIndex } from './types/index';
-import * as FormTypesModule from './types/formTypes';
-
-// Re-export the FormData from the index file
-export type FormData = FormDataFromIndex;
-
-// Re-export the form types
-export * from './types/formTypes';
-export * from './types/estimationTypes';
-
-export interface Message {
-  id: string;
-  type: 'system' | 'user' | 'assistant' | 'loading';
-  content: string;
-  options?: string[];
+export interface FormData {
+  projectType?: string;
+  surface?: number | string;
+  city?: string;
+  landType?: string;
+  complexity?: string;
+  qualityStandard?: string;
+  constructionType?: string;
+  constructionStyle?: string;
+  email?: string;
+  name?: string;
+  phone?: string;
+  insulationType?: string;
+  roofingType?: string;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
+  landPrice?: number | string;
+  // Add other form fields as needed
 }
 
-export interface ConversationalProps {
-  onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  onClientTypeSubmit: (data: {clientType: string}) => void;
-  goToStep: (step: number) => void;
+export interface ConstructionCosts {
+  structuralWork: number;
+  finishingWork: number;
+  technicalLots: number;
+  externalWorks: number;
+  total: number;
 }
 
-export interface MessageDisplayProps {
-  messages: Message[];
-  loading: boolean;
-  onOptionClick: (option: string) => void;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
+export interface FeeCosts {
+  architectFees: number;
+  engineeringFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  total: number;
 }
 
-export interface InputAreaProps {
-  userInput: string;
-  setUserInput: (input: string) => void;
-  handleSendMessage: () => void;
-  handleKeyPress: (e: React.KeyboardEvent) => void;
+export interface OtherCosts {
+  insurance: number;
+  contingency: number;
+  taxes: number;
+  miscellaneous: number;
+  total: number;
 }
 
-export interface MessageProcessorProps {
-  onUserInput: (input: string) => void;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
 }
 
-// The state of the conversation to track progress
-export interface ConversationState {
-  currentStep: string;
-  askedQuestions: string[];
-  completedFields: string[];
-  formProgress: number;
+export interface EstimationResponseData {
+  constructionCosts: ConstructionCosts;
+  fees: FeeCosts;
+  otherCosts: OtherCosts;
+  totalAmount: number;
+  timeline: EstimationTimeline;
 }

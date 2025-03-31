@@ -3,7 +3,7 @@ import React from 'react';
 import { formatDateFrench } from '@/utils/dateUtils';
 
 interface LegalLastUpdateProps {
-  date: string;
+  date: string | Date;
 }
 
 const LegalLastUpdate: React.FC<LegalLastUpdateProps> = ({ date }) => {
