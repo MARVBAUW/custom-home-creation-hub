@@ -1,201 +1,71 @@
 
 /**
- * Ensures a value is a number or zero if undefined/null/NaN
- * 
- * @param value The value to convert to number
- * @param defaultValue Default value to use if conversion fails (defaults to 0)
- * @returns A number
+ * Type conversion utility functions
  */
-export const ensureNumber = (
-  value: string | number | undefined | null,
-  defaultValue: number = 0
-): number => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
+
+/**
+ * Ensures a value is a number, with fallback to defaultValue if conversion fails
+ * @param value - The value to ensure is a number
+ * @param defaultValue - The default value to use if conversion fails (default: 0)
+ * @returns The value as a number
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (value === undefined || value === null) return defaultValue;
   
-  if (typeof value === 'number') {
-    return isNaN(value) ? defaultValue : value;
-  }
+  // If value is already a number, return it
+  if (typeof value === 'number') return value;
   
-  const parsed = parseFloat(value);
+  // If value is a boolean, convert to 0 or 1
+  if (typeof value === 'boolean') return value ? 1 : 0;
+  
+  // Try to parse as number
+  const parsed = Number(value);
   return isNaN(parsed) ? defaultValue : parsed;
 };
 
 /**
- * Converts a value to a string
- * 
- * @param value The value to convert to string
- * @param defaultValue Default value to use if value is undefined/null
- * @returns A string
+ * Ensures a value is a boolean, with logic for string conversions
+ * @param value - The value to ensure is a boolean
+ * @param defaultValue - The default value to use if conversion is ambiguous (default: false)
+ * @returns The value as a boolean
  */
-export const ensureString = (
-  value: string | number | undefined | null,
-  defaultValue: string = ''
-): string => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
+export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
+  if (value === undefined || value === null) return defaultValue;
   
-  return String(value);
-};
-
-/**
- * Converts a value to a boolean
- * 
- * @param value The value to convert to boolean
- * @param defaultValue Default value to use if conversion is not clear
- * @returns A boolean
- */
-export const ensureBoolean = (
-  value: string | boolean | number | undefined | null,
-  defaultValue: boolean = false
-): boolean => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
+  // If value is already a boolean, return it
+  if (typeof value === 'boolean') return value;
   
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  
+  // Handle string values
   if (typeof value === 'string') {
-    return value.toLowerCase() === 'true' || value === '1' || value === 'yes' || value === 'oui';
+    const lowercased = value.toLowerCase();
+    if (lowercased === 'true' || lowercased === 'yes' || lowercased === 'oui' || lowercased === '1') {
+      return true;
+    }
+    if (lowercased === 'false' || lowercased === 'no' || lowercased === 'non' || lowercased === '0') {
+      return false;
+    }
   }
   
+  // For numbers, 0 is false, anything else is true
   if (typeof value === 'number') {
-    return value === 1;
+    return value !== 0;
   }
   
   return defaultValue;
 };
 
 /**
- * Convert a string representation to an appropriate type (for calculated fields)
- * 
- * @param value The string value to parse
- * @returns The converted value
+ * Ensures a value is a string
+ * @param value - The value to ensure is a string
+ * @param defaultValue - The default value to use if conversion is ambiguous (default: '')
+ * @returns The value as a string
  */
-export const parseStringValue = (value: string): string | number | boolean => {
-  // Check if it's a number
-  if (!isNaN(Number(value)) && value.trim() !== '') {
-    return Number(value);
-  }
+export const ensureString = (value: any, defaultValue: string = ''): string => {
+  if (value === undefined || value === null) return defaultValue;
   
-  // Check if it's a boolean
-  if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
-    return value.toLowerCase() === 'true';
-  }
+  // If value is already a string, return it
+  if (typeof value === 'string') return value;
   
-  // Otherwise return as string
-  return value;
-};
-
-/**
- * Converts any value to a form-friendly string representation
- * 
- * @param value The value to convert to a form value
- * @param defaultValue Default value to use if value is undefined/null
- * @returns A string representation for form fields
- */
-export const toFormValue = (
-  value: string | number | boolean | undefined | null,
-  defaultValue: string = ''
-): string => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
-  
+  // Convert other types to string
   return String(value);
-};
-
-/**
- * Ensures a string value is properly formatted for an OUI/NON type
- * 
- * @param value The value to convert to OUI/NON
- * @param defaultValue Default value to use
- * @returns Either "OUI" or "NON"
- */
-export const ensureOuiNon = (
-  value: string | boolean | undefined | null,
-  defaultValue: "OUI" | "NON" = "NON"
-): "OUI" | "NON" => {
-  if (value === undefined || value === null) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'boolean') {
-    return value ? "OUI" : "NON";
-  }
-  
-  if (typeof value === 'string') {
-    const normalized = value.toUpperCase().trim();
-    if (normalized === 'OUI' || normalized === 'YES' || normalized === 'TRUE' || normalized === '1') {
-      return "OUI";
-    }
-    if (normalized === 'NON' || normalized === 'NO' || normalized === 'FALSE' || normalized === '0') {
-      return "NON";
-    }
-  }
-  
-  return defaultValue;
-};
-
-/**
- * Ensures a percentage value is within the valid 0-100 range
- * 
- * @param value The value to convert to percentage
- * @param defaultValue Default value to use if conversion fails
- * @returns A number between 0 and 100
- */
-export const ensurePercentage = (
-  value: string | number | undefined | null,
-  defaultValue: number = 0
-): number => {
-  const num = ensureNumber(value, defaultValue);
-  return Math.max(0, Math.min(100, num));
-};
-
-/**
- * Converts array or comma-separated string values to proper string array
- * 
- * @param value The value to convert to a string array
- * @returns An array of strings
- */
-export const ensureStringArray = (
-  value: string | string[] | undefined | null
-): string[] => {
-  if (value === undefined || value === null) {
-    return [];
-  }
-  
-  if (Array.isArray(value)) {
-    return value.map(String);
-  }
-  
-  // If it's a comma-separated string, split it
-  if (typeof value === 'string' && value.includes(',')) {
-    return value.split(',').map(item => item.trim());
-  }
-  
-  return [String(value)];
-};
-
-/**
- * Creates a tuple with at least one required element
- * 
- * @param items Array of items to convert to tuple
- * @param defaultFirst Default value for the first item if array is empty
- * @returns A tuple with at least one required element
- */
-export const createRequiredTuple = <T>(
-  items: T[],
-  defaultFirst: T
-): [T, ...T[]] => {
-  if (!items.length) {
-    return [defaultFirst];
-  }
-  
-  const [first, ...rest] = items;
-  return [first, ...rest];
 };

@@ -9,31 +9,151 @@ import { EstimationFormData as OriginalEstimationFormData,
         EstimationResponseData as OriginalEstimationResponseData, 
         FeeCosts as OriginalFeeCosts,
         EstimationTimeline } from './estimationFormData';
-import { FormData as ExtendedFormData } from './formTypes';
+import { FormData as OriginalFormData } from './formTypes';
 
 // Create unified types that combine both versions
-export interface UnifiedFormData extends Omit<OriginalEstimationFormData, 'budget' | 'poolHeating' | 'surface' | 'terassementsViabilisation'> {
-  // Add properties with flexible types to handle mixed data types
-  surface?: number | string;
-  poolHeating?: boolean | string;
+export interface UnifiedFormData {
+  // Client information
+  clientType?: 'individual' | 'professional' | string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  company?: string;
+  address?: string;
+  city?: string;
+  zipCode?: string;
   budget?: number | string;
-  terassementsViabilisation?: number | boolean | string;
-  // Fields specific for navigation
-  skipToContact?: boolean;
-  // Fields specific for professional forms and special projects
-  companyName?: string;
+  
+  // Project basic information
+  projectType?: 'construction' | 'renovation' | 'extension' | 'division' | string;
   projectDescription?: string;
-  projectPurpose?: string;
-  startDate?: string;
-  commercialAccepted?: boolean;
-  formCompleted?: boolean;
-  // Allow for dynamic properties
-  [key: string]: any;
-}
+  projectLocation?: string;
+  projectDeadline?: string;
+  surface?: number | string;
+  levels?: number | string;
+  units?: number | string;
+  
+  // Land information
+  landOwnership?: 'owned' | 'to-purchase' | string;
+  landArea?: number | string;
+  landType?: string;
+  landSlope?: string;
+  landAccess?: string;
+  landPrice?: number | string;
+  
+  // Construction details
+  constructionType?: string;
+  constructionStyle?: string;
+  bedrooms?: number | string;
+  bathrooms?: number | string;
+  basement?: boolean | string;
+  garage?: boolean | string;
+  atticType?: string;
+  roofType?: string;
+  roofArea?: number | string;
+  foundationType?: string;
+  landscapingType?: string | string[];
+  landscapingArea?: number | string;
+  fencingLength?: number | string;
+  gateLength?: number | string;
+  terraceArea?: number | string;
+  
+  // Renovation details
+  renovationScope?: string;
+  
+  // Demolition
+  demolitionTypes?: string[];
+  demolitionPercentages?: { [key: string]: string | number };
+  demolitionTotalArea?: number | string;
+  
+  // Structural work
+  createWalls?: "OUI" | "NON" | boolean;
+  wallArea?: number | string;
+  createFloors?: "OUI" | "NON" | boolean;
+  floorType?: "BOIS" | "BETON" | string;
+  floorArea?: number | string;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: { [key: string]: string | number };
+  
+  // Roof
+  roofingType?: string;
+  roofingArea?: number | string;
+  
+  // Windows and doors
+  windowType?: string;
+  windowRenovationArea?: number | string;
+  windowNewArea?: number | string;
+  
+  // Plumbing
+  plumbingType?: string;
+  
+  // Features
+  hasSwimmingPool?: boolean | string;
+  hasTerrace?: boolean | string;
+  hasSolarPanels?: boolean | string;
+  hasGeothermalEnergy?: boolean | string;
+  
+  // Interior details
+  doorType?: string;
+  interiorDoorType?: string;
+  doorCount?: number | string;
+  
+  // Kitchen and bathroom
+  bathroomType?: string;
+  bathroomCount?: number | string;
+  kitchenType?: string;
+  kitchenCost?: number | string;
+  
+  // Options
+  carportType?: string;
+  poolType?: string;
+  poolArea?: number | string;
+  poolHeating?: boolean | string;
+  jacuzziType?: string;
+  jacuzziArea?: number | string;
+  
+  // Environmental features
+  renewableEnergyType?: string;
+  environmentalSolutionType?: string;
+  
+  // Finishing details
+  flooringType?: string;
+  wallFinishType?: string;
+  ceilingFinishType?: string;
+  paintType?: string;
+  
+  // Heating and cooling
+  heatingType?: string;
+  hasAirConditioning?: boolean | string;
+  
+  // Budget and planning
+  desiredStartDate?: string;
+  desiredCompletionDate?: string;
+  totalBudget?: number | string;
+  
+  // Financing information
+  financingMethod?: string;
+  loanPercentage?: number | string;
+  loanTerm?: number | string;
+  interestRate?: number | string;
+  
+  // Special requests
+  additionalNotes?: string;
+  
+  // Generated values - the critical field that's causing compatibility issues
+  terassementsViabilisation?: number | string | boolean;
+  montantT?: number | string;
+  totalAmount?: number | string;
+  budgetAvailable?: number | string;
 
-// Export the unified types with the original names for backward compatibility
-export type FormData = UnifiedFormData;
-export type EstimationFormData = UnifiedFormData;
+  // Contact form specific fields
+  projectPurpose?: string;
+  commercialAccepted?: boolean;
+  
+  // Add an index signature to allow for string indexing
+  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
+}
 
 // Unified response data type
 export interface UnifiedEstimationResponseData {
@@ -48,7 +168,6 @@ export interface UnifiedEstimationResponseData {
     architect: number;
     engineeringFees: number;
     architectFees: number;
-    // All fee properties should be optional for compatibility
     officialFees?: number;
     inspectionFees?: number;
     technicalStudies?: number;
@@ -85,9 +204,6 @@ export interface UnifiedEstimationResponseData {
   };
 }
 
-// Export the unified response data type with both original names
-export type EstimationResponseData = UnifiedEstimationResponseData;
-
 // Unified fee costs
 export interface UnifiedFeeCosts {
   architect: number;
@@ -106,7 +222,10 @@ export interface UnifiedFeeCosts {
   total: number;
 }
 
-// Export the unified fee costs with both original names
+// Export the unified types to use across the codebase
+export type FormData = UnifiedFormData;
+export type EstimationFormData = UnifiedFormData;
+export type EstimationResponseData = UnifiedEstimationResponseData;
 export type FeeCosts = UnifiedFeeCosts;
 
 // Re-export EstimationTimeline with explicit reference to avoid ambiguity

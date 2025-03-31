@@ -1,6 +1,6 @@
 
 // FormTypes.ts
-import { EstimationFormData, EstimationResponseData } from './estimationFormData';
+import { EstimationFormData, EstimationResponseData } from '../types';
 
 /**
  * Base props for form components
@@ -16,13 +16,6 @@ export interface BaseFormProps {
 }
 
 // Extended FormData interface compatible with EstimationFormData
-export interface FormData extends Omit<EstimationFormData, 'budget' | 'poolHeating' | 'surface' | 'terassementsViabilisation'> {
-  surface?: number | string;
-  projectDescription?: string;
-  projectPurpose?: string;
-  commercialAccepted?: boolean;
-  budget?: number | string;
-  poolHeating?: boolean | string;
-  terassementsViabilisation?: number | boolean;
+export interface FormData extends EstimationFormData {
   [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
 }

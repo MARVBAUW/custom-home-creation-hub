@@ -9,9 +9,9 @@ import {
   calculateLandscapingCost, 
   calculateFencingCost, 
   calculateGateCost, 
-  calculateTerraceCost,
-  ensureNumber 
+  calculateTerraceCost
 } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 import { Trees, Fence, GalleryVertical, Footprints } from 'lucide-react';
 
 const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
@@ -116,7 +116,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
       gateLength,
       terraceArea,
       includeLandscaping: landscapingTypes.length > 0 && !landscapingTypes.includes('PAS DU TOUT'),
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Navigate to next step

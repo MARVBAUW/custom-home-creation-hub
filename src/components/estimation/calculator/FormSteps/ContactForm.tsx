@@ -2,11 +2,11 @@
 import React from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import ContactDetailsStep from '../steps/ContactDetailsStep';
-import { FormData, UnifiedFormData } from '../types';
+import { FormData } from '../types';
 
 interface ContactFormProps extends BaseFormProps {
-  formData: UnifiedFormData;
-  updateFormData: (data: Partial<UnifiedFormData>) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
 }
 
 const ContactForm: React.FC<ContactFormProps> = (props) => {

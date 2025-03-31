@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { calculateHeatingCost, calculateAirConditioningCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/montantUtils';
+import { ensureNumber, ensureBoolean } from '../utils/typeConversions';
 import { Thermometer, Wind, Leaf, PiggyBank } from 'lucide-react';
 
 const ChauffageForm: React.FC<BaseFormProps> = ({
@@ -17,11 +16,11 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
   animationDirection
 }) => {
   const [heatingType, setHeatingType] = useState<string>(
-    formData.heatingType || 'standard'
+    formData.heatingType?.toString() || 'standard'
   );
   
   const [hasAirConditioning, setHasAirConditioning] = useState<boolean>(
-    formData.hasAirConditioning || false
+    ensureBoolean(formData.hasAirConditioning, false)
   );
 
   const handleSubmit = () => {
@@ -41,7 +40,7 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
     updateFormData({
       heatingType,
       hasAirConditioning,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Move to the next step
@@ -212,7 +211,7 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
         
         {formData.montantT && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+            <p className="text-sm font-medium">Total estimé: {ensureNumber(formData.montantT).toLocaleString()} €</p>
           </div>
         )}
       </div>

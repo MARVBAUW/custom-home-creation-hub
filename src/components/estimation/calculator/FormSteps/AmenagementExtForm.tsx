@@ -1,11 +1,11 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { ensureNumber } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
+import { ensureBoolean } from '../utils/typeConversions';
 import { Trees, Flower2, Droplets, CookingPot } from 'lucide-react';
 
 const AmenagementExtForm: React.FC<BaseFormProps> = ({
@@ -16,19 +16,19 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
   animationDirection
 }) => {
   const [hasLandscaping, setHasLandscaping] = useState<boolean>(
-    formData.includeLandscaping || false
+    ensureBoolean(formData.includeLandscaping, false)
   );
   
   const [hasPool, setHasPool] = useState<boolean>(
-    formData.pool || false
+    ensureBoolean(formData.pool, false)
   );
   
   const [hasTerrace, setHasTerrace] = useState<boolean>(
-    formData.terrace || false
+    ensureBoolean(formData.terrace, false)
   );
   
   const [hasOutdoorKitchen, setHasOutdoorKitchen] = useState<boolean>(
-    formData.outdoorKitchen || false
+    ensureBoolean(formData.outdoorKitchen, false)
   );
 
   const handleSubmit = () => {
@@ -134,7 +134,7 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
         
         {formData.montantT && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+            <p className="text-sm font-medium">Total estimé: {ensureNumber(formData.montantT).toLocaleString()} €</p>
           </div>
         )}
       </div>
