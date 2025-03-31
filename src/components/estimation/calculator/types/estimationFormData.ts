@@ -157,7 +157,15 @@ export interface EstimationFormData {
   basicPaintPercentage?: number | string;
   decorativePaintPercentage?: number | string;
   wallpaperPercentage?: number | string;
+  woodPanelingPercentage?: number | string;
+  stonePanelingPercentage?: number | string;
   paintSurface?: number | string;
+
+  // Renewable energy
+  renewableEnergyType?: string;
+  
+  // Environmental solutions
+  environmentalSolutionType?: string;
   
   // Project requirements
   needsDemolition?: boolean;

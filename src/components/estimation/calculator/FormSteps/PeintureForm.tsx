@@ -1,13 +1,16 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { ensureNumber } from '../utils/montantUtils';
-import { Paintbrush, Ban } from 'lucide-react';
+import { ensureNumber } from '../utils/typeConversions';
+import { calculatePaintingCost } from '../utils/montantUtils';
+import { Paintbrush, Wallpaper, Construction, TreePine, Mountain } from 'lucide-react';
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ExclamationCircle } from 'lucide-react';
 
 const PeintureForm: React.FC<BaseFormProps> = ({
   formData,
@@ -16,53 +19,63 @@ const PeintureForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [paintType, setPaintType] = useState<string>(
-    formData.paintType || 'standard'
-  );
-  
+  // Initialize state for each wall covering type percentage
   const [basicPaintPercentage, setBasicPaintPercentage] = useState<number>(
-    Number(formData.basicPaintPercentage || 80)
+    formData.basicPaintPercentage ? Number(formData.basicPaintPercentage) : 60
   );
 
   const [decorativePaintPercentage, setDecorativePaintPercentage] = useState<number>(
-    Number(formData.decorativePaintPercentage || 10)
+    formData.decorativePaintPercentage ? Number(formData.decorativePaintPercentage) : 20
   );
 
   const [wallpaperPercentage, setWallpaperPercentage] = useState<number>(
-    Number(formData.wallpaperPercentage || 10)
+    formData.wallpaperPercentage ? Number(formData.wallpaperPercentage) : 10
+  );
+
+  const [woodPanelingPercentage, setWoodPanelingPercentage] = useState<number>(
+    formData.woodPanelingPercentage ? Number(formData.woodPanelingPercentage) : 5
+  );
+
+  const [stonePanelingPercentage, setStonePanelingPercentage] = useState<number>(
+    formData.stonePanelingPercentage ? Number(formData.stonePanelingPercentage) : 5
   );
 
   // Calculate the total percentage
-  const totalPercentage = basicPaintPercentage + decorativePaintPercentage + wallpaperPercentage;
+  const totalPercentage = basicPaintPercentage + decorativePaintPercentage + 
+                         wallpaperPercentage + woodPanelingPercentage + stonePanelingPercentage;
+  
+  // Determine if the form is valid for submission
+  const isValid = totalPercentage === 100;
 
+  // Handle form submission
   const handleSubmit = () => {
-    if (totalPercentage !== 100) {
+    if (!isValid) {
       return; // Prevent submission if percentages don't add up to 100%
     }
 
-    // Calculate paint costs based on surface and percentages
+    // Calculate wall coverings costs based on surface and percentages
     const surface = ensureNumber(formData.surface, 0);
     
-    // Paint costs per m² (basic, decorative, wallpaper)
-    const basicPaintRate = paintType === 'premium' ? 25 : paintType === 'medium' ? 18 : 12;
-    const decorativePaintRate = 35;
-    const wallpaperRate = 45;
-    
-    // Calculate costs for each surface type
-    const basicPaintCost = (basicPaintRate * surface * (basicPaintPercentage / 100));
-    const decorativePaintCost = (decorativePaintRate * surface * (decorativePaintPercentage / 100));
-    const wallpaperCost = (wallpaperRate * surface * (wallpaperPercentage / 100));
-    
-    // Total paint cost
-    const totalPaintCost = basicPaintCost + decorativePaintCost + wallpaperCost;
+    // Calculate total painting cost using the utility function
+    const totalWallCoveringsCost = calculatePaintingCost(
+      {
+        basicPaint: basicPaintPercentage,
+        decorativePaint: decorativePaintPercentage,
+        wallpaper: wallpaperPercentage,
+        woodPaneling: woodPanelingPercentage,
+        stoneCladding: stonePanelingPercentage
+      },
+      surface
+    );
 
     // Update form data with paint options and cost
     updateFormData({
-      paintType,
       basicPaintPercentage,
       decorativePaintPercentage,
       wallpaperPercentage,
-      montantT: (formData.montantT || 0) + totalPaintCost
+      woodPanelingPercentage,
+      stonePanelingPercentage,
+      montantT: (formData.montantT || 0) + totalWallCoveringsCost
     });
     
     // Move to the next step
@@ -74,126 +87,215 @@ const PeintureForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <h3 className="text-lg font-medium mb-4">Peinture & revêtements muraux</h3>
+        <h3 className="text-lg font-medium mb-4">Peinture & Revêtements Muraux</h3>
         
         <div className="mb-8">
-          <Label className="mb-2 block">Type de peinture</Label>
-          <RadioGroup 
-            value={paintType} 
-            onValueChange={setPaintType}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
-          >
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPaintType('standard')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Paintbrush className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="standard" id="paint-standard" className="sr-only" />
-                <Label htmlFor="paint-standard" className="font-medium">Peinture standard</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Peinture de base
-                </p>
+          <Label className="mb-2 block text-base font-medium">Répartition des Surfaces Murales (%)</Label>
+          <p className="text-sm text-gray-500 mb-4">
+            Indiquez le pourcentage de chaque type de revêtement mural. Le total doit être égal à 100%.
+          </p>
+          
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <Card className={`transition-all ${basicPaintPercentage > 0 ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <CardContent className="pt-4 pb-4">
+                <div className="flex items-center mb-3">
+                  <Paintbrush className="h-5 w-5 text-blue-500 mr-2" />
+                  <Label className="font-medium">Peinture Base</Label>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm text-gray-500">Pourcentage</span>
+                  <span className="text-sm font-medium">{basicPaintPercentage}%</span>
+                </div>
+                <Slider
+                  value={[basicPaintPercentage]}
+                  max={100}
+                  step={5}
+                  onValueChange={(value) => {
+                    const newValue = value[0];
+                    setBasicPaintPercentage(newValue);
+                    
+                    // Adjust other percentages to maintain 100% total
+                    const otherTotal = decorativePaintPercentage + wallpaperPercentage + 
+                                      woodPanelingPercentage + stonePanelingPercentage;
+                    
+                    if (otherTotal > 0) {
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / otherTotal;
+                      
+                      setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
+                      setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
+                      setWoodPanelingPercentage(Math.round(woodPanelingPercentage * ratio));
+                      setStonePanelingPercentage(Math.round(stonePanelingPercentage * ratio));
+                    }
+                  }}
+                />
               </CardContent>
             </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'medium' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPaintType('medium')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Paintbrush className="h-8 w-8 text-blue-600 mb-2" />
-                <RadioGroupItem value="medium" id="paint-medium" className="sr-only" />
-                <Label htmlFor="paint-medium" className="font-medium">Peinture milieu de gamme</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Peinture lavable
-                </p>
+
+            <Card className={`transition-all ${decorativePaintPercentage > 0 ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <CardContent className="pt-4 pb-4">
+                <div className="flex items-center mb-3">
+                  <Paintbrush className="h-5 w-5 text-indigo-500 mr-2" />
+                  <Label className="font-medium">Peinture Décorative</Label>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm text-gray-500">Pourcentage</span>
+                  <span className="text-sm font-medium">{decorativePaintPercentage}%</span>
+                </div>
+                <Slider
+                  value={[decorativePaintPercentage]}
+                  max={100}
+                  step={5}
+                  onValueChange={(value) => {
+                    const newValue = value[0];
+                    setDecorativePaintPercentage(newValue);
+                    
+                    // Adjust other percentages to maintain 100% total
+                    const otherPercentages = [
+                      { value: basicPaintPercentage, setter: setBasicPaintPercentage },
+                      { value: wallpaperPercentage, setter: setWallpaperPercentage },
+                      { value: woodPanelingPercentage, setter: setWoodPanelingPercentage },
+                      { value: stonePanelingPercentage, setter: setStonePanelingPercentage }
+                    ];
+                    
+                    const otherTotal = otherPercentages.reduce((sum, item) => sum + item.value, 0);
+                    if (otherTotal > 0) {
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / otherTotal;
+                      
+                      otherPercentages.forEach(item => {
+                        item.setter(Math.round(item.value * ratio));
+                      });
+                    }
+                  }}
+                />
               </CardContent>
             </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${paintType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setPaintType('premium')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Paintbrush className="h-8 w-8 text-blue-700 mb-2" />
-                <RadioGroupItem value="premium" id="paint-premium" className="sr-only" />
-                <Label htmlFor="paint-premium" className="font-medium">Peinture haut de gamme</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Peinture premium
-                </p>
+
+            <Card className={`transition-all ${wallpaperPercentage > 0 ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <CardContent className="pt-4 pb-4">
+                <div className="flex items-center mb-3">
+                  <Wallpaper className="h-5 w-5 text-amber-500 mr-2" />
+                  <Label className="font-medium">Papier Peint</Label>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm text-gray-500">Pourcentage</span>
+                  <span className="text-sm font-medium">{wallpaperPercentage}%</span>
+                </div>
+                <Slider
+                  value={[wallpaperPercentage]}
+                  max={100}
+                  step={5}
+                  onValueChange={(value) => {
+                    const newValue = value[0];
+                    setWallpaperPercentage(newValue);
+                    
+                    // Adjust other percentages to maintain 100% total
+                    const otherPercentages = [
+                      { value: basicPaintPercentage, setter: setBasicPaintPercentage },
+                      { value: decorativePaintPercentage, setter: setDecorativePaintPercentage },
+                      { value: woodPanelingPercentage, setter: setWoodPanelingPercentage },
+                      { value: stonePanelingPercentage, setter: setStonePanelingPercentage }
+                    ];
+                    
+                    const otherTotal = otherPercentages.reduce((sum, item) => sum + item.value, 0);
+                    if (otherTotal > 0) {
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / otherTotal;
+                      
+                      otherPercentages.forEach(item => {
+                        item.setter(Math.round(item.value * ratio));
+                      });
+                    }
+                  }}
+                />
               </CardContent>
             </Card>
-          </RadioGroup>
-        </div>
-        
-        <div className="mb-8">
-          <div className="flex justify-between">
-            <Label className="text-base font-medium">Peinture basique (%)</Label>
-            <span className="text-sm font-medium">{basicPaintPercentage}%</span>
+
+            <Card className={`transition-all ${woodPanelingPercentage > 0 ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <CardContent className="pt-4 pb-4">
+                <div className="flex items-center mb-3">
+                  <TreePine className="h-5 w-5 text-emerald-600 mr-2" />
+                  <Label className="font-medium">Revêtement Mural Bois Ajouré</Label>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm text-gray-500">Pourcentage</span>
+                  <span className="text-sm font-medium">{woodPanelingPercentage}%</span>
+                </div>
+                <Slider
+                  value={[woodPanelingPercentage]}
+                  max={100}
+                  step={5}
+                  onValueChange={(value) => {
+                    const newValue = value[0];
+                    setWoodPanelingPercentage(newValue);
+                    
+                    // Adjust other percentages to maintain 100% total
+                    const otherPercentages = [
+                      { value: basicPaintPercentage, setter: setBasicPaintPercentage },
+                      { value: decorativePaintPercentage, setter: setDecorativePaintPercentage },
+                      { value: wallpaperPercentage, setter: setWallpaperPercentage },
+                      { value: stonePanelingPercentage, setter: setStonePanelingPercentage }
+                    ];
+                    
+                    const otherTotal = otherPercentages.reduce((sum, item) => sum + item.value, 0);
+                    if (otherTotal > 0) {
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / otherTotal;
+                      
+                      otherPercentages.forEach(item => {
+                        item.setter(Math.round(item.value * ratio));
+                      });
+                    }
+                  }}
+                />
+              </CardContent>
+            </Card>
+
+            <Card className={`transition-all ${stonePanelingPercentage > 0 ? 'border-blue-500 bg-blue-50' : ''}`}>
+              <CardContent className="pt-4 pb-4">
+                <div className="flex items-center mb-3">
+                  <Mountain className="h-5 w-5 text-stone-600 mr-2" />
+                  <Label className="font-medium">Revêtement Mural Type Pierre Naturelle</Label>
+                </div>
+                <div className="flex justify-between mb-1">
+                  <span className="text-sm text-gray-500">Pourcentage</span>
+                  <span className="text-sm font-medium">{stonePanelingPercentage}%</span>
+                </div>
+                <Slider
+                  value={[stonePanelingPercentage]}
+                  max={100}
+                  step={5}
+                  onValueChange={(value) => {
+                    const newValue = value[0];
+                    setStonePanelingPercentage(newValue);
+                    
+                    // Adjust other percentages to maintain 100% total
+                    const otherPercentages = [
+                      { value: basicPaintPercentage, setter: setBasicPaintPercentage },
+                      { value: decorativePaintPercentage, setter: setDecorativePaintPercentage },
+                      { value: wallpaperPercentage, setter: setWallpaperPercentage },
+                      { value: woodPanelingPercentage, setter: setWoodPanelingPercentage }
+                    ];
+                    
+                    const otherTotal = otherPercentages.reduce((sum, item) => sum + item.value, 0);
+                    if (otherTotal > 0) {
+                      const remaining = 100 - newValue;
+                      const ratio = remaining / otherTotal;
+                      
+                      otherPercentages.forEach(item => {
+                        item.setter(Math.round(item.value * ratio));
+                      });
+                    }
+                  }}
+                />
+              </CardContent>
+            </Card>
           </div>
-          <Slider
-            value={[basicPaintPercentage]}
-            max={100}
-            step={5}
-            onValueChange={(value) => {
-              setBasicPaintPercentage(value[0]);
-              // Adjust other percentages proportionally to maintain 100% total
-              const remaining = 100 - value[0];
-              const currentOthers = decorativePaintPercentage + wallpaperPercentage;
-              if (currentOthers > 0) {
-                const ratio = remaining / currentOthers;
-                setDecorativePaintPercentage(Math.round(decorativePaintPercentage * ratio));
-                setWallpaperPercentage(Math.round(wallpaperPercentage * ratio));
-              } else {
-                setDecorativePaintPercentage(Math.round(remaining / 2));
-                setWallpaperPercentage(Math.round(remaining / 2));
-              }
-            }}
-            className="mt-2"
-          />
-        </div>
-        
-        <div className="mb-8">
-          <div className="flex justify-between">
-            <Label className="text-base font-medium">Peinture décorative (%)</Label>
-            <span className="text-sm font-medium">{decorativePaintPercentage}%</span>
-          </div>
-          <Slider
-            value={[decorativePaintPercentage]}
-            max={100}
-            step={5}
-            onValueChange={(value) => {
-              setDecorativePaintPercentage(value[0]);
-              // Adjust other percentages
-              const remaining = 100 - value[0] - wallpaperPercentage;
-              setBasicPaintPercentage(Math.max(0, remaining));
-            }}
-            className="mt-2"
-          />
-        </div>
-        
-        <div className="mb-8">
-          <div className="flex justify-between">
-            <Label className="text-base font-medium">Papier peint (%)</Label>
-            <span className="text-sm font-medium">{wallpaperPercentage}%</span>
-          </div>
-          <Slider
-            value={[wallpaperPercentage]}
-            max={100}
-            step={5}
-            onValueChange={(value) => {
-              setWallpaperPercentage(value[0]);
-              // Adjust other percentages
-              const remaining = 100 - value[0] - decorativePaintPercentage;
-              setBasicPaintPercentage(Math.max(0, remaining));
-            }}
-            className="mt-2"
-          />
         </div>
         
         {/* Total percentage indicator */}
-        <div className="mb-4">
+        <div className="mb-6">
           <div className="flex justify-between">
             <Label className="text-base font-medium">Surface totale</Label>
             <span className={`text-sm font-medium ${totalPercentage !== 100 ? 'text-red-500' : 'text-green-500'}`}>
@@ -208,6 +310,18 @@ const PeintureForm: React.FC<BaseFormProps> = ({
             ></div>
           </div>
         </div>
+        
+        {/* Error indicator if total is not 100% */}
+        {totalPercentage !== 100 && (
+          <Alert variant="destructive" className="mb-4">
+            <ExclamationCircle className="h-4 w-4 mr-2" />
+            <AlertDescription>
+              {totalPercentage > 100 
+                ? "La somme des surfaces de revêtements muraux ne peut pas être supérieure à 100%"
+                : "La somme des surfaces de revêtements muraux doit être égal à 100%"}
+            </AlertDescription>
+          </Alert>
+        )}
         
         <div className="flex justify-between pt-4">
           <Button variant="outline" onClick={goToPreviousStep}>
