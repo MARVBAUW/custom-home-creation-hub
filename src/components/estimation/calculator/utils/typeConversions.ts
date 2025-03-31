@@ -19,6 +19,27 @@ export const toNumber = (value: any): number => {
 };
 
 /**
+ * Ensure a value is a number, with optional default value
+ */
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
+  if (value === undefined || value === null) return defaultValue;
+  if (typeof value === 'number') return value;
+  const num = Number(value);
+  return isNaN(num) ? defaultValue : num;
+};
+
+/**
+ * Ensure a value is a boolean
+ */
+export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
+  if (value === undefined || value === null) return defaultValue;
+  if (typeof value === 'boolean') return value;
+  if (value === 'true' || value === 'OUI' || value === 'Oui' || value === 'oui' || value === '1') return true;
+  if (value === 'false' || value === 'NON' || value === 'Non' || value === 'non' || value === '0') return false;
+  return Boolean(value);
+};
+
+/**
  * Convert a value to a boolean
  */
 export const toBoolean = (value: any): boolean => {
@@ -40,7 +61,7 @@ export const toArray = (value: any): any[] => {
 /**
  * Convert a value to a proper form value based on field type
  */
-export const toFormValue = (value: any, fieldType: string): any => {
+export const toFormValue = (value: any, fieldType: string = 'string'): any => {
   switch (fieldType) {
     case 'number':
       return toNumber(value);
@@ -103,5 +124,7 @@ export default {
   toArray,
   toFormValue,
   convertFormData,
-  formatValueForDisplay
+  formatValueForDisplay,
+  ensureNumber,
+  ensureBoolean
 };
