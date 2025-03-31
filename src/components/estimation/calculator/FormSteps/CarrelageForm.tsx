@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Square, Grid2X2, CheckSquare } from 'lucide-react';
-import { calculateFloorTilingCost, calculateWallTilingCost, ensureNumber } from '../utils/montantUtils';
+import { calculateFloorTilingCost, calculateWallTilingCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
+import { Square, Grid2X2, CheckSquare, Ban } from 'lucide-react';
 
 const CarrelageForm: React.FC<BaseFormProps> = ({
   formData,

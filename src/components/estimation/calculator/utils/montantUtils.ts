@@ -1,4 +1,3 @@
-
 // Import the ensureNumber function from typeConversions to re-export it
 import { ensureNumber } from './typeConversions';
 
@@ -275,3 +274,139 @@ export function calculateAirConditioningCost(hasAirConditioning: boolean, area: 
   return hasAirConditioning ? 65 * area : 0;
 }
 
+/**
+ * Calculate cost for plastering based on the type and surface area
+ * @param type Type of plastering work
+ * @param area Surface area in square meters
+ * @returns Cost of plastering in euros
+ */
+export function calculatePlasteringCost(type: string, area: number): number {
+  switch (type) {
+    case 'base':
+    case 'PRESTATION DE BASE':
+      return 95 * area;
+    case 'specific':
+    case 'PRESTATION AVEC QUELQUES SPECIFICITES':
+      return 105 * area;
+    case 'advanced':
+    case 'PRESTATIONS AVANCEES (ARCHE, NICHES, RANGEMENTS CACHES)':
+      return 120 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}
+
+/**
+ * Calculates the additional cost for interior carpentry based on chosen options
+ * 
+ * @param doorType Type of interior doors
+ * @param hasMoldings Whether moldings are included
+ * @param hasCustomFurniture Whether custom furniture is included
+ * @param surface Surface area in square meters
+ * @returns Additional cost in euros
+ */
+export function calculateInteriorCarpenteryCost2(
+  doorType: string,
+  hasMoldings: boolean = false,
+  hasCustomFurniture: boolean = false,
+  surface: number
+): number {
+  let doorCost = 0;
+  
+  // Cost calculation for door type
+  switch (doorType) {
+    case 'base':
+    case 'BASE':
+      doorCost = 50 * surface;
+      break;
+    case 'standing':
+    case 'STANDING':
+      doorCost = 60 * surface;
+      break;
+    case 'premium':
+    case 'HAUT DE GAMME':
+      doorCost = 70 * surface;
+      break;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      doorCost = 0;
+  }
+  
+  // Add cost for moldings if selected
+  const moldingsCost = hasMoldings ? 10 * surface : 0;
+  
+  // Add cost for custom furniture if selected
+  const customFurnitureCost = hasCustomFurniture ? 20 * surface : 0;
+  
+  // Return total carpentry cost
+  return doorCost + moldingsCost + customFurnitureCost;
+}
+
+/**
+ * Calculate cost for floor tiling based on type, percentage and surface area
+ * 
+ * @param type Type of floor tiling
+ * @param percentage Percentage of the surface to tile
+ * @param area Total surface area in square meters
+ * @returns Cost of floor tiling in euros
+ */
+export function calculateFloorTilingCost(
+  type: string,
+  percentage: number,
+  area: number
+): number {
+  let basePrice = 0;
+  const tileArea = (percentage / 100) * area;
+  
+  switch (type) {
+    case 'standard':
+    case 'CARRELAGE BASE':
+      basePrice = 66;
+      break;
+    case 'medium':
+    case 'CARRELAGE MILIEU DE GAMME':
+      basePrice = 76;
+      break;
+    case 'premium':
+    case 'CARRELAGE HAUT DE GAMME':
+      basePrice = 86;
+      break;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+  
+  return basePrice * tileArea;
+}
+
+/**
+ * Calculate cost for wall tiling based on type and surface area
+ * 
+ * @param type Type of wall tiling
+ * @param area Surface area in square meters
+ * @returns Cost of wall tiling in euros
+ */
+export function calculateWallTilingCost(
+  type: string,
+  area: number
+): number {
+  switch (type) {
+    case 'standard':
+    case 'FAIENCE BASE':
+      return 6 * area;
+    case 'medium':
+    case 'FAIENCE MG':
+      return 7 * area;
+    case 'premium':
+    case 'FAIENCE HG':
+      return 8 * area;
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0;
+  }
+}

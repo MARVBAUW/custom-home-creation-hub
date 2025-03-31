@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { calculatePlasteringCost, ensureNumber } from '../utils/montantUtils';
+import { calculatePlasteringCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 import { Square, Layers, LayoutDashboard } from 'lucide-react';
 
 const PlatrerieForm: React.FC<BaseFormProps> = ({
@@ -88,6 +89,19 @@ const PlatrerieForm: React.FC<BaseFormProps> = ({
                 <Label htmlFor="plastering-advanced" className="font-medium">Prestations avancées</Label>
                 <p className="text-xs text-gray-500 mt-1">
                   Arches, niches, rangements cachés, etc.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${plasteringType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setPlasteringType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <RadioGroupItem value="non_concerne" id="plastering-non_concerne" className="sr-only" />
+                <Label htmlFor="plastering-non_concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de travaux de plâtrerie requis
                 </p>
               </CardContent>
             </Card>
