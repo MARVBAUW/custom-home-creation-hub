@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import StepIndicator from './StepIndicator';
 import StepRenderer from './StepRenderer';
 import FormNavigation from './FormNavigation';
-import { FormData } from '../types/estimationFormData';
+import { FormData } from '../types/formTypes';
 
 interface CalculatorLayoutProps {
   step: number;

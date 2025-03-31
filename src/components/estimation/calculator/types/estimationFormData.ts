@@ -1,117 +1,79 @@
 
-/**
- * Complete type definition for the estimation form data
- */
-export interface EstimationFormData {
-  // Project basics
-  estimationType?: string;
+export interface FormData {
+  clientType?: string;
   projectType?: string;
   surface?: number;
   city?: string;
-  
-  // Rooms information
+  location?: string;
   bedrooms?: number;
   bathrooms?: number;
-  doorCount?: number;
-  
-  // Foundation and structure
-  foundationType?: string;
-  wallType?: string;
-  
-  // Renovations
-  needsRenovation?: boolean;
-  repairFoundation?: string;
-  repairStructure?: string;
-  repairFramework?: string;
-  structureType?: "BOIS" | "BETON";
-  
-  // Demolition
-  demolitionTypes?: string[];
-  demolitionPercentages?: { [key: string]: string };
-  demolitionTotalArea?: number;
-  demolitionCost?: number;
-  demolitionDetailedCosts?: { [key: string]: number };
-  
-  // Facade
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
-  
-  // Roof
-  roofType?: string;
-  roofArea?: string;
-  
-  // Electrical systems
-  electricalType?: string;
-  hasSmartHome?: boolean;
-  
-  // Plumbing
-  plumbingType?: string;
-  
-  // Heating
-  heatingType?: string;
-  hasAirConditioning?: boolean;
-  
-  // Flooring
-  flooringType?: string;
-  flooringArea?: number;
-  
-  // Paintwork
-  paintSurface?: number;
-  paintTypes?: {
-    basicPaint: number;
-    decorativePaint: number;
-    wallpaper: number;
-    woodPaneling: number;
-    stoneCladding: number;
+  budget?: number;
+  constructionType?: string;
+  [key: string]: any;
+}
+
+export interface EstimationResponseData {
+  projectType: string;
+  projectDetails: {
+    surface: number;
+    location: string;
+    projectType: string;
+    constructionType?: string;
+    bedrooms?: number;
+    bathrooms?: number;
+    city?: string;
+    [key: string]: any;
   };
-  
-  // Kitchen
-  kitchenQuality?: string;
-  kitchenSize?: number;
-  
-  // Bathroom
-  bathroomQuality?: string;
-  bathroomCount?: number;
-  
-  // Interior details
-  hasDressingRoom?: boolean;
-  hasCustomClosets?: boolean;
-  
-  // Exterior features
-  pool?: boolean;
-  terrace?: boolean;
-  outdoorKitchen?: boolean;
-  
-  // Landscaping
-  landscapingType?: string | string[];
-  landscapingArea?: string;
-  fencingLength?: string;
-  gateLength?: string;
-  terraceArea?: string;
-  includeLandscaping?: boolean;
-  
-  // Special features
-  hasElevator?: boolean;
-  hasHomeAutomation?: boolean;
-  hasSecuritySystem?: boolean;
-  hasHeatRecovery?: boolean;
-  
-  // Contact information
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  
-  // Total amount
-  montantT?: number;
-  
-  // Environmental solutions
-  environmentalSolutions?: string[];
-  
-  // Additional fields for the application
-  [key: string]: string | number | boolean | string[] | { [key: string]: string | number } | undefined;
+  estimatedCost: number | {
+    total: number;
+    perSquareMeter: number;
+    breakdown: {
+      materials: number;
+      labor: number;
+      fees: number;
+    }
+  };
+  constructionCosts: {
+    structuralWork: number;
+    finishingWork: number;
+    technicalLots: number;
+    externalWorks: number;
+    total: number;
+  };
+  fees: {
+    architect: number;
+    engineeringFees: number;
+    architectFees: number;
+    projectManagement: number;
+    officialFees: number;
+    inspectionFees: number;
+    technicalStudies: number;
+    permits: number;
+    insurance: number;
+    contingency: number;
+    taxes: number;
+    other: number;
+    total: number;
+  };
+  otherCosts: {
+    insurance: number;
+    contingency: number;
+    taxes: number;
+    miscellaneous: number;
+    total: number;
+  };
+  totalAmount: number;
+  timeline: {
+    design: number;
+    permits: number;
+    bidding: number;
+    construction: number;
+    total: number;
+  };
+  categories: Array<{
+    category: string;
+    amount: number;
+  }>;
+  dateGenerated: string;
+  isComplete: boolean;
 }

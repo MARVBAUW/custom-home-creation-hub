@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { FormData } from '../types/estimationFormData';
+import { FormData } from '../types/formTypes';
 
 export interface StepRendererProps {
   step: number;

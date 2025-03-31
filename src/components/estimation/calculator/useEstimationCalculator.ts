@@ -2,7 +2,7 @@
 import { useState, useCallback } from 'react';
 import { FormData } from './types/formTypes';
 import { adaptToEstimationResponseData } from './utils/dataAdapter';
-import { ensureNumber } from './utils/typeConvers+ions';
+import { ensureNumber } from './utils/typeConversions';
 import { EstimationResponseData } from './types/estimationTypes';
 
 // Move the function outside the hook

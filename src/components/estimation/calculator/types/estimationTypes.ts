@@ -44,6 +44,9 @@ export interface FeeCosts {
   contingency: number;
   taxes: number;
   other: number;
+  masterBuilderFees?: number;
+  safetyCoordination?: number;
+  technicalControl?: number;
   total: number;
 }
 

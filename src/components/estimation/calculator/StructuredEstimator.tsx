@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useEstimationCalculator, EstimationResponseData } from './useEstimationCalculator';
+import { useEstimationCalculator } from './useEstimationCalculator';
+import { EstimationResponseData } from './types/estimationTypes';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,8 +14,6 @@ import {
 import StepIndicator from './components/StepIndicator';
 import { createTypeAdaptingUpdater } from './utils/dataAdapter';
 import { safeRenderValue } from './utils/typeConversions';
-
-// Rest of your imports...
 
 const StructuredEstimator: React.FC = () => {
   const {
