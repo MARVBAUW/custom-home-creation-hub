@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ensureNumber } from '../utils/montantUtils';
-import { Trees, Flower2, Pool, CookingPot } from 'lucide-react';
+import { Trees, Flower2, Droplets, CookingPot } from 'lucide-react';
 
 const AmenagementExtForm: React.FC<BaseFormProps> = ({
   formData,
@@ -78,7 +79,7 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
             />
             <div className="grid gap-1">
               <Label htmlFor="pool" className="flex items-center gap-2">
-                <Pool className="h-4 w-4 text-blue-500" />
+                <Droplets className="h-4 w-4 text-blue-500" />
                 Piscine
               </Label>
               <p className="text-sm text-gray-500">
