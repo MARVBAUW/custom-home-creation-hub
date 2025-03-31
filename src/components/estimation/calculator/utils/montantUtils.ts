@@ -393,3 +393,64 @@ export const calculateDemolitionCost = (demolitionType: string, area: number, pe
   
   return Math.round(surfaceToDemo * costPerSqMeter);
 };
+
+// Add the missing floor tiling functions
+export const calculateFloorTilingCost = (type: string, percentage: number, totalArea: number): number => {
+  const area = (percentage / 100) * ensureNumber(totalArea);
+  const costPerSquareMeter = getFloorTileCostPerSquareMeter(type);
+  return costPerSquareMeter * area;
+};
+
+/**
+ * Get cost per square meter for different floor tile types
+ */
+const getFloorTileCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 80;
+    case 'medium': return 120;
+    case 'premium': return 200;
+    default: return 0;
+  }
+};
+
+/**
+ * Calculate wall tiling costs based on type and area
+ */
+export const calculateWallTilingCost = (type: string, totalArea: number): number => {
+  // Wall tiling is typically 50% of floor area for bathrooms and kitchens
+  const wallArea = ensureNumber(totalArea) * 0.5;
+  const costPerSquareMeter = getWallTileCostPerSquareMeter(type);
+  return costPerSquareMeter * wallArea;
+};
+
+/**
+ * Get cost per square meter for different wall tile types
+ */
+const getWallTileCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'standard': return 60;
+    case 'medium': return 90;
+    case 'premium': return 150;
+    default: return 0;
+  }
+};
+
+// Add parquet calculation
+export const calculateParquetCost = (type: string, area: number): number => {
+  const costPerSquareMeter = getParquetCostPerSquareMeter(type);
+  return costPerSquareMeter * ensureNumber(area);
+};
+
+/**
+ * Get cost per square meter for different parquet types
+ */
+const getParquetCostPerSquareMeter = (type: string): number => {
+  switch (type) {
+    case 'PARQUET DE BASE': return 50;
+    case 'PARQUET MG': return 90;
+    case 'PARQUET HG': return 160;
+    case 'none': return 0;
+    default: return 0;
+  }
+};
+

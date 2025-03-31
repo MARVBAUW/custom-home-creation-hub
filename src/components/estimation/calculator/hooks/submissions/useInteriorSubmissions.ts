@@ -13,8 +13,8 @@ export const useInteriorSubmissions = () => {
   const handlePlatrerieSubmit = (data: any, formData: FormData) => {
     const surface = ensureNumber(formData.surface, 0);
     const additionalCost = calculatePlasteringCost(
-      data.plasteringType,
-      surface
+      surface,
+      data.plasteringType
     );
     
     return {
@@ -26,12 +26,10 @@ export const useInteriorSubmissions = () => {
 
   // Function to handle menuiseries intérieures submission
   const handleMenuiseriesIntSubmit = (data: any, formData: FormData) => {
-    const surface = ensureNumber(formData.surface, 0);
+    const doorCount = ensureNumber(formData.doorCount, 0);
     const additionalCost = calculateInteriorCarpenteryCost(
-      data.doorType, 
-      data.hasMoldings || false, 
-      data.hasCustomFurniture || false, 
-      surface
+      doorCount,
+      data.doorType
     );
     
     return {
@@ -63,7 +61,7 @@ export const useInteriorSubmissions = () => {
     }
     
     if (data.softFloorType && data.softFloorType !== 'none') {
-      additionalCost += calculateSoftFloorCost(data.softFloorType, ensureNumber(data.softFloorArea, 0));
+      additionalCost += calculateSoftFloorCost(ensureNumber(data.softFloorArea, 0), data.softFloorType);
     }
     
     return {
