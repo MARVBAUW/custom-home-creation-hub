@@ -1,3 +1,4 @@
+
 /**
  * Utility functions for calculating costs in the estimation calculator
  */
@@ -276,16 +277,42 @@ export function calculatePaintingCost(paintType: string, percentage: number, tot
 export function calculateHeatingCost(heatingType: string, surface: number): number {
   switch (heatingType) {
     case 'ÉLECTRIQUE':
+    case 'electric':
+    case 'standard':
       return surface * 60;
     case 'GAZ':
+    case 'gas':
       return surface * 80;
     case 'POMPE À CHALEUR':
+    case 'heat_pump':
+    case 'eco':
       return surface * 120;
     case 'POÊLE À BOIS':
+    case 'wood':
+    case 'economic':
       return surface * 70;
+    case 'sans_avis':
+    case 'non_concerne':
     default:
       return 0;
   }
+}
+
+/**
+ * Calculate air conditioning cost based on if it's installed and surface area
+ */
+export function calculateAirConditioningCost(hasAirConditioning: boolean, surface: number): number {
+  if (!hasAirConditioning) {
+    return 0;
+  }
+  
+  // Base cost for air conditioning is approximately €100 per square meter for standard installation
+  const baseCostPerM2 = 100;
+  
+  // We estimate that air conditioning covers about 50% of the living space
+  const airConditionedArea = surface * 0.5;
+  
+  return baseCostPerM2 * airConditionedArea;
 }
 
 /**
@@ -353,3 +380,4 @@ export function calculateWindowsCost(windowType: string, area: number): number {
       return 0;
   }
 }
+
