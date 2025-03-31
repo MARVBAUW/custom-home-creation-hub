@@ -60,3 +60,21 @@ export function ensureBoolean(value: any, defaultValue: boolean = false): boolea
   
   return defaultValue;
 }
+
+/**
+ * Converts form values to the appropriate format for display or processing
+ * 
+ * @param value The form value to convert
+ * @returns The formatted value
+ */
+export function toFormValue(value: any): string {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  if (typeof value === 'boolean') {
+    return value ? 'true' : 'false';
+  }
+  
+  return String(value);
+}
