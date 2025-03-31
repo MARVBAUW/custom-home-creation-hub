@@ -8,6 +8,9 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  // Additional props for form components that need them
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 /**
@@ -27,6 +30,12 @@ export interface FormData {
   email?: string;
   phone?: string;
   company?: string;
+  companyName?: string;
+  budget?: number;
+  
+  // Project description
+  projectDescription?: string;
+  projectPurpose?: string;
   
   // Construction details
   constructionType?: string;
@@ -86,12 +95,12 @@ export interface FormData {
   wallCost?: number;
   floorCost?: number;
   structuralFeatures?: string[];
-  structuralFeatureValues?: { [key: string]: string };
+  structuralFeatureValues?: { [key: string]: string | number };
   structuralFeatureCosts?: { [key: string]: number };
   structuralFeaturesTotal?: number;
   structuralWorkTotal?: number;
   demolitionTypes?: string[];
-  demolitionPercentages?: { [key: string]: string };
+  demolitionPercentages?: { [key: string]: string | number };
   demolitionTotalArea?: number;
   demolitionCost?: number;
   demolitionDetailedCosts?: { [key: string]: number };
@@ -122,10 +131,10 @@ export interface FormData {
   // Project timing
   projectStart?: Date;
   projectEnd?: Date;
+  startDate?: string;
   
   // Cost and budget tracking
   montantT?: number;
-  budget?: number;
   landPrice?: number;
   
   // Allow for additional dynamic fields

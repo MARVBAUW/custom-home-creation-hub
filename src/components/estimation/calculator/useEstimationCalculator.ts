@@ -1,147 +1,105 @@
 
 import { useState, useCallback } from 'react';
-import { FormData, EstimationFormData, EstimationResponseData } from './types';
-import { createTypeAdaptingUpdater, adaptToEstimationFormData } from './utils/dataAdapter';
-
-// Initial form data
-const initialFormData: FormData = {
-  clientType: '',
-  projectType: '',
-  surface: '',
-  budget: '',
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  montantT: 0
-};
+import { FormData } from './types/formTypes';
+import { EstimationResponseData } from './types/estimationTypes';
+import { generateEstimationResult } from './calculations/estimationCalculator';
+import { adaptToEstimationResponseData } from './utils/dataAdapter';
+import { ensureNumber } from './utils/typeConversions';
 
 export const useEstimationCalculator = () => {
-  const [step, setStep] = useState<number>(0);
-  const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [step, setStep] = useState(0);
+  const totalSteps = 20;
+  const [formData, setFormData] = useState<FormData>({
+    surface: 0,
+    city: '',
+    // Initialize with default values
+  });
   const [estimationResult, setEstimationResult] = useState<EstimationResponseData | null>(null);
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
-  
-  // Total number of steps - can be updated based on project type
-  const totalSteps = 20;
-  
-  // Update form data with new values
-  const updateFormData = useCallback((newData: Partial<FormData>) => {
-    // Convert the incoming data to a format compatible with FormData
-    setFormData(prevData => ({
-      ...prevData,
-      ...newData
-    }));
+
+  // Update form data with partial data
+  const updateFormData = useCallback((data: Partial<FormData>) => {
+    setFormData(prev => {
+      // Ensure data types are properly converted
+      const updatedData = { ...prev, ...data };
+      
+      // Convert specific fields to number as needed
+      if (data.surface !== undefined) {
+        updatedData.surface = ensureNumber(data.surface);
+      }
+      if (data.bedrooms !== undefined) {
+        updatedData.bedrooms = ensureNumber(data.bedrooms);
+      }
+      if (data.bathrooms !== undefined) {
+        updatedData.bathrooms = ensureNumber(data.bathrooms);
+      }
+      if (data.budget !== undefined) {
+        updatedData.budget = ensureNumber(data.budget);
+      }
+      
+      return updatedData;
+    });
   }, []);
-  
-  // Move to the next step
+
+  // Navigate to next step
   const goToNextStep = useCallback(() => {
     setAnimationDirection('forward');
     setStep(prev => Math.min(prev + 1, totalSteps - 1));
   }, [totalSteps]);
-  
-  // Move to the previous step
+
+  // Navigate to previous step
   const goToPreviousStep = useCallback(() => {
     setAnimationDirection('backward');
     setStep(prev => Math.max(prev - 1, 0));
   }, []);
-  
-  // Calculate the estimation result
-  const calculateEstimationResult = useCallback((): EstimationResponseData => {
-    // Base cost per square meter
-    const baseCostPerSquareMeter = 1500;
-    
-    // Get numeric values from form data
-    const surface = Number(formData.surface) || 0;
-    
-    // Calculate basic costs
-    const structuralWorkCost = surface * baseCostPerSquareMeter * 0.4;
-    const finishingWorkCost = surface * baseCostPerSquareMeter * 0.3;
-    const technicalLotsCost = surface * baseCostPerSquareMeter * 0.2;
-    const externalWorksCost = surface * baseCostPerSquareMeter * 0.1;
-    
-    // Calculate total construction cost
-    const totalConstructionCost = structuralWorkCost + finishingWorkCost + technicalLotsCost + externalWorksCost;
-    
-    // Calculate fees (architect, engineering, etc.)
-    const architectFees = totalConstructionCost * 0.1;
-    const engineeringFees = totalConstructionCost * 0.05;
-    const otherFees = totalConstructionCost * 0.03;
-    const totalFees = architectFees + engineeringFees + otherFees;
-    
-    // Calculate other costs
-    const insuranceCost = totalConstructionCost * 0.02;
-    const contingencyCost = totalConstructionCost * 0.05;
-    const taxesCost = totalConstructionCost * 0.01;
-    const miscellaneousCost = totalConstructionCost * 0.01;
-    const totalOtherCosts = insuranceCost + contingencyCost + taxesCost + miscellaneousCost;
-    
-    // Calculate total amount
-    const totalAmount = totalConstructionCost + totalFees + totalOtherCosts;
-    
-    // Create categories for pie chart
-    const categories = [
-      { category: 'Gros œuvre', amount: structuralWorkCost },
-      { category: 'Second œuvre', amount: finishingWorkCost },
-      { category: 'Lots techniques', amount: technicalLotsCost },
-      { category: 'Aménagements extérieurs', amount: externalWorksCost },
-      { category: 'Honoraires', amount: totalFees },
-      { category: 'Autres coûts', amount: totalOtherCosts }
-    ];
-    
-    // Create timeline estimation
-    const timelineEstimation = {
-      design: 2,
-      permits: 3,
-      bidding: 1,
-      construction: surface > 200 ? 12 : (surface > 100 ? 9 : 6),
-      total: 0
-    };
-    
-    // Calculate total timeline
-    timelineEstimation.total = timelineEstimation.design + timelineEstimation.permits + timelineEstimation.bidding + timelineEstimation.construction;
-    
-    // Create and return the estimation result
-    const result: EstimationResponseData = {
-      constructionCosts: {
-        structuralWork: structuralWorkCost,
-        finishingWork: finishingWorkCost,
-        technicalLots: technicalLotsCost,
-        externalWorks: externalWorksCost,
-        total: totalConstructionCost
-      },
-      fees: {
-        architect: architectFees,
-        engineeringFees: engineeringFees,
-        architectFees: architectFees,
-        officialFees: engineeringFees * 0.2,
-        inspectionFees: engineeringFees * 0.3,
-        technicalStudies: engineeringFees * 0.5,
-        other: otherFees,
-        total: totalFees
-      },
-      otherCosts: {
-        insurance: insuranceCost,
-        contingency: contingencyCost,
-        taxes: taxesCost,
-        miscellaneous: miscellaneousCost,
-        total: totalOtherCosts
-      },
-      totalAmount,
-      categories,
-      timeline: timelineEstimation
-    };
-    
-    return result;
-  }, [formData]);
-  
-  // Finalize the estimation and store the result
-  const finalizeEstimation = useCallback(() => {
-    const result = calculateEstimationResult();
+
+  // Go to specific step
+  const goToStep = useCallback((stepIndex: number) => {
+    if (stepIndex > step) {
+      setAnimationDirection('forward');
+    } else if (stepIndex < step) {
+      setAnimationDirection('backward');
+    }
+    setStep(Math.max(0, Math.min(stepIndex, totalSteps - 1)));
+  }, [step, totalSteps]);
+
+  // Calculate estimation result
+  const calculateEstimationResult = useCallback(() => {
+    // Generate result based on form data
+    const result = generateEstimationResult(formData);
     setEstimationResult(result);
     return result;
-  }, [calculateEstimationResult]);
-  
+  }, [formData]);
+
+  // Finalize estimation
+  const finalizeEstimation = useCallback(() => {
+    const result = calculateEstimationResult();
+    
+    // Add additional data needed for the response
+    const completeResult: EstimationResponseData = {
+      ...result,
+      projectType: formData.projectType || '',
+      projectDetails: {
+        surface: ensureNumber(formData.surface),
+        location: formData.city || '',
+        projectType: formData.projectType || '',
+        city: formData.city || '',
+        bedrooms: ensureNumber(formData.bedrooms),
+        bathrooms: ensureNumber(formData.bathrooms),
+      },
+      estimatedCost: result.totalAmount,
+      dateGenerated: new Date().toISOString(),
+      isComplete: true
+    };
+    
+    setEstimationResult(completeResult);
+    
+    // Move to the results step
+    goToNextStep();
+    
+    return completeResult;
+  }, [calculateEstimationResult, formData, goToNextStep]);
+
   return {
     step,
     setStep,
@@ -152,6 +110,7 @@ export const useEstimationCalculator = () => {
     updateFormData,
     goToNextStep,
     goToPreviousStep,
+    goToStep,
     calculateEstimationResult,
     finalizeEstimation
   };

@@ -1,5 +1,5 @@
 
-import { FormData } from '../types';
+import { FormData } from '../types/formTypes';
 import { EstimationResponseData, EstimationTimeline } from '../types/estimationTypes';
 
 /**
@@ -11,19 +11,13 @@ export const convertEstimationResponseData = (data: any): EstimationResponseData
     projectType: data.projectType || '',
     projectDetails: {
       surface: data.surface || 0,
+      location: data.city || '',
+      projectType: data.projectType || '',
       city: data.city || '',
       bedrooms: data.bedrooms || 0,
       bathrooms: data.bathrooms || 0,
     },
-    estimatedCost: {
-      total: data.totalAmount || 0,
-      perSquareMeter: (data.totalAmount || 0) / (data.surface || 1),
-      breakdown: {
-        materials: (data.totalAmount || 0) * 0.5,
-        labor: (data.totalAmount || 0) * 0.4,
-        fees: (data.totalAmount || 0) * 0.1,
-      }
-    },
+    estimatedCost: data.totalAmount || 0,
     constructionCosts: {
       structuralWork: data.constructionCosts?.structuralWork || 0,
       finishingWork: data.constructionCosts?.finishingWork || 0,

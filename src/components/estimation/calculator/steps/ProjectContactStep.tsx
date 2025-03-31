@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { FormData } from '../types';
+import { FormData } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon, Info } from 'lucide-react';
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ensureString } from '../utils/typeConversions';
 
 interface ProjectContactStepProps {
   formData: FormData;
@@ -45,11 +46,11 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
   // Validation function
   const isFormValid = () => {
     return (
-      firstName.trim() !== '' &&
-      lastName.trim() !== '' &&
-      email.trim() !== '' &&
-      phone.trim() !== '' &&
-      projectDescription.trim() !== '' &&
+      firstName && firstName.toString().trim() !== '' &&
+      lastName && lastName.toString().trim() !== '' &&
+      email && email.toString().trim() !== '' &&
+      phone && phone.toString().trim() !== '' &&
+      projectDescription && projectDescription.toString().trim() !== '' &&
       termsAccepted
     );
   };
@@ -133,7 +134,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
                 <Label htmlFor="firstName">Prénom <span className="text-red-500">*</span></Label>
                 <Input
                   id="firstName"
-                  value={firstName}
+                  value={ensureString(firstName)}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
@@ -143,7 +144,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
                 <Label htmlFor="lastName">Nom <span className="text-red-500">*</span></Label>
                 <Input
                   id="lastName"
-                  value={lastName}
+                  value={ensureString(lastName)}
                   onChange={(e) => setLastName(e.target.value)}
                   required
                 />
@@ -156,7 +157,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
                 <Input
                   id="email"
                   type="email"
-                  value={email}
+                  value={ensureString(email)}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
@@ -167,7 +168,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
                 <Input
                   id="phone"
                   type="tel"
-                  value={phone}
+                  value={ensureString(phone)}
                   onChange={(e) => setPhone(e.target.value)}
                   required
                 />
@@ -178,14 +179,14 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
               <Label htmlFor="city">Ville du projet</Label>
               <Input
                 id="city"
-                value={city}
+                value={ensureString(city)}
                 onChange={(e) => setCity(e.target.value)}
               />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="projectPurpose">Objectif principal du projet</Label>
-              <Select value={projectPurpose} onValueChange={setProjectPurpose}>
+              <Select value={ensureString(projectPurpose)} onValueChange={setProjectPurpose}>
                 <SelectTrigger id="projectPurpose">
                   <SelectValue placeholder="Sélectionnez l'objectif principal" />
                 </SelectTrigger>
@@ -204,7 +205,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
               <Label htmlFor="projectDescription">Description du projet <span className="text-red-500">*</span></Label>
               <Textarea
                 id="projectDescription"
-                value={projectDescription}
+                value={ensureString(projectDescription)}
                 onChange={(e) => setProjectDescription(e.target.value)}
                 rows={4}
                 placeholder={`Décrivez brièvement votre projet de ${formData.projectType === 'design' ? "design d'espace" : "d'optimisation"}...`}
@@ -216,7 +217,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
               <Checkbox 
                 id="terms" 
                 checked={termsAccepted} 
-                onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
+                onCheckedChange={(checked) => setTermsAccepted(!!checked)}
               />
               <Label htmlFor="terms" className="text-sm cursor-pointer">
                 J'accepte les <a href="/cgu" target="_blank" className="text-blue-600 hover:underline">Conditions Générales d'Utilisation</a> <span className="text-red-500">*</span>
@@ -227,7 +228,7 @@ const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
               <Checkbox 
                 id="commercial" 
                 checked={commercialAccepted} 
-                onCheckedChange={(checked) => setCommercialAccepted(checked as boolean)}
+                onCheckedChange={(checked) => setCommercialAccepted(!!checked)}
               />
               <Label htmlFor="commercial" className="text-sm cursor-pointer">
                 J'accepte de recevoir des informations commerciales de Progineer

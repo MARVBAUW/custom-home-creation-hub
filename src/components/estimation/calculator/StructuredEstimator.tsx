@@ -55,7 +55,6 @@ const StructuredEstimator = () => {
     totalSteps,
     formData,
     estimationResult,
-    showResultDialog,
     animationDirection,
     updateFormData,
     goToNextStep,
@@ -359,116 +358,71 @@ const StructuredEstimator = () => {
                         ].filter(Boolean)
                       }
                     }), {})
-                  }} 
+                  }}
                   formData={formData}
-                  includeTerrainPrice={!!formData.landPrice} 
+                  onBack={() => setActiveTab('form')}
                 />
               </div>
             </TabsContent>
             
             <TabsContent value="summary" className="mt-0">
+              {/* Render summary component */}
               <EstimationSummaryReport 
+                estimationResult={estimationResult}
                 formData={formData}
-                estimationResult={estimationResult.totalAmount}
-                categoriesAmounts={categoriesAmounts}
               />
             </TabsContent>
             
             <TabsContent value="quote" className="mt-0">
+              {/* Render professional quote */}
               <ProfessionalQuoteReport 
+                estimationResult={estimationResult}
                 formData={formData}
-                estimationResult={estimationResult.totalAmount}
-                onPrint={handlePrint}
               />
             </TabsContent>
           </Tabs>
         ) : (
-          <Card className="p-6">
-            {/* Barre de progression */}
-            <div className="w-full h-2 bg-gray-200 rounded-full mb-6">
-              <div 
-                className="h-2 bg-progineer-gold rounded-full transition-all duration-300"
-                style={{ width: `${stepProgress}%` }}
-              ></div>
-            </div>
-            
-            {/* Étape actuelle */}
-            <div className="text-sm text-gray-500 mb-2">
-              Étape {step + 1} sur {totalSteps}
-            </div>
-            
-            {/* Contenu de l'étape actuelle */}
-            <div className={`transform transition-all duration-300 ${animationDirection === 'forward' ? 'translate-x-0 opacity-100' : 'translate-x-0 opacity-100'}`}>
-              {getStepContent()}
-            </div>
-            
-            {/* Boutons de navigation (sauf pour les premières et dernières étapes qui ont leurs propres boutons) */}
-            {step > 0 && step < totalSteps - 2 && (
-              <div className="flex justify-between mt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={goToPreviousStep}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeftIcon className="w-4 h-4" />
-                  Précédent
-                </Button>
-                <Button
-                  type="button"
-                  onClick={goToNextStep}
-                  className="flex items-center gap-2 bg-progineer-gold hover:bg-progineer-gold/90"
-                >
-                  Suivant
-                  <ArrowRightIcon className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
+          <Card className="w-full shadow-md border p-6">
+            {getStepContent()}
           </Card>
         )}
         
-        {/* Dialog pour sauvegarder l'estimation */}
+        {/* Save dialog */}
         <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle>Sauvegarder votre estimation</DialogTitle>
               <DialogDescription>
-                Donnez un nom à votre projet et renseignez votre email pour créer un compte et sauvegarder votre estimation.
+                Remplissez les informations suivantes pour sauvegarder votre estimation et y accéder ultérieurement.
               </DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="projectName" className="text-right">
-                  Nom du projet
-                </Label>
-                <Input
-                  id="projectName"
-                  value={projectName}
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="projectName">Nom du projet</Label>
+                <Input 
+                  id="projectName" 
+                  value={projectName} 
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="col-span-3"
-                  placeholder="Maison rue des Lilas"
+                  placeholder="Ex: Rénovation maison Marseille"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="email" className="text-right">
-                  Email
-                </Label>
-                <Input
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="col-span-3"
-                  placeholder="votre@email.com"
+              
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input 
+                  id="email" 
                   type="email"
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="votre@email.com"
                 />
               </div>
             </div>
+            
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setShowSaveDialog(false)}>
-                Annuler
-              </Button>
-              <Button type="button" onClick={handleConfirmSave} className="bg-progineer-gold hover:bg-progineer-gold/90">
-                <CheckCircle className="w-4 h-4 mr-2" />
+              <Button variant="outline" onClick={() => setShowSaveDialog(false)}>Annuler</Button>
+              <Button onClick={handleConfirmSave} disabled={!email || !projectName}>
                 Sauvegarder et créer un compte
               </Button>
             </DialogFooter>

@@ -1,5 +1,5 @@
 
-import { EstimationTimeline, FeeCosts } from '../types';
+import { FormData } from '../types/formTypes';
 
 export interface CategoryCost {
   category: string;
@@ -27,7 +27,32 @@ export interface ProjectDetails {
   location: string;
   projectType: string;
   constructionType?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  city?: string;
   [key: string]: any;
+}
+
+export interface FeeCosts {
+  architect: number;
+  engineeringFees: number;
+  architectFees: number;
+  officialFees: number;
+  inspectionFees: number;
+  technicalStudies: number;
+  other: number;
+  total: number;
+}
+
+/**
+ * Timeline estimation interface
+ */
+export interface EstimationTimeline {
+  design: number;
+  permits: number;
+  bidding: number;
+  construction: number;
+  total: number;
 }
 
 /**
@@ -44,16 +69,15 @@ export interface EstimationResponseData {
   // Additional fields needed by components
   projectType: string;
   projectDetails: ProjectDetails;
-  estimatedCost: number;
+  estimatedCost: number | {
+    total: number;
+    perSquareMeter: number;
+    breakdown: {
+      materials: number;
+      labor: number;
+      fees: number;
+    }
+  };
   dateGenerated: string;
   isComplete: boolean;
-}
-
-// Export EstimationTimeline to resolve the missing export error
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  bidding: number;
-  construction: number;
-  total: number;
 }

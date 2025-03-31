@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Utility functions for type conversions in the estimation calculator
  */
@@ -68,7 +70,11 @@ export const safeIncludes = (arr: any[] | undefined | null, value: any): boolean
 export const ensureReactNode = (value: any): React.ReactNode => {
   // Handle objects that are not valid React nodes
   if (value !== null && typeof value === 'object' && !React.isValidElement(value)) {
-    return JSON.stringify(value);
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
   }
   return value;
 };
