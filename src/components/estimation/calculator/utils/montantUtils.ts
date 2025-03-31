@@ -98,3 +98,64 @@ export function calculateRoofingCost(type: string, area: number): number {
       return 0;
   }
 }
+
+/**
+ * Calculate insulation cost based on the insulation type and surface area
+ * @param type Type of insulation
+ * @param area Surface area to insulate in square meters
+ * @returns Cost of insulation in euros
+ */
+export function calculateInsulationCost(type: string, area: number): number {
+  switch (type) {
+    case 'standard':
+    case 'ISOLATION THERMIQUE REGLEMENTAIRE (BASE)':
+      return 80 * area; // Base insulation cost
+    case 'reinforced':
+    case 'ISOLATION THERMIQUE PERFORMANTE':
+      return 100 * area; // Enhanced insulation cost
+    case 'passive':
+    case 'ISOLATION THERMIQUE ULTRA PERFORMANTE':
+      return 120 * area; // High performance insulation cost
+    case 'non_concerne':
+    case 'NON CONCERNE':
+    default:
+      return 0; // No insulation
+  }
+}
+
+/**
+ * Calculate facade cost based on the facade material type and surface area
+ * @param materials Object containing facade materials and their percentages
+ * @param area Total surface area in square meters
+ * @returns Total cost of facade materials
+ */
+export function calculateFacadeCost(materials: Record<string, number>, area: number): number {
+  let totalCost = 0;
+  
+  // Apply costs for each material type based on their percentage
+  if (materials.PIERRE_NUE) {
+    totalCost += (materials.PIERRE_NUE / 100) * area * 2.5;
+  }
+  
+  if (materials.ENDUIT) {
+    totalCost += (materials.ENDUIT / 100) * area * 0.7;
+  }
+  
+  if (materials.BRIQUE) {
+    totalCost += (materials.BRIQUE / 100) * area * 1.9;
+  }
+  
+  if (materials.BARDAGE_METALLIQUE) {
+    totalCost += (materials.BARDAGE_METALLIQUE / 100) * area * 3;
+  }
+  
+  if (materials.BARDAGE_BOIS) {
+    totalCost += (materials.BARDAGE_BOIS / 100) * area * 2.1;
+  }
+  
+  if (materials.BARDAGE_PIERRE) {
+    totalCost += (materials.BARDAGE_PIERRE / 100) * area * 3.1;
+  }
+  
+  return totalCost;
+}

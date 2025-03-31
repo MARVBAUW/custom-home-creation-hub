@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Shield, ShieldCheck, Award, Leaf, Wrench } from 'lucide-react';
+import { calculateInsulationCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 
 const IsolationForm: React.FC<BaseFormProps> = ({
   formData,
@@ -23,10 +25,24 @@ const IsolationForm: React.FC<BaseFormProps> = ({
   const handleContinue = () => {
     const data = { insulationType };
     
+    // Calculate the insulation cost based on the selected type and add it to the total
+    const surface = ensureNumber(formData.surface, 0);
+    const insulationCost = calculateInsulationCost(insulationType, surface);
+    
+    // Update the montantT (total amount) with the insulation cost
+    const currentTotal = ensureNumber(formData.montantT, 0);
+    const newTotal = currentTotal + insulationCost;
+    
+    // Include the calculated cost in the update
+    const updatedData = {
+      ...data,
+      montantT: newTotal
+    };
+    
     if (onSubmit) {
-      onSubmit(data);
+      onSubmit(updatedData);
     } else {
-      updateFormData(data);
+      updateFormData(updatedData);
       goToNextStep();
     }
   };
@@ -55,6 +71,7 @@ const IsolationForm: React.FC<BaseFormProps> = ({
                 <p className="text-xs text-gray-500 mt-2">
                   Isolation réglementaire conforme à la RT2012
                 </p>
+                <p className="text-sm font-semibold mt-2">80€/m²</p>
               </CardContent>
             </Card>
             
@@ -69,6 +86,7 @@ const IsolationForm: React.FC<BaseFormProps> = ({
                 <p className="text-xs text-gray-500 mt-2">
                   Isolation haute performance énergétique
                 </p>
+                <p className="text-sm font-semibold mt-2">100€/m²</p>
               </CardContent>
             </Card>
             
@@ -83,6 +101,7 @@ const IsolationForm: React.FC<BaseFormProps> = ({
                 <p className="text-xs text-gray-500 mt-2">
                   Isolation très haute performance pour maison passive
                 </p>
+                <p className="text-sm font-semibold mt-2">120€/m²</p>
               </CardContent>
             </Card>
             
@@ -97,6 +116,7 @@ const IsolationForm: React.FC<BaseFormProps> = ({
                 <p className="text-xs text-gray-500 mt-2">
                   Isolation en matériaux naturels et écologiques
                 </p>
+                <p className="text-sm font-semibold mt-2">110€/m²</p>
               </CardContent>
             </Card>
             
@@ -111,6 +131,22 @@ const IsolationForm: React.FC<BaseFormProps> = ({
                 <p className="text-xs text-gray-500 mt-2">
                   Isolation adaptée aux projets de rénovation
                 </p>
+                <p className="text-sm font-semibold mt-2">90€/m²</p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${insulationType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setInsulationType('non_concerne')}
+            >
+              <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+                <Shield className="h-10 w-10 text-gray-500 mb-3" />
+                <RadioGroupItem value="non_concerne" id="isolation-non-concerne" className="sr-only" />
+                <Label htmlFor="isolation-non-concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-2">
+                  Pas d'isolation dans ce projet
+                </p>
+                <p className="text-sm font-semibold mt-2">0€/m²</p>
               </CardContent>
             </Card>
           </RadioGroup>
