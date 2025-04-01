@@ -1,53 +1,80 @@
 
 import React from 'react';
-import { Message, MessageDisplayProps } from '../../types/conversationalTypes';
-import { motion } from 'framer-motion';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { MessageDisplayProps } from '../../types/conversationalTypes';
+import { Message } from '../../types/conversationalTypes';
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
-  message,
   messages,
   loading,
   onOptionClick,
   messagesEndRef
 }) => {
-  // Determine message styling based on sender
-  const isAssistant = message.type === 'assistant';
-
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`flex ${isAssistant ? 'justify-start' : 'justify-end'} mb-4`}
-    >
-      <div
-        className={`px-4 py-3 rounded-lg max-w-[80%] ${
-          isAssistant
-            ? 'bg-gray-100 text-gray-800 rounded-tl-none'
-            : 'bg-blue-600 text-white rounded-tr-none'
-        }`}
-      >
-        <div className="whitespace-pre-wrap">{message.content}</div>
-        
-        {/* Display options buttons if available */}
-        {isAssistant && message.options && message.options.length > 0 && (
-          <div className="mt-3 space-y-2">
-            {message.options.map((option, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                size="sm"
-                className="w-full justify-start text-left border-gray-300 hover:bg-gray-200"
-                onClick={() => onOptionClick(option)}
-              >
-                {option}
-              </Button>
-            ))}
+    <div className="space-y-4">
+      {messages.map((message: Message) => (
+        <div
+          key={message.id}
+          className={`flex ${
+            message.type === 'user' ? 'justify-end' : 'justify-start'
+          }`}
+        >
+          <div
+            className={`max-w-[80%] rounded-lg p-3 ${
+              message.type === 'user'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-100 text-gray-800'
+            }`}
+          >
+            <div className="flex items-start">
+              {message.type !== 'user' && (
+                <Avatar className="h-6 w-6 mr-2">
+                  <AvatarFallback>AI</AvatarFallback>
+                  <AvatarImage src="/images/bot-avatar.png" alt="AI Assistant" />
+                </Avatar>
+              )}
+              <div>
+                <p>{message.content}</p>
+                {message.options && message.options.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {message.options.map((option, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        className="bg-white hover:bg-gray-100 text-gray-800"
+                        onClick={() => onOptionClick(option)}
+                      >
+                        {option}
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        )}
-      </div>
-    </motion.div>
+        </div>
+      ))}
+      
+      {loading && (
+        <div className="flex justify-start">
+          <div className="max-w-[80%] rounded-lg p-3 bg-gray-100">
+            <div className="flex items-center space-x-2">
+              <Avatar className="h-6 w-6">
+                <AvatarFallback>AI</AvatarFallback>
+                <AvatarImage src="/images/bot-avatar.png" alt="AI Assistant" />
+              </Avatar>
+              <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* This div is used to scroll to the bottom of the chat */}
+      <div ref={messagesEndRef} />
+    </div>
   );
 };
 

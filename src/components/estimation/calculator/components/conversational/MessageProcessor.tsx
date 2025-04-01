@@ -10,9 +10,14 @@ const MessageProcessor: React.FC<MessageProcessorProps> = ({
   formData,
   updateFormData
 }) => {
-  const [processedContent, setProcessedContent] = useState<React.ReactNode>(null);
+  const [processedContent, setProcessedContent] = useState<string>('');
 
   useEffect(() => {
+    if (!content) {
+      onProcessed && onProcessed('');
+      return;
+    }
+    
     // Process the content - here we could extract data, parse for special commands, etc.
     // Example: check for surface information
     const surfaceMatch = content.match(/(\d+)\s*m²/);
@@ -36,7 +41,7 @@ const MessageProcessor: React.FC<MessageProcessorProps> = ({
     setProcessedContent(content);
     
     // Call onProcessed with the result
-    onProcessed(content);
+    onProcessed && onProcessed(content);
   }, [content, onProcessed, updateFormData]);
 
   return null; // This component doesn't render anything

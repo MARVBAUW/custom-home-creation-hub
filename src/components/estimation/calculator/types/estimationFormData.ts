@@ -1,26 +1,19 @@
 
-import { FormData } from './formTypes';
-
-export interface EstimationFormData extends FormData {
-  // Additional fields specific to estimation form
+// Basic estimation form data type
+export interface EstimationFormData {
   projectType: string;
   surface: number;
   location: string;
-  constructionType?: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  budget?: number;
-  city?: string;
-  // Facade-related properties
-  stonePercentage?: number;
-  plasterPercentage?: number;
-  brickPercentage?: number;
-  metalCladdingPercentage?: number;
-  woodCladdingPercentage?: number;
-  stoneCladdingPercentage?: number;
-  montantT?: number;
+  constructionType: string;
+  bedrooms: number;
+  bathrooms: number;
+  budget: number;
+  city: string;
+  clientType: string;
+  [key: string]: any;
 }
 
+// Response data for estimation
 export interface EstimationResponseData {
   projectType: string;
   projectDetails: {
@@ -40,8 +33,8 @@ export interface EstimationResponseData {
   };
   fees: {
     architect: number;
-    engineeringFees: number;
     architectFees: number;
+    engineeringFees: number;
     projectManagement: number;
     officialFees: number;
     inspectionFees: number;
@@ -58,23 +51,23 @@ export interface EstimationResponseData {
     demolition: number;
     siteDevelopment: number;
     total: number;
+    insurance: number;
+    contingency: number;
+    taxes: number;
+    miscellaneous: number;
   };
   totalAmount: number;
   dateGenerated: string;
   isComplete: boolean;
-  timeline: EstimationTimeline;
-  categories: CategoryCost[];
-}
-
-export interface EstimationTimeline {
-  design: number;
-  permits: number;
-  construction: number;
-  totalMonths: number;
-}
-
-export interface CategoryCost {
-  name: string;
-  cost: number;
-  percentage: number;
+  timeline: {
+    design: number;
+    permits: number;
+    construction: number;
+    totalMonths: number;
+  };
+  categories: {
+    name: string;
+    cost: number;
+    percentage: number;
+  }[];
 }

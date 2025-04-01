@@ -1,13 +1,15 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { Card } from "@/components/ui/card";
+import React, { useState, useEffect, useRef } from 'react';
+import { Card } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Send, Loader2 } from 'lucide-react';
+import { FormData } from './types/formTypes';
+import { Message } from './types/conversationalTypes';
 import MessageDisplay from './components/conversational/MessageDisplay';
 import InputArea from './components/conversational/InputArea';
 import MessageProcessor from './components/conversational/MessageProcessor';
-import { FormData } from './types/formTypes';
-import { Message } from './types/conversationalTypes';
-import { useToast } from '@/hooks/use-toast';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ConversationalEstimatorProps {
   onUserInput: (input: string) => void;
@@ -24,223 +26,182 @@ const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = ({
   onClientTypeSubmit,
   goToStep
 }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'system',
+      content: "Bonjour ! Je suis votre assistant d'estimation. Comment puis-je vous aider avec votre projet de construction ou rénovation ?",
+      options: ['Construction neuve', 'Rénovation', 'Extension']
+    }
+  ]);
+  
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [processedContent, setProcessedContent] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
-
-  // Scroll to bottom when messages change
+  
+  // Scroll to bottom whenever messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-
-  // Initial welcome message
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([
-        {
-          id: uuidv4(),
-          type: 'system',
-          content: "Bonjour ! Je suis votre assistant virtuel pour l'estimation de votre projet. Décrivez-moi votre projet (type, surface, localisation) et je pourrai vous aider à l'estimer.",
-          options: ['Construction neuve', 'Rénovation', 'Extension', 'Aménagement intérieur']
-        }
-      ]);
-    }
-  }, [messages]);
-
+  
   // Handle user message submission
   const handleSendMessage = () => {
-    if (userInput.trim() === '') return;
+    if (!userInput.trim()) return;
     
-    // Add user message to chat
-    const newUserMessage: Message = {
+    // Add user message
+    const userMessage: Message = {
       id: uuidv4(),
       type: 'user',
-      content: userInput
+      content: userInput.trim(),
+      time: new Date().toISOString()
     };
     
-    setMessages(prev => [...prev, newUserMessage]);
+    setMessages(prev => [...prev, userMessage]);
+    onUserInput(userInput);
     
-    // Process user input
-    processUserInput(userInput);
-    
-    // Clear input field
+    // Clear input and show loading
     setUserInput('');
-    
-    // Show assistant is typing
     setLoading(true);
     
-    // Simulate AI response time
+    // Process the response
     setTimeout(() => {
-      generateResponse(userInput);
-      setLoading(false);
-    }, 1500);
+      processMessage(userInput);
+    }, 800);
   };
   
-  // Process user input and update form data
-  const processUserInput = (input: string) => {
-    // Pass to parent component
-    onUserInput(input);
+  // Process message and generate response
+  const processMessage = (input: string) => {
+    // Analyze input for project information
+    let projectType = '';
+    let surface = 0;
     
-    // Process for form data extraction
-    const lowerInput = input.toLowerCase();
-    
-    // Extract project type
-    if (lowerInput.includes('maison') || lowerInput.includes('construction')) {
-      updateFormData({ projectType: 'construction' });
-    } else if (lowerInput.includes('rénovation') || lowerInput.includes('renovation')) {
-      updateFormData({ projectType: 'renovation' });
-    } else if (lowerInput.includes('extension')) {
-      updateFormData({ projectType: 'extension' });
-    } else if (lowerInput.includes('aménag') || lowerInput.includes('amenag')) {
-      updateFormData({ projectType: 'amenagement' });
+    if (input.toLowerCase().includes('maison') || 
+        input.toLowerCase().includes('construction')) {
+      projectType = 'construction';
+    } else if (input.toLowerCase().includes('renov') || 
+               input.toLowerCase().includes('rénov')) {
+      projectType = 'renovation';
+    } else if (input.toLowerCase().includes('extension') || 
+               input.toLowerCase().includes('agrandir')) {
+      projectType = 'extension';
     }
     
-    // Extract surface
-    const surfaceMatch = lowerInput.match(/(\d+)\s*(?:m²|m2|mètres carrés|metres carres)/);
+    // Extract surface information
+    const surfaceMatch = input.match(/(\d+)\s*m²/);
     if (surfaceMatch && surfaceMatch[1]) {
-      updateFormData({ surface: parseInt(surfaceMatch[1]) });
+      surface = parseInt(surfaceMatch[1], 10);
     }
     
-    // Extract location
-    if (lowerInput.includes('à ') || lowerInput.includes('a ')) {
-      const locationMatch = lowerInput.match(/(?:à|a)\s+([A-Za-zÀ-ÿ-]+)/);
-      if (locationMatch && locationMatch[1]) {
-        const city = locationMatch[1].charAt(0).toUpperCase() + locationMatch[1].slice(1).toLowerCase();
-        updateFormData({ city: city });
-      }
+    // Update form data if we found anything
+    if (projectType || surface) {
+      const updates: Partial<FormData> = {};
+      if (projectType) updates.projectType = projectType;
+      if (surface) updates.surface = surface;
+      updateFormData(updates);
     }
-  };
-  
-  // Generate assistant response based on user input
-  const generateResponse = (input: string) => {
+    
+    // Generate assistant response
     let responseContent = '';
     let responseOptions: string[] = [];
     
-    // Checks if project type is mentioned
-    const hasProjectType = formData.projectType !== undefined && formData.projectType !== '';
-    // Checks if surface is mentioned
-    const hasSurface = formData.surface !== undefined && formData.surface !== 0;
-    // Checks if location is mentioned
-    const hasLocation = formData.city !== undefined && formData.city !== '';
-    
-    // Response based on collected information
-    if (!hasProjectType) {
-      responseContent = "Pour commencer, pourriez-vous me préciser le type de projet que vous envisagez ? (construction neuve, rénovation, extension...)";
-      responseOptions = ['Construction neuve', 'Rénovation', 'Extension', 'Aménagement intérieur'];
-    } else if (!hasSurface) {
-      responseContent = `Je vois que vous envisagez un projet de ${formData.projectType}. Quelle est la surface approximative en m² ?`;
-      responseOptions = ['Moins de 50m²', '50-100m²', '100-150m²', '150-200m²', 'Plus de 200m²'];
-    } else if (!hasLocation) {
-      responseContent = `Merci ! Un projet de ${formData.projectType} de ${formData.surface}m². Où ce projet sera-t-il situé ?`;
-      responseOptions = ['Région PACA', 'Région Île-de-France', 'Autre région'];
+    if (projectType === 'construction') {
+      responseContent = "Super ! Vous souhaitez construire une maison neuve. Quelle superficie approximative envisagez-vous ?";
+      responseOptions = ['Moins de 100m²', 'Entre 100m² et 150m²', 'Plus de 150m²'];
+    } else if (projectType === 'renovation') {
+      responseContent = "Très bien ! Pour votre projet de rénovation, pouvez-vous m'indiquer la superficie concernée ?";
+      responseOptions = ['Moins de 80m²', 'Entre 80m² et 120m²', 'Plus de 120m²'];
+    } else if (projectType === 'extension') {
+      responseContent = "Une extension ! Quelle superficie souhaitez-vous ajouter à votre habitation ?";
+      responseOptions = ['Moins de 40m²', 'Entre 40m² et 60m²', 'Plus de 60m²'];
+    } else if (surface > 0) {
+      responseContent = `D'accord pour une surface de ${surface}m². Quel type de prestation recherchez-vous ?`;
+      responseOptions = ['Maîtrise d\'œuvre complète', 'Permis de construire uniquement', 'Étude préliminaire'];
     } else {
-      // Calculate preliminary estimation
-      const estimationPerM2 = getEstimationBasePrice(formData.projectType || '');
-      const totalEstimation = (formData.surface || 0) * estimationPerM2;
-      
-      // Format the estimation with thousand separators
-      const formattedEstimation = new Intl.NumberFormat('fr-FR').format(totalEstimation);
-      
-      responseContent = `D'après les informations que vous m'avez fournies (${formData.projectType} de ${formData.surface}m² à ${formData.city}), j'estime votre projet à environ ${formattedEstimation}€. Cette estimation de base inclut les travaux principaux. Souhaitez-vous affiner cette estimation avec plus de détails ?`;
-      responseOptions = ['Oui, affiner l\'estimation', 'Quelles prestations sont incluses ?', 'Quels sont les délais habituels ?'];
-      
-      // Update formData with the preliminary estimation
-      updateFormData({ montantT: totalEstimation });
-      
-      // Move to step 4 if goToStep is provided
-      if (goToStep) {
-        goToStep(4);
-      }
+      responseContent = "Pourriez-vous me préciser le type de projet (construction neuve, rénovation, extension) et la superficie approximative ?";
+      responseOptions = ['Construction neuve', 'Rénovation', 'Extension'];
     }
     
-    // Add assistant message to chat
-    const newAssistantMessage: Message = {
+    // Add assistant response message
+    const assistantMessage: Message = {
       id: uuidv4(),
       type: 'assistant',
       content: responseContent,
-      options: responseOptions
+      options: responseOptions,
+      time: new Date().toISOString()
     };
     
-    setMessages(prev => [...prev, newAssistantMessage]);
+    setMessages(prev => [...prev, assistantMessage]);
+    setLoading(false);
   };
   
-  // Get base price per m² based on project type
-  const getEstimationBasePrice = (projectType: string): number => {
-    switch (projectType.toLowerCase()) {
-      case 'construction':
-        return 1800; // 1800€/m² for new construction
-      case 'renovation':
-        return 1200; // 1200€/m² for renovation
-      case 'extension':
-        return 1600; // 1600€/m² for extension
-      case 'amenagement':
-        return 800;  // 800€/m² for interior design
-      default:
-        return 1500; // Default value
-    }
-  };
-  
-  // Handle suggested option click
+  // Handle option click
   const handleOptionClick = (option: string) => {
+    // Treat the option as a user message
     setUserInput(option);
     
-    // Auto-submit certain options
-    if (['Construction neuve', 'Rénovation', 'Extension', 'Aménagement intérieur'].includes(option)) {
-      setTimeout(() => {
-        handleSendMessage();
-      }, 300);
-    }
+    // Simulate a user clicking send
+    const userMessage: Message = {
+      id: uuidv4(),
+      type: 'user',
+      content: option,
+      time: new Date().toISOString()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    onUserInput(option);
+    
+    // Process the response
+    setLoading(true);
+    setTimeout(() => {
+      processMessage(option);
+    }, 800);
   };
   
-  // Handle key press (Enter to send)
+  // Handle key press for enter key
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
-
-  // Function to handle message processing
-  const handleProcessMessage = (processed: React.ReactNode) => {
-    // Handle the processed message
-    console.log("Message processed:", processed);
+  
+  // Process message content
+  const handleProcessed = (content: string) => {
+    setProcessedContent(content);
   };
-
+  
   return (
-    <Card className="border rounded-lg overflow-hidden h-[500px] flex flex-col">
-      <div className="flex-1 overflow-y-auto p-4">
-        {messages.map((msg, index) => (
-          <MessageDisplay
-            key={msg.id || index}
-            message={msg}
+    <div className="flex flex-col h-full">
+      <Card className="flex-grow overflow-y-auto mb-4 max-h-[500px]">
+        <div className="p-4 space-y-4">
+          <MessageDisplay 
             messages={messages}
             loading={loading}
             onOptionClick={handleOptionClick}
             messagesEndRef={messagesEndRef}
           />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
+          
+          {/* Invisible component to process messages */}
+          <MessageProcessor
+            onUserInput={onUserInput}
+            formData={formData}
+            updateFormData={updateFormData}
+            content={userInput}
+            onProcessed={handleProcessed}
+          />
+        </div>
+      </Card>
       
-      <InputArea 
+      <InputArea
         userInput={userInput}
         setUserInput={setUserInput}
         handleSendMessage={handleSendMessage}
         handleKeyPress={handleKeyPress}
       />
-      
-      {/* Component to process user inputs - no visual rendering */}
-      <MessageProcessor 
-        content={userInput}
-        onProcessed={handleProcessMessage}
-        onUserInput={onUserInput}
-        formData={formData}
-        updateFormData={updateFormData}
-      />
-    </Card>
+    </div>
   );
 };
 

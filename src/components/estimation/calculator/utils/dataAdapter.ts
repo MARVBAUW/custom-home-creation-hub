@@ -99,7 +99,11 @@ export function adaptToEstimationResponseData(formData: EstimationFormData): Est
       land: landCost,
       demolition: demolitionCost,
       siteDevelopment: siteDevelopmentCost,
-      total: otherCostsTotal
+      total: otherCostsTotal,
+      insurance: 0,
+      contingency: 0,
+      taxes: 0,
+      miscellaneous: 0
     },
     totalAmount,
     dateGenerated: new Date().toISOString(),
@@ -134,9 +138,8 @@ export function adaptToFormData(data: any): FormData {
 /**
  * Adapts standard FormData to EstimationFormData
  */
-export function adaptToEstimationFormData(formData: FormData): EstimationFormData {
+export function adaptToEstimationFormData(formData: Partial<FormData>): EstimationFormData {
   return {
-    ...formData,
     projectType: formData.projectType || 'construction',
     surface: ensureNumber(formData.surface),
     location: formData.location || '',
@@ -144,7 +147,28 @@ export function adaptToEstimationFormData(formData: FormData): EstimationFormDat
     bedrooms: ensureNumber(formData.bedrooms),
     bathrooms: ensureNumber(formData.bathrooms),
     budget: ensureNumber(formData.budget),
-    city: formData.city || ''
+    city: formData.city || '',
+    clientType: formData.clientType || ''
+  };
+}
+
+/**
+ * Creates an updater function that handles type conversions
+ * This solves the issue of type mismatches between different form data formats
+ */
+export function createTypeAdaptingUpdater(originalUpdateFn: (data: any) => void) {
+  return (data: any) => {
+    // Convert types before updating
+    const processedData: any = { ...data };
+    
+    // Handle numbers
+    if ('surface' in data) processedData.surface = ensureNumber(data.surface);
+    if ('bedrooms' in data) processedData.bedrooms = ensureNumber(data.bedrooms);
+    if ('bathrooms' in data) processedData.bathrooms = ensureNumber(data.bathrooms);
+    if ('budget' in data) processedData.budget = ensureNumber(data.budget);
+    
+    // Pass the processed data to the original update function
+    originalUpdateFn(processedData);
   };
 }
 
