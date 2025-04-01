@@ -1,83 +1,88 @@
 
-import React, { useState, useEffect } from 'react';
-import { FormData } from '../../types/formTypes';
+import React, { useEffect } from 'react';
 import { MessageProcessorProps } from '../../types/conversationalTypes';
 
-const MessageProcessor: React.FC<MessageProcessorProps> = ({
-  content,
+/**
+ * Analyzes user intent from message content
+ */
+export function analyzeUserIntent(content: string) {
+  // Simple intent analysis logic
+  const intents = {
+    projectType: null,
+    surface: null,
+    budget: null,
+    location: null
+  };
+  
+  // Check for project type mentions
+  if (content.toLowerCase().includes('construction') || 
+      content.toLowerCase().includes('maison neuve')) {
+    intents.projectType = 'construction';
+  } else if (content.toLowerCase().includes('renovation') || 
+             content.toLowerCase().includes('rénov')) {
+    intents.projectType = 'renovation';
+  } else if (content.toLowerCase().includes('extension')) {
+    intents.projectType = 'extension';
+  }
+  
+  // Extract surface information
+  const surfaceMatch = content.match(/(\d+)\s*m²/);
+  if (surfaceMatch && surfaceMatch[1]) {
+    intents.surface = parseInt(surfaceMatch[1], 10);
+  }
+  
+  // Extract budget information
+  const budgetMatch = content.match(/(\d+[\d\s]*)\s*€/);
+  if (budgetMatch && budgetMatch[1]) {
+    intents.budget = parseInt(budgetMatch[1].replace(/\s/g, ''), 10);
+  }
+  
+  // Extract location information
+  // This would require a more sophisticated NLP approach for accurate extraction
+  
+  return intents;
+}
+
+/**
+ * Extracts form data from a message
+ */
+export function extractFormDataFromMessage(content: string) {
+  const intents = analyzeUserIntent(content);
+  const formData: Record<string, any> = {};
+  
+  if (intents.projectType) formData.projectType = intents.projectType;
+  if (intents.surface) formData.surface = intents.surface;
+  if (intents.budget) formData.budget = intents.budget;
+  if (intents.location) formData.location = intents.location;
+  
+  return formData;
+}
+
+/**
+ * Component that processes user messages and extracts relevant information
+ */
+const MessageProcessor: React.FC<MessageProcessorProps> = ({ 
+  content, 
   onProcessed,
-  onUserInput,
-  formData,
   updateFormData
 }) => {
-  const [processedContent, setProcessedContent] = useState<string>('');
-
   useEffect(() => {
-    if (!content) {
-      onProcessed && onProcessed('');
-      return;
+    if (!content) return;
+    
+    // Extract form data from the message
+    const extractedData = extractFormDataFromMessage(content);
+    
+    // Update form data with extracted information
+    if (Object.keys(extractedData).length > 0) {
+      updateFormData(extractedData);
     }
     
-    // Process the content - here we could extract data, parse for special commands, etc.
-    // Example: check for surface information
-    const surfaceMatch = content.match(/(\d+)\s*m²/);
-    if (surfaceMatch && surfaceMatch[1]) {
-      const surface = parseInt(surfaceMatch[1]);
-      if (!isNaN(surface)) {
-        updateFormData({ surface });
-      }
-    }
-
-    // Process for project type
-    if (content.toLowerCase().includes('maison') || content.toLowerCase().includes('construction')) {
-      updateFormData({ projectType: 'construction' });
-    } else if (content.toLowerCase().includes('rénov') || content.toLowerCase().includes('renovation')) {
-      updateFormData({ projectType: 'renovation' });
-    } else if (content.toLowerCase().includes('extension')) {
-      updateFormData({ projectType: 'extension' });
-    }
-
-    // For now, just pass the content through
-    setProcessedContent(content);
-    
-    // Call onProcessed with the result
-    onProcessed && onProcessed(content);
-  }, [content, onProcessed, updateFormData]);
-
-  return null; // This component doesn't render anything
-};
-
-// Export utility functions for use in other components
-export const analyzeUserIntent = (message: string): string => {
-  // Simple intent analyzer - can be expanded later
-  if (message.toLowerCase().includes('prix') || message.toLowerCase().includes('coût')) {
-    return 'price_inquiry';
-  }
-  if (message.toLowerCase().includes('durée') || message.toLowerCase().includes('temps')) {
-    return 'timeline_inquiry';
-  }
-  return 'general_information';
-};
-
-export const extractFormDataFromMessage = (message: string): Partial<FormData> => {
-  const data: Partial<FormData> = {};
+    // Signal that processing is complete
+    onProcessed(content);
+  }, [content, updateFormData, onProcessed]);
   
-  // Extract surface
-  const surfaceMatch = message.match(/(\d+)\s*m²/);
-  if (surfaceMatch && surfaceMatch[1]) {
-    data.surface = parseInt(surfaceMatch[1]);
-  }
-  
-  // Extract project type
-  if (message.toLowerCase().includes('maison') || message.toLowerCase().includes('construction')) {
-    data.projectType = 'construction';
-  } else if (message.toLowerCase().includes('rénov') || message.toLowerCase().includes('renovation')) {
-    data.projectType = 'renovation';
-  } else if (message.toLowerCase().includes('extension')) {
-    data.projectType = 'extension';
-  }
-  
-  return data;
+  // This component doesn't render anything
+  return null;
 };
 
 export default MessageProcessor;

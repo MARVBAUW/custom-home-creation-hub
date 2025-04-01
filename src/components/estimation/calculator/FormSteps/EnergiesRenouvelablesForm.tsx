@@ -24,24 +24,8 @@ const EnergiesRenouvelablesForm: React.FC<BaseFormProps> = ({
     // Get the current total amount
     const currentTotal = ensureNumber(formData.montantT, 0);
     
-    // Map the UI option to the calculation parameter
-    let calculationType = 'standard';
-    switch (energyType) {
-      case 'optimized':
-        calculationType = 'optimized';
-        break;
-      case 'semiAutonomous':
-        calculationType = 'semiAutonomous';
-        break;
-      case 'autonomous':
-        calculationType = 'autonomous';
-        break;
-      default:
-        calculationType = 'standard';
-    }
-    
     // Calculate the additional cost for renewable energy
-    const additionalCost = calculateRenewableEnergyCost(calculationType, currentTotal);
+    const additionalCost = calculateRenewableEnergyCost(energyType, currentTotal);
 
     // Update form data with renewable energy type and additional cost
     updateFormData({

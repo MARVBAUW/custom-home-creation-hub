@@ -1,6 +1,6 @@
 
 import { EstimationFormData } from '../types/estimationFormData';
-import { EstimationResponseData } from '../types/estimationTypes';
+import { EstimationResponseData, ProjectDetails } from '../types/estimationTypes';
 import { calculateStructuralCosts } from './structuralCosts';
 import { calculateFeeCosts } from './feeCosts';
 import { calculateExternalCosts } from './externalCosts';
@@ -16,41 +16,46 @@ export function generateEstimationResult(formData: EstimationFormData): Estimati
   const externalCosts = calculateExternalCosts(formData);
   
   // Subtotal for construction
-  const constructionSubtotal = constructionCosts.total + 
-                               finishingCosts.total + 
-                               technicalCosts.total + 
-                               externalCosts.total;
+  const constructionSubtotal = 
+    constructionCosts + 
+    finishingCosts + 
+    technicalCosts + 
+    externalCosts;
   
   // Calculate fees based on construction subtotal
   const feeCosts = calculateFeeCosts(constructionSubtotal, formData);
   
   // Calculate total
-  const totalAmount = constructionSubtotal + feeCosts.total + externalCosts.total;
+  const totalAmount = constructionSubtotal + feeCosts.total + externalCosts;
+  
+  // Create project details
+  const projectDetails: ProjectDetails = {
+    projectType: formData.projectType,
+    surface: ensureNumber(formData.surface),
+    location: formData.location || 'non spécifié',
+    constructionType: formData.constructionType || 'standard',
+    bedrooms: ensureNumber(formData.bedrooms),
+    bathrooms: ensureNumber(formData.bathrooms)
+  };
   
   // Generate response object
   const result: EstimationResponseData = {
     projectType: formData.projectType,
-    projectDetails: {
-      surface: ensureNumber(formData.surface),
-      location: formData.location || 'non spécifié',
-      constructionType: formData.constructionType || 'standard',
-      bedrooms: ensureNumber(formData.bedrooms),
-      bathrooms: ensureNumber(formData.bathrooms)
-    },
+    projectDetails: projectDetails,
     estimatedCost: totalAmount,
     constructionCosts: {
-      structuralWork: constructionCosts.total,
-      finishingWork: finishingCosts.total,
-      technicalLots: technicalCosts.total,
-      externalWorks: externalCosts.total,
+      structuralWork: constructionCosts,
+      finishingWork: finishingCosts,
+      technicalLots: technicalCosts,
+      externalWorks: externalCosts,
       total: constructionSubtotal
     },
     fees: feeCosts,
     otherCosts: {
       land: 0, // Not calculated here
-      demolition: externalCosts.demolition || 0,
-      siteDevelopment: externalCosts.siteDevelopment || 0,
-      total: externalCosts.total,
+      demolition: 0,
+      siteDevelopment: 0,
+      total: externalCosts,
       insurance: feeCosts.insurance || 0,
       contingency: feeCosts.contingency || 0,
       taxes: feeCosts.taxes || 0,
@@ -63,28 +68,30 @@ export function generateEstimationResult(formData: EstimationFormData): Estimati
       design: calculateDesignTime(formData),
       permits: calculatePermitTime(formData),
       construction: calculateConstructionTime(formData),
-      totalMonths: 0 // Will be calculated below
+      totalMonths: 0, // Will be calculated below
+      bidding: 2,
+      total: 0
     },
     categories: [
       { 
         name: 'Structure', 
-        cost: constructionCosts.total, 
-        percentage: (constructionCosts.total / totalAmount) * 100 
+        cost: constructionCosts, 
+        percentage: (constructionCosts / totalAmount) * 100 
       },
       { 
         name: 'Finitions', 
-        cost: finishingCosts.total, 
-        percentage: (finishingCosts.total / totalAmount) * 100 
+        cost: finishingCosts, 
+        percentage: (finishingCosts / totalAmount) * 100 
       },
       { 
         name: 'Lots techniques', 
-        cost: technicalCosts.total, 
-        percentage: (technicalCosts.total / totalAmount) * 100 
+        cost: technicalCosts, 
+        percentage: (technicalCosts / totalAmount) * 100 
       },
       { 
         name: 'Travaux extérieurs', 
-        cost: externalCosts.total, 
-        percentage: (externalCosts.total / totalAmount) * 100 
+        cost: externalCosts, 
+        percentage: (externalCosts / totalAmount) * 100 
       },
       { 
         name: 'Honoraires et frais', 
@@ -99,6 +106,9 @@ export function generateEstimationResult(formData: EstimationFormData): Estimati
     result.timeline.design + 
     result.timeline.permits + 
     result.timeline.construction;
+  
+  // Set total to match totalMonths for compatibility
+  result.timeline.total = result.timeline.totalMonths;
   
   return result;
 }

@@ -182,6 +182,7 @@ const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = ({
             loading={loading}
             onOptionClick={handleOptionClick}
             messagesEndRef={messagesEndRef}
+            message="" // Empty string to satisfy type requirement
           />
           
           {/* Invisible component to process messages */}

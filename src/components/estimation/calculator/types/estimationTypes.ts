@@ -1,7 +1,11 @@
 
-export interface CategoryCost {
-  category: string;
-  amount: number;
+export interface ProjectDetails {
+  projectType: string;
+  surface: number;
+  location: string;
+  constructionType: string;
+  bedrooms: number;
+  bathrooms: number;
 }
 
 export interface ConstructionCosts {
@@ -12,29 +16,10 @@ export interface ConstructionCosts {
   total: number;
 }
 
-export interface OtherCosts {
-  insurance: number;
-  contingency: number;
-  taxes: number;
-  miscellaneous: number;
-  total: number;
-}
-
-export interface ProjectDetails {
-  surface: number;
-  location: string;
-  projectType: string;
-  constructionType?: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  city?: string;
-  [key: string]: any;
-}
-
 export interface FeeCosts {
   architect: number;
-  engineeringFees: number;
   architectFees: number;
+  engineeringFees: number;
   projectManagement: number;
   officialFees: number;
   inspectionFees: number;
@@ -44,46 +29,45 @@ export interface FeeCosts {
   contingency: number;
   taxes: number;
   other: number;
-  masterBuilderFees?: number;
-  safetyCoordination?: number;
-  technicalControl?: number;
   total: number;
 }
 
-/**
- * Timeline estimation interface
- */
+export interface OtherCosts {
+  land: number;
+  demolition: number;
+  siteDevelopment: number;
+  total: number;
+  insurance: number;
+  contingency: number;
+  taxes: number;
+  miscellaneous: number;
+}
+
 export interface EstimationTimeline {
   design: number;
   permits: number;
-  bidding: number;
   construction: number;
-  total: number;
+  totalMonths: number;
+  bidding?: number;
+  total?: number;
 }
 
-/**
- * Complete estimation response data format
- */
+export interface CategoryCost {
+  name: string;
+  cost: number;
+  percentage: number;
+}
+
 export interface EstimationResponseData {
+  projectType: string;
+  projectDetails: ProjectDetails;
+  estimatedCost: number;
   constructionCosts: ConstructionCosts;
   fees: FeeCosts;
   otherCosts: OtherCosts;
   totalAmount: number;
-  timeline: EstimationTimeline;
-  categories: CategoryCost[];
-  
-  // Additional fields needed by components
-  projectType: string;
-  projectDetails: ProjectDetails;
-  estimatedCost: number | {
-    total: number;
-    perSquareMeter: number;
-    breakdown: {
-      materials: number;
-      labor: number;
-      fees: number;
-    }
-  };
   dateGenerated: string;
   isComplete: boolean;
+  timeline: EstimationTimeline;
+  categories: CategoryCost[];
 }

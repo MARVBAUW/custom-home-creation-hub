@@ -20,6 +20,8 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 // Project types

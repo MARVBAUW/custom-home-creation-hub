@@ -24,24 +24,8 @@ const SolutionsEnvironnementalesForm: React.FC<BaseFormProps> = ({
     // Get the current total amount
     const currentTotal = ensureNumber(formData.montantT, 0);
     
-    // Map the UI option to the calculation parameter
-    let calculationType = 'none';
-    switch (solutionType) {
-      case 'low':
-        calculationType = 'low';
-        break;
-      case 'medium':
-        calculationType = 'medium';
-        break;
-      case 'high':
-        calculationType = 'high';
-        break;
-      default:
-        calculationType = 'none';
-    }
-    
     // Calculate the additional cost for environmental solutions
-    const additionalCost = calculateEnvironmentalSolutionsCost(calculationType, currentTotal);
+    const additionalCost = calculateEnvironmentalSolutionsCost(solutionType, currentTotal);
 
     // Update form data with environmental solution type and additional cost
     updateFormData({

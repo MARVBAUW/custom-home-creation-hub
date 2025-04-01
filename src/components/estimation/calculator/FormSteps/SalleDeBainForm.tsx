@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { calculateBathroomCost } from '../utils/montantUtils';
-import { ensureNumber } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 import { Bath, Home, CheckSquare, Waves } from 'lucide-react';
 
 const SalleDeBainForm: React.FC<BaseFormProps> = ({
@@ -76,7 +76,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain fonctionnelle avec équipements de base
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('standard', 1))} / unité
+                  {formatPrice(calculateBathroomCost('standard'))} / unité
                 </p>
               </CardContent>
             </Card>
@@ -93,7 +93,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain de qualité avec finitions soignées
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('premium', 1))} / unité
+                  {formatPrice(calculateBathroomCost('premium'))} / unité
                 </p>
               </CardContent>
             </Card>
@@ -110,7 +110,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain haut de gamme avec matériaux nobles
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('luxury', 1))} / unité
+                  {formatPrice(calculateBathroomCost('luxury'))} / unité
                 </p>
               </CardContent>
             </Card>
