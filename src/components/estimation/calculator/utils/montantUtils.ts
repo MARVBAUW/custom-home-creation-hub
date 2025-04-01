@@ -1,4 +1,3 @@
-
 import { ensureNumber } from './typeConversions';
 
 // Basic conversion function to ensure we're working with numbers
@@ -464,4 +463,206 @@ export function calculateGateCost(formData: any, gateType: string = 'standard'):
   }
   
   return cost;
+}
+
+/**
+ * Convert percentage from string to number
+ */
+export function percentageToNumber(value: string): number {
+  if (!value) return 0;
+  const numValue = parseFloat(value);
+  return isNaN(numValue) ? 0 : numValue;
+}
+
+/**
+ * Calculate detailed facade cost based on percentages of different materials
+ */
+export function calculateDetailedFacadeCost(
+  formData: any,
+  stonePercentage: string = "0",
+  plasterPercentage: string = "0",
+  brickPercentage: string = "0",
+  metalCladdingPercentage: string = "0",
+  woodCladdingPercentage: string = "0",
+  stoneCladdingPercentage: string = "0"
+): number {
+  // Surface area from form data
+  const surface = ensureNumericValue(formData.surface, 0);
+  
+  // Convert percentages to numbers
+  const stonePercent = percentageToNumber(stonePercentage);
+  const plasterPercent = percentageToNumber(plasterPercentage);
+  const brickPercent = percentageToNumber(brickPercentage);
+  const metalCladdingPercent = percentageToNumber(metalCladdingPercentage);
+  const woodCladdingPercent = percentageToNumber(woodCladdingPercentage);
+  const stoneCladdingPercent = percentageToNumber(stoneCladdingPercentage);
+  
+  // Define base costs per square meter for each material
+  const stoneCost = 320;
+  const plasterCost = 120;
+  const brickCost = 200;
+  const metalCladdingCost = 250;
+  const woodCladdingCost = 180;
+  const stoneCladdingCost = 280;
+  
+  // Calculate total facade area (assume 3m height per floor)
+  const facadeArea = surface * 0.8; // Simplified calculation
+  
+  // Calculate costs for each material
+  const stoneCostTotal = (stonePercent / 100) * facadeArea * stoneCost;
+  const plasterCostTotal = (plasterPercent / 100) * facadeArea * plasterCost;
+  const brickCostTotal = (brickPercent / 100) * facadeArea * brickCost;
+  const metalCladdingCostTotal = (metalCladdingPercent / 100) * facadeArea * metalCladdingCost;
+  const woodCladdingCostTotal = (woodCladdingPercent / 100) * facadeArea * woodCladdingCost;
+  const stoneCladdingCostTotal = (stoneCladdingPercent / 100) * facadeArea * stoneCladdingCost;
+  
+  // Return the total cost
+  return stoneCostTotal + plasterCostTotal + brickCostTotal + 
+         metalCladdingCostTotal + woodCladdingCostTotal + stoneCladdingCostTotal;
+}
+
+/**
+ * Calculate new total amount with facade costs
+ */
+export function calculateNewMontantT(currentMontantT: number = 0, facadeCost: number = 0): number {
+  return ensureNumericValue(currentMontantT) + facadeCost;
+}
+
+// Export the ensureNumber function that's used elsewhere
+export const ensureNumber = (value: any): number => {
+  if (typeof value === 'number') return value;
+  if (!value) return 0;
+  
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? 0 : parsed;
+};
+
+// Additional functions needed by other components
+
+/**
+ * Calculate roofing renovation costs
+ */
+export function calculateRoofingRenovCost(roofingType: string, surface: number): number {
+  const rates: Record<string, number> = {
+    'tuilePlate': 160,
+    'tuileRonde': 167,
+    'ardoise': 240,
+    'zinc': 190,
+    'chaume': 230,
+    'bacAcier': 85,
+    'bitume': 95,
+    'vegetalisee': 176,
+    'gravillonnee': 125
+  };
+  
+  return (rates[roofingType] || 160) * surface;
+}
+
+/**
+ * Calculate roof framework renovation cost
+ */
+export function calculateRoofFrameworkRenovCost(type: string, surface: number): number {
+  const rates: Record<string, number> = {
+    'light': 100,
+    'medium': 150,
+    'heavy': 200,
+    'complete': 300
+  };
+  
+  return (rates[type] || 150) * surface;
+}
+
+/**
+ * Calculate kitchen costs
+ */
+export function calculateKitchenCost(quality: string, size: number): number {
+  const rates: Record<string, number> = {
+    'basic': 3000,
+    'standard': 6000,
+    'premium': 12000,
+    'luxury': 25000
+  };
+  
+  return (rates[quality] || 6000) * (size / 10);
+}
+
+/**
+ * Calculate bathroom costs
+ */
+export function calculateBathroomCost(quality: string, size: number): number {
+  const rates: Record<string, number> = {
+    'basic': 2500,
+    'standard': 5000,
+    'premium': 10000,
+    'luxury': 20000
+  };
+  
+  return (rates[quality] || 5000) * (size / 5);
+}
+
+/**
+ * Calculate windows costs
+ */
+export function calculateWindowsCost(type: string, area: number): number {
+  const rates: Record<string, number> = {
+    'pvc': 400,
+    'aluminum': 650,
+    'wood': 700,
+    'mixed': 750
+  };
+  
+  return (rates[type] || 500) * area;
+}
+
+/**
+ * Calculate insulation costs
+ */
+export function calculateInsulationCost(type: string, surface: number): number {
+  const rates: Record<string, number> = {
+    'base': 30,
+    'performance': 45,
+    'ultraPerformance': 65,
+    'sansAvis': 40
+  };
+  
+  return (rates[type] || 40) * surface;
+}
+
+/**
+ * Calculate renewable energy solutions costs
+ */
+export function calculateRenewableEnergyCost(type: string, surface: number): number {
+  const rates: Record<string, number> = {
+    'solar': 250,
+    'geothermal': 180,
+    'heatPump': 120,
+    'windmill': 300
+  };
+  
+  return (rates[type] || 200) * surface * 0.1;
+}
+
+/**
+ * Calculate environmental solutions costs
+ */
+export function calculateEnvironmentalSolutionsCost(type: string, surface: number): number {
+  const rates: Record<string, number> = {
+    'rainwaterHarvesting': 3500,
+    'greyWaterRecycling': 5000,
+    'greenRoof': 150, // per m²
+    'smartHome': 80 // per m²
+  };
+  
+  if (type === 'greenRoof' || type === 'smartHome') {
+    return rates[type] * surface;
+  }
+  
+  return rates[type] || 4000;
+}
+
+/**
+ * Calculate electrical cost (renamed from electrical to electricity for consistency)
+ */
+export function calculateElectricalCost(formData: any, surface?: number): number {
+  return calculateElectricityCost(formData, surface);
 }

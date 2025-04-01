@@ -1,132 +1,71 @@
-import { FormData } from '../types/formTypes';
-import { calculateStructuralCosts } from './structuralCosts';
-import { calculateFinishingCosts } from './finishingCosts';
-import { calculateTechnicalCosts } from './technicalCosts';
-import { calculateExternalCosts } from './externalCosts';
-import { calculateFees } from './feeCosts';
-import { ensureNumber } from '../utils/typeConversions';
 
-export interface FeeCosts {
-  architect: number;
-  engineeringFees: number;
-  architectFees: number;
-  projectManagement: number;
-  permits: number;
-  insurance: number;
-  contingency: number;
-  taxes: number;
-  total: number;
-}
+import { EstimationFormData, EstimationResponseData } from '../types/estimationFormData';
+import { calculateConstructionCosts } from './structuralCosts';
+import { calculateDetailedFeeCosts } from './feeCosts';
+import { calculateOtherCosts } from './externalCosts';
 
-export interface EstimationTimeline {
-  planning: { duration: string; startOffset: number };
-  permits: { duration: string; startOffset: number };
-  foundation: { duration: string; startOffset: number };
-  structure: { duration: string; startOffset: number };
-  envelope: { duration: string; startOffset: number };
-  interiors: { duration: string; startOffset: number };
-  finishing: { duration: string; startOffset: number };
-  total: string;
-}
-
-export function generateEstimationResult(formData: FormData) {
-  const surface = ensureNumber(formData.surface);
-  const budget = ensureNumber(formData.budget);
+/**
+ * Generate a complete estimation result based on form data
+ */
+export function generateEstimationResult(formData: EstimationFormData): EstimationResponseData {
+  // Extract basic project data
+  const surface = formData.surface || 0;
+  const bedrooms = formData.bedrooms || 0;
+  const bathrooms = formData.bathrooms || 0;
+  const constructionType = formData.constructionType || 'standard';
+  const location = formData.location || 'urban';
   
-  // Calculate base cost (either from budget or surface * average price)
-  const baseCost = budget > 0 ? budget : surface * 1500;
-  
-  // Calculate component costs
-  const structuralCosts = calculateStructuralCosts(formData, baseCost);
-  const finishingCosts = calculateFinishingCosts(formData, baseCost);
-  const technicalCosts = calculateTechnicalCosts(formData, baseCost);
-  const externalCosts = calculateExternalCosts(formData, baseCost);
-  
-  // Total construction costs
-  const totalConstructionCosts = structuralCosts + finishingCosts + technicalCosts + externalCosts;
+  // Calculate construction costs
+  const constructionCosts = calculateConstructionCosts(formData);
   
   // Calculate fees
-  const fees = calculateFees(totalConstructionCosts);
+  const fees = calculateDetailedFeeCosts(constructionCosts.total);
   
-  // Other costs
-  const otherCosts = {
-    insurance: totalConstructionCosts * 0.02,
-    contingency: totalConstructionCosts * 0.05,
-    taxes: totalConstructionCosts * 0.03,
-    miscellaneous: totalConstructionCosts * 0.02,
-    total: totalConstructionCosts * 0.12
-  };
+  // Calculate other costs
+  const otherCosts = calculateOtherCosts(formData);
   
-  // Total amount
-  const totalAmount = totalConstructionCosts + fees.total + otherCosts.total;
+  // Calculate total amount
+  const totalAmount = constructionCosts.total + fees.total + otherCosts.total;
   
-  // Timeline estimation
-  const timeline: EstimationTimeline = {
-    planning: { duration: '2 mois', startOffset: 0 },
-    permits: { duration: '3 mois', startOffset: 2 },
-    foundation: { duration: '1 mois', startOffset: 5 },
-    structure: { duration: '2 mois', startOffset: 6 },
-    envelope: { duration: '1.5 mois', startOffset: 8 },
-    interiors: { duration: '3 mois', startOffset: 9.5 },
-    finishing: { duration: '1.5 mois', startOffset: 12.5 },
-    total: '14 mois'
-  };
+  // Calculate timeline (rough estimates)
+  const designMonths = Math.max(2, Math.ceil(surface / 200));
+  const permitMonths = 3;
+  const constructionMonths = Math.max(6, Math.ceil(surface / 50));
+  const totalMonths = designMonths + permitMonths + constructionMonths;
   
-  // Categories for reporting
+  // Generate categories for charts/breakdown
   const categories = [
-    { name: 'Gros œuvre', amount: structuralCosts },
-    { name: 'Second œuvre', amount: finishingCosts },
-    { name: 'Lots techniques', amount: technicalCosts },
-    { name: 'Extérieurs', amount: externalCosts }
+    { name: 'Structural Work', cost: constructionCosts.structuralWork, percentage: (constructionCosts.structuralWork / totalAmount) * 100 },
+    { name: 'Finishing Work', cost: constructionCosts.finishingWork, percentage: (constructionCosts.finishingWork / totalAmount) * 100 },
+    { name: 'Technical Lots', cost: constructionCosts.technicalLots, percentage: (constructionCosts.technicalLots / totalAmount) * 100 },
+    { name: 'External Works', cost: constructionCosts.externalWorks, percentage: (constructionCosts.externalWorks / totalAmount) * 100 },
+    { name: 'Fees', cost: fees.total, percentage: (fees.total / totalAmount) * 100 },
+    { name: 'Other Costs', cost: otherCosts.total, percentage: (otherCosts.total / totalAmount) * 100 }
   ];
   
-  // Generate additional data needed for EstimationReport
-  const projectDetails = {
-    surface: ensureNumber(formData.surface) || 0,
-    bedrooms: ensureNumber(formData.bedrooms) || 0,
-    bathrooms: ensureNumber(formData.bathrooms) || 0,
-    city: formData.city || '',
-    constructionType: formData.constructionType || 'traditional',
-    clientType: formData.clientType || 'individual'
-  };
-  
-  // Return the complete estimation data
+  // Generate the response
   return {
     projectType: formData.projectType || 'construction',
-    projectDetails,
-    estimatedCost: totalAmount,
-    dateGenerated: new Date().toISOString(),
-    isComplete: true,
-    constructionCosts: {
-      structuralWork: structuralCosts,
-      finishingWork: finishingCosts,
-      technicalLots: technicalCosts,
-      externalWorks: externalCosts,
-      total: totalConstructionCosts
+    projectDetails: {
+      surface,
+      location,
+      constructionType,
+      bedrooms,
+      bathrooms
     },
+    estimatedCost: totalAmount,
+    constructionCosts,
     fees,
     otherCosts,
     totalAmount,
-    timeline,
-    categories,
-    
-    // Additional data for EstimationReport
-    totalHT: totalConstructionCosts,
-    totalTTC: totalConstructionCosts * 1.2,
-    vat: totalConstructionCosts * 0.2,
-    corpsEtat: {
-      "Gros oeuvre": { montantHT: structuralCosts * 0.6, details: ['Fondations', 'Élévation'] },
-      "Charpente": { montantHT: structuralCosts * 0.2, details: ['Charpente traditionnelle'] },
-      "Couverture": { montantHT: structuralCosts * 0.2, details: ['Tuiles céramiques'] },
-      "Menuiseries Extérieures": { montantHT: finishingCosts * 0.3, details: ['PVC double vitrage'] },
-      "Second oeuvre": { montantHT: finishingCosts * 0.7, details: ['Plomberie', 'Électricité', 'Isolation', 'Plâtrerie', 'Peinture'] }
+    dateGenerated: new Date().toISOString(),
+    isComplete: true,
+    timeline: {
+      design: designMonths,
+      permits: permitMonths,
+      construction: constructionMonths,
+      totalMonths
     },
-    honorairesHT: fees.total,
-    coutGlobalHT: totalConstructionCosts + fees.total,
-    coutGlobalTTC: (totalConstructionCosts + fees.total) * 1.2,
-    taxeAmenagement: totalConstructionCosts * 0.05,
-    garantieDecennale: totalConstructionCosts * 0.01,
-    etudesGeotechniques: totalConstructionCosts * 0.005,
-    etudeThermique: totalConstructionCosts * 0.005
+    categories
   };
 }

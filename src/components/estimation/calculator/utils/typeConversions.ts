@@ -1,114 +1,57 @@
 
-import React from 'react';
+/**
+ * Utility functions for type conversions
+ */
 
 /**
- * Converts a value to a number
+ * Ensures a value is a number, converting from string if necessary
  */
-export function ensureNumber(value: any, defaultValue: number = 0): number {
+export const ensureNumber = (value: any, defaultValue: number = 0): number => {
   if (typeof value === 'number') return value;
   if (!value) return defaultValue;
   
-  if (typeof value === 'string') {
-    // Remove currency symbols, commas, etc.
-    const cleanValue = value.replace(/[^0-9.-]+/g, '');
-    return parseFloat(cleanValue) || defaultValue;
-  }
-  
-  return defaultValue;
-}
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? defaultValue : parsed;
+};
 
 /**
- * Converts a value to a boolean
+ * Converts a form field value to appropriate format for form display
  */
-export function ensureBoolean(value: any): boolean {
+export const toFormValue = (value: any, defaultValue: string = ''): string => {
+  if (value === undefined || value === null) return defaultValue;
+  return value.toString();
+};
+
+/**
+ * Converts a string to boolean
+ */
+export const toBoolean = (value: any): boolean => {
   if (typeof value === 'boolean') return value;
-  if (!value) return false;
-  
   if (typeof value === 'string') {
-    const lowercaseValue = value.toLowerCase().trim();
-    return lowercaseValue === 'true' || 
-           lowercaseValue === 'yes' || 
-           lowercaseValue === 'oui' || 
-           lowercaseValue === '1';
+    return value.toLowerCase() === 'true' || value === '1' || value === 'yes' || value === 'oui';
   }
-  
   return Boolean(value);
-}
+};
 
 /**
- * Converts a value to a string
+ * Format a number as currency
  */
-export function ensureString(value: any): string {
-  if (typeof value === 'string') return value;
-  if (!value && value !== 0) return '';
-  
-  return String(value);
-}
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+};
 
 /**
- * Converts a value to an array
+ * Format a number as percentage
  */
-export function ensureArray<T>(value: any): T[] {
-  if (Array.isArray(value)) return value;
-  if (!value) return [];
-  
-  return [value] as T[];
-}
-
-/**
- * Convert a string percentage to a decimal value
- */
-export function percentageToDecimal(value: string | number): number {
-  if (typeof value === 'number') return value / 100;
-  
-  // Remove % symbol if present
-  const cleanValue = value.replace('%', '');
-  return parseFloat(cleanValue) / 100 || 0;
-}
-
-/**
- * Convert form input value to appropriate type based on context
- */
-export function toFormValue(value: any, type: 'string' | 'number' | 'boolean' | 'array' = 'string'): any {
-  switch (type) {
-    case 'number':
-      return ensureNumber(value);
-    case 'boolean':
-      return ensureBoolean(value);
-    case 'array':
-      return ensureArray(value);
-    case 'string':
-    default:
-      return ensureString(value);
-  }
-}
-
-/**
- * Safely render any value as a React node
- */
-export function safeRenderValue(value: any): React.ReactNode {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  
-  if (
-    typeof value === 'string' || 
-    typeof value === 'number' || 
-    typeof value === 'boolean'
-  ) {
-    return String(value);
-  }
-  
-  if (Array.isArray(value)) {
-    return JSON.stringify(value);
-  }
-  
-  if (typeof value === 'object') {
-    if (value instanceof Date) {
-      return value.toLocaleString();
-    }
-    return JSON.stringify(value);
-  }
-  
-  return '';
-}
+export const formatPercentage = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }).format(value / 100);
+};
