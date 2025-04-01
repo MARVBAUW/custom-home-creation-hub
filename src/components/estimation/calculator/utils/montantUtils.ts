@@ -1,340 +1,467 @@
 
-import { FormData } from '../types/formTypes';
 import { ensureNumber } from './typeConversions';
-import { 
-  calculateRoofingCost as calcRoofingCost,
-  calculateRoofingRenovCost as calcRoofingRenovCost,
-  calculateRoofFrameworkRenovCost as calcRoofFrameworkRenovCost,
-  calculateFacadeCost as calcFacadeCost,
-  calculateDetailedFacadeCost as calcDetailedFacadeCost
-} from './calculations/exterior';
 
-// Export ensureNumber for usage in components
-export { ensureNumber };
-
-/**
- * Calculate kitchen cost based on quality and size
- */
-export const calculateKitchenCost = (quality: string, size: number): number => {
-  const basePrice = {
-    'basic': 300,
-    'standard': 600,
-    'premium': 1200,
-    'luxury': 2000
-  }[quality] || 600;
-  
-  return basePrice * size;
-};
-
-/**
- * Calculate bathroom cost based on quality and count
- */
-export const calculateBathroomCost = (quality: string, count: number): number => {
-  const basePrice = {
-    'basic': 2000,
-    'standard': 4000,
-    'premium': 8000,
-    'luxury': 15000
-  }[quality] || 4000;
-  
-  return basePrice * count;
-};
-
-/**
- * Calculate environmental solutions cost
- */
-export const calculateEnvironmentalSolutionsCost = (solutions: string[]): number => {
-  const prices: Record<string, number> = {
-    'solar': 10000,
-    'geothermal': 20000,
-    'rainwater': 5000,
-    'greenRoof': 8000,
-    'trippleGlazing': 6000,
-    'heatPump': 9000,
-    'smartHome': 4000
-  };
-  
-  return solutions.reduce((total, solution) => total + (prices[solution] || 0), 0);
-};
-
-/**
- * Calculate renewable energy cost
- */
-export const calculateRenewableEnergyCost = (type: string, size: number): number => {
-  const basePrices: Record<string, number> = {
-    'solar': 800,
-    'geothermal': 1500,
-    'heatPump': 1000,
-    'biomass': 700
-  };
-  
-  return (basePrices[type] || 800) * size;
-};
-
-/**
- * Calculate gate cost
- */
-export const calculateGateCost = (length: number, type: string = 'standard'): number => {
-  const basePrice = {
-    'metal': 250,
-    'wood': 150,
-    'composite': 200,
-    'automatic': 400
-  }[type] || 200;
-  
-  return basePrice * length;
-};
-
-/**
- * Convert string percentage to number for calculations
- */
-export const percentageToNumber = (value: string | number | undefined): number => {
+// Basic conversion function to ensure we're working with numbers
+export function ensureNumericValue(value: any, defaultValue: number = 0): number {
   if (typeof value === 'number') return value;
-  if (!value) return 0;
+  if (!value) return defaultValue;
   
-  // Remove % sign if present
-  const cleanValue = value.toString().replace('%', '').trim();
-  return parseFloat(cleanValue) || 0;
-};
-
-/**
- * Calculate windows cost
- */
-export const calculateWindowsCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'pvc': 350,
-    'aluminum': 500,
-    'wood': 600,
-    'steel': 550
-  }[type] || 400;
+  if (typeof value === 'string') {
+    // Remove currency symbols, commas, etc.
+    const cleanValue = value.replace(/[^0-9.-]+/g, '');
+    return parseFloat(cleanValue) || defaultValue;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return defaultValue;
+}
 
-/**
- * Calculate insulation cost
- */
-export const calculateInsulationCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'standard': 40,
-    'premium': 60,
-    'ecological': 75,
-    'highPerformance': 90
-  }[type] || 50;
+// Generic cost calculation function that takes a base amount and multiplies by a coefficient
+export function calculateCost(baseAmount: any, coefficient: number = 1): number {
+  return ensureNumericValue(baseAmount) * coefficient;
+}
+
+// Calculate structural costs
+export function calculateStructuralCost(formData: any, surfaceArea: number = 0): number {
+  const baseCost = 600; // Base cost per square meter
+  const surface = surfaceArea || ensureNumericValue(formData.surface, 0);
+  return surface * baseCost;
+}
+
+// Calculate masonry wall costs
+export function calculateMasonryWallCost(wallType: string, surfaceArea: number): number {
+  let coefficient = 1;
   
-  return costPerSquareMeter * area;
-};
-
-// Add additional calculation functions that were missing
-export const calculateElectricityCost = (type: string = 'standard', size: number): number => {
-  const costPerSquareMeter = {
-    'basic': 40,
-    'standard': 60, 
-    'premium': 85,
-    'smart': 120
-  }[type] || 60;
+  switch(wallType) {
+    case 'bricks':
+      coefficient = 1.2;
+      break;
+    case 'concrete':
+      coefficient = 1.0;
+      break;
+    case 'stone':
+      coefficient = 1.5;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * size;
-};
+  return 250 * surfaceArea * coefficient;
+}
 
-export const calculatePlumbingCost = (type: string = 'standard', size: number): number => {
-  const costPerSquareMeter = {
-    'basic': 35,
-    'standard': 50, 
-    'premium': 75
-  }[type] || 50;
+// Calculate floor costs
+export function calculateFloorCost(floorType: string, surfaceArea: number): number {
+  let coefficient = 1;
   
-  return costPerSquareMeter * size;
-};
-
-export const calculateHeatingCost = (type: string = 'standard', size: number): number => {
-  const costPerSquareMeter = {
-    'electric': 45,
-    'gas': 65,
-    'heatPump': 120,
-    'geothermal': 180
-  }[type] || 65;
+  switch(floorType) {
+    case 'concrete':
+      coefficient = 1.0;
+      break;
+    case 'wood':
+      coefficient = 1.2;
+      break;
+    case 'reinforced':
+      coefficient = 1.3;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * size;
-};
+  return 200 * surfaceArea * coefficient;
+}
 
-export const calculateAirConditioningCost = (type: string = 'standard', size: number): number => {
-  const costPerSquareMeter = {
-    'split': 80,
-    'central': 150,
-    'premium': 200
-  }[type] || 80;
+// Calculate demolition costs
+export function calculateDemolitionCost(demolitionType: string, surfaceArea: number): number {
+  let coefficient = 1;
   
-  return costPerSquareMeter * size;
-};
-
-export const calculateParquetCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'basic': 45,
-    'standard': 75,
-    'premium': 120,
-    'luxury': 180
-  }[type] || 75;
+  switch(demolitionType) {
+    case 'total':
+      coefficient = 1.5;
+      break;
+    case 'partial':
+      coefficient = 1.0;
+      break;
+    case 'selective':
+      coefficient = 1.2;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 100 * surfaceArea * coefficient;
+}
 
-export const calculateSoftFloorCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'vinyl': 25,
-    'carpet': 40,
-    'linoleum': 35,
-    'premium': 70
-  }[type] || 35;
+// Calculate electricity costs
+export function calculateElectricityCost(formData: any, surfaceArea?: number): number {
+  const surface = surfaceArea || ensureNumericValue(formData.surface, 0);
+  const complexity = formData.electricalComplexity || 'standard';
   
-  return costPerSquareMeter * area;
-};
-
-export const calculatePlasteringCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'basic': 25,
-    'standard': 35,
-    'premium': 50
-  }[type] || 35;
+  let coefficient = 1;
+  switch(complexity) {
+    case 'basic':
+      coefficient = 0.8;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'advanced':
+      coefficient = 1.3;
+      break;
+    case 'premium':
+      coefficient = 1.6;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 85 * surface * coefficient;
+}
 
-export const calculateInteriorCarpenteryCost = (type: string = 'standard', units: number): number => {
-  const costPerUnit = {
-    'basic': 500,
-    'standard': 800,
-    'premium': 1200,
-    'luxury': 2000
-  }[type] || 800;
+// Calculate plumbing costs
+export function calculatePlumbingCost(formData: any, surfaceArea?: number): number {
+  const surface = surfaceArea || ensureNumericValue(formData.surface, 0);
+  const bathrooms = ensureNumericValue(formData.bathrooms, 1);
   
-  return costPerUnit * units;
-};
+  return 70 * surface + (2500 * bathrooms);
+}
 
-export const calculatePaintingCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'basic': 20,
-    'standard': 30,
-    'premium': 50,
-    'decorative': 80
-  }[type] || 30;
+// Calculate heating costs
+export function calculateHeatingCost(formData: any, heatingType: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
   
-  return costPerSquareMeter * area;
-};
-
-export const calculateFloorTilingCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'ceramic': 60,
-    'porcelain': 80,
-    'natural': 150,
-    'luxury': 250
-  }[type] || 80;
+  switch(heatingType) {
+    case 'electric':
+      coefficient = 0.8;
+      break;
+    case 'gas':
+      coefficient = 1.0;
+      break;
+    case 'heat_pump':
+      coefficient = 1.5;
+      break;
+    case 'underfloor':
+      coefficient = 1.3;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 60 * surface * coefficient;
+}
 
-export const calculateWallTilingCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'ceramic': 50,
-    'porcelain': 70,
-    'glass': 130,
-    'mosaic': 200
-  }[type] || 70;
+// Calculate air conditioning costs
+export function calculateAirConditioningCost(formData: any, type: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
   
-  return costPerSquareMeter * area;
-};
-
-export const calculateDemolitionCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'light': 50,
-    'standard': 90,
-    'heavy': 150,
-    'structural': 250
-  }[type] || 90;
+  switch(type) {
+    case 'split':
+      coefficient = 0.8;
+      break;
+    case 'central':
+      coefficient = 1.5;
+      break;
+    case 'ducted':
+      coefficient = 1.3;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 100 * surface * coefficient;
+}
 
-export const calculateMasonryWallCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'brick': 180,
-    'block': 120,
-    'concrete': 150,
-    'stone': 350
-  }[type] || 150;
+// Calculate plastering costs
+export function calculatePlasteringCost(formData: any, plasterType: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
   
-  return costPerSquareMeter * area;
-};
-
-export const calculateFloorCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'wood': 150,
-    'concrete': 180,
-    'composite': 220
-  }[type] || 180;
+  switch(plasterType) {
+    case 'basic':
+      coefficient = 0.8;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.3;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 45 * surface * coefficient;
+}
 
-export const calculateStructuralFeatureCost = (feature: string, quantity: number): number => {
-  const unitCosts: Record<string, number> = {
-    'beam': 800,
-    'column': 600,
-    'foundation': 1200,
-    'slab': 250,
-    'wall': 350
-  };
+// Calculate interior carpentry costs
+export function calculateInteriorCarpenteryCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
   
-  return (unitCosts[feature] || 500) * quantity;
-};
-
-export const calculateLandscapingCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'basic': 30,
-    'standard': 50,
-    'premium': 100,
-    'luxury': 200
-  }[type] || 50;
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.8;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.5;
+      break;
+    default:
+      coefficient = 1.0;
+  }
   
-  return costPerSquareMeter * area;
-};
+  return 120 * surface * coefficient;
+}
 
-export const calculateFencingCost = (type: string = 'standard', length: number): number => {
-  const costPerMeter = {
-    'wire': 50,
-    'wood': 100,
-    'metal': 150,
-    'brick': 250
-  }[type] || 100;
+// Calculate parquet costs
+export function calculateParquetCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
+  
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.7;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.8;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 80 * surface * coefficient;
+}
+
+// Calculate soft floor costs (carpet, vinyl, etc.)
+export function calculateSoftFloorCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
+  
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.7;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.5;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 50 * surface * coefficient;
+}
+
+// Calculate floor tiling costs
+export function calculateFloorTilingCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
+  
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.8;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.7;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 90 * surface * coefficient;
+}
+
+// Calculate wall tiling costs
+export function calculateWallTilingCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
+  
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.8;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.5;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 80 * surface * coefficient;
+}
+
+// Calculate painting costs
+export function calculatePaintingCost(formData: any, quality: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.surface, 0);
+  let coefficient = 1;
+  
+  switch(quality) {
+    case 'basic':
+      coefficient = 0.7;
+      break;
+    case 'standard':
+      coefficient = 1.0;
+      break;
+    case 'premium':
+      coefficient = 1.4;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 35 * surface * coefficient;
+}
+
+// Calculate structural feature costs (beams, columns, etc.)
+export function calculateStructuralFeatureCost(featureType: string, quantity: number): number {
+  let baseCost = 0;
+  
+  switch(featureType) {
+    case 'beam':
+      baseCost = 300;
+      break;
+    case 'column':
+      baseCost = 500;
+      break;
+    case 'truss':
+      baseCost = 800;
+      break;
+    default:
+      baseCost = 400;
+  }
+  
+  return baseCost * quantity;
+}
+
+// Calculate roofing costs
+export function calculateRoofingCost(formData: any, roofingType: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.roofSurface, 0) || ensureNumericValue(formData.surface, 0) * 1.3;
+  let coefficient = 1;
+  
+  switch(roofingType) {
+    case 'tiles':
+      coefficient = 1.0;
+      break;
+    case 'slate':
+      coefficient = 1.5;
+      break;
+    case 'metal':
+      coefficient = 0.9;
+      break;
+    case 'flat':
+      coefficient = 1.2;
+      break;
+    default:
+      coefficient = 1.0;
+  }
+  
+  return 120 * surface * coefficient;
+}
+
+// Calculate landscaping costs
+export function calculateLandscapingCost(formData: any, gardenSize: number = 0): number {
+  const size = gardenSize || ensureNumericValue(formData.gardenSize, 0);
+  
+  if (size === 0) return 0;
+  
+  let baseCost = 30; // Base cost per square meter
+  
+  // Apply scaling for larger gardens
+  if (size > 500) {
+    baseCost = 25;
+  } else if (size > 1000) {
+    baseCost = 20;
+  }
+  
+  return baseCost * size;
+}
+
+// Calculate fencing costs
+export function calculateFencingCost(formData: any, fenceType: string = 'standard'): number {
+  const length = ensureNumericValue(formData.fenceLength, 0);
+  
+  if (length === 0) return 0;
+  
+  let costPerMeter = 90;
+  
+  switch(fenceType) {
+    case 'wood':
+      costPerMeter = 80;
+      break;
+    case 'metal':
+      costPerMeter = 120;
+      break;
+    case 'pvc':
+      costPerMeter = 70;
+      break;
+    case 'stone':
+      costPerMeter = 200;
+      break;
+    default:
+      costPerMeter = 90;
+  }
   
   return costPerMeter * length;
-};
+}
 
-export const calculateTerraceCost = (type: string = 'standard', area: number): number => {
-  const costPerSquareMeter = {
-    'concrete': 100,
-    'wood': 150,
-    'composite': 220,
-    'stone': 300
-  }[type] || 150;
+// Calculate terrace costs
+export function calculateTerraceCost(formData: any, terraceType: string = 'standard'): number {
+  const surface = ensureNumericValue(formData.terraceSurface, 0);
   
-  return costPerSquareMeter * area;
-};
+  if (surface === 0) return 0;
+  
+  let costPerMeter = 150;
+  
+  switch(terraceType) {
+    case 'wood':
+      costPerMeter = 180;
+      break;
+    case 'tile':
+      costPerMeter = 150;
+      break;
+    case 'concrete':
+      costPerMeter = 120;
+      break;
+    case 'stone':
+      costPerMeter = 250;
+      break;
+    default:
+      costPerMeter = 150;
+  }
+  
+  return costPerMeter * surface;
+}
 
-/**
- * Re-export facade calculation functions
- */
-export const calculateFacadeCost = calcFacadeCost;
-export const calculateDetailedFacadeCost = calcDetailedFacadeCost;
-export const calculateRoofingCost = calcRoofingCost;
-export const calculateRoofingRenovCost = calcRoofingRenovCost;
-export const calculateRoofFrameworkRenovCost = calcRoofFrameworkRenovCost;
-
-/**
- * Calculate new total amount with a new cost component
- */
-export const calculateNewMontantT = (currentMontantT: number | undefined, additionalCost: number): number => {
-  const current = currentMontantT || 0;
-  return current + additionalCost;
-};
-
+// Calculate gate costs
+export function calculateGateCost(formData: any, gateType: string = 'standard'): number {
+  let cost = 1500;
+  
+  switch(gateType) {
+    case 'manual':
+      cost = 1200;
+      break;
+    case 'automatic':
+      cost = 2500;
+      break;
+    case 'sliding':
+      cost = 3000;
+      break;
+    default:
+      cost = 1500;
+  }
+  
+  return cost;
+}

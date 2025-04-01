@@ -2,7 +2,7 @@
 // Export all calculation functions
 export * from './costBreakdown';
 export * from './detailedEstimation';
-export { calculateEstimation } from './estimationCalculator';
+export { generateEstimationResult as calculateEstimation } from './estimationCalculator';
 export * from './externalCosts';
 export * from './feeCosts';
 export * from './finishingCosts';

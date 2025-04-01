@@ -7,6 +7,9 @@ import { FormData } from '../types';
 interface ContactFormProps extends BaseFormProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
 }
 
 const ContactForm: React.FC<ContactFormProps> = (props) => {
@@ -16,7 +19,7 @@ const ContactForm: React.FC<ContactFormProps> = (props) => {
     updateFormData={props.updateFormData} 
     goToNextStep={props.goToNextStep} 
     goToPreviousStep={props.goToPreviousStep}
-    animationDirection={props.animationDirection as 'forward' | 'backward'}
+    animationDirection={props.animationDirection}
   />;
 };
 

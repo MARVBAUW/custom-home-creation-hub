@@ -6,15 +6,8 @@ import MessageDisplay from './components/conversational/MessageDisplay';
 import InputArea from './components/conversational/InputArea';
 import MessageProcessor from './components/conversational/MessageProcessor';
 import { FormData } from './types/formTypes';
+import { Message } from './types/conversationalTypes';
 import { useToast } from '@/hooks/use-toast';
-
-// Types pour les messages du chat
-export interface Message {
-  id: string;
-  type: 'system' | 'user' | 'assistant';
-  content: string;
-  options?: string[];
-}
 
 interface ConversationalEstimatorProps {
   onUserInput: (input: string) => void;
@@ -210,14 +203,27 @@ const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = ({
     }
   };
 
+  // Function to handle message processing
+  const handleProcessMessage = (processed: React.ReactNode) => {
+    // Handle the processed message
+    console.log("Message processed:", processed);
+  };
+
   return (
     <Card className="border rounded-lg overflow-hidden h-[500px] flex flex-col">
-      <MessageDisplay 
-        messages={messages} 
-        loading={loading} 
-        onOptionClick={handleOptionClick} 
-        messagesEndRef={messagesEndRef}
-      />
+      <div className="flex-1 overflow-y-auto p-4">
+        {messages.map((msg, index) => (
+          <MessageDisplay
+            key={msg.id || index}
+            message={msg}
+            messages={messages}
+            loading={loading}
+            onOptionClick={handleOptionClick}
+            messagesEndRef={messagesEndRef}
+          />
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
       
       <InputArea 
         userInput={userInput}
@@ -228,6 +234,8 @@ const ConversationalEstimator: React.FC<ConversationalEstimatorProps> = ({
       
       {/* Component to process user inputs - no visual rendering */}
       <MessageProcessor 
+        content={userInput}
+        onProcessed={handleProcessMessage}
         onUserInput={onUserInput}
         formData={formData}
         updateFormData={updateFormData}

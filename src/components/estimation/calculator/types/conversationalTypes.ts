@@ -14,6 +14,7 @@ export interface ConversationState {
   completedFields?: Record<string, any>;
   formData?: Record<string, any>;
   askedQuestions?: string[];
+  formProgress?: number;
 }
 
 export interface MessageDisplayProps {

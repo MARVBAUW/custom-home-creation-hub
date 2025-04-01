@@ -1,16 +1,8 @@
 
 import React from 'react';
-import { Message } from '../../types/conversationalTypes';
+import { Message, MessageDisplayProps } from '../../types/conversationalTypes';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-
-interface MessageDisplayProps {
-  message: Message;
-  messages: Message[];
-  loading: boolean;
-  onOptionClick: (option: string) => void;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
-}
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
   message,
