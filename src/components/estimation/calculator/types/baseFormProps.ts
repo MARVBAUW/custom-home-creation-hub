@@ -13,3 +13,50 @@ export interface BaseFormProps {
   defaultValues?: any;
   onSubmit?: (data: any) => void;
 }
+
+/**
+ * Extended props for contact forms
+ */
+export interface ContactFormProps extends BaseFormProps {
+  validateEmail?: boolean;
+  requirePhone?: boolean;
+  showCompanyFields?: boolean;
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+/**
+ * Extended props for client type forms
+ */
+export interface ClientTypeFormProps extends BaseFormProps {
+  clientTypes?: string[];
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+/**
+ * Extended props for project type forms  
+ */
+export interface ProjectTypeFormProps extends BaseFormProps {
+  projectTypes?: string[];
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+/**
+ * Extended props for professional project forms
+ */
+export interface ProfessionalFormProps extends BaseFormProps {
+  buildingTypes?: string[];
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+/**
+ * Extended props for estimation type forms
+ */
+export interface EstimationTypeFormProps extends BaseFormProps {
+  estimationTypes?: string[];
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}

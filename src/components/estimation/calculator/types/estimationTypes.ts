@@ -47,6 +47,7 @@ export interface FeeCosts {
   other: number;
   total: number;
   masterBuilderFees?: number; // Added as optional
+  safetyCoordination?: number; // Added as optional
 }
 
 export interface OtherCosts {
@@ -74,4 +75,29 @@ export interface CategoryCost {
   percentage: number;
   name?: string; // Added as optional
   category?: string; // Added as optional
+  amount?: number; // Added as optional for different calculation formats
+}
+
+// Additional types for SEO enhancement
+export interface EstimationSEOData {
+  '@context': 'https://schema.org';
+  '@type': 'Service';
+  name: string;
+  description: string;
+  provider: {
+    '@type': 'ProfessionalService';
+    name: string;
+    url: string;
+    areaServed: string[];
+  };
+  offers: {
+    '@type': 'Offer';
+    price: string;
+    priceCurrency: string;
+  };
+  estimatedCost: {
+    '@type': 'MonetaryAmount';
+    currency: string;
+    value: number;
+  };
 }

@@ -62,3 +62,27 @@ export const formatNumber = (value: number, precision: number = 0): string => {
     maximumFractionDigits: precision
   }).format(value);
 };
+
+// Convert string array to typed tuple for function arguments
+export const toTypedTuple = (arr: string[]): [string, ...string[]] => {
+  if (!arr.length) return [''];
+  return [arr[0], ...arr.slice(1)];
+};
+
+// Convert form data to types needed for calculations
+export const toNumberOrDefault = (value: string | number | undefined, defaultVal: number = 0): number => {
+  if (value === undefined || value === '') return defaultVal;
+  const num = typeof value === 'string' ? Number(value) : value;
+  return isNaN(num) ? defaultVal : num;
+};
+
+// Add string to number conversion with safety checks
+export const stringToNumber = (value: string): number => {
+  const num = Number(value);
+  return isNaN(num) ? 0 : num;
+};
+
+// Add number to string conversion with safety checks
+export const numberToString = (value: number): string => {
+  return String(value || 0);
+};
