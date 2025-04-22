@@ -26,4 +26,3 @@ Allow: /
 
 User-agent: Yandexbot
 Allow: /
-
