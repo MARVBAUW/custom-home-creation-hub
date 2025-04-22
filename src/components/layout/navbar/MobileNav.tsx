@@ -35,9 +35,11 @@ const MobileNav = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
-      <Container className="flex flex-col min-h-[calc(100vh-4rem)] py-6 space-y-4">
-        <ul className="overflow-y-auto flex-grow">
+    // Changement ici : top-16 => top-24 pour éviter la superposition avec la bannière
+    <div className="fixed top-24 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
+      <Container className="flex flex-col min-h-[calc(100vh-6rem)] py-6 space-y-4">
+        {/* Changement ici : overflow-y-auto flex-grow => flex-grow (on retire overflow pour éviter découpage */}
+        <ul className="flex-grow">
           {navLinks.map(item => {
             // Doit-on afficher la section déployée ?
             const isOpened = openDropdown === null || openDropdown === item.name;
@@ -150,3 +152,4 @@ const MobileNav = ({
 };
 
 export default MobileNav;
+
