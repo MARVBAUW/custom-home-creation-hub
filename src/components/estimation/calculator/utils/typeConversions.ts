@@ -5,28 +5,34 @@
 
 /**
  * Ensure a value is a number - useful for handling form inputs
+ * @param value The value to convert to a number
+ * @param defaultValue Optional default value if conversion fails (defaults to 0)
  */
-export const ensureNumber = (value: any): number => {
+export const ensureNumber = (value: any, defaultValue = 0): number => {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     const parsed = parseFloat(value);
-    return isNaN(parsed) ? 0 : parsed;
+    return isNaN(parsed) ? defaultValue : parsed;
   }
-  return 0;
+  return defaultValue;
 };
 
 /**
  * Ensure a value is a string - useful for handling form inputs
+ * @param value The value to convert to a string
+ * @param defaultValue Optional default value if value is null/undefined
  */
-export const ensureString = (value: any): string => {
-  if (value === undefined || value === null) return '';
+export const ensureString = (value: any, defaultValue = ''): string => {
+  if (value === undefined || value === null) return defaultValue;
   return String(value);
 };
 
 /**
  * Ensure a value is a boolean - useful for handling form inputs
+ * @param value The value to convert to a boolean
+ * @param defaultValue Optional default value if conversion is ambiguous
  */
-export const ensureBoolean = (value: any): boolean => {
+export const ensureBoolean = (value: any, defaultValue = false): boolean => {
   if (typeof value === 'boolean') return value;
   if (typeof value === 'string') {
     return value.toLowerCase() === 'true' || value === '1';
@@ -34,7 +40,7 @@ export const ensureBoolean = (value: any): boolean => {
   if (typeof value === 'number') {
     return value === 1;
   }
-  return false;
+  return defaultValue;
 };
 
 /**

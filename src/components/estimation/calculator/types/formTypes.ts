@@ -1,31 +1,31 @@
 
-// Basic form data structure
-export interface FormData {
-  clientType: string;
-  projectType: string;
-  surface: number;
-  city: string;
-  location: string;
-  bedrooms: number;
-  bathrooms: number;
-  budget: number;
-  constructionType: string;
-  [key: string]: any;
-}
+import { ReactNode } from 'react';
+import { FormData } from './estimationTypes';
 
-// Base props for all form components
 export interface BaseFormProps {
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
+  animationDirection: string;
   defaultValues?: any;
   onSubmit?: (data: any) => void;
 }
 
-// Project types
-export type ProjectType = 'construction' | 'renovation' | 'extension';
+export interface StepProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: string;
+}
 
-// Client types
-export type ClientType = 'individual' | 'professional';
+export interface ButtonProps {
+  children: ReactNode;
+  onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'link';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  className?: string;
+}

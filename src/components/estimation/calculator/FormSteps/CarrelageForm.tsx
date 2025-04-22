@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,7 +30,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
 
   const handleSubmit = () => {
     // Get the surface area
-    const surface = ensureNumber(formData.surface, 0);
+    const surface = ensureNumber(formData.surface);
     
     // Calculate floor tiling cost based on selected options
     const floorTilingCost = floorTileType !== 'non_concerne' 
@@ -49,7 +48,7 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
       floorTileType,
       floorTilePercentage,
       wallTileType,
-      montantT: ensureNumber(formData.montantT, 0) + additionalCost
+      montantT: ensureNumber(formData.montantT) + additionalCost
     });
     
     // Move to the next step

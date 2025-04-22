@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
-import { calculateRoofFrameworkRenovCost, ensureNumber } from '../utils/montantUtils';
+import { calculateRoofFrameworkRenovCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 
 // Schema for the form validation
 const formSchema = z.object({
@@ -50,7 +51,7 @@ const CharpenteRenovForm: React.FC<BaseFormProps> = ({
     updateFormData({
       roofType: values.roofType,
       roofArea: ensureNumber(values.roofArea),
-      montantT: ensureNumber(formData.montantT, 0) + roofCost,
+      montantT: ensureNumber(formData.montantT) + roofCost,
     });
     
     // Move to next step

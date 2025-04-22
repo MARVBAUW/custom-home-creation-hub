@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,12 +20,12 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
   );
   
   const [hasAirConditioning, setHasAirConditioning] = useState<boolean>(
-    ensureBoolean(formData.hasAirConditioning, false)
+    ensureBoolean(formData.hasAirConditioning)
   );
 
   const handleSubmit = () => {
     // Get the surface area
-    const surface = ensureNumber(formData.surface, 0);
+    const surface = ensureNumber(formData.surface);
     
     // Calculate the heating cost based on type and surface
     const heatingCost = calculateHeatingCost(heatingType, surface);
@@ -41,7 +40,7 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
     updateFormData({
       heatingType,
       hasAirConditioning,
-      montantT: ensureNumber(formData.montantT, 0) + additionalCost
+      montantT: ensureNumber(formData.montantT) + additionalCost
     });
     
     // Move to the next step
