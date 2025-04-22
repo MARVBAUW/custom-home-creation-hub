@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
 import { calculateInteriorCarpenteryCost } from '../utils/montantUtils';
 import { ensureNumber } from '../utils/typeConversions';
-import { DoorClosed, Columns, BookMarked } from 'lucide-react';
+import { Door, Separator, CheckCircle } from 'lucide-react';
 
 const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
   formData,
@@ -17,36 +17,24 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [doorType, setDoorType] = useState<string>(
-    formData.doorType || 'base'
+  const [carpentryType, setCarpentryType] = useState<string>(
+    formData.interiorCarpentryType || 'standard'
   );
   
-  const [hasMoldings, setHasMoldings] = useState<boolean>(
-    formData.hasMoldings || false
-  );
-  
-  const [hasCustomFurniture, setHasCustomFurniture] = useState<boolean>(
-    formData.hasCustomFurniture || false
+  const [doorCount, setDoorCount] = useState<number>(
+    Number(formData.interiorDoorCount || 5)
   );
 
   const handleSubmit = () => {
-    // Get the surface area
-    const surface = ensureNumber(formData.surface, 0);
+    // Calculate the cost based on selected options
+    const carpentryTotalCost = calculateInteriorCarpenteryCost(carpentryType, doorCount);
     
-    // Calculate the cost based on interior carpentry options and surface
-    const additionalCost = calculateInteriorCarpenteryCost(
-      doorType,
-      hasMoldings,
-      hasCustomFurniture,
-      surface
-    );
-
-    // Update form data with carpentry options and additional cost
+    // Update form data with selections and calculated cost
     updateFormData({
-      doorType,
-      hasMoldings,
-      hasCustomFurniture,
-      montantT: (formData.montantT || 0) + additionalCost
+      interiorCarpentryType: carpentryType,
+      interiorDoorCount: doorCount,
+      interiorCarpentryTotalCost: carpentryTotalCost,
+      montantT: ensureNumber(formData.montantT) + carpentryTotalCost
     });
     
     // Move to the next step
@@ -58,127 +46,109 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
     }`}>
       <div className="space-y-6">
-        <h3 className="text-lg font-medium mb-4">Menuiseries Intérieures</h3>
-        
-        <div className="mb-8">
-          <Label className="mb-2 block">Type de portes intérieures</Label>
-          <RadioGroup 
-            value={doorType} 
-            onValueChange={setDoorType}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'base' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setDoorType('base')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <DoorClosed className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="base" id="door-base" className="sr-only" />
-                <Label htmlFor="door-base" className="font-medium">Basique</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Portes intérieures standard
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'standing' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setDoorType('standing')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <DoorClosed className="h-8 w-8 text-blue-700 mb-2" />
-                <RadioGroupItem value="standing" id="door-standing" className="sr-only" />
-                <Label htmlFor="door-standing" className="font-medium">Standing</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Portes intérieures de qualité intermédiaire
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'premium' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setDoorType('premium')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <DoorClosed className="h-8 w-8 text-blue-900 mb-2" />
-                <RadioGroupItem value="premium" id="door-premium" className="sr-only" />
-                <Label htmlFor="door-premium" className="font-medium">Haut de gamme</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Portes intérieures premium
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${doorType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setDoorType('non_concerne')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <RadioGroupItem value="non_concerne" id="door-non_concerne" className="sr-only" />
-                <Label htmlFor="door-non_concerne" className="font-medium">Non concerné</Label>
-                <p className="text-xs text-gray-500 mt-1">
-                  Pas de portes intérieures à installer
-                </p>
-              </CardContent>
-            </Card>
-          </RadioGroup>
+        <div className="flex items-center space-x-2 text-2xl font-semibold text-primary">
+          <Door className="h-6 w-6" />
+          <h2>Menuiseries Intérieures</h2>
         </div>
         
-        {doorType !== 'non_concerne' && (
-          <div className="mb-8">
-            <Label className="mb-4 block">Options supplémentaires</Label>
+        <Card>
+          <CardContent className="pt-6">
             <div className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="moldings" 
-                  checked={hasMoldings}
-                  onCheckedChange={(checked) => setHasMoldings(checked === true)}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <Label htmlFor="moldings" className="text-sm font-medium flex items-center">
-                    <Columns className="h-4 w-4 mr-2 text-blue-500" />
-                    Moulures
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Ajout de moulures décoratives
-                  </p>
-                </div>
+              <div>
+                <Label className="text-base">Type de menuiseries intérieures</Label>
+                <RadioGroup
+                  defaultValue={carpentryType}
+                  onValueChange={setCarpentryType}
+                  className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                >
+                  <Card
+                    className={`border-2 p-4 rounded-lg transition-colors cursor-pointer ${
+                      carpentryType === 'standard'
+                        ? 'border-primary ring-2 ring-primary'
+                        : 'border-muted'
+                    }`}
+                  >
+                    <RadioGroupItem value="standard" id="carpentry-standard" className="sr-only" />
+                    <Label
+                      htmlFor="carpentry-standard"
+                      className="font-semibold text-lg leading-none peer-data-[state=checked]:text-primary"
+                    >
+                      Standard
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Menuiseries fonctionnelles et économiques
+                    </p>
+                  </Card>
+                  
+                  <Card
+                    className={`border-2 p-4 rounded-lg transition-colors cursor-pointer ${
+                      carpentryType === 'premium'
+                        ? 'border-primary ring-2 ring-primary'
+                        : 'border-muted'
+                    }`}
+                  >
+                    <RadioGroupItem value="premium" id="carpentry-premium" className="sr-only" />
+                    <Label
+                      htmlFor="carpentry-premium"
+                      className="font-semibold text-lg leading-none peer-data-[state=checked]:text-primary"
+                    >
+                      Premium
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Menuiseries de qualité supérieure avec finitions soignées
+                    </p>
+                  </Card>
+                  
+                  <Card
+                    className={`border-2 p-4 rounded-lg transition-colors cursor-pointer ${
+                      carpentryType === 'luxury'
+                        ? 'border-primary ring-2 ring-primary'
+                        : 'border-muted'
+                    }`}
+                  >
+                    <RadioGroupItem value="luxury" id="carpentry-luxury" className="sr-only" />
+                    <Label
+                      htmlFor="carpentry-luxury"
+                      className="font-semibold text-lg leading-none peer-data-[state=checked]:text-primary"
+                    >
+                      Luxe
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      Menuiseries haut de gamme avec matériaux nobles et design personnalisé
+                    </p>
+                  </Card>
+                </RadioGroup>
               </div>
               
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="custom-furniture" 
-                  checked={hasCustomFurniture}
-                  onCheckedChange={(checked) => setHasCustomFurniture(checked === true)}
-                />
-                <div className="grid gap-1.5 leading-none">
-                  <Label htmlFor="custom-furniture" className="text-sm font-medium flex items-center">
-                    <BookMarked className="h-4 w-4 mr-2 text-blue-500" />
-                    Ameublements spécifiques
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Installation de meubles sur mesure ou encastrés
-                  </p>
+              <Separator className="my-4" />
+              
+              <div>
+                <Label className="text-base">Nombre de portes intérieures</Label>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {doorCount} portes
+                  </span>
                 </div>
+                <Slider
+                  defaultValue={[5]}
+                  max={15}
+                  min={1}
+                  step={1}
+                  onValueChange={(value) => setDoorCount(value[0])}
+                />
+              </div>
+              
+              <div className="mt-6 flex justify-between">
+                <Button variant="outline" onClick={goToPreviousStep}>
+                  Précédent
+                </Button>
+                <Button onClick={handleSubmit}>
+                  Continuer
+                </Button>
               </div>
             </div>
-          </div>
-        )}
-        
-        <div className="flex justify-between pt-4">
-          <Button variant="outline" onClick={goToPreviousStep}>
-            Précédent
-          </Button>
-          <Button onClick={handleSubmit}>
-            Continuer
-          </Button>
-        </div>
-        
-        {formData.montantT && (
-          <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
-          </div>
-        )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

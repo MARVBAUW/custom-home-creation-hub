@@ -1,358 +1,225 @@
-import React from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, ArrowRight, Hammer, HardHat, AlertTriangle } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ArrowLeft, ArrowRight, Trash2 } from 'lucide-react';
 import { calculateDemolitionCost } from '../utils/montantUtils';
 import { ensureNumber } from '../utils/typeConversions';
 
-// Define the checkbox items for demolition types
+// Sample demolition types
 const demolitionTypes = [
-  { id: 'noDemolition', label: 'PAS DE DEMOLITION', value: 'PAS DE DEMOLITION' },
-  { id: 'grossOeuvre', label: 'GROS OEUVRE (MACONNERIE, DALLE..)', value: 'GROS OEUVRE (MACONNERIE, DALLE..)' },
-  { id: 'facade', label: 'REVETEMENT DE FACADE', value: 'REVETEMENT DE FACADE' },
-  { id: 'platrerie', label: 'PLATRERIE', value: 'PLATRERIE' },
-  { id: 'sol', label: 'REVETEMENTS DE SOL', value: 'REVETEMENTS DE SOL' },
-  { id: 'menuiseriesInt', label: 'MENUISERIES INTERIEURES', value: 'MENUISERIES INTERIEURES' },
-  { id: 'menuiseriesExt', label: 'MENUISERIES EXTERIEURES', value: 'MENUISERIES EXTERIEURES' },
-  { id: 'plomberie', label: 'PLOMBERIE', value: 'PLOMBERIE' },
-  { id: 'sanitaire', label: 'EQUIPEMENTS SANITAIRES', value: 'EQUIPEMENTS SANITAIRES' },
-  { id: 'electricite', label: 'ELECTRICITE', value: 'ELECTRICITE' },
-  { id: 'clim', label: 'CLIMATISATION', value: 'CLIMATISATION' },
-  { id: 'ventilation', label: 'VENTILATION', value: 'VENTILATION' },
-  { id: 'chauffage', label: 'CHAUFFAGE', value: 'CHAUFFAGE' },
-  { id: 'totalite', label: 'TOTALITE HORS GROS OEUVRE', value: 'TOTALITE HORS GROS OEUVRE' }
+  { id: 'TOTALE', label: 'Démolition totale', description: 'Démolition complète de la structure existante' },
+  { id: 'PARTIELLE', label: 'Démolition partielle', description: 'Démolition de certaines parties du bâtiment' },
+  { id: 'NON CONCERNE', label: 'Non concerné', description: 'Pas de démolition nécessaire' }
 ];
 
-// Schema for the form validation
-const formSchema = z.object({
-  demolitionTypes: z.array(z.string()).nonempty("Veuillez sélectionner au moins une option"),
-  percentages: z.record(z.string().optional()),
-  totalArea: z.string().optional(),
-});
-
-type FormSchemaType = z.infer<typeof formSchema>;
-
-const DemolitionForm: React.FC<BaseFormProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep, 
+const DemolitionForm: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep,
   goToPreviousStep,
-  animationDirection 
+  animationDirection
 }) => {
-  // Initialize form with react-hook-form
-  const form = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      demolitionTypes: formData.demolitionTypes?.length 
-        ? formData.demolitionTypes 
-        : ['PAS DE DEMOLITION'],
-      percentages: formData.demolitionPercentages 
-        ? Object.entries(formData.demolitionPercentages).reduce((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {} as Record<string, string>)
-        : {},
-      totalArea: formData.demolitionTotalArea?.toString() || "",
-    },
-  });
+  const [demolitionType, setDemolitionType] = useState<string>(
+    formData.demolitionType || 'NON CONCERNE'
+  );
+  
+  const [demolitionArea, setDemolitionArea] = useState<string>(
+    formData.demolitionArea ? String(formData.demolitionArea) : ''
+  );
+  
+  const [wasteOptions, setWasteOptions] = useState<string[]>(
+    Array.isArray(formData.wasteOptions) ? formData.wasteOptions : (formData.wasteOptions ? [formData.wasteOptions as string] : [])
+  );
+  
+  const [areaValues, setAreaValues] = useState<Record<string, string>>(
+    formData.wasteOptionAreas || {}
+  );
 
-  // For checking if a demolition type is selected
-  const selectedTypes = form.watch('demolitionTypes');
-  
-  // Function to check if "PAS DE DEMOLITION" is selected
-  const isNoDemolitionSelected = selectedTypes.includes('PAS DE DEMOLITION');
-  
-  // Function to handle demolition type changes
-  const handleDemolitionTypeChange = (checked: boolean, value: string) => {
-    const currentValues = form.getValues('demolitionTypes');
-    
-    // Handle "PAS DE DEMOLITION" special case
-    if (value === 'PAS DE DEMOLITION' && checked) {
-      // If 'PAS DE DEMOLITION' is checked, uncheck all others
-      form.setValue('demolitionTypes', ['PAS DE DEMOLITION']);
-    } else if (checked) {
-      // If any other option is checked, uncheck 'PAS DE DEMOLITION'
-      const filteredValues = currentValues.filter(v => v !== 'PAS DE DEMOLITION');
-      if (filteredValues.length > 0) {
-        form.setValue('demolitionTypes', [...filteredValues, value]);
-      } else {
-        form.setValue('demolitionTypes', [value]);
-      }
+  // Toggle a waste option
+  const toggleWasteOption = (option: string) => {
+    if (wasteOptions.includes(option)) {
+      setWasteOptions(wasteOptions.filter(item => item !== option));
     } else {
-      // If unchecked, simply remove the value
-      form.setValue('demolitionTypes', currentValues.filter(v => v !== value));
-      
-      // If no options left, default to 'PAS DE DEMOLITION'
-      if (form.getValues('demolitionTypes').length === 0) {
-        form.setValue('demolitionTypes', ['PAS DE DEMOLITION']);
-      }
+      setWasteOptions([...wasteOptions, option]);
     }
   };
 
-  // Function to handle form submission
-  const onSubmit = (values: FormSchemaType) => {
-    // Skip calculations if 'PAS DE DEMOLITION' is selected
-    if (values.demolitionTypes.includes('PAS DE DEMOLITION')) {
-      updateFormData({
-        demolitionTypes: values.demolitionTypes,
-        demolitionPercentages: {},
-        demolitionTotalArea: 0,
-        demolitionCost: 0,
-      });
-      goToNextStep();
-      return;
+  // Update area value for a waste option
+  const updateAreaValue = (option: string, value: string) => {
+    setAreaValues({
+      ...areaValues,
+      [option]: value
+    });
+  };
+
+  const handleSubmit = () => {
+    // Calculate demolition cost
+    let cost = 0;
+    if (demolitionType !== 'NON CONCERNE') {
+      cost = calculateDemolitionCost(demolitionType, ensureNumber(demolitionArea));
     }
     
-    // Get the total project surface
-    const projectSurface = ensureNumber(formData.surface);
+    // Add waste management costs (simplified example)
+    const wasteCosts: Record<string, number> = {};
+    let totalWasteCost = 0;
     
-    // Convert string percentages to numbers
-    const percentagesAsNumbers: Record<string, number> = {};
-    Object.entries(values.percentages || {}).forEach(([key, value]) => {
-      percentagesAsNumbers[key] = ensureNumber(value);
+    wasteOptions.forEach(option => {
+      const area = ensureNumber(areaValues[option], 0);
+      // Sample calculation: €50 per square meter for waste management
+      const wasteCost = area * 50;
+      wasteCosts[option] = wasteCost;
+      totalWasteCost += wasteCost;
     });
     
-    // Calculate the demolition cost for each selected type
-    let totalDemolitionCost = 0;
-    const costs: Record<string, number> = {};
-    
-    values.demolitionTypes.forEach(type => {
-      if (type !== 'PAS DE DEMOLITION' && type !== 'TOTALITE HORS GROS OEUVRE') {
-        const percentage = percentagesAsNumbers[type] || 0;
-        const cost = calculateDemolitionCost(type, projectSurface, percentage);
-        costs[type] = cost;
-        totalDemolitionCost += cost;
-      } else if (type === 'TOTALITE HORS GROS OEUVRE') {
-        const area = ensureNumber(values.totalArea);
-        const cost = calculateDemolitionCost(type, area, 100); // 100% for totalite
-        costs[type] = cost;
-        totalDemolitionCost += cost;
-      }
-    });
-    
-    // Update form data with values and calculated cost
+    const totalCost = cost + totalWasteCost;
+
+    // Update form data
     updateFormData({
-      demolitionTypes: values.demolitionTypes,
-      demolitionPercentages: percentagesAsNumbers,
-      demolitionTotalArea: ensureNumber(values.totalArea),
-      demolitionCost: totalDemolitionCost,
-      demolitionDetailedCosts: costs,
-      montantT: ensureNumber(formData.montantT) + totalDemolitionCost
+      demolitionType,
+      demolitionArea: ensureNumber(demolitionArea),
+      demolitionCost: cost,
+      wasteOptions: wasteOptions.length > 0 ? wasteOptions : [],
+      wasteOptionAreas: areaValues,
+      wasteManagementCosts: wasteCosts,
+      wasteTotalCost: totalWasteCost,
+      montantT: ensureNumber(formData.montantT) + totalCost
     });
     
     goToNextStep();
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center space-x-2 text-2xl font-semibold text-primary">
-        <Hammer className="h-6 w-6" />
-        <h2>Démolition et dépose</h2>
+    <div className={`transform transition-all duration-300 ${
+      animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
+    }`}>
+      <div className="space-y-6">
+        <h3 className="text-lg font-medium flex items-center gap-2">
+          <Trash2 className="h-5 w-5 text-red-500" />
+          Démolition
+        </h3>
+        
+        <div className="mb-6">
+          <Label className="text-base mb-2 block">Type de démolition</Label>
+          <RadioGroup
+            value={demolitionType}
+            onValueChange={setDemolitionType}
+            className="grid grid-cols-1 gap-4"
+          >
+            {demolitionTypes.map(type => (
+              <Card
+                key={type.id}
+                className={`cursor-pointer transition-all ${
+                  demolitionType === type.id ? 'border-red-500 bg-red-50' : ''
+                }`}
+                onClick={() => setDemolitionType(type.id)}
+              >
+                <CardContent className="p-4 flex items-center justify-between">
+                  <div>
+                    <RadioGroupItem value={type.id} id={type.id} className="sr-only" />
+                    <Label htmlFor={type.id} className="font-medium cursor-pointer">
+                      {type.label}
+                    </Label>
+                    <p className="text-sm text-gray-500">{type.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </RadioGroup>
+        </div>
+        
+        {demolitionType !== 'NON CONCERNE' && (
+          <div className="mb-6">
+            <Label htmlFor="demolitionArea" className="text-base mb-2 block">
+              Surface à démolir (m²)
+            </Label>
+            <Input
+              id="demolitionArea"
+              type="number"
+              value={demolitionArea}
+              onChange={(e) => setDemolitionArea(e.target.value)}
+              placeholder="Surface en m²"
+              min="0"
+            />
+          </div>
+        )}
+        
+        {demolitionType !== 'NON CONCERNE' && (
+          <div className="mb-6">
+            <Label className="text-base mb-2 block">Gestion des déchets</Label>
+            <div className="space-y-3">
+              {['Tri sélectif', 'Evacuation gravats', 'Recyclage'].map(option => (
+                <Card
+                  key={option}
+                  className={`cursor-pointer transition-all ${
+                    wasteOptions.includes(option) ? 'border-red-500 bg-red-50' : ''
+                  }`}
+                  onClick={() => toggleWasteOption(option)}
+                >
+                  <CardContent className="p-4 flex items-center justify-between">
+                    <div>
+                      <Checkbox
+                        id={option}
+                        checked={wasteOptions.includes(option)}
+                        onCheckedChange={() => {}}
+                        className="mr-2"
+                      />
+                      <Label htmlFor={option} className="font-medium cursor-pointer">
+                        {option}
+                      </Label>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        {wasteOptions.length > 0 && (
+          <div className="mb-6">
+            <Label className="text-base mb-2 block">Surfaces concernées (m²)</Label>
+            <div className="space-y-3">
+              {wasteOptions.map(option => (
+                <div key={option}>
+                  <Label htmlFor={`area-${option}`} className="block text-sm font-medium">
+                    {option}
+                  </Label>
+                  <Input
+                    id={`area-${option}`}
+                    type="number"
+                    value={areaValues[option] || ''}
+                    onChange={(e) => updateAreaValue(option, e.target.value)}
+                    placeholder="Surface en m²"
+                    min="0"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        <div className="flex justify-between pt-4">
+          <Button
+            variant="outline"
+            onClick={goToPreviousStep}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Précédent
+          </Button>
+          <Button
+            onClick={handleSubmit}
+            className="flex items-center gap-2"
+          >
+            Suivant
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-      
-      <Card>
-        <CardContent className="pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="bg-amber-50 p-4 rounded-md border border-amber-200 mb-6">
-                <div className="flex items-center text-amber-700 mb-2">
-                  <AlertTriangle className="h-5 w-5 mr-2" />
-                  <h3 className="font-medium">Instructions</h3>
-                </div>
-                <p className="text-sm text-amber-700">
-                  Indiquez les pourcentages correspondant aux parties à démolir. Par exemple, la démolition de la moitié des revêtements de façade équivaut à 50%.
-                </p>
-              </div>
-              
-              <FormField
-                control={form.control}
-                name="demolitionTypes"
-                render={() => (
-                  <FormItem>
-                    <div className="mb-4">
-                      <FormLabel className="text-base">Démolition / Dépose *</FormLabel>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {demolitionTypes.map((item) => (
-                        <FormField
-                          key={item.id}
-                          control={form.control}
-                          name="demolitionTypes"
-                          render={({ field }) => {
-                            return (
-                              <FormItem
-                                key={item.id}
-                                className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4"
-                              >
-                                <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(item.value)}
-                                    onCheckedChange={(checked) => {
-                                      handleDemolitionTypeChange(!!checked, item.value);
-                                    }}
-                                  />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                  <FormLabel className="text-sm font-medium">
-                                    {item.label}
-                                  </FormLabel>
-                                </div>
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      ))}
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              {/* Show percentage inputs for selected demolition types except 'PAS DE DEMOLITION' and 'TOTALITE HORS GROS OEUVRE' */}
-              {!isNoDemolitionSelected && (
-                <div className="space-y-4 pt-4">
-                  <h3 className="text-lg font-medium">Proportions des existants à démolir</h3>
-                  <div className="grid grid-cols-1 gap-4">
-                    {selectedTypes.map((type) => {
-                      if (type !== 'PAS DE DEMOLITION' && type !== 'TOTALITE HORS GROS OEUVRE') {
-                        return (
-                          <FormField
-                            key={type}
-                            control={form.control}
-                            name={`percentages.${type}`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{type} (% à démolir)</FormLabel>
-                                <FormControl>
-                                  <Input
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    placeholder="Pourcentage (0-100)"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
-              )}
-              
-              {/* Show total area input if 'TOTALITE HORS GROS OEUVRE' is selected */}
-              {selectedTypes.includes('TOTALITE HORS GROS OEUVRE') && (
-                <FormField
-                  control={form.control}
-                  name="totalArea"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Surface de plancher des existants à démolir (m²)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          placeholder="Surface en m²"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-              
-              {/* Cost calculation summary */}
-              {!isNoDemolitionSelected && (
-                <div className="rounded-md bg-slate-50 p-4 mt-4">
-                  <div className="flex items-center">
-                    <HardHat className="h-5 w-5 mr-2 text-orange-600" />
-                    <span className="font-medium">Coût estimé de démolition: </span> 
-                  </div>
-                  
-                  {/* Show cost estimate for each selected type */}
-                  <div className="mt-2 space-y-1">
-                    {selectedTypes.map((type) => {
-                      if (type !== 'PAS DE DEMOLITION') {
-                        let cost = 0;
-                        
-                        if (type === 'TOTALITE HORS GROS OEUVRE') {
-                          const area = ensureNumber(form.watch('totalArea'));
-                          cost = calculateDemolitionCost(type, area, 100);
-                        } else {
-                          const percentage = ensureNumber(form.watch(`percentages.${type}`));
-                          cost = calculateDemolitionCost(type, ensureNumber(formData.surface), percentage);
-                        }
-                        
-                        return (
-                          <div key={type} className="flex justify-between text-sm">
-                            <span>{type}:</span>
-                            <span className="font-medium">{cost.toLocaleString()} €</span>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                    
-                    {/* Total cost */}
-                    <div className="flex justify-between font-medium pt-2 border-t mt-2">
-                      <span>TOTAL:</span>
-                      <span className="text-primary">
-                        {selectedTypes.reduce((total, type) => {
-                          if (type !== 'PAS DE DEMOLITION') {
-                            let cost = 0;
-                            
-                            if (type === 'TOTALITE HORS GROS OEUVRE') {
-                              const area = ensureNumber(form.watch('totalArea'));
-                              cost = calculateDemolitionCost(type, area, 100);
-                            } else {
-                              const percentage = ensureNumber(form.watch(`percentages.${type}`));
-                              cost = calculateDemolitionCost(type, ensureNumber(formData.surface), percentage);
-                            }
-                            
-                            return total + cost;
-                          }
-                          return total;
-                        }, 0).toLocaleString()} €
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex justify-between pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={goToPreviousStep}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Précédent
-                </Button>
-                <Button 
-                  type="submit"
-                  className="flex items-center gap-2 bg-primary"
-                >
-                  Suivant
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
     </div>
   );
 };

@@ -11,3 +11,6 @@ export * from './materialCosts';
 export * from './simpleEstimation';
 export * from './structuralCosts';
 export * from './technicalCosts';
+
+// Re-export calculateEstimationData for backwards compatibility
+export { calculateEstimationData } from '../calculationUtils';

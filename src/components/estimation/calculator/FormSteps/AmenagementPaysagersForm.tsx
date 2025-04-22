@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -76,30 +77,30 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
 
     // Calculate landscaping costs
     if (landscapingTypes.includes('UN PEU') && landscapingArea) {
-      additionalCost += calculateLandscapingCost('UN PEU', landscapingArea);
+      additionalCost += calculateLandscapingCost('UN PEU', ensureNumber(landscapingArea));
     }
     
     if (landscapingTypes.includes('BEAUCOUP') && landscapingArea) {
-      additionalCost += calculateLandscapingCost('BEAUCOUP', landscapingArea);
+      additionalCost += calculateLandscapingCost('BEAUCOUP', ensureNumber(landscapingArea));
     }
     
     if (landscapingTypes.includes('PASSIONNEMENT') && landscapingArea) {
-      additionalCost += calculateLandscapingCost('PASSIONNEMENT', landscapingArea);
+      additionalCost += calculateLandscapingCost('PASSIONNEMENT', ensureNumber(landscapingArea));
     }
     
     // Calculate fencing cost
     if (landscapingTypes.includes('CLOTURE') && fencingLength) {
-      additionalCost += calculateFencingCost(fencingLength);
+      additionalCost += calculateFencingCost(ensureNumber(fencingLength));
     }
     
     // Calculate gate cost
     if (landscapingTypes.includes('PORTAIL') && gateLength) {
-      additionalCost += calculateGateCost(gateLength);
+      additionalCost += calculateGateCost(ensureNumber(gateLength));
     }
     
     // Calculate terrace cost
     if (landscapingTypes.includes('TERRASSE') && terraceArea) {
-      additionalCost += calculateTerraceCost(terraceArea);
+      additionalCost += calculateTerraceCost(ensureNumber(terraceArea));
     }
 
     // Update form data with landscaping selections and costs

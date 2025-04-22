@@ -76,7 +76,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain fonctionnelle avec équipements de base
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('standard'))} / unité
+                  {formatPrice(calculateBathroomCost('standard'))}
                 </p>
               </CardContent>
             </Card>
@@ -93,7 +93,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain de qualité avec finitions soignées
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('premium'))} / unité
+                  {formatPrice(calculateBathroomCost('premium'))}
                 </p>
               </CardContent>
             </Card>
@@ -110,7 +110,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
                   Salle de bain haut de gamme avec matériaux nobles
                 </p>
                 <p className="text-sm font-medium mt-2">
-                  {formatPrice(calculateBathroomCost('luxury'))} / unité
+                  {formatPrice(calculateBathroomCost('luxury'))}
                 </p>
               </CardContent>
             </Card>
@@ -152,7 +152,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
             <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
             <p className="text-xs text-gray-500">
-              + {formatPrice(calculateBathroomCost(bathroomType, bathroomCount))} pour {bathroomCount} salle(s) de bain
+              + {formatPrice(calculateBathroomCost(bathroomType))} pour {bathroomCount} salle(s) de bain
             </p>
           </div>
         )}

@@ -63,10 +63,14 @@ export const ensureString = (value: any, defaultValue: string = ''): string => {
  * @param value Value to convert
  * @returns Form field value
  */
-export const toFormValue = (value: any): string | number | boolean => {
+export const toFormValue = (value: any): string => {
   if (value === null || value === undefined) return '';
   
-  return value;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return value.toString();
+  if (typeof value === 'boolean') return value ? 'true' : 'false';
+  
+  return String(value);
 };
 
 /**
@@ -88,31 +92,4 @@ export const safeRenderValue = (value: any, defaultValue: string = '-'): string 
   }
   
   return String(value) || defaultValue;
-};
-
-/**
- * Convert a percentage string to a number
- * @param percentage Percentage string (e.g. "50%", "50")
- * @returns Number between 0-100
- */
-export const percentageToNumber = (percentage: string): number => {
-  if (!percentage) return 0;
-  
-  // Remove % sign if present
-  const cleaned = percentage.replace('%', '');
-  const value = parseFloat(cleaned);
-  
-  if (isNaN(value)) return 0;
-  
-  // Ensure the value is between 0-100
-  return Math.min(100, Math.max(0, value));
-};
-
-/**
- * Convert a number to a percentage string
- * @param value Number to convert
- * @returns Percentage string (e.g. "50%")
- */
-export const numberToPercentage = (value: number): string => {
-  return `${Math.round(value)}%`;
 };
