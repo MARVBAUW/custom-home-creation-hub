@@ -26,11 +26,14 @@ const SitemapXML: React.FC = () => {
       const currentDate = new Date().toISOString().split('T')[0];
       const baseUrl = 'https://progineer.fr';
       
-      // XML declaration
+      // XML declaration and proper namespaces
       const xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
       
-      // Create the urlset element with proper namespace declaration
-      let xmlString = xmlDeclaration + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+      // Create the urlset element with proper namespace declarations
+      let xmlString = xmlDeclaration + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' +
+                     'xmlns:xhtml="http://www.w3.org/1999/xhtml" ' +
+                     'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" ' +
+                     'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n';
       
       // Add each route as URL element
       publicRoutes
@@ -70,6 +73,7 @@ const SitemapXML: React.FC = () => {
       <>
         <Helmet>
           <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+          <meta name="robots" content="index, follow" />
         </Helmet>
         <pre 
           style={{

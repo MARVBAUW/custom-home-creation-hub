@@ -79,6 +79,7 @@ const SEO: React.FC<SEOProps> = ({
       {/* Language */}
       <html lang="fr" />
       <meta property="og:locale" content="fr_FR" />
+      <meta http-equiv="Content-Language" content="fr" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />

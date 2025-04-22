@@ -8,6 +8,7 @@ import StatsSection from '../components/home/StatsSection';
 import LocationMap from '../components/home/LocationMap';
 import { getBusinessStructuredData } from '../utils/googleBusiness';
 import SEO from '../components/common/SEO';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
       />
       
       <main className="pt-16"> {/* Ajouter un padding-top pour compenser le navbar fixe */}
+        <h1 className="sr-only">Progineer - Architecte et Maître d'œuvre en PACA</h1>
         <Hero />
         <Services />
         <StatsSection />
@@ -28,6 +30,10 @@ const Index = () => {
         <LocationMap />
         <CTASection />
       </main>
+      
+      <SEOFooter 
+        text="Architecte et maître d'œuvre à Marseille, Nice, Toulon et dans toute la région PACA. Progineer vous accompagne dans tous vos projets de construction, rénovation et extension de maisons sur mesure. Expertise en architecture, optimisation d'espace et design d'intérieur pour créer votre habitat idéal en Provence-Alpes-Côte d'Azur."
+      />
     </>
   );
 };
