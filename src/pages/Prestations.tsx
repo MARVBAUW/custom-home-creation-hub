@@ -256,6 +256,7 @@ const Prestations = () => {
                 </CardContent>
                 <CardFooter>
                   <div className="flex flex-col w-full gap-2">
+                    {/* Correction ici pour coupler slug et bouton */}
                     {service.slug ? (
                       <Button
                         href={`/prestations-maitre-oeuvre/${service.slug}`}
