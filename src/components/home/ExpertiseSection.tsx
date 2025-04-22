@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
-import { Shield, Clock, Tool, Users, CheckCircle, Building } from 'lucide-react';
+import { Shield, Clock, Wrench, Users, CheckCircle, Building } from 'lucide-react';
 
 const ExpertiseSection = () => {
   return (
@@ -42,7 +42,7 @@ const ExpertiseSection = () => {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow-sm border border-stone-100">
-            <Tool className="w-12 h-12 text-progineer-gold mb-4" />
+            <Wrench className="w-12 h-12 text-progineer-gold mb-4" />
             <h3 className="text-xl font-semibold mb-2">Choix des matériaux</h3>
             <p className="text-gray-600">
               Bénéficiez de notre expertise pour sélectionner les meilleurs matériaux adaptés à votre projet.
