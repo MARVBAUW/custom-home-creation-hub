@@ -37,13 +37,16 @@ const SitemapXML: React.FC = () => {
       
       // Add each route as URL element
       publicRoutes
-        .filter(route => route.path && route.path !== '/sitemap.xml')
+        .filter(route => route.path && route.path !== '/sitemap.xml' && !route.path.includes('*'))
         .forEach(route => {
+          // Route path cleanup
+          const path = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
+          
           // Build full URL
-          const fullUrl = `${baseUrl}${route.path}`;
+          const fullUrl = `${baseUrl}${path}`;
           
           // Calculate priority based on route depth
-          const pathSegments = route.path.split('/').filter(Boolean);
+          const pathSegments = path.split('/').filter(Boolean);
           const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
           const changefreq = priority > 0.6 ? 'monthly' : 'yearly';
           
@@ -74,6 +77,7 @@ const SitemapXML: React.FC = () => {
         <Helmet>
           <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
           <meta name="robots" content="index, follow" />
+          <title>Sitemap XML - Progineer</title>
         </Helmet>
         <pre 
           style={{
@@ -88,7 +92,8 @@ const SitemapXML: React.FC = () => {
             backgroundColor: 'white',
             color: 'black'
           }}
-        >{xmlContent}</pre>
+          dangerouslySetInnerHTML={{ __html: xmlContent }}
+        />
       </>
     );
   }

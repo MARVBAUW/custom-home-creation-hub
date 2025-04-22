@@ -14,6 +14,8 @@ Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
 Allow: /parrainage
 Allow: /faq
+Allow: /a-propos
+Allow: /devenir-partenaire
 
 # Specific bot directives
 User-agent: Googlebot
@@ -24,3 +26,4 @@ Allow: /
 
 User-agent: Yandexbot
 Allow: /
+
