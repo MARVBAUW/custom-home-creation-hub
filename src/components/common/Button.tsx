@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'estimation';
   size?: 'sm' | 'md' | 'lg';
   href?: string;
   isExternal?: boolean;
@@ -27,6 +27,7 @@ const Button = ({
     variant === 'primary' && 'bg-khaki-600 text-khaki-50 shadow hover:bg-khaki-700',
     variant === 'secondary' && 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
     variant === 'outline' && 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+    variant === 'estimation' && 'bg-[#8B5CF6] text-white shadow-lg hover:bg-[#7C3AED] border-2 border-white/20',
     size === 'sm' && 'h-8 text-xs px-3',
     size === 'md' && 'h-10 text-sm px-4',
     size === 'lg' && 'h-12 text-base px-6',

@@ -39,7 +39,7 @@ const Hero = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button href="/estimation" size="lg" className="font-medium bg-progineer-gold hover:bg-progineer-gold/90 text-white">
+            <Button href="/estimation" size="lg" variant="estimation" className="font-medium">
               Estimer mon projet
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
