@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -34,10 +35,10 @@ const MobileNav = ({
   if (!isOpen) return null;
 
   return (
-    // Menu positionné encore plus bas, hauteur triplée
-    <div className="fixed top-[80%] left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-y-auto">
-      <Container className="flex flex-col min-h-[calc(100vh*3)] py-6 space-y-4">
-        {/* Changement ici : overflow-y-auto flex-grow => flex-grow (on retire overflow pour éviter découpage */}
+    // Positionnement absolu par rapport au viewport, indépendant du header
+    <div className="fixed inset-0 top-20 z-40 bg-white/98 backdrop-blur-md overflow-y-auto">
+      <Container className="flex flex-col py-6 space-y-4 min-h-screen">
+        {/* Changement ici : flex-grow simplement pour que le contenu remplisse l'espace */}
         <ul className="flex-grow">
           {navLinks.map(item => {
             // Doit-on afficher la section déployée ?
