@@ -1,6 +1,8 @@
 
 import React from "react";
 import Container from "@/components/common/Container";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { getInitials } from "@/lib/utils";
 
 interface TeamMember {
   id: number;
@@ -27,18 +29,23 @@ const TeamMembersSection: React.FC<TeamMembersSectionProps> = ({ members }) => (
           >
             <div className="flex flex-col items-center">
               <div className="w-48 h-48 relative mb-6 flex-shrink-0">
-                <img 
-                  src={member.image} 
-                  alt={member.name}
-                  className="w-full h-full object-contain rounded-xl bg-white"
-                />
+                <Avatar className="w-full h-full">
+                  <AvatarImage 
+                    src={member.image} 
+                    alt={member.name}
+                    className="object-cover bg-white rounded-xl"
+                  />
+                  <AvatarFallback className="text-4xl bg-khaki-700 text-white">
+                    {getInitials(member.name)}
+                  </AvatarFallback>
+                </Avatar>
               </div>
               <div className="text-center">
                 <h3 className="text-2xl font-semibold text-white mb-1">{member.name}</h3>
-                <p className="text-progineer-gold mb-4">{member.role}</p>
+                <p className="text-khaki-400 mb-4 font-medium">{member.role}</p>
                 <p className="text-white/90 text-sm mb-6 max-w-lg">{member.bio}</p>
                 <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2 text-progineer-gold">Compétences :</h4>
+                  <h4 className="text-sm font-medium mb-2 text-khaki-400">Compétences :</h4>
                   <div className="flex flex-wrap gap-2 justify-center">
                     {member.skills.map((skill, idx) => (
                       <span 

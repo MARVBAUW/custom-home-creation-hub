@@ -21,7 +21,7 @@ const teamMembers = [
   {
     id: 2,
     name: 'Maël Allano',
-    role: "Maître d'œuvre & chargé d'études",
+    role: "Cofondateur & Maître d'œuvre",
     image: '/lovable-uploads/e78983ec-3921-43f5-93e1-7dee7f23a28a.png',
     bio: "Également diplômé du master en génie civil de l'INSA, Maël a débuté comme chef de chantier dans une entreprise de second œuvre. Développant les aspects techniques au niveau des finitions du bâtiment, il s'est ensuite orienté vers une entreprise générale du bâtiment spécialisée dans l'industrie et le tertiaire, en tant que chargé d'études de prix et d'analyse de structure. Maël a su diversifier son panel de connaissances et acquérir une vision globale de l'étude et de la réalisation de divers types de projets.",
     skills: ['Finitions', 'Études de prix', 'Analyse de structure', 'Conduite de chantier']
