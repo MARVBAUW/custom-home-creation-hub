@@ -18,7 +18,7 @@ const Index = () => {
       <SEO 
         title="Maître d'œuvre Marseille | Construction & Rénovation | Progineer PACA"
         description="Maître d'œuvre à Marseille expert en construction, rénovation et extension de maisons. Coordination des corps de métier, respect des délais et expertise technique pour vos projets en PACA."
-        keywords="maître d'œuvre marseille, maîtrise d'œuvre, coordination chantier, corps de métier, expertise technique, respect des délais, projet de rénovation"
+        keywords="maître d'œuvre marseille, maîtrise d'œuvre, coordination chantier, corps de métier, expertise technique, respect des délais, projet de rénovation, maître d'ouvrage, maîtres d'œuvre"
         canonicalUrl="https://progineer.fr/"
         structuredData={getBusinessStructuredData()}
       />
@@ -45,6 +45,7 @@ const Index = () => {
                   <li><Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">Extension</Link></li>
                   <li><Link to="/prestations-maitre-oeuvre/design-interieur" className="text-progineer-gold hover:underline">Design d'intérieur</Link></li>
                   <li><Link to="/prestations-maitre-oeuvre/optimisation-espace" className="text-progineer-gold hover:underline">Optimisation d'espace</Link></li>
+                  <li><Link to="/sitemap.xml" className="text-progineer-gold hover:underline">Plan du site XML</Link></li>
                 </ul>
               </div>
               <div>
@@ -65,6 +66,8 @@ const Index = () => {
                   <li><Link to="/faq" className="text-progineer-gold hover:underline">FAQ</Link></li>
                   <li><Link to="/mentions-legales" className="text-progineer-gold hover:underline">Mentions légales</Link></li>
                   <li><Link to="/sitemap" className="text-progineer-gold hover:underline">Plan du site</Link></li>
+                  <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
+                  <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
                 </ul>
               </div>
             </div>
@@ -74,7 +77,7 @@ const Index = () => {
       
       <SEOFooter 
         text="Votre maître d'œuvre à Marseille et en PACA. Progineer assure la coordination des corps de métier et le respect des délais pour vos projets de construction et rénovation. Notre expertise technique et notre maîtrise d'œuvre garantissent la réussite de votre projet immobilier en Provence-Alpes-Côte d'Azur."
-        additionalKeywords={["maître d'œuvre marseille", "coordination corps de métier", "expertise technique construction", "respect délais chantier", "rénovation marseille"]}
+        additionalKeywords={["maître d'œuvre marseille", "coordination corps de métier", "expertise technique construction", "respect délais chantier", "rénovation marseille", "maître d'ouvrage", "projet de rénovation", "maîtrise d'œuvre"]}
       />
     </>
   );

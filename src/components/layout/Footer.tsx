@@ -74,28 +74,33 @@ const Footer = () => {
               <h3 className="text-white text-lg font-medium mb-5 pb-2 border-b border-white/10 text-center md:text-left">Nos services</h3>
               <ul className="space-y-3 text-center md:text-left">
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#construction" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Construction sur mesure
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#renovation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations-maitre-oeuvre/renovation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Rénovation énergétique
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#extension" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations-maitre-oeuvre/extension" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Extension & agrandissement
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#optimisation" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations-maitre-oeuvre/optimisation-espace" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Optimisation d'espace
                   </Link>
                 </li>
                 <li>
-                  <Link to="/prestations-maitre-oeuvre#design" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                  <Link to="/prestations-maitre-oeuvre/design-interieur" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
                     <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Design d'espace
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/sitemap" className="text-white/70 dark:text-white/80 hover:text-progineer-gold transition-colors text-sm flex items-center justify-center md:justify-start">
+                    <ChevronRight className="h-3 w-3 mr-1 text-progineer-gold/70" /> Plan du site
                   </Link>
                 </li>
               </ul>
@@ -153,16 +158,19 @@ const Footer = () => {
             <div className="flex flex-wrap gap-x-6 gap-y-2 justify-center">
               <Link to="/mentions-legales" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Mentions légales</Link>
               <Link to="/cgv" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">CGV</Link>
+              <Link to="/cgu" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">CGU</Link>
+              <Link to="/privacy-policy" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Confidentialité</Link>
               <Link to="/faq" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">FAQ</Link>
               <Link to="/devenir-partenaire" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Devenir partenaire</Link>
               <Link to="/parrainage" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Parrainage</Link>
+              <Link to="/sitemap.xml" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Sitemap XML</Link>
             </div>
           </div>
 
           {/* SEO Footer Text */}
           <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/30 dark:text-white/40 text-center md:text-left">
             <p className="max-w-4xl">
-              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z.
+              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z. Coordination des corps de métier, respect des délais et expertise technique pour tous vos projets.
             </p>
           </div>
         </Container>

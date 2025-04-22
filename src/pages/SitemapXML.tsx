@@ -38,7 +38,7 @@ const SitemapXML: React.FC = () => {
       
       // Add each route as URL element
       publicRoutes
-        .filter(route => route.path && route.path !== '/sitemap.xml' && !route.path.includes('*'))
+        .filter(route => route.path && route.path !== '*' && !route.path.includes('*'))
         .forEach(route => {
           // Route path cleanup
           const path = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
@@ -110,7 +110,7 @@ const SitemapXML: React.FC = () => {
       <Helmet>
         <title>Plan du site XML - Progineer</title>
         <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
-        <meta name="robots" content="noindex, follow" />
+        <meta name="robots" content="index, follow" />
         <meta name="description" content="Plan du site XML pour Progineer, entreprise d'architecture et de maîtrise d'œuvre en PACA." />
       </Helmet>
       
@@ -154,6 +154,7 @@ const SitemapXML: React.FC = () => {
                 <li><Link to="/privacy-policy" className="text-progineer-gold hover:underline">Politique de confidentialité</Link></li>
                 <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
                 <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
+                <li><Link to="/" className="text-progineer-gold hover:underline">Retour à l'accueil</Link></li>
               </ul>
             </div>
           </div>
@@ -169,6 +170,12 @@ const SitemapXML: React.FC = () => {
           <pre className="font-mono text-xs p-4 bg-gray-800 text-gray-200 rounded-lg overflow-auto max-h-96">
             {xmlContent}
           </pre>
+          
+          <div className="mt-8">
+            <Link to="/" className="text-progineer-gold hover:underline flex items-center">
+              ← Retour à la page d'accueil
+            </Link>
+          </div>
         </div>
       </Container>
     </>

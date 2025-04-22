@@ -65,7 +65,17 @@ const SEO: React.FC<SEOProps> = ({
         "opens": "09:00",
         "closes": "18:00"
       }
-    ]
+    ],
+    "keywords": keywords || "maître d'œuvre marseille, coordination corps de métier, expertise technique, respect des délais",
+    "serviceArea": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": "43.296482",
+        "longitude": "5.369780"
+      },
+      "geoRadius": "100000"
+    }
   };
 
   return (
@@ -113,7 +123,32 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="robots" content="index, follow" />
+      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      
+      {/* Additional meta tags for social sharing */}
+      <meta property="article:publisher" content="https://www.facebook.com/progineer" />
+      
+      {/* Additional structured data for breadcrumbs */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Accueil",
+              "item": "https://progineer.fr"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": title,
+              "item": canonicalUrl
+            }
+          ]
+        })}
+      </script>
 
       {/* Additional meta tags can be passed as children */}
       {children}

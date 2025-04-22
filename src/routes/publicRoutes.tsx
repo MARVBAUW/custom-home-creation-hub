@@ -107,5 +107,9 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/sitemap.xml",
     element: <SitemapXML />
+  },
+  {
+    path: "*",
+    element: <NotFound />
   }
 ];

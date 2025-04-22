@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
+import { Link } from 'react-router-dom';
 
 interface SEOFooterProps {
   text: string;
@@ -19,7 +20,8 @@ const SEOFooter = ({ text, additionalKeywords = [] }: SEOFooterProps) => {
   const services = [
     "construction maison", "rénovation villa", "extension habitat", 
     "design d'intérieur", "maître d'œuvre", "architecte PACA",
-    "optimisation espace", "aménagement intérieur", "rénovation énergétique"
+    "optimisation espace", "aménagement intérieur", "rénovation énergétique",
+    "coordination corps de métier", "respect des délais", "choix de matériaux"
   ];
 
   // Combine standard keywords with any additional ones
@@ -43,6 +45,24 @@ const SEOFooter = ({ text, additionalKeywords = [] }: SEOFooterProps) => {
               Progineer propose une gamme complète de services incluant {services.slice(0, -1).join(', ')} et {services[services.length - 1]}.
               Notre expertise technique et notre connaissance approfondie des réglementations locales garantissent la réussite de votre projet immobilier en région PACA.
             </p>
+            
+            <div className="mt-6 flex flex-wrap gap-2 justify-center">
+              <Link to="/prestations-maitre-oeuvre" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Nos prestations
+              </Link>
+              <Link to="/contact" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Nous contacter
+              </Link>
+              <Link to="/estimation" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Estimer mon projet
+              </Link>
+              <Link to="/realisations-architecte-maison" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Voir nos réalisations
+              </Link>
+              <Link to="/sitemap" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Plan du site
+              </Link>
+            </div>
             
             {keywordsToUse.length > 0 && (
               <div className="mt-4 pt-4 border-t border-stone-200 dark:border-stone-700">

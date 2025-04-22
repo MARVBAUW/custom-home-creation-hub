@@ -16,6 +16,7 @@ Allow: /parrainage
 Allow: /faq
 Allow: /a-propos
 Allow: /devenir-partenaire
+Allow: /sitemap
 
 # Specific bot directives
 User-agent: Googlebot
@@ -33,3 +34,7 @@ Allow: /prestations-maitre-oeuvre/construction-neuve
 Allow: /prestations-maitre-oeuvre/extension
 Allow: /prestations-maitre-oeuvre/design-interieur
 Allow: /prestations-maitre-oeuvre/optimisation-espace
+Allow: /cgu
+Allow: /cgv
+Allow: /privacy-policy
+Allow: /sitemap.xml
