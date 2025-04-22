@@ -21,16 +21,16 @@ const PlomberieForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
-    // Get the surface area
+    // Get the surface area and ensure it's a number
     const surface = ensureNumber(formData.surface, 0);
     
     // Calculate the cost based on plumbing type and surface
-    const additionalCost = calculatePlumbingCost(plumbingType, surface);
+    const additionalCost = calculatePlumbingCost(surface, plumbingType);
 
     // Update form data with plumbing type and additional cost
     updateFormData({
       plumbingType,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Move to the next step

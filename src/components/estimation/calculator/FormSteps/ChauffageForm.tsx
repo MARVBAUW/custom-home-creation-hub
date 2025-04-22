@@ -25,11 +25,11 @@ const ChauffageForm: React.FC<BaseFormProps> = ({
   );
 
   const handleSubmit = () => {
-    // Get the surface area
+    // Get the surface area and ensure it's a number
     const surface = ensureNumber(formData.surface);
     
     // Calculate the heating cost based on type and surface
-    const heatingCost = calculateHeatingCost(heatingType, surface);
+    const heatingCost = calculateHeatingCost(surface, heatingType);
     
     // Calculate the air conditioning cost if selected
     const airConditioningCost = calculateAirConditioningCost(hasAirConditioning, surface);
