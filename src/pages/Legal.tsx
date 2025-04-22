@@ -47,14 +47,20 @@ const Legal = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <LegalHero title="Mentions légales" />
-        
-        <LegalContent>
-          <LegalSections />
-        </LegalContent>
+        <main>
+          <h1 className="sr-only">Mentions légales - Progineer, Architecte et Maître d'œuvre en PACA</h1>
+          <LegalHero title="Mentions légales" />
+          
+          <LegalContent>
+            <LegalSections />
+          </LegalContent>
+        </main>
       </motion.div>
 
-      <SEOFooter text="Mentions légales de Progineer. Retrouvez toutes les informations juridiques concernant notre société de maîtrise d'œuvre et d'architecture basée en région PACA. Nous intervenons à Marseille, Nice, Toulon, Cannes et dans toute la région pour vos projets de construction, rénovation et extension." />
+      <SEOFooter 
+        text="Mentions légales de Progineer. Retrouvez toutes les informations juridiques concernant notre société de maîtrise d'œuvre et d'architecture basée en région PACA. Nous intervenons à Marseille, Nice, Toulon, Cannes et dans toute la région pour vos projets de construction, rénovation et extension."
+        additionalKeywords={["informations légales Progineer", "mentions juridiques architecte", "données société maître d'œuvre", "conditions légales PACA", "informations réglementaires construction"]}
+      />
     </>
   );
 };

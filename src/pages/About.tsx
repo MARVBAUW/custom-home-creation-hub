@@ -19,14 +19,18 @@ const About = () => {
         canonicalUrl="https://progineer.fr/a-propos"
       />
 
-      <AboutHero />
-      <AboutStory />
-      <AboutValues />
-      <AboutApproach />
-      <CTACTA />
+      <main>
+        <h1 className="sr-only">À propos de Progineer - Architecte et Maître d'œuvre en PACA</h1>
+        <AboutHero />
+        <AboutStory />
+        <AboutValues />
+        <AboutApproach />
+        <CTACTA />
+      </main>
       
       <SEOFooter 
         text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Découvrez l'histoire et les valeurs de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région Provence-Alpes-Côte d'Azur."
+        additionalKeywords={["entreprise architecture PACA", "histoire maître d'œuvre", "valeurs Progineer", "expertise construction Marseille", "rénovation professionnelle Nice"]}
       />
     </>
   );
