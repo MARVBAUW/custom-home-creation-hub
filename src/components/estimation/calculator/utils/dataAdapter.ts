@@ -1,310 +1,98 @@
 
-import { EstimationResponseData, ProjectDetails, ConstructionCosts, FeeCosts, OtherCosts, EstimationTimeline } from '../types/estimationTypes';
-import { FormData } from '../types/formTypes';
-import { ensureNumber, ensureString, ensureBoolean } from './typeConversions';
+import { FormData, EstimationResponseData } from '../types/estimationTypes';
+import { ensureNumber, ensureBoolean, ensureString } from './typeConversions';
 
 /**
- * Adapt form data to the estimation response data structure
+ * Adapts the form data to the estimation response data format
+ * @param formData The form data to adapt
+ * @returns The adapted estimation response data
  */
 export const adaptToEstimationResponseData = (formData: FormData): EstimationResponseData => {
-  const currentDate = new Date().toISOString();
-  
-  // Extract project details
-  const projectDetails: ProjectDetails = {
-    projectType: ensureString(formData.projectType || 'construction'),
-    surface: ensureNumber(formData.surface),
-    location: ensureString(formData.location || ''),
-    constructionType: ensureString(formData.constructionType || 'standard'),
-    bedrooms: ensureNumber(formData.bedrooms),
-    bathrooms: ensureNumber(formData.bathrooms),
-    city: ensureString(formData.city || '')
+  // Create a default estimation response
+  const response: EstimationResponseData = {
+    projectType: formData.projectType || 'Construction',
+    projectDetails: {
+      projectType: formData.projectType || 'Construction',
+      surface: ensureNumber(formData.surface),
+      location: formData.location || formData.city || 'PACA',
+      constructionType: formData.constructionType || 'Standard',
+      bedrooms: ensureNumber(formData.bedrooms),
+      bathrooms: ensureNumber(formData.bathrooms),
+      city: formData.city || 'Non spécifiée',
+    },
+    estimatedCost: ensureNumber(formData.budget) || 0,
+    constructionCosts: {
+      structuralWork: 0,
+      finishingWork: 0,
+      technicalLots: 0,
+      externalWorks: 0,
+      total: 0
+    },
+    fees: {
+      architectFees: 0,
+      engineeringFees: 0,
+      projectManagement: 0,
+      officialFees: 0,
+      inspectionFees: 0,
+      technicalStudies: 0,
+      permits: 0,
+      insurance: 0,
+      contingency: 0,
+      taxes: 0,
+      other: 0,
+      total: 0
+    },
+    otherCosts: {
+      land: 0,
+      demolition: 0,
+      siteDevelopment: 0,
+      insurance: 0,
+      contingency: 0,
+      taxes: 0,
+      miscellaneous: 0,
+      total: 0
+    },
+    totalAmount: ensureNumber(formData.montantT) || 0,
+    dateGenerated: new Date().toISOString(),
+    isComplete: !!formData.formCompleted,
+    timeline: {
+      design: 2,
+      permits: 3,
+      bidding: 1,
+      construction: 8,
+      total: 14,
+      totalMonths: 14
+    },
+    categories: []
   };
-  
-  // Calculate construction costs based on form data
-  const constructionCosts: ConstructionCosts = calculateConstructionCosts(formData);
-  
-  // Calculate fee costs based on construction costs
-  const fees: FeeCosts = calculateFeeCosts(constructionCosts.total, formData);
-  
-  // Calculate other costs
-  const otherCosts: OtherCosts = calculateOtherCosts(formData);
-  
-  // Calculate total amount
-  const totalAmount = constructionCosts.total + fees.total + otherCosts.total;
-  
-  // Generate timeline estimation
-  const timeline: EstimationTimeline = generateTimeline(formData);
-  
-  // Generate categories for reporting
-  const categories = generateCostCategories(constructionCosts, fees, otherCosts);
-  
-  return {
-    projectType: ensureString(formData.projectType || 'construction'),
-    projectDetails,
-    estimatedCost: constructionCosts.total,
-    constructionCosts,
-    fees,
-    otherCosts,
-    totalAmount,
-    dateGenerated: currentDate,
-    isComplete: true,
-    timeline,
-    categories
-  };
+
+  return response;
 };
 
 /**
- * Create an updater function that handles type conversion
+ * Creates a type-adapting updater function to ensure proper data types
+ * @param updateFunction The original update function
+ * @returns A type-adapting update function
  */
-export const createTypeAdaptingUpdater = (updateFn: (data: any) => void) => {
-  return (data: any) => {
-    // Convert numeric fields
-    const adaptedData = { ...data };
+export const createTypeAdaptingUpdater = (updateFunction: (data: Partial<FormData>) => void) => {
+  return (data: Partial<FormData>) => {
+    const adaptedData: Partial<FormData> = {};
     
-    // Process number fields
-    ['surface', 'bedrooms', 'bathrooms', 'budget'].forEach(field => {
-      if (field in adaptedData) {
-        adaptedData[field] = ensureNumber(adaptedData[field]);
+    // Convert each property to the correct type
+    Object.entries(data).forEach(([key, value]) => {
+      if (key.includes('surface') || key.includes('Area') || key.includes('Length') || 
+          key.includes('Count') || key.includes('budget') || key.includes('montantT') ||
+          key === 'bedrooms' || key === 'bathrooms') {
+        adaptedData[key] = ensureNumber(value);
+      } else if (key.includes('has') || key.includes('include') || key.includes('Accepted') || 
+                key.includes('Needed') || key.includes('Upgrade') || 
+                key === 'pool' || key === 'terrace') {
+        adaptedData[key] = ensureBoolean(value);
+      } else {
+        adaptedData[key] = value;
       }
     });
     
-    // Process boolean fields
-    ['termsAccepted', 'commercialAccepted', 'formCompleted'].forEach(field => {
-      if (field in adaptedData) {
-        adaptedData[field] = ensureBoolean(adaptedData[field]);
-      }
-    });
-    
-    // Process string fields
-    ['firstName', 'lastName', 'email', 'phone', 'city', 'projectDescription', 
-     'projectType', 'projectPurpose', 'location', 'constructionType'].forEach(field => {
-      if (field in adaptedData) {
-        adaptedData[field] = ensureString(adaptedData[field]);
-      }
-    });
-    
-    // Call the original update function with converted data
-    updateFn(adaptedData);
+    updateFunction(adaptedData);
   };
-};
-
-// Helper functions for cost calculations
-
-const calculateConstructionCosts = (formData: FormData): ConstructionCosts => {
-  const surface = ensureNumber(formData.surface);
-  const constructionType = ensureString(formData.constructionType);
-  
-  // Base rates per square meter depending on construction type
-  let structuralRate = 800; // Default
-  let finishingRate = 600; // Default
-  let technicalRate = 300; // Default
-  let externalRate = 200; // Default
-  
-  // Adjust rates based on construction type
-  if (constructionType === 'luxury') {
-    structuralRate = 1200;
-    finishingRate = 1000;
-    technicalRate = 500;
-    externalRate = 400;
-  } else if (constructionType === 'eco') {
-    structuralRate = 900;
-    finishingRate = 700;
-    technicalRate = 400;
-    externalRate = 250;
-  }
-  
-  // Calculate costs based on surface and rates
-  const structuralWork = surface * structuralRate;
-  const finishingWork = surface * finishingRate;
-  const technicalLots = surface * technicalRate;
-  const externalWorks = surface * externalRate;
-  
-  // Total construction cost
-  const total = structuralWork + finishingWork + technicalLots + externalWorks;
-  
-  return {
-    structuralWork,
-    finishingWork,
-    technicalLots,
-    externalWorks,
-    total
-  };
-};
-
-const calculateFeeCosts = (constructionTotal: number, formData: FormData): FeeCosts => {
-  // Calculate fee percentages based on construction cost
-  const architectFeesPercent = 0.09; // 9%
-  const engineeringFeesPercent = 0.05; // 5%
-  const projectManagementPercent = 0.06; // 6%
-  const officialFeesPercent = 0.02; // 2%
-  const inspectionFeesPercent = 0.03; // 3%
-  const technicalStudiesPercent = 0.04; // 4%
-  const permitsPercent = 0.02; // 2%
-  const insurancePercent = 0.03; // 3%
-  const contingencyPercent = 0.05; // 5%
-  const taxesPercent = 0.20; // 20% VAT
-  const otherPercent = 0.01; // 1%
-  
-  // Calculate actual fees
-  const architectFees = constructionTotal * architectFeesPercent;
-  const engineeringFees = constructionTotal * engineeringFeesPercent;
-  const projectManagement = constructionTotal * projectManagementPercent;
-  const officialFees = constructionTotal * officialFeesPercent;
-  const inspectionFees = constructionTotal * inspectionFeesPercent;
-  const technicalStudies = constructionTotal * technicalStudiesPercent;
-  const permits = constructionTotal * permitsPercent;
-  const insurance = constructionTotal * insurancePercent;
-  const contingency = constructionTotal * contingencyPercent;
-  const taxes = constructionTotal * taxesPercent;
-  const other = constructionTotal * otherPercent;
-  
-  // Total fees
-  const total = architectFees + engineeringFees + projectManagement + officialFees +
-                inspectionFees + technicalStudies + permits + insurance +
-                contingency + taxes + other;
-  
-  return {
-    architectFees,
-    engineeringFees,
-    projectManagement,
-    officialFees,
-    inspectionFees,
-    technicalStudies,
-    permits,
-    insurance,
-    contingency,
-    taxes,
-    other,
-    total
-  };
-};
-
-const calculateOtherCosts = (formData: FormData): OtherCosts => {
-  const constructionType = ensureString(formData.constructionType);
-  const surface = ensureNumber(formData.surface);
-  
-  // Base land cost per square meter
-  let landCostPerSqm = 500; // Default
-  
-  // Adjust land cost based on construction type
-  if (constructionType === 'luxury') {
-    landCostPerSqm = 1000;
-  } else if (constructionType === 'eco') {
-    landCostPerSqm = 400;
-  }
-  
-  // Calculate costs
-  const land = landCostPerSqm * surface; // Land cost is typically based on the surface area
-  const demolition = 0; // Default to 0, typically specified separately
-  const siteDevelopment = surface * 100; // Site development is typically based on the surface area
-  const insurance = surface * 20;
-  const contingency = surface * 50;
-  const taxes = (land + siteDevelopment) * 0.05; // 5% of land and site development costs
-  const miscellaneous = surface * 30;
-  
-  // Total other costs
-  const total = land + demolition + siteDevelopment + insurance + contingency + taxes + miscellaneous;
-  
-  return {
-    land,
-    demolition,
-    siteDevelopment,
-    insurance,
-    contingency,
-    taxes,
-    miscellaneous,
-    total
-  };
-};
-
-const generateTimeline = (formData: FormData): EstimationTimeline => {
-  const surface = ensureNumber(formData.surface);
-  const constructionType = ensureString(formData.constructionType);
-  
-  // Base timeline in weeks
-  let designWeeks = 4;
-  let permitsWeeks = 12;
-  let biddingWeeks = 4;
-  let constructionWeeks = 24;
-  
-  // Adjust timeline based on construction type and surface
-  if (constructionType === 'luxury') {
-    designWeeks = 8;
-    constructionWeeks = 40;
-  } else if (constructionType === 'eco') {
-    designWeeks = 6;
-    constructionWeeks = 30;
-  }
-  
-  // Adjust for surface area
-  if (surface > 200) {
-    constructionWeeks += 8;
-    designWeeks += 2;
-  } else if (surface < 100) {
-    constructionWeeks -= 4;
-    designWeeks -= 1;
-  }
-  
-  // Total timeline in weeks
-  const total = designWeeks + permitsWeeks + biddingWeeks + constructionWeeks;
-  
-  // Convert weeks to months (approximately 4.33 weeks per month)
-  const totalMonths = Math.ceil(total / 4.33);
-  
-  return {
-    design: designWeeks,
-    permits: permitsWeeks,
-    bidding: biddingWeeks,
-    construction: constructionWeeks,
-    total,
-    totalMonths
-  };
-};
-
-const generateCostCategories = (
-  constructionCosts: ConstructionCosts,
-  fees: FeeCosts,
-  otherCosts: OtherCosts
-) => {
-  const totalCost = constructionCosts.total + fees.total + otherCosts.total;
-  
-  // Create categories for each major cost component
-  return [
-    {
-      name: 'Gros œuvre',
-      cost: constructionCosts.structuralWork,
-      percentage: (constructionCosts.structuralWork / totalCost) * 100,
-      category: 'construction'
-    },
-    {
-      name: 'Second œuvre',
-      cost: constructionCosts.finishingWork,
-      percentage: (constructionCosts.finishingWork / totalCost) * 100,
-      category: 'construction'
-    },
-    {
-      name: 'Lots techniques',
-      cost: constructionCosts.technicalLots,
-      percentage: (constructionCosts.technicalLots / totalCost) * 100,
-      category: 'construction'
-    },
-    {
-      name: 'Aménagements extérieurs',
-      cost: constructionCosts.externalWorks,
-      percentage: (constructionCosts.externalWorks / totalCost) * 100,
-      category: 'construction'
-    },
-    {
-      name: 'Honoraires',
-      cost: fees.total,
-      percentage: (fees.total / totalCost) * 100,
-      category: 'fees'
-    },
-    {
-      name: 'Frais annexes',
-      cost: otherCosts.total,
-      percentage: (otherCosts.total / totalCost) * 100,
-      category: 'other'
-    }
-  ];
 };

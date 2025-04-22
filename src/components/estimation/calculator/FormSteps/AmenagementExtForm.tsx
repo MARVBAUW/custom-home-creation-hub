@@ -132,7 +132,7 @@ const AmenagementExtForm: React.FC<BaseFormProps> = ({
           </Button>
         </div>
         
-        {formData.montantT && (
+        {formData.montantT !== undefined && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
             <p className="text-sm font-medium">Total estimé: {ensureNumber(formData.montantT).toLocaleString()} €</p>
           </div>

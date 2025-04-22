@@ -1,10 +1,13 @@
 
 import { ReactNode } from 'react';
-import { FormData } from './estimationTypes';
+import { FormData as EstimationFormData } from './estimationTypes';
+
+// Re-export FormData from estimationTypes
+export { FormData } from './estimationTypes';
 
 export interface BaseFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: string;
@@ -13,8 +16,8 @@ export interface BaseFormProps {
 }
 
 export interface StepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: string;

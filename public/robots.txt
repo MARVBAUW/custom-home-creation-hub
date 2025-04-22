@@ -46,5 +46,6 @@ Allow: /estimation
 Allow: /contact
 Allow: /faq
 
+# Force HTTPS via robots.txt is not effective, but adding for documentation
 # Prevent bots from crawling certain pages (if needed)
 # Disallow: /workspace

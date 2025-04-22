@@ -23,7 +23,7 @@ const SitemapXML: React.FC = () => {
   const generateSitemapXML = () => {
     try {
       // Date courante au format ISO pour lastmod
-      const currentDate = new Date().toISOString();
+      const currentDate = new Date().toISOString().split('T')[0];
       const baseUrl = 'https://progineer.fr';
       
       // Déclaration XML
@@ -93,12 +93,13 @@ const SitemapXML: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Sitemap XML - Progineer</title>
+        <title>Plan du site XML - Progineer</title>
         <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
+        <meta name="robots" content="noindex, follow" />
       </Helmet>
       
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-4">Sitemap XML</h1>
+        <h1 className="text-2xl font-bold mb-4">Plan du site XML</h1>
         <p className="mb-4">Ce sitemap XML est généré dynamiquement à partir des routes de l'application.</p>
         <p className="mb-4">Pour une utilisation avec les moteurs de recherche, utilisez plutôt l'URL: <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">/sitemap.xml</a></p>
         <pre style={{

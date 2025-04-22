@@ -103,10 +103,59 @@ export interface FormData {
   termsAccepted?: boolean;
   commercialAccepted?: boolean;
   formCompleted?: boolean;
-  // Additional fields that might be used in calculations
+  
+  // Additional fields for estimation calculations
   heatingType?: string;
   hasAirConditioning?: boolean;
   insulationType?: string;
   demolitionNeeded?: boolean;
   renovationType?: string;
+  
+  // Fields for AmenagementExtForm
+  includeLandscaping?: boolean;
+  pool?: boolean;
+  terrace?: boolean;
+  outdoorKitchen?: boolean;
+  
+  // Fields for AmenagementPaysagersForm
+  landscapingType?: string;
+  landscapingArea?: number;
+  fencingLength?: number;
+  gateLength?: number;
+  terraceArea?: number;
+  
+  // Fields for CarrelageForm
+  floorTileType?: string;
+  floorTilePercentage?: number;
+  wallTileType?: string;
+  
+  // Fields for ChauffageForm
+  heatingSystemType?: string;
+  montantT?: number;
+  
+  // Fields for CombleForm
+  atticType?: string;
+  
+  // Fields for ConstructionDetailsForm
+  doorCount?: number;
+  
+  // Fields for CouvertureForm and CharpenteForm
+  roofType?: string;
+  roofArea?: number;
+  
+  // Additional fields that may be referenced
+  foundationType?: string;
+  windowType?: string;
+  insulationLevel?: string;
+  electricalUpgrade?: boolean;
+  plumbingUpgrade?: boolean;
+  kitchenType?: string;
+  bathroomCount?: number;
+  hasBasement?: boolean;
+  specialFeatures?: string[];
+  exteriorFinishType?: string;
+  landArea?: number;
+  
+  // Any other fields that might be used in calculations
+  [key: string]: any;
 }

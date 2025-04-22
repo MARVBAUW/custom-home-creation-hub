@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => ({
       allow: ['.'],
     },
     middlewareMode: false,
+    https: true, // Enable HTTPS in development
   },
   
   // Configure path aliases
@@ -48,7 +49,8 @@ export default defineConfig(({ mode }) => ({
             if (assetInfo.name.includes('progineer-icon') || 
                 assetInfo.name.includes('progineer-apple-touch-icon') || 
                 assetInfo.name === 'site.webmanifest' || 
-                assetInfo.name === 'progineer-favicon.ico') {
+                assetInfo.name === 'progineer-favicon.ico' ||
+                assetInfo.name === 'robots.txt') {
               return '[name][extname]';
             }
             // Handle image files in schemas directory
@@ -61,5 +63,7 @@ export default defineConfig(({ mode }) => ({
         }
       }
     },
+    // Ensure all files are properly handled with headers
+    sourcemap: true,
   }
 }))

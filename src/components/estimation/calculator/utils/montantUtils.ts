@@ -2,257 +2,130 @@
 import { ensureNumber } from './typeConversions';
 
 /**
- * Calculate the cost for floor tiling based on type, percentage, and surface
+ * Calculate roof covering renovation cost
+ * @param type Roof type
+ * @param area Roof area in m²
+ * @returns Cost in euros
  */
-export const calculateFloorTilingCost = (
-  floorTileType: string,
-  floorTilePercentage: number,
-  surface: number
-): number => {
-  const percentageDecimal = floorTilePercentage / 100;
-  let tileRate = 0;
+export const calculateRoofCoveringRenovCost = (type: string, area: number): number => {
+  const baseRate = type === 'tuiles' ? 120 : 
+                  type === 'ardoise' ? 150 : 
+                  type === 'zinc' ? 180 : 
+                  type === 'toit-terrasse' ? 200 : 
+                  100; // default rate
   
-  switch (floorTileType) {
-    case 'standard':
-      tileRate = 40; // €/m²
-      break;
-    case 'medium':
-      tileRate = 60; // €/m²
-      break;
-    case 'premium':
-      tileRate = 90; // €/m²
-      break;
-    default:
-      tileRate = 0;
-  }
-  
-  return surface * percentageDecimal * tileRate;
+  return baseRate * ensureNumber(area);
 };
 
 /**
- * Calculate the cost for wall tiling based on type and surface
+ * Calculate roof frame renovation cost
+ * @param type Roof type
+ * @param area Roof area in m²
+ * @returns Cost in euros
  */
-export const calculateWallTilingCost = (
-  wallTileType: string,
-  surface: number
-): number => {
-  let tileRate = 0;
+export const calculateRoofFrameRenovCost = (type: string, area: number): number => {
+  const baseRate = type === 'bois' ? 200 : 
+                  type === 'metal' ? 250 : 
+                  type === 'mixte' ? 230 : 
+                  180; // default rate
   
-  switch (wallTileType) {
-    case 'standard':
-      tileRate = 30; // €/m²
-      break;
-    case 'medium':
-      tileRate = 45; // €/m²
-      break;
-    case 'premium':
-      tileRate = 70; // €/m²
-      break;
-    default:
-      tileRate = 0;
-  }
-  
-  // Assume wall tiles cover about 30% of the wall area based on room height
-  const wallArea = surface * 0.3;
-  return wallArea * tileRate;
+  return baseRate * ensureNumber(area);
 };
 
 /**
- * Calculate the cost for heating based on type and surface
+ * Calculate façade renovation cost
+ * @param facadeType Facade type
+ * @param area Facade area in m²
+ * @returns Cost in euros
  */
-export const calculateHeatingCost = (
-  heatingType: string,
-  surface: number
-): number => {
-  let rate = 0;
+export const calculateFacadeRenovCost = (facadeType: string, area: number): number => {
+  const baseRate = facadeType === 'enduit' ? 80 : 
+                  facadeType === 'pierre' ? 140 : 
+                  facadeType === 'brique' ? 110 : 
+                  facadeType === 'bois' ? 120 : 
+                  90; // default rate
   
-  switch (heatingType) {
-    case 'standard':
-      rate = 60; // €/m²
-      break;
-    case 'eco':
-      rate = 90; // €/m²
-      break;
-    case 'economic':
-      rate = 80; // €/m²
-      break;
-    case 'sans_avis':
-      rate = 70; // €/m²
-      break;
-    case 'non_concerne':
-      rate = 0;
-      break;
-    default:
-      rate = 0;
-  }
-  
-  return surface * rate;
+  return baseRate * ensureNumber(area);
 };
 
 /**
- * Calculate the cost for air conditioning based on selection and surface
+ * Calculate grosses-oeuvres renovation cost
+ * @param type Type of work
+ * @param area Area in m²
+ * @returns Cost in euros
  */
-export const calculateAirConditioningCost = (
-  hasAirConditioning: boolean,
-  surface: number
-): number => {
-  if (!hasAirConditioning) return 0;
+export const calculateGrosOeuvreRenovCost = (type: string, area: number): number => {
+  const baseRate = type === 'mur-porteur' ? 350 : 
+                  type === 'fondation' ? 450 : 
+                  type === 'dalle' ? 200 : 
+                  300; // default rate
   
-  // Base rate for air conditioning (€/m²)
-  const acRate = 100;
-  
-  return surface * acRate;
+  return baseRate * ensureNumber(area);
 };
 
 /**
- * Calculate the cost for landscaping based on type and area
+ * Calculate electrical installation cost
+ * @param surface Surface in m²
+ * @returns Cost in euros
  */
-export const calculateLandscapingCost = (
-  landscapingType: string,
-  area: number
-): number => {
-  let rate = 0;
-  
-  switch (landscapingType) {
-    case 'UN PEU':
-      rate = 30; // €/m²
-      break;
-    case 'BEAUCOUP':
-      rate = 50; // €/m²
-      break;
-    case 'PASSIONNEMENT':
-      rate = 80; // €/m²
-      break;
-    default:
-      rate = 0;
-  }
-  
-  return area * rate;
+export const calculateElectricalCost = (surface: number): number => {
+  return 85 * ensureNumber(surface);
 };
 
 /**
- * Calculate the cost for fencing based on length
+ * Calculate plumbing installation cost
+ * @param bathroomCount Number of bathrooms
+ * @param kitchenCount Number of kitchens
+ * @returns Cost in euros
  */
-export const calculateFencingCost = (length: number): number => {
-  const fencingRate = 100; // €/m
-  return length * fencingRate;
+export const calculatePlumbingCost = (bathroomCount: number, kitchenCount: number): number => {
+  return (3500 * ensureNumber(bathroomCount)) + (2000 * ensureNumber(kitchenCount));
 };
 
 /**
- * Calculate the cost for gates based on length
+ * Calculate heating system cost
+ * @param type Heating system type
+ * @param surface Surface in m²
+ * @returns Cost in euros
  */
-export const calculateGateCost = (length: number): number => {
-  const gateBaseRate = 500; // € base cost
-  const gateRatePerMeter = 300; // €/m additional
-  return gateBaseRate + length * gateRatePerMeter;
+export const calculateHeatingCost = (type: string, surface: number): number => {
+  const baseRate = type === 'gaz' ? 100 : 
+                  type === 'electrique' ? 80 : 
+                  type === 'pompe-chaleur' ? 150 : 
+                  type === 'chauffage-solaire' ? 200 : 
+                  120; // default rate
+  
+  return baseRate * ensureNumber(surface);
 };
 
 /**
- * Calculate the cost for terrace construction
+ * Calculate roof cost
+ * @param type Roof type
+ * @param surface Surface in m²
+ * @returns Cost in euros
  */
-export const calculateTerraceCost = (area: number): number => {
-  const terraceRate = 150; // €/m²
-  return area * terraceRate;
+export const calculateRoofCost = (type: string, surface: number): number => {
+  const baseRate = type === 'tuiles' ? 150 : 
+                  type === 'ardoise' ? 200 : 
+                  type === 'zinc' ? 180 : 
+                  type === 'toit-terrasse' ? 220 : 
+                  160; // default rate
+  
+  return baseRate * ensureNumber(surface);
 };
 
 /**
- * Calculate the cost for roof framework renovation
+ * Calculate tile flooring cost
+ * @param type Tile type
+ * @param surface Surface in m²
+ * @returns Cost in euros
  */
-export const calculateRoofFrameworkRenovCost = (
-  roofType: string,
-  roofArea: string | number
-): number => {
-  const area = ensureNumber(roofArea);
-  let rate = 0;
+export const calculateTileFlooringCost = (type: string, surface: number): number => {
+  const baseRate = type === 'ceramique' ? 80 : 
+                  type === 'gres' ? 100 : 
+                  type === 'pierre' ? 150 : 
+                  type === 'marbre' ? 200 : 
+                  90; // default rate
   
-  switch (roofType) {
-    case 'TOITURE TERRASSE ACCESSIBLE':
-      rate = 190; // €/m²
-      break;
-    case 'TOITURE TERRASSE INACCESSIBLE':
-      rate = 180; // €/m²
-      break;
-    case 'CHARPENTE INDUSTRIELLE':
-      rate = 160; // €/m²
-      break;
-    case 'CHARPENTE TRADITIONNELLE':
-      rate = 185; // €/m²
-      break;
-    case 'NON CONCERNE':
-    default:
-      rate = 0;
-  }
-  
-  return area * rate;
-};
-
-/**
- * Calculate the cost for roof covering renovation
- */
-export const calculateRoofCoveringRenovCost = (
-  coveringType: string,
-  area: string | number
-): number => {
-  const roofArea = ensureNumber(area);
-  let rate = 0;
-  
-  switch (coveringType) {
-    case 'TUILES':
-      rate = 75; // €/m²
-      break;
-    case 'ARDOISES':
-      rate = 85; // €/m²
-      break;
-    case 'ZINC':
-      rate = 110; // €/m²
-      break;
-    case 'BACS ACIER':
-      rate = 65; // €/m²
-      break;
-    case 'MEMBRANE':
-      rate = 55; // €/m²
-      break;
-    case 'NON CONCERNE':
-    default:
-      rate = 0;
-  }
-  
-  return roofArea * rate;
-};
-
-/**
- * Calculate facade renovation cost
- */
-export const calculateDetailedFacadeCost = (
-  facadeType: string,
-  percentage: number,
-  totalSurface: number
-): number => {
-  const surfacePortion = (totalSurface * percentage) / 100;
-  let rate = 0;
-  
-  switch (facadeType) {
-    case 'PIERRE':
-      rate = 210; // €/m²
-      break;
-    case 'ENDUIT':
-      rate = 75; // €/m²
-      break;
-    case 'BRIQUES':
-      rate = 160; // €/m²
-      break;
-    case 'BARDAGE METAL':
-      rate = 140; // €/m²
-      break;
-    case 'BARDAGE BOIS':
-      rate = 180; // €/m²
-      break;
-    case 'BARDAGE PIERRE':
-      rate = 250; // €/m²
-      break;
-    default:
-      rate = 0;
-  }
-  
-  return surfacePortion * rate;
+  return baseRate * ensureNumber(surface);
 };
