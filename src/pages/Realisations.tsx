@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
@@ -10,12 +9,12 @@ import SEOFooter from '@/components/common/SEOFooter';
 const projects = [
   {
     id: 1,
-    title: 'Villa en bord de mer',
-    location: 'Martignas sur Jalles',
+    title: 'Maison contemporaine avec vue panoramique',
+    location: 'PACA',
     category: 'Construction neuve',
-    description: 'Villa contemporaine avec piscine à débordement et vue sur la mer. Une architecture minimaliste qui s\'intègre parfaitement dans son environnement.',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop',
-    slug: 'villa-bord-mer-martignas'
+    description: 'Villa moderne à l\'architecture audacieuse, intégrant des matériaux contemporains et des lignes épurées, conçue par notre maître d\'œuvre à Marseille.',
+    image: '/lovable-uploads/90cf95a2-5f6b-471e-a957-8133545791cb.png',
+    slug: 'maison-contemporaine-vue-panoramique'
   },
   {
     id: 2,
