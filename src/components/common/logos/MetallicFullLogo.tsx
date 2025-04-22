@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { LogoSize } from './LogoConstants';
 
@@ -7,87 +6,52 @@ interface MetallicFullLogoProps {
   getSizeClasses: () => string;
 }
 
-const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({
-  getSizeClasses
+const MetallicFullLogo: React.FC<MetallicFullLogoProps> = ({ 
+  getSizeClasses 
 }) => {
   return (
-    <svg viewBox="0 0 1200 512" xmlns="http://www.w3.org/2000/svg" className={getSizeClasses()}>
+    <svg height="720" width="1280" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" className={`${getSizeClasses()} metallic-logo`}>
       <defs>
-        <linearGradient id="goldMetallicFull" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#d4af37"/>
-          <stop offset="50%" stopColor="#f5f5dc"/>
-          <stop offset="100%" stopColor="#b8860b"/>
+        <linearGradient id="metalGradientFull" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#f8f8f8"/>
+          <stop offset="25%" stopColor="#c6c6c6"/>
+          <stop offset="50%" stopColor="#999999"/>
+          <stop offset="75%" stopColor="#c6c6c6"/>
+          <stop offset="100%" stopColor="#f8f8f8"/>
         </linearGradient>
-        <filter id="metallic-shadow-full">
-          <feDropShadow dx="0" dy="2" stdDeviation="4" floodOpacity="0.3" />
+        <filter id="shineFull">
+          <feSpecularLighting in="SourceAlpha" surfaceScale="5" specularConstant="1" specularExponent="20" lightingColor="white" result="specOut">
+            <fePointLight x="-5000" y="-10000" z="20000"/>
+          </feSpecularLighting>
+          <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+          <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+        </filter>
+        
+        <filter id="hoverGlowFull">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feFlood flood-color="#c8a86d" flood-opacity="0.7" result="glowColor"/>
+          <feComposite in="glowColor" in2="blur" operator="in" result="softGlow"/>
+          <feMerge>
+            <feMergeNode in="softGlow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
         </filter>
       </defs>
-      
-      {/* Logo Shape */}
-      <g transform="translate(0, 0)">
-        {/* Triangle gauche */}
-        <polygon 
-          points="0,196 364,94 361,465 234,465 234,305 357,267 0,510"
-          fill="url(#goldMetallicFull)" 
-          filter="url(#metallic-shadow-full)"
-          className="logo-polygon"
-        />
 
-        {/* Triangle haut centre */}
-        <polygon 
-          points="707,0 500,59 500,228 707,0"
-          fill="url(#goldMetallicFull)" 
-          filter="url(#metallic-shadow-full)"
-          className="logo-polygon"
-        />
+      <g filter="url(#shineFull)" className="metallic-full-path">
+        {/* Background removed - only keep the lines and logo */}
+        
+        {/* Lignes décoratives */}
+        <path d="M0 0 251.387 0.0001" fill="none" stroke="#FFFFFF" strokeWidth="4" transform="matrix(1 0 0 -1 215 421)" />
+        <path d="M215 284 1065.55 284" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
+        <path d="M814 422 1065.39 422" fill="none" stroke="#FFFFFF" strokeWidth="4"/>
 
-        {/* Ligne médiane vers droite */}
-        <polygon 
-          points="361,267 707,33 707,0 361,267"
-          fill="url(#goldMetallicFull)" 
-          filter="url(#metallic-shadow-full)"
-          className="logo-polygon"
-        />
-
-        {/* Volume central (milieu corrigé) */}
-        <polygon 
-          points="500,228 605,312 604,465 500,465 500,228"
-          fill="url(#goldMetallicFull)" 
-          filter="url(#metallic-shadow-full)"
-          className="logo-polygon"
-        />
-
-        {/* Bâtiment droit avec toit incliné */}
-        <polygon 
-          points="707,0 773,76 770,237 940,292 940,465 704,465"
-          fill="url(#goldMetallicFull)" 
-          filter="url(#metallic-shadow-full)"
-          className="logo-polygon"
-        />
-
-        {/* Sol */}
-        <rect 
-          x="0" 
-          y="465" 
-          width="940" 
-          height="2" 
-          fill="#2a2a2a" 
-          className="logo-rect"
-        />
+        {/* Textes en URL metalGradientFull pour la visibilité */}
+        <text x="197.67" y="373.684" fontSize="55.4" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">P R O G I N E E R</text>
+        <text x="498.569" y="427.582" fontSize="15.6" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">M A I T R I S E D</text>
+        <text x="664.187" y="420.648" fontSize="7.05" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">'</text>
+        <text x="675.689" y="427.608" fontSize="15.4" fontFamily="Arial, sans-serif" fill="url(#metalGradientFull)">O E U V R E</text>
       </g>
-      
-      {/* Text "PROGINEER" */}
-      <text 
-        x="950" 
-        y="300" 
-        fontFamily="Arial, sans-serif" 
-        fontSize="80" 
-        fontWeight="bold" 
-        fill="url(#goldMetallicFull)" 
-        filter="url(#metallic-shadow-full)"
-      >
-        PROGINEER
-      </text>
     </svg>
   );
 };
