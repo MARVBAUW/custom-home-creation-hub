@@ -14,7 +14,7 @@ const projects = [
     location: 'PACA',
     category: 'Construction neuve',
     description: 'Villa moderne à l\'architecture audacieuse, intégrant des matériaux contemporains et des lignes épurées, conçue par notre maître d\'œuvre à Marseille.',
-    image: 'lovable-uploads/90cf95a2-5f6b-471e-a957-8133545791cb.png',
+    image: '/lovable-uploads/90cf95a2-5f6b-471e-a957-8133545791cb.png',
     slug: 'maison-contemporaine-vue-panoramique'
   },
   {
@@ -59,7 +59,7 @@ const projects = [
     location: 'Toulon',
     category: 'Construction écologique',
     description: 'Maison à énergie positive utilisant des matériaux biosourcés et des technologies innovantes pour un impact environnemental minimal.',
-    image: 'https://images.unsplash.com/photo-1606744858291-9763e4e785fa?q=80&w=2074&auto=format&fit=crop',
+    image: '/lovable-uploads/732fa99d-df25-4869-9ca9-b49ccf6f51a4.png',
     slug: 'maison-passive-toulon'
   },
 ];
