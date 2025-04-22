@@ -48,33 +48,76 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Key features section - Updated layout and visual hierarchy */}
-          <div className="w-full mt-16 p-8 rounded-2xl bg-gradient-to-br from-black/30 to-black/10 backdrop-blur-sm border border-white/20 shadow-lg">
-            <h3 className="text-white/90 font-medium mb-8 text-center">Nos engagements pour votre projet</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Coordination des corps de métier</span>
-              </div>
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Respect des délais garantis</span>
-              </div>
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Expertise technique</span>
-              </div>
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Maîtrise d'œuvre complète</span>
-              </div>
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Choix des matériaux</span>
-              </div>
-              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
-                <span className="group-hover:text-progineer-gold transition-colors duration-300">Projets de rénovation</span>
+          {/* Key features section - Enhanced layout with better visual hierarchy */}
+          <div className="w-full mt-16">
+            <div className="p-8 rounded-2xl bg-gradient-to-br from-white/5 to-transparent backdrop-blur-md border border-white/10 shadow-2xl">
+              <h3 className="text-white/90 font-medium mb-8 text-center relative">
+                <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-4 py-1 bg-progineer-gold/20 rounded-full text-sm backdrop-blur-sm border border-progineer-gold/30">
+                  Expertise & Qualité
+                </span>
+                Nos engagements pour votre projet
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Coordination des corps de métier</h4>
+                      <p className="text-sm text-white/70">Gestion experte de tous les intervenants pour une exécution harmonieuse de votre projet</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Respect des délais garantis</h4>
+                      <p className="text-sm text-white/70">Planification rigoureuse et suivi constant pour livrer votre projet dans les temps</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Expertise technique</h4>
+                      <p className="text-sm text-white/70">Solutions innovantes et conformes aux normes pour des résultats durables</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Maîtrise d'œuvre complète</h4>
+                      <p className="text-sm text-white/70">Accompagnement global de la conception à la réalisation de votre projet</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Sélection des matériaux</h4>
+                      <p className="text-sm text-white/70">Choix minutieux des matériaux pour une qualité et une durabilité optimales</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="group bg-black/20 backdrop-blur-sm rounded-xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-black/30 border border-white/5 hover:border-progineer-gold/20">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                    <div>
+                      <h4 className="text-white/90 font-medium mb-2 group-hover:text-progineer-gold transition-colors duration-300">Innovation durable</h4>
+                      <p className="text-sm text-white/70">Solutions éco-responsables pour des projets respectueux de l'environnement</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
