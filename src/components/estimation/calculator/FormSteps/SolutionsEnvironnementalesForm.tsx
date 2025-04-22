@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,7 +24,7 @@ const SolutionsEnvironnementalesForm: React.FC<BaseFormProps> = ({
     const currentTotal = ensureNumber(formData.montantT, 0);
     
     // Calculate the additional cost for environmental solutions
-    const additionalCost = calculateEnvironmentalSolutionsCost(solutionType, currentTotal);
+    const additionalCost = calculateEnvironmentalSolutionsCost(solutionType);
 
     // Update form data with environmental solution type and additional cost
     updateFormData({

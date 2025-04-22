@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,7 +22,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
     formData.bathroomType || 'standard'
   );
   const [bathroomCount, setBathroomCount] = useState<number>(
-    Number(formData.bathroomCount || 1)
+    ensureNumber(formData.bathroomCount || 1)
   );
 
   const handleSubmit = () => {
@@ -47,6 +46,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
     return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(price);
   };
 
+  // Updated price calculation calls
   return (
     <div className={`transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0' : '-translate-x-0'
@@ -152,7 +152,7 @@ const SalleDeBainForm: React.FC<BaseFormProps> = ({
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
             <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
             <p className="text-xs text-gray-500">
-              + {formatPrice(calculateBathroomCost(bathroomType))} pour {bathroomCount} salle(s) de bain
+              + {formatPrice(calculateBathroomCost(bathroomType, bathroomCount))} pour {bathroomCount} salle(s) de bain
             </p>
           </div>
         )}
