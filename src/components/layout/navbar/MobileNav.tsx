@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -30,8 +29,8 @@ const MobileNav = ({
   
   return (
     <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
-      <Container className="flex flex-col h-[calc(100vh-4rem)] py-6">
-        <ul className="space-y-1 overflow-y-auto">
+      <Container className="flex flex-col h-[calc(100vh-4rem)] py-6 space-y-4"> {/* Increased space-y-4 to add more vertical spacing */}
+        <ul className="space-y-1 overflow-y-auto flex-grow"> {/* Added flex-grow to allow expansion */}
           {navLinks.map(item => (
             <React.Fragment key={item.name}>
               {/* Main menu item */}
@@ -88,7 +87,7 @@ const MobileNav = ({
           ))}
         </ul>
         
-        <div className="mt-4 space-y-4 pt-4 border-t border-gray-200">
+        <div className="mt-auto space-y-4 pt-4 border-t border-gray-200"> {/* Added mt-auto to push this section to the bottom */}
           <div className="flex flex-col space-y-2">
             <a href="tel:+33783762156" className="flex items-center py-2 text-stone-700">
               <Phone className="h-4 w-4 mr-2 text-khaki-600" />
