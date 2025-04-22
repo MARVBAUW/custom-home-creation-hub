@@ -173,7 +173,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors"
               >
-                Annuaire de maîtres d'œuvre
+                Trouver un maitre d'oeuvre
               </a>
             </div>
           </div>
