@@ -8,26 +8,26 @@ import Logo from '@/components/common/Logo';
 const Hero = () => {
   return (
     <>
-      <section className="relative min-h-[90vh] flex items-center py-24 overflow-hidden">
+      <section className="relative min-h-[90vh] flex items-center py-24 overflow-hidden bg-transparent">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
           <div 
             className="absolute inset-0 bg-cover bg-center"
             style={{ 
               backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')`,
               backgroundPosition: 'center',
+              opacity: 0.3 // Reduced opacity for transparency
             }}
           ></div>
         </div>
         
         <Container className="relative z-10 mt-16">
-          <div className="flex flex-col items-start animate-fade-in">
+          <div className="flex flex-col items-start animate-fade-in text-white">
             <div className="w-full flex justify-center mb-12">
               <Logo variant="metallic-full" size="lg" className="mx-auto" />
             </div>
             
-            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-white/20 backdrop-blur-sm text-white text-sm font-medium">
               Maître d'œuvre à Marseille
             </div>
             
@@ -36,7 +36,7 @@ const Hero = () => {
               <span className="text-progineer-gold">Marseille et en PACA</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
+            <p className="text-lg md:text-xl text-white mb-8 max-w-2xl text-left">
               Coordination des corps de métier, respect des délais et expertise technique pour vos projets de construction et rénovation. Un accompagnement sur mesure par votre maître d'ouvrage à Marseille.
             </p>
             
