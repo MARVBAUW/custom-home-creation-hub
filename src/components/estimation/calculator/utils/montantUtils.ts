@@ -498,12 +498,6 @@ export const calculateRoofFrameworkRenovCost = (type: string, roofArea: number |
   return Math.round(ensureNumber(roofArea) * rate);
 };
 
-/**
- * Calculate cost for roof covering renovation
- * @param type Type of roof covering
- * @param roofArea Surface area in square meters
- * @returns Cost estimate
- */
 export const calculateRoofCoveringRenovCost = (type: string, roofArea: number | string): number => {
   if (type === 'NON CONCERNE') return 0;
   
@@ -520,10 +514,8 @@ export const calculateRoofCoveringRenovCost = (type: string, roofArea: number | 
     zinc: 190,
     chaume: 230,
     bac_acier: 85,
-    "TUILES": 160,
-    "ARDOISES": 240,
-    "ZINC": 190,
-    "BACS ACIER": 85
+    TUILES: 160,
+    BACS_ACIER: 85
   };
   
   const rate = rates[type] || 160;
