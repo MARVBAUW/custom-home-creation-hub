@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
@@ -13,6 +12,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 const services = [
   {
     id: 'construction',
+    slug: 'construction-neuve',
     icon: <Building className="h-10 w-10 text-khaki-600" />,
     title: 'Construction sur mesure',
     description: 'Construction de maisons individuelles et petits collectifs parfaitement adaptés à vos besoins et à votre terrain.',
@@ -35,6 +35,7 @@ const services = [
   },
   {
     id: 'renovation',
+    slug: 'renovation',
     icon: <Wrench className="h-10 w-10 text-khaki-600" />,
     title: 'Rénovation énergétique',
     description: 'Améliorez la performance énergétique de votre logement tout en valorisant votre patrimoine immobilier.',
@@ -62,6 +63,7 @@ const services = [
   },
   {
     id: 'extension',
+    slug: 'extension',
     icon: <Plus className="h-10 w-10 text-khaki-600" />,
     title: 'Extension & agrandissement',
     description: 'Agrandissez votre espace de vie avec une extension harmonieuse et parfaitement intégrée à votre habitat existant.',
@@ -89,6 +91,7 @@ const services = [
   },
   {
     id: 'optimisation',
+    slug: 'optimisation-espace',
     icon: <Settings className="h-10 w-10 text-khaki-600" />,
     title: 'Optimisation d\'espace',
     description: 'Maximisez le potentiel de votre surface habitable grâce à des solutions d\'aménagement intelligentes et fonctionnelles.',
@@ -115,6 +118,7 @@ const services = [
   },
   {
     id: 'design',
+    slug: 'design-interieur',
     icon: <Construction className="h-10 w-10 text-khaki-600" />,
     title: 'Design d\'espace',
     description: 'Créez des intérieurs esthétiques et fonctionnels qui reflètent votre personnalité et votre mode de vie.',
@@ -142,6 +146,7 @@ const services = [
   },
   {
     id: 'administratif',
+    slug: null, // Pas de page dédiée
     icon: <Info className="h-10 w-10 text-khaki-600" />,
     title: 'Montage administratif',
     description: 'Simplifiez vos démarches administratives grâce à notre accompagnement expert pour tous vos projets de construction.',
@@ -245,36 +250,56 @@ const Prestations = () => {
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Collapsible 
-                    className="w-full" 
-                    open={openServiceId === service.id}
-                    onOpenChange={() => toggleService(service.id)}
-                  >
-                    <CollapsibleTrigger className="w-full">
-                      <Button 
-                        variant="outline" 
+                  <div className="flex flex-col w-full gap-2">
+                    {service.slug ? (
+                      <Button
+                        href={`/prestations-maitre-oeuvre/${service.slug}`}
                         className="w-full justify-center flex items-center"
+                        variant="outline"
                       >
-                        {openServiceId === service.id ? (
-                          <>Voir moins <ChevronUp className="ml-2 h-4 w-4" /></>
-                        ) : (
-                          <>En savoir plus <ChevronDown className="ml-2 h-4 w-4" /></>
-                        )}
+                        En savoir plus
                       </Button>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-4">
-                      <div className="p-4 bg-khaki-50 rounded-lg">
-                        <p className="text-gray-700 whitespace-pre-line">
-                          {service.detailedContent}
-                        </p>
-                        <div className="mt-4">
-                          <Button href="/contact" className="w-full sm:w-auto justify-center mt-2">
-                            Demander un devis
-                          </Button>
+                    ) : (
+                      <Button
+                        href="/contact"
+                        className="w-full justify-center flex items-center"
+                        variant="outline"
+                      >
+                        En savoir plus
+                      </Button>
+                    )}
+
+                    <Collapsible 
+                      className="w-full" 
+                      open={openServiceId === service.id}
+                      onOpenChange={() => toggleService(service.id)}
+                    >
+                      <CollapsibleTrigger className="w-full">
+                        <Button 
+                          variant="outline" 
+                          className="w-full justify-center flex items-center"
+                        >
+                          {openServiceId === service.id ? (
+                            <>Voir moins <ChevronUp className="ml-2 h-4 w-4" /></>
+                          ) : (
+                            <>Détails <ChevronDown className="ml-2 h-4 w-4" /></>
+                          )}
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <div className="p-4 bg-khaki-50 rounded-lg">
+                          <p className="text-gray-700 whitespace-pre-line">
+                            {service.detailedContent}
+                          </p>
+                          <div className="mt-4">
+                            <Button href="/contact" className="w-full sm:w-auto justify-center mt-2">
+                              Demander un devis
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </div>
                 </CardFooter>
               </Card>
             ))}
