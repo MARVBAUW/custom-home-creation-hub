@@ -30,7 +30,7 @@ const MobileNav = ({
   
   return (
     <div className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/98 backdrop-blur-md overflow-auto">
-      <Container className="flex flex-col h-[calc(100vh-4rem)] py-4">
+      <Container className="flex flex-col h-[calc(100vh-4rem)] py-6">
         <ul className="space-y-1 overflow-y-auto">
           {navLinks.map(item => (
             <React.Fragment key={item.name}>
@@ -39,7 +39,7 @@ const MobileNav = ({
                 {item.subLinks ? (
                   <button 
                     onClick={() => toggleDropdown(openDropdown === item.name ? null : item.name)}
-                    className="flex items-center justify-between w-full text-sm font-medium text-stone-800 hover:text-khaki-800 py-3 px-1"
+                    className="flex items-center justify-between w-full text-base font-medium text-stone-800 hover:text-khaki-800 py-3 px-2"
                   >
                     <span>{item.name}</span>
                     <svg 
@@ -60,7 +60,7 @@ const MobileNav = ({
                 ) : (
                   <Link 
                     to={item.path} 
-                    className="block text-sm font-medium text-stone-800 hover:text-khaki-800 py-3 px-1"
+                    className="block text-base font-medium text-stone-800 hover:text-khaki-800 py-3 px-2"
                   >
                     {item.name}
                   </Link>
@@ -69,13 +69,13 @@ const MobileNav = ({
               
               {/* Sub-links if they exist and dropdown is open */}
               {item.subLinks && openDropdown === item.name && (
-                <li className="pl-3 mb-2 bg-gray-50 rounded-md">
-                  <ul className="space-y-1 border-l border-stone-200 pl-2 py-2">
+                <li className="pl-3 mb-3 bg-gray-50 rounded-md">
+                  <ul className="space-y-1 border-l border-stone-200 pl-3 py-3">
                     {item.subLinks.map(subLink => (
                       <li key={subLink.name}>
                         <Link 
                           to={subLink.path} 
-                          className="block py-2 px-2 text-sm text-stone-600 hover:text-khaki-800 hover:bg-gray-100 rounded-md"
+                          className="block py-2 px-3 text-sm text-stone-600 hover:text-khaki-800 hover:bg-gray-100 rounded-md"
                         >
                           {subLink.name}
                         </Link>
