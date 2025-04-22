@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
@@ -7,6 +8,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Building, Construction, Wrench, Settings, Plus, Info, ChevronDown, ChevronUp } from 'lucide-react';
 import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { InternalLinkText } from '@/utils/internalLinking';
+import SEOFooter from '@/components/common/SEOFooter';
 
 // Define service categories
 const services = [
@@ -216,8 +219,10 @@ const Prestations = () => {
               Services de maîtrise d'œuvre
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              De la conception à la réalisation, Progineer vous accompagne dans tous vos projets de construction, 
-              rénovation et aménagement en région PACA.
+              <InternalLinkText 
+                text="De la conception à la réalisation, Progineer vous accompagne dans tous vos projets de construction, rénovation et aménagement en région PACA."
+                maxOccurrences={2}
+              />
             </p>
           </div>
         </Container>
@@ -236,7 +241,7 @@ const Prestations = () => {
                   <div className="mb-4">{service.icon}</div>
                   <CardTitle className="text-xl">{service.title}</CardTitle>
                   <CardDescription className="text-gray-600">
-                    {service.description}
+                    <InternalLinkText text={service.description} maxOccurrences={1} />
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -244,7 +249,7 @@ const Prestations = () => {
                     {service.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <span className="mr-2 mt-1 text-khaki-600">•</span>
-                        <span>{feature}</span>
+                        <span><InternalLinkText text={feature} /></span>
                       </li>
                     ))}
                   </ul>
@@ -289,7 +294,7 @@ const Prestations = () => {
                       <CollapsibleContent className="mt-4">
                         <div className="p-4 bg-khaki-50 rounded-lg">
                           <p className="text-gray-700 whitespace-pre-line">
-                            {service.detailedContent}
+                            <InternalLinkText text={service.detailedContent} maxOccurrences={3} />
                           </p>
                           <div className="mt-4">
                             <Button href="/contact" className="w-full sm:w-auto justify-center mt-2">
@@ -313,7 +318,10 @@ const Prestations = () => {
           <div className="text-center mb-16 max-w-3xl mx-auto">
             <h2 className="text-3xl font-semibold mb-6">Notre processus d'accompagnement</h2>
             <p className="text-gray-600">
-              Une méthodologie éprouvée pour mener à bien votre projet, de la première idée à la livraison finale.
+              <InternalLinkText 
+                text="Une méthodologie éprouvée pour mener à bien votre projet, de la première idée à la livraison finale."
+                maxOccurrences={1}
+              />
             </p>
           </div>
 
@@ -323,7 +331,10 @@ const Prestations = () => {
               <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">1</div>
               <h3 className="text-xl font-semibold mb-3 mt-2">Consultation initiale</h3>
               <p className="text-gray-600">
-                Nous écoutons vos besoins, analysons votre projet et définissons ensemble les grandes lignes de votre projet.
+                <InternalLinkText 
+                  text="Nous écoutons vos besoins, analysons votre projet et définissons ensemble les grandes lignes de votre projet."
+                  maxOccurrences={1}
+                />
               </p>
             </div>
 
@@ -332,7 +343,10 @@ const Prestations = () => {
               <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">2</div>
               <h3 className="text-xl font-semibold mb-3 mt-2">Étude et conception</h3>
               <p className="text-gray-600">
-                Nous élaborons les plans, estimons les coûts et proposons des solutions techniques adaptées à votre budget.
+                <InternalLinkText 
+                  text="Nous élaborons les plans, estimons les coûts et proposons des solutions techniques adaptées à votre budget."
+                  maxOccurrences={1}
+                />
               </p>
             </div>
 
@@ -341,7 +355,10 @@ const Prestations = () => {
               <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">3</div>
               <h3 className="text-xl font-semibold mb-3 mt-2">Réalisation</h3>
               <p className="text-gray-600">
-                Nous coordonnons les différents corps de métier et veillons au respect du calendrier et de la qualité d'exécution.
+                <InternalLinkText 
+                  text="Nous coordonnons les différents corps de métier et veillons au respect du calendrier et de la qualité d'exécution."
+                  maxOccurrences={1}
+                />
               </p>
             </div>
 
@@ -350,7 +367,10 @@ const Prestations = () => {
               <div className="absolute -top-5 -left-5 w-10 h-10 rounded-full bg-khaki-600 text-white flex items-center justify-center font-semibold text-lg">4</div>
               <h3 className="text-xl font-semibold mb-3 mt-2">Livraison et suivi</h3>
               <p className="text-gray-600">
-                Nous effectuons la réception des travaux et assurons un suivi post-livraison pour garantir votre entière satisfaction.
+                <InternalLinkText 
+                  text="Nous effectuons la réception des travaux et assurons un suivi post-livraison pour garantir votre entière satisfaction."
+                  maxOccurrences={1}
+                />
               </p>
             </div>
           </div>
@@ -371,7 +391,10 @@ const Prestations = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-2">Expertise technique</h3>
                     <p className="text-gray-600">
-                      Notre équipe combine des compétences en architecture, ingénierie et gestion de projet pour une approche complète et efficace.
+                      <InternalLinkText 
+                        text="Notre équipe combine des compétences en architecture, ingénierie et gestion de projet pour une approche complète et efficace."
+                        maxOccurrences={1}
+                      />
                     </p>
                   </div>
                 </div>
@@ -383,7 +406,10 @@ const Prestations = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-2">Communication transparente</h3>
                     <p className="text-gray-600">
-                      Nous vous tenons informés à chaque étape de l'avancement de votre projet et restons disponibles pour répondre à vos questions.
+                      <InternalLinkText 
+                        text="Nous vous tenons informés à chaque étape de l'avancement de votre projet et restons disponibles pour répondre à vos questions."
+                        maxOccurrences={1}
+                      />
                     </p>
                   </div>
                 </div>
@@ -395,7 +421,10 @@ const Prestations = () => {
                   <div>
                     <h3 className="text-xl font-medium mb-2">Maîtrise des coûts</h3>
                     <p className="text-gray-600">
-                      Nos méthodes de travail optimisées nous permettent de respecter scrupuleusement les budgets établis, sans mauvaises surprises.
+                      <InternalLinkText 
+                        text="Nos méthodes de travail optimisées nous permettent de respecter scrupuleusement les budgets établis, sans mauvaises surprises."
+                        maxOccurrences={1}
+                      />
                     </p>
                   </div>
                 </div>
@@ -423,7 +452,11 @@ const Prestations = () => {
               Prêt à concrétiser votre projet ?
             </h2>
             <p className="text-xl opacity-90 mb-8">
-              Contactez notre équipe pour discuter de vos besoins et obtenir un devis personnalisé.
+              <InternalLinkText 
+                text="Contactez notre équipe pour discuter de vos besoins et obtenir un devis personnalisé."
+                maxOccurrences={1}
+                className="text-white"
+              />
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -450,7 +483,10 @@ const Prestations = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-semibold mb-4">Questions fréquentes</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Vous avez des questions sur nos services ? Consultez nos réponses ci-dessous ou contactez-nous directement.
+              <InternalLinkText 
+                text="Vous avez des questions sur nos services ? Consultez nos réponses ci-dessous ou contactez-nous directement."
+                maxOccurrences={1}
+              />
             </p>
           </div>
 
@@ -458,28 +494,40 @@ const Prestations = () => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold mb-3">Quelle est la différence entre un maître d'œuvre et un architecte ?</h3>
               <p className="text-gray-600">
-                Le maître d'œuvre, comme Progineer, coordonne et supervise l'ensemble du projet de construction, tandis que l'architecte se concentre davantage sur la conception. Nous travaillons en collaboration avec des architectes lorsque nécessaire pour certains projets.
+                <InternalLinkText 
+                  text="Le maître d'œuvre, comme Progineer, coordonne et supervise l'ensemble du projet de construction, tandis que l'architecte se concentre davantage sur la conception. Nous travaillons en collaboration avec des architectes lorsque nécessaire pour certains projets."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold mb-3">Quel est le délai moyen pour un projet de construction ?</h3>
               <p className="text-gray-600">
-                Les délais varient selon la nature et l'ampleur du projet. Pour une maison individuelle, comptez environ 8 à 12 mois entre la conception et la livraison. Une extension prend généralement 4 à 6 mois, et une rénovation 2 à 6 mois selon sa complexité.
+                <InternalLinkText 
+                  text="Les délais varient selon la nature et l'ampleur du projet. Pour une maison individuelle, comptez environ 8 à 12 mois entre la conception et la livraison. Une extension prend généralement 4 à 6 mois, et une rénovation 2 à 6 mois selon sa complexité."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold mb-3">Quelles garanties offrez-vous sur vos prestations ?</h3>
               <p className="text-gray-600">
-                Nous sommes couverts par une assurance décennale et une responsabilité civile professionnelle. De plus, nous garantissons la conformité des travaux avec les plans et le respect des normes en vigueur, notamment la RE2020.
+                <InternalLinkText 
+                  text="Nous sommes couverts par une assurance décennale et une responsabilité civile professionnelle. De plus, nous garantissons la conformité des travaux avec les plans et le respect des normes en vigueur, notamment la RE2020."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <h3 className="text-xl font-semibold mb-3">Intervenez-vous sur toute la région PACA ?</h3>
               <p className="text-gray-600">
-                Oui, nous intervenons dans toute la région Provence-Alpes-Côte d'Azur, notamment à Marseille, Toulon, Nice, Cannes, Saint-Tropez, Fréjus et leurs environs. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre zone.
+                <InternalLinkText 
+                  text="Oui, nous intervenons dans toute la région Provence-Alpes-Côte d'Azur, notamment à Marseille, Toulon, Nice, Cannes, Saint-Tropez, Fréjus et leurs environs. N'hésitez pas à nous contacter pour vérifier notre disponibilité dans votre zone."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
           </div>
@@ -492,16 +540,19 @@ const Prestations = () => {
         </Container>
       </section>
 
-      {/* SEO Footer */}
-      <section className="py-8 bg-stone-50 border-t border-stone-200">
-        <Container>
-          <div className="text-sm text-stone-500">
-            <p>
-              Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation énergétique et extension. Nos architectes et ingénieurs assurent la maîtrise d'ouvrage complète de votre projet. Optimisation des espaces, design d'intérieur et montage administratif pour particuliers et professionnels dans toute la région Provence-Alpes-Côte d'Azur.
-            </p>
-          </div>
-        </Container>
-      </section>
+      {/* SEO Footer renforcé */}
+      <SEOFooter 
+        text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation énergétique et extension. Nos architectes et ingénieurs assurent la maîtrise d'ouvrage complète de votre projet. Optimisation des espaces, design d'intérieur et montage administratif pour particuliers et professionnels dans toute la région Provence-Alpes-Côte d'Azur."
+        additionalKeywords={[
+          "maître d'œuvre PACA", 
+          "coordination travaux", 
+          "conception architecturale", 
+          "maison sur mesure", 
+          "rénovation énergétique Marseille", 
+          "extension habitat", 
+          "optimisation espace"
+        ]}
+      />
     </>
   );
 };

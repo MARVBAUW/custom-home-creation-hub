@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Hero from '../components/home/Hero';
 import ExpertiseSection from '../components/home/ExpertiseSection';
@@ -10,7 +11,8 @@ import { getBusinessStructuredData } from '../utils/googleBusiness';
 import SEO from '../components/common/SEO';
 import SEOFooter from '@/components/common/SEOFooter';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';  // Add this import
+import { ArrowRight } from 'lucide-react';
+import { InternalLinkText } from '@/utils/internalLinking';
 
 const Index = () => {
   return (
@@ -41,7 +43,10 @@ const Index = () => {
                 Tout ce dont vous avez besoin
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Explorez l'ensemble de nos services et ressources pour votre projet de construction ou rénovation.
+                <InternalLinkText 
+                  text="Explorez l'ensemble de nos services et ressources pour votre projet de construction ou rénovation."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
 

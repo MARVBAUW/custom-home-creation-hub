@@ -4,6 +4,8 @@ import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Link } from 'react-router-dom';
+import { InternalLinkText } from '@/utils/internalLinking';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const projects = [
   {
@@ -83,8 +85,10 @@ const Realisations = () => {
               Portfolio de nos projets
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA.
-              Découvrez notre savoir-faire en matière de <strong>construction</strong> et <strong>rénovation</strong>.
+              <InternalLinkText 
+                text="Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Découvrez notre savoir-faire en matière de construction et rénovation."
+                maxOccurrences={2}
+              />
             </p>
           </div>
         </Container>
@@ -117,7 +121,9 @@ const Realisations = () => {
                   </div>
                   
                   <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 text-sm mb-4">{project.description}</p>
+                  <p className="text-gray-600 text-sm mb-4">
+                    <InternalLinkText text={project.description} maxOccurrences={1} />
+                  </p>
                   
                   <Link to={`/realisations-architecte-maison/${project.slug}`}>
                     <Button variant="outline" className="w-full justify-center">
@@ -141,23 +147,26 @@ const Realisations = () => {
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Maisons individuelles sur mesure</span>
+                  <span><InternalLinkText text="Maisons individuelles sur mesure" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Villas contemporaines et traditionnelles</span>
+                  <span><InternalLinkText text="Villas contemporaines et traditionnelles" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Petit collectif résidentiel</span>
+                  <span><InternalLinkText text="Petit collectif résidentiel" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Bureaux et locaux professionnels</span>
+                  <span><InternalLinkText text="Bureaux et locaux professionnels" /></span>
                 </li>
               </ul>
               <p className="text-gray-600 text-sm">
-                Nos constructions neuves sont conçues dans le respect des <strong>normes énergétiques</strong> et <strong>environnementales</strong> actuelles, avec une attention particulière portée à l'intégration dans leur environnement.
+                <InternalLinkText 
+                  text="Nos constructions neuves sont conçues dans le respect des normes énergétiques et environnementales actuelles, avec une attention particulière portée à l'intégration dans leur environnement."
+                  maxOccurrences={2} 
+                />
               </p>
             </div>
             
@@ -166,23 +175,26 @@ const Realisations = () => {
               <ul className="space-y-2 mb-6">
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Rénovation complète d'appartements</span>
+                  <span><InternalLinkText text="Rénovation complète d'appartements" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Réhabilitation de bâtiments anciens</span>
+                  <span><InternalLinkText text="Réhabilitation de bâtiments anciens" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Extensions de maisons existantes</span>
+                  <span><InternalLinkText text="Extensions de maisons existantes" /></span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-khaki-600 mr-2">✓</span>
-                  <span>Surélévations et aménagements de combles</span>
+                  <span><InternalLinkText text="Surélévations et aménagements de combles" /></span>
                 </li>
               </ul>
               <p className="text-gray-600 text-sm">
-                Nos projets de rénovation et d'extension valorisent le <strong>patrimoine existant</strong> tout en y apportant le <strong>confort moderne</strong> et une amélioration des performances énergétiques.
+                <InternalLinkText 
+                  text="Nos projets de rénovation et d'extension valorisent le patrimoine existant tout en y apportant le confort moderne et une amélioration des performances énergétiques."
+                  maxOccurrences={2}
+                />
               </p>
             </div>
           </div>
@@ -197,7 +209,10 @@ const Realisations = () => {
               Vous avez un projet similaire ?
             </h2>
             <p className="text-gray-600 mb-8">
-              Contactez-nous pour discuter de votre projet et découvrir comment notre expertise peut vous aider à le concrétiser.
+              <InternalLinkText 
+                text="Contactez-nous pour discuter de votre projet et découvrir comment notre expertise peut vous aider à le concrétiser."
+                maxOccurrences={2}
+              />
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button href="/estimation" className="bg-khaki-700 hover:bg-khaki-800 text-white">Estimer mon projet</Button>
@@ -207,17 +222,19 @@ const Realisations = () => {
         </Container>
       </section>
 
-      {/* SEO Footer */}
-      <section className="py-8 bg-white">
-        <Container>
-          <div className="text-sm text-stone-500">
-            <h4 className="font-semibold mb-2">Réalisations de notre bureau d'études</h4>
-            <p>
-              Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Ingénieur, maître d'œuvre spécialisé en construction de maisons sur mesure, rénovation et extension dans toute la région Provence-Alpes-Côte d'Azur.
-            </p>
-          </div>
-        </Container>
-      </section>
+      {/* SEO Footer renforcé */}
+      <SEOFooter 
+        text="Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Ingénieur, maître d'œuvre spécialisé en construction de maisons sur mesure, rénovation et extension dans toute la région Provence-Alpes-Côte d'Azur."
+        additionalKeywords={[
+          "réalisations architecturales", 
+          "projets maître d'œuvre", 
+          "portfolio construction", 
+          "rénovation appartement", 
+          "extension maison PACA", 
+          "maison écologique Toulon", 
+          "villa contemporaine Marseille"
+        ]}
+      />
     </>
   );
 };
