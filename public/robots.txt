@@ -3,6 +3,9 @@
 User-agent: *
 Allow: /
 
+# Sitemap location
+Sitemap: https://progineer.fr/sitemap.xml
+
 # Prioritize main pages
 Allow: /
 Allow: /estimation
@@ -12,40 +15,12 @@ Allow: /realisations-architecte-maison
 Allow: /parrainage
 Allow: /faq
 
-# Main sitemap (with absolute URL)
-Sitemap: https://progineer.fr/sitemap.xml
-
 # Specific bot directives
 User-agent: Googlebot
 Allow: /
-Allow: /estimation
-Allow: /contact
-Allow: /faq
 
 User-agent: Bingbot
 Allow: /
-Allow: /estimation
-Allow: /contact
-Allow: /faq
 
 User-agent: Yandexbot
 Allow: /
-Allow: /estimation
-Allow: /contact
-Allow: /faq
-
-User-agent: Twitterbot
-Allow: /
-Allow: /estimation
-Allow: /contact
-Allow: /faq
-
-User-agent: facebookexternalhit
-Allow: /
-Allow: /estimation
-Allow: /contact
-Allow: /faq
-
-# Force HTTPS via robots.txt is not effective, but adding for documentation
-# Prevent bots from crawling certain pages (if needed)
-# Disallow: /workspace

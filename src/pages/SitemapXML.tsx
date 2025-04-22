@@ -96,6 +96,7 @@ const SitemapXML: React.FC = () => {
         <title>Plan du site XML - Progineer</title>
         <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
         <meta name="robots" content="noindex, follow" />
+        <meta name="description" content="Plan du site XML pour Progineer, entreprise d'architecture et de maîtrise d'œuvre en PACA." />
       </Helmet>
       
       <div className="container mx-auto px-4 py-8">

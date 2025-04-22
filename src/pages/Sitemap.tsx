@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import Container from '../components/common/Container';
 import { Link } from 'react-router-dom';
 import SEO from '../components/common/SEO';
@@ -20,19 +19,21 @@ const Sitemap = () => {
       ]
     },
     {
+      title: 'Prestations',
+      links: [
+        { href: '/prestations-maitre-oeuvre/construction-neuve', name: 'Construction Neuve' },
+        { href: '/prestations-maitre-oeuvre/renovation', name: 'Rénovation' },
+        { href: '/prestations-maitre-oeuvre/extension', name: 'Extension' },
+        { href: '/prestations-maitre-oeuvre/optimisation-espace', name: 'Optimisation d\'Espace' },
+        { href: '/prestations-maitre-oeuvre/design-interieur', name: 'Design d\'Intérieur' },
+      ]
+    },
+    {
       title: 'Services',
       links: [
         { href: '/parrainage', name: 'Parrainage' },
         { href: '/devenir-partenaire', name: 'Devenir Partenaire' },
         { href: '/workspace', name: 'Espace de Travail' },
-      ]
-    },
-    {
-      title: 'Calculateurs',
-      links: [
-        { href: '/workspace/calculateurs', name: 'Calculateurs financiers' },
-        { href: '/workspace/calculateurs/eurocode', name: 'Calculateurs Eurocode' },
-        { href: '/workspace', name: 'Tous les calculateurs' },
       ]
     },
     {
