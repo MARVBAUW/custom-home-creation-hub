@@ -11,6 +11,3 @@ export * from './materialCosts';
 export * from './simpleEstimation';
 export * from './structuralCosts';
 export * from './technicalCosts';
-
-// Re-export from calculationUtils for backwards compatibility
-// Removed duplicate declaration to fix build error
