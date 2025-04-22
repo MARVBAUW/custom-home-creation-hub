@@ -90,9 +90,9 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
                 <Grid2X2 className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="medium" id="floor-medium" className="sr-only" />
-                <Label htmlFor="floor-medium" className="font-medium">Milieu de gamme</Label>
+                <Label htmlFor="floor-medium" className="font-medium">Carrelage medium</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Carrelage qualité moyenne
+                  Carrelage milieu de gamme
                 </p>
               </CardContent>
             </Card>
@@ -104,9 +104,9 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
                 <CheckSquare className="h-8 w-8 text-blue-500 mb-2" />
                 <RadioGroupItem value="premium" id="floor-premium" className="sr-only" />
-                <Label htmlFor="floor-premium" className="font-medium">Haut de gamme</Label>
+                <Label htmlFor="floor-premium" className="font-medium">Carrelage premium</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Carrelage haute qualité
+                  Carrelage haut de gamme
                 </p>
               </CardContent>
             </Card>
@@ -117,10 +117,10 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
                 <Ban className="h-8 w-8 text-gray-500 mb-2" />
-                <RadioGroupItem value="non_concerne" id="floor-none" className="sr-only" />
-                <Label htmlFor="floor-none" className="font-medium">Non concerné</Label>
+                <RadioGroupItem value="non_concerne" id="floor-non_concerne" className="sr-only" />
+                <Label htmlFor="floor-non_concerne" className="font-medium">Non concerné</Label>
                 <p className="text-xs text-gray-500 mt-1">
-                  Pas de carrelage sol
+                  Pas de carrelage au sol
                 </p>
               </CardContent>
             </Card>
@@ -129,51 +129,38 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
         
         {floorTileType !== 'non_concerne' && (
           <div className="mb-8">
-            <div className="flex justify-between">
-              <Label className="text-base font-medium">Proportion de surface carrelée</Label>
+            <div className="flex items-center justify-between mb-2">
+              <Label>Pourcentage de la surface à carreler</Label>
               <span className="text-sm font-medium">{floorTilePercentage}%</span>
             </div>
             <Slider
               value={[floorTilePercentage]}
+              onValueChange={(values) => setFloorTilePercentage(values[0])}
+              min={0}
               max={100}
               step={5}
-              onValueChange={(value) => setFloorTilePercentage(value[0])}
-              className="mt-2"
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>0%</span>
-              <span>50%</span>
-              <span>100%</span>
-            </div>
           </div>
         )}
         
         <div className="mb-8">
-          <Label className="mb-2 block">Type de faïence murs</Label>
+          <Label className="mb-2 block">Type de faïence murale</Label>
           <RadioGroup 
             value={wallTileType} 
             onValueChange={setWallTileType}
-            className="grid grid-cols-1 gap-3 sm:grid-cols-3"
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
           >
             <Card 
               className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'standard' ? 'border-blue-500 bg-blue-50' : ''}`}
               onClick={() => setWallTileType('standard')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Square className="h-8 w-8 text-blue-500 mb-2" />
+                <Square className="h-8 w-8 text-green-500 mb-2" />
                 <RadioGroupItem value="standard" id="wall-standard" className="sr-only" />
                 <Label htmlFor="wall-standard" className="font-medium">Faïence base</Label>
-              </CardContent>
-            </Card>
-            
-            <Card 
-              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'medium' ? 'border-blue-500 bg-blue-50' : ''}`}
-              onClick={() => setWallTileType('medium')}
-            >
-              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <Grid2X2 className="h-8 w-8 text-blue-500 mb-2" />
-                <RadioGroupItem value="medium" id="wall-medium" className="sr-only" />
-                <Label htmlFor="wall-medium" className="font-medium">Faïence MG</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Faïence standard
+                </p>
               </CardContent>
             </Card>
             
@@ -182,9 +169,40 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
               onClick={() => setWallTileType('premium')}
             >
               <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
-                <CheckSquare className="h-8 w-8 text-blue-500 mb-2" />
+                <Grid2X2 className="h-8 w-8 text-green-500 mb-2" />
                 <RadioGroupItem value="premium" id="wall-premium" className="sr-only" />
-                <Label htmlFor="wall-premium" className="font-medium">Faïence HG</Label>
+                <Label htmlFor="wall-premium" className="font-medium">Faïence premium</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Faïence haut de gamme
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'luxury' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWallTileType('luxury')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <CheckSquare className="h-8 w-8 text-green-500 mb-2" />
+                <RadioGroupItem value="luxury" id="wall-luxury" className="sr-only" />
+                <Label htmlFor="wall-luxury" className="font-medium">Faïence luxe</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Faïence très haut de gamme
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card 
+              className={`cursor-pointer transition-all hover:shadow-md ${wallTileType === 'non_concerne' ? 'border-blue-500 bg-blue-50' : ''}`}
+              onClick={() => setWallTileType('non_concerne')}
+            >
+              <CardContent className="pt-4 pb-4 flex flex-col items-center text-center">
+                <Ban className="h-8 w-8 text-gray-500 mb-2" />
+                <RadioGroupItem value="non_concerne" id="wall-non_concerne" className="sr-only" />
+                <Label htmlFor="wall-non_concerne" className="font-medium">Non concerné</Label>
+                <p className="text-xs text-gray-500 mt-1">
+                  Pas de faïence murale
+                </p>
               </CardContent>
             </Card>
           </RadioGroup>
@@ -198,12 +216,6 @@ const CarrelageForm: React.FC<BaseFormProps> = ({
             Continuer
           </Button>
         </div>
-        
-        {formData.montantT && (
-          <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {Number(formData.montantT).toLocaleString()} €</p>
-          </div>
-        )}
       </div>
     </div>
   );

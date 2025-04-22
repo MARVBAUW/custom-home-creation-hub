@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { calculateKitchenCost } from '../utils/montantUtils';
 import { Utensils, Home, CheckSquare, LayoutGrid } from 'lucide-react';
+import { ensureNumber } from '../utils/typeConversions';
 
 const CuisineForm: React.FC<BaseFormProps> = ({
   formData,
@@ -31,7 +32,7 @@ const CuisineForm: React.FC<BaseFormProps> = ({
       kitchenType,
       kitchenCost,
       includeCuisine: true,
-      montantT: (formData.montantT || 0) + kitchenCost
+      montantT: (ensureNumber(formData.montantT) || 0) + kitchenCost
     });
     
     // Move to the next step
@@ -124,7 +125,7 @@ const CuisineForm: React.FC<BaseFormProps> = ({
         
         {formData.montantT && (
           <div className="mt-4 p-3 bg-gray-100 rounded-md">
-            <p className="text-sm font-medium">Total estimé: {formData.montantT.toLocaleString()} €</p>
+            <p className="text-sm font-medium">Total estimé: {ensureNumber(formData.montantT).toLocaleString()} €</p>
             <p className="text-xs text-gray-500">
               + {formatPrice(calculateKitchenCost(kitchenType))} pour la cuisine
             </p>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -11,7 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, ArrowRight, Home } from 'lucide-react';
 import { BaseFormProps } from '../types/formTypes';
-import { calculateRoofingRenovCost, ensureNumber } from '../utils/montantUtils';
+import { calculateRoofCoveringRenovCost } from '../utils/montantUtils';
+import { ensureNumber } from '../utils/typeConversions';
 
 // Schema for the form validation
 const formSchema = z.object({
@@ -42,7 +42,7 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
   // Function to handle form submission
   const onSubmit = (values: FormValues) => {
     // Calculate the cost based on the roof type and area
-    const roofCost = calculateRoofingRenovCost(
+    const roofCost = calculateRoofCoveringRenovCost(
       values.roofType,
       values.roofArea
     );
@@ -50,8 +50,8 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
     // Update form data with values and calculated cost
     updateFormData({
       roofType: values.roofType,
-      roofArea: values.roofArea,
-      montantT: ensureNumber(formData.montantT, 0) + roofCost,
+      roofArea: ensureNumber(values.roofArea),
+      montantT: ensureNumber(formData.montantT) + roofCost,
     });
     
     // Move to next step
@@ -65,7 +65,7 @@ const CouvertureRenovForm: React.FC<BaseFormProps> = ({
   // Calculate the estimated cost in real-time
   const estimatedCost = React.useMemo(() => {
     if (!watchRoofType || watchRoofType === 'NON CONCERNE') return 0;
-    return calculateRoofingRenovCost(watchRoofType, watchRoofArea);
+    return calculateRoofCoveringRenovCost(watchRoofType, watchRoofArea);
   }, [watchRoofType, watchRoofArea]);
 
   return (

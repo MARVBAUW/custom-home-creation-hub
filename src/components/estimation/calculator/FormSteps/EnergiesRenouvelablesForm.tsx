@@ -22,7 +22,7 @@ const EnergiesRenouvelablesForm: React.FC<BaseFormProps> = ({
 
   const handleSubmit = () => {
     // Get the current total amount
-    const currentTotal = ensureNumber(formData.montantT, 0);
+    const currentTotal = ensureNumber(formData.montantT);
     
     // Calculate the additional cost for renewable energy
     const additionalCost = calculateRenewableEnergyCost(energyType, currentTotal);

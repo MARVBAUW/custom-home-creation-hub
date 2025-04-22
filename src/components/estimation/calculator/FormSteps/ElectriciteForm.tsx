@@ -22,7 +22,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
 
   const handleSubmit = () => {
     // Get the surface area
-    const surface = ensureNumber(formData.surface, 0);
+    const surface = ensureNumber(formData.surface);
     
     // Calculate the cost based on electrical type and surface
     const additionalCost = calculateElectricityCost(surface, electricalType);
@@ -30,7 +30,7 @@ const ElectriciteForm: React.FC<BaseFormProps> = ({
     // Update form data with electrical type and additional cost
     updateFormData({
       electricalType,
-      montantT: ensureNumber(formData.montantT, 0) + additionalCost
+      montantT: ensureNumber(formData.montantT) + additionalCost
     });
     
     // Move to the next step

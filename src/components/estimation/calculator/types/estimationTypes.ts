@@ -18,6 +18,7 @@ export interface ConstructionCosts {
 }
 
 export interface FeeCosts {
+  architect?: number;
   architectFees: number;
   engineeringFees: number;
   projectManagement: number;
@@ -30,6 +31,9 @@ export interface FeeCosts {
   taxes: number;
   other: number;
   total: number;
+  masterBuilderFees?: number;
+  safetyCoordination?: number;
+  technicalControl?: number;
 }
 
 export interface OtherCosts {
@@ -53,16 +57,25 @@ export interface EstimationTimeline {
 }
 
 export interface CategoryCost {
-  name: string;
-  cost: number;
-  percentage: number;
+  name?: string;
+  cost?: number;
+  percentage?: number;
   category: string;
+  amount: number;
 }
 
 export interface EstimationResponseData {
   projectType: string;
   projectDetails: ProjectDetails;
-  estimatedCost: number;
+  estimatedCost: number | { 
+    total: number; 
+    perSquareMeter: number; 
+    breakdown: { 
+      materials: number; 
+      labor: number; 
+      fees: number; 
+    } 
+  };
   constructionCosts: ConstructionCosts;
   fees: FeeCosts;
   otherCosts: OtherCosts;
@@ -118,7 +131,7 @@ export interface FormData {
   outdoorKitchen?: boolean;
   
   // Fields for AmenagementPaysagersForm
-  landscapingType?: string;
+  landscapingType?: string | string[];
   landscapingArea?: number;
   fencingLength?: number;
   gateLength?: number;
@@ -143,6 +156,13 @@ export interface FormData {
   roofType?: string;
   roofArea?: number;
   
+  // Fields for DemolitionForm
+  demolitionTypes?: string[];
+  demolitionPercentages?: Record<string, number>;
+  demolitionTotalArea?: number;
+  demolitionCost?: number;
+  demolitionDetailedCosts?: Record<string, number>;
+  
   // Additional fields that may be referenced
   foundationType?: string;
   windowType?: string;
@@ -155,6 +175,12 @@ export interface FormData {
   specialFeatures?: string[];
   exteriorFinishType?: string;
   landArea?: number;
+  
+  // Fields for ElectriciteForm
+  electricalType?: string;
+  
+  // Fields for EnergiesRenouvelablesForm
+  renewableEnergyType?: string;
   
   // Any other fields that might be used in calculations
   [key: string]: any;

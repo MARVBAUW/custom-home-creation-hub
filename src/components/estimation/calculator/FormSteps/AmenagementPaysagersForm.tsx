@@ -23,7 +23,7 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
 }) => {
   // Initialize state for landscape types
   const [landscapingTypes, setLandscapingTypes] = useState<string[]>(
-    formData.landscapingType ? (Array.isArray(formData.landscapingType) ? formData.landscapingType : [formData.landscapingType]) : []
+    formData.landscapingType ? (Array.isArray(formData.landscapingType) ? formData.landscapingType : [formData.landscapingType as string]) : []
   );
 
   // Initialize state for area values
@@ -76,47 +76,41 @@ const AmenagementPaysagersForm: React.FC<BaseFormProps> = ({
 
     // Calculate landscaping costs
     if (landscapingTypes.includes('UN PEU') && landscapingArea) {
-      const area = ensureNumber(landscapingArea);
-      additionalCost += calculateLandscapingCost('UN PEU', area);
+      additionalCost += calculateLandscapingCost('UN PEU', landscapingArea);
     }
     
     if (landscapingTypes.includes('BEAUCOUP') && landscapingArea) {
-      const area = ensureNumber(landscapingArea);
-      additionalCost += calculateLandscapingCost('BEAUCOUP', area);
+      additionalCost += calculateLandscapingCost('BEAUCOUP', landscapingArea);
     }
     
     if (landscapingTypes.includes('PASSIONNEMENT') && landscapingArea) {
-      const area = ensureNumber(landscapingArea);
-      additionalCost += calculateLandscapingCost('PASSIONNEMENT', area);
+      additionalCost += calculateLandscapingCost('PASSIONNEMENT', landscapingArea);
     }
     
     // Calculate fencing cost
     if (landscapingTypes.includes('CLOTURE') && fencingLength) {
-      const length = ensureNumber(fencingLength);
-      additionalCost += calculateFencingCost(length);
+      additionalCost += calculateFencingCost(fencingLength);
     }
     
     // Calculate gate cost
     if (landscapingTypes.includes('PORTAIL') && gateLength) {
-      const length = ensureNumber(gateLength);
-      additionalCost += calculateGateCost(length);
+      additionalCost += calculateGateCost(gateLength);
     }
     
     // Calculate terrace cost
     if (landscapingTypes.includes('TERRASSE') && terraceArea) {
-      const area = ensureNumber(terraceArea);
-      additionalCost += calculateTerraceCost(area);
+      additionalCost += calculateTerraceCost(terraceArea);
     }
 
     // Update form data with landscaping selections and costs
     updateFormData({
       landscapingType: landscapingTypes,
-      landscapingArea,
-      fencingLength,
-      gateLength,
-      terraceArea,
+      landscapingArea: ensureNumber(landscapingArea),
+      fencingLength: ensureNumber(fencingLength),
+      gateLength: ensureNumber(gateLength),
+      terraceArea: ensureNumber(terraceArea),
       includeLandscaping: landscapingTypes.length > 0 && !landscapingTypes.includes('PAS DU TOUT'),
-      montantT: ensureNumber(formData.montantT, 0) + additionalCost
+      montantT: ensureNumber(formData.montantT) + additionalCost
     });
     
     // Navigate to next step
