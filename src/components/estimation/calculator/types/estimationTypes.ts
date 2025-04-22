@@ -80,3 +80,33 @@ export interface ConversationState {
   formProgress: number;
   messages: any[]; // Array of message objects
 }
+
+// Expanding the FormData interface to include all necessary fields
+export interface FormData {
+  clientType?: string;
+  projectType?: string;
+  surface?: number;
+  facadeSurface?: number;
+  city?: string;
+  location?: string;
+  constructionType?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  budget?: number;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  projectDescription?: string;
+  projectPurpose?: string;
+  message?: string;
+  termsAccepted?: boolean;
+  commercialAccepted?: boolean;
+  formCompleted?: boolean;
+  // Additional fields that might be used in calculations
+  heatingType?: string;
+  hasAirConditioning?: boolean;
+  insulationType?: string;
+  demolitionNeeded?: boolean;
+  renovationType?: string;
+}
