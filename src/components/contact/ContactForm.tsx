@@ -1,208 +1,259 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Send } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/integrations/supabase/client';
+import { useForm } from 'react-hook-form';
+import Button from '../common/Button';
+import { Mail, Phone, AlertCircle, Check } from 'lucide-react';
+
+type FormData = {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  consent: boolean;
+};
 
 const ContactForm = () => {
-  const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    projectType: '',
-    message: ''
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.email || !formData.message) {
-      toast({
-        title: "Formulaire incomplet",
-        description: "Veuillez remplir tous les champs obligatoires.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
+  const [error, setError] = useState<string | null>(null);
+  
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+  
+  const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+    setError(null);
     
     try {
-      // Appel à la fonction Edge de Supabase
-      const { data, error } = await supabase.functions.invoke('send-contact-email', {
-        body: formData
-      });
+      // En production, envoyer les données à une API
+      console.log('Form data submitted:', data);
       
-      if (error) throw error;
+      // Simuler un délai de réponse du serveur
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      console.log("Contact form submitted successfully:", data);
-      
+      // Réinitialiser le formulaire et afficher le message de succès
+      reset();
       setIsSubmitted(true);
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        projectType: '',
-        message: ''
-      });
       
-      toast({
-        title: "Message envoyé",
-        description: "Nous avons bien reçu votre message et vous répondrons rapidement.",
-      });
-    } catch (error) {
-      console.error("Error submitting contact form:", error);
-      toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.",
-        variant: "destructive",
-      });
+      // Masquer le message de succès après 5 secondes
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+      
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      setError('Une erreur est survenue lors de l\'envoi du formulaire. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (isSubmitted) {
-    return (
-      <Card className="p-6 bg-green-50 border-green-100">
-        <div className="text-center">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-green-100 mb-4">
-            <CheckCircle className="h-6 w-6 text-green-600" />
+  
+  return (
+    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 md:p-8">
+      <h3 className="text-2xl font-semibold mb-6">Nous contacter</h3>
+      
+      {/* Success Message */}
+      {isSubmitted && (
+        <div className="mb-6 p-4 bg-green-50 border border-green-100 rounded-md flex items-start">
+          <Check className="h-5 w-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" />
+          <div>
+            <p className="text-green-800 font-medium">Message envoyé avec succès !</p>
+            <p className="text-green-700 text-sm">Nous vous répondrons dans les plus brefs délais.</p>
           </div>
-          <h3 className="text-xl font-semibold mb-2">Message envoyé avec succès</h3>
-          <p className="text-gray-600 mb-6">
-            Merci de nous avoir contactés. Notre équipe vous répondra dans les plus brefs délais.
-          </p>
-          <Button onClick={() => setIsSubmitted(false)}>
-            Envoyer un autre message
+        </div>
+      )}
+      
+      {/* Error Message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-md flex items-start">
+          <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-3 flex-shrink-0" />
+          <div>
+            <p className="text-red-800 font-medium">Erreur</p>
+            <p className="text-red-700 text-sm">{error}</p>
+          </div>
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Nom */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Nom complet <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="name"
+              type="text"
+              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-khaki-500 focus:border-transparent transition-colors ${
+                errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              }`}
+              placeholder="Votre nom et prénom"
+              aria-required="true"
+              aria-invalid={errors.name ? "true" : "false"}
+              {...register('name', { required: 'Ce champ est requis' })}
+            />
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+            )}
+          </div>
+          
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Adresse email <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-khaki-500 focus:border-transparent transition-colors ${
+                errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              }`}
+              placeholder="votre.email@exemple.com"
+              aria-required="true"
+              aria-invalid={errors.email ? "true" : "false"}
+              {...register('email', { 
+                required: 'Ce champ est requis',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Adresse email invalide'
+                }
+              })}
+            />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+            )}
+          </div>
+          
+          {/* Téléphone */}
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              Téléphone
+            </label>
+            <input
+              id="phone"
+              type="tel"
+              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-khaki-500 focus:border-transparent transition-colors ${
+                errors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              }`}
+              placeholder="06 12 34 56 78"
+              aria-invalid={errors.phone ? "true" : "false"}
+              {...register('phone')}
+            />
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
+            )}
+          </div>
+          
+          {/* Sujet */}
+          <div>
+            <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+              Sujet <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="subject"
+              className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-khaki-500 focus:border-transparent transition-colors ${
+                errors.subject ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              }`}
+              aria-required="true"
+              aria-invalid={errors.subject ? "true" : "false"}
+              {...register('subject', { required: 'Ce champ est requis' })}
+            >
+              <option value="">Sélectionnez un sujet</option>
+              <option value="devis">Demande de devis</option>
+              <option value="information">Renseignements</option>
+              <option value="rendez-vous">Prise de rendez-vous</option>
+              <option value="autre">Autre demande</option>
+            </select>
+            {errors.subject && (
+              <p className="mt-1 text-sm text-red-600">{errors.subject.message}</p>
+            )}
+          </div>
+        </div>
+        
+        {/* Message */}
+        <div className="mb-6">
+          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+            Message <span className="text-red-500">*</span>
+          </label>
+          <textarea
+            id="message"
+            rows={5}
+            className={`w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-khaki-500 focus:border-transparent transition-colors ${
+              errors.message ? 'border-red-300 bg-red-50' : 'border-gray-300'
+            }`}
+            placeholder="Décrivez votre projet ou votre demande..."
+            aria-required="true"
+            aria-invalid={errors.message ? "true" : "false"}
+            {...register('message', { required: 'Ce champ est requis' })}
+          ></textarea>
+          {errors.message && (
+            <p className="mt-1 text-sm text-red-600">{errors.message.message}</p>
+          )}
+        </div>
+        
+        {/* Consentement */}
+        <div className="mb-8">
+          <div className="flex items-start">
+            <input
+              id="consent"
+              type="checkbox"
+              className={`h-5 w-5 rounded border-gray-300 text-khaki-600 focus:ring-khaki-500 mr-2 mt-0.5 ${
+                errors.consent ? 'border-red-300' : ''
+              }`}
+              aria-required="true"
+              aria-invalid={errors.consent ? "true" : "false"}
+              {...register('consent', { required: 'Vous devez accepter la politique de confidentialité' })}
+            />
+            <label htmlFor="consent" className="text-sm text-gray-700">
+              J'accepte que mes données soient traitées conformément à la <a href="/privacy-policy" className="text-khaki-600 hover:underline">politique de confidentialité</a> de Progineer. <span className="text-red-500">*</span>
+            </label>
+          </div>
+          {errors.consent && (
+            <p className="mt-1 text-sm text-red-600">{errors.consent.message}</p>
+          )}
+        </div>
+        
+        {/* Submit Button */}
+        <div>
+          <Button
+            type="submit"
+            className="w-full justify-center bg-khaki-700 hover:bg-khaki-800 text-white"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Envoi en cours...
+              </>
+            ) : (
+              'Envoyer ma demande'
+            )}
           </Button>
         </div>
-      </Card>
-    );
-  }
-
-  return (
-    <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Nom complet *</Label>
-          <Input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Votre nom et prénom"
-            required
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="email">Email *</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="votre@email.com"
-            required
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="phone">Téléphone</Label>
-          <Input
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="06 xx xx xx xx"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="subject">Sujet</Label>
-          <Select value={formData.subject} onValueChange={(value) => handleSelectChange('subject', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionnez un sujet" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="devis">Demande de devis</SelectItem>
-              <SelectItem value="info">Information générale</SelectItem>
-              <SelectItem value="partenariat">Partenariat</SelectItem>
-              <SelectItem value="autre">Autre</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="projectType">Type de projet</Label>
-          <Select value={formData.projectType} onValueChange={(value) => handleSelectChange('projectType', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Sélectionnez votre projet" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="construction">Construction neuve</SelectItem>
-              <SelectItem value="renovation">Rénovation</SelectItem>
-              <SelectItem value="extension">Extension</SelectItem>
-              <SelectItem value="amenagement">Aménagement intérieur</SelectItem>
-              <SelectItem value="autre">Autre</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="message">Message *</Label>
-          <Textarea
-            id="message"
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            placeholder="Décrivez votre projet ou votre demande..."
-            rows={5}
-            required
-          />
-        </div>
-        
-        <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
-              Envoi en cours...
-            </>
-          ) : (
-            <>
-              <Send className="mr-2 h-4 w-4" />
-              Envoyer le message
-            </>
-          )}
-        </Button>
-        
-        <p className="text-xs text-gray-500 text-center mt-2">
-          * Champs obligatoires. Vos données sont protégées conformément à notre politique de confidentialité.
-        </p>
       </form>
-    </Card>
+      
+      {/* Alternative Contact Methods */}
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <h4 className="text-lg font-medium mb-4">Autres moyens de nous contacter</h4>
+        <div className="space-y-4">
+          <div className="flex items-center">
+            <Phone className="h-5 w-5 text-khaki-600 mr-3" />
+            <a href="tel:+33783762156" className="text-gray-700 hover:text-khaki-600 transition-colors">
+              +33 7 83 76 21 56
+            </a>
+          </div>
+          <div className="flex items-center">
+            <Mail className="h-5 w-5 text-khaki-600 mr-3" />
+            <a href="mailto:progineer.moe@gmail.com" className="text-gray-700 hover:text-khaki-600 transition-colors">
+              progineer.moe@gmail.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
