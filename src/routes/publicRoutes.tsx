@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import Index from '../pages/Index';
@@ -24,6 +23,11 @@ import Renovation from '../pages/prestations/Renovation';
 import Extension from '../pages/prestations/Extension';
 import OptimisationEspace from '../pages/prestations/OptimisationEspace';
 import DesignInterieur from '../pages/prestations/DesignInterieur';
+import MontageAdministratif from '../pages/prestations/MontageAdministratif';
+import PetitCollectif from '../pages/prestations/PetitCollectif';
+import Rehabilitation from '../pages/prestations/Rehabilitation';
+import ConstructionEcologique from '../pages/prestations/ConstructionEcologique';
+import RealisationsArchitecturales from '../pages/RealisationsArchitecturales';
 
 // Add a proper route for the HTML sitemap page
 export const publicRoutes: RouteObject[] = [
@@ -63,6 +67,22 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/prestations-maitre-oeuvre/design-interieur",
     element: <DesignInterieur />
+  },
+  {
+    path: "/prestations-maitre-oeuvre/montage-administratif",
+    element: <MontageAdministratif />
+  },
+  {
+    path: "/prestations-maitre-oeuvre/petit-collectif",
+    element: <PetitCollectif />
+  },
+  {
+    path: "/prestations-maitre-oeuvre/rehabilitation",
+    element: <Rehabilitation />
+  },
+  {
+    path: "/prestations-maitre-oeuvre/construction-ecologique",
+    element: <ConstructionEcologique />
   },
   {
     path: "/realisations-architecte-maison",
@@ -107,6 +127,10 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/sitemap.xml",
     element: <SitemapXML />
+  },
+  {
+    path: "/realisations-architecturales",
+    element: <RealisationsArchitecturales />
   },
   {
     path: "*",

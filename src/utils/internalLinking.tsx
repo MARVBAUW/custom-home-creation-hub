@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -21,11 +20,19 @@ export const keywordMap: Record<string, string> = {
   "design d'espace": "/prestations-maitre-oeuvre/design-interieur",
   "aménagement intérieur": "/prestations-maitre-oeuvre/design-interieur",
   "réalisations": "/realisations-architecte-maison",
+  "portfolio": "/realisations-architecturales",
+  "réalisations architecturales": "/realisations-architecturales",
   "projets": "/realisations-architecte-maison",
   "devis": "/contact",
   "estimation": "/estimation",
   "contact": "/contact",
-  
+
+  // Ajouts pour maillage interne spécifique
+  "montage administratif": "/prestations-maitre-oeuvre/montage-administratif",
+  "petit collectif résidentiel": "/prestations-maitre-oeuvre/petit-collectif",
+  "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation",
+  "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique",
+
   // Villes PACA
   "marseille": "/",
   "aix-en-provence": "/",
