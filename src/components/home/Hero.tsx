@@ -49,32 +49,32 @@ const Hero = () => {
           </div>
 
           {/* Key features section - Updated layout and visual hierarchy */}
-          <div className="w-full mt-16 p-6 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
-            <h3 className="text-white/90 font-medium mb-6 text-center">Nos engagements pour votre projet</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Coordination des corps de métier</span>
+          <div className="w-full mt-16 p-8 rounded-2xl bg-gradient-to-br from-black/30 to-black/10 backdrop-blur-sm border border-white/20 shadow-lg">
+            <h3 className="text-white/90 font-medium mb-8 text-center">Nos engagements pour votre projet</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-sm">
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Coordination des corps de métier</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Respect des délais garantis</span>
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Respect des délais garantis</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Expertise technique</span>
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Expertise technique</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Maîtrise d'œuvre complète</span>
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Maîtrise d'œuvre complète</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Choix des matériaux</span>
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Choix des matériaux</span>
               </div>
-              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
-                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
-                <span>Projets de rénovation</span>
+              <div className="group flex items-center space-x-3 text-white/80 hover:text-white transition-all duration-300 hover:-translate-y-1">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0 group-hover:scale-150 transition-transform duration-300"></div>
+                <span className="group-hover:text-progineer-gold transition-colors duration-300">Projets de rénovation</span>
               </div>
             </div>
           </div>
