@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
@@ -10,17 +9,17 @@ const teamMembers = [
     id: 1,
     name: 'Marvin Bauwens',
     role: 'Fondateur & Maître d\'œuvre',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2049&auto=format&fit=crop',
-    bio: 'Avec plus de 10 ans d\'expérience dans l\'architecture et la construction, Marvin a fondé Progineer en 2018 avec la vision de créer des espaces de vie parfaitement adaptés aux besoins de chacun.',
-    skills: ['Architecture', 'Coordination de projets', 'Gestion de chantier', 'Conception 3D']
+    image: '/lovable-uploads/aa0d9792-6c78-477d-9203-0c92cc4c6035.png',
+    bio: "Diplômé d’un master en génie civil décerné par l’INSA, Marvin a ensuite acquis de l’expérience dans divers corps de métiers. Il a notamment été représentant de la maîtrise d’ouvrage pour une foncière nationale d’envergure, ainsi que chef de projet de maîtrise d’œuvre. Missionné pour gérer les actifs immobiliers de différentes entités, Marvin a démontré son efficacité tant dans la conception que dans le suivi opérationnel des travaux, apportant une réelle valeur ajoutée à chaque étape du projet.",
+    skills: ['Expertise technique', 'Gestion de projet', 'Coordination', 'Pilotage travaux']
   },
   {
     id: 2,
-    name: 'Mael Allano',
-    role: 'Architecte principal',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2074&auto=format&fit=crop',
-    bio: 'Diplômé de l\'École d\'Architecture de Marseille, Mael apporte son expertise créative et technique à chaque projet, avec une approche centrée sur le design durable et l\'intégration environnementale.',
-    skills: ['Design architectural', 'Architecture durable', 'Rénovation', 'Planification spatiale']
+    name: 'Maël Allano',
+    role: 'Maître d\'œuvre & chargé d\'études',
+    image: '/lovable-uploads/e78983ec-3921-43f5-93e1-7dee7f23a28a.png',
+    bio: "Également diplômé du master en génie civil de l’INSA, Maël a débuté comme chef de chantier dans une entreprise de second œuvre. Développant les aspects techniques au niveau des finitions du bâtiment, il s’est ensuite orienté vers une entreprise générale du bâtiment spécialisée dans l’industrie et le tertiaire, en tant que chargé d’études de prix et d’analyse de structure. Maël a su diversifier son panel de connaissances et acquérir une vision globale de l’étude et de la réalisation de divers types de projets.",
+    skills: ['Finitions', 'Études de prix', 'Analyse de structure', 'Conduite de chantier']
   }
 ];
 
@@ -76,37 +75,35 @@ const Equipe = () => {
       </section>
 
       {/* Team members section */}
-      <section className="py-16">
+      <section className="py-16" style={{ background: "transparent" }}>
         <Container>
-          <h2 className="text-3xl font-semibold mb-12 text-center">Notre équipe pluridisciplinaire</h2>
+          <h2 className="text-3xl font-semibold mb-12 text-center text-white">Notre équipe pluridisciplinaire</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {teamMembers.map((member) => (
               <div 
                 key={member.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 transition-transform duration-300 hover:shadow-md hover:-translate-y-1"
+                className="bg-transparent rounded-xl overflow-visible shadow-none border-0 flex flex-col items-center"
               >
-                <div className="h-64 overflow-hidden">
+                <div className="w-52 h-52 flex justify-center items-end mb-6">
                   <img 
                     src={member.image} 
-                    alt={`${member.name}, ${member.role} chez Progineer, cabinet d'architecture et de maîtrise d'œuvre en PACA`}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    alt={member.name}
+                    className="w-full h-full object-contain"
+                    style={{ background: 'transparent' }}
                   />
                 </div>
-                
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
-                  <p className="text-khaki-600 mb-4">{member.role}</p>
-                  
-                  <p className="text-gray-600 text-sm mb-4">{member.bio}</p>
-                  
+                <div className="px-2 text-center">
+                  <h3 className="text-2xl font-semibold text-white mb-1">{member.name}</h3>
+                  <p className="text-progineer-gold mb-4">{member.role}</p>
+                  <p className="text-white text-sm mb-4">{member.bio}</p>
                   <div className="mt-4">
-                    <h4 className="text-sm font-medium mb-2">Compétences :</h4>
-                    <div className="flex flex-wrap gap-2">
+                    <h4 className="text-sm font-medium mb-2 text-progineer-gold">Compétences :</h4>
+                    <div className="flex flex-wrap gap-2 justify-center">
                       {member.skills.map((skill, index) => (
                         <span 
                           key={index}
-                          className="px-2 py-1 bg-stone-100 text-stone-700 rounded text-xs"
+                          className="px-2 py-1 bg-white/10 text-white rounded text-xs border border-white/20"
                         >
                           {skill}
                         </span>
