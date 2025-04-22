@@ -1,5 +1,6 @@
+
 import { FormData } from '../types/formTypes';
-import { EstimationResponseData } from '../types/estimationTypes';
+import { EstimationResponseData, EstimationFormData } from '../types/estimationTypes';
 import { ensureNumber, ensureString, ensureBoolean } from './typeConversions';
 import { calculateEstimationData } from '../calculationUtils';
 
@@ -20,6 +21,43 @@ export const adaptToEstimationData = (formData: FormData): any => {
     // Add other necessary fields
     montantT: ensureNumber(formData.montantT, 0)
   };
+};
+
+/**
+ * Convert form data to EstimationFormData format
+ * @param formData Form data to convert
+ * @returns Estimation form data
+ */
+export const adaptToEstimationFormData = (formData: Partial<FormData>): Partial<EstimationFormData> => {
+  // Create a copy to avoid mutation
+  const adaptedData: Partial<EstimationFormData> = { ...formData };
+  
+  // Ensure number values are properly converted
+  if (formData.surface !== undefined) {
+    adaptedData.surface = ensureNumber(formData.surface);
+  }
+  
+  if (formData.montantT !== undefined) {
+    adaptedData.montantT = ensureNumber(formData.montantT);
+  }
+  
+  // Return the adapted data
+  return adaptedData;
+};
+
+/**
+ * Convert EstimationFormData to FormData format
+ * @param formData Estimation form data to convert
+ * @returns Standard form data
+ */
+export const adaptToFormData = (formData: Partial<EstimationFormData>): Partial<FormData> => {
+  // Create a copy to avoid mutation
+  const adaptedData: Partial<FormData> = { ...formData };
+  
+  // Add any necessary conversions here
+  
+  // Return the adapted data
+  return adaptedData;
 };
 
 /**

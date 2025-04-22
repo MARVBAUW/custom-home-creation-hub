@@ -149,12 +149,6 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
       selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0'
     );
     
-    // Calculate new total
-    const newMontantT = calculateNewMontantT(
-      ensureNumber(formData.montantT), 
-      facadeCost
-    );
-    
     // Update form data
     updateFormData({
       stonePercentage: Number(selectedFacades.includes('pierre') ? stonePercentage : '0'),
@@ -163,7 +157,7 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
       metalCladdingPercentage: Number(selectedFacades.includes('bardageMetal') ? metalCladdingPercentage : '0'),
       woodCladdingPercentage: Number(selectedFacades.includes('bardageBois') ? woodCladdingPercentage : '0'),
       stoneCladdingPercentage: Number(selectedFacades.includes('bardagePierre') ? stoneCladdingPercentage : '0'),
-      montantT: newMontantT
+      montantT: ensureNumber(formData.montantT) + facadeCost
     });
     
     // Go to next step

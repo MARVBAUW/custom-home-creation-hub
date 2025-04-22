@@ -6,11 +6,11 @@ import { ensureNumber } from './typeConversions';
 
 /**
  * Calculate heating system cost
- * @param heatingType Type of heating system
  * @param surface Surface area in m²
+ * @param heatingType Type of heating system
  * @returns Cost in euros
  */
-export const calculateHeatingCost = (heatingType: string, surface: number): number => {
+export const calculateHeatingCost = (surface: number, heatingType: string): number => {
   const baseRates: Record<string, number> = {
     'standard': 75,
     'eco': 120,
@@ -29,13 +29,8 @@ export const calculateHeatingCost = (heatingType: string, surface: number): numb
  * @param surface Surface area in m²
  * @returns Cost in euros
  */
-export const calculateAirConditioningCost = (hasAirConditioning: string | boolean, surface: number): number => {
-  // Convert to boolean if necessary
-  const includeAC = typeof hasAirConditioning === 'string' 
-    ? hasAirConditioning.toLowerCase() === 'true' || hasAirConditioning === 'yes'
-    : !!hasAirConditioning;
-  
-  return includeAC ? 95 * ensureNumber(surface, 0) : 0;
+export const calculateAirConditioningCost = (hasAirConditioning: boolean, surface: number): number => {
+  return hasAirConditioning ? 95 * ensureNumber(surface, 0) : 0;
 };
 
 /**
@@ -98,10 +93,11 @@ export const calculateWallTilingCost = (tileType: string, surface: number): numb
 /**
  * Calculate roof frame renovation cost
  * @param roofType Type of roof frame
- * @param area Roof area in m²
+ * @param areaStr Roof area in m² (as string or number)
  * @returns Cost in euros
  */
-export const calculateRoofFrameRenovCost = (roofType: string, area: number): number => {
+export const calculateRoofFrameRenovCost = (roofType: string, areaStr: string | number): number => {
+  const area = ensureNumber(areaStr, 0);
   const baseRates: Record<string, number> = {
     'TOITURE TERRASSE ACCESSIBLE': 190,
     'TOITURE TERRASSE INACCESSIBLE': 180,
@@ -111,7 +107,7 @@ export const calculateRoofFrameRenovCost = (roofType: string, area: number): num
   };
   
   const baseRate = baseRates[roofType] || 0;
-  return baseRate * ensureNumber(area, 0);
+  return baseRate * area;
 };
 
 // Alias for backward compatibility
@@ -120,21 +116,21 @@ export const calculateRoofFrameworkRenovCost = calculateRoofFrameRenovCost;
 /**
  * Calculate roof covering renovation cost
  * @param roofingType Type of roofing
- * @param area Roof area in m²
+ * @param areaStr Roof area in m² (as string or number)
  * @returns Cost in euros
  */
-export const calculateRoofCoveringRenovCost = (roofingType: string, area: number): number => {
+export const calculateRoofCoveringRenovCost = (roofingType: string, areaStr: string | number): number => {
+  const area = ensureNumber(areaStr, 0);
   const baseRates: Record<string, number> = {
-    'TUILES TRADITIONNELLES': 90,
-    'TUILES PLATES': 95,
-    'ARDOISES': 110,
-    'ZINC': 120,
-    'TOIT TERRASSE': 105,
+    'TUILES': 120,
+    'ARDOISES': 240,
+    'ZINC': 180,
+    'BACS ACIER': 110,
     'NON CONCERNE': 0
   };
   
   const baseRate = baseRates[roofingType] || 0;
-  return baseRate * ensureNumber(area, 0);
+  return baseRate * area;
 };
 
 // Alias for backward compatibility
@@ -178,15 +174,16 @@ export const calculateDemolitionCost = (demolitionType: string, area: number): n
 
 /**
  * Calculate electrical system cost
- * @param electricalType Type of electrical system
  * @param surface Surface area in m²
+ * @param electricalType Type of electrical system
  * @returns Cost in euros
  */
-export const calculateElectricalCost = (electricalType: string, surface: number): number => {
+export const calculateElectricalCost = (surface: number, electricalType: string): number => {
   const baseRates: Record<string, number> = {
-    'standard': 65,
+    'basic': 65,
+    'standard': 75,
     'premium': 85,
-    'luxury': 110,
+    'smart_home': 110,
     'non_concerne': 0
   };
   
@@ -304,11 +301,11 @@ export const calculateWindowsCost = (windowType: string, quantity: number): numb
 
 /**
  * Calculate interior carpentry cost
+ * @param doorCount Number of doors
  * @param carpentryType Type of interior carpentry
- * @param quantity Number of doors, closets, etc.
  * @returns Cost in euros
  */
-export const calculateInteriorCarpenteryCost = (carpentryType: string, quantity: number): number => {
+export const calculateInteriorCarpenteryCost = (carpentryType: string, doorCount: number): number => {
   const baseRates: Record<string, number> = {
     'standard': 550,
     'premium': 850,
@@ -317,7 +314,7 @@ export const calculateInteriorCarpenteryCost = (carpentryType: string, quantity:
   };
   
   const baseRate = baseRates[carpentryType] || 0;
-  return baseRate * ensureNumber(quantity, 0);
+  return baseRate * ensureNumber(doorCount, 0);
 };
 
 /**
@@ -362,7 +359,7 @@ export const calculateSoftFloorCost = (floorType: string, surface: number): numb
  * @param surface Surface area in m²
  * @returns Cost in euros
  */
-export const calculatePaintingCost = (paintType: number, surface: number): number => {
+export const calculatePaintingCost = (paintType: string | number, surface: number): number => {
   // If paintType is a number, it's already the cost
   if (typeof paintType === 'number') {
     return paintType * ensureNumber(surface, 0);
@@ -382,15 +379,18 @@ export const calculatePaintingCost = (paintType: number, surface: number): numbe
 
 /**
  * Calculate plastering cost
- * @param plasteringType Type of plastering
  * @param surface Surface area in m²
+ * @param plasteringType Type of plastering
  * @returns Cost in euros
  */
-export const calculatePlasteringCost = (plasteringType: string, surface: number): number => {
+export const calculatePlasteringCost = (surface: number, plasteringType: string): number => {
   const baseRates: Record<string, number> = {
-    'standard': 35,
+    'base': 35,
+    'standard': 40,
     'premium': 50,
-    'luxury': 70,
+    'specific': 55,
+    'advanced': 70,
+    'luxury': 75,
     'non_concerne': 0
   };
   
@@ -400,11 +400,11 @@ export const calculatePlasteringCost = (plasteringType: string, surface: number)
 
 /**
  * Calculate plumbing cost
- * @param plumbingType Type of plumbing
  * @param surface Surface area in m²
+ * @param plumbingType Type of plumbing
  * @returns Cost in euros
  */
-export const calculatePlumbingCost = (plumbingType: string, surface: number): number => {
+export const calculatePlumbingCost = (surface: number, plumbingType: string): number => {
   const baseRates: Record<string, number> = {
     'standard': 55,
     'premium': 75,
@@ -506,18 +506,43 @@ export const calculateFacadeCost = calculateFacadeRenovCost;
 
 /**
  * Calculate detailed facade cost
- * @param options Facade options
- * @param surface Surface area in m²
+ * @param formData Form data containing surface information
+ * @param stonePercentage Stone percentage
+ * @param plasterPercentage Plaster percentage
+ * @param brickPercentage Brick percentage
+ * @param metalCladdingPercentage Metal cladding percentage
+ * @param woodCladdingPercentage Wood cladding percentage
+ * @param stoneCladdingPercentage Stone cladding percentage
  * @returns Cost in euros
  */
-export const calculateDetailedFacadeCost = (options: Record<string, number>, surface: number): Record<string, number> => {
-  const result: Record<string, number> = {};
+export const calculateDetailedFacadeCost = (
+  formData: any,
+  stonePercentage: string,
+  plasterPercentage: string,
+  brickPercentage: string,
+  metalCladdingPercentage: string,
+  woodCladdingPercentage: string,
+  stoneCladdingPercentage: string
+): number => {
+  const surface = ensureNumber(formData.surface, 0);
+  const rates = {
+    stone: 120,
+    plaster: 75,
+    brick: 95,
+    metalCladding: 110,
+    woodCladding: 90,
+    stoneCladding: 130
+  };
   
-  for (const [key, value] of Object.entries(options)) {
-    result[key] = value * ensureNumber(surface, 0);
-  }
+  let totalCost = 0;
+  totalCost += rates.stone * surface * ensureNumber(stonePercentage) / 100;
+  totalCost += rates.plaster * surface * ensureNumber(plasterPercentage) / 100;
+  totalCost += rates.brick * surface * ensureNumber(brickPercentage) / 100;
+  totalCost += rates.metalCladding * surface * ensureNumber(metalCladdingPercentage) / 100;
+  totalCost += rates.woodCladding * surface * ensureNumber(woodCladdingPercentage) / 100;
+  totalCost += rates.stoneCladding * surface * ensureNumber(stoneCladdingPercentage) / 100;
   
-  return result;
+  return totalCost;
 };
 
 /**

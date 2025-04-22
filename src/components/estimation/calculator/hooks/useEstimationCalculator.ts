@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { FormData, EstimationResponseData } from '../types';
-import { calculateEstimation } from '../calculationUtils';
+import { calculateEstimationData } from '../calculationUtils';
 
 /**
  * Hook for estimation calculations
@@ -31,7 +31,7 @@ export const useEstimationCalculator = (formData: FormData) => {
     try {
       // Use a timeout to simulate calculation time
       setTimeout(() => {
-        const result = calculateEstimation(formData);
+        const result = calculateEstimationData(formData);
         setEstimationResult(result);
         setIsCalculating(false);
       }, 800);

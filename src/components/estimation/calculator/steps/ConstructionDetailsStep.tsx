@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ensureNumber } from '../utils/typeConversions';
 
 interface ConstructionDetailsStepProps {
   formData: FormData;
@@ -22,9 +23,9 @@ const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
   goToPreviousStep,
   animationDirection
 }) => {
-  const [surface, setSurface] = React.useState<string | number>(formData.surface || '');
-  const [levels, setLevels] = React.useState<string | number>(formData.levels || '');
-  const [units, setUnits] = React.useState<string | number>(formData.units || '');
+  const [surface, setSurface] = React.useState<string>(formData.surface ? formData.surface.toString() : '');
+  const [levels, setLevels] = React.useState<string>(formData.levels ? formData.levels.toString() : '');
+  const [units, setUnits] = React.useState<string>(formData.units ? formData.units.toString() : '');
   
   // Detect if we're in renovation mode to show specific label
   const isRenovation = formData.projectType === 'renovation' || formData.projectType === 'division';
@@ -32,9 +33,9 @@ const ConstructionDetailsStep: React.FC<ConstructionDetailsStepProps> = ({
   const handleSubmit = () => {
     // Update the form data
     updateFormData({ 
-      surface: surface,
-      levels: levels,
-      units: units,
+      surface: ensureNumber(surface),
+      levels: ensureNumber(levels),
+      units: ensureNumber(units),
       montantT: 0 // Initialize the amount
     });
     

@@ -20,7 +20,7 @@ export const useInteriorSubmissions = () => {
     return {
       plasteringType: data.plasteringType,
       interiorFittings: data.interiorFittings || 'standard',
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 
@@ -29,8 +29,8 @@ export const useInteriorSubmissions = () => {
     // Ensure doorCount exists or use a default value of 0
     const doorCount = formData.doorCount !== undefined ? ensureNumber(formData.doorCount, 0) : 0;
     const additionalCost = calculateInteriorCarpenteryCost(
-      doorCount,
-      data.doorType
+      data.doorType,
+      doorCount
     );
     
     return {
@@ -38,7 +38,7 @@ export const useInteriorSubmissions = () => {
       interiorDoorsType: data.interiorDoorsType,
       hasMoldings: data.hasMoldings || false,
       hasCustomFurniture: data.hasCustomFurniture || false,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 
@@ -62,7 +62,7 @@ export const useInteriorSubmissions = () => {
     }
     
     if (data.softFloorType && data.softFloorType !== 'none') {
-      additionalCost += calculateSoftFloorCost(ensureNumber(data.softFloorArea, 0), data.softFloorType);
+      additionalCost += calculateSoftFloorCost(data.softFloorType, ensureNumber(data.softFloorArea, 0));
     }
     
     return {
@@ -73,7 +73,7 @@ export const useInteriorSubmissions = () => {
       parquetSurface: ensureNumber(data.parquetSurface),
       parquetArea: ensureNumber(data.parquetArea, 0),
       softFloorArea: ensureNumber(data.softFloorArea, 0),
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     };
   };
 

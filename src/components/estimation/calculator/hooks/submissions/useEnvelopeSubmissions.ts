@@ -1,7 +1,7 @@
 
 import { useCallback } from 'react';
 import { FormData } from '../../types/formTypes';
-import { percentageToNumber, calculateFacadeCost, calculateDetailedFacadeCost } from '../../utils/montantUtils';
+import { calculateFacadeRenovCost, percentageToNumber } from '../../utils/montantUtils';
 import { ensureNumber } from '../../utils/typeConversions';
 
 export const useEnvelopeSubmissions = (
@@ -36,11 +36,17 @@ export const useEnvelopeSubmissions = (
       stoneCladding: percentageToNumber(stoneCladdingPercentage)
     };
     
-    // Calculate cost based on facade percentages
-    const facadeCost = calculateDetailedFacadeCost(
-      ensureNumber(formData.surface),
-      percentages
-    );
+    // Calculate cost for each facade type
+    const surface = ensureNumber(formData.surface);
+    let facadeCost = 0;
+    
+    // Add cost for each facade type based on percentage
+    if (percentages.stone > 0) facadeCost += calculateFacadeRenovCost('premium', surface * percentages.stone / 100);
+    if (percentages.plaster > 0) facadeCost += calculateFacadeRenovCost('standard', surface * percentages.plaster / 100);
+    if (percentages.brick > 0) facadeCost += calculateFacadeRenovCost('premium', surface * percentages.brick / 100);
+    if (percentages.metalCladding > 0) facadeCost += calculateFacadeRenovCost('premium', surface * percentages.metalCladding / 100);
+    if (percentages.woodCladding > 0) facadeCost += calculateFacadeRenovCost('premium', surface * percentages.woodCladding / 100);
+    if (percentages.stoneCladding > 0) facadeCost += calculateFacadeRenovCost('luxury', surface * percentages.stoneCladding / 100);
     
     // Update form data with facade information and cost
     updateFormData({

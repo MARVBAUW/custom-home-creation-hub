@@ -30,7 +30,7 @@ const PlatrerieForm: React.FC<BaseFormProps> = ({
     // Update form data with plastering type and additional cost
     updateFormData({
       plasteringType,
-      montantT: (formData.montantT || 0) + additionalCost
+      montantT: ensureNumber(formData.montantT, 0) + additionalCost
     });
     
     // Move to the next step

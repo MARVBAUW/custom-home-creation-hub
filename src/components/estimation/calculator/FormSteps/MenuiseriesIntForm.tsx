@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { calculateInteriorCarpenteryCost } from '../utils/montantUtils';
 import { ensureNumber } from '../utils/typeConversions';
-import { Door, Separator, CheckCircle } from 'lucide-react';
+import { DoorOpen, SeparatorHorizontal, CheckCircle } from 'lucide-react';
 
 const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
   formData,
@@ -47,7 +48,7 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
     }`}>
       <div className="space-y-6">
         <div className="flex items-center space-x-2 text-2xl font-semibold text-primary">
-          <Door className="h-6 w-6" />
+          <DoorOpen className="h-6 w-6" />
           <h2>Menuiseries Intérieures</h2>
         </div>
         
@@ -120,7 +121,7 @@ const MenuiseriesIntForm: React.FC<BaseFormProps> = ({
                 </RadioGroup>
               </div>
               
-              <Separator className="my-4" />
+              <SeparatorHorizontal className="my-4" />
               
               <div>
                 <Label className="text-base">Nombre de portes intérieures</Label>
