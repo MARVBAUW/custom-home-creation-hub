@@ -8,7 +8,7 @@ import SEOFooter from '@/components/common/SEOFooter';
 const teamMembers = [
   {
     id: 1,
-    name: 'Marvin Duval',
+    name: 'Marvin Bauwens',
     role: 'Fondateur & Maître d\'œuvre',
     image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2049&auto=format&fit=crop',
     bio: 'Avec plus de 10 ans d\'expérience dans l\'architecture et la construction, Marvin a fondé Progineer en 2018 avec la vision de créer des espaces de vie parfaitement adaptés aux besoins de chacun.',
@@ -16,7 +16,7 @@ const teamMembers = [
   },
   {
     id: 2,
-    name: 'Mael Richardson',
+    name: 'Mael Allano',
     role: 'Architecte principal',
     image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2074&auto=format&fit=crop',
     bio: 'Diplômé de l\'École d\'Architecture de Marseille, Mael apporte son expertise créative et technique à chaque projet, avec une approche centrée sur le design durable et l\'intégration environnementale.',
