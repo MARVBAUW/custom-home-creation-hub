@@ -2,7 +2,7 @@
 // Export all calculation functions
 export * from './costBreakdown';
 export * from './detailedEstimation';
-export { calculateEstimation, calculateEstimationData } from './estimationCalculator';
+export { calculateEstimation } from './estimationCalculator';
 export * from './externalCosts';
 export * from './feeCosts';
 export * from './finishingCosts';
@@ -12,5 +12,5 @@ export * from './simpleEstimation';
 export * from './structuralCosts';
 export * from './technicalCosts';
 
-// Re-export calculateEstimationData for backwards compatibility
+// Re-export calculateEstimationData from calculationUtils for backwards compatibility
 export { calculateEstimationData } from '../calculationUtils';

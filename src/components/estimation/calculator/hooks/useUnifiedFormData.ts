@@ -3,12 +3,12 @@
  * Hook for managing form data with automatic type conversion between different formats
  */
 import { useCallback } from 'react';
-import { FormData, EstimationFormData } from '../types';
+import { FormData, EstimationResponseData } from '../types';
 import { adaptToEstimationData } from '../utils/dataAdapter';
 
 interface UseUnifiedFormDataProps {
-  formData: FormData | EstimationFormData;
-  updateFormData: (data: Partial<FormData> | Partial<EstimationFormData>) => void;
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
 }
 
 export const useUnifiedFormData = ({ 
@@ -19,7 +19,7 @@ export const useUnifiedFormData = ({
   /**
    * Update function that ensures data is in the correct format
    */
-  const updateUnifiedFormData = useCallback((data: Partial<FormData> | Partial<EstimationFormData>) => {
+  const updateUnifiedFormData = useCallback((data: Partial<FormData>) => {
     updateFormData(data);
   }, [updateFormData]);
   
@@ -33,8 +33,8 @@ export const useUnifiedFormData = ({
   /**
    * Get the form data in EstimationFormData format
    */
-  const getEstimationFormData = useCallback((): EstimationFormData => {
-    return formData as EstimationFormData;
+  const getEstimationFormData = useCallback((): FormData => {
+    return formData as FormData;
   }, [formData]);
   
   return {

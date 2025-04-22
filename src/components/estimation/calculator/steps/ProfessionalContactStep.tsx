@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { ensureNumber } from '../utils/typeConversions';
 
 interface ProfessionalContactStepProps {
   formData: FormData;
@@ -76,7 +77,7 @@ const ProfessionalContactStep: React.FC<ProfessionalContactStepProps> = ({
       city,
       projectDescription,
       startDate,
-      budget,
+      budget: budget ? ensureNumber(budget) : undefined,
       termsAccepted,
       commercialAccepted,
       formCompleted: true

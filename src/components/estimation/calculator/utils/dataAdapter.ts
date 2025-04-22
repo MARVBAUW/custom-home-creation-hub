@@ -1,6 +1,5 @@
-
 import { FormData } from '../types/formTypes';
-import { EstimationResponseData, EstimationFormData } from '../types/estimationTypes';
+import { EstimationResponseData } from '../types/estimationTypes';
 import { ensureNumber, ensureString, ensureBoolean } from './typeConversions';
 import { calculateEstimationData } from '../calculationUtils';
 
@@ -28,9 +27,9 @@ export const adaptToEstimationData = (formData: FormData): any => {
  * @param formData Form data to convert
  * @returns Estimation form data
  */
-export const adaptToEstimationFormData = (formData: Partial<FormData>): Partial<EstimationFormData> => {
+export const adaptToEstimationFormData = (formData: Partial<FormData>): Partial<FormData> => {
   // Create a copy to avoid mutation
-  const adaptedData: Partial<EstimationFormData> = { ...formData };
+  const adaptedData: Partial<FormData> = { ...formData };
   
   // Ensure number values are properly converted
   if (formData.surface !== undefined) {
@@ -50,7 +49,7 @@ export const adaptToEstimationFormData = (formData: Partial<FormData>): Partial<
  * @param formData Estimation form data to convert
  * @returns Standard form data
  */
-export const adaptToFormData = (formData: Partial<EstimationFormData>): Partial<FormData> => {
+export const adaptToFormData = (formData: Partial<FormData>): Partial<FormData> => {
   // Create a copy to avoid mutation
   const adaptedData: Partial<FormData> = { ...formData };
   
