@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Hero from '../components/home/Hero';
 import ExpertiseSection from '../components/home/ExpertiseSection';
@@ -11,6 +10,7 @@ import { getBusinessStructuredData } from '../utils/googleBusiness';
 import SEO from '../components/common/SEO';
 import SEOFooter from '@/components/common/SEOFooter';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';  // Add this import
 
 const Index = () => {
   return (
