@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          ui: ['@/components/ui'],
+          ui: ['@/components/ui/index'], // Fix: Change from '@/components/ui' to '@/components/ui/index'
         },
       },
     },
