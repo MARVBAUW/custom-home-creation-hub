@@ -16,6 +16,20 @@ export const ensureNumber = (value: any): number => {
 };
 
 /**
+ * Ensure a value is a boolean - useful for handling form inputs
+ */
+export const ensureBoolean = (value: any): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'string') {
+    return value.toLowerCase() === 'true' || value === '1';
+  }
+  if (typeof value === 'number') {
+    return value === 1;
+  }
+  return false;
+};
+
+/**
  * Convert a percentage string to a number
  */
 export const percentageToNumber = (percentageStr: string): number => {

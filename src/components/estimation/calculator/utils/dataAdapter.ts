@@ -2,6 +2,7 @@
 import { FormData } from '../types';
 import { EstimationResponseData, ProjectDetails, ConstructionCosts, FeeCosts, OtherCosts, EstimationTimeline, CategoryCost } from '../types/estimationTypes';
 import { getDefaultFormData } from './montantUtils';
+import { ensureNumber } from './typeConversions';
 
 /**
  * Adapts FormData to EstimationFormData
@@ -35,6 +36,35 @@ export const adaptToFormData = (estimationData: any): FormData => {
     bedrooms: estimationData.bedrooms || defaultData.bedrooms,
     bathrooms: estimationData.bathrooms || defaultData.bathrooms,
     // Add other fields as needed
+  };
+};
+
+/**
+ * Creates a function that adapts data types when updating form data
+ * This helps with handling different form field types correctly
+ */
+export const createTypeAdaptingUpdater = (updateFunction: (data: Partial<FormData>) => void) => {
+  return (data: Partial<FormData>) => {
+    // Create a copy of the data to avoid modifying the original
+    const processedData = { ...data };
+    
+    // Process numeric fields to ensure they are numbers
+    if (processedData.surface !== undefined) {
+      processedData.surface = ensureNumber(processedData.surface);
+    }
+    
+    if (processedData.bedrooms !== undefined) {
+      processedData.bedrooms = ensureNumber(processedData.bedrooms);
+    }
+    
+    if (processedData.bathrooms !== undefined) {
+      processedData.bathrooms = ensureNumber(processedData.bathrooms);
+    }
+    
+    // Process any other fields that need type conversion
+    
+    // Pass the processed data to the original update function
+    updateFunction(processedData);
   };
 };
 

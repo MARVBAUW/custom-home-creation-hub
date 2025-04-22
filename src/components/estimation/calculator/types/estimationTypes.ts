@@ -1,19 +1,4 @@
 
-// Types for the estimation response
-export interface EstimationResponseData {
-  projectType: string;
-  projectDetails: ProjectDetails;
-  estimatedCost: number;
-  constructionCosts: ConstructionCosts;
-  fees: FeeCosts;
-  otherCosts: OtherCosts;
-  totalAmount: number;
-  dateGenerated: string;
-  isComplete: boolean;
-  timeline: EstimationTimeline;
-  categories: CategoryCost[];
-}
-
 export interface ProjectDetails {
   projectType: string;
   surface: number;
@@ -21,7 +6,7 @@ export interface ProjectDetails {
   constructionType: string;
   bedrooms: number;
   bathrooms: number;
-  city?: string; // Making city optional
+  city: string;
 }
 
 export interface ConstructionCosts {
@@ -33,9 +18,8 @@ export interface ConstructionCosts {
 }
 
 export interface FeeCosts {
-  architect: number;
-  engineeringFees: number;
   architectFees: number;
+  engineeringFees: number;
   projectManagement: number;
   officialFees: number;
   inspectionFees: number;
@@ -46,8 +30,6 @@ export interface FeeCosts {
   taxes: number;
   other: number;
   total: number;
-  masterBuilderFees?: number; // Added as optional
-  safetyCoordination?: number; // Added as optional
 }
 
 export interface OtherCosts {
@@ -64,40 +46,37 @@ export interface OtherCosts {
 export interface EstimationTimeline {
   design: number;
   permits: number;
-  bidding?: number;
+  bidding: number;
   construction: number;
-  total?: number;
+  total: number;
   totalMonths: number;
 }
 
 export interface CategoryCost {
+  name: string;
   cost: number;
   percentage: number;
-  name?: string; // Added as optional
-  category?: string; // Added as optional
-  amount?: number; // Added as optional for different calculation formats
+  category: string;
 }
 
-// Additional types for SEO enhancement
-export interface EstimationSEOData {
-  '@context': 'https://schema.org';
-  '@type': 'Service';
-  name: string;
-  description: string;
-  provider: {
-    '@type': 'ProfessionalService';
-    name: string;
-    url: string;
-    areaServed: string[];
-  };
-  offers: {
-    '@type': 'Offer';
-    price: string;
-    priceCurrency: string;
-  };
-  estimatedCost: {
-    '@type': 'MonetaryAmount';
-    currency: string;
-    value: number;
-  };
+export interface EstimationResponseData {
+  projectType: string;
+  projectDetails: ProjectDetails;
+  estimatedCost: number;
+  constructionCosts: ConstructionCosts;
+  fees: FeeCosts;
+  otherCosts: OtherCosts;
+  totalAmount: number;
+  dateGenerated: string;
+  isComplete: boolean;
+  timeline: EstimationTimeline;
+  categories: CategoryCost[];
+}
+
+export interface ConversationState {
+  currentStep: string;
+  askedQuestions: any[];
+  completedFields: any[];
+  formProgress: number;
+  messages: any[]; // Array of message objects
 }
