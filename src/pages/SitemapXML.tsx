@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, Link } from 'react-router-dom';
+import Container from '@/components/common/Container';
 
 // This component handles the XML sitemap and redirects if necessary
 const SitemapXML: React.FC = () => {
@@ -56,6 +57,11 @@ const SitemapXML: React.FC = () => {
           xmlString += `    <lastmod>${currentDate}</lastmod>\n`;
           xmlString += `    <changefreq>${changefreq}</changefreq>\n`;
           xmlString += `    <priority>${priority.toFixed(1)}</priority>\n`;
+          
+          // Add canonical and hreflang references
+          xmlString += `    <xhtml:link rel="alternate" hreflang="fr" href="${fullUrl}"/>\n`;
+          xmlString += `    <xhtml:link rel="canonical" href="${fullUrl}"/>\n`;
+          
           xmlString += '  </url>\n';
         });
       
@@ -108,21 +114,63 @@ const SitemapXML: React.FC = () => {
         <meta name="description" content="Plan du site XML pour Progineer, entreprise d'architecture et de maîtrise d'œuvre en PACA." />
       </Helmet>
       
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-4">Plan du site XML</h1>
-        <p className="mb-4">Ce sitemap XML est généré dynamiquement à partir des routes de l'application.</p>
-        <p className="mb-4">Pour une utilisation avec les moteurs de recherche, utilisez plutôt l'URL: <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">/sitemap.xml</a></p>
-        <pre style={{
-          fontFamily: 'monospace',
-          whiteSpace: 'pre-wrap',
-          padding: '20px',
-          backgroundColor: '#f5f5f5',
-          border: '1px solid #ddd',
-          borderRadius: '4px',
-          overflow: 'auto',
-          maxHeight: '80vh'
-        }}>{xmlContent}</pre>
-      </div>
+      <Container className="py-16 min-h-screen">
+        <div className="mx-auto px-4 py-8">
+          <h1 className="text-3xl font-bold mb-6">Plan du site</h1>
+          <p className="mb-6">Consultez ci-dessous toutes les pages de notre site web :</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Pages principales</h2>
+              <ul className="space-y-2">
+                <li><Link to="/" className="text-progineer-gold hover:underline">Accueil</Link></li>
+                <li><Link to="/estimation" className="text-progineer-gold hover:underline">Estimer mon projet</Link></li>
+                <li><Link to="/contact" className="text-progineer-gold hover:underline">Nous contacter</Link></li>
+                <li><Link to="/a-propos" className="text-progineer-gold hover:underline">À propos</Link></li>
+                <li><Link to="/realisations-architecte-maison" className="text-progineer-gold hover:underline">Nos réalisations</Link></li>
+                <li><Link to="/equipe-maitrise-oeuvre" className="text-progineer-gold hover:underline">Notre équipe</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Nos prestations</h2>
+              <ul className="space-y-2">
+                <li><Link to="/prestations-maitre-oeuvre" className="text-progineer-gold hover:underline">Prestations (aperçu)</Link></li>
+                <li><Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold hover:underline">Construction neuve</Link></li>
+                <li><Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold hover:underline">Rénovation</Link></li>
+                <li><Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">Extension</Link></li>
+                <li><Link to="/prestations-maitre-oeuvre/design-interieur" className="text-progineer-gold hover:underline">Design d'intérieur</Link></li>
+                <li><Link to="/prestations-maitre-oeuvre/optimisation-espace" className="text-progineer-gold hover:underline">Optimisation d'espace</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h2 className="text-xl font-semibold mb-4">Informations & Légal</h2>
+              <ul className="space-y-2">
+                <li><Link to="/faq" className="text-progineer-gold hover:underline">FAQ</Link></li>
+                <li><Link to="/parrainage" className="text-progineer-gold hover:underline">Parrainage</Link></li>
+                <li><Link to="/devenir-partenaire" className="text-progineer-gold hover:underline">Devenir partenaire</Link></li>
+                <li><Link to="/mentions-legales" className="text-progineer-gold hover:underline">Mentions légales</Link></li>
+                <li><Link to="/privacy-policy" className="text-progineer-gold hover:underline">Politique de confidentialité</Link></li>
+                <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
+                <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="bg-stone-100 p-6 rounded-lg mb-8">
+            <h2 className="text-xl font-semibold mb-4">Fichier XML du plan du site</h2>
+            <p className="mb-4">Pour une utilisation avec les moteurs de recherche, accédez à notre fichier XML via l'URL suivante :</p>
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="inline-block bg-progineer-gold text-white px-4 py-2 rounded hover:bg-progineer-gold/90 transition-colors">
+              Voir le sitemap.xml
+            </a>
+          </div>
+
+          <pre className="font-mono text-xs p-4 bg-gray-800 text-gray-200 rounded-lg overflow-auto max-h-96">
+            {xmlContent}
+          </pre>
+        </div>
+      </Container>
     </>
   );
 };

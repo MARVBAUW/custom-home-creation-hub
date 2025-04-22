@@ -26,3 +26,10 @@ Allow: /
 
 User-agent: Yandexbot
 Allow: /
+
+# Additional indexing hints
+Allow: /prestations-maitre-oeuvre/renovation
+Allow: /prestations-maitre-oeuvre/construction-neuve
+Allow: /prestations-maitre-oeuvre/extension
+Allow: /prestations-maitre-oeuvre/design-interieur
+Allow: /prestations-maitre-oeuvre/optimisation-espace
