@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/common/SEO';
 
 const Sitemap = () => {
-  // Site structure with links
+  // Site structure with links - organized and structured
   const siteStructure = [
     {
       title: 'Pages Principales',

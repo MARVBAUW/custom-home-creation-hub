@@ -29,7 +29,7 @@ const SitemapXML: React.FC = () => {
       // XML declaration
       const xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
       
-      // Create the urlset element directly as string
+      // Create the urlset element with proper namespace declaration
       let xmlString = xmlDeclaration + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
       
       // Add each route as URL element
