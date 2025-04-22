@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
@@ -7,6 +6,7 @@ import Logo from '@/components/common/Logo';
 
 const Footer = () => {
   return <footer className="bg-progineer-dark dark:bg-gray-950">
+      {/* Sections précédentes du footer */}
       {/* Top Section with Border */}
       <div className="border-b border-white/10">
         <Container size="lg" className="py-14 bg-[#202014]/[0.94]">
@@ -156,6 +156,7 @@ const Footer = () => {
               </p>
             </div>
             <div className="flex flex-wrap gap-x-6 gap-y-2 justify-center">
+              {/* Liens existants */}
               <Link to="/mentions-legales" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Mentions légales</Link>
               <Link to="/cgv" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">CGV</Link>
               <Link to="/cgu" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">CGU</Link>
@@ -164,10 +165,20 @@ const Footer = () => {
               <Link to="/devenir-partenaire" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Devenir partenaire</Link>
               <Link to="/parrainage" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Parrainage</Link>
               <Link to="/sitemap.xml" className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors">Sitemap XML</Link>
+
+              {/* Nouveau lien vers l'annuaire */}
+              <a 
+                href="https://www.maitredoeuvre.com/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-xs text-white/50 dark:text-white/60 hover:text-progineer-gold transition-colors"
+              >
+                Annuaire de maîtres d'œuvre
+              </a>
             </div>
           </div>
 
-          {/* SEO Footer Text */}
+          {/* Section SEO Footer */}
           <div className="mt-6 pt-6 border-t border-white/10 text-xs text-white/30 dark:text-white/40 text-center md:text-left">
             <p className="max-w-4xl">
               Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs vous accompagnent de A à Z. Coordination des corps de métier, respect des délais et expertise technique pour tous vos projets.
