@@ -43,10 +43,17 @@ const CTASection = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button href="/estimation" className="bg-progineer-gold hover:bg-progineer-gold/90 text-white">
+              <Button 
+                href="/estimation" 
+                className="bg-khaki-700 hover:bg-khaki-800 text-white !text-white"
+              >
                 Estimer mon projet
               </Button>
-              <Button href="/contact" variant="outline" className="border-progineer-gold/50 bg-transparent text-progineer-gold hover:bg-progineer-gold/10">
+              <Button 
+                href="/contact" 
+                variant="outline" 
+                className="border-progineer-gold/50 bg-transparent text-progineer-gold hover:bg-progineer-gold/10"
+              >
                 Prendre rendez-vous
               </Button>
             </div>
