@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Hero from '../components/home/Hero';
+import ExpertiseSection from '../components/home/ExpertiseSection';
 import Services from '../components/home/Services';
 import Testimonials from '../components/home/Testimonials';
 import CTASection from '../components/home/CTASection';
@@ -14,16 +15,17 @@ const Index = () => {
   return (
     <>
       <SEO 
-        title="Progineer | Architecte & Maître d'oeuvre en PACA - Marseille, Nice, Toulon"
-        description="Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA."
-        keywords="architecte PACA, maître d'œuvre Marseille, construction maison sur mesure, rénovation villa, extension maison"
+        title="Maître d'œuvre Marseille | Construction & Rénovation | Progineer PACA"
+        description="Maître d'œuvre à Marseille expert en construction, rénovation et extension de maisons. Coordination des corps de métier, respect des délais et expertise technique pour vos projets en PACA."
+        keywords="maître d'œuvre marseille, maîtrise d'œuvre, coordination chantier, corps de métier, expertise technique, respect des délais, projet de rénovation"
         canonicalUrl="https://progineer.fr/"
         structuredData={getBusinessStructuredData()}
       />
       
-      <main className="pt-16"> {/* Ajouter un padding-top pour compenser le navbar fixe */}
-        <h1 className="sr-only">Progineer - Architecte et Maître d'œuvre en PACA</h1>
+      <main className="pt-16">
+        <h1 className="sr-only">Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
         <Hero />
+        <ExpertiseSection />
         <Services />
         <StatsSection />
         <Testimonials />
@@ -32,7 +34,8 @@ const Index = () => {
       </main>
       
       <SEOFooter 
-        text="Architecte et maître d'œuvre à Marseille, Nice, Toulon et dans toute la région PACA. Progineer vous accompagne dans tous vos projets de construction, rénovation et extension de maisons sur mesure. Expertise en architecture, optimisation d'espace et design d'intérieur pour créer votre habitat idéal en Provence-Alpes-Côte d'Azur."
+        text="Votre maître d'œuvre à Marseille et en PACA. Progineer assure la coordination des corps de métier et le respect des délais pour vos projets de construction et rénovation. Notre expertise technique et notre maîtrise d'œuvre garantissent la réussite de votre projet immobilier en Provence-Alpes-Côte d'Azur."
+        additionalKeywords={["maître d'œuvre marseille", "coordination corps de métier", "expertise technique construction", "respect délais chantier", "rénovation marseille"]}
       />
     </>
   );

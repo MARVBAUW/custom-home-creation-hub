@@ -22,22 +22,21 @@ const Hero = () => {
       
       <Container className="relative z-10 mt-16">
         <div className="flex flex-col items-start animate-fade-in">
-          {/* Centered metallic logo */}
           <div className="w-full flex justify-center mb-12">
             <Logo variant="metallic-full" size="lg" className="mx-auto" />
           </div>
           
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
-            Architecte & Maître d'œuvre en PACA
+            Maître d'œuvre à Marseille
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
-            Design et construction <br className="hidden md:block" />
-            <span className="text-progineer-gold">de maisons sur mesure</span>
+            Votre maître d'œuvre expert à <br className="hidden md:block" />
+            <span className="text-progineer-gold">Marseille et en PACA</span>
           </h1>
           
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
-            Progineer vous accompagne dans tous vos projets de construction, rénovation et extension à Marseille et dans toute la région PACA.
+            Coordination des corps de métier, respect des délais et expertise technique pour vos projets de construction et rénovation. Un accompagnement sur mesure par votre maître d'ouvrage à Marseille.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4">
@@ -48,6 +47,34 @@ const Hero = () => {
             <Button href="/prestations-maitre-oeuvre" variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
               Découvrir nos prestations
             </Button>
+          </div>
+
+          {/* Ajout de mots-clés sémantiques */}
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-white/80">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Coordination des corps de métier</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Respect des délais garantis</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Expertise technique</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Maîtrise d'œuvre complète</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Choix des matériaux</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
+              <span>Projets de rénovation</span>
+            </div>
           </div>
         </div>
       </Container>
