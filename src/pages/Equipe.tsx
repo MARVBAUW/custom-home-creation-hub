@@ -3,6 +3,7 @@ import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const teamMembers = [
   {
@@ -20,38 +21,6 @@ const teamMembers = [
     image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=2074&auto=format&fit=crop',
     bio: 'Diplômé de l\'École d\'Architecture de Marseille, Mael apporte son expertise créative et technique à chaque projet, avec une approche centrée sur le design durable et l\'intégration environnementale.',
     skills: ['Design architectural', 'Architecture durable', 'Rénovation', 'Planification spatiale']
-  },
-  {
-    id: 3,
-    name: 'Sophie Lambert',
-    role: 'Ingénieure structure',
-    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=2070&auto=format&fit=crop',
-    bio: 'Sophie assure la solidité et la sécurité de toutes nos constructions. Spécialisée en calcul de structures, elle intervient dès la phase de conception pour garantir la faisabilité technique des projets.',
-    skills: ['Calcul de structures', 'Normes réglementaires', 'Génie civil', 'Études techniques']
-  },
-  {
-    id: 4,
-    name: 'Thomas Perrin',
-    role: 'Conducteur de travaux',
-    image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=1974&auto=format&fit=crop',
-    bio: 'Thomas supervise tous nos chantiers avec rigueur et efficacité. Sa grande expérience dans le BTP lui permet de coordonner les différents corps de métier et d\'assurer le respect des délais et de la qualité.',
-    skills: ['Suivi de chantier', 'Coordination d\'équipes', 'Planification', 'Contrôle qualité']
-  },
-  {
-    id: 5,
-    name: 'Amina Badi',
-    role: 'Architecte d\'intérieur',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop',
-    bio: 'Passionnée de design d\'intérieur, Amina imagine des espaces fonctionnels et esthétiques. Elle accompagne nos clients dans le choix des matériaux, des couleurs et du mobilier pour créer des intérieurs qui leur ressemblent.',
-    skills: ['Design d\'intérieur', 'Agencement', 'Décoration', 'Rendus 3D']
-  },
-  {
-    id: 6,
-    name: 'Lucas Moreau',
-    role: 'Responsable administratif',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1974&auto=format&fit=crop',
-    bio: 'Lucas gère toute la partie administrative et financière de Progineer. Il s\'occupe des devis, des factures, des contrats et du suivi budgétaire des projets pour garantir une transparence totale à nos clients.',
-    skills: ['Gestion administrative', 'Finance', 'Relations clients', 'Contrats']
   }
 ];
 
@@ -111,7 +80,7 @@ const Equipe = () => {
         <Container>
           <h2 className="text-3xl font-semibold mb-12 text-center">Notre équipe pluridisciplinaire</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {teamMembers.map((member) => (
               <div 
                 key={member.id}
@@ -281,16 +250,10 @@ const Equipe = () => {
       </section>
 
       {/* SEO Footer */}
-      <section className="py-8 bg-white">
-        <Container>
-          <div className="text-sm text-stone-500">
-            <h4 className="font-semibold mb-2">Notre équipe d'experts</h4>
-            <p>
-              L'équipe Progineer est composée d'architectes, de maîtres d'œuvre et d'ingénieurs expérimentés basés à Marseille et intervenant dans toute la région PACA. Nos professionnels vous accompagnent dans tous vos projets de construction, rénovation et extension de maisons individuelles en Provence-Alpes-Côte d'Azur.
-            </p>
-          </div>
-        </Container>
-      </section>
+      <SEOFooter 
+        text="Notre équipe composée d'architectes et de maîtres d'œuvre à Marseille vous accompagne dans vos projets de construction, rénovation et extension de maisons en région PACA. Des professionnels expérimentés à votre écoute pour donner vie à vos projets immobiliers."
+        additionalKeywords={["équipe d'architectes", "maître d'œuvre Marseille", "professionnels de la construction", "expertise bâtiment PACA", "architecte maison individuelle"]}
+      />
     </>
   );
 };
