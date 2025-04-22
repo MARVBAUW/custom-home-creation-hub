@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
@@ -10,7 +11,7 @@ const teamMembers = [
     name: 'Marvin Bauwens',
     role: 'Fondateur & Maître d\'œuvre',
     image: '/lovable-uploads/aa0d9792-6c78-477d-9203-0c92cc4c6035.png',
-    bio: "Diplômé d’un master en génie civil décerné par l’INSA, Marvin a ensuite acquis de l’expérience dans divers corps de métiers. Il a notamment été représentant de la maîtrise d’ouvrage pour une foncière nationale d’envergure, ainsi que chef de projet de maîtrise d’œuvre. Missionné pour gérer les actifs immobiliers de différentes entités, Marvin a démontré son efficacité tant dans la conception que dans le suivi opérationnel des travaux, apportant une réelle valeur ajoutée à chaque étape du projet.",
+    bio: "Diplômé d'un master en génie civil décerné par l'INSA, Marvin a ensuite acquis de l'expérience dans divers corps de métiers. Il a notamment été représentant de la maîtrise d'ouvrage pour une foncière nationale d'envergure, ainsi que chef de projet de maîtrise d'œuvre. Missionné pour gérer les actifs immobiliers de différentes entités, Marvin a démontré son efficacité tant dans la conception que dans le suivi opérationnel des travaux, apportant une réelle valeur ajoutée à chaque étape du projet.",
     skills: ['Expertise technique', 'Gestion de projet', 'Coordination', 'Pilotage travaux']
   },
   {
@@ -18,7 +19,7 @@ const teamMembers = [
     name: 'Maël Allano',
     role: 'Maître d\'œuvre & chargé d\'études',
     image: '/lovable-uploads/e78983ec-3921-43f5-93e1-7dee7f23a28a.png',
-    bio: "Également diplômé du master en génie civil de l’INSA, Maël a débuté comme chef de chantier dans une entreprise de second œuvre. Développant les aspects techniques au niveau des finitions du bâtiment, il s’est ensuite orienté vers une entreprise générale du bâtiment spécialisée dans l’industrie et le tertiaire, en tant que chargé d’études de prix et d’analyse de structure. Maël a su diversifier son panel de connaissances et acquérir une vision globale de l’étude et de la réalisation de divers types de projets.",
+    bio: "Également diplômé du master en génie civil de l'INSA, Maël a débuté comme chef de chantier dans une entreprise de second œuvre. Développant les aspects techniques au niveau des finitions du bâtiment, il s'est ensuite orienté vers une entreprise générale du bâtiment spécialisée dans l'industrie et le tertiaire, en tant que chargé d'études de prix et d'analyse de structure. Maël a su diversifier son panel de connaissances et acquérir une vision globale de l'étude et de la réalisation de divers types de projets.",
     skills: ['Finitions', 'Études de prix', 'Analyse de structure', 'Conduite de chantier']
   }
 ];
@@ -74,40 +75,41 @@ const Equipe = () => {
         </Container>
       </section>
 
-      {/* Team members section */}
-      <section className="py-16" style={{ background: "transparent" }}>
+      {/* Team members section - Correction du problème d'affichage */}
+      <section className="py-16 bg-gray-900">
         <Container>
           <h2 className="text-3xl font-semibold mb-12 text-center text-white">Notre équipe pluridisciplinaire</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
             {teamMembers.map((member) => (
               <div 
                 key={member.id}
-                className="bg-transparent rounded-xl overflow-visible shadow-none border-0 flex flex-col items-center"
+                className="bg-gray-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-white/10 p-6"
               >
-                <div className="w-52 h-52 flex justify-center items-end mb-6">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full h-full object-contain"
-                    style={{ background: 'transparent' }}
-                  />
-                </div>
-                <div className="px-2 text-center">
-                  <h3 className="text-2xl font-semibold text-white mb-1">{member.name}</h3>
-                  <p className="text-progineer-gold mb-4">{member.role}</p>
-                  <p className="text-white text-sm mb-4">{member.bio}</p>
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium mb-2 text-progineer-gold">Compétences :</h4>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {member.skills.map((skill, index) => (
-                        <span 
-                          key={index}
-                          className="px-2 py-1 bg-white/10 text-white rounded text-xs border border-white/20"
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                <div className="flex flex-col items-center">
+                  <div className="w-48 h-48 relative mb-6 flex-shrink-0">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-2xl font-semibold text-white mb-1">{member.name}</h3>
+                    <p className="text-progineer-gold mb-4">{member.role}</p>
+                    <p className="text-white/90 text-sm mb-6 max-w-lg">{member.bio}</p>
+                    <div className="mt-4">
+                      <h4 className="text-sm font-medium mb-2 text-progineer-gold">Compétences :</h4>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        {member.skills.map((skill, index) => (
+                          <span 
+                            key={index}
+                            className="px-2 py-1 bg-white/10 text-white rounded text-xs border border-white/20"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
