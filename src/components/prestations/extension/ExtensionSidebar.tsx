@@ -10,9 +10,9 @@ const ExtensionSidebar = () => {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold mb-4">Besoin d'un devis ?</h3>
         <p className="text-gray-600 mb-6">
-          <InternalLinkText 
-            text="Contactez-nous pour échanger sur votre projet d'extension et obtenir un devis personnalisé."
-            maxOccurrences={1}
+          <InternalLinkText
+            text="Contactez-nous pour échanger sur votre projet d'extension de maison et obtenir un devis personnalisé auprès de notre maître d'œuvre à Marseille ou en région PACA."
+            maxOccurrences={2}
           />
         </p>
         <div className="space-y-4">
@@ -30,23 +30,23 @@ const ExtensionSidebar = () => {
         <ul className="space-y-2">
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Extension horizontale</span>
+            <InternalLinkText text="Extension horizontale" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Surélévation</span>
+            <InternalLinkText text="Surélévation" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Véranda</span>
+            <InternalLinkText text="Véranda" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Aménagement de combles</span>
+            <InternalLinkText text="Aménagement de combles" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Extension à ossature bois</span>
+            <InternalLinkText text="Extension à ossature bois" />
           </li>
         </ul>
         <div className="mt-6 space-y-4">

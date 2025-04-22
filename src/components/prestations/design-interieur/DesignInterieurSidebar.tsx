@@ -10,9 +10,9 @@ const DesignInterieurSidebar = () => {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold mb-4">Besoin d'un devis ?</h3>
         <p className="text-gray-600 mb-6">
-          <InternalLinkText 
-            text="Contactez-nous pour échanger sur votre projet de design d'intérieur et obtenir un devis personnalisé."
-            maxOccurrences={1}
+          <InternalLinkText
+            text="Contactez-nous pour échanger sur votre projet de design d'intérieur et obtenir un devis personnalisé avec un maître d'œuvre à Marseille ou en région PACA."
+            maxOccurrences={2}
           />
         </p>
         <div className="space-y-4">
@@ -30,23 +30,23 @@ const DesignInterieurSidebar = () => {
         <ul className="space-y-2">
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Conception d'espaces résidentiels</span>
+            <InternalLinkText text="Conception d'espaces résidentiels" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Aménagement de locaux professionnels</span>
+            <InternalLinkText text="Aménagement de locaux professionnels" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Home staging pour valorisation</span>
+            <InternalLinkText text="Home staging pour valorisation" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Sélection de mobilier et décoration</span>
+            <InternalLinkText text="Sélection de mobilier et décoration" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Visualisation 3D et moodboards</span>
+            <InternalLinkText text="Visualisation 3D et moodboards" />
           </li>
         </ul>
         <div className="mt-6 space-y-4">

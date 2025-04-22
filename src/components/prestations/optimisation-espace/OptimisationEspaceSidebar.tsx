@@ -10,9 +10,9 @@ const OptimisationEspaceSidebar = () => {
       <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
         <h3 className="text-xl font-semibold mb-4">Besoin d'un devis ?</h3>
         <p className="text-gray-600 mb-6">
-          <InternalLinkText 
-            text="Contactez-nous pour échanger sur votre projet d'optimisation d'espace et obtenir un devis personnalisé."
-            maxOccurrences={1}
+          <InternalLinkText
+            text="Contactez-nous pour échanger sur votre projet d'optimisation d'espace et obtenir un devis personnalisé avec notre maître d'œuvre à Marseille ou en région PACA."
+            maxOccurrences={2}
           />
         </p>
         <div className="space-y-4">
@@ -30,23 +30,23 @@ const OptimisationEspaceSidebar = () => {
         <ul className="space-y-2">
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Petits espaces urbains</span>
+            <InternalLinkText text="Petits espaces urbains" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Logements familiaux</span>
+            <InternalLinkText text="Logements familiaux" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Bureaux professionnels</span>
+            <InternalLinkText text="Bureaux professionnels" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Commerces et locaux</span>
+            <InternalLinkText text="Commerces et locaux" />
           </li>
           <li className="flex items-start">
             <span className="text-khaki-600 mr-2">•</span>
-            <span>Espaces de stockage</span>
+            <InternalLinkText text="Espaces de stockage" />
           </li>
         </ul>
         <div className="mt-6 space-y-4">
