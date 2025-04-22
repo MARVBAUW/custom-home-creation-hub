@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import Container from '@/components/common/Container';
@@ -14,7 +13,7 @@ const projects = [
     location: 'PACA',
     category: 'Construction neuve',
     description: 'Villa moderne à l\'architecture audacieuse, intégrant des matériaux contemporains et des lignes épurées, conçue par notre maître d\'œuvre à Marseille.',
-    image: 'lovable-uploads/90cf95a2-5f6b-471e-a957-8133545791cb.png',
+    image: '/lovable-uploads/90cf95a2-5f6b-471e-a957-8133545791cb.png',
     slug: 'maison-contemporaine-vue-panoramique'
   },
   {
