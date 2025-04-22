@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BaseFormProps } from '../types/formTypes';
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { calculateHeatingCost, calculateAirConditioningCost } from '../utils/montantUtils';
-import { ensureNumber, ensureBoolean } from '../utils/typeConversions';
+import { ensureNumber, ensureBoolean, ensureString } from '../utils/typeConversions';
 import { Thermometer, Wind, Leaf, PiggyBank } from 'lucide-react';
 
 const ChauffageForm: React.FC<BaseFormProps> = ({

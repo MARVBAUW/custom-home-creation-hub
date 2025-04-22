@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -37,6 +38,8 @@ const formSchema = z.object({
   totalArea: z.string().optional(),
 });
 
+type FormSchemaType = z.infer<typeof formSchema>;
+
 const DemolitionForm: React.FC<BaseFormProps> = ({ 
   formData, 
   updateFormData, 
@@ -45,13 +48,18 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
   animationDirection 
 }) => {
   // Initialize form with react-hook-form
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       demolitionTypes: formData.demolitionTypes?.length 
         ? formData.demolitionTypes 
         : ['PAS DE DEMOLITION'],
-      percentages: formData.demolitionPercentages || {},
+      percentages: formData.demolitionPercentages 
+        ? Object.entries(formData.demolitionPercentages).reduce((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {} as Record<string, string>)
+        : {},
       totalArea: formData.demolitionTotalArea?.toString() || "",
     },
   });
@@ -86,7 +94,7 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
   };
 
   // Function to handle form submission
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = (values: FormSchemaType) => {
     // Skip calculations if 'PAS DE DEMOLITION' is selected
     if (values.demolitionTypes.includes('PAS DE DEMOLITION')) {
       updateFormData({
@@ -102,13 +110,19 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
     // Get the total project surface
     const projectSurface = ensureNumber(formData.surface);
     
+    // Convert string percentages to numbers
+    const percentagesAsNumbers: Record<string, number> = {};
+    Object.entries(values.percentages || {}).forEach(([key, value]) => {
+      percentagesAsNumbers[key] = ensureNumber(value);
+    });
+    
     // Calculate the demolition cost for each selected type
     let totalDemolitionCost = 0;
     const costs: Record<string, number> = {};
     
     values.demolitionTypes.forEach(type => {
       if (type !== 'PAS DE DEMOLITION' && type !== 'TOTALITE HORS GROS OEUVRE') {
-        const percentage = ensureNumber(values.percentages?.[type]);
+        const percentage = percentagesAsNumbers[type] || 0;
         const cost = calculateDemolitionCost(type, projectSurface, percentage);
         costs[type] = cost;
         totalDemolitionCost += cost;
@@ -123,7 +137,7 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
     // Update form data with values and calculated cost
     updateFormData({
       demolitionTypes: values.demolitionTypes,
-      demolitionPercentages: values.percentages,
+      demolitionPercentages: percentagesAsNumbers,
       demolitionTotalArea: ensureNumber(values.totalArea),
       demolitionCost: totalDemolitionCost,
       demolitionDetailedCosts: costs,
@@ -269,6 +283,7 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
                     {selectedTypes.map((type) => {
                       if (type !== 'PAS DE DEMOLITION') {
                         let cost = 0;
+                        
                         if (type === 'TOTALITE HORS GROS OEUVRE') {
                           const area = ensureNumber(form.watch('totalArea'));
                           cost = calculateDemolitionCost(type, area, 100);
@@ -276,6 +291,7 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
                           const percentage = ensureNumber(form.watch(`percentages.${type}`));
                           cost = calculateDemolitionCost(type, ensureNumber(formData.surface), percentage);
                         }
+                        
                         return (
                           <div key={type} className="flex justify-between text-sm">
                             <span>{type}:</span>
@@ -292,13 +308,17 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
                       <span className="text-primary">
                         {selectedTypes.reduce((total, type) => {
                           if (type !== 'PAS DE DEMOLITION') {
+                            let cost = 0;
+                            
                             if (type === 'TOTALITE HORS GROS OEUVRE') {
                               const area = ensureNumber(form.watch('totalArea'));
-                              return total + calculateDemolitionCost(type, area, 100);
+                              cost = calculateDemolitionCost(type, area, 100);
                             } else {
                               const percentage = ensureNumber(form.watch(`percentages.${type}`));
-                              return total + calculateDemolitionCost(type, ensureNumber(formData.surface), percentage);
+                              cost = calculateDemolitionCost(type, ensureNumber(formData.surface), percentage);
                             }
+                            
+                            return total + cost;
                           }
                           return total;
                         }, 0).toLocaleString()} €

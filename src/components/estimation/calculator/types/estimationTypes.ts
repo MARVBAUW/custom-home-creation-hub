@@ -18,7 +18,7 @@ export interface ConstructionCosts {
 }
 
 export interface FeeCosts {
-  architect?: number;
+  architect: number;
   architectFees: number;
   engineeringFees: number;
   projectManagement: number;
