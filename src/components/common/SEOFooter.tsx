@@ -37,13 +37,13 @@ const SEOFooter = ({ text, additionalKeywords = [] }: SEOFooterProps) => {
             <h2 className="text-base font-medium text-stone-700 dark:text-stone-300 mt-5 mb-2">Zones d'intervention en région PACA</h2>
             <p className="mb-3">
               Notre entreprise de maîtrise d'œuvre intervient dans toute la région PACA (Provence-Alpes-Côte d'Azur), notamment à {locations.slice(0, -1).join(', ')} et {locations[locations.length - 1]}.
-              Que vous souhaitiez construire, rénover ou agrandir votre maison, notre équipe de professionnels vous accompagne tout au long de votre projet.
+              Que vous souhaitiez <Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold hover:underline">construire</Link>, <Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold hover:underline">rénover</Link> ou <Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">agrandir</Link> votre maison, notre équipe de professionnels vous accompagne tout au long de votre projet.
             </p>
             
             <h2 className="text-base font-medium text-stone-700 dark:text-stone-300 mt-5 mb-2">Nos services de maîtrise d'œuvre</h2>
             <p>
-              Progineer propose une gamme complète de services incluant {services.slice(0, -1).join(', ')} et {services[services.length - 1]}.
-              Notre expertise technique et notre connaissance approfondie des réglementations locales garantissent la réussite de votre projet immobilier en région PACA.
+              <Link to="/" className="text-progineer-gold hover:underline">Progineer</Link> propose une gamme complète de services incluant {services.slice(0, -1).join(', ')} et {services[services.length - 1]}.
+              Notre <Link to="/equipe-maitrise-oeuvre" className="text-progineer-gold hover:underline">expertise technique</Link> et notre connaissance approfondie des réglementations locales garantissent la réussite de votre <Link to="/estimation" className="text-progineer-gold hover:underline">projet immobilier</Link> en région PACA.
             </p>
             
             <div className="mt-6 flex flex-wrap gap-2 justify-center">
@@ -59,8 +59,20 @@ const SEOFooter = ({ text, additionalKeywords = [] }: SEOFooterProps) => {
               <Link to="/realisations-architecte-maison" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
                 Voir nos réalisations
               </Link>
+              <Link to="/faq" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                FAQ
+              </Link>
+              <Link to="/a-propos" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                À propos
+              </Link>
+              <Link to="/equipe-maitrise-oeuvre" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Notre équipe
+              </Link>
               <Link to="/sitemap" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
                 Plan du site
+              </Link>
+              <Link to="/sitemap.xml" className="text-xs bg-stone-200 dark:bg-gray-800 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
+                Sitemap XML
               </Link>
             </div>
             

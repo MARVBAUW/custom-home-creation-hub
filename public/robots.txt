@@ -37,4 +37,9 @@ Allow: /prestations-maitre-oeuvre/optimisation-espace
 Allow: /cgu
 Allow: /cgv
 Allow: /privacy-policy
+Allow: /mentions-legales
+Allow: /equipe-maitrise-oeuvre
 Allow: /sitemap.xml
+
+# Crawl delay for better server performance
+Crawl-delay: 1

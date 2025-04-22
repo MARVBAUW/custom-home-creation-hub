@@ -33,7 +33,7 @@ const SEO: React.FC<SEOProps> = ({
   const defaultStructuredData = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "Progineer",
+    "name": "Progineer - Maître d'œuvre en PACA",
     "description": "Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA.",
     "url": "https://progineer.fr",
     "logo": "https://progineer.fr/images/progineer-logo.png",
@@ -44,6 +44,7 @@ const SEO: React.FC<SEOProps> = ({
       "@type": "PostalAddress",
       "addressLocality": "Marseille",
       "addressRegion": "PACA",
+      "postalCode": "13000",
       "addressCountry": "FR"
     },
     "geo": {
@@ -51,7 +52,32 @@ const SEO: React.FC<SEOProps> = ({
       "latitude": "43.296482",
       "longitude": "5.369780"
     },
-    "areaServed": ["Marseille", "Nice", "Toulon", "Cannes", "Fréjus", "PACA"],
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Marseille"
+      },
+      {
+        "@type": "City",
+        "name": "Nice"
+      },
+      {
+        "@type": "City",
+        "name": "Toulon"
+      },
+      {
+        "@type": "City",
+        "name": "Cannes"
+      },
+      {
+        "@type": "City",
+        "name": "Fréjus"
+      },
+      {
+        "@type": "AdministrativeArea",
+        "name": "PACA"
+      }
+    ],
     "sameAs": [
       "https://facebook.com/progineer",
       "https://instagram.com/progineer",
@@ -75,6 +101,36 @@ const SEO: React.FC<SEOProps> = ({
         "longitude": "5.369780"
       },
       "geoRadius": "100000"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Services de maîtrise d'œuvre",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Construction neuve",
+            "url": "https://progineer.fr/prestations-maitre-oeuvre/construction-neuve"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Rénovation",
+            "url": "https://progineer.fr/prestations-maitre-oeuvre/renovation"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Extension",
+            "url": "https://progineer.fr/prestations-maitre-oeuvre/extension"
+          }
+        }
+      ]
     }
   };
 
@@ -89,7 +145,7 @@ const SEO: React.FC<SEOProps> = ({
       {/* Language */}
       <html lang="fr" />
       <meta property="og:locale" content="fr_FR" />
-      <meta http-equiv="Content-Language" content="fr" />
+      <meta httpEquiv="Content-Language" content="fr" />
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={ogType} />
@@ -149,6 +205,9 @@ const SEO: React.FC<SEOProps> = ({
           ]
         })}
       </script>
+
+      {/* Add link to sitemap */}
+      <link rel="sitemap" type="application/xml" href="https://progineer.fr/sitemap.xml" />
 
       {/* Additional meta tags can be passed as children */}
       {children}

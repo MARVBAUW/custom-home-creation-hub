@@ -3,6 +3,7 @@ import React from 'react';
 import Container from '../components/common/Container';
 import { Link } from 'react-router-dom';
 import SEO from '../components/common/SEO';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const Sitemap = () => {
   // Site structure with links - organized and structured
@@ -16,6 +17,7 @@ const Sitemap = () => {
         { href: '/equipe-maitrise-oeuvre', name: 'Équipe' },
         { href: '/estimation', name: 'Estimation' },
         { href: '/contact', name: 'Contact' },
+        { href: '/a-propos', name: 'À propos' },
       ]
     },
     {
@@ -33,7 +35,7 @@ const Sitemap = () => {
       links: [
         { href: '/parrainage', name: 'Parrainage' },
         { href: '/devenir-partenaire', name: 'Devenir Partenaire' },
-        { href: '/workspace', name: 'Espace de Travail' },
+        { href: '/faq', name: 'Foire Aux Questions' },
       ]
     },
     {
@@ -43,7 +45,7 @@ const Sitemap = () => {
         { href: '/privacy-policy', name: 'Politique de Confidentialité' },
         { href: '/cgu', name: 'Conditions Générales d\'Utilisation' },
         { href: '/cgv', name: 'Conditions Générales de Vente' },
-        { href: '/faq', name: 'Foire Aux Questions' },
+        { href: '/sitemap.xml', name: 'Plan du Site XML' },
       ]
     }
   ];
@@ -52,8 +54,8 @@ const Sitemap = () => {
     <>
       <SEO 
         title="Plan du site Progineer | Architecture et maîtrise d'oeuvre en PACA"
-        description="Consultez le plan du site Progineer et accédez facilement à toutes nos pages. Services de maîtrise d'oeuvre, architecture, calculateurs et outils professionnels."
-        keywords="plan du site, sitemap, progineer, maître d'oeuvre PACA, architecture, calculateurs structures, eurocode"
+        description="Consultez le plan du site Progineer et accédez facilement à toutes nos pages. Services de maîtrise d'oeuvre, architecture, projets de construction et rénovation en PACA."
+        keywords="plan du site, sitemap, progineer, maître d'oeuvre PACA, architecture, construction, rénovation, extension"
         canonicalUrl="https://progineer.fr/sitemap"
         structuredData={{
           "@context": "https://schema.org",
@@ -101,7 +103,7 @@ const Sitemap = () => {
                     <li key={linkIndex}>
                       <Link 
                         to={link.href} 
-                        className="text-khaki-600 hover:text-khaki-800 dark:text-khaki-400 dark:hover:text-khaki-200"
+                        className="text-progineer-gold hover:text-progineer-gold/80 dark:text-progineer-gold dark:hover:text-progineer-gold/80"
                       >
                         {link.name}
                       </Link>
@@ -122,7 +124,7 @@ const Sitemap = () => {
                 href="/sitemap.xml" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="inline-block px-4 py-2 rounded bg-khaki-600 text-white hover:bg-khaki-700 transition-colors"
+                className="inline-block px-4 py-2 rounded bg-progineer-gold text-white hover:bg-progineer-gold/90 transition-colors"
               >
                 Voir le sitemap XML
               </a>
@@ -135,8 +137,22 @@ const Sitemap = () => {
               </a>
             </div>
           </div>
+
+          <div className="mt-8 flex justify-between items-center">
+            <Link to="/" className="text-progineer-gold hover:underline flex items-center">
+              ← Retour à la page d'accueil
+            </Link>
+            <Link to="/contact" className="text-progineer-gold hover:underline flex items-center">
+              Nous contacter →
+            </Link>
+          </div>
         </Container>
       </section>
+
+      <SEOFooter 
+        text="Consultez le plan du site Progineer pour naviguer facilement sur notre site. Retrouvez toutes nos pages concernant la maîtrise d'œuvre, l'architecture, la construction et la rénovation en région PACA."
+        additionalKeywords={["plan du site", "sitemap progineer", "navigation site maître d'œuvre", "architecture PACA", "construction marseille", "rénovation PACA"]}
+      />
     </>
   );
 };

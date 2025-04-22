@@ -4,6 +4,7 @@ import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
 import { Navigate, useLocation, Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
+import SEO from '@/components/common/SEO';
 
 // This component handles the XML sitemap and redirects if necessary
 const SitemapXML: React.FC = () => {
@@ -104,20 +105,20 @@ const SitemapXML: React.FC = () => {
     );
   }
 
-  // Autrement, afficher comme une page normale avec l'UI autour
+  // Sinon, afficher comme une page normale avec l'UI autour
   return (
     <>
-      <Helmet>
-        <title>Plan du site XML - Progineer</title>
-        <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
-        <meta name="robots" content="index, follow" />
-        <meta name="description" content="Plan du site XML pour Progineer, entreprise d'architecture et de maîtrise d'œuvre en PACA." />
-      </Helmet>
+      <SEO 
+        title="Plan du site XML - Progineer | Architecture et maîtrise d'oeuvre en PACA"
+        description="Consultez le plan du site XML de Progineer, fichier sitemap.xml pour les moteurs de recherche. Notre entreprise d'architecture et de maîtrise d'œuvre en PACA."
+        keywords="sitemap xml, plan du site xml, progineer sitemap, xml sitemap progineer, seo xml"
+        canonicalUrl="https://progineer.fr/sitemap.xml"
+      />
       
       <Container className="py-16 min-h-screen">
         <div className="mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold mb-6">Plan du site</h1>
-          <p className="mb-6">Consultez ci-dessous toutes les pages de notre site web :</p>
+          <h1 className="text-3xl font-bold mb-6">Plan du site XML</h1>
+          <p className="mb-6">Consultez ci-dessous toutes les pages de notre site web au format XML pour les moteurs de recherche :</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
             <div>
@@ -154,6 +155,7 @@ const SitemapXML: React.FC = () => {
                 <li><Link to="/privacy-policy" className="text-progineer-gold hover:underline">Politique de confidentialité</Link></li>
                 <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
                 <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
+                <li><Link to="/sitemap" className="text-progineer-gold hover:underline">Plan du site HTML</Link></li>
                 <li><Link to="/" className="text-progineer-gold hover:underline">Retour à l'accueil</Link></li>
               </ul>
             </div>
@@ -171,9 +173,12 @@ const SitemapXML: React.FC = () => {
             {xmlContent}
           </pre>
           
-          <div className="mt-8">
+          <div className="mt-8 flex flex-wrap gap-4">
             <Link to="/" className="text-progineer-gold hover:underline flex items-center">
               ← Retour à la page d'accueil
+            </Link>
+            <Link to="/sitemap" className="text-progineer-gold hover:underline flex items-center">
+              Voir le plan du site HTML
             </Link>
           </div>
         </div>
