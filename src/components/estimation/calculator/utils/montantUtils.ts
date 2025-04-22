@@ -38,6 +38,10 @@ export const calculateHeatingCost = (surface: number, heatingType: string): numb
     heat_pump: 150,    // Heat pump system
     solar: 200,        // Solar heating system
     geothermal: 250,   // Geothermal heating system
+    standard: 80,      // Standard heating system
+    eco: 150,          // Eco-friendly heating system
+    economic: 70,      // Economical heating system
+    sans_avis: 80,     // No preference
     non_concerne: 0    // No heating system required
   };
 
@@ -97,33 +101,31 @@ export const percentageToNumber = (percentage: string | number): number => {
 
 /**
  * Calculate facade cost based on detailed material percentages and surface area
- * @param formData Form data containing surface information
  * @param stonePercentage Percentage of stone facade
  * @param plasterPercentage Percentage of plaster facade
  * @param brickPercentage Percentage of brick facade
  * @param metalCladdingPercentage Percentage of metal cladding
  * @param woodCladdingPercentage Percentage of wood cladding
  * @param stoneCladdingPercentage Percentage of stone cladding
+ * @param surface Surface area in square meters
  * @returns Total facade cost
  */
 export const calculateDetailedFacadeCost = (
-  formData: any,
-  stonePercentage: string | number,
-  plasterPercentage: string | number,
-  brickPercentage: string | number,
-  metalCladdingPercentage: string | number,
-  woodCladdingPercentage: string | number,
-  stoneCladdingPercentage: string | number
+  stonePercentage: number,
+  plasterPercentage: number,
+  brickPercentage: number,
+  metalCladdingPercentage: number,
+  woodCladdingPercentage: number,
+  stoneCladdingPercentage: number,
+  surface: number
 ): number => {
-  const surface = ensureNumber(formData.surface);
-  
-  // Convert percentages to numbers (0-1)
-  const stone = ensureNumber(stonePercentage) / 100;
-  const plaster = ensureNumber(plasterPercentage) / 100;
-  const brick = ensureNumber(brickPercentage) / 100;
-  const metalCladding = ensureNumber(metalCladdingPercentage) / 100;
-  const woodCladding = ensureNumber(woodCladdingPercentage) / 100;
-  const stoneCladding = ensureNumber(stoneCladdingPercentage) / 100;
+  // Convert percentages to decimal (if not already)
+  const stone = stonePercentage / 100;
+  const plaster = plasterPercentage / 100;
+  const brick = brickPercentage / 100;
+  const metalCladding = metalCladdingPercentage / 100;
+  const woodCladding = woodCladdingPercentage / 100;
+  const stoneCladding = stoneCladdingPercentage / 100;
   
   // Base costs per square meter for each material
   const rates = {
@@ -199,19 +201,19 @@ export const calculateElectricalCost = (surface: number, type: string): number =
 
 /**
  * Calculate cost for interior carpentry work
- * @param surface Surface area in square meters
- * @param quality Quality level of carpentry
+ * @param doorType Type of doors
+ * @param doorCount Number of doors
  * @returns Cost estimate
  */
-export const calculateInteriorCarpenteryCost = (surface: number, quality: string): number => {
+export const calculateInteriorCarpenteryCost = (doorType: string, doorCount: number): number => {
   const rates: Record<string, number> = {
-    basic: 80,
-    standard: 120,
-    premium: 200
+    basic: 300,
+    standard: 500,
+    premium: 800
   };
   
-  const rate = rates[quality] || 120;
-  return Math.round(surface * rate * 0.25);
+  const rate = rates[doorType] || 500;
+  return Math.round(doorCount * rate);
 };
 
 /**
@@ -233,33 +235,35 @@ export const calculatePlasteringCost = (surface: number, quality: string): numbe
 
 /**
  * Calculate cost for parquet flooring
+ * @param type Quality level of parquet
  * @param surface Surface area in square meters
- * @param quality Quality level of parquet
  * @returns Cost estimate
  */
-export const calculateParquetCost = (surface: number, quality: string): number => {
+export const calculateParquetCost = (type: string, surface: number): number => {
   const rates: Record<string, number> = {
     basic: 60,
     standard: 90,
     premium: 150,
-    luxury: 250
+    luxury: 250,
+    none: 0
   };
   
-  const rate = rates[quality] || 90;
+  const rate = rates[type] || 90;
   return Math.round(surface * rate);
 };
 
 /**
  * Calculate cost for soft floor coverings
- * @param surface Surface area in square meters
  * @param type Type of soft floor covering
+ * @param surface Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateSoftFloorCost = (surface: number, type: string): number => {
+export const calculateSoftFloorCost = (type: string, surface: number): number => {
   const rates: Record<string, number> = {
     vinyl: 40,
     carpet: 50,
-    linoleum: 45
+    linoleum: 45,
+    none: 0
   };
   
   const rate = rates[type] || 45;
@@ -339,11 +343,10 @@ export const calculatePaintingCost = (surface: number, quality: string): number 
 
 /**
  * Calculate cost for kitchen
- * @param surface Surface area in square meters
  * @param quality Quality level of kitchen
  * @returns Cost estimate
  */
-export const calculateKitchenCost = (surface: number, quality: string): number => {
+export const calculateKitchenCost = (quality: string): number => {
   const rates: Record<string, number> = {
     basic: 4000,
     standard: 8000,
@@ -351,38 +354,41 @@ export const calculateKitchenCost = (surface: number, quality: string): number =
     luxury: 25000
   };
   
-  const baseRate = rates[quality] || 8000;
-  // Adjust based on kitchen size
-  const sizeMultiplier = Math.min(Math.max(surface / 10, 0.8), 1.5);
-  
-  return Math.round(baseRate * sizeMultiplier);
+  return rates[quality] || 8000;
 };
 
 /**
  * Calculate cost for floor tiling
+ * @param type Quality level of tiles
+ * @param percentage Percentage of the floor to be tiled
  * @param surface Surface area in square meters
- * @param quality Quality level of tiles
  * @returns Cost estimate
  */
-export const calculateFloorTilingCost = (surface: number, quality: string): number => {
+export const calculateFloorTilingCost = (type: string, percentage: number, surface: number): number => {
+  if (type === 'non_concerne') return 0;
+  
   const rates: Record<string, number> = {
     basic: 70,
     standard: 100,
+    medium: 125,
     premium: 150,
     luxury: 250
   };
   
-  const rate = rates[quality] || 100;
-  return Math.round(surface * rate);
+  const rate = rates[type] || 100;
+  const tileArea = surface * (percentage / 100);
+  return Math.round(tileArea * rate);
 };
 
 /**
  * Calculate cost for wall tiling
+ * @param type Quality level of tiles
  * @param surface Surface area in square meters
- * @param quality Quality level of tiles
  * @returns Cost estimate
  */
-export const calculateWallTilingCost = (surface: number, quality: string): number => {
+export const calculateWallTilingCost = (type: string, surface: number): number => {
+  if (type === 'non_concerne') return 0;
+  
   const rates: Record<string, number> = {
     basic: 75,
     standard: 110,
@@ -390,8 +396,10 @@ export const calculateWallTilingCost = (surface: number, quality: string): numbe
     luxury: 260
   };
   
-  const rate = rates[quality] || 110;
-  return Math.round(surface * rate);
+  const rate = rates[type] || 110;
+  // Typically wall tiling covers about 30% of the total surface area
+  const wallTileArea = surface * 0.3;
+  return Math.round(wallTileArea * rate);
 };
 
 /**
@@ -415,35 +423,30 @@ export const calculateDemolitionCost = (surface: number, type: string): number =
 /**
  * Calculate cost for masonry wall work
  * @param surface Surface area in square meters
- * @param type Type of masonry
  * @returns Cost estimate
  */
-export const calculateMasonryWallCost = (surface: number, type: string): number => {
-  const rates: Record<string, number> = {
-    brick: 180,
-    concrete: 150,
-    stone: 250,
-    aac: 140
-  };
-  
-  const rate = rates[type] || 150;
+export const calculateMasonryWallCost = (surface: number): number => {
+  // Average rate for masonry walls
+  const rate = 180;
   return Math.round(surface * rate);
 };
 
 /**
  * Calculate cost for floor work
- * @param surface Surface area in square meters
  * @param type Type of floor
+ * @param surface Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateFloorCost = (surface: number, type: string): number => {
+export const calculateFloorCost = (type: string, surface: number): number => {
   const rates: Record<string, number> = {
+    BOIS: 150,
+    BETON: 120,
     concrete: 90,
     wood: 150,
     composite: 120
   };
   
-  const rate = rates[type] || 100;
+  const rate = rates[type] || 120;
   return Math.round(surface * rate);
 };
 
@@ -454,11 +457,21 @@ export const calculateFloorCost = (surface: number, type: string): number => {
  * @returns Cost estimate
  */
 export const calculateStructuralFeatureCost = (type: string, count: number): number => {
+  // Base rates for different structural features
   const rates: Record<string, number> = {
     beam: 1500,
     column: 800,
     arch: 2000,
-    opening: 1200
+    opening: 1200,
+    "RESEAUX EVACUATION A REPRENDRE / TRANCHEE / REBOUCHAGE": 150,
+    "DEMOLITION MUR PORTEUR": 300,
+    "POSE D'UN IPN": 500,
+    "OUVERTURE EN FACADE/MUR PORTEUR": 800,
+    "CREATION D'UNE TREMIE*": 900,
+    "FONDATION SEMELLE": 200,
+    "FONDATION MASSIF": 1000,
+    "CHAPE": 80,
+    "RACCORDEMENT SANTAIRE RESEAU URBAIN": 2000
   };
   
   const rate = rates[type] || 1000;
@@ -468,11 +481,17 @@ export const calculateStructuralFeatureCost = (type: string, count: number): num
 /**
  * Calculate cost for roof framework renovation
  * @param type Type of renovation
- * @param surface Surface area in square meters
+ * @param roofArea Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateRoofFrameworkRenovCost = (type: string, surface: number): number => {
+export const calculateRoofFrameworkRenovCost = (type: string, roofArea: number): number => {
+  if (type === 'NON CONCERNE') return 0;
+  
   const rates: Record<string, number> = {
+    "TOITURE TERRASSE ACCESSIBLE": 190,
+    "TOITURE TERRASSE INACCESSIBLE": 180,
+    "CHARPENTE INDUSTRIELLE": 160,
+    "CHARPENTE TRADITIONNELLE": 185,
     light: 100,
     medium: 150,
     heavy: 200,
@@ -480,17 +499,25 @@ export const calculateRoofFrameworkRenovCost = (type: string, surface: number): 
   };
   
   const rate = rates[type] || 150;
-  return Math.round(surface * rate);
+  return Math.round(ensureNumber(roofArea) * rate);
 };
 
 /**
  * Calculate cost for roof covering renovation
  * @param type Type of roof covering
- * @param surface Surface area in square meters
+ * @param roofArea Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateRoofCoveringRenovCost = (type: string, surface: number): number => {
+export const calculateRoofCoveringRenovCost = (type: string, roofArea: number): number => {
+  if (type === 'NON CONCERNE') return 0;
+  
   const rates: Record<string, number> = {
+    "TUILES PLATES": 160,
+    "TUILES RONDES": 167,
+    "ARDOISES": 240,
+    "ZINC": 190,
+    "CHAUME": 230,
+    "BAC ACIER": 85,
     tuile_plate: 160,
     tuile_ronde: 167,
     ardoise: 240,
@@ -500,26 +527,21 @@ export const calculateRoofCoveringRenovCost = (type: string, surface: number): n
   };
   
   const rate = rates[type] || 160;
-  return Math.round(surface * rate);
+  return Math.round(ensureNumber(roofArea) * rate);
 };
 
 /**
  * Calculate cost for environmental solutions
  * @param type Type of environmental solution
- * @param surface Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateEnvironmentalSolutionsCost = (type: string, surface: number): number => {
+export const calculateEnvironmentalSolutionsCost = (type: string): number => {
   const rates: Record<string, number> = {
     rainwater: 5000,
     solarPanels: 15000,
-    greenRoof: 200,
+    greenRoof: 7000,
     compost: 1000
   };
-  
-  if (type === "greenRoof") {
-    return Math.round(surface * rates[type]);
-  }
   
   return rates[type] || 5000;
 };
@@ -527,24 +549,17 @@ export const calculateEnvironmentalSolutionsCost = (type: string, surface: numbe
 /**
  * Calculate cost for renewable energy systems
  * @param type Type of renewable energy system
- * @param surface Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateRenewableEnergyCost = (type: string, surface: number): number => {
+export const calculateRenewableEnergyCost = (type: string): number => {
   const rates: Record<string, number> = {
-    solar: 1200,
-    geothermal: 2000,
-    biomass: 1500,
+    solar: 12000,
+    geothermal: 20000,
+    biomass: 15000,
     windmill: 20000
   };
   
-  if (type === "windmill") {
-    return rates[type];
-  }
-  
-  // Surface based calculation for solar, geothermal, biomass
-  const baseCost = rates[type] || 1500;
-  return Math.round(surface * 0.1 * baseCost);
+  return rates[type] || 15000;
 };
 
 /**
@@ -558,7 +573,10 @@ export const calculateLandscapingCost = (type: string, surface: number): number 
     basic: 50,
     standard: 80,
     premium: 120,
-    luxury: 200
+    luxury: 200,
+    "UN PEU": 50,
+    "BEAUCOUP": 100,
+    "PASSIONNEMENT": 150
   };
   
   const rate = rates[type] || 80;
@@ -567,52 +585,37 @@ export const calculateLandscapingCost = (type: string, surface: number): number 
 
 /**
  * Calculate cost for fencing
- * @param type Type of fencing
  * @param length Length in meters
  * @returns Cost estimate
  */
-export const calculateFencingCost = (type: string, length: number): number => {
-  const rates: Record<string, number> = {
-    wood: 100,
-    chain: 80,
-    wrought: 300,
-    composite: 150
-  };
-  
-  const rate = rates[type] || 100;
+export const calculateFencingCost = (length: number): number => {
+  // Standard rate for fencing per meter
+  const rate = 120;
   return Math.round(length * rate);
 };
 
 /**
  * Calculate cost for gate
- * @param type Type of gate
+ * @param width Width in meters
  * @returns Cost estimate
  */
-export const calculateGateCost = (type: string): number => {
-  const rates: Record<string, number> = {
-    manual: 1500,
-    automatic: 3500,
-    smart: 5000
-  };
+export const calculateGateCost = (width: number): number => {
+  // Base cost for a gate
+  const baseCost = 1500;
+  // Additional cost per meter of width
+  const additionalCost = 500;
   
-  return rates[type] || 2500;
+  return Math.round(baseCost + (width * additionalCost));
 };
 
 /**
  * Calculate cost for terrace
- * @param type Type of terrace
  * @param surface Surface area in square meters
  * @returns Cost estimate
  */
-export const calculateTerraceCost = (type: string, surface: number): number => {
-  const rates: Record<string, number> = {
-    wood: 200,
-    composite: 350,
-    stone: 300,
-    tile: 180,
-    concrete: 120
-  };
-  
-  const rate = rates[type] || 200;
+export const calculateTerraceCost = (surface: number): number => {
+  // Standard rate for terrace per square meter
+  const rate = 200;
   return Math.round(surface * rate);
 };
+
