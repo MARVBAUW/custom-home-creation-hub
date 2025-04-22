@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
@@ -49,31 +48,34 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Ajout de mots-clés sémantiques */}
-          <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-white/80">
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Coordination des corps de métier</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Respect des délais garantis</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Expertise technique</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Maîtrise d'œuvre complète</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Choix des matériaux</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-progineer-gold rounded-full"></div>
-              <span>Projets de rénovation</span>
+          {/* Key features section - Updated layout and visual hierarchy */}
+          <div className="w-full mt-16 p-6 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10">
+            <h3 className="text-white/90 font-medium mb-6 text-center">Nos engagements pour votre projet</h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 text-sm">
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Coordination des corps de métier</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Respect des délais garantis</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Expertise technique</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Maîtrise d'œuvre complète</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Choix des matériaux</span>
+              </div>
+              <div className="flex items-center space-x-3 text-white/80 hover:text-white transition-colors">
+                <div className="w-2 h-2 bg-progineer-gold rounded-full flex-shrink-0"></div>
+                <span>Projets de rénovation</span>
+              </div>
             </div>
           </div>
         </div>
