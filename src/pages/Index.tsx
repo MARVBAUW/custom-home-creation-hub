@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Hero from '../components/home/Hero';
 import ExpertiseSection from '../components/home/ExpertiseSection';
@@ -11,6 +10,7 @@ import { getBusinessStructuredData } from '../utils/googleBusiness';
 import SEO from '../components/common/SEO';
 import SEOFooter from '@/components/common/SEOFooter';
 import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -34,40 +34,93 @@ const Index = () => {
         <CTASection />
         
         {/* Amélioration SEO - Ajout de liens internes supplémentaires */}
-        <section className="py-8 bg-stone-50">
+        <section className="py-16 bg-gradient-to-b from-stone-100 to-white">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Nos prestations</h2>
-                <ul className="space-y-2">
-                  <li><Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold hover:underline">Construction neuve</Link></li>
-                  <li><Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold hover:underline">Rénovation</Link></li>
-                  <li><Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">Extension</Link></li>
-                  <li><Link to="/prestations-maitre-oeuvre/design-interieur" className="text-progineer-gold hover:underline">Design d'intérieur</Link></li>
-                  <li><Link to="/prestations-maitre-oeuvre/optimisation-espace" className="text-progineer-gold hover:underline">Optimisation d'espace</Link></li>
-                  <li><Link to="/sitemap.xml" className="text-progineer-gold hover:underline">Plan du site XML</Link></li>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-semibold mb-6 text-gray-900">
+                Tout ce dont vous avez besoin
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Explorez l'ensemble de nos services et ressources pour votre projet de construction ou rénovation.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">Nos prestations</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Construction neuve
+                  </Link></li>
+                  <li><Link to="/prestations-maitre-oeuvre/renovation" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Rénovation
+                  </Link></li>
+                  <li><Link to="/prestations-maitre-oeuvre/extension" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Extension
+                  </Link></li>
+                  <li><Link to="/prestations-maitre-oeuvre/design-interieur" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Design d'intérieur
+                  </Link></li>
+                  <li><Link to="/prestations-maitre-oeuvre/optimisation-espace" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Optimisation d'espace
+                  </Link></li>
                 </ul>
               </div>
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Notre entreprise</h2>
-                <ul className="space-y-2">
-                  <li><Link to="/a-propos" className="text-progineer-gold hover:underline">À propos</Link></li>
-                  <li><Link to="/realisations-architecte-maison" className="text-progineer-gold hover:underline">Nos réalisations</Link></li>
-                  <li><Link to="/equipe-maitrise-oeuvre" className="text-progineer-gold hover:underline">Notre équipe</Link></li>
-                  <li><Link to="/parrainage" className="text-progineer-gold hover:underline">Programme de parrainage</Link></li>
-                  <li><Link to="/devenir-partenaire" className="text-progineer-gold hover:underline">Devenir partenaire</Link></li>
+
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">Notre entreprise</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/a-propos" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    À propos
+                  </Link></li>
+                  <li><Link to="/realisations-architecte-maison" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Nos réalisations
+                  </Link></li>
+                  <li><Link to="/equipe-maitrise-oeuvre" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Notre équipe
+                  </Link></li>
+                  <li><Link to="/parrainage" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Programme de parrainage
+                  </Link></li>
+                  <li><Link to="/devenir-partenaire" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Devenir partenaire
+                  </Link></li>
                 </ul>
               </div>
-              <div>
-                <h2 className="text-xl font-semibold mb-4">Informations</h2>
-                <ul className="space-y-2">
-                  <li><Link to="/estimation" className="text-progineer-gold hover:underline">Estimer mon projet</Link></li>
-                  <li><Link to="/contact" className="text-progineer-gold hover:underline">Nous contacter</Link></li>
-                  <li><Link to="/faq" className="text-progineer-gold hover:underline">FAQ</Link></li>
-                  <li><Link to="/mentions-legales" className="text-progineer-gold hover:underline">Mentions légales</Link></li>
-                  <li><Link to="/sitemap" className="text-progineer-gold hover:underline">Plan du site</Link></li>
-                  <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
-                  <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
+
+              <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">Informations</h3>
+                <ul className="space-y-3">
+                  <li><Link to="/estimation" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Estimer mon projet
+                  </Link></li>
+                  <li><Link to="/contact" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Nous contacter
+                  </Link></li>
+                  <li><Link to="/faq" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    FAQ
+                  </Link></li>
+                  <li><Link to="/mentions-legales" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Mentions légales
+                  </Link></li>
+                  <li><Link to="/sitemap" className="text-khaki-600 hover:text-khaki-800 transition-colors flex items-center">
+                    <ArrowRight className="h-4 w-4 mr-2" />
+                    Plan du site
+                  </Link></li>
                 </ul>
               </div>
             </div>
