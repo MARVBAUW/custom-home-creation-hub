@@ -29,3 +29,36 @@ export const percentageToNumber = (percentage: string | number): number => {
   }
   return percentage / 100;
 };
+
+/**
+ * Safely converts any value to a form-compatible value
+ */
+export const toFormValue = (value: any): string => {
+  if (value === undefined || value === null) return '';
+  return String(value);
+};
+
+/**
+ * Safely render a value as a string with fallback
+ */
+export const safeRenderValue = (value: any, fallback: string = '-'): string => {
+  if (value === undefined || value === null || value === '') return fallback;
+  return String(value);
+};
+
+/**
+ * Format a number as currency (Euros)
+ */
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
+};
+
+/**
+ * Format a number with correct separators and precision
+ */
+export const formatNumber = (value: number, precision: number = 0): string => {
+  return new Intl.NumberFormat('fr-FR', { 
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision
+  }).format(value);
+};

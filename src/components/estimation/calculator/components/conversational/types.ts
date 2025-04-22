@@ -42,4 +42,5 @@ export interface ConversationState {
   askedQuestions: string[];
   completedFields: string[];
   formProgress: number;
+  messages: Message[]; // Added messages field that is required by hooks
 }
