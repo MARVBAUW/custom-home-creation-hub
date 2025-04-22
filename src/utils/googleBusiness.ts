@@ -120,6 +120,32 @@ export const getBusinessStructuredData = () => {
       "@type": "AggregateRating",
       "ratingValue": "5.0",
       "ratingCount": "5"
-    }
+    },
+    "makesOffer": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Construction neuve",
+          "description": "Service de construction de maisons sur mesure en région PACA"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Rénovation",
+          "description": "Service de rénovation de maisons et appartements en région PACA"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Extension",
+          "description": "Service d'extension et d'agrandissement de maisons en région PACA"
+        }
+      }
+    ]
   };
 };

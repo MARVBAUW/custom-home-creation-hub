@@ -30,7 +30,7 @@ export const getEstimationStructuredData = () => {
         }
       },
       "areaServed": ["Marseille", "Nice", "Toulon", "Cannes", "Fréjus", "Aix-en-Provence", "PACA"],
-      "serviceType": "Estimation de projet immobilier",
+      "serviceOutput": "Estimation de projet immobilier",
       "audience": {
         "@type": "Audience",
         "audienceType": "Particuliers et professionnels"
