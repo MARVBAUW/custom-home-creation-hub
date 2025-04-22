@@ -12,5 +12,5 @@ export * from './simpleEstimation';
 export * from './structuralCosts';
 export * from './technicalCosts';
 
-// Re-export calculateEstimationData from calculationUtils for backwards compatibility
-export { calculateEstimationData } from '../calculationUtils';
+// Re-export from calculationUtils for backwards compatibility
+// Removed duplicate declaration to fix build error

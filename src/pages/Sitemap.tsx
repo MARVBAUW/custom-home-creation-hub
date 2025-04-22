@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import SEO from '../components/common/SEO';
 
 const Sitemap = () => {
-  // Structure des liens du site
+  // Site structure with links
   const siteStructure = [
     {
       title: 'Pages Principales',
@@ -30,9 +30,9 @@ const Sitemap = () => {
     {
       title: 'Calculateurs',
       links: [
-        { href: '/workspace', name: 'Tous les calculateurs' },
         { href: '/workspace/calculateurs', name: 'Calculateurs financiers' },
         { href: '/workspace/calculateurs/eurocode', name: 'Calculateurs Eurocode' },
+        { href: '/workspace', name: 'Tous les calculateurs' },
       ]
     },
     {
@@ -83,14 +83,18 @@ const Sitemap = () => {
 
       <section className="py-16 bg-white dark:bg-gray-950">
         <Container size="lg">
-          <h1 className="text-3xl md:text-4xl font-semibold mb-8 text-gray-900 dark:text-white">
+          <h1 className="text-3xl md:text-4xl font-semibold mb-4 text-gray-900 dark:text-white">
             Plan du site
           </h1>
+          
+          <h2 className="text-xl md:text-2xl font-medium mb-8 text-gray-700 dark:text-gray-200">
+            Toutes les pages du site Progineer
+          </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {siteStructure.map((section, index) => (
               <div key={index} className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-sm">
-                <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-100">{section.title}</h2>
+                <h3 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-100">{section.title}</h3>
                 <ul className="space-y-2">
                   {section.links.map((link, linkIndex) => (
                     <li key={linkIndex}>
@@ -108,7 +112,7 @@ const Sitemap = () => {
           </div>
           
           <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-sm">
-            <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-100">Ressources XML</h2>
+            <h3 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-100">Ressources XML</h3>
             <p className="mb-4 text-gray-600 dark:text-gray-300">
               Pour les moteurs de recherche et l'indexation automatique, nous proposons également une version XML du sitemap.
             </p>

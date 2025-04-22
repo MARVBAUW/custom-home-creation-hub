@@ -4,47 +4,47 @@ import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';
 import { Navigate, useLocation } from 'react-router-dom';
 
-// Cette composante gère le sitemap XML et redirige si nécessaire
+// This component handles the XML sitemap and redirects if necessary
 const SitemapXML: React.FC = () => {
   const [xmlContent, setXmlContent] = useState<string>('');
   const location = useLocation();
   const currentPath = location.pathname;
   
-  // Si l'URL a un slash final après "sitemap.xml", on redirige vers la version sans slash
+  // If the URL has a trailing slash after "sitemap.xml", redirect to the version without slash
   if (currentPath.endsWith('/sitemap.xml/')) {
     return <Navigate to="/sitemap.xml" replace />;
   }
   
   useEffect(() => {
-    // Génère le contenu XML immédiatement quand le composant est monté
+    // Generate the XML content immediately when the component is mounted
     generateSitemapXML();
   }, []);
 
   const generateSitemapXML = () => {
     try {
-      // Date courante au format ISO pour lastmod
+      // Current date in ISO format for lastmod
       const currentDate = new Date().toISOString().split('T')[0];
       const baseUrl = 'https://progineer.fr';
       
-      // Déclaration XML
+      // XML declaration
       const xmlDeclaration = '<?xml version="1.0" encoding="UTF-8"?>\n';
       
-      // Créer l'élément urlset directement en string
+      // Create the urlset element directly as string
       let xmlString = xmlDeclaration + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
       
-      // Ajoute chaque route comme élément URL
+      // Add each route as URL element
       publicRoutes
         .filter(route => route.path && route.path !== '/sitemap.xml')
         .forEach(route => {
-          // Construit l'URL complète
+          // Build full URL
           const fullUrl = `${baseUrl}${route.path}`;
           
-          // Calcule la priorité basée sur la profondeur de la route
+          // Calculate priority based on route depth
           const pathSegments = route.path.split('/').filter(Boolean);
           const priority = pathSegments.length === 0 ? 1.0 : Math.max(0.3, 1.0 - (pathSegments.length * 0.2));
           const changefreq = priority > 0.6 ? 'monthly' : 'yearly';
           
-          // Crée l'élément URL directement en string
+          // Create URL element directly as string
           xmlString += '  <url>\n';
           xmlString += `    <loc>${fullUrl}</loc>\n`;
           xmlString += `    <lastmod>${currentDate}</lastmod>\n`;
@@ -53,18 +53,18 @@ const SitemapXML: React.FC = () => {
           xmlString += '  </url>\n';
         });
       
-      // Ferme l'élément urlset
+      // Close urlset element
       xmlString += '</urlset>';
       
-      // Définit le contenu XML dans l'état
+      // Set XML content to state
       setXmlContent(xmlString);
     } catch (error) {
-      console.error('Erreur lors de la génération du sitemap XML:', error);
-      setXmlContent(`<!-- Erreur lors de la génération du sitemap: ${error} -->`);
+      console.error('Error generating XML sitemap:', error);
+      setXmlContent(`<!-- Error generating sitemap: ${error} -->`);
     }
   };
 
-  // Si nous accédons directement au chemin /sitemap.xml, servir en tant que XML pur
+  // If accessing /sitemap.xml directly, serve as pure XML
   if (currentPath === '/sitemap.xml') {
     return (
       <>

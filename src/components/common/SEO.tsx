@@ -19,7 +19,7 @@ const SEO: React.FC<SEOProps> = ({
   keywords,
   canonicalUrl = 'https://progineer.fr',
   ogType = 'website',
-  ogImage = 'https://progineer.fr/images/progineer-social-card.jpg', // Image par défaut mise à jour
+  ogImage = 'https://progineer.fr/images/progineer-social-card.jpg', 
   structuredData,
   children,
 }) => {
@@ -29,7 +29,7 @@ const SEO: React.FC<SEOProps> = ({
   // Make sure description is not too long (Google typically displays ~155-160 characters)
   const formattedDescription = description.length > 160 ? description.substring(0, 160) + '...' : description;
 
-  // Si aucun structured data n'est fourni, utiliser les données par défaut de l'entreprise
+  // Default structured data if none is provided
   const defaultStructuredData = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
