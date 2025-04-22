@@ -41,7 +41,7 @@ const Navbar = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300 backdrop-blur-sm",
+        "fixed top-[6rem] w-full z-50 transition-all duration-300 backdrop-blur-sm", // Change top positioning to top-[6rem]
         isScrolled || isOpen
           ? "bg-white/95 dark:bg-gray-900/95 py-2 border-b border-stone-200/50 dark:border-gray-700/50" 
           : "bg-transparent py-3"
@@ -92,3 +92,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
