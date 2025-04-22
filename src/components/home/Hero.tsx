@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Button from '@/components/common/Button';
 import Container from '@/components/common/Container';
@@ -6,51 +7,57 @@ import Logo from '@/components/common/Logo';
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center py-24 overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')`,
-            backgroundPosition: 'center',
-          }}
-        ></div>
-      </div>
-      
-      <Container className="relative z-10 mt-16">
-        <div className="flex flex-col items-start animate-fade-in">
-          <div className="w-full flex justify-center mb-12">
-            <Logo variant="metallic-full" size="lg" className="mx-auto" />
+    <>
+      <section className="relative min-h-[90vh] flex items-center py-24 overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ 
+              backgroundImage: `url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070&auto=format&fit=crop')`,
+              backgroundPosition: 'center',
+            }}
+          ></div>
+        </div>
+        
+        <Container className="relative z-10 mt-16">
+          <div className="flex flex-col items-start animate-fade-in">
+            <div className="w-full flex justify-center mb-12">
+              <Logo variant="metallic-full" size="lg" className="mx-auto" />
+            </div>
+            
+            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
+              Maître d'œuvre à Marseille
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
+              Votre maître d'œuvre expert à <br className="hidden md:block" />
+              <span className="text-progineer-gold">Marseille et en PACA</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
+              Coordination des corps de métier, respect des délais et expertise technique pour vos projets de construction et rénovation. Un accompagnement sur mesure par votre maître d'ouvrage à Marseille.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button href="/estimation" size="lg" variant="estimation" className="font-medium">
+                Estimer mon projet
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button href="/prestations-maitre-oeuvre" variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
+                Découvrir nos prestations
+              </Button>
+            </div>
           </div>
-          
-          <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/30 backdrop-blur-sm text-white text-sm font-medium">
-            Maître d'œuvre à Marseille
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
-            Votre maître d'œuvre expert à <br className="hidden md:block" />
-            <span className="text-progineer-gold">Marseille et en PACA</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
-            Coordination des corps de métier, respect des délais et expertise technique pour vos projets de construction et rénovation. Un accompagnement sur mesure par votre maître d'ouvrage à Marseille.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Button href="/estimation" size="lg" variant="estimation" className="font-medium">
-              Estimer mon projet
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-            <Button href="/prestations-maitre-oeuvre" variant="outline" size="lg" className="bg-white/10 border-white/30 text-white hover:bg-white/20">
-              Découvrir nos prestations
-            </Button>
-          </div>
+        </Container>
+      </section>
 
-          {/* Key features section - Enhanced layout with better visual hierarchy */}
-          <div className="w-full mt-16">
-            <div className="p-8 rounded-2xl bg-gradient-to-br from-white/5 to-transparent backdrop-blur-md border border-white/10 shadow-2xl">
+      {/* Key features section - Moved outside of the hero section */}
+      <section className="py-16 bg-gray-900">
+        <Container>
+          <div className="rounded-2xl bg-gradient-to-br from-black/40 to-black/20 border border-white/10 shadow-2xl">
+            <div className="p-8">
               <h3 className="text-white/90 font-medium mb-8 text-center relative">
                 <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-4 py-1 bg-progineer-gold/20 rounded-full text-sm backdrop-blur-sm border border-progineer-gold/30">
                   Expertise & Qualité
@@ -121,9 +128,9 @@ const Hero = () => {
               </div>
             </div>
           </div>
-        </div>
-      </Container>
-    </section>
+        </Container>
+      </section>
+    </>
   );
 };
 
