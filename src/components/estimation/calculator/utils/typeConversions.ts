@@ -1,37 +1,31 @@
 
 /**
- * Utility functions to ensure consistent type handling
+ * Utility functions for type conversions
  */
 
-export const ensureNumber = (value: any, defaultValue: number = 0): number => {
-  if (value === undefined || value === null) return defaultValue;
-  const num = Number(value);
-  return isNaN(num) ? defaultValue : num;
-};
-
-export const ensureBoolean = (value: any, defaultValue: boolean = false): boolean => {
-  if (value === undefined || value === null) return defaultValue;
-  return Boolean(value);
-};
-
-export const ensureString = (value: any, defaultValue: string = ''): string => {
-  if (value === undefined || value === null) return defaultValue;
-  return String(value);
-};
-
-export const percentageToNumber = (percentage: string | number): number => {
-  if (typeof percentage === 'string') {
-    // Handle "50%" format
-    if (percentage.endsWith('%')) {
-      return Number(percentage.replace('%', '')) / 100;
-    }
-    return Number(percentage) / 100;
+/**
+ * Ensure a value is a number - useful for handling form inputs
+ */
+export const ensureNumber = (value: any): number => {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
   }
-  return percentage / 100;
+  return 0;
 };
 
 /**
- * Safely converts any value to a form-compatible value
+ * Convert a percentage string to a number
+ */
+export const percentageToNumber = (percentageStr: string): number => {
+  if (!percentageStr) return 0;
+  const value = parseFloat(percentageStr);
+  return isNaN(value) ? 0 : value;
+};
+
+/**
+ * Convert a value to a form-friendly format
  */
 export const toFormValue = (value: any): string => {
   if (value === undefined || value === null) return '';
@@ -39,50 +33,9 @@ export const toFormValue = (value: any): string => {
 };
 
 /**
- * Safely render a value as a string with fallback
+ * Safely render a value for display, providing a fallback
  */
 export const safeRenderValue = (value: any, fallback: string = '-'): string => {
   if (value === undefined || value === null || value === '') return fallback;
   return String(value);
-};
-
-/**
- * Format a number as currency (Euros)
- */
-export const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-};
-
-/**
- * Format a number with correct separators and precision
- */
-export const formatNumber = (value: number, precision: number = 0): string => {
-  return new Intl.NumberFormat('fr-FR', { 
-    minimumFractionDigits: precision,
-    maximumFractionDigits: precision
-  }).format(value);
-};
-
-// Convert string array to typed tuple for function arguments
-export const toTypedTuple = (arr: string[]): [string, ...string[]] => {
-  if (!arr.length) return [''];
-  return [arr[0], ...arr.slice(1)];
-};
-
-// Convert form data to types needed for calculations
-export const toNumberOrDefault = (value: string | number | undefined, defaultVal: number = 0): number => {
-  if (value === undefined || value === '') return defaultVal;
-  const num = typeof value === 'string' ? Number(value) : value;
-  return isNaN(num) ? defaultVal : num;
-};
-
-// Add string to number conversion with safety checks
-export const stringToNumber = (value: string): number => {
-  const num = Number(value);
-  return isNaN(num) ? 0 : num;
-};
-
-// Add number to string conversion with safety checks
-export const numberToString = (value: number): string => {
-  return String(value || 0);
 };

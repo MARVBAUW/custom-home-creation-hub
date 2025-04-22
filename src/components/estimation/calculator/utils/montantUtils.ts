@@ -85,33 +85,37 @@ export const calculateRoofingRenovCost = (
   return baseRate * surface;
 };
 
+// Add the missing facade cost calculation functions
 export const calculateFacadeCost = (
-  formData: FormData,
+  surface: number = 0,
   renderType: string = 'standard',
-  insulation: boolean = false,
-  percentages: {
-    render: number,
-    stone: number,
-    brick: number,
-    wood: number,
-    other: number
-  } = { render: 100, stone: 0, brick: 0, wood: 0, other: 0 }
+  insulation: boolean = false
 ): number => {
   // Base costs per m² for different facade materials
-  const costs: Record<string, number> = {
-    'render': insulation ? 95 : 65,
-    'stone': 280,
-    'brick': 160,
-    'wood': 210,
-    'other': 120
-  };
+  const baseCost = renderType === 'premium' ? 95 : renderType === 'standard' ? 75 : 55;
+  const insulationCost = insulation ? 45 : 0;
   
-  // Quality adjustments
-  if (renderType === 'premium') {
-    costs.render *= 1.3;
-  } else if (renderType === 'basic') {
-    costs.render *= 0.8;
-  }
+  return (baseCost + insulationCost) * surface;
+};
+
+export const calculateDetailedFacadeCost = (
+  formData: FormData,
+  stonePercentage: string = '0',
+  plasterPercentage: string = '0',
+  brickPercentage: string = '0',
+  metalCladdingPercentage: string = '0',
+  woodCladdingPercentage: string = '0',
+  stoneCladdingPercentage: string = '0'
+): number => {
+  // Base costs per m² for different facade materials
+  const rates: Record<string, number> = {
+    'stone': 320,
+    'plaster': 120,
+    'brick': 200,
+    'metalCladding': 250,
+    'woodCladding': 180,
+    'stoneCladding': 280
+  };
   
   // Calculate facade area (approximate)
   const height = 2.8; // Average height per floor
@@ -122,13 +126,19 @@ export const calculateFacadeCost = (
   
   // Calculate weighted cost based on material percentages
   let totalCost = 0;
-  totalCost += (percentages.render / 100) * costs.render * facadeArea;
-  totalCost += (percentages.stone / 100) * costs.stone * facadeArea;
-  totalCost += (percentages.brick / 100) * costs.brick * facadeArea;
-  totalCost += (percentages.wood / 100) * costs.wood * facadeArea;
-  totalCost += (percentages.other / 100) * costs.other * facadeArea;
+  totalCost += (percentageToNumber(stonePercentage) / 100) * rates.stone * facadeArea;
+  totalCost += (percentageToNumber(plasterPercentage) / 100) * rates.plaster * facadeArea;
+  totalCost += (percentageToNumber(brickPercentage) / 100) * rates.brick * facadeArea;
+  totalCost += (percentageToNumber(metalCladdingPercentage) / 100) * rates.metalCladding * facadeArea;
+  totalCost += (percentageToNumber(woodCladdingPercentage) / 100) * rates.woodCladding * facadeArea;
+  totalCost += (percentageToNumber(stoneCladdingPercentage) / 100) * rates.stoneCladding * facadeArea;
   
   return totalCost;
+};
+
+// Calculate a new total montant including facade cost
+export const calculateNewMontantT = (currentMontantT: number = 0, facadeCost: number = 0): number => {
+  return ensureNumber(currentMontantT) + facadeCost;
 };
 
 // Interior costs calculations
@@ -185,6 +195,19 @@ export const calculateWallTilingCost = (
   return baseRate * surface;
 };
 
+export const calculateParquetCost = (
+  surface: number = 0, 
+  quality: string = 'standard'
+): number => {
+  const rates: Record<string, number> = {
+    'premium': 95,
+    'standard': 65,
+    'basic': 45
+  };
+  const baseRate = rates[quality] || 65;
+  return baseRate * surface;
+};
+
 export const calculateSoftFloorCost = (
   surface: number = 0, 
   floorType: string = 'laminate'
@@ -237,7 +260,10 @@ export const calculateElectricityCost = (
   return baseRate * surface;
 };
 
-export const calculateElectricalCost = (surface: number, quality: string = 'standard'): number => {
+export const calculateElectricalCost = (
+  surface: number = 0, 
+  quality: string = 'standard'
+): number => {
   return calculateElectricityCost(surface, quality);
 };
 
@@ -416,6 +442,25 @@ export const calculateTerraceCost = (
   
   const baseRate = rates[material] || 120;
   return baseRate * surface;
+};
+
+// Windows and doors
+export const calculateWindowsCost = (
+  surface: number = 0,
+  type: string = 'standard',
+  isRenovation: boolean = false
+): number => {
+  const baseRates: Record<string, number> = {
+    'basic': 350,
+    'standard': 450,
+    'premium': 650,
+    'highPerformance': 850
+  };
+  
+  const baseRate = baseRates[type] || 450;
+  const renovationMultiplier = isRenovation ? 1.2 : 1;
+  
+  return baseRate * surface * renovationMultiplier;
 };
 
 // Specialty calculations

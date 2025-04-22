@@ -4,9 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { FormData } from '../types';
-import { calculateDetailedFacadeCost, calculateNewMontantT } from '../utils/montantUtils';
+import { 
+  calculateDetailedFacadeCost,
+  calculateNewMontantT
+} from '../utils/montantUtils';
 import FacadeOptions, { FacadeOption } from './facade/FacadeOptions';
 import PercentageIndicator from './facade/PercentageIndicator';
+import { ensureNumber } from '../utils/typeConversions';
 
 interface FacadeStepProps {
   formData: FormData;
@@ -146,7 +150,10 @@ const FacadeStep: React.FC<FacadeStepProps> = ({
     );
     
     // Calculate new total
-    const newMontantT = calculateNewMontantT(formData.montantT, facadeCost);
+    const newMontantT = calculateNewMontantT(
+      ensureNumber(formData.montantT), 
+      facadeCost
+    );
     
     // Update form data
     updateFormData({
