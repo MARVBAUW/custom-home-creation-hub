@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Hero from '../components/home/Hero';
 import ExpertiseSection from '../components/home/ExpertiseSection';
@@ -10,7 +11,6 @@ import { getBusinessStructuredData } from '../utils/googleBusiness';
 import SEO from '../components/common/SEO';
 import SEOFooter from '@/components/common/SEOFooter';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -130,8 +130,28 @@ const Index = () => {
       
       <SEOFooter 
         text="Votre maître d'œuvre à Marseille et en PACA. Progineer assure la coordination des corps de métier et le respect des délais pour vos projets de construction et rénovation. Notre expertise technique et notre maîtrise d'œuvre garantissent la réussite de votre projet immobilier en Provence-Alpes-Côte d'Azur."
-        additionalKeywords={["maître d'œuvre marseille", "coordination corps de métier", "expertise technique construction", "respect délais chantier", "rénovation marseille", "maître d'ouvrage", "projet de rénovation", "maîtrise d'œuvre"]}
+        additionalKeywords={[
+          "maître d'œuvre marseille", 
+          "coordination corps de métier", 
+          "expertise technique construction", 
+          "respect délais chantier", 
+          "rénovation marseille", 
+          "maître d'ouvrage", 
+          "projet de rénovation", 
+          "maîtrise d'œuvre"
+        ]}
       />
+
+      {/* Discreet backlink section */}
+      <div className="sr-only">
+        <a 
+          href="https://www.maitredoeuvre.com/" 
+          rel="nofollow" 
+          target="_blank"
+        >
+          Annuaire de maitres d'oeuvre
+        </a>
+      </div>
     </>
   );
 };
