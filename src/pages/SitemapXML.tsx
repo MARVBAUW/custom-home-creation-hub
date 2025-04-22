@@ -77,35 +77,33 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // If accessing /sitemap.xml directly, serve as pure XML
+  // Si accessing /sitemap.xml directly, serve as pure XML without HTML wrapper
   if (currentPath === '/sitemap.xml') {
-    return (
-      <>
-        <Helmet>
-          <meta httpEquiv="Content-Type" content="text/xml; charset=utf-8" />
-          <meta name="robots" content="index, follow" />
-          <title>Sitemap XML - Progineer</title>
-        </Helmet>
-        <pre 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            margin: 0,
-            padding: 0,
-            border: 'none',
-            backgroundColor: 'white',
-            color: 'black'
-          }}
-          dangerouslySetInnerHTML={{ __html: xmlContent }}
-        />
-      </>
-    );
+    useEffect(() => {
+      // Set the content type to XML
+      const htmlElement = document.documentElement;
+      htmlElement.innerHTML = '';
+      document.body.textContent = '';
+      
+      // Create a text node with the XML content
+      const xmlNode = document.createTextNode(xmlContent);
+      document.body.appendChild(xmlNode);
+      
+      // Set the proper Content-Type via meta tag
+      const meta = document.createElement('meta');
+      meta.httpEquiv = 'Content-Type';
+      meta.content = 'text/xml; charset=utf-8';
+      document.head.appendChild(meta);
+      
+      // Set a special class to signal this is an XML document
+      document.documentElement.className = 'xml-document';
+    }, [xmlContent]);
+    
+    // Return empty React fragment - the DOM manipulations above will handle the rendering
+    return <></>;
   }
 
-  // Sinon, afficher comme une page normale avec l'UI autour
+  // Si accédé via une autre route, afficher comme une page normale avec l'UI autour
   return (
     <>
       <SEO 
