@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -81,7 +80,11 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
     } else if (checked) {
       // If any other option is checked, uncheck 'PAS DE DEMOLITION'
       const filteredValues = currentValues.filter(v => v !== 'PAS DE DEMOLITION');
-      form.setValue('demolitionTypes', [...filteredValues, value]);
+      if (filteredValues.length > 0) {
+        form.setValue('demolitionTypes', [...filteredValues, value]);
+      } else {
+        form.setValue('demolitionTypes', [value]);
+      }
     } else {
       // If unchecked, simply remove the value
       form.setValue('demolitionTypes', currentValues.filter(v => v !== value));
@@ -275,7 +278,7 @@ const DemolitionForm: React.FC<BaseFormProps> = ({
                 <div className="rounded-md bg-slate-50 p-4 mt-4">
                   <div className="flex items-center">
                     <HardHat className="h-5 w-5 mr-2 text-orange-600" />
-                    <span className="font-medium">Coût estimé de démolition: </span>
+                    <span className="font-medium">Coût estimé de démolition: </span> 
                   </div>
                   
                   {/* Show cost estimate for each selected type */}

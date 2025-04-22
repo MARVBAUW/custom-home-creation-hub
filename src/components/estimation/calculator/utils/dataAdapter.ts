@@ -199,18 +199,39 @@ export const adaptToFormData = (estimationData: EstimationResponseData): FormDat
     fees: JSON.stringify(fees),
     otherCosts: JSON.stringify(otherCosts),
     timeline: JSON.stringify(timeline),
-    montantT: typeof estimationData.estimatedCost === 'number' 
-              ? estimationData.estimatedCost 
-              : estimationData.estimatedCost.total
+    montantT: estimationData.totalAmount
   };
 };
 
 /**
- * Convert form data to estimation form data
- * This is a placeholder function that would normally have more implementation details
+ * Adapt data to estimation form data format
+ * This is a utility function to ensure correct types
+ * @param data The data to adapt
+ * @returns FormData with correct types
  */
-export const adaptToEstimationFormData = (formData: FormData): FormData => {
-  // For now, just return the original form data
-  // This function would be expanded based on specific requirements
-  return { ...formData };
+export const adaptToEstimationFormData = (data: Partial<FormData>): FormData => {
+  // Create a new object with default values for required fields
+  const result: Partial<FormData> = { ...data };
+  
+  // Ensure the values are of the correct type
+  if ('surface' in data) result.surface = ensureNumber(data.surface);
+  if ('bedrooms' in data) result.bedrooms = ensureNumber(data.bedrooms);
+  if ('bathrooms' in data) result.bathrooms = ensureNumber(data.bathrooms);
+  if ('doorCount' in data) result.doorCount = ensureNumber(data.doorCount);
+  
+  return result as FormData;
+};
+
+/**
+ * Create a type-adapting updater function
+ * This wrapper ensures data types are correctly converted before updating form data
+ * 
+ * @param updateFn The original update function
+ * @returns A new function that converts types before updating
+ */
+export const createTypeAdaptingUpdater = (updateFn: (data: Partial<FormData>) => void) => {
+  return (data: Partial<FormData>) => {
+    const adaptedData = adaptToEstimationFormData(data);
+    updateFn(adaptedData);
+  };
 };

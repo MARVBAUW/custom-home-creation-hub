@@ -1,81 +1,264 @@
 
 import { useState, useCallback } from 'react';
-import { FormData, ConversationState } from '../types/formTypes';
-import { ensureNumber } from '../utils/typeConversions';
+import { FormData } from '../types/formTypes';
+import { ConversationState } from '../types/formTypes';
 
-const useConversationalEstimator = () => {
-  // Initialize form data state
-  const [formData, setFormData] = useState<FormData>({
-    projectType: 'renovation', // Default value
-    surface: 0,
-    location: '',
-    constructionType: '',
-    bedrooms: 0,
-    bathrooms: 0,
-    city: '',
-  });
+interface UseConversationalEstimatorProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  onClientTypeSubmit?: (data: { clientType: string }) => void;
+  goToStep?: (step: number) => void;
+}
+
+export const useConversationalEstimator = ({
+  formData,
+  updateFormData,
+  onClientTypeSubmit,
+  goToStep
+}: UseConversationalEstimatorProps) => {
+  // State for the user's current input
+  const [userInput, setUserInput] = useState('');
   
-  // Initialize conversation state
+  // Form data state for the estimator
+  const [estimationFormData, setEstimationFormData] = useState<FormData>(formData);
+  
+  // Conversation state
   const [conversationState, setConversationState] = useState<ConversationState>({
-    currentStep: 'initial',
+    currentStep: 'greeting',
     askedQuestions: [],
     completedFields: [],
     formProgress: 0,
-    messages: [], // Initialize empty messages array
+    messages: []
   });
   
-  // Function to update form data
-  const updateFormData = useCallback((newData: Partial<FormData>) => {
-    setFormData(prev => ({
+  // Process user input
+  const handleUserInput = useCallback((input: string) => {
+    if (!input.trim()) return;
+    
+    setUserInput('');
+    
+    // Add user message to conversation
+    setConversationState(prev => ({
       ...prev,
-      ...newData
+      messages: [
+        ...prev.messages,
+        {
+          type: 'user',
+          content: input,
+          timestamp: new Date().toISOString()
+        }
+      ]
     }));
+    
+    // Process the input based on current step
+    processInput(input);
   }, []);
   
-  // Function to calculate estimation
-  const calculateEstimation = useCallback(() => {
-    // Basic calculation logic
-    const surface = ensureNumber(formData.surface);
-    const baseRate = formData.constructionType === 'neuf' ? 1500 : 1200;
-    const estimatedCost = surface * baseRate;
+  // Mock function to process the input
+  const processInput = useCallback((input: string) => {
+    const inputLower = input.toLowerCase();
     
-    // Update form data with calculated cost
-    updateFormData({
-      montantT: estimatedCost
-    });
+    // Simple logic to extract and update form data
+    // Surface
+    const surfaceMatch = inputLower.match(/(\d+)\s*m²/);
+    if (surfaceMatch && surfaceMatch[1]) {
+      const surface = parseInt(surfaceMatch[1]);
+      updateFormData({ surface });
+      setEstimationFormData(prev => ({ ...prev, surface }));
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: `J'ai noté une surface de ${surface} m². Quel type de projet envisagez-vous ? (construction, rénovation, extension)`,
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
     
-    // Return the calculation
-    return estimatedCost;
-  }, [formData, updateFormData]);
+    // Project type
+    if (inputLower.includes('construction') || inputLower.includes('neuf')) {
+      updateFormData({ projectType: 'construction' });
+      setEstimationFormData(prev => ({ ...prev, projectType: 'construction' }));
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: 'Super, pour votre projet de construction neuve, pouvez-vous m\'indiquer la surface souhaitée en m² ?',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
+    
+    if (inputLower.includes('rénovation') || inputLower.includes('renovation')) {
+      updateFormData({ projectType: 'renovation' });
+      setEstimationFormData(prev => ({ ...prev, projectType: 'renovation' }));
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: 'Pour votre projet de rénovation, quelle est la surface concernée en m² ?',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
+    
+    if (inputLower.includes('extension')) {
+      updateFormData({ projectType: 'extension' });
+      setEstimationFormData(prev => ({ ...prev, projectType: 'extension' }));
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: 'Pour votre projet d\'extension, quelle surface additionnelle envisagez-vous en m² ?',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
+    
+    // Client type
+    if (inputLower.includes('particulier')) {
+      updateFormData({ clientType: 'individual' });
+      setEstimationFormData(prev => ({ ...prev, clientType: 'individual' }));
+      
+      if (onClientTypeSubmit) {
+        onClientTypeSubmit({ clientType: 'individual' });
+      }
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: 'Parfait ! En tant que particulier, quel type de projet envisagez-vous ? (construction, rénovation, extension)',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
+    
+    if (inputLower.includes('professionnel') || inputLower.includes('entreprise')) {
+      updateFormData({ clientType: 'professional' });
+      setEstimationFormData(prev => ({ ...prev, clientType: 'professional' }));
+      
+      if (onClientTypeSubmit) {
+        onClientTypeSubmit({ clientType: 'professional' });
+      }
+      
+      // Add bot response
+      setTimeout(() => {
+        setConversationState(prev => ({
+          ...prev,
+          messages: [
+            ...prev.messages,
+            {
+              type: 'bot',
+              content: 'Bienvenue ! Pour votre projet professionnel, pouvez-vous préciser votre secteur d\'activité ?',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }));
+      }, 1000);
+      
+      return;
+    }
+    
+    // Default response
+    setTimeout(() => {
+      setConversationState(prev => ({
+        ...prev,
+        messages: [
+          ...prev.messages,
+          {
+            type: 'bot',
+            content: 'Merci pour cette information. Pouvez-vous me préciser si vous êtes un particulier ou un professionnel ?',
+            timestamp: new Date().toISOString()
+          }
+        ]
+      }));
+    }, 1000);
+    
+  }, [updateFormData, onClientTypeSubmit]);
   
-  // Function to reset form data
-  const resetFormData = useCallback(() => {
-    setFormData({
-      projectType: 'renovation',
-      surface: 0,
-      location: '',
-      constructionType: '',
-      bedrooms: 0,
-      bathrooms: 0,
-      city: '',
-    });
-    
+  // Reset conversation
+  const resetConversation = useCallback(() => {
+    setEstimationFormData({} as FormData);
     setConversationState({
-      currentStep: 'initial',
+      currentStep: 'greeting',
       askedQuestions: [],
       completedFields: [],
       formProgress: 0,
-      messages: [],
+      messages: []
     });
+    
+    // Add initial greeting
+    setTimeout(() => {
+      setConversationState(prev => ({
+        ...prev,
+        messages: [
+          {
+            type: 'bot',
+            content: 'Bonjour ! Je suis l\'assistant d\'estimation de Progineer. Comment puis-je vous aider avec votre projet ? Êtes-vous un particulier ou un professionnel ?',
+            timestamp: new Date().toISOString()
+          }
+        ]
+      }));
+    }, 500);
   }, []);
   
+  // Initialize conversation on first load
+  const initializeConversation = useCallback(() => {
+    resetConversation();
+  }, [resetConversation]);
+  
   return {
-    formData,
+    userInput,
+    setUserInput,
+    handleUserInput,
     conversationState,
-    updateFormData,
-    calculateEstimation,
-    resetFormData,
-    setConversationState
+    resetConversation,
+    initializeConversation
   };
 };
 

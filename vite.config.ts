@@ -6,48 +6,46 @@ import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  return {
-    plugins: [
-      react(),
-    ],
-    publicDir: 'public',
-    server: {
-      host: '0.0.0.0',
-      port: 3000,
-      fs: {
-        allow: ['..']
-      },
-      middlewareMode: false,
-      https: false,
+export default defineConfig({
+  plugins: [
+    react(),
+  ],
+  publicDir: 'public',
+  server: {
+    host: '0.0.0.0',
+    port: 8080,
+    fs: {
+      allow: ['..']
     },
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
+    middlewareMode: false,
+    https: false,
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
     },
-    assetsInclude: '**/*.docx',
-    build: {
-      outDir: 'dist',
-      assetsDir: 'assets',
-      cssCodeSplit: true,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            vendor: ['react', 'react-dom'],
-            ui: ['@/components/ui'],
-          },
+  },
+  assetsInclude: '**/*.docx',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@/components/ui'],
         },
       },
-      chunkSizeWarningLimit: 1000,
     },
-    css: {
-      postcss: {
-        plugins: [
-          tailwindcss,
-          autoprefixer,
-        ],
-      },
+    chunkSizeWarningLimit: 1000,
+  },
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss,
+        autoprefixer,
+      ],
     },
-  };
+  },
 });
