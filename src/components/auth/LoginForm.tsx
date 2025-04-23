@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Github } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import SimpleCaptcha from './SimpleCaptcha';
+import FormField from './FormField';
+import AuthButton from './AuthButton';
+
+// Vérifier si l'email entré est un email administrateur
+const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -18,7 +22,6 @@ const LoginForm = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
 
   // Vérifier si l'email entré est un email administrateur
-  const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
   const isAdminSignin = ADMIN_EMAILS.includes(email.toLowerCase());
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,55 +84,33 @@ const LoginForm = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="votre@email.com"
-            className={`border-gray-300 focus:ring-khaki-500 focus:border-khaki-500 ${
-              isAdminSignin ? 'bg-amber-50 border-amber-200' : ''
-            }`}
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="votre@email.com"
+          isAdmin={isAdminSignin}
+          disabled={loading}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Mot de passe</Label>
-          <Input 
-            id="password" 
-            type="password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="password"
+          label="Mot de passe"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
+        />
 
         <div className="flex justify-center my-4">
           <SimpleCaptcha onVerify={setCaptchaVerified} />
         </div>
 
-        <Button 
-          type="submit" 
-          className={`w-full text-white ${
-            isAdminSignin 
-              ? 'bg-amber-600 hover:bg-amber-700' 
-              : 'bg-khaki-600 hover:bg-khaki-700'
-          }`}
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connexion en cours...
-            </>
-          ) : (
-            isAdminSignin ? 'Connexion administrateur' : 'Se connecter'
-          )}
-        </Button>
+        <AuthButton loading={loading} isAdmin={isAdminSignin}>
+          {isAdminSignin ? 'Connexion administrateur' : 'Se connecter'}
+        </AuthButton>
       </form>
 
       <div className="relative my-4">
@@ -143,15 +124,15 @@ const LoginForm = () => {
         </div>
       </div>
 
-      <Button 
-        variant="outline" 
-        className="w-full text-gray-700 hover:bg-gray-50"
+      <AuthButton
+        type="button"
         onClick={handleGoogleSignIn}
         disabled={loading}
+        className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
       >
         <Github className="mr-2 h-5 w-5" />
         Continuer avec Google
-      </Button>
+      </AuthButton>
     </div>
   );
 };

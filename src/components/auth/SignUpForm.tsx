@@ -1,14 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import SimpleCaptcha from './SimpleCaptcha';
+import FormField from './FormField';
+import AuthButton from './AuthButton';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -83,15 +81,6 @@ const SignUpForm = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600 mb-4"></div>
-        <p className="text-gray-600">Création de votre compte...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
@@ -119,78 +108,52 @@ const SignUpForm = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="fullName">Nom complet</Label>
-          <Input 
-            id="fullName" 
-            type="text" 
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder={isAdminSignup ? "Administrateur" : "Jean Dupont"}
-            className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="fullName"
+          label="Nom complet"
+          type="text"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder={isAdminSignup ? "Administrateur" : "Jean Dupont"}
+          disabled={loading}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input 
-            id="email" 
-            type="email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="votre@email.com"
-            className={`border-gray-300 focus:ring-khaki-500 focus:border-khaki-500 ${
-              isAdminSignup ? 'bg-amber-50 border-amber-200' : ''
-            }`}
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="email"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="votre@email.com"
+          isAdmin={isAdminSignup}
+          disabled={loading}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="password">Mot de passe</Label>
-          <Input 
-            id="password" 
-            type="password" 
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="password"
+          label="Mot de passe"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={loading}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-          <Input 
-            id="confirmPassword" 
-            type="password" 
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
-            disabled={loading}
-          />
-        </div>
+        <FormField
+          id="confirmPassword"
+          label="Confirmer le mot de passe"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          disabled={loading}
+        />
 
         <div className="flex justify-center my-4">
           <SimpleCaptcha onVerify={setCaptchaVerified} />
         </div>
 
-        <Button 
-          type="submit" 
-          className={`w-full text-white ${
-            isAdminSignup 
-              ? 'bg-amber-600 hover:bg-amber-700' 
-              : 'bg-khaki-600 hover:bg-khaki-700'
-          }`}
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Création en cours...
-            </>
-          ) : isAdminSignup ? 'Créer le compte administrateur' : 'Créer mon compte'}
-        </Button>
+        <AuthButton loading={loading} isAdmin={isAdminSignup}>
+          {loading ? 'Création en cours...' : isAdminSignup ? 'Créer le compte administrateur' : 'Créer mon compte'}
+        </AuthButton>
       </form>
       
       <div className="relative my-4">
@@ -204,15 +167,15 @@ const SignUpForm = () => {
         </div>
       </div>
       
-      <Button 
-        variant="outline" 
-        className="w-full text-gray-700 hover:bg-gray-50"
+      <AuthButton
+        type="button"
         onClick={handleGoogleSignUp}
         disabled={loading}
+        className="bg-white hover:bg-gray-50 text-gray-700 border border-gray-300"
       >
         <LogIn className="mr-2 h-5 w-5" />
         S'inscrire avec Google
-      </Button>
+      </AuthButton>
 
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
