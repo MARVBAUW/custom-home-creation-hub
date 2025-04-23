@@ -65,31 +65,36 @@ const SitemapXML: React.FC = () => {
       
       content += '</urlset>';
       
-      // Créer un blob XML et télécharger automatiquement
+      // Au lieu de modifier directement le document, nous allons créer un blob et rediriger vers son URL
       const blob = new Blob([content], { type: 'application/xml' });
+      const xmlUrl = URL.createObjectURL(blob);
       
-      // Au lieu de rediriger, remplacer tout le contenu HTML
+      // Remplacer le contenu du document
       document.documentElement.innerHTML = '';
-      document.documentElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
       
-      // Définir le doctype XML
-      const doctypeNode = document.implementation.createDocumentType('xml', '', '');
-      document.doctype && document.doctype.remove();
-      document.insertBefore(doctypeNode, document.documentElement);
-      
-      // Définir l'en-tête Content-Type
+      // Ajouter un meta pour le content-type (même si nous ne pouvons pas changer le contentType directement)
       const meta = document.createElement('meta');
       meta.httpEquiv = 'Content-Type';
       meta.content = 'text/xml; charset=UTF-8';
       document.head.appendChild(meta);
       
-      // Insérer le contenu XML directement dans le corps
+      // Ajouter le XML en tant que contenu pré-formatté
       const pre = document.createElement('pre');
       pre.textContent = content;
       document.body.appendChild(pre);
       
-      // Forcer le content-type
-      document.contentType = 'application/xml';
+      // Définir l'attribut xmlns sur l'élément html
+      document.documentElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+      
+      // Définir le doctype XML au lieu de HTML
+      const doctypeNode = document.implementation.createDocumentType('xml', '', '');
+      document.doctype && document.doctype.remove();
+      document.insertBefore(doctypeNode, document.documentElement);
+      
+      // Rediriger vers le blob URL, ce qui permettra au navigateur de le traiter comme XML
+      if (typeof window !== 'undefined') {
+        window.location.href = xmlUrl;
+      }
     }
   }, [currentPath]);
 
