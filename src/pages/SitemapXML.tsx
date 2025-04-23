@@ -8,8 +8,8 @@ const SitemapXML: React.FC = () => {
   const currentPath = location.pathname;
   const [xmlContent, setXmlContent] = useState<string | null>(null);
   
-  // Redirect if URL ends with trailing slash
-  if (currentPath.endsWith('/sitemap.xml/')) {
+  // Check if the URL ends with a trailing slash - moved outside of the component body
+  if (currentPath === '/sitemap.xml/') {
     return <Navigate to="/sitemap.xml" replace />;
   }
 
@@ -75,20 +75,32 @@ const SitemapXML: React.FC = () => {
   const formatXmlWithSyntaxHighlighting = (xml: string): JSX.Element[] => {
     const lines = xml.split('\n');
     return lines.map((line, index) => {
-      const formattedLine = line
-        .replace(
-          /(<\?.*?\?>|<\/?[a-zA-Z]+>|<[a-zA-Z]+\s|=['"](.*?)['"]|\/>)/g,
-          (match) => {
-            if (match.startsWith('<?')) {
-              return `<span style="color: ${xmlStyles.declaration.color}">${match}</span>`;
-            } else if (match.startsWith('</') || match.startsWith('<') || match === '/>') {
-              return `<span style="color: ${xmlStyles.tag.color}">${match}</span>`;
-            } else if (match.startsWith('="') || match.startsWith("='")) {
-              return `<span style="color: ${xmlStyles.value.color}">${match}</span>`;
-            }
-            return match;
-          }
-        );
+      // Utiliser un système plus simple pour la coloration syntaxique
+      let formattedLine = line;
+      
+      // Colorer la déclaration XML
+      formattedLine = formattedLine.replace(
+        /(<\?.*?\?>)/g,
+        `<span style="color: ${xmlStyles.declaration.color}">$1</span>`
+      );
+      
+      // Colorer les balises d'ouverture et de fermeture
+      formattedLine = formattedLine.replace(
+        /(<\/[a-zA-Z]+>|<[a-zA-Z]+>|<[a-zA-Z]+\s|<\/|<|\/>)/g,
+        `<span style="color: ${xmlStyles.tag.color}">$1</span>`
+      );
+      
+      // Colorer les attributs
+      formattedLine = formattedLine.replace(
+        /\s([a-zA-Z]+)=/g,
+        ` <span style="color: ${xmlStyles.attribute.color}">$1</span>=`
+      );
+      
+      // Colorer les valeurs des attributs
+      formattedLine = formattedLine.replace(
+        /(=["'].*?["'])/g,
+        `<span style="color: ${xmlStyles.value.color}">$1</span>`
+      );
 
       return (
         <div 
@@ -100,7 +112,8 @@ const SitemapXML: React.FC = () => {
     });
   };
 
-  if (xmlContent && currentPath === '/sitemap.xml') {
+  // Si l'URL est /sitemap.xml ou /sitemap.xml/ avec ou sans slash final
+  if (xmlContent && (currentPath === '/sitemap.xml' || currentPath === '/sitemap.xml/')) {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
         <h1 style={{ marginBottom: '20px', color: '#333' }}>Sitemap XML</h1>
