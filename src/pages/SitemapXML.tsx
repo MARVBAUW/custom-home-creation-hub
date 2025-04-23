@@ -68,52 +68,20 @@ const SitemapXML: React.FC = () => {
       
       // Create a Blob with the XML content and the correct content type
       const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
-      const xmlUrl = URL.createObjectURL(blob);
       
-      // Set the response content type to XML
-      const htmlHead = document.head;
-      if (htmlHead) {
-        // Remove existing content type meta tags
-        const existingMeta = htmlHead.querySelector('meta[http-equiv="Content-Type"]');
-        if (existingMeta) {
-          existingMeta.remove();
-        }
-        
-        // Add proper XML content type
-        const meta = document.createElement('meta');
-        meta.httpEquiv = 'Content-Type';
-        meta.content = 'application/xml; charset=UTF-8';
-        htmlHead.appendChild(meta);
-      }
+      // IMPORTANT: Set the document Content-Type using document.contentType
+      // This is a more direct approach than using meta tags
+      document.contentType = 'application/xml';
       
-      // Replace the entire document content with XML
-      document.open('text/xml');
+      // Complete replacement of the document with XML content
+      document.open('application/xml');
       document.write(content);
       document.close();
-      
-      // Set actual Content-Type header for the document if possible
-      // Note: This might not work in all browsers due to security restrictions
-      try {
-        // @ts-ignore: This is a non-standard property but works in some contexts
-        if (document.contentType) {
-          // This is read-only in most browsers, but we attempt it anyway
-          // If it fails, the meta tag above provides a fallback
-        }
-      } catch (error) {
-        console.error("Cannot set document.contentType directly:", error);
-      }
     }
   }, [currentPath]);
 
-  // Initial React render content
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="text-center p-6">
-        <h1 className="text-xl font-semibold mb-4">Chargement du sitemap XML...</h1>
-        <p className="text-gray-600">Si le sitemap ne s'affiche pas automatiquement, essayez de rafraîchir la page.</p>
-      </div>
-    </div>
-  );
+  // Initial React render content (not shown to users as it will be replaced by XML)
+  return null;
 };
 
 export default SitemapXML;

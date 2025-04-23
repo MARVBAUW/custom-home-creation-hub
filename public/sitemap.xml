@@ -165,12 +165,4 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/sitemap"/>
     <xhtml:link rel="canonical" href="https://progineer.fr/sitemap"/>
   </url>
-  <url>
-    <loc>https://progineer.fr/sitemap.xml</loc>
-    <lastmod>2025-04-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/sitemap.xml"/>
-    <xhtml:link rel="canonical" href="https://progineer.fr/sitemap.xml"/>
-  </url>
 </urlset>
