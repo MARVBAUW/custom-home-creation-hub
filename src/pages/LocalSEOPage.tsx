@@ -17,12 +17,10 @@ import Extension from './prestations/Extension';
 import OptimisationEspace from './prestations/OptimisationEspace';
 import DesignInterieur from './prestations/DesignInterieur';
 
-interface LocalSEOPageParams {
-  '*': string;
-}
-
+// Update the type to match what react-router-dom expects
 const LocalSEOPage: React.FC = () => {
-  const params = useParams<LocalSEOPageParams>();
+  // Use a string-indexed object type for params as required by useParams
+  const params = useParams<Record<string, string>>();
   const location = useLocation();
   const [seoParams, setSeoParams] = useState<{
     profession: string;

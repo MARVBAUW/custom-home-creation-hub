@@ -2,8 +2,14 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import { InternalLinkText } from '@/utils/internalLinking';
+import { formatCityName } from '@/utils/localSEOUtils';
 
-const ExtensionHero = () => {
+interface ExtensionHeroProps {
+  customH1?: string;
+  customCity?: string;
+}
+
+const ExtensionHero: React.FC<ExtensionHeroProps> = ({ customH1, customCity }) => {
   return (
     <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
       <Container size="md">
@@ -12,11 +18,14 @@ const ExtensionHero = () => {
             Extension & Agrandissement
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-            Extension de maison à Marseille et PACA
+            {customH1 || `Extension de maison à Marseille et PACA`}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
             <InternalLinkText 
-              text="Agrandissez votre espace de vie avec une extension parfaitement intégrée à votre habitat existant. Créez de nouveaux espaces fonctionnels et lumineux."
+              text={customCity ? 
+                `Agrandissez votre espace de vie à ${formatCityName(customCity)} avec une extension parfaitement intégrée à votre habitat existant. Créez de nouveaux espaces fonctionnels et lumineux.` :
+                `Agrandissez votre espace de vie avec une extension parfaitement intégrée à votre habitat existant. Créez de nouveaux espaces fonctionnels et lumineux.`
+              }
               maxOccurrences={2}
             />
           </p>

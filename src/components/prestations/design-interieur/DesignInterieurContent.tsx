@@ -1,12 +1,18 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
+import { formatCityName } from '@/utils/localSEOUtils';
 
-const DesignInterieurContent = () => {
+interface DesignInterieurContentProps {
+  city?: string;
+}
+
+const DesignInterieurContent: React.FC<DesignInterieurContentProps> = ({ city }) => {
+  const cityDisplay = city ? formatCityName(city) : '';
+  
   return (
     <>
-      <h2 className="text-3xl font-semibold mb-6">Transformez votre intérieur</h2>
+      <h2 className="text-3xl font-semibold mb-6">Transformez votre intérieur{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
       <p className="mb-8 text-gray-700">
         Chez Progineer, notre équipe de <strong>designers d'intérieur</strong> crée des espaces qui vous ressemblent. Nous concevons des intérieurs harmonieux, fonctionnels et esthétiques qui répondent à vos besoins spécifiques et reflètent votre personnalité. Chaque projet est unique et bénéficie d'une approche personnalisée.
       </p>
@@ -185,10 +191,10 @@ const DesignInterieurContent = () => {
       </div>
 
       <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-2xl font-medium mb-4">Vous avez un projet de design d'intérieur ?</h3>
+        <h3 className="text-2xl font-medium mb-4">Vous avez un projet de design d'intérieur{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
         <p className="mb-6">
           <InternalLinkText 
-            text="Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet et de vous proposer des solutions créatives adaptées à vos besoins et à votre budget."
+            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions créatives adaptées à vos besoins et à votre budget.`}
             maxOccurrences={1}
           />
         </p>

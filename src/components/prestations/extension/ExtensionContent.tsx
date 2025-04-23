@@ -1,14 +1,20 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
+import { formatCityName } from '@/utils/localSEOUtils';
 
-const ExtensionContent = () => {
+interface ExtensionContentProps {
+  city?: string;
+}
+
+const ExtensionContent: React.FC<ExtensionContentProps> = ({ city }) => {
+  const cityDisplay = city ? formatCityName(city) : '';
+  
   return (
     <>
-      <h2 className="text-3xl font-semibold mb-6">Agrandissez votre habitat</h2>
+      <h2 className="text-3xl font-semibold mb-6">Agrandissez votre habitat{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
       <p className="mb-8 text-gray-700">
-        Chez Progineer, nous concevons des <strong>extensions de maison</strong> qui s'intègrent harmonieusement à votre bâti existant tout en apportant une touche contemporaine. Notre expertise vous permet de gagner de l'espace supplémentaire sans déménager, valorisant ainsi votre patrimoine immobilier.
+        Chez Progineer, nous concevons des <strong>extensions de maison</strong>{cityDisplay ? ` à ${cityDisplay}` : ''} qui s'intègrent harmonieusement à votre bâti existant tout en apportant une touche contemporaine. Notre expertise vous permet de gagner de l'espace supplémentaire sans déménager, valorisant ainsi votre patrimoine immobilier.
       </p>
 
       <div className="mb-12">
@@ -20,7 +26,7 @@ const ExtensionContent = () => {
         <p className="text-sm text-gray-500 text-center">Extension contemporaine à Aix-en-Provence</p>
       </div>
 
-      <h3 className="text-2xl font-medium mb-4">Nos solutions d'extension</h3>
+      <h3 className="text-2xl font-medium mb-4">Nos solutions d'extension{cityDisplay ? ` à ${cityDisplay}` : ''}</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h4 className="text-xl font-medium mb-3">Extension horizontale</h4>
@@ -174,10 +180,10 @@ const ExtensionContent = () => {
       </div>
 
       <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-2xl font-medium mb-4">Vous avez un projet d'extension ?</h3>
+        <h3 className="text-2xl font-medium mb-4">Vous avez un projet d'extension{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
         <p className="mb-6">
           <InternalLinkText 
-            text="Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet et de vous proposer des solutions adaptées à vos besoins et à votre budget."
+            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions adaptées à vos besoins et à votre budget.`}
             maxOccurrences={1}
           />
         </p>
