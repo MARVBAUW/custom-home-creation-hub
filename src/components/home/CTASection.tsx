@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
@@ -60,11 +61,7 @@ const CTASection = () => {
           
           <div className="relative">
             <div className="relative">
-              <img 
-                src="/lovable-uploads/94f9dc5b-f17d-4892-8665-a89593433dc7.png" 
-                alt="Villa contemporaine avec piscine à Marseille" 
-                className="w-full h-auto rounded-xl shadow-2xl"
-              />
+              <img alt="Maison contemporaine avec grande baie vitrée" className="w-full h-auto object-fill" src="/lovable-uploads/2ab0f303-213f-43c9-94dc-75e0e8e55718.png" />
             </div>
             <div className="absolute -bottom-6 -right-20 p-6 bg-white rounded-xl shadow-lg border border-progineer-gold/10 max-w-xs">
               <div className="flex items-center justify-between mb-2">
