@@ -12,7 +12,7 @@ const ConstructionNeuve = () => {
   return (
     <>
       <SEO 
-        title="Construction de maisons sur mesure en PACA | Progineer"
+        title="Construction de maisons sur mesure en PACA | Maître d'œuvre Progineer"
         description="Spécialiste en construction de maisons individuelles à Marseille et en PACA. Créez la maison de vos rêves avec Progineer, maître d'œuvre expert en construction sur mesure."
         keywords="construction maison, maison sur mesure, construction individuelle, maître d'œuvre PACA, construction neuve"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/construction-neuve"

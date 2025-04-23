@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
 import { Helmet } from 'react-helmet';

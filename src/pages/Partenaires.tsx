@@ -41,9 +41,9 @@ const Partenaires = () => {
   return (
     <>
       <SEO
-        title="Devenir partenaire | Progineer - Architecte & Maître d'œuvre en PACA"
-        description="Devenez partenaire de Progineer, architecte et maître d'œuvre en région PACA. Opportunités pour artisans, professionnels du BTP et agents commerciaux."
-        keywords="partenaire architecte, artisans BTP PACA, réseau professionnels construction, collaboration maître d'œuvre"
+        title="Nos Partenaires | Réseau Progineer - Architecte & Maître d'œuvre en PACA"
+        description="Découvrez notre réseau de partenaires qualifiés - artisans, bureaux d'études et professionnels du BTP qui contribuent à la réussite de vos projets de construction en PACA."
+        keywords="partenaires architecte, artisans BTP PACA, réseau professionnels construction, collaboration maître d'œuvre"
         canonicalUrl="https://progineer.fr/devenir-partenaire"
         structuredData={structuredData}
       />

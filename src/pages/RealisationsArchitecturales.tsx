@@ -9,7 +9,7 @@ const RealisationsArchitecturales = () => {
     <>
       <SEO
         title="Réalisations architecturales | Maître d'œuvre PACA - Progineer"
-        description="Portfolio de réalisations architecturales à Marseille, Aix, Toulon et dans toute la région PACA."
+        description="Portfolio de réalisations architecturales à Marseille, Aix, Toulon et dans toute la région PACA. Découvrez nos projets de construction, rénovation et extension."
         keywords="réalisations architecturales, portfolio, maître d'œuvre, projets immobiliers, PACA"
         canonicalUrl="https://progineer.fr/realisations-architecturales"
       />
