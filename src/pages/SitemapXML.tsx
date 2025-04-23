@@ -66,114 +66,15 @@ const SitemapXML: React.FC = () => {
       
       content += '</urlset>';
       
-      // Create a simple XSL stylesheet if it doesn't exist in public folder
-      const xslContent = `<?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" 
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
-
-  <xsl:template match="/">
-    <html xmlns="http://www.w3.org/1999/xhtml">
-      <head>
-        <title>XML Sitemap - Progineer</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <style type="text/css">
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-          }
-          h1 {
-            color: #0a5b8f;
-            font-size: 1.5em;
-          }
-          table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 20px 0;
-          }
-          th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-          }
-          th {
-            background-color: #f2f2f2;
-            color: #333;
-          }
-          tr:hover {
-            background-color: #f5f5f5;
-          }
-          a {
-            color: #0a5b8f;
-          }
-          .url {
-            max-width: 400px;
-            word-break: break-all;
-          }
-          .header {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-          }
-          .footer {
-            font-size: 0.8em;
-            color: #666;
-            margin-top: 30px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>Plan du site XML de Progineer</h1>
-          <p>Ce fichier XML est utilisé par les moteurs de recherche pour découvrir toutes les pages du site.</p>
-        </div>
-        <div>
-          <table>
-            <tr>
-              <th>URL</th>
-              <th>Dernière modification</th>
-              <th>Fréquence</th>
-              <th>Priorité</th>
-            </tr>
-            <xsl:for-each select="sitemap:urlset/sitemap:url">
-              <tr>
-                <td class="url"><a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a></td>
-                <td><xsl:value-of select="sitemap:lastmod"/></td>
-                <td><xsl:value-of select="sitemap:changefreq"/></td>
-                <td><xsl:value-of select="sitemap:priority"/></td>
-              </tr>
-            </xsl:for-each>
-          </table>
-        </div>
-        <div class="footer">
-          <p>Généré par Progineer - <a href="https://progineer.fr">progineer.fr</a></p>
-        </div>
-      </body>
-    </html>
-  </xsl:template>
-</xsl:stylesheet>`;
-      
-      // Method 1: Use a downloadable Blob approach
+      // Create a Blob with the XML content and the correct content type
       const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
-      const url = URL.createObjectURL(blob);
+      const xmlUrl = URL.createObjectURL(blob);
       
-      // Method 2: Create both an XML blob and XSL blob for styling
-      const xslBlob = new Blob([xslContent], { type: 'application/xml;charset=UTF-8' });
-      const xslUrl = URL.createObjectURL(xslBlob);
-      
-      // Clear the document and set proper meta tags
+      // Replace the current document content with the XML content
       document.open();
+      document.write('<!DOCTYPE xml>');
       document.write(`
-        <!DOCTYPE xml>
-        <html xmlns="http://www.w3.org/1999/xhtml">
+        <html>
           <head>
             <meta http-equiv="Content-Type" content="application/xml; charset=UTF-8" />
             <title>Sitemap XML - Progineer</title>
@@ -185,22 +86,22 @@ const SitemapXML: React.FC = () => {
       `);
       document.close();
       
-      // Add a fallback link for downloading the XML
+      // Add a download link for the XML file
       const downloadLink = document.createElement('a');
       downloadLink.style.position = 'fixed';
       downloadLink.style.bottom = '10px';
       downloadLink.style.right = '10px';
       downloadLink.style.padding = '8px 16px';
-      downloadLink.style.backgroundColor = '#0a5b8f';
+      downloadLink.style.backgroundColor = '#787346';
       downloadLink.style.color = 'white';
       downloadLink.style.textDecoration = 'none';
       downloadLink.style.borderRadius = '4px';
-      downloadLink.href = url;
+      downloadLink.href = xmlUrl;
       downloadLink.setAttribute('download', 'sitemap.xml');
       downloadLink.textContent = 'Télécharger le sitemap XML';
       document.body.appendChild(downloadLink);
       
-      // Provide a link to view the XML directly
+      // Add a link to view the raw XML
       const viewLink = document.createElement('a');
       viewLink.style.position = 'fixed';
       viewLink.style.bottom = '10px';
@@ -210,14 +111,16 @@ const SitemapXML: React.FC = () => {
       viewLink.style.color = 'white';
       viewLink.style.textDecoration = 'none';
       viewLink.style.borderRadius = '4px';
-      viewLink.href = url;
+      viewLink.href = xmlUrl;
       viewLink.setAttribute('target', '_blank');
       viewLink.textContent = 'Voir le XML brut';
       document.body.appendChild(viewLink);
       
-      // Alternative approach: redirect to the blob URL for direct XML viewing
-      // Uncomment this to use this approach instead of inline display
-      // window.location.href = url;
+      // Alternative method: direct download via automatic click
+      // Uncomment this to automatically download the file when visiting the URL
+      // document.body.appendChild(downloadLink);
+      // downloadLink.click();
+      // document.body.removeChild(downloadLink);
     }
   }, [currentPath]);
 
