@@ -7,14 +7,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import { Loader2, UserPlus, Google } from 'lucide-react';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { signUp, loading, error, user } = useAuth();
+  const { signUp, signUpWithGoogle, loading, error, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -94,6 +94,15 @@ const SignUp = () => {
       }
     }
   }, [user, navigate, isAdminSignup]);
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await signUpWithGoogle();
+    } catch (err) {
+      console.error('Google Sign-Up Error:', err);
+      setFormError('Erreur lors de la création du compte avec Google');
+    }
+  };
 
   return (
     <>
@@ -244,11 +253,35 @@ const SignUp = () => {
                     ) : isAdminSignup ? 'Créer le compte administrateur' : 'Créer mon compte'}
                   </Button>
                 </form>
+                
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">
+                      Ou inscrivez-vous avec
+                    </span>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full text-gray-700 hover:bg-gray-50"
+                  onClick={handleGoogleSignUp}
+                  disabled={loading}
+                >
+                  <Google className="mr-2 h-5 w-5" />
+                  S'inscrire avec Google
+                </Button>
 
                 <div className="mt-6 text-center">
                   <p className="text-sm text-gray-600">
                     Vous avez déjà un compte ?{' '}
-                    <Link to="/workspace/sign-in" className="text-khaki-600 hover:text-khaki-700 font-medium">
+                    <Link 
+                      to="/workspace/sign-in" 
+                      className="text-khaki-600 hover:text-khaki-700 font-medium"
+                    >
                       Se connecter
                     </Link>
                   </p>

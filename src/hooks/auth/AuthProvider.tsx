@@ -12,8 +12,8 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { session, user, loading, error, setError, setLoading } = useAuthState();
-  const { signIn } = useSignIn(setLoading, setError);
-  const { signUp } = useSignUp(setLoading, setError);
+  const { signIn, signInWithGoogle } = useSignIn(setLoading, setError);
+  const { signUp, signUpWithGoogle } = useSignUp(setLoading, setError);
   const { signOut } = useSignOut(setLoading, setError);
 
   return (
@@ -25,6 +25,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         signIn,
         signUp,
         signOut,
+        signInWithGoogle,
+        signUpWithGoogle,
         error
       }}
     >

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@/components/ui/use-toast';
@@ -9,6 +8,41 @@ const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
 
 export const useSignIn = (setLoading: (loading: boolean) => void, setError: (error: string | null) => void) => {
   const navigate = useNavigate();
+
+  const signInWithGoogle = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/workspace/client-area`
+        }
+      });
+
+      if (error) {
+        console.error('Google Sign-In Error:', error);
+        toast({
+          title: 'Erreur de connexion',
+          description: 'Impossible de se connecter avec Google',
+          variant: 'destructive'
+        });
+        throw error;
+      }
+
+      console.log('Google Sign-In Data:', data);
+    } catch (err) {
+      console.error('Unexpected Google Sign-In Error:', err);
+      toast({
+        title: 'Erreur',
+        description: 'Une erreur est survenue lors de la connexion',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -160,5 +194,5 @@ export const useSignIn = (setLoading: (loading: boolean) => void, setError: (err
     }
   };
 
-  return { signIn };
+  return { signIn, signInWithGoogle };
 };

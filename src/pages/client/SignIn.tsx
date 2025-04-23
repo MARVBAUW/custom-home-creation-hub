@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -8,14 +7,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, UserPlus } from 'lucide-react';
+import { Loader2, UserPlus, Google } from 'lucide-react';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { signIn, signUp, loading, error, user } = useAuth();
+  const { signIn, signInWithGoogle, loading, error, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -72,6 +71,15 @@ const SignIn = () => {
       setPassword('Baullanowens1112.');
     }
   }, [email]);
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      console.error('Google Sign-In Error:', err);
+      setFormError('Erreur lors de la connexion avec Google');
+    }
+  };
 
   return (
     <>
@@ -182,6 +190,27 @@ const SignIn = () => {
                     )}
                   </Button>
                 </form>
+                
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t border-gray-300"></span>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white text-gray-500">
+                      Ou continuer avec
+                    </span>
+                  </div>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  className="w-full text-gray-700 hover:bg-gray-50"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                >
+                  <Google className="mr-2 h-5 w-5" />
+                  Continuer avec Google
+                </Button>
 
                 <div className="mt-6 text-center">
                   <Button 
