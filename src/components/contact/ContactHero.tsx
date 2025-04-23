@@ -6,13 +6,14 @@ const ContactHero = () => {
   return (
     <section className="pt-32 pb-16 bg-gradient-to-b from-progineer-light to-white relative">
       {/* Background Image */}
-      <div className="absolute inset-0 z-0 opacity-15">
+      <div className="absolute inset-0 z-0 opacity-30">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-white z-10"></div>
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundImage: `url('/lovable-uploads/23fe2b30-1f84-472d-a3c8-d4c413ffbbc4.png')`,
             backgroundPosition: 'center',
+            transform: 'scale(1.05)',
           }}
         ></div>
       </div>
