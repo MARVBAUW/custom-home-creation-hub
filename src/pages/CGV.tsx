@@ -1,12 +1,12 @@
 
 import React from 'react';
-import SEO from '@/components/common/SEO';
-import LegalHero from '@/components/legal/LegalHero';
-import LegalContent from '@/components/legal/LegalContent';
+import SEO from '../components/common/SEO';
+import LegalHero from '../components/legal/LegalHero';
+import LegalContent from '../components/legal/LegalContent';
 import { motion } from 'framer-motion';
-import SEOFooter from '@/components/common/SEOFooter';
-import { getBusinessStructuredData } from '@/utils/googleBusiness';
-import CGVSections from '@/components/legal/CGVSections';
+import SEOFooter from '../components/common/SEOFooter';
+import { getBusinessStructuredData } from '../utils/googleBusiness';
+import CGVSections from '../components/legal/CGVSections';
 
 const CGV = () => {
   // Structured data for WebPage with business data
@@ -35,9 +35,9 @@ const CGV = () => {
   return (
     <>
       <SEO 
-        title="Conditions Générales de Vente | Progineer - Architecte & Maître d'œuvre en PACA"
-        description="Conditions Générales de Vente de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région PACA. Découvrez les modalités de nos prestations."
-        keywords="CGV Progineer, conditions générales vente architecte, CGV maître d'œuvre PACA, contrat architecture, conditions prestation construction"
+        title="Conditions Générales de Vente | Maître d'œuvre Progineer PACA"
+        description="Conditions Générales de Vente de Progineer, entreprise de maîtrise d'œuvre en PACA. Modalités contractuelles pour nos services de construction et rénovation."
+        keywords="CGV maître d'œuvre, conditions générales vente Progineer, contrat construction PACA, conditions services rénovation, clauses contractuelles"
         canonicalUrl="https://progineer.fr/cgv"
         structuredData={structuredData}
       />
@@ -47,14 +47,19 @@ const CGV = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <LegalHero title="Conditions Générales de Vente" />
-        
-        <LegalContent>
-          <CGVSections />
-        </LegalContent>
+        <main>
+          <h1 className="sr-only">Conditions Générales de Vente - Progineer, Maître d'œuvre en PACA</h1>
+          <LegalHero title="Conditions Générales de Vente" />
+          
+          <LegalContent>
+            <CGVSections />
+          </LegalContent>
+        </main>
       </motion.div>
 
-      <SEOFooter text="Conditions Générales de Vente de Progineer, maître d'œuvre et architecte en région PACA. Ces CGV régissent les relations contractuelles entre notre société et ses clients pour tous les services de construction, rénovation, extension et aménagement dans les Bouches-du-Rhône, le Var, les Alpes-Maritimes et toute la région PACA." />
+      <SEOFooter text="Conditions Générales de Vente de Progineer, maître d'œuvre et architecte en région PACA. Ces CGV régissent les relations contractuelles entre notre société et ses clients pour tous les services de construction, rénovation, extension et aménagement dans les Bouches-du-Rhône, le Var, les Alpes-Maritimes et toute la région PACA." 
+      additionalKeywords={["clauses contractuelles construction", "conditions rénovation PACA", "engagements maître d'œuvre", "contrat prestation bâtiment", "modalités paiement travaux"]}
+      />
     </>
   );
 };

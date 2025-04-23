@@ -16,9 +16,9 @@ const Estimation = () => {
   return (
     <>
       <SEO 
-        title="Estimation Gratuite de Projet de Construction & Rénovation | Progineer PACA"
-        description="Estimez gratuitement et sans engagement votre projet de construction, rénovation ou extension avec Progineer, maître d'œuvre expert en région PACA. Devis personnalisé en 24h. Marseille, Nice, Toulon."
-        keywords="estimation projet construction PACA, devis travaux Marseille, prix maison sur mesure, estimation rénovation Nice, coût extension maison Toulon, budget construction appartement, estimation travaux gratuite, devis architecte PACA"
+        title="Estimation Gratuite de Projet | Maître d'œuvre Progineer PACA"
+        description="Estimez gratuitement votre projet de construction, rénovation ou extension avec Progineer, maître d'œuvre expert en PACA. Devis personnalisé sous 24h."
+        keywords="estimation projet construction, simulation coût travaux, devis maître d'œuvre PACA, prix rénovation Marseille, budget extension maison"
         canonicalUrl="https://progineer.fr/estimation"
         structuredData={structuredData}
         ogType="website"
@@ -31,28 +31,42 @@ const Estimation = () => {
         <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/estimation" />
       </SEO>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <EstimationHero />
-        
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-10">Estimez votre projet en quelques étapes</h2>
-            <div className="p-2 md:p-5 lg:p-8 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm relative z-10 max-w-5xl mx-auto">
-              {/* Remplacement de l'ancien calculateur par le nouveau système */}
-              <EstimationWizard />
+      <main>
+        <h1 className="sr-only">Estimation gratuite de projet de construction et rénovation en PACA</h1>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <EstimationHero />
+          
+          <section className="py-16 bg-white">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl font-bold text-center mb-10">Estimez votre projet en quelques étapes</h2>
+              <div className="p-2 md:p-5 lg:p-8 rounded-xl shadow-lg bg-white/80 backdrop-blur-sm relative z-10 max-w-5xl mx-auto">
+                {/* Remplacement de l'ancien calculateur par le nouveau système */}
+                <EstimationWizard />
+              </div>
             </div>
-          </div>
-        </section>
-        
-        <EstimationBenefits />
-        <EstimationTrustMetrics />
-        <EstimationFAQ />
-        <EstimationLocationCities />
-      </motion.div>
+          </section>
+          
+          <EstimationBenefits />
+          <EstimationTrustMetrics />
+          <EstimationFAQ />
+          <EstimationLocationCities />
+        </motion.div>
+      </main>
+
+      <SEOFooter 
+        text="Estimation gratuite et personnalisée pour tous vos projets de construction et rénovation en PACA. Notre maître d'œuvre vous propose un chiffrage précis de votre projet à Marseille, Nice, Toulon et partout en Provence-Alpes-Côte d'Azur."
+        additionalKeywords={[
+          "simulateur prix construction", 
+          "calcul budget rénovation", 
+          "estimation coût extension", 
+          "devis travaux Marseille", 
+          "tarifs maître d'œuvre PACA"
+        ]}
+      />
     </>
   );
 };

@@ -12,15 +12,15 @@ const About = () => {
   return (
     <>
       <SEO 
-        title="À propos | Progineer - Architecte & Maître d'œuvre en PACA"
-        description="Découvrez Progineer, entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA."
-        keywords="à propos architecte, histoire maître d'œuvre, entreprise construction PACA, valeurs architecte Marseille"
+        title="À propos | Maître d'œuvre Progineer à Marseille et en PACA"
+        description="Découvrez Progineer, entreprise de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA depuis 2018."
+        keywords="histoire maître d'œuvre, valeurs Progineer, expertise construction PACA, entreprise rénovation Marseille, vision entreprise bâtiment"
         ogType="website"
         canonicalUrl="https://progineer.fr/a-propos"
       />
 
       <main>
-        <h1 className="sr-only">À propos de Progineer - Architecte et Maître d'œuvre en PACA</h1>
+        <h1 className="sr-only">À propos de Progineer - Maître d'œuvre expert en PACA</h1>
         <AboutHero />
         <AboutStory />
         <AboutValues />
@@ -29,8 +29,14 @@ const About = () => {
       </main>
       
       <SEOFooter 
-        text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Découvrez l'histoire et les valeurs de Progineer, entreprise d'architecture et de maîtrise d'œuvre en région Provence-Alpes-Côte d'Azur."
-        additionalKeywords={["entreprise architecture PACA", "histoire maître d'œuvre", "valeurs Progineer", "expertise construction Marseille", "rénovation professionnelle Nice"]}
+        text="Maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Découvrez l'histoire et les valeurs de Progineer, entreprise de maîtrise d'œuvre fondée par des ingénieurs passionnés en région Provence-Alpes-Côte d'Azur."
+        additionalKeywords={[
+          "histoire entreprise construction", 
+          "fondateurs maître d'œuvre", 
+          "valeurs Progineer PACA", 
+          "expertise technique bâtiment", 
+          "approche construction durable"
+        ]}
       />
     </>
   );

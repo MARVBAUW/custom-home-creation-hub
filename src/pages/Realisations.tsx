@@ -71,52 +71,55 @@ const Realisations = () => {
   return (
     <>
       <SEO 
-        title="Nos réalisations | Architecte et Maître d'œuvre PACA - Progineer"
-        description="Découvrez les projets de construction, rénovation et extension réalisés par Progineer, architecte et maître d'œuvre en région PACA."
-        keywords="réalisations architecte, projets maison sur mesure, portfolio maître d'œuvre, construction PACA, rénovation Marseille"
+        title="Nos réalisations | Maître d'œuvre Progineer en PACA"
+        description="Découvrez les projets de construction, rénovation et extension réalisés par Progineer, maître d'œuvre en PACA. Des réalisations uniques et sur-mesure."
+        keywords="réalisations maître d'œuvre, projets construction PACA, portfolio rénovation, extension maison Marseille, références travaux"
         canonicalUrl="https://progineer.fr/realisations-architecte-maison"
       />
 
-      {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
-        <Container size="md">
-          <div className="text-center">
-            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-              Nos réalisations
+      <main>
+        <h1 className="sr-only">Nos réalisations - Portfolio de projets de maîtrise d'œuvre en PACA</h1>
+        {/* Hero section */}
+        <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+          <Container size="md">
+            <div className="text-center">
+              <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
+                Nos réalisations
+              </div>
+              <h2 className="text-4xl md:text-5xl font-semibold mb-6">
+                Portfolio de nos projets
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+                <InternalLinkText 
+                  text="Exemples de projets réalisés par notre équipe de maîtrise d'œuvre à Marseille et en PACA. Découvrez notre savoir-faire en matière de construction et rénovation."
+                  maxOccurrences={2}
+                />
+              </p>
             </div>
-            <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Portfolio de nos projets
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              <InternalLinkText 
-                text="Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Découvrez notre savoir-faire en matière de construction et rénovation."
-                maxOccurrences={2}
-              />
-            </p>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
 
-      {/* Projects gallery */}
-      <ProjectsGallery projects={projects} />
+        {/* Projects gallery */}
+        <ProjectsGallery projects={projects} />
 
-      {/* Types de projets section */}
-      <ProjectTypesSection />
+        {/* Types de projets section */}
+        <ProjectTypesSection />
 
-      {/* CTA section */}
-      <CTASection />
+        {/* CTA section */}
+        <CTASection />
+      </main>
 
       {/* SEO Footer renforcé */}
       <SEOFooter 
-        text="Exemples de projets réalisés par notre bureau d'étude à Marseille et en PACA. Ingénieur, maître d'œuvre spécialisé en construction de maisons sur mesure, rénovation et extension dans toute la région Provence-Alpes-Côte d'Azur."
+        text="Portfolio de projets réalisés par Progineer, maître d'œuvre expert en PACA. Découvrez nos réalisations en construction de maisons sur mesure, rénovation et extension dans toute la région Provence-Alpes-Côte d'Azur."
         additionalKeywords={[
-          "réalisations architecturales", 
-          "projets maître d'œuvre", 
-          "portfolio construction", 
-          "rénovation appartement", 
-          "extension maison PACA", 
-          "maison écologique Toulon", 
-          "villa contemporaine Marseille"
+          "portfolio maître d'œuvre", 
+          "réalisations construction PACA", 
+          "projets rénovation Marseille", 
+          "références extension maison", 
+          "maisons contemporaines", 
+          "villa écologique Toulon", 
+          "rénovation appartement"
         ]}
       />
     </>

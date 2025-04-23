@@ -56,55 +56,64 @@ const Equipe = () => {
   return (
     <>
       <SEO 
-        title="Notre équipe | Architecte et Maître d'œuvre à Marseille - Progineer"
-        description="Découvrez l'équipe de Progineer, architectes et maîtres d'œuvre spécialisés dans la construction et rénovation de maisons en PACA. Des professionnels passionnés à votre service."
-        keywords="équipe architecte, maître d'œuvre Marseille, professionnels construction PACA, ingénieurs bâtiment, architecte intérieur"
+        title="Notre équipe | Maître d'œuvre Progineer à Marseille"
+        description="Découvrez l'équipe de Progineer, maîtres d'œuvre expérimentés et ingénieurs spécialisés dans la construction et rénovation en PACA. Des professionnels à votre service."
+        keywords="équipe maître d'œuvre PACA, ingénieurs construction, professionnels bâtiment Marseille, experts rénovation, techniciens chantier"
         canonicalUrl="https://progineer.fr/equipe-maitrise-oeuvre"
       />
 
-      {/* Hero section */}
-      <section className="pt-32 pb-16 bg-gradient-to-b from-stone-50 to-white">
-        <Container size="md">
-          <div className="text-center">
-            <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-              Notre équipe
+      <main>
+        <h1 className="sr-only">Notre équipe de maîtres d'œuvre et ingénieurs en PACA</h1>
+        {/* Hero section */}
+        <section className="pt-32 pb-16 bg-gradient-to-b from-stone-50 to-white">
+          <Container size="md">
+            <div className="text-center">
+              <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
+                Notre équipe
+              </div>
+              <h2 className="text-4xl md:text-5xl font-semibold mb-6">
+                Des professionnels à votre service
+              </h2>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+                Découvrez l'équipe <strong>passionnée et expérimentée</strong> qui donnera vie à votre projet. 
+                Ingénieurs et spécialistes en construction vous accompagnent à chaque étape.
+              </p>
             </div>
-            <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Des professionnels à votre service
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Découvrez l'équipe <strong>passionnée et expérimentée</strong> qui donnera vie à votre projet. 
-              Architectes, ingénieurs et spécialistes en construction vous accompagnent à chaque étape.
-            </p>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
 
-      <TeamMembersSection members={teamMembers} />
-      <ValuesSection values={values} />
-      <ApproachSection />
+        <TeamMembersSection members={teamMembers} />
+        <ValuesSection values={values} />
+        <ApproachSection />
 
-      {/* CTA section */}
-      <section className="py-16 bg-stone-50 border-y border-stone-200">
-        <Container>
-          <div className="text-center max-w-3xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-6">
-              Travaillons ensemble sur votre projet
-            </h2>
-            <p className="text-gray-600 mb-8">
-              Notre équipe est prête à mettre son expertise à votre service. Contactez-nous pour discuter de votre projet et découvrir comment nous pouvons vous aider à le concrétiser.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button href="/estimation" className="bg-khaki-700 hover:bg-khaki-800 text-white">Estimer mon projet</Button>
-              <Button href="/contact" variant="outline" className="border-khaki-300 hover:bg-khaki-50">Prendre rendez-vous</Button>
+        {/* CTA section */}
+        <section className="py-16 bg-stone-50 border-y border-stone-200">
+          <Container>
+            <div className="text-center max-w-3xl mx-auto">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-6">
+                Travaillons ensemble sur votre projet
+              </h2>
+              <p className="text-gray-600 mb-8">
+                Notre équipe est prête à mettre son expertise à votre service. Contactez-nous pour discuter de votre projet et découvrir comment nous pouvons vous aider à le concrétiser.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button href="/estimation" className="bg-khaki-700 hover:bg-khaki-800 text-white">Estimer mon projet</Button>
+                <Button href="/contact" variant="outline" className="border-khaki-300 hover:bg-khaki-50">Prendre rendez-vous</Button>
+              </div>
             </div>
-          </div>
-        </Container>
-      </section>
+          </Container>
+        </section>
+      </main>
 
       <SEOFooter 
-        text="Notre équipe composée d'architectes et de maîtres d'œuvre à Marseille vous accompagne dans vos projets de construction, rénovation et extension de maisons en région PACA. Des professionnels expérimentés à votre écoute pour donner vie à vos projets immobiliers."
-        additionalKeywords={["équipe d'architectes", "maître d'œuvre Marseille", "professionnels de la construction", "expertise bâtiment PACA", "architecte maison individuelle"]}
+        text="Notre équipe de maîtres d'œuvre et d'ingénieurs à Marseille vous accompagne dans vos projets de construction, rénovation et extension en région PACA. Des professionnels expérimentés à votre écoute pour donner vie à vos projets immobiliers."
+        additionalKeywords={[
+          "ingénieurs construction PACA", 
+          "experts bâtiment Marseille", 
+          "équipe maîtrise d'œuvre", 
+          "professionnels rénovation", 
+          "techniciens projets immobiliers"
+        ]}
       />
     </>
   );

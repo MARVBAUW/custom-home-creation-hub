@@ -15,9 +15,9 @@ const Contact = () => {
   return (
     <>
       <SEO 
-        title="Contact | Progineer - Architecte & Maître d'œuvre en PACA"
-        description="Contactez Progineer, votre architecte et maître d'œuvre pour vos projets de construction, rénovation et extension en région PACA - Marseille, Nice, Toulon, Cannes."
-        keywords="contact architecte Marseille, contact maître d'œuvre PACA, devis travaux, rendez-vous architecte, contact entreprise construction PACA"
+        title="Contact | Maître d'œuvre Progineer à Marseille et en PACA"
+        description="Contactez Progineer, votre maître d'œuvre pour vos projets de construction, rénovation et extension en PACA. Devis gratuit, rendez-vous et conseils personnalisés."
+        keywords="contact maître d'œuvre PACA, devis travaux Marseille, rendez-vous construction, téléphone Progineer, adresse entreprise bâtiment"
         canonicalUrl="https://progineer.fr/contact"
         structuredData={structuredData}
         ogType="website"
@@ -30,27 +30,37 @@ const Contact = () => {
         <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/contact" />
       </SEO>
 
-      <ContactHero />
+      <main>
+        <h1 className="sr-only">Contact - Progineer Maître d'œuvre à Marseille et en PACA</h1>
+        <ContactHero />
 
-      {/* Contact content */}
-      <section className="py-16">
-        <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
-            <ContactInfo />
-            
-            {/* Contact Form */}
-            <ContactForm />
-          </div>
-        </Container>
-      </section>
+        {/* Contact content */}
+        <section className="py-16">
+          <Container>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {/* Contact Info */}
+              <ContactInfo />
+              
+              {/* Contact Form */}
+              <ContactForm />
+            </div>
+          </Container>
+        </section>
 
-      {/* Map Section */}
-      <ContactLocationMap />
+        {/* Map Section */}
+        <ContactLocationMap />
+      </main>
 
       {/* SEO Footer */}
       <SEOFooter 
-        text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Contactez nos architectes et ingénieurs pour votre projet dans la région Provence-Alpes-Côte d'Azur. Notre équipe intervient à Marseille, Nice, Toulon, Cannes, Saint-Tropez et dans toute la région PACA pour vous accompagner dans la réalisation de votre projet de construction, rénovation ou extension."
+        text="Contactez votre maître d'œuvre à Marseille et en PACA pour tous vos projets de construction, rénovation et extension. Notre équipe intervient à Marseille, Nice, Toulon, Cannes et dans toute la région PACA pour vous accompagner dans la réalisation de votre projet immobilier."
+        additionalKeywords={[
+          "formulaire contact maître d'œuvre", 
+          "demande devis construction", 
+          "prise rendez-vous travaux", 
+          "coordonnées Progineer PACA", 
+          "contact projet rénovation"
+        ]}
       />
     </>
   );

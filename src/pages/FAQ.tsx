@@ -9,9 +9,9 @@ const FAQ = () => {
   return (
     <>
       <SEO 
-        title="FAQ | Progineer - Architecte & Maître d'œuvre en PACA"
-        description="Questions fréquentes sur la construction, rénovation et extension de maisons. Trouvez des réponses à vos interrogations sur la maîtrise d'œuvre en région PACA."
-        keywords="FAQ architecture, questions maître d'œuvre, construction maison PACA, rénovation questions fréquentes"
+        title="FAQ - Questions fréquentes | Maître d'œuvre Progineer PACA"
+        description="Trouvez des réponses à vos questions sur la construction, rénovation et extension de maisons en PACA. Tout savoir sur les services d'un maître d'œuvre."
+        keywords="FAQ maître d'œuvre, questions fréquentes construction, coût rénovation PACA, questions extension maison, devis travaux, processus construction"
         canonicalUrl="https://progineer.fr/faq"
         structuredData={{
           "@context": "https://schema.org",
@@ -45,11 +45,21 @@ const FAQ = () => {
         }}
       />
 
-      <FAQHero />
-      <FAQContent />
+      <main>
+        <h1 className="sr-only">FAQ - Questions fréquentes sur la maîtrise d'œuvre et la construction en PACA</h1>
+        <FAQHero />
+        <FAQContent />
+      </main>
       
       <SEOFooter 
-        text="Ingénieur, maître d'œuvre à Marseille et en PACA – Spécialiste en construction de maisons sur mesure, rénovation et extension. Nos architectes et ingénieurs répondent à toutes vos questions sur vos projets immobiliers dans la région Provence-Alpes-Côte d'Azur."
+        text="Trouvez des réponses à vos questions sur la maîtrise d'œuvre à Marseille et en PACA. Nos experts répondent à toutes vos interrogations concernant la construction, rénovation et extension de maisons dans la région Provence-Alpes-Côte d'Azur."
+        additionalKeywords={[
+          "coût construction maison PACA", 
+          "délais travaux rénovation", 
+          "permis construire extension", 
+          "honoraires maître d'œuvre", 
+          "phases projet construction"
+        ]}
       />
     </>
   );
