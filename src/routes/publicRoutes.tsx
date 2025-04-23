@@ -7,7 +7,7 @@ import Prestations from '../pages/Prestations';
 import Realisations from '../pages/Realisations';
 import Equipe from '../pages/Equipe';
 import Estimation from '../pages/Estimation';
-import MentionsLegales from '../pages/MentionsLegales';
+import MentionsLegales from '../pages/Legal';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import CGU from '../pages/CGU';
 import CGV from '../pages/CGV';
@@ -15,7 +15,7 @@ import FAQ from '../pages/FAQ';
 import Sitemap from '../pages/Sitemap';
 import SitemapXML from '../pages/SitemapXML';
 import Parrainage from '../pages/Parrainage';
-import PartenairesPage from '../pages/PartenairesPage';
+import DevenirPartenaire from '../pages/DevenirPartenaire';
 import NotFound from '../pages/NotFound';
 
 export const publicRoutes = [
@@ -89,7 +89,7 @@ export const publicRoutes = [
   },
   {
     path: "/devenir-partenaire",
-    element: <PartenairesPage />,
+    element: <DevenirPartenaire />,
   },
   {
     path: "*",
