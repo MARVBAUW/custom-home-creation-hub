@@ -76,7 +76,7 @@
               <th>Fréquence</th>
               <th>Priorité</th>
             </tr>
-            <xsl:for-each select="/*/sitemap:url">
+            <xsl:for-each select="//sitemap:url">
               <tr>
                 <td class="url"><a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a></td>
                 <td><xsl:value-of select="sitemap:lastmod"/></td>
