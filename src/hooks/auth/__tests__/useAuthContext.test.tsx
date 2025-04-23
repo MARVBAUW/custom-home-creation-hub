@@ -31,7 +31,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
       loading: false,
       error: null,
       signIn: async (email: string, password: string) => {},
-      signUp: async (email: string, password: string, metadata?: any) => {},
+      signUp: async (email: string, password: string, metadata?: Record<string, any>) => {},
       signOut: async () => {},
       signInWithGoogle: async () => {},
       signUpWithGoogle: async () => {},

@@ -45,7 +45,7 @@ export const useSignUp = (setLoading: (loading: boolean) => void, setError: (err
     }
   };
 
-  const signUp = async (email: string, password: string, metadata?: any) => {
+  const signUp = async (email: string, password: string, metadata?: Record<string, any>) => {
     try {
       setLoading(true);
       setError(null);
