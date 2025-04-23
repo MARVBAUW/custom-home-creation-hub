@@ -1,5 +1,5 @@
 
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import { AuthContext, useAuthContext } from '../AuthContext';
 import { ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
@@ -81,4 +81,3 @@ describe('useAuthContext', () => {
     consoleError.mockRestore();
   });
 });
-
