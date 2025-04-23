@@ -1,6 +1,7 @@
+
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { Navigate, useLocation, Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
@@ -76,33 +77,37 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // Si accessing /sitemap.xml directly, serve as pure XML without HTML wrapper
+  // If accessing /sitemap.xml directly, serve as pure XML without HTML wrapper
   if (currentPath === '/sitemap.xml') {
     useEffect(() => {
-      // Set the content type to XML
-      const htmlElement = document.documentElement;
-      htmlElement.innerHTML = '';
-      document.body.textContent = '';
+      // Create a new document
+      const doc = document.implementation.createDocument(null, 'root', null);
+      const parser = new DOMParser();
       
-      // Create a text node with the XML content
-      const xmlNode = document.createTextNode(xmlContent);
-      document.body.appendChild(xmlNode);
-      
-      // Set the proper Content-Type via meta tag
-      const meta = document.createElement('meta');
-      meta.httpEquiv = 'Content-Type';
-      meta.content = 'text/xml; charset=utf-8';
-      document.head.appendChild(meta);
-      
-      // Set a special class to signal this is an XML document
-      document.documentElement.className = 'xml-document';
+      try {
+        // Parse the XML content
+        const xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
+        
+        // Replace the entire HTML with XML content
+        document.open();
+        document.write(xmlContent);
+        document.close();
+        
+        // Set the proper Content-Type via meta tag (though browser may ignore this)
+        const meta = document.createElement('meta');
+        meta.httpEquiv = 'Content-Type';
+        meta.content = 'text/xml; charset=utf-8';
+        document.head.appendChild(meta);
+      } catch (e) {
+        console.error('Error serving XML:', e);
+      }
     }, [xmlContent]);
     
     // Return empty React fragment - the DOM manipulations above will handle the rendering
     return <></>;
   }
 
-  // Si accédé via une autre route, afficher comme une page normale avec l'UI autour
+  // For other routes, display as a normal page with UI around it
   return (
     <>
       <SEO 
