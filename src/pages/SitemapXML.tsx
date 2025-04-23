@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { publicRoutes } from '../routes/publicRoutes';
-import SEO from '../components/common/SEO';
 
 const SitemapXML: React.FC = () => {
   const location = useLocation();
@@ -66,48 +65,40 @@ const SitemapXML: React.FC = () => {
       
       content += '</urlset>';
       
-      // Directement modifier le document pour servir correctement le XML
-      document.open('text/xml');
-      document.write(content);
-      document.close();
+      // Créer un blob XML et télécharger automatiquement
+      const blob = new Blob([content], { type: 'application/xml' });
       
-      // Configurer le Content-Type directement sur le document
+      // Au lieu de rediriger, remplacer tout le contenu HTML
+      document.documentElement.innerHTML = '';
+      document.documentElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+      
+      // Définir le doctype XML
+      const doctypeNode = document.implementation.createDocumentType('xml', '', '');
+      document.doctype && document.doctype.remove();
+      document.insertBefore(doctypeNode, document.documentElement);
+      
+      // Définir l'en-tête Content-Type
       const meta = document.createElement('meta');
       meta.httpEquiv = 'Content-Type';
-      meta.content = 'text/xml; charset=utf-8';
+      meta.content = 'text/xml; charset=UTF-8';
       document.head.appendChild(meta);
-
-      // Définir le titre du document
-      document.title = 'Sitemap XML - Progineer';
+      
+      // Insérer le contenu XML directement dans le corps
+      const pre = document.createElement('pre');
+      pre.textContent = content;
+      document.body.appendChild(pre);
+      
+      // Forcer le content-type
+      document.contentType = 'application/xml';
     }
-    
-    // Nettoyage lors du démontage
-    return () => {
-      if (currentPath === '/sitemap.xml') {
-        const meta = document.querySelector('meta[http-equiv="Content-Type"]');
-        if (meta) meta.remove();
-      }
-    };
   }, [currentPath]);
 
-  // Pour l'affichage initial avant le remplacement du document
-  if (currentPath === '/sitemap.xml') {
-    return (
-      <>
-        <SEO 
-          title="Sitemap XML - Progineer"
-          description="Plan du site au format XML pour Progineer"
-          canonicalUrl="https://progineer.fr/sitemap.xml"
-        />
-        <div className="text-center py-10">
-          <p>Génération du sitemap XML...</p>
-        </div>
-      </>
-    );
-  }
-
-  // Pour tout autre chemin (sauf /sitemap.xml/ qui est redirigé)
-  return null;
+  // Affichage pour le rendu initial React
+  return (
+    <div className="hidden">
+      {/* Ce contenu sera remplacé par le XML */}
+    </div>
+  );
 };
 
 export default SitemapXML;
