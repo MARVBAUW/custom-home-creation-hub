@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -74,12 +75,12 @@
               <th>Fréquence</th>
               <th>Priorité</th>
             </tr>
-            <xsl:for-each select="sitemap:urlset/sitemap:url">
+            <xsl:for-each select="/*/url">
               <tr>
-                <td class="url"><a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a></td>
-                <td><xsl:value-of select="sitemap:lastmod"/></td>
-                <td><xsl:value-of select="sitemap:changefreq"/></td>
-                <td><xsl:value-of select="sitemap:priority"/></td>
+                <td class="url"><a href="{loc}"><xsl:value-of select="loc"/></a></td>
+                <td><xsl:value-of select="lastmod"/></td>
+                <td><xsl:value-of select="changefreq"/></td>
+                <td><xsl:value-of select="priority"/></td>
               </tr>
             </xsl:for-each>
           </table>
