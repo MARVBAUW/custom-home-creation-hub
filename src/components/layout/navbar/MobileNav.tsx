@@ -36,7 +36,7 @@ const MobileNav = ({
 
   return (
     // Positionnement absolu par rapport au viewport, indépendant du header
-    <div className="fixed inset-0 top-20 z-40 bg-white/98 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 top-20 z-40 bg-white dark:bg-gray-900 shadow-lg overflow-y-auto">
       <Container className="flex flex-col py-6 space-y-4 min-h-screen">
         {/* Changement ici : flex-grow simplement pour que le contenu remplisse l'espace */}
         <ul className="flex-grow">
@@ -45,7 +45,7 @@ const MobileNav = ({
             const isOpened = openDropdown === null || openDropdown === item.name;
             return (
               <React.Fragment key={item.name}>
-                <li className="border-b border-stone-200">
+                <li className="border-b border-stone-200 dark:border-gray-700">
                   {item.subLinks ? (
                     <button
                       onClick={() => {
@@ -53,8 +53,8 @@ const MobileNav = ({
                         toggleDropdown(openDropdown === item.name ? null : item.name);
                       }}
                       className={cn(
-                        "flex items-center justify-between w-full text-base font-medium text-stone-800 hover:text-khaki-800 py-3 px-2",
-                        openDropdown === item.name && "bg-stone-100"
+                        "flex items-center justify-between w-full text-base font-medium text-stone-800 dark:text-gray-200 hover:text-khaki-800 dark:hover:text-khaki-400 py-3 px-2",
+                        openDropdown === item.name && "bg-stone-100 dark:bg-gray-800"
                       )}
                       aria-expanded={isOpened}
                       aria-controls={`mobile-nav-section-${item.name}`}
@@ -78,7 +78,7 @@ const MobileNav = ({
                   ) : (
                     <Link
                       to={item.path}
-                      className="block text-base font-medium text-stone-800 hover:text-khaki-800 py-3 px-2"
+                      className="block text-base font-medium text-stone-800 dark:text-gray-200 hover:text-khaki-800 dark:hover:text-khaki-400 py-3 px-2"
                     >
                       {item.name}
                     </Link>
@@ -88,15 +88,15 @@ const MobileNav = ({
                     sauf si openDropdown est défini et ce n'est pas le bon item */}
                 {item.subLinks && isOpened && (
                   <li
-                    className="pl-3 mb-3 bg-gray-50 rounded-md"
+                    className="pl-3 mb-3 bg-gray-50 dark:bg-gray-800 rounded-md"
                     id={`mobile-nav-section-${item.name}`}
                   >
-                    <ul className="space-y-1 border-l border-stone-200 pl-3 py-3">
+                    <ul className="space-y-1 border-l border-stone-200 dark:border-gray-700 pl-3 py-3">
                       {item.subLinks.map(subLink => (
                         <li key={subLink.name}>
                           <Link
                             to={subLink.path}
-                            className="block py-2 px-3 text-sm text-stone-600 hover:text-khaki-800 hover:bg-gray-100 rounded-md"
+                            className="block py-2 px-3 text-sm text-stone-600 dark:text-gray-300 hover:text-khaki-800 dark:hover:text-khaki-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
                           >
                             {subLink.name}
                           </Link>
@@ -110,14 +110,14 @@ const MobileNav = ({
           })}
         </ul>
 
-        <div className="mt-auto space-y-4 pt-4 border-t border-gray-200">
+        <div className="mt-auto space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className="flex flex-col space-y-2">
-            <a href="tel:+33783762156" className="flex items-center py-2 text-stone-700">
-              <Phone className="h-4 w-4 mr-2 text-khaki-600" />
+            <a href="tel:+33783762156" className="flex items-center py-2 text-stone-700 dark:text-gray-300">
+              <Phone className="h-4 w-4 mr-2 text-khaki-600 dark:text-khaki-400" />
               <span className="text-sm">+33 7 83 76 21 56</span>
             </a>
-            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-2 text-stone-700">
-              <Mail className="h-4 w-4 mr-2 text-khaki-600" />
+            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-2 text-stone-700 dark:text-gray-300">
+              <Mail className="h-4 w-4 mr-2 text-khaki-600 dark:text-khaki-400" />
               <span className="text-sm">progineer.moe@gmail.com</span>
             </a>
           </div>

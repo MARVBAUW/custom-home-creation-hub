@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -57,8 +58,13 @@ const SignUpForm = () => {
       setFormError('Le mot de passe est requis');
       return;
     }
+    
+    if (password !== confirmPassword) {
+      setFormError('Les mots de passe ne correspondent pas');
+      return;
+    }
 
-    if (captchaVerified) {
+    if (!captchaVerified) {
       setFormError('Veuillez compléter la vérification de sécurité');
       return;
     }

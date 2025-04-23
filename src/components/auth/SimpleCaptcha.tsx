@@ -22,6 +22,7 @@ const SimpleCaptcha: React.FC<SimpleCaptchaProps> = ({ onVerify }) => {
     setNum2(Math.floor(Math.random() * 10));
     setUserAnswer('');
     setError(false);
+    onVerify(false); // Reset verification state when generating a new problem
   };
 
   const handleAnswerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +33,8 @@ const SimpleCaptcha: React.FC<SimpleCaptchaProps> = ({ onVerify }) => {
       const isCorrect = parseInt(value) === (num1 + num2);
       setError(!isCorrect);
       onVerify(isCorrect);
+    } else {
+      onVerify(false); // If input is cleared, reset verification
     }
   };
 
