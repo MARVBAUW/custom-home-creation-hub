@@ -1,4 +1,6 @@
 import React from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useHcaptcha } from '@/hooks/useHcaptcha';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -50,7 +52,19 @@ const PartnerContactForm = () => {
       acceptTerms: false
     }
   });
-  const onSubmit = (data: FormValues) => {
+  const { verifyToken, isVerifying, error: captchaError } = useHcaptcha();
+  const [captchaVerified, setCaptchaVerified] = React.useState(false);
+
+  const onSubmit = async (data: FormValues) => {
+    if (!captchaVerified) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez compléter le captcha",
+        variant: "destructive"
+      });
+      return;
+    }
+
     console.log(data);
     // Here you would typically send the data to your backend
 
@@ -60,7 +74,14 @@ const PartnerContactForm = () => {
     });
     form.reset();
   };
-  return <div id="partner-form" className="scroll-mt-24">
+
+  const handleCaptchaVerify = async (token: string) => {
+    const isValid = await verifyToken(token);
+    setCaptchaVerified(isValid);
+  };
+
+  return (
+    <div id="partner-form" className="scroll-mt-24">
       <h3 className="text-2xl font-semibold mb-6">Devenir partenaire Progineer</h3>
       
       <Form {...form}>
@@ -166,11 +187,23 @@ const PartnerContactForm = () => {
                 </div>
               </FormItem>} />
           
+          <div className="mb-4">
+            <HCaptcha
+              sitekey="10000000-ffff-ffff-ffff-000000000001"
+              onVerify={handleCaptchaVerify}
+            />
+            {captchaError && (
+              <p className="mt-1 text-sm text-red-600">{captchaError}</p>
+            )}
+          </div>
+          
           <Button type="submit" className="w-full bg-[#787346]">
             Envoyer ma candidature
           </Button>
         </form>
       </Form>
-    </div>;
+    </div>
+  );
 };
+
 export default PartnerContactForm;

@@ -1,6 +1,7 @@
-
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useHcaptcha } from '@/hooks/useHcaptcha';
 import Button from '../common/Button';
 import { Mail, Phone, AlertCircle, Check } from 'lucide-react';
 
@@ -19,8 +20,15 @@ const ContactForm = () => {
   const [error, setError] = useState<string | null>(null);
   
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
-  
+  const { verifyToken, isVerifying, error: captchaError } = useHcaptcha();
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+
   const onSubmit = async (data: FormData) => {
+    if (!captchaVerified) {
+      setError('Veuillez compléter le captcha');
+      return;
+    }
+
     setIsSubmitting(true);
     setError(null);
     
@@ -46,6 +54,11 @@ const ContactForm = () => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCaptchaVerify = async (token: string) => {
+    const isValid = await verifyToken(token);
+    setCaptchaVerified(isValid);
   };
   
   return (
@@ -213,6 +226,19 @@ const ContactForm = () => {
           )}
         </div>
         
+        {/* Add hCaptcha before submit button */}
+        <div className="mb-6">
+          <HCaptcha
+            sitekey="10000000-ffff-ffff-ffff-000000000001"
+            onVerify={handleCaptchaVerify}
+          />
+          {(error === 'Veuillez compléter le captcha' || captchaError) && (
+            <p className="mt-1 text-sm text-red-600">
+              {error || captchaError}
+            </p>
+          )}
+        </div>
+
         {/* Submit Button */}
         <div>
           <Button
