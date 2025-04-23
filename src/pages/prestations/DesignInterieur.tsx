@@ -7,6 +7,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import DesignInterieurHero from '@/components/prestations/design-interieur/DesignInterieurHero';
 import DesignInterieurSidebar from '@/components/prestations/design-interieur/DesignInterieurSidebar';
 import DesignInterieurContent from '@/components/prestations/design-interieur/DesignInterieurContent';
+import DesignInterieurSEOContent from '@/components/prestations/design-interieur/DesignInterieurSEOContent';
 
 interface DesignInterieurProps {
   forcedSeoParams?: {
@@ -41,6 +42,7 @@ const DesignInterieur: React.FC<DesignInterieurProps> = ({ forcedSeoParams }) =>
             </div>
             <div className="lg:col-span-3">
               <DesignInterieurContent city={forcedSeoParams?.city} />
+              <DesignInterieurSEOContent />
             </div>
           </div>
         </Container>

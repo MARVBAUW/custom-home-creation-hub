@@ -7,6 +7,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import ExtensionHero from '@/components/prestations/extension/ExtensionHero';
 import ExtensionSidebar from '@/components/prestations/extension/ExtensionSidebar';
 import ExtensionContent from '@/components/prestations/extension/ExtensionContent';
+import ExtensionSEOContent from '@/components/prestations/extension/ExtensionSEOContent';
 
 interface ExtensionProps {
   forcedSeoParams?: {
@@ -42,6 +43,7 @@ const Extension: React.FC<ExtensionProps> = ({ forcedSeoParams }) => {
             </div>
             <div className="lg:col-span-3">
               <ExtensionContent city={forcedSeoParams?.city} />
+              <ExtensionSEOContent />
             </div>
           </div>
         </Container>

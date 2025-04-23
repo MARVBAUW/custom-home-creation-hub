@@ -7,6 +7,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import OptimisationEspaceHero from '@/components/prestations/optimisation-espace/OptimisationEspaceHero';
 import OptimisationEspaceSidebar from '@/components/prestations/optimisation-espace/OptimisationEspaceSidebar';
 import OptimisationEspaceContent from '@/components/prestations/optimisation-espace/OptimisationEspaceContent';
+import OptimisationEspaceSEOContent from '@/components/prestations/optimisation-espace/OptimisationEspaceSEOContent';
 
 interface OptimisationEspaceProps {
   forcedSeoParams?: {
@@ -41,6 +42,7 @@ const OptimisationEspace: React.FC<OptimisationEspaceProps> = ({ forcedSeoParams
             </div>
             <div className="lg:col-span-3">
               <OptimisationEspaceContent city={forcedSeoParams?.city} />
+              <OptimisationEspaceSEOContent />
             </div>
           </div>
         </Container>

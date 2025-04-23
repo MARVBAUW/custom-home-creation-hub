@@ -7,6 +7,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import ConstructionNeuveHero from '@/components/prestations/construction-neuve/ConstructionNeuveHero';
 import ConstructionNeuveSidebar from '@/components/prestations/construction-neuve/ConstructionNeuveSidebar';
 import ConstructionNeuveContent from '@/components/prestations/construction-neuve/ConstructionNeuveContent';
+import ConstructionNeuveSEOContent from '@/components/prestations/construction-neuve/ConstructionNeuveSEOContent';
 
 interface ConstructionNeuveProps {
   forcedSeoParams?: {
@@ -41,6 +42,7 @@ const ConstructionNeuve: React.FC<ConstructionNeuveProps> = ({ forcedSeoParams }
             </div>
             <div className="lg:col-span-3">
               <ConstructionNeuveContent city={forcedSeoParams?.city} />
+              <ConstructionNeuveSEOContent />
             </div>
           </div>
         </Container>
