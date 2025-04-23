@@ -8,7 +8,7 @@ const SitemapXML: React.FC = () => {
   const currentPath = location.pathname;
   const [xmlContent, setXmlContent] = useState<string | null>(null);
   
-  // Gestion de la redirection pour l'URL avec slash final
+  // Redirection simple pour l'URL avec slash final
   if (currentPath === '/sitemap.xml/') {
     return <Navigate to="/sitemap.xml" replace />;
   }
@@ -55,138 +55,139 @@ const SitemapXML: React.FC = () => {
       metaContentType.httpEquiv = 'Content-Type';
       metaContentType.content = 'application/xml; charset=utf-8';
       document.head.appendChild(metaContentType);
-      
-      // Ajouter un lien pour télécharger le sitemap
-      const downloadLink = document.createElement('link');
-      downloadLink.rel = 'alternate';
-      downloadLink.type = 'application/xml';
-      downloadLink.href = `${baseUrl}/sitemap.xml`;
-      document.head.appendChild(downloadLink);
     }
     
     // Nettoyage lors du démontage du composant
     return () => {
       const metaTag = document.querySelector('meta[http-equiv="Content-Type"]');
       if (metaTag) metaTag.remove();
-      
-      const downloadLink = document.querySelector('link[rel="alternate"][type="application/xml"]');
-      if (downloadLink) downloadLink.remove();
     };
   }, [currentPath]);
 
-  // Style pour l'apparence de l'éditeur de code
-  const codeEditorStyle = {
-    fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-    fontSize: '14px',
-    lineHeight: '1.5',
-    background: '#1e1e1e',
-    color: '#d4d4d4',
-    padding: '20px',
-    borderRadius: '4px',
-    overflow: 'auto',
-    margin: '20px',
+  // Style pour l'affichage du XML
+  const codeStyle = {
+    fontFamily: 'monospace',
     whiteSpace: 'pre' as 'pre',
-  };
-
-  // Styles pour la coloration syntaxique
-  const xmlStyles = {
-    tag: { color: '#569cd6' },         // Bleu pour les balises
-    attribute: { color: '#9cdcfe' },    // Bleu clair pour les attributs
-    value: { color: '#ce9178' },        // Orange pour les valeurs
-    content: { color: '#d4d4d4' },      // Blanc pour le contenu
-    declaration: { color: '#808080' }    // Gris pour la déclaration XML
+    background: '#f5f5f5',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    padding: '15px',
+    margin: '20px',
+    overflowX: 'auto' as 'auto',
+    maxWidth: '100%',
+    color: '#333'
   };
 
   // Fonction simplifiée pour la coloration syntaxique
-  const formatXmlWithSyntaxHighlighting = (xml: string): JSX.Element[] => {
-    if (!xml) return [];
-    
-    const lines = xml.split('\n');
-    return lines.map((line, index) => {
-      // Coloration syntaxique avec des regexes plus simples
-      let formattedLine = line;
-      
-      // Colorer la déclaration XML
-      formattedLine = formattedLine.replace(
-        /(&lt;\?.*?\?&gt;|<\?.*?\?>)/g, 
-        `<span style="color: ${xmlStyles.declaration.color}">$1</span>`
-      );
-      
-      // Colorer les balises
-      formattedLine = formattedLine.replace(
-        /(&lt;\/.*?&gt;|&lt;.*?&gt;|<\/.*?>|<.*?>)/g,
-        match => `<span style="color: ${xmlStyles.tag.color}">${match}</span>`
-      );
-      
-      // Colorer les attributs (noms seulement)
-      formattedLine = formattedLine.replace(
-        /\s([a-zA-Z:]+)=/g,
-        ` <span style="color: ${xmlStyles.attribute.color}">$1</span>=`
-      );
-      
-      // Colorer les valeurs des attributs
-      formattedLine = formattedLine.replace(
-        /(=["'].*?["'])/g,
-        `<span style="color: ${xmlStyles.value.color}">$1</span>`
-      );
+  const formatXML = (xml: string): JSX.Element => {
+    // Échapper les caractères spéciaux pour un affichage HTML sécurisé
+    const escapeHTML = (str: string) => {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    };
 
-      return (
-        <div 
-          key={index} 
-          dangerouslySetInnerHTML={{ __html: formattedLine }}
-          style={{ padding: '0 4px' }}
-        />
-      );
-    });
+    // Transformer le XML en HTML colorisé
+    const colorized = escapeHTML(xml)
+      .replace(/&lt;\?.*?\?&gt;/g, '<span style="color:#999">&lt;?$&?&gt;</span>')
+      .replace(/&lt;(\/?[a-zA-Z0-9:]+)(\s|&gt;)/g, '&lt;<span style="color:#0066cc">$1</span>$2')
+      .replace(/=&quot;.*?&quot;/g, (match) => {
+        return '=<span style="color:#cc6600">' + match.substring(1) + '</span>';
+      });
+
+    return <div dangerouslySetInnerHTML={{ __html: colorized }} />;
   };
 
-  // Rendu conditionnel basé sur le contenu XML et le chemin actuel
-  if (xmlContent && currentPath === '/sitemap.xml') {
-    return (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
-        <h1 style={{ marginBottom: '20px', color: '#333' }}>Sitemap XML</h1>
-        <div className="xml-actions" style={{ marginBottom: '20px' }}>
-          <a 
-            href="/sitemap.xml" 
-            download="sitemap.xml" 
-            className="bg-progineer-gold text-white px-4 py-2 rounded hover:bg-progineer-gold/80 transition-colors inline-block mr-4"
-          >
-            Télécharger le sitemap XML
-          </a>
-          <a 
-            href="https://search.google.com/search-console" 
-            target="_blank"
-            rel="noopener noreferrer" 
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors inline-block"
-          >
-            Soumettre à Google Search Console
-          </a>
+  // Condition de rendu sécurisée avec fallback
+  if (currentPath === '/sitemap.xml') {
+    if (xmlContent) {
+      return (
+        <>
+          {/* Ce div ne sera pas rendu car nous utilisons le type text/xml */}
+          <div style={{ display: 'none' }}>
+            <pre id="sitemap-xml-content">{xmlContent}</pre>
+          </div>
+          
+          {/* Affichage visuel pour les navigateurs */}
+          <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+            <h1>Sitemap XML</h1>
+            <div style={{ marginBottom: '20px' }}>
+              <a 
+                href="data:application/xml;charset=utf-8,{encodeURIComponent(xmlContent)}" 
+                download="sitemap.xml"
+                style={{
+                  background: '#4caf50',
+                  color: 'white',
+                  padding: '10px 15px',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  display: 'inline-block',
+                  marginRight: '15px'
+                }}
+              >
+                Télécharger le sitemap XML
+              </a>
+              <a 
+                href="https://search.google.com/search-console" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#2196f3',
+                  color: 'white',
+                  padding: '10px 15px',
+                  borderRadius: '4px',
+                  textDecoration: 'none',
+                  display: 'inline-block'
+                }}
+              >
+                Soumettre à Google Search Console
+              </a>
+            </div>
+            <div style={codeStyle}>
+              {formatXML(xmlContent)}
+            </div>
+            <div style={{ marginTop: '20px', fontSize: '0.9em', color: '#666' }}>
+              <p>Ce sitemap XML liste toutes les pages du site et est conforme au <a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="noopener noreferrer" style={{ color: '#2196f3' }}>protocole sitemap standard</a>.</p>
+            </div>
+          </div>
+          
+          {/* Script pour corriger le Content-Type */}
+          <script dangerouslySetInnerHTML={{
+            __html: `
+              // Vérifie si nous sommes sur la route /sitemap.xml exactement
+              if (window.location.pathname === '/sitemap.xml') {
+                // Obtenir le contenu XML
+                const xmlContent = document.getElementById('sitemap-xml-content')?.textContent;
+                if (xmlContent) {
+                  // Crée un Blob avec le contenu XML
+                  const blob = new Blob([xmlContent], { type: 'text/xml' });
+                  const url = URL.createObjectURL(blob);
+                  
+                  // Si navigateur prend en charge l'API Document.write, remplacer le contenu
+                  if (document.contentType) {
+                    document.write('<?xml version="1.0" encoding="UTF-8"?>' + xmlContent);
+                    document.close();
+                  }
+                }
+              }
+            `
+          }} />
+        </>
+      );
+    } else {
+      // Afficher un état de chargement pendant la génération du XML
+      return (
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Génération du sitemap XML en cours...</p>
         </div>
-        <pre style={codeEditorStyle}>
-          {formatXmlWithSyntaxHighlighting(xmlContent)}
-        </pre>
-        <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
-          Ce sitemap est généré automatiquement à partir des routes de l'application et est conforme au 
-          <a href="https://www.sitemaps.org/protocol.html" target="_blank" rel="noopener noreferrer" style={{ color: '#569cd6', marginLeft: '4px' }}>
-            protocole sitemap standard
-          </a>.
-        </p>
-      </div>
-    );
+      );
+    }
   }
 
-  // Si nous sommes sur /sitemap.xml/ mais la redirection n'a pas fonctionné, 
-  // afficher un message d'erreur plutôt qu'une page blanche
-  if (currentPath === '/sitemap.xml/') {
-    return (
-      <div style={{ maxWidth: '600px', margin: '100px auto', textAlign: 'center' }}>
-        <h1>Redirection en cours...</h1>
-        <p>Si vous n'êtes pas automatiquement redirigé vers le sitemap, <a href="/sitemap.xml">cliquez ici</a>.</p>
-      </div>
-    );
-  }
-
-  // Pour tout autre chemin où ce composant pourrait être rendu
+  // Pour tout autre chemin que /sitemap.xml (et sans /sitemap.xml/ qui est redirigé)
   return null;
 };
 
