@@ -189,7 +189,7 @@ const PartnerContactForm = () => {
           
           <div className="mb-4">
             <HCaptcha
-              sitekey="10000000-ffff-ffff-ffff-000000000001"
+              sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
               onVerify={handleCaptchaVerify}
             />
             {captchaError && (
