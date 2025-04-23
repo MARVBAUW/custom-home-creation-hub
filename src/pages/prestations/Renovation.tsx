@@ -12,9 +12,9 @@ const Renovation = () => {
   return (
     <>
       <SEO 
-        title="Rénovation de maisons et appartements | Maître d'œuvre PACA - Progineer"
-        description="Découvrez notre service de rénovation complète à Marseille et en PACA. Transformation de votre habitat par des experts en architecture et maîtrise d'œuvre."
-        keywords="rénovation maison, rénovation appartement, maître d'œuvre PACA, rénovation Marseille, architecte rénovation"
+        title="Rénovation complète de maisons et appartements en PACA | Progineer"
+        description="Experts en rénovation à Marseille et en PACA. Transformez votre habitat avec Progineer, maître d'œuvre spécialisé en rénovation complète de maisons et appartements."
+        keywords="rénovation maison, rénovation appartement, transformation habitat, maître d'œuvre PACA, rénovation complète"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/renovation"
       />
 
@@ -36,6 +36,13 @@ const Renovation = () => {
 
       <SEOFooter 
         text="Rénovation de maisons et d'appartements en PACA par Progineer, maître d'œuvre spécialisé en transformation d'habitat. Nos experts vous accompagnent dans tous vos projets de rénovation à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour améliorer votre confort et valoriser votre patrimoine."
+        additionalKeywords={[
+          "rénovation énergétique PACA", 
+          "modernisation habitat Marseille", 
+          "transformation intérieure maison", 
+          "rénovation appartement ancien", 
+          "réhabilitation logement méditerranée"
+        ]}
       />
     </>
   );

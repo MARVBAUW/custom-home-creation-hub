@@ -12,9 +12,9 @@ const OptimisationEspace = () => {
   return (
     <>
       <SEO 
-        title="Optimisation d'espace | Maître d'œuvre PACA - Progineer"
-        description="Optimisez votre surface habitable ou professionnelle à Marseille ou PACA avec nos solutions innovantes d'optimisation d'espace."
-        keywords="optimisation d'espace, aménagement intérieur, maître d'œuvre marseille"
+        title="Optimisation d'espace et aménagement intérieur en PACA | Progineer"
+        description="Maximisez votre surface habitable grâce à nos solutions d'optimisation d'espace à Marseille et en PACA. Progineer, maître d'œuvre spécialiste de l'aménagement intelligent."
+        keywords="optimisation d'espace, aménagement intérieur, gain de place, maître d'œuvre PACA, petit espace"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/optimisation-espace"
       />
 
@@ -36,6 +36,13 @@ const OptimisationEspace = () => {
 
       <SEOFooter 
         text="Optimisation d'espace à Marseille et en PACA par Progineer, maître d'œuvre spécialisé en aménagement intérieur. Nos experts vous accompagnent dans tous vos projets d'optimisation d'espace à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour maximiser le potentiel de vos surfaces."
+        additionalKeywords={[
+          "gain de place habitat", 
+          "aménagement optimal PACA", 
+          "solutions petits espaces", 
+          "agencement intelligent Marseille", 
+          "optimisation surface habitable"
+        ]}
       />
     </>
   );

@@ -12,9 +12,9 @@ const DesignInterieur = () => {
   return (
     <>
       <SEO 
-        title="Design d'intérieur | Maître d'œuvre PACA - Progineer"
-        description="Design d'intérieur et d'espace sur-mesure, par un maître d'œuvre à Marseille et en région PACA."
-        keywords="design d'intérieur, design d'espace, aménagement intérieur, maître d'œuvre marseille"
+        title="Design d'intérieur et aménagement d'espace en PACA | Progineer"
+        description="Expert en design d'intérieur à Marseille et en PACA. Créez des espaces harmonieux et fonctionnels avec Progineer, spécialiste de l'aménagement intérieur sur-mesure."
+        keywords="design d'intérieur, aménagement d'espace, décoration intérieure, maître d'œuvre PACA, intérieur sur-mesure"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/design-interieur"
       />
 
@@ -36,6 +36,13 @@ const DesignInterieur = () => {
 
       <SEOFooter 
         text="Design d'intérieur à Marseille et en PACA par Progineer, maître d'œuvre spécialisé en conception d'espaces. Nos experts vous accompagnent dans tous vos projets de design intérieur à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour créer des espaces qui vous ressemblent."
+        additionalKeywords={[
+          "aménagement intérieur PACA", 
+          "design d'espace Marseille", 
+          "décoration intérieure professionnelle", 
+          "optimisation espace habitable", 
+          "conception intérieure méditerranéenne"
+        ]}
       />
     </>
   );

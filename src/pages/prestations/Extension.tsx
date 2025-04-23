@@ -12,9 +12,9 @@ const Extension = () => {
   return (
     <>
       <SEO 
-        title="Extension de maison | Maître d'œuvre PACA - Progineer"
-        description="Agrandissez votre maison avec une extension sur-mesure réalisée par un maître d'œuvre à Marseille et en région PACA."
-        keywords="extension maison, agrandissement, maître d'œuvre marseille, extension PACA"
+        title="Extension de maison sur mesure en PACA | Maître d'œuvre Progineer"
+        description="Spécialiste en extension de maison à Marseille et en PACA. Agrandissez votre espace habitable avec une extension sur-mesure réalisée par Progineer, votre maître d'œuvre expert."
+        keywords="extension maison, agrandissement maison, extension sur-mesure, maître d'œuvre PACA, extension Marseille"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/extension"
       />
 
@@ -36,6 +36,13 @@ const Extension = () => {
 
       <SEOFooter 
         text="Extension et agrandissement de maisons en PACA par Progineer, maître d'œuvre spécialisé dans les projets d'extension. Nos experts vous accompagnent dans tous vos projets d'agrandissement à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour optimiser et valoriser votre habitat."
+        additionalKeywords={[
+          "extension maison contemporaine", 
+          "agrandissement villa PACA", 
+          "surélévation maison Marseille", 
+          "véranda sur mesure", 
+          "extension bois méditerranée"
+        ]}
       />
     </>
   );
