@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
@@ -46,8 +45,19 @@ const services = [
 
 const Services = () => {
   return (
-    <section className="py-24 bg-stone-50">
-      <Container>
+    <section className="py-24 relative">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-stone-50/95"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ 
+            backgroundImage: `url('/lovable-uploads/f6c3eeaa-f404-4b27-b287-d8aeff95c06a.png')`,
+          }}
+        ></div>
+      </div>
+
+      <Container className="relative z-10">
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <div className="inline-block px-3 py-1 mb-4 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
             Nos prestations
