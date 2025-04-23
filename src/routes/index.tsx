@@ -8,6 +8,10 @@ import Footer from '../components/layout/Footer';
 import Navbar from '../components/layout/Navbar';
 import { Outlet } from 'react-router-dom';
 
+// Lazily loaded components for authentication routes
+const SignIn = React.lazy(() => import('../pages/client/SignIn'));
+const SignUp = React.lazy(() => import('../pages/client/SignUp'));
+
 // Layout component for standard pages with navbar and footer
 const MainLayout = () => (
   <>
@@ -28,19 +32,19 @@ export const routes = [
       ...workspaceRoutes,
       {
         path: "/workspace/sign-in",
-        element: <React.lazy(() => import('../pages/client/SignIn')) />
+        element: <SignIn />
       },
       {
         path: "/workspace/sign-up",
-        element: <React.lazy(() => import('../pages/client/SignUp')) />
+        element: <SignUp />
       },
       {
         path: "/sign-in",
-        element: <React.lazy(() => import('../pages/client/SignIn')) />
+        element: <SignIn />
       },
       {
         path: "/sign-up", 
-        element: <React.lazy(() => import('../pages/client/SignUp')) />
+        element: <SignUp />
       },
     ],
   },
