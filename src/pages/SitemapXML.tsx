@@ -153,30 +153,16 @@ const SitemapXML: React.FC = () => {
                 <li><Link to="/privacy-policy" className="text-progineer-gold hover:underline">Politique de confidentialité</Link></li>
                 <li><Link to="/cgu" className="text-progineer-gold hover:underline">CGU</Link></li>
                 <li><Link to="/cgv" className="text-progineer-gold hover:underline">CGV</Link></li>
-                <li><Link to="/sitemap" className="text-progineer-gold hover:underline">Plan du site HTML</Link></li>
-                <li><Link to="/" className="text-progineer-gold hover:underline">Retour à l'accueil</Link></li>
               </ul>
             </div>
           </div>
           
-          <div className="bg-stone-100 p-6 rounded-lg mb-8">
-            <h2 className="text-xl font-semibold mb-4">Fichier XML du plan du site</h2>
-            <p className="mb-4">Pour une utilisation avec les moteurs de recherche, accédez à notre fichier XML via l'URL suivante :</p>
-            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="inline-block bg-progineer-gold text-white px-4 py-2 rounded hover:bg-progineer-gold/90 transition-colors">
-              Voir le sitemap.xml
-            </a>
-          </div>
-
-          <pre className="font-mono text-xs p-4 bg-gray-800 text-gray-200 rounded-lg overflow-auto max-h-96">
-            {xmlContent}
-          </pre>
-          
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-8 flex justify-between items-center">
             <Link to="/" className="text-progineer-gold hover:underline flex items-center">
               ← Retour à la page d'accueil
             </Link>
-            <Link to="/sitemap" className="text-progineer-gold hover:underline flex items-center">
-              Voir le plan du site HTML
+            <Link to="/contact" className="text-progineer-gold hover:underline flex items-center">
+              Nous contacter →
             </Link>
           </div>
         </div>
