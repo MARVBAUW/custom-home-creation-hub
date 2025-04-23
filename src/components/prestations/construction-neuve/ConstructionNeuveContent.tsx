@@ -35,6 +35,15 @@ const ConstructionNeuveContent: React.FC<ConstructionNeuveContentProps> = ({ cit
         </p>
       </div>
 
+      <div className="mb-12">
+        <img 
+          src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2070&auto=format&fit=crop" 
+          alt="Construction d'une maison moderne par Progineer en PACA"
+          className="w-full h-auto rounded-xl mb-4"
+        />
+        <p className="text-sm text-gray-500 text-center">Villa contemporaine réalisée par notre équipe à Marseille</p>
+      </div>
+
       <div>
         <h2 className="text-2xl font-semibold mb-4">
           {cityName ? `Pourquoi choisir Progineer pour construire à ${cityName} ?` : 'Notre approche de la construction neuve'}
