@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useHcaptcha } from '@/hooks/useHcaptcha';
@@ -253,7 +254,7 @@ const PartnerContactForm = () => {
                   onLoad={() => {
                     console.log("hCaptcha chargé avec succès");
                   }}
-                  hl="fr"
+                  languageOverride="fr"
                 />
                 <p className="text-xs text-gray-500 mt-2">Cette vérification est nécessaire pour éviter les soumissions automatisées.</p>
               </div>

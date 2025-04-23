@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, UserPlus, LogIn, Google } from 'lucide-react';
+import { Loader2, UserPlus, LogIn, Github } from 'lucide-react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
@@ -185,7 +185,7 @@ const SignIn = () => {
                     <HCaptcha
                       sitekey="10000000-ffff-ffff-ffff-000000000001"
                       onVerify={(token) => setCaptchaToken(token)}
-                      hl="fr"
+                      languageOverride="fr"
                     />
                   </div>
 
@@ -226,7 +226,7 @@ const SignIn = () => {
                   onClick={handleGoogleSignIn}
                   disabled={loading}
                 >
-                  <Google className="mr-2 h-5 w-5" />
+                  <Github className="mr-2 h-5 w-5" />
                   Continuer avec Google
                 </Button>
 
