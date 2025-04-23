@@ -9,7 +9,7 @@ const RenovationHero = () => {
       <Container size="md">
         <div className="text-center">
           <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
-            Nos prestations
+            Rénovation
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold mb-6">
             Rénovation complète à Marseille et PACA

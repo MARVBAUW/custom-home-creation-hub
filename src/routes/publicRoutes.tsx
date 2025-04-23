@@ -4,6 +4,11 @@ import Index from '../pages/Index';
 import Contact from '../pages/Contact';
 import About from '../pages/About';
 import Prestations from '../pages/Prestations';
+import ConstructionNeuve from '../pages/prestations/ConstructionNeuve';
+import Renovation from '../pages/prestations/Renovation';
+import Extension from '../pages/prestations/Extension';
+import OptimisationEspace from '../pages/prestations/OptimisationEspace';
+import DesignInterieur from '../pages/prestations/DesignInterieur';
 import Realisations from '../pages/Realisations';
 import Equipe from '../pages/Equipe';
 import Estimation from '../pages/Estimation';
@@ -36,8 +41,24 @@ export const publicRoutes = [
     element: <Prestations />,
   },
   {
-    path: "/prestations-maitre-oeuvre/:prestation",
-    element: <Prestations />,
+    path: "/prestations-maitre-oeuvre/construction-neuve",
+    element: <ConstructionNeuve />,
+  },
+  {
+    path: "/prestations-maitre-oeuvre/renovation",
+    element: <Renovation />,
+  },
+  {
+    path: "/prestations-maitre-oeuvre/extension",
+    element: <Extension />,
+  },
+  {
+    path: "/prestations-maitre-oeuvre/optimisation-espace",
+    element: <OptimisationEspace />,
+  },
+  {
+    path: "/prestations-maitre-oeuvre/design-interieur",
+    element: <DesignInterieur />,
   },
   {
     path: "/realisations-architecte-maison",
