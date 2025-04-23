@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { publicRoutes } from '../routes/publicRoutes';
@@ -66,17 +65,20 @@ const SitemapXML: React.FC = () => {
       
       content += '</urlset>';
       
-      // Create a Blob with the XML content and the correct content type
-      const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
-      
-      // IMPORTANT: Set the document Content-Type using document.contentType
-      // This is a more direct approach than using meta tags
-      document.contentType = 'application/xml';
-      
-      // Complete replacement of the document with XML content
-      document.open('application/xml');
-      document.write(content);
-      document.close();
+      // Attempt to set content type headers
+      if (typeof window !== 'undefined') {
+        // For client-side rendering
+        const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
+        const xmlUrl = URL.createObjectURL(blob);
+        
+        // Programmatically change document type
+        window.document.contentType = 'application/xml';
+        
+        // Open document with XML mime type
+        window.document.open('application/xml');
+        window.document.write(content);
+        window.document.close();
+      }
     }
   }, [currentPath]);
 
