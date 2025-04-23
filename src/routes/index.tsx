@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { publicRoutes } from './publicRoutes';
 import { adminRoutes } from './adminRoutes';
 import { clientRoutes } from './clientRoutes';
@@ -11,6 +11,14 @@ import { Outlet } from 'react-router-dom';
 // Lazily loaded components for authentication routes
 const SignIn = React.lazy(() => import('../pages/client/SignIn'));
 const SignUp = React.lazy(() => import('../pages/client/SignUp'));
+
+// Loading fallback for lazy-loaded components
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+    <span className="ml-3 text-lg text-gray-700">Chargement...</span>
+  </div>
+);
 
 // Layout component for standard pages with navbar and footer
 const MainLayout = () => (
@@ -32,19 +40,19 @@ export const routes = [
       ...workspaceRoutes,
       {
         path: "/workspace/sign-in",
-        element: <SignIn />
+        element: <Suspense fallback={<LoadingFallback />}><SignIn /></Suspense>
       },
       {
         path: "/workspace/sign-up",
-        element: <SignUp />
+        element: <Suspense fallback={<LoadingFallback />}><SignUp /></Suspense>
       },
       {
         path: "/sign-in",
-        element: <SignIn />
+        element: <Suspense fallback={<LoadingFallback />}><SignIn /></Suspense>
       },
       {
         path: "/sign-up", 
-        element: <SignUp />
+        element: <Suspense fallback={<LoadingFallback />}><SignUp /></Suspense>
       },
     ],
   },

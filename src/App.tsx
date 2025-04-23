@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from "./components/theme/ThemeProvider";
@@ -11,6 +11,14 @@ import { routes } from './routes';
 
 const queryClient = new QueryClient();
 
+// Loading fallback for suspense
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-khaki-600"></div>
+    <span className="ml-3 text-lg text-gray-700">Chargement de l'application...</span>
+  </div>
+);
+
 const App = () => {
   const routeElements = useRoutes(routes);
 
@@ -20,7 +28,9 @@ const App = () => {
         <HelmetProvider>
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
-            {routeElements}
+            <Suspense fallback={<LoadingFallback />}>
+              {routeElements}
+            </Suspense>
             <Toaster />
           </AuthProvider>
         </HelmetProvider>
