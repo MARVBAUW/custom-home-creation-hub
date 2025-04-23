@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -30,8 +31,15 @@ export const keywordMap: Record<string, string> = {
   // Ajouts pour maillage interne spécifique
   "montage administratif": "/prestations-maitre-oeuvre/montage-administratif",
   "petit collectif résidentiel": "/prestations-maitre-oeuvre/petit-collectif",
+  "petit collectif": "/prestations-maitre-oeuvre/petit-collectif",
   "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation",
+  "réhabilitation bâtiment": "/prestations-maitre-oeuvre/rehabilitation",
   "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique",
+  "maison écologique": "/prestations-maitre-oeuvre/construction-ecologique",
+  "construction bois": "/prestations-maitre-oeuvre/construction-ecologique",
+  "ossature bois": "/prestations-maitre-oeuvre/construction-ecologique",
+  "permis de construire": "/prestations-maitre-oeuvre/montage-administratif",
+  "déclaration préalable": "/prestations-maitre-oeuvre/montage-administratif",
 
   // Villes PACA
   "marseille": "/",

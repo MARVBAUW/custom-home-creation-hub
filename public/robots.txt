@@ -12,6 +12,7 @@ Allow: /estimation
 Allow: /contact
 Allow: /prestations-maitre-oeuvre
 Allow: /realisations-architecte-maison
+Allow: /realisations-architecturales
 Allow: /parrainage
 Allow: /faq
 Allow: /a-propos
@@ -34,6 +35,10 @@ Allow: /prestations-maitre-oeuvre/construction-neuve
 Allow: /prestations-maitre-oeuvre/extension
 Allow: /prestations-maitre-oeuvre/design-interieur
 Allow: /prestations-maitre-oeuvre/optimisation-espace
+Allow: /prestations-maitre-oeuvre/montage-administratif
+Allow: /prestations-maitre-oeuvre/petit-collectif
+Allow: /prestations-maitre-oeuvre/rehabilitation
+Allow: /prestations-maitre-oeuvre/construction-ecologique
 Allow: /cgu
 Allow: /cgv
 Allow: /privacy-policy
