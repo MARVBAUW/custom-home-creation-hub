@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
@@ -20,11 +19,11 @@ const ExtensionContent: React.FC<ExtensionContentProps> = ({ city }) => {
 
       <div className="mb-12">
         <img 
-          src="https://images.unsplash.com/photo-1599619350689-c8c2a1a09d91?q=80&w=2070&auto=format&fit=crop" 
-          alt="Extension de maison réalisée par Progineer en PACA"
-          className="w-full h-auto rounded-xl mb-4"
+          src="/lovable-uploads/732fa99d-df25-4869-9ca9-b49ccf6f51a4.png" 
+          alt={`Extension de maison réalisée par Progineer${cityDisplay ? ` à ${cityDisplay}` : ''}`}
+          className="w-full h-auto rounded-xl mb-4 object-cover max-h-[600px]"
         />
-        <p className="text-sm text-gray-500 text-center">Extension contemporaine d'une villa à Marseille</p>
+        <p className="text-sm text-gray-500 text-center">Extension contemporaine{cityDisplay ? ` à ${cityDisplay}` : ''}</p>
       </div>
 
       <h3 className="text-2xl font-medium mb-4">Nos solutions d'extension</h3>
