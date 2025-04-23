@@ -7,14 +7,14 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, UserPlus, Google } from 'lucide-react';
+import { Loader2, UserPlus, LogIn } from 'lucide-react';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { signIn, signInWithGoogle, loading, error, user } = useAuth();
+  const { signIn, signUp, signInWithGoogle, loading, error, user } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
@@ -208,7 +208,7 @@ const SignIn = () => {
                   onClick={handleGoogleSignIn}
                   disabled={loading}
                 >
-                  <Google className="mr-2 h-5 w-5" />
+                  <LogIn className="mr-2 h-5 w-5" />
                   Continuer avec Google
                 </Button>
 

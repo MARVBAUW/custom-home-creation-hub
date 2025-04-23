@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, UserPlus, Google } from 'lucide-react';
+import { Loader2, UserPlus, LogIn } from 'lucide-react';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -271,7 +271,7 @@ const SignUp = () => {
                   onClick={handleGoogleSignUp}
                   disabled={loading}
                 >
-                  <Google className="mr-2 h-5 w-5" />
+                  <LogIn className="mr-2 h-5 w-5" />
                   S'inscrire avec Google
                 </Button>
 
