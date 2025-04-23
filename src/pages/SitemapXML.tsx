@@ -1,11 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { publicRoutes } from '../routes/publicRoutes';
 
 const SitemapXML: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [xmlContent, setXmlContent] = useState<string>('');
   
   // Redirection pour l'URL avec slash final
   if (currentPath === '/sitemap.xml/') {
@@ -18,12 +19,12 @@ const SitemapXML: React.FC = () => {
       const currentDate = new Date().toISOString().split('T')[0];
       const baseUrl = 'https://progineer.fr';
       
-      // Génération du contenu XML
-      let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n';
-      xmlContent += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ';
-      xmlContent += 'xmlns:xhtml="http://www.w3.org/1999/xhtml" ';
-      xmlContent += 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" ';
-      xmlContent += 'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n';
+      // Génération du contenu XML avec un espace de noms correct
+      let content = '<?xml version="1.0" encoding="UTF-8"?>\n';
+      content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ';
+      content += 'xmlns:xhtml="http://www.w3.org/1999/xhtml" ';
+      content += 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" ';
+      content += 'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n';
 
       // Ajouter chaque route avec une indentation appropriée
       publicRoutes
@@ -32,24 +33,27 @@ const SitemapXML: React.FC = () => {
           const path = route.path.replace(/\/$/, '');
           const fullUrl = `${baseUrl}${path}`;
           
-          xmlContent += '  <url>\n';
-          xmlContent += `    <loc>${fullUrl}</loc>\n`;
-          xmlContent += `    <lastmod>${currentDate}</lastmod>\n`;
-          xmlContent += '    <changefreq>monthly</changefreq>\n';
-          xmlContent += '    <priority>0.8</priority>\n';
+          content += '  <url>\n';
+          content += `    <loc>${fullUrl}</loc>\n`;
+          content += `    <lastmod>${currentDate}</lastmod>\n`;
+          content += '    <changefreq>monthly</changefreq>\n';
+          content += '    <priority>0.8</priority>\n';
           
           // Ajouter les balises hreflang et canonical
-          xmlContent += `    <xhtml:link rel="alternate" hreflang="fr" href="${fullUrl}"/>\n`;
-          xmlContent += `    <xhtml:link rel="canonical" href="${fullUrl}"/>\n`;
+          content += `    <xhtml:link rel="alternate" hreflang="fr" href="${fullUrl}"/>\n`;
+          content += `    <xhtml:link rel="canonical" href="${fullUrl}"/>\n`;
           
-          xmlContent += '  </url>\n';
+          content += '  </url>\n';
         });
       
-      xmlContent += '</urlset>';
+      content += '</urlset>';
       
-      // Remplacer complètement le contenu de la page par le XML
+      setXmlContent(content);
+
+      // Directement modifier le document pour servir correctement le XML
+      // Cela contourne les limitations de React pour servir du contenu XML
       document.open('text/xml');
-      document.write(xmlContent);
+      document.write(content);
       document.close();
       
       // Configurer le Content-Type directement sur le document
@@ -57,11 +61,14 @@ const SitemapXML: React.FC = () => {
       meta.httpEquiv = 'Content-Type';
       meta.content = 'text/xml; charset=utf-8';
       document.head.appendChild(meta);
+
+      // Définir le titre du document
+      document.title = 'Sitemap XML - Progineer';
     }
     
     // Nettoyage lors du démontage
     return () => {
-      if (document.contentType !== 'text/xml') {
+      if (currentPath === '/sitemap.xml') {
         const meta = document.querySelector('meta[http-equiv="Content-Type"]');
         if (meta) meta.remove();
       }
@@ -69,7 +76,6 @@ const SitemapXML: React.FC = () => {
   }, [currentPath]);
 
   // Pour l'affichage initial avant le remplacement du document
-  // Ce contenu ne sera visible que brièvement
   if (currentPath === '/sitemap.xml') {
     return (
       <div className="text-center py-10">
