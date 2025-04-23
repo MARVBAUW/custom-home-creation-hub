@@ -1,22 +1,23 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
-    <loc>https://progineer.fr</loc>
+    <loc>https://progineer.fr/</loc>
     <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr"/>
-    <xhtml:link rel="canonical" href="https://progineer.fr"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/"/>
+    <xhtml:link rel="canonical" href="https://progineer.fr/"/>
   </url>
   <url>
     <loc>https://progineer.fr/a-propos</loc>
     <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/a-propos"/>
     <xhtml:link rel="canonical" href="https://progineer.fr/a-propos"/>
   </url>
@@ -30,7 +31,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/realisations-architecte-maison</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/realisations-architecte-maison"/>
@@ -38,7 +39,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/equipe-maitrise-oeuvre</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/equipe-maitrise-oeuvre"/>
@@ -46,7 +47,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/estimation</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/estimation"/>
@@ -54,7 +55,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/contact</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/contact"/>
@@ -62,7 +63,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre/renovation</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre/renovation"/>
@@ -70,7 +71,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre/construction-neuve</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre/construction-neuve"/>
@@ -78,7 +79,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre/extension</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre/extension"/>
@@ -86,7 +87,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre/design-interieur</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre/design-interieur"/>
@@ -94,7 +95,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre/optimisation-espace</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre/optimisation-espace"/>
@@ -102,7 +103,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/devenir-partenaire</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/devenir-partenaire"/>
@@ -110,7 +111,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/parrainage</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/parrainage"/>
@@ -118,7 +119,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/faq</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/faq"/>
@@ -126,7 +127,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/mentions-legales</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/mentions-legales"/>
@@ -134,7 +135,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/privacy-policy</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/privacy-policy"/>
@@ -142,7 +143,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/cgu</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/cgu"/>
@@ -150,7 +151,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/cgv</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/cgv"/>
@@ -158,7 +159,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/sitemap</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/sitemap"/>
@@ -166,7 +167,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/sitemap.xml</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/sitemap.xml"/>

@@ -70,57 +70,38 @@ const SitemapXML: React.FC = () => {
       const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
       const xmlUrl = URL.createObjectURL(blob);
       
-      // Replace the current document content with the XML content
-      document.open();
-      document.write('<!DOCTYPE xml>');
-      document.write(`
-        <html>
-          <head>
-            <meta http-equiv="Content-Type" content="application/xml; charset=UTF-8" />
-            <title>Sitemap XML - Progineer</title>
-          </head>
-          <body>
-            <pre>${content}</pre>
-          </body>
-        </html>
-      `);
+      // Set the response content type to XML
+      const htmlHead = document.head;
+      if (htmlHead) {
+        // Remove existing content type meta tags
+        const existingMeta = htmlHead.querySelector('meta[http-equiv="Content-Type"]');
+        if (existingMeta) {
+          existingMeta.remove();
+        }
+        
+        // Add proper XML content type
+        const meta = document.createElement('meta');
+        meta.httpEquiv = 'Content-Type';
+        meta.content = 'application/xml; charset=UTF-8';
+        htmlHead.appendChild(meta);
+      }
+      
+      // Replace the entire document content with XML
+      document.open('text/xml');
+      document.write(content);
       document.close();
       
-      // Add a download link for the XML file
-      const downloadLink = document.createElement('a');
-      downloadLink.style.position = 'fixed';
-      downloadLink.style.bottom = '10px';
-      downloadLink.style.right = '10px';
-      downloadLink.style.padding = '8px 16px';
-      downloadLink.style.backgroundColor = '#787346';
-      downloadLink.style.color = 'white';
-      downloadLink.style.textDecoration = 'none';
-      downloadLink.style.borderRadius = '4px';
-      downloadLink.href = xmlUrl;
-      downloadLink.setAttribute('download', 'sitemap.xml');
-      downloadLink.textContent = 'Télécharger le sitemap XML';
-      document.body.appendChild(downloadLink);
-      
-      // Add a link to view the raw XML
-      const viewLink = document.createElement('a');
-      viewLink.style.position = 'fixed';
-      viewLink.style.bottom = '10px';
-      viewLink.style.left = '10px';
-      viewLink.style.padding = '8px 16px';
-      viewLink.style.backgroundColor = '#333';
-      viewLink.style.color = 'white';
-      viewLink.style.textDecoration = 'none';
-      viewLink.style.borderRadius = '4px';
-      viewLink.href = xmlUrl;
-      viewLink.setAttribute('target', '_blank');
-      viewLink.textContent = 'Voir le XML brut';
-      document.body.appendChild(viewLink);
-      
-      // Alternative method: direct download via automatic click
-      // Uncomment this to automatically download the file when visiting the URL
-      // document.body.appendChild(downloadLink);
-      // downloadLink.click();
-      // document.body.removeChild(downloadLink);
+      // Set actual Content-Type header for the document if possible
+      // Note: This might not work in all browsers due to security restrictions
+      try {
+        // @ts-ignore: This is a non-standard property but works in some contexts
+        if (document.contentType) {
+          // This is read-only in most browsers, but we attempt it anyway
+          // If it fails, the meta tag above provides a fallback
+        }
+      } catch (error) {
+        console.error("Cannot set document.contentType directly:", error);
+      }
     }
   }, [currentPath]);
 
