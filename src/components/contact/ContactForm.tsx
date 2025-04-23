@@ -22,6 +22,22 @@ const ContactForm = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
   const { verifyToken, isVerifying, error: captchaError } = useHcaptcha();
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaVisible, setCaptchaVisible] = useState(true);
+
+  React.useEffect(() => {
+    // Vérifier si le captcha est correctement chargé après 2 secondes
+    const timer = setTimeout(() => {
+      const captchaIframe = document.querySelector('iframe[src*="hcaptcha"]');
+      if (!captchaIframe) {
+        console.error("hCaptcha iframe non trouvé, tentative de rechargement");
+        setCaptchaVisible(false);
+        // Réafficher après un court délai
+        setTimeout(() => setCaptchaVisible(true), 500);
+      }
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [captchaVisible]);
 
   const onSubmit = async (data: FormData) => {
     if (!captchaVerified) {
@@ -42,6 +58,7 @@ const ContactForm = () => {
       // Réinitialiser le formulaire et afficher le message de succès
       reset();
       setIsSubmitted(true);
+      setCaptchaVerified(false);
       
       // Masquer le message de succès après 5 secondes
       setTimeout(() => {
@@ -57,8 +74,27 @@ const ContactForm = () => {
   };
 
   const handleCaptchaVerify = async (token: string) => {
-    const isValid = await verifyToken(token);
-    setCaptchaVerified(isValid);
+    console.log("Token hCaptcha reçu:", token ? token.substring(0, 10) + '...' : 'null');
+    if (!token) {
+      setCaptchaVerified(false);
+      setError('Échec de vérification du captcha');
+      return;
+    }
+    
+    try {
+      const isValid = await verifyToken(token);
+      console.log("Résultat de la vérification:", isValid);
+      setCaptchaVerified(isValid);
+      if (!isValid) {
+        setError('Échec de vérification du captcha');
+      } else {
+        setError(null);
+      }
+    } catch (err) {
+      console.error("Erreur lors de la vérification:", err);
+      setCaptchaVerified(false);
+      setError('Erreur lors de la vérification du captcha');
+    }
   };
   
   return (
@@ -228,10 +264,28 @@ const ContactForm = () => {
         
         {/* Add hCaptcha before submit button */}
         <div className="mb-6">
-          <HCaptcha
-            sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
-            onVerify={handleCaptchaVerify}
-          />
+          {captchaVisible && (
+            <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
+              <HCaptcha
+                sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
+                onVerify={handleCaptchaVerify}
+                onError={(err) => {
+                  console.error("Erreur hCaptcha:", err);
+                  setError('Erreur de chargement du captcha');
+                }}
+                onLoad={() => {
+                  console.log("hCaptcha chargé avec succès");
+                  setError(null);
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-2">Cette vérification est nécessaire pour éviter les soumissions automatisées.</p>
+            </div>
+          )}
+          {!captchaVisible && (
+            <div className="p-3 mb-2 text-center">
+              <p className="text-sm text-amber-600">Chargement du captcha...</p>
+            </div>
+          )}
           {(error === 'Veuillez compléter le captcha' || captchaError) && (
             <p className="mt-1 text-sm text-red-600">
               {error || captchaError}
@@ -244,7 +298,7 @@ const ContactForm = () => {
           <Button
             type="submit"
             className="w-full justify-center bg-khaki-700 hover:bg-khaki-800 text-white"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !captchaVerified}
           >
             {isSubmitting ? (
               <>

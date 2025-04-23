@@ -12,11 +12,18 @@ export const useHcaptcha = () => {
     setError(null);
 
     try {
+      console.log('Verification du token hCaptcha:', token.substring(0, 10) + '...');
+      
       const { data, error: verificationError } = await supabase.functions.invoke('verify-hcaptcha', {
         body: { token }
       });
 
-      if (verificationError) throw verificationError;
+      console.log('Réponse de verify-hcaptcha:', data, verificationError);
+
+      if (verificationError) {
+        console.error('Erreur de vérification:', verificationError);
+        throw verificationError;
+      }
 
       if (data?.success) {
         setHcaptchaToken(token);

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useHcaptcha } from '@/hooks/useHcaptcha';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+
 const formSchema = z.object({
   firstName: z.string().min(2, {
     message: 'Le prénom doit contenir au moins 2 caractères'
@@ -37,7 +38,9 @@ const formSchema = z.object({
     message: 'Vous devez accepter les conditions'
   })
 });
+
 type FormValues = z.infer<typeof formSchema>;
+
 const PartnerContactForm = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,7 +56,23 @@ const PartnerContactForm = () => {
     }
   });
   const { verifyToken, isVerifying, error: captchaError } = useHcaptcha();
-  const [captchaVerified, setCaptchaVerified] = React.useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaVisible, setCaptchaVisible] = useState(true);
+  
+  useEffect(() => {
+    // Vérifier si le captcha est correctement chargé après 2 secondes
+    const timer = setTimeout(() => {
+      const captchaIframe = document.querySelector('iframe[src*="hcaptcha"]');
+      if (!captchaIframe) {
+        console.error("hCaptcha iframe non trouvé, tentative de rechargement");
+        setCaptchaVisible(false);
+        // Réafficher après un court délai
+        setTimeout(() => setCaptchaVisible(true), 500);
+      }
+    }, 2000);
+    
+    return () => clearTimeout(timer);
+  }, [captchaVisible]);
 
   const onSubmit = async (data: FormValues) => {
     if (!captchaVerified) {
@@ -66,18 +85,48 @@ const PartnerContactForm = () => {
     }
 
     console.log(data);
-    // Here you would typically send the data to your backend
+    // Ici vous enverriez normalement les données à votre backend
 
     toast({
       title: "Demande envoyée",
       description: "Votre demande de partenariat a bien été envoyée. Nous vous contacterons rapidement."
     });
     form.reset();
+    setCaptchaVerified(false);
   };
 
   const handleCaptchaVerify = async (token: string) => {
-    const isValid = await verifyToken(token);
-    setCaptchaVerified(isValid);
+    console.log("Token hCaptcha reçu:", token ? token.substring(0, 10) + '...' : 'null');
+    if (!token) {
+      setCaptchaVerified(false);
+      toast({
+        title: "Erreur",
+        description: "Échec de vérification du captcha",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    try {
+      const isValid = await verifyToken(token);
+      console.log("Résultat de la vérification:", isValid);
+      setCaptchaVerified(isValid);
+      if (!isValid) {
+        toast({
+          title: "Erreur",
+          description: "Échec de vérification du captcha",
+          variant: "destructive"
+        });
+      }
+    } catch (err) {
+      console.error("Erreur lors de la vérification:", err);
+      setCaptchaVerified(false);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la vérification du captcha",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -188,16 +237,41 @@ const PartnerContactForm = () => {
               </FormItem>} />
           
           <div className="mb-4">
-            <HCaptcha
-              sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
-              onVerify={handleCaptchaVerify}
-            />
+            {captchaVisible && (
+              <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
+                <HCaptcha
+                  sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
+                  onVerify={handleCaptchaVerify}
+                  onError={(err) => {
+                    console.error("Erreur hCaptcha:", err);
+                    toast({
+                      title: "Erreur",
+                      description: "Erreur de chargement du captcha",
+                      variant: "destructive"
+                    });
+                  }}
+                  onLoad={() => {
+                    console.log("hCaptcha chargé avec succès");
+                  }}
+                />
+                <p className="text-xs text-gray-500 mt-2">Cette vérification est nécessaire pour éviter les soumissions automatisées.</p>
+              </div>
+            )}
+            {!captchaVisible && (
+              <div className="p-3 mb-2 text-center">
+                <p className="text-sm text-amber-600">Chargement du captcha...</p>
+              </div>
+            )}
             {captchaError && (
               <p className="mt-1 text-sm text-red-600">{captchaError}</p>
             )}
           </div>
           
-          <Button type="submit" className="w-full bg-[#787346]">
+          <Button 
+            type="submit" 
+            className="w-full bg-[#787346]"
+            disabled={!captchaVerified}
+          >
             Envoyer ma candidature
           </Button>
         </form>

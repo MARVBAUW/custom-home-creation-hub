@@ -4,6 +4,7 @@ import { RouteObject } from 'react-router-dom';
 import ClientArea from '@/pages/client/ClientArea';
 import ClientProjects from '@/pages/client/ClientProjects';
 import SignIn from '@/pages/client/SignIn';
+import SignUp from '@/pages/client/SignUp';
 import ClientOnboarding from '@/pages/client/ClientOnboarding';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ClientProjectDetail from '@/components/client/project-detail/ClientProjectDetail';
@@ -20,6 +21,14 @@ export const clientRoutes: RouteObject[] = [
   {
     path: "/sign-in",
     element: <SignIn />
+  },
+  {
+    path: "/workspace/sign-up",
+    element: <SignUp />
+  },
+  {
+    path: "/sign-up",
+    element: <SignUp />
   },
   {
     path: "/client-onboarding",
