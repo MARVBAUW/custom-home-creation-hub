@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
@@ -53,6 +54,10 @@ const Services = () => {
           className="absolute inset-0 bg-cover bg-center opacity-10"
           style={{ 
             backgroundImage: `url('/lovable-uploads/f6c3eeaa-f404-4b27-b287-d8aeff95c06a.png')`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            width: '100%',
+            height: '100%'
           }}
         ></div>
       </div>
