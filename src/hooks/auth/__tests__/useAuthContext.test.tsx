@@ -81,4 +81,3 @@ describe('useAuthContext', () => {
     consoleError.mockRestore();
   });
 });
-
