@@ -6,10 +6,18 @@ const SitemapXML: React.FC = () => {
   const location = useLocation();
   
   useEffect(() => {
-    // Redirect to the static sitemap.xml file in the public folder
-    if (location.pathname === '/sitemap.xml') {
-      window.location.href = '/sitemap.xml';
-    }
+    // Handle direct navigation to XML files
+    const handleSitemapRedirect = () => {
+      const path = location.pathname;
+      
+      if (path === '/sitemap.xml' || path === '/sitemap') {
+        window.location.href = '/sitemap.xml';
+      } else if (path === '/sitemap.xsl') {
+        window.location.href = '/sitemap.xsl';
+      }
+    };
+    
+    handleSitemapRedirect();
   }, [location.pathname]);
 
   // This component doesn't render anything as it just redirects
