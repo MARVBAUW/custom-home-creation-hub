@@ -7,7 +7,7 @@ import Prestations from '../pages/Prestations';
 import Realisations from '../pages/Realisations';
 import Equipe from '../pages/Equipe';
 import Estimation from '../pages/Estimation';
-import MentionsLegales from '../pages/Legal';
+import Legal from '../pages/Legal';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import CGU from '../pages/CGU';
 import CGV from '../pages/CGV';
@@ -53,7 +53,7 @@ export const publicRoutes = [
   },
   {
     path: "/mentions-legales",
-    element: <MentionsLegales />,
+    element: <Legal />,
   },
   {
     path: "/privacy-policy",
