@@ -49,12 +49,13 @@ const Services = () => {
     <section className="py-24 relative">
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-stone-50/95"></div>
+        <div className="absolute inset-0 bg-stone-50/90"></div>
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-10"
+          className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{ 
-            backgroundImage: `url('/lovable-uploads/f6c3eeaa-f404-4b27-b287-d8aeff95c06a.png')`,
+            backgroundImage: `url('/lovable-uploads/8a0d3971-7296-41b2-a4eb-1d500001185d.png')`,
             backgroundSize: 'cover',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             width: '100%',
             height: '100%'
