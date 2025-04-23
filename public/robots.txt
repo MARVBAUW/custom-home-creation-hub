@@ -3,7 +3,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Sitemap location (without trailing slash)
 Sitemap: https://progineer.fr/sitemap.xml
 
 # Prioritize main pages

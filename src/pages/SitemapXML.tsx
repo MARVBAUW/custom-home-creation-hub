@@ -13,7 +13,7 @@ const SitemapXML: React.FC = () => {
   const currentPath = location.pathname;
   
   // If the URL has a trailing slash after "sitemap.xml", redirect to the version without slash
-  if (currentPath.endsWith('/sitemap.xml/')) {
+  if (currentPath.match(/\/sitemap\.xml\/?\/$/)) {
     return <Navigate to="/sitemap.xml" replace />;
   }
   
@@ -41,8 +41,8 @@ const SitemapXML: React.FC = () => {
       publicRoutes
         .filter(route => route.path && route.path !== '*' && !route.path.includes('*'))
         .forEach(route => {
-          // Route path cleanup
-          const path = route.path.endsWith('/') ? route.path.slice(0, -1) : route.path;
+          // Route path cleanup - ensure no trailing slash
+          const path = route.path.replace(/\/$/, '');
           
           // Build full URL
           const fullUrl = `${baseUrl}${path}`;
@@ -77,23 +77,19 @@ const SitemapXML: React.FC = () => {
     }
   };
 
-  // If accessing /sitemap.xml directly, serve as pure XML without HTML wrapper
-  if (currentPath === '/sitemap.xml') {
+  // If accessing /sitemap.xml directly (with or without trailing slash), serve as pure XML
+  if (currentPath === '/sitemap.xml' || currentPath === '/sitemap.xml/') {
     useEffect(() => {
-      // Create a new document
-      const doc = document.implementation.createDocument(null, 'root', null);
-      const parser = new DOMParser();
+      // Only proceed if we have XML content
+      if (!xmlContent) return;
       
       try {
-        // Parse the XML content
-        const xmlDoc = parser.parseFromString(xmlContent, 'application/xml');
-        
         // Replace the entire HTML with XML content
         document.open();
         document.write(xmlContent);
         document.close();
         
-        // Set the proper Content-Type via meta tag (though browser may ignore this)
+        // Set the proper Content-Type via meta tag
         const meta = document.createElement('meta');
         meta.httpEquiv = 'Content-Type';
         meta.content = 'text/xml; charset=utf-8';
@@ -103,11 +99,11 @@ const SitemapXML: React.FC = () => {
       }
     }, [xmlContent]);
     
-    // Return empty React fragment - the DOM manipulations above will handle the rendering
+    // Return empty React fragment
     return <></>;
   }
 
-  // For other routes, display as a normal page with UI around it
+  // For other routes, display as a normal page with UI
   return (
     <>
       <SEO 
