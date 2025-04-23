@@ -5,3 +5,12 @@ Disallow: /workspace/
 Disallow: /sign-in/
 Disallow: /sign-up/
 Sitemap: https://progineer.fr/sitemap.xml
+
+# Support pour les URLs localisées
+Allow: /architecte-*
+Allow: /maitre-doeuvre-*
+Allow: /constructeur-*
+Allow: /maitre-oeuvre-*
+Allow: /constructeur-de-maison-*
+Allow: /architecte-dinterieur-*
+Allow: /optimisation-espace-*
