@@ -77,17 +77,83 @@ const SitemapXML: React.FC = () => {
 
   // Fonction pour formater le XML avec coloration syntaxique
   const formatXmlWithSyntaxHighlighting = (xml: string) => {
-    return xml
-      .replace(/(&lt;|<)(\/?)([\w:-]+)(\s|\/|\s[\w=-]+|\s\w+:[\w=-]+|\s+xmlns(?::\w+)?=)([^&]*?)(\/?)(>|&gt;)/g, 
-        (match, open, slash, tag, attrs, attrContent, closeSlash, close) => {
-          // Formater les balises et les attributs
-          return <React.Fragment key={match + Math.random()}>
-            <span style={tagStyle}>{open}{slash}{tag}</span>{attrs}
-            <span style={valueStyle}>{attrContent}</span>
-            <span style={tagStyle}>{closeSlash}{close}</span>
-          </React.Fragment>;
+    // Diviser le contenu XML en parties pour pouvoir appliquer des styles différents
+    const parts: JSX.Element[] = [];
+    
+    // Expression régulière pour trouver les balises XML
+    const regex = /(<\?xml[^?]*\?>)|(<\/?[a-zA-Z0-9:]+)([^<>]*)(\/>|>)|([^<>]+)/g;
+    let match;
+    let index = 0;
+    
+    while ((match = regex.exec(xml)) !== null) {
+      if (match[1]) {
+        // Déclaration XML
+        parts.push(<span key={`decl-${index}`} style={declStyle}>{match[1]}</span>);
+      } else if (match[2]) {
+        // Balise ouvrante ou fermante
+        parts.push(<span key={`tag-${index}`} style={tagStyle}>{match[2]}</span>);
+        
+        // Attributs
+        if (match[3]) {
+          // Trouver les attributs et leurs valeurs
+          const attrRegex = /\s+([a-zA-Z0-9:]+)=("([^"]*)"|'([^']*)')/g;
+          let attrMatch;
+          let attrParts = match[3];
+          let lastIndex = 0;
+          const attrElements: JSX.Element[] = [];
+          
+          while ((attrMatch = attrRegex.exec(match[3])) !== null) {
+            // Partie avant l'attribut (espace)
+            if (attrMatch.index > lastIndex) {
+              attrElements.push(
+                <span key={`attr-space-${index}-${lastIndex}`}>
+                  {match[3].substring(lastIndex, attrMatch.index)}
+                </span>
+              );
+            }
+            
+            // Nom de l'attribut
+            attrElements.push(
+              <span key={`attr-name-${index}-${attrMatch.index}`} style={attrStyle}>
+                {attrMatch[1]}=
+              </span>
+            );
+            
+            // Valeur de l'attribut
+            const quote = attrMatch[2][0]; // " ou '
+            const value = attrMatch[3] || attrMatch[4];
+            attrElements.push(
+              <span key={`attr-value-${index}-${attrMatch.index}`} style={valueStyle}>
+                {quote}{value}{quote}
+              </span>
+            );
+            
+            lastIndex = attrMatch.index + attrMatch[0].length;
+          }
+          
+          // Partie restante
+          if (lastIndex < match[3].length) {
+            attrElements.push(
+              <span key={`attr-rest-${index}`}>
+                {match[3].substring(lastIndex)}
+              </span>
+            );
+          }
+          
+          parts.push(<>{attrElements}</>);
         }
-      );
+        
+        // Fermeture de balise
+        parts.push(<span key={`close-${index}`} style={tagStyle}>{match[4]}</span>);
+      } else if (match[5]) {
+        // Contenu entre les balises
+        parts.push(<span key={`content-${index}`}>{match[5]}</span>);
+      }
+      
+      index++;
+    }
+    
+    return <>{parts}</>;
   };
 
   if (xmlContent && currentPath === '/sitemap.xml') {
