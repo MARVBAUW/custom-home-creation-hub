@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -7,7 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, UserPlus, LogIn, Github } from 'lucide-react';
+import { Loader2, UserPlus, LogIn, Github, ArrowLeft } from 'lucide-react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
@@ -101,6 +102,12 @@ const SignIn = () => {
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
         <Container size="md">
           <div className="text-center">
+            <div className="absolute top-24 left-4 md:left-8">
+              <Link to="/workspace" className="flex items-center text-sm font-medium text-gray-600 hover:text-khaki-700">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Retour au workspace
+              </Link>
+            </div>
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
               Espace Client
             </div>

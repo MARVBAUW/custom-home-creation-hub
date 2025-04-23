@@ -23,13 +23,31 @@ const MainLayout = () => (
 export const routes = [
   {
     element: <MainLayout />,
-    children: publicRoutes,
+    children: [
+      ...publicRoutes,
+      ...workspaceRoutes,
+      {
+        path: "/workspace/sign-in",
+        element: <React.lazy(() => import('../pages/client/SignIn')) />
+      },
+      {
+        path: "/workspace/sign-up",
+        element: <React.lazy(() => import('../pages/client/SignUp')) />
+      },
+      {
+        path: "/sign-in",
+        element: <React.lazy(() => import('../pages/client/SignIn')) />
+      },
+      {
+        path: "/sign-up", 
+        element: <React.lazy(() => import('../pages/client/SignUp')) />
+      },
+    ],
   },
-  // Incluons maintenant les routes workspace dans le layout principal
-  {
-    element: <MainLayout />,
-    children: workspaceRoutes,
-  },
-  ...clientRoutes,
+  ...clientRoutes.filter(route => 
+    !["/workspace/sign-in", "/workspace/sign-up", "/sign-in", "/sign-up"].includes(route.path || '')
+  ),
   ...adminRoutes,
 ];
+
+export default routes;

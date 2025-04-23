@@ -3,8 +3,6 @@ import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import ClientArea from '@/pages/client/ClientArea';
 import ClientProjects from '@/pages/client/ClientProjects';
-import SignIn from '@/pages/client/SignIn';
-import SignUp from '@/pages/client/SignUp';
 import ClientOnboarding from '@/pages/client/ClientOnboarding';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ClientProjectDetail from '@/components/client/project-detail/ClientProjectDetail';
@@ -14,22 +12,7 @@ import ClientProfile from '@/pages/client/ClientProfile';
 import ClientPlanning from '@/pages/client/ClientPlanning';
 
 export const clientRoutes: RouteObject[] = [
-  {
-    path: "/workspace/sign-in",
-    element: <SignIn />
-  },
-  {
-    path: "/sign-in",
-    element: <SignIn />
-  },
-  {
-    path: "/workspace/sign-up",
-    element: <SignUp />
-  },
-  {
-    path: "/sign-up",
-    element: <SignUp />
-  },
+  /* Auth routes are now handled in the main routes file */
   {
     path: "/client-onboarding",
     element: <ClientOnboarding />
