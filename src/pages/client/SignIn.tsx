@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, UserPlus, LogIn, Github, ArrowLeft } from 'lucide-react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import SimpleCaptcha from '@/components/auth/SimpleCaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -22,7 +21,7 @@ const SignIn = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isAdminSignin, setIsAdminSignin] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   // Vérifier si l'email entré est un email administrateur
   useEffect(() => {
@@ -51,8 +50,8 @@ const SignIn = () => {
       return;
     }
 
-    if (!captchaToken) {
-      setFormError('Veuillez valider le captcha');
+    if (!captchaVerified) {
+      setFormError('Veuillez compléter la vérification de sécurité');
       return;
     }
 
@@ -62,8 +61,7 @@ const SignIn = () => {
       // Créer un nouveau compte
       console.log('Creating new account with email:', email);
       await signUp(email, password, { 
-        full_name: isAdminSignin ? 'Administrateur' : 'Nouvel Utilisateur',
-        captchaToken 
+        full_name: isAdminSignin ? 'Administrateur' : 'Nouvel Utilisateur'
       });
     } else {
       // Se connecter avec un compte existant
@@ -99,10 +97,10 @@ const SignIn = () => {
         <meta name="description" content="Connectez-vous à votre espace client Progineer pour suivre l'avancement de vos projets et accéder à vos documents." />
       </Helmet>
 
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-20 pb-16 bg-gradient-to-b from-khaki-50 to-white">
         <Container size="md">
           <div className="text-center">
-            <div className="absolute top-24 left-4 md:left-8">
+            <div className="mb-6">
               <Link to="/workspace" className="flex items-center text-sm font-medium text-gray-600 hover:text-khaki-700">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Retour au workspace
@@ -189,11 +187,7 @@ const SignIn = () => {
                   </div>
 
                   <div className="flex justify-center my-4">
-                    <HCaptcha
-                      sitekey="10000000-ffff-ffff-ffff-000000000001"
-                      onVerify={(token) => setCaptchaToken(token)}
-                      languageOverride="fr"
-                    />
+                    <SimpleCaptcha onVerify={setCaptchaVerified} />
                   </div>
 
                   <Button 

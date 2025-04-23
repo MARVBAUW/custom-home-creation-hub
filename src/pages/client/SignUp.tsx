@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Container from '@/components/common/Container';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, UserPlus, LogIn, ArrowLeft } from 'lucide-react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import SimpleCaptcha from '@/components/auth/SimpleCaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -23,7 +22,7 @@ const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isAdminSignup, setIsAdminSignup] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   // Vérifier si l'email entré est un email administrateur
   useEffect(() => {
@@ -41,7 +40,6 @@ const SignUp = () => {
     e.preventDefault();
     setFormError(null);
 
-    // Pour les emails administrateurs, on supprime certaines validations
     if (!isAdminSignup) {
       if (!fullName.trim()) {
         setFormError('Le nom complet est requis');
@@ -64,20 +62,14 @@ const SignUp = () => {
       return;
     }
 
-    if (password !== confirmPassword) {
-      setFormError('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    if (!captchaToken) {
-      setFormError('Veuillez valider le captcha');
+    if (captchaVerified) {
+      setFormError('Veuillez compléter la vérification de sécurité');
       return;
     }
 
     try {
       await signUp(email, password, { 
         full_name: fullName || (isAdminSignup ? 'Administrateur' : 'Nouvel Utilisateur'),
-        captchaToken 
       });
       // If not an admin signup, redirect to onboarding form after successful signup
       if (!isAdminSignup && user) {
@@ -122,10 +114,10 @@ const SignUp = () => {
         <meta name="description" content="Créez votre compte Progineer pour accéder à votre espace client personnalisé." />
       </Helmet>
 
-      <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
+      <section className="pt-20 pb-16 bg-gradient-to-b from-khaki-50 to-white">
         <Container size="md">
           <div className="text-center">
-            <div className="absolute top-24 left-4 md:left-8">
+            <div className="mb-6">
               <Link to="/workspace" className="flex items-center text-sm font-medium text-gray-600 hover:text-khaki-700">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Retour au workspace
@@ -254,10 +246,7 @@ const SignUp = () => {
                   </div>
 
                   <div className="flex justify-center my-4">
-                    <HCaptcha
-                      sitekey="10000000-ffff-ffff-ffff-000000000001"
-                      onVerify={(token) => setCaptchaToken(token)}
-                    />
+                    <SimpleCaptcha onVerify={setCaptchaVerified} />
                   </div>
 
                   <Button 
