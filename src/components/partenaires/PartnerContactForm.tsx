@@ -253,6 +253,7 @@ const PartnerContactForm = () => {
                   onLoad={() => {
                     console.log("hCaptcha chargé avec succès");
                   }}
+                  hl="fr"
                 />
                 <p className="text-xs text-gray-500 mt-2">Cette vérification est nécessaire pour éviter les soumissions automatisées.</p>
               </div>
