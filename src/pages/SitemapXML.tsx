@@ -7,7 +7,7 @@ const SitemapXML: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   
-  // If the URL has a trailing slash after "sitemap.xml", redirect to the version without slash
+  // Si l'URL a un slash à la fin après "sitemap.xml", rediriger vers la version sans slash
   if (currentPath.endsWith('/sitemap.xml/')) {
     return <Navigate to="/sitemap.xml" replace />;
   }
@@ -23,7 +23,7 @@ const SitemapXML: React.FC = () => {
       xmlString += 'xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 ';
       xmlString += 'http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">\n';
 
-      // Add each route
+      // Ajouter chaque route
       publicRoutes
         .filter(route => route.path && route.path !== '*' && !route.path.includes('*'))
         .forEach(route => {
@@ -40,31 +40,28 @@ const SitemapXML: React.FC = () => {
       
       xmlString += '</urlset>';
 
-      // Create a Blob with the XML content
-      const blob = new Blob([xmlString], { type: 'application/xml' });
-      const url = URL.createObjectURL(blob);
-
-      // Clear any existing document content
-      document.documentElement.innerHTML = '';
-
-      // Create an iframe to display the XML content
-      const iframe = document.createElement('iframe');
-      iframe.style.width = '100%';
-      iframe.style.height = '100vh';
-      iframe.style.border = 'none';
-      document.body.appendChild(iframe);
-
-      // Set the iframe source to the Blob URL
-      iframe.src = url;
-
-      // Clean up the Blob URL when the component unmounts
-      return () => {
-        URL.revokeObjectURL(url);
-      };
+      // Au lieu de créer un iframe, définir le type de contenu et servir directement le XML
+      document.open('text/xml');
+      document.write(xmlString);
+      document.close();
+      
+      // Définir le type de contenu dans l'en-tête pour indiquer qu'il s'agit de XML
+      const meta = document.createElement('meta');
+      meta.httpEquiv = 'Content-Type';
+      meta.content = 'application/xml; charset=utf-8';
+      document.head.appendChild(meta);
+      
+      // Supprimer tout élément HTML standard qui pourrait être présent
+      document.body.style.margin = '0';
+      document.body.style.padding = '0';
+      
+      // Supprimer le favicon ou autres éléments qui pourraient être ajoutés automatiquement
+      Array.from(document.head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]'))
+        .forEach(el => el.parentNode?.removeChild(el));
     }
   }, [currentPath]);
 
-  // Return empty fragment since we're handling the DOM directly for XML
+  // Renvoyer un fragment vide, le contenu sera remplacé par le XML
   return <></>;
 };
 
