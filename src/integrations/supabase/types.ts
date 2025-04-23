@@ -68,6 +68,33 @@ export type Database = {
           },
         ]
       }
+      api_keys: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean | null
+          key_value: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          key_value: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          key_value?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       backlinks_logs: {
         Row: {
           backlinks_generated: number | null
