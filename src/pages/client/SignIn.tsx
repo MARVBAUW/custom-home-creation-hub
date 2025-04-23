@@ -67,7 +67,7 @@ const SignIn = () => {
     } else {
       // Se connecter avec un compte existant
       console.log('Attempting to sign in with:', email);
-      await signIn(email, password, captchaToken);
+      await signIn(email, password);
     }
   };
 

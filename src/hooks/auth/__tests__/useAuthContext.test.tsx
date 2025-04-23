@@ -1,5 +1,5 @@
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '../__tests__/test-utils';
 import { AuthContext, useAuthContext } from '../AuthContext';
 import { ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
