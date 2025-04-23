@@ -1,5 +1,5 @@
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import { AuthContext, useAuthContext } from '../AuthContext';
 import { ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
@@ -52,7 +52,6 @@ describe('useAuthContext', () => {
   });
 
   it('should return the auth context values', () => {
-    // Update to use wrapper as options
     const { result } = renderHook(() => useAuthContext(), { wrapper });
     
     expect(result.current.user).toEqual(mockUser);
@@ -62,7 +61,6 @@ describe('useAuthContext', () => {
   });
 
   it('should provide working auth functions', () => {
-    // Update to use wrapper as options
     const { result } = renderHook(() => useAuthContext(), { wrapper });
     
     expect(typeof result.current.signIn).toBe('function');
@@ -73,7 +71,7 @@ describe('useAuthContext', () => {
   });
 
   it('should throw error when used outside AuthProvider', () => {
-    // Test without wrapper
+    // Suppress console.error to avoid noisy output during test
     const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
     
     expect(() => {
