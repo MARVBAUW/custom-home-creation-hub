@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, UserPlus, LogIn } from 'lucide-react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -20,6 +21,7 @@ const SignIn = () => {
   const [formError, setFormError] = useState<string | null>(null);
   const [isCreatingAccount, setIsCreatingAccount] = useState(false);
   const [isAdminSignin, setIsAdminSignin] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // Vérifier si l'email entré est un email administrateur
   useEffect(() => {
@@ -48,16 +50,24 @@ const SignIn = () => {
       return;
     }
 
+    if (!captchaToken) {
+      setFormError('Veuillez valider le captcha');
+      return;
+    }
+
     console.log('Submitting login form with email:', email);
     
     if (isCreatingAccount) {
       // Créer un nouveau compte
       console.log('Creating new account with email:', email);
-      await signUp(email, password, { full_name: isAdminSignin ? 'Administrateur' : 'Nouvel Utilisateur' });
+      await signUp(email, password, { 
+        full_name: isAdminSignin ? 'Administrateur' : 'Nouvel Utilisateur',
+        captchaToken 
+      });
     } else {
       // Se connecter avec un compte existant
       console.log('Attempting to sign in with:', email);
-      await signIn(email, password);
+      await signIn(email, password, captchaToken);
     }
   };
 
@@ -168,6 +178,13 @@ const SignIn = () => {
                       onChange={(e) => setPassword(e.target.value)}
                       className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
                       disabled={loading}
+                    />
+                  </div>
+
+                  <div className="flex justify-center my-4">
+                    <HCaptcha
+                      sitekey="10000000-ffff-ffff-ffff-000000000001"
+                      onVerify={(token) => setCaptchaToken(token)}
                     />
                   </div>
 

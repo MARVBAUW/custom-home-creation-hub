@@ -2,10 +2,25 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { AuthContext, useAuthContext } from '../AuthContext';
 import { ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
 
 // Mock data
-const mockUser = { id: '123', email: 'test@example.com' };
-const mockSession = { user: mockUser, access_token: 'token123' };
+const mockUser: User = {
+  id: '123',
+  email: 'test@example.com',
+  app_metadata: {},
+  user_metadata: {},
+  aud: 'authenticated',
+  created_at: '2024-01-01T00:00:00.000Z',
+};
+
+const mockSession: Session = {
+  user: mockUser,
+  access_token: 'token123',
+  refresh_token: 'refresh123',
+  expires_in: 3600,
+  token_type: 'bearer',
+};
 
 // Create a wrapper with AuthContext
 const wrapper = ({ children }: { children: ReactNode }) => (

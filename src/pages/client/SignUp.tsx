@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, UserPlus, LogIn } from 'lucide-react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 // Liste des emails administrateurs pour l'affichage conditionnel
 const ADMIN_EMAILS = ['marvinbauwens@gmail.com', 'progineer.moe@gmail.com'];
@@ -21,6 +22,7 @@ const SignUp = () => {
   const [fullName, setFullName] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
   const [isAdminSignup, setIsAdminSignup] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   // Vérifier si l'email entré est un email administrateur
   useEffect(() => {
@@ -66,8 +68,16 @@ const SignUp = () => {
       return;
     }
 
+    if (!captchaToken) {
+      setFormError('Veuillez valider le captcha');
+      return;
+    }
+
     try {
-      await signUp(email, password, { full_name: fullName || (isAdminSignup ? 'Administrateur' : 'Nouvel Utilisateur') });
+      await signUp(email, password, { 
+        full_name: fullName || (isAdminSignup ? 'Administrateur' : 'Nouvel Utilisateur'),
+        captchaToken 
+      });
       // If not an admin signup, redirect to onboarding form after successful signup
       if (!isAdminSignup && user) {
         navigate('/workspace/client-onboarding');
@@ -233,6 +243,13 @@ const SignUp = () => {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       className="border-gray-300 focus:ring-khaki-500 focus:border-khaki-500"
                       disabled={loading}
+                    />
+                  </div>
+
+                  <div className="flex justify-center my-4">
+                    <HCaptcha
+                      sitekey="10000000-ffff-ffff-ffff-000000000001"
+                      onVerify={(token) => setCaptchaToken(token)}
                     />
                   </div>
 
