@@ -1,11 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { publicRoutes } from '../routes/publicRoutes';
 
 const SitemapXML: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
+  const [xmlContent, setXmlContent] = useState<string | null>(null);
   
   // Si l'URL a un slash à la fin après "sitemap.xml", rediriger vers la version sans slash
   if (currentPath.endsWith('/sitemap.xml/')) {
@@ -39,29 +40,68 @@ const SitemapXML: React.FC = () => {
         });
       
       xmlString += '</urlset>';
+      
+      setXmlContent(xmlString);
 
-      // Au lieu de créer un iframe, définir le type de contenu et servir directement le XML
-      document.open('text/xml');
-      document.write(xmlString);
-      document.close();
+      // Définir le titre de la page
+      document.title = 'Sitemap XML - Progineer';
       
-      // Définir le type de contenu dans l'en-tête pour indiquer qu'il s'agit de XML
-      const meta = document.createElement('meta');
-      meta.httpEquiv = 'Content-Type';
-      meta.content = 'application/xml; charset=utf-8';
-      document.head.appendChild(meta);
-      
-      // Supprimer tout élément HTML standard qui pourrait être présent
-      document.body.style.margin = '0';
-      document.body.style.padding = '0';
-      
-      // Supprimer le favicon ou autres éléments qui pourraient être ajoutés automatiquement
-      Array.from(document.head.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]'))
-        .forEach(el => el.parentNode?.removeChild(el));
+      // Configurer les en-têtes HTTP pour indiquer que c'est du XML
+      const metaContentType = document.createElement('meta');
+      metaContentType.httpEquiv = 'Content-Type';
+      metaContentType.content = 'application/xml; charset=utf-8';
+      document.head.appendChild(metaContentType);
     }
   }, [currentPath]);
 
-  // Renvoyer un fragment vide, le contenu sera remplacé par le XML
+  // Style pour simuler un éditeur de code
+  const codeEditorStyle = {
+    fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+    fontSize: '14px',
+    lineHeight: '1.5',
+    background: '#282c34',
+    color: '#abb2bf',
+    padding: '20px',
+    borderRadius: '4px',
+    overflow: 'auto',
+    margin: '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+    whiteSpace: 'pre' as 'pre',
+  };
+
+  // Styles pour la coloration syntaxique
+  const tagStyle = { color: '#e06c75' }; // rouge pour les balises
+  const attrStyle = { color: '#d19a66' }; // orange pour les attributs
+  const valueStyle = { color: '#98c379' }; // vert pour les valeurs
+  const declStyle = { color: '#56b6c2' }; // cyan pour les déclarations
+
+  // Fonction pour formater le XML avec coloration syntaxique
+  const formatXmlWithSyntaxHighlighting = (xml: string) => {
+    return xml
+      .replace(/(&lt;|<)(\/?)([\w:-]+)(\s|\/|\s[\w=-]+|\s\w+:[\w=-]+|\s+xmlns(?::\w+)?=)([^&]*?)(\/?)(>|&gt;)/g, 
+        (match, open, slash, tag, attrs, attrContent, closeSlash, close) => {
+          // Formater les balises et les attributs
+          return <React.Fragment key={match + Math.random()}>
+            <span style={tagStyle}>{open}{slash}{tag}</span>{attrs}
+            <span style={valueStyle}>{attrContent}</span>
+            <span style={tagStyle}>{closeSlash}{close}</span>
+          </React.Fragment>;
+        }
+      );
+  };
+
+  if (xmlContent && currentPath === '/sitemap.xml') {
+    return (
+      <div style={{ padding: '20px' }}>
+        <h1 style={{ marginBottom: '20px', color: '#333' }}>Sitemap XML</h1>
+        <div style={codeEditorStyle}>
+          {formatXmlWithSyntaxHighlighting(xmlContent)}
+        </div>
+      </div>
+    );
+  }
+
+  // Renvoyer un fragment vide si on n'est pas sur la route du sitemap
   return <></>;
 };
 
