@@ -13,11 +13,12 @@ const SitemapXML: React.FC = () => {
     const handleSitemapRedirect = () => {
       const path = location.pathname;
       
-      // Handle trailing slash in sitemap.xml URL
-      if (path === '/' || path === '/sitemap.xml' || path === '/sitemap' || path === '/sitemap.xml/') {
-        window.location.href = `${baseUrl}/sitemap.xml`;
+      // Handle exact matches to redirect to the static XML files in the public folder
+      if (path === '/sitemap.xml' || path === '/sitemap' || path === '/sitemap.xml/') {
+        // Use direct navigation to the static file, bypassing React router
+        window.location.replace(`${baseUrl}/sitemap.xml`);
       } else if (path === '/sitemap.xsl' || path === '/sitemap.xsl/') {
-        window.location.href = `${baseUrl}/sitemap.xsl`;
+        window.location.replace(`${baseUrl}/sitemap.xsl`);
       }
     };
     

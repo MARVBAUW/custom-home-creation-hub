@@ -83,10 +83,6 @@ export const publicRoutes = [
     element: <SitemapXML />,
   },
   {
-    path: "/",
-    element: <SitemapXML />,
-  },
-  {
     path: "/parrainage",
     element: <Parrainage />,
   },
