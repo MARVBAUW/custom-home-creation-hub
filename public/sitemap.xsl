@@ -1,12 +1,15 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
-
+  
+  <!-- Match the root element regardless of namespace -->
   <xsl:template match="/">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -73,7 +76,8 @@
               <th>Fréquence</th>
               <th>Priorité</th>
             </tr>
-            <xsl:for-each select="urlset/url">
+            <!-- Use wildcard namespace matching to handle both prefixed and non-prefixed elements -->
+            <xsl:for-each select="/*/url">
               <tr>
                 <td class="url"><a href="{loc}"><xsl:value-of select="loc"/></a></td>
                 <td><xsl:value-of select="lastmod"/></td>
