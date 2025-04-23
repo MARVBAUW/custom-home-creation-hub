@@ -4,14 +4,14 @@ import Container from '@/components/common/Container';
 
 const ContactHero = () => {
   return (
-    <section className="pt-32 pb-16 bg-gradient-to-b from-progineer-light to-white relative">
+    <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white relative">
       {/* Background Image */}
-      <div className="absolute inset-0 z-0 opacity-15">
+      <div className="absolute inset-0 z-0 opacity-20">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-white z-10"></div>
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: `url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundImage: `url('/lovable-uploads/e0f4ca87-d189-4420-9ae4-bc145e7365d1.png')`,
             backgroundPosition: 'center',
           }}
         ></div>
@@ -19,15 +19,14 @@ const ContactHero = () => {
       
       <Container size="md" className="relative z-10">
         <div className="text-center">
-          <div className="inline-block px-3 py-1 mb-6 rounded-full bg-progineer-gold/10 text-progineer-gold text-sm font-medium">
+          <div className="inline-block px-3 py-1 mb-6 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
             Contact
           </div>
-          <h1 className="text-4xl md:text-5xl font-rare tracking-wide mb-6 text-progineer-dark">
-            Parlons de votre projet
+          <h1 className="text-4xl md:text-5xl font-semibold mb-6">
+            Contactez notre équipe
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable">
-            Notre équipe est à votre disposition pour répondre à toutes vos questions
-            et vous accompagner dans la réalisation de votre projet.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+            Notre équipe est à votre écoute pour répondre à vos questions et vous accompagner dans votre projet en région PACA.
           </p>
         </div>
       </Container>
