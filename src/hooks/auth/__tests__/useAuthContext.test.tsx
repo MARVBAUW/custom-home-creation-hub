@@ -4,7 +4,7 @@ import { AuthContext, useAuthContext } from '../AuthContext';
 import { ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 
-// Mock data
+// Mock data with proper types
 const mockUser: User = {
   id: '123',
   email: 'test@example.com',
@@ -22,6 +22,15 @@ const mockSession: Session = {
   token_type: 'bearer',
 };
 
+// Mock auth functions
+const mockAuthFunctions = {
+  signIn: jest.fn(),
+  signUp: jest.fn(),
+  signOut: jest.fn(),
+  signInWithGoogle: jest.fn(),
+  signUpWithGoogle: jest.fn(),
+};
+
 // Create a wrapper with AuthContext
 const wrapper = ({ children }: { children: ReactNode }) => (
   <AuthContext.Provider
@@ -30,11 +39,7 @@ const wrapper = ({ children }: { children: ReactNode }) => (
       session: mockSession,
       loading: false,
       error: null,
-      signIn: async (email: string, password: string) => {},
-      signUp: async (email: string, password: string, metadata?: Record<string, any>) => {},
-      signOut: async () => {},
-      signInWithGoogle: async () => {},
-      signUpWithGoogle: async () => {},
+      ...mockAuthFunctions
     }}
   >
     {children}
@@ -42,6 +47,10 @@ const wrapper = ({ children }: { children: ReactNode }) => (
 );
 
 describe('useAuthContext', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should return the auth context values', () => {
     const { result } = renderHook(() => useAuthContext(), { wrapper });
     
@@ -49,9 +58,27 @@ describe('useAuthContext', () => {
     expect(result.current.session).toEqual(mockSession);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
-    expect(typeof result.current.signIn).toBe('function');
+  });
+
+  it('should provide working auth functions', () => {
+    const { result } = renderHook(() => useAuthContext(), { wrapper });
     
-    // Remove the extra argument here
+    expect(typeof result.current.signIn).toBe('function');
     expect(typeof result.current.signUp).toBe('function');
+    expect(typeof result.current.signOut).toBe('function');
+    expect(typeof result.current.signInWithGoogle).toBe('function');
+    expect(typeof result.current.signUpWithGoogle).toBe('function');
+  });
+
+  it('should throw error when used outside AuthProvider', () => {
+    // Test without wrapper
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    expect(() => {
+      renderHook(() => useAuthContext());
+    }).toThrow('useAuth must be used within an AuthProvider');
+    
+    consoleError.mockRestore();
   });
 });
+
