@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
@@ -12,129 +13,129 @@ const OptimisationEspaceContent: React.FC<OptimisationEspaceContentProps> = ({ c
   
   return (
     <>
-      <h2 className="text-3xl font-semibold mb-6">Optimisez chaque m² de votre espace{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
+      <h2 className="text-3xl font-semibold mb-6">Optimisation d'espace{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
       <p className="mb-8 text-gray-700">
-        Chez Progineer, nous vous aidons à maximiser le potentiel de votre intérieur grâce à des solutions d'<strong>optimisation d'espace</strong> intelligentes et sur mesure{cityDisplay ? ` à ${cityDisplay}` : ''}. Que vous ayez un petit appartement ou une grande maison, nous transformons chaque recoin en un espace fonctionnel et agréable à vivre.
+        Notre expertise en <strong>optimisation d'espace</strong> {cityDisplay ? ` à ${cityDisplay}` : ''} vous permet de maximiser chaque mètre carré de votre habitat. Nous concevons des aménagements intelligents et fonctionnels, parfaitement adaptés à vos besoins.
       </p>
 
       <div className="mb-12">
         <img 
-          src="https://images.unsplash.com/photo-1563983454453-4ca344064581?q=80&w=2070&auto=format&fit=crop" 
-          alt="Exemple d'optimisation d'espace réalisée par Progineer en PACA"
+          src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=2070&auto=format&fit=crop" 
+          alt="Optimisation d'espace réalisée par Progineer en PACA"
           className="w-full h-auto rounded-xl mb-4"
         />
-        <p className="text-sm text-gray-500 text-center">Aménagement d'un studio à Nice</p>
+        <p className="text-sm text-gray-500 text-center">Aménagement optimisé d'un petit appartement à Marseille</p>
       </div>
 
       <h3 className="text-2xl font-medium mb-4">Nos solutions d'optimisation</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Mobilier multifonctionnel</h4>
-          <p className="text-gray-600 mb-4">
-            <InternalLinkText 
-              text="Des meubles ingénieux qui se transforment pour s'adapter à vos besoins : lits escamotables, tables pliantes, canapés convertibles..."
-              maxOccurrences={1}
-            />
-          </p>
-          <ul className="text-sm text-gray-600">
-            <li className="flex items-start mb-1">
-              <span className="text-khaki-600 mr-2">✓</span>
-              <span>Gain de place considérable</span>
-            </li>
-            <li className="flex items-start mb-1">
-              <span className="text-khaki-600 mr-2">✓</span>
-              <span>Adaptabilité à tous les espaces</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-khaki-600 mr-2">✓</span>
-              <span>Esthétique et design</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h4 className="text-xl font-medium mb-3">Rangements sur mesure</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Des solutions de rangement astucieuses qui exploitent chaque recoin : placards intégrés, étagères modulables, dressings personnalisés..."
+              text="Création de rangements intégrés et optimisés pour exploiter tous les recoins de votre habitat."
               maxOccurrences={1}
             />
           </p>
           <ul className="text-sm text-gray-600">
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Organisation optimale</span>
+              <span>Bibliothèques sur mesure</span>
             </li>
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Intégration parfaite à votre intérieur</span>
+              <span>Placards intégrés</span>
             </li>
             <li className="flex items-start">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Valorisation de l'espace</span>
+              <span>Solutions sous escalier</span>
             </li>
           </ul>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Cloisons modulables & verrières</h4>
+          <h4 className="text-xl font-medium mb-3">Mobilier multifonction</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Des systèmes de séparation flexibles qui permettent de créer des espaces distincts sans perdre en luminosité : cloisons coulissantes, verrières d'atelier, panneaux japonais..."
+              text="Conception et installation de mobilier adaptatif qui remplit plusieurs fonctions dans un espace limité."
               maxOccurrences={1}
             />
           </p>
           <ul className="text-sm text-gray-600">
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Flexibilité et modularité</span>
+              <span>Lits escamotables</span>
             </li>
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Luminosité préservée</span>
+              <span>Tables transformables</span>
             </li>
             <li className="flex items-start">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Design contemporain</span>
+              <span>Modules combinés</span>
             </li>
           </ul>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Aménagement des combles & sous-sols</h4>
+          <h4 className="text-xl font-medium mb-3">Mezzanines et estrades</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Transformation de vos espaces inutilisés en pièces à vivre : chambres, bureaux, salles de jeux, home cinémas..."
+              text="Création d'espaces superposés pour exploiter la hauteur et gagner de la surface au sol."
               maxOccurrences={1}
             />
           </p>
           <ul className="text-sm text-gray-600">
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Surface habitable augmentée</span>
+              <span>Chambres en mezzanine</span>
             </li>
             <li className="flex items-start mb-1">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Valorisation de votre bien</span>
+              <span>Estrades avec rangements</span>
             </li>
             <li className="flex items-start">
               <span className="text-khaki-600 mr-2">✓</span>
-              <span>Confort amélioré</span>
+              <span>Bureaux suspendus</span>
+            </li>
+          </ul>
+        </div>
+        
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+          <h4 className="text-xl font-medium mb-3">Cloisons modulables</h4>
+          <p className="text-gray-600 mb-4">
+            <InternalLinkText 
+              text="Installation de séparations amovibles pour créer des espaces flexibles adaptables à vos besoins."
+              maxOccurrences={1}
+            />
+          </p>
+          <ul className="text-sm text-gray-600">
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Parois coulissantes</span>
+            </li>
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Bibliothèques séparatrices</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Rideaux et voilages</span>
             </li>
           </ul>
         </div>
       </div>
 
-      <h3 className="text-2xl font-medium mb-4">Notre approche de l'optimisation</h3>
+      <h3 className="text-2xl font-medium mb-4">Notre démarche d'optimisation</h3>
       <div className="bg-gray-50 p-6 rounded-lg mb-10">
         <ol className="space-y-4">
           <li className="flex">
             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">1</span>
             <div>
-              <h4 className="font-medium">Analyse de vos besoins</h4>
+              <h4 className="font-medium">Analyse de l'espace</h4>
               <p className="text-gray-600 text-sm">
                 <InternalLinkText 
-                  text="Nous étudions votre mode de vie, vos habitudes et vos contraintes pour comprendre vos attentes en matière d'aménagement."
+                  text="Étude approfondie de votre espace, des contraintes et des possibilités d'aménagement."
                   maxOccurrences={1}
                 />
               </p>
@@ -146,7 +147,7 @@ const OptimisationEspaceContent: React.FC<OptimisationEspaceContentProps> = ({ c
               <h4 className="font-medium">Conception sur mesure</h4>
               <p className="text-gray-600 text-sm">
                 <InternalLinkText 
-                  text="Nous créons des plans d'aménagement 2D et 3D qui optimisent chaque mètre carré et vous permettent de visualiser votre futur intérieur."
+                  text="Création de solutions personnalisées adaptées à vos besoins et à votre mode de vie."
                   maxOccurrences={1}
                 />
               </p>
@@ -155,10 +156,10 @@ const OptimisationEspaceContent: React.FC<OptimisationEspaceContentProps> = ({ c
           <li className="flex">
             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">3</span>
             <div>
-              <h4 className="font-medium">Sélection de matériaux & équipements</h4>
+              <h4 className="font-medium">Visualisation du projet</h4>
               <p className="text-gray-600 text-sm">
                 <InternalLinkText 
-                  text="Nous vous conseillons dans le choix de matériaux durables, esthétiques et adaptés à votre budget, ainsi que dans la sélection d'équipements innovants."
+                  text="Présentation de plans, esquisses et rendus 3D pour visualiser les aménagements proposés."
                   maxOccurrences={1}
                 />
               </p>
@@ -167,10 +168,10 @@ const OptimisationEspaceContent: React.FC<OptimisationEspaceContentProps> = ({ c
           <li className="flex">
             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">4</span>
             <div>
-              <h4 className="font-medium">Réalisation des travaux</h4>
+              <h4 className="font-medium">Réalisation et installation</h4>
               <p className="text-gray-600 text-sm">
                 <InternalLinkText 
-                  text="Nous coordonnons les différents corps de métier et assurons le suivi rigoureux du chantier pour garantir la qualité et le respect des délais."
+                  text="Fabrication et mise en place des aménagements par des artisans qualifiés."
                   maxOccurrences={1}
                 />
               </p>
@@ -180,10 +181,10 @@ const OptimisationEspaceContent: React.FC<OptimisationEspaceContentProps> = ({ c
       </div>
 
       <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-2xl font-medium mb-4">Vous souhaitez optimiser votre espace{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
+        <h3 className="text-2xl font-medium mb-4">Vous avez un projet d'optimisation{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
         <p className="mb-6">
           <InternalLinkText 
-            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions astucieuses pour transformer votre intérieur.`}
+            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre espace${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions pour l'optimiser.`}
             maxOccurrences={1}
           />
         </p>

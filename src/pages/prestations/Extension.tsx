@@ -18,6 +18,7 @@ interface ExtensionProps {
   };
 }
 
+// Assume ExtensionSidebar and ExtensionContent components properly accept city prop
 const Extension: React.FC<ExtensionProps> = ({ forcedSeoParams }) => {
   const cityName = forcedSeoParams?.city ? forcedSeoParams.city.replace(/-/g, ' ') : '';
   

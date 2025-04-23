@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
@@ -12,189 +13,179 @@ const DesignInterieurContent: React.FC<DesignInterieurContentProps> = ({ city })
   
   return (
     <>
-      <h2 className="text-3xl font-semibold mb-6">Transformez votre intérieur{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
+      <h2 className="text-3xl font-semibold mb-6">Design d'intérieur{cityDisplay ? ` à ${cityDisplay}` : ''}</h2>
       <p className="mb-8 text-gray-700">
-        Chez Progineer, notre équipe de <strong>designers d'intérieur</strong> crée des espaces qui vous ressemblent. Nous concevons des intérieurs harmonieux, fonctionnels et esthétiques qui répondent à vos besoins spécifiques et reflètent votre personnalité. Chaque projet est unique et bénéficie d'une approche personnalisée.
+        Notre expertise en <strong>design d'intérieur</strong> {cityDisplay ? ` à ${cityDisplay}` : ''} vous permet de créer des espaces qui vous ressemblent. Nous concevons des intérieurs fonctionnels et esthétiques, qui s'adaptent parfaitement à votre mode de vie.
       </p>
 
       <div className="mb-12">
         <img 
-          src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop" 
-          alt="Exemple de design d'intérieur réalisé par Progineer en PACA"
+          src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2080&auto=format&fit=crop" 
+          alt="Design d'intérieur réalisé par Progineer en PACA"
           className="w-full h-auto rounded-xl mb-4"
         />
-        <p className="text-sm text-gray-500 text-center">Aménagement intérieur contemporain à Marseille</p>
+        <p className="text-sm text-gray-500 text-center">Conception d'un salon contemporain à Marseille</p>
       </div>
 
-      <h3 className="text-2xl font-medium mb-4">Notre processus créatif</h3>
-      <div className="grid grid-cols-1 gap-6 mb-10">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <div className="flex items-start">
-            <span className="flex-shrink-0 w-10 h-10 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">1</span>
-            <div>
-              <h4 className="text-xl font-medium mb-2">Écoute et analyse</h4>
-              <p className="text-gray-600">
-                <InternalLinkText 
-                  text="Nous commençons par comprendre vos besoins, vos goûts et votre mode de vie pour saisir l'essence de votre projet. Cette étape d'échange est fondamentale pour créer un intérieur qui vous correspond."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <div className="flex items-start">
-            <span className="flex-shrink-0 w-10 h-10 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">2</span>
-            <div>
-              <h4 className="text-xl font-medium mb-2">Concept et planches d'ambiance</h4>
-              <p className="text-gray-600">
-                <InternalLinkText 
-                  text="Nous élaborons un concept qui répond à vos attentes et créons des moodboards pour vous présenter notre vision. Ces planches d'ambiance illustrent les couleurs, textures et matériaux envisagés."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <div className="flex items-start">
-            <span className="flex-shrink-0 w-10 h-10 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">3</span>
-            <div>
-              <h4 className="text-xl font-medium mb-2">Plans et visualisations 3D</h4>
-              <p className="text-gray-600">
-                <InternalLinkText 
-                  text="Nous concevons des plans détaillés et réalisons des visualisations 3D pour vous permettre de vous projeter dans votre futur intérieur avant même le début des travaux."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <div className="flex items-start">
-            <span className="flex-shrink-0 w-10 h-10 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">4</span>
-            <div>
-              <h4 className="text-xl font-medium mb-2">Coordination et réalisation</h4>
-              <p className="text-gray-600">
-                <InternalLinkText 
-                  text="Nous supervisons la mise en œuvre du projet, de la sélection des artisans à la livraison finale, en passant par le choix des mobiliers et des éléments de décoration."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h3 className="text-2xl font-medium mb-4">Nos compétences en design</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Agencement spatial</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Optimisation des circulations et création d'espaces fonctionnels adaptés à votre quotidien"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Harmonie chromatique</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Sélection de palettes de couleurs équilibrées et cohérentes avec votre style"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Sélection de matériaux</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Choix de revêtements et matériaux durables et esthétiques"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Éclairage architectural</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Conception de plans lumière pour valoriser vos espaces"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Mobilier sur mesure</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Création de pièces uniques adaptées à vos espaces et besoins"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-2">Art & décoration</h4>
-          <p className="text-gray-600 text-sm">
-            <InternalLinkText 
-              text="Sélection d'œuvres et accessoires pour personnaliser votre intérieur"
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-      </div>
-
-      <h3 className="text-2xl font-medium mb-4">Exemples de réalisations</h3>
+      {/* Contenu principal - gardez et adaptez selon vos besoins */}
+      <h3 className="text-2xl font-medium mb-4">Nos services de design d'intérieur</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Appartement haussmannien</h4>
+          <h4 className="text-xl font-medium mb-3">Conception d'espaces</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Rénovation complète avec préservation des éléments d'époque et intégration de touches contemporaines."
+              text="Optimisation des volumes et création d'aménagements sur mesure pour transformer vos espaces."
               maxOccurrences={1}
             />
           </p>
+          <ul className="text-sm text-gray-600">
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Plans optimisés</span>
+            </li>
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Meubles sur mesure</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Circulation fluide</span>
+            </li>
+          </ul>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Villa contemporaine</h4>
+          <h4 className="text-xl font-medium mb-3">Décoration intérieure</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Design intérieur minimaliste et épuré avec des matériaux nobles et des jeux de lumière naturelle."
+              text="Sélection de couleurs, matériaux, mobilier et accessoires pour créer une ambiance harmonieuse."
               maxOccurrences={1}
             />
           </p>
+          <ul className="text-sm text-gray-600">
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Palettes de couleurs</span>
+            </li>
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Choix de matériaux</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Accessoires déco</span>
+            </li>
+          </ul>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Espaces professionnels</h4>
+          <h4 className="text-xl font-medium mb-3">Home staging</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Aménagement de bureaux alliant confort, ergonomie et image de marque pour une entreprise locale."
+              text="Mise en valeur de votre bien immobilier pour maximiser son attrait auprès des acheteurs potentiels."
               maxOccurrences={1}
             />
           </p>
+          <ul className="text-sm text-gray-600">
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Valorisation immobilière</span>
+            </li>
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Aménagement temporaire</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Conseils pratiques</span>
+            </li>
+          </ul>
         </div>
         
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Rénovation de commerce</h4>
+          <h4 className="text-xl font-medium mb-3">Suivi de projet</h4>
           <p className="text-gray-600 mb-4">
             <InternalLinkText 
-              text="Redesign complet d'une boutique avec création d'une identité visuelle forte et d'un parcours client optimisé."
+              text="Coordination des artisans et suivi de la mise en œuvre pour garantir un résultat conforme à vos attentes."
               maxOccurrences={1}
             />
           </p>
+          <ul className="text-sm text-gray-600">
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Coordination des intervenants</span>
+            </li>
+            <li className="flex items-start mb-1">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Suivi qualité</span>
+            </li>
+            <li className="flex items-start">
+              <span className="text-khaki-600 mr-2">✓</span>
+              <span>Respect des délais</span>
+            </li>
+          </ul>
         </div>
+      </div>
+
+      <h3 className="text-2xl font-medium mb-4">Notre approche du design d'intérieur</h3>
+      <div className="bg-gray-50 p-6 rounded-lg mb-10">
+        <ol className="space-y-4">
+          <li className="flex">
+            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">1</span>
+            <div>
+              <h4 className="font-medium">Étude de vos besoins</h4>
+              <p className="text-gray-600 text-sm">
+                <InternalLinkText 
+                  text="Compréhension de vos attentes, de votre mode de vie et de vos goûts pour créer un projet personnalisé."
+                  maxOccurrences={1}
+                />
+              </p>
+            </div>
+          </li>
+          <li className="flex">
+            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">2</span>
+            <div>
+              <h4 className="font-medium">Conception créative</h4>
+              <p className="text-gray-600 text-sm">
+                <InternalLinkText 
+                  text="Élaboration de planches d'ambiance, plans, rendus 3D pour visualiser votre futur intérieur."
+                  maxOccurrences={1}
+                />
+              </p>
+            </div>
+          </li>
+          <li className="flex">
+            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">3</span>
+            <div>
+              <h4 className="font-medium">Sélection des éléments</h4>
+              <p className="text-gray-600 text-sm">
+                <InternalLinkText 
+                  text="Choix des matériaux, couleurs, mobilier et accessoires en accord avec le concept défini."
+                  maxOccurrences={1}
+                />
+              </p>
+            </div>
+          </li>
+          <li className="flex">
+            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">4</span>
+            <div>
+              <h4 className="font-medium">Mise en œuvre</h4>
+              <p className="text-gray-600 text-sm">
+                <InternalLinkText 
+                  text="Coordination des travaux et installation des éléments pour concrétiser votre projet."
+                  maxOccurrences={1}
+                />
+              </p>
+            </div>
+          </li>
+        </ol>
       </div>
 
       <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-2xl font-medium mb-4">Vous avez un projet de design d'intérieur{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
+        <h3 className="text-2xl font-medium mb-4">Vous avez un projet de design intérieur{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
         <p className="mb-6">
           <InternalLinkText 
-            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions créatives adaptées à vos besoins et à votre budget.`}
+            text={`Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre projet${cityDisplay ? ` à ${cityDisplay}` : ''} et de vous proposer des solutions personnalisées.`}
             maxOccurrences={1}
           />
         </p>
