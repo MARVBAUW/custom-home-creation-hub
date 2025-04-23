@@ -7,6 +7,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import RenovationHero from '@/components/prestations/renovation/RenovationHero';
 import RenovationSidebar from '@/components/prestations/renovation/RenovationSidebar';
 import RenovationContent from '@/components/prestations/renovation/RenovationContent';
+import RenovationSEOContent from '@/components/prestations/renovation/RenovationSEOContent';
 
 interface RenovationProps {
   forcedSeoParams?: {
@@ -41,6 +42,7 @@ const Renovation: React.FC<RenovationProps> = ({ forcedSeoParams }) => {
             </div>
             <div className="lg:col-span-3">
               <RenovationContent city={forcedSeoParams?.city} />
+              <RenovationSEOContent />
             </div>
           </div>
         </Container>
