@@ -12,6 +12,11 @@ const SEOFooter = () => {
             <Link to="/" className="text-progineer-gold hover:underline">Progineer</Link>, ingénieur et maître d'œuvre à Marseille et en PACA – Spécialiste en <Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold hover:underline">construction de maisons sur mesure</Link>, <Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold hover:underline">rénovation</Link> et <Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">extension</Link>. Rejoignez notre réseau de partenaires artisans et professionnels du bâtiment pour collaborer sur des projets de qualité dans la région Provence-Alpes-Côte d'Azur.
           </p>
           
+          {/* Add explicit backlink here for better crawler visibility */}
+          <p className="mb-4">
+            Pour trouver d'autres professionnels du secteur, consultez <a href="https://www.maitredoeuvre.com/" className="text-progineer-gold hover:underline" rel="noopener">Trouver un maitre d'oeuvre</a> - annuaire des maîtres d'œuvre en France.
+          </p>
+          
           <div className="flex flex-wrap gap-3 mt-4">
             <Link to="/prestations-maitre-oeuvre" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
               Nos prestations
