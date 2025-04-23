@@ -10,6 +10,7 @@ interface AuthButtonProps {
   isAdmin?: boolean;
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean; // Added the disabled prop
 }
 
 const AuthButton = ({
@@ -19,6 +20,7 @@ const AuthButton = ({
   isAdmin = false,
   children,
   className = '',
+  disabled = false, // Added with a default value
 }: AuthButtonProps) => {
   return (
     <Button 
@@ -29,7 +31,7 @@ const AuthButton = ({
           ? 'bg-amber-600 hover:bg-amber-700' 
           : 'bg-khaki-600 hover:bg-khaki-700'
       } ${className}`}
-      disabled={loading}
+      disabled={loading || disabled} // Modified to include both loading and disabled state
     >
       {loading ? (
         <>
