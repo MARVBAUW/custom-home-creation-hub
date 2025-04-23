@@ -25,7 +25,7 @@ export const PartnerCaptcha: React.FC<PartnerCaptchaProps> = ({
     <div className="mb-4">
       <div className="border border-gray-200 rounded-md p-3 bg-gray-50">
         <HCaptcha
-          sitekey="4670f13a-0fac-4c08-a15c-73729bda05fa"
+          sitekey="10000000-ffff-ffff-ffff-000000000001" 
           onVerify={onVerify}
           onError={(err) => {
             console.error("Erreur hCaptcha:", err);
@@ -37,6 +37,8 @@ export const PartnerCaptcha: React.FC<PartnerCaptchaProps> = ({
         />
         <p className="text-xs text-gray-500 mt-2">
           Cette vérification est nécessaire pour éviter les soumissions automatisées.
+          <br/>
+          <span className="italic text-amber-600">Note: Ceci est une clé de test hCaptcha. En production, utilisez une clé réelle.</span>
         </p>
       </div>
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}

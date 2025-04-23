@@ -6,7 +6,7 @@
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
     <loc>https://progineer.fr</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr"/>
@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/a-propos</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/a-propos"/>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://progineer.fr/prestations-maitre-oeuvre</loc>
-    <lastmod>2025-04-22</lastmod>
+    <lastmod>2025-04-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="fr" href="https://progineer.fr/prestations-maitre-oeuvre"/>

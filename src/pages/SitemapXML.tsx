@@ -1,7 +1,5 @@
-
 import React, { useEffect, useState } from 'react';
 import { publicRoutes } from '../routes/publicRoutes';
-import { Helmet } from 'react-helmet-async';
 import { Navigate, useLocation, Link } from 'react-router-dom';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
@@ -13,7 +11,7 @@ const SitemapXML: React.FC = () => {
   const currentPath = location.pathname;
   
   // If the URL has a trailing slash after "sitemap.xml", redirect to the version without slash
-  if (currentPath.match(/\/sitemap\.xml\/?\/$/)) {
+  if (currentPath.endsWith('/sitemap.xml/')) {
     return <Navigate to="/sitemap.xml" replace />;
   }
   
@@ -78,7 +76,7 @@ const SitemapXML: React.FC = () => {
   };
 
   // If accessing /sitemap.xml directly (with or without trailing slash), serve as pure XML
-  if (currentPath === '/sitemap.xml' || currentPath === '/sitemap.xml/') {
+  if (currentPath === '/sitemap.xml') {
     useEffect(() => {
       // Only proceed if we have XML content
       if (!xmlContent) return;
