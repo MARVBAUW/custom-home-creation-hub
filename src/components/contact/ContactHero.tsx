@@ -11,7 +11,7 @@ const ContactHero = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{ 
-            backgroundImage: `url('/lovable-uploads/23fe2b30-1f84-472d-a3c8-d4c413ffbbc4.png')`,
+            backgroundImage: `url('/lovable-uploads/af45cd18-4494-41b9-ac7f-3284f31ba042.png')`,
             backgroundPosition: 'center',
             transform: 'scale(1.05)',
           }}
