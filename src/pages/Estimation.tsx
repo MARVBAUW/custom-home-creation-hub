@@ -9,6 +9,7 @@ import EstimationFAQ from '@/components/estimation/EstimationFAQ';
 import EstimationLocationCities from '@/components/estimation/EstimationLocationCities';
 import EstimationWizard from '@/components/estimation/calculator/EstimationWizard';
 import { motion } from 'framer-motion';
+import SEOFooter from '@/components/common/SEOFooter';
 
 const Estimation = () => {
   const structuredData = getEstimationStructuredData();
