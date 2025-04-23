@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Index from '../pages/Index';
 import Contact from '../pages/Contact';
@@ -77,6 +76,10 @@ export const publicRoutes = [
   },
   {
     path: "/sitemap.xml",
+    element: <SitemapXML />,
+  },
+  {
+    path: "/sitemap.xml/",
     element: <SitemapXML />,
   },
   {
