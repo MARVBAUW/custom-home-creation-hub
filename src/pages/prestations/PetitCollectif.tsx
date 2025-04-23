@@ -3,19 +3,25 @@ import React from 'react';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
 import { InternalLinkText } from '@/utils/internalLinking';
+import SEOFooter from '@/components/common/SEOFooter';
+import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 
 const PetitCollectif = () => {
   return (
     <>
       <SEO
-        title="Petit collectif résidentiel | Maître d'œuvre PACA - Progineer"
-        description="Réalisation de petits collectifs résidentiels sur mesure à Marseille et en région PACA."
-        keywords="petit collectif résidentiel, construction, maître d'œuvre Marseille, collectif PACA"
+        title="Construction de petit collectif résidentiel PACA | Progineer"
+        description="Maître d'œuvre spécialiste des petits collectifs résidentiels en PACA. De l'optimisation foncière à la livraison, nous concevons des immeubles de qualité."
+        keywords="petit collectif résidentiel, construction immeuble, maître d'œuvre Marseille, R+2, R+3, PACA"
         canonicalUrl="https://progineer.fr/prestations-maitre-oeuvre/petit-collectif"
       />
+      
+      {/* Ajout de la navigation secondaire pour les pages de prestation */}
+      <PrestationsSubNav activeService="petit-collectif" />
+      
       <section className="py-12">
         <Container>
-          <h1 className="text-3xl font-bold mb-6">Petit collectif résidentiel</h1>
+          <h1 className="text-3xl font-bold mb-6">Conception et construction de petits collectifs résidentiels</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div>
               <InternalLinkText
@@ -38,6 +44,26 @@ const PetitCollectif = () => {
                 <li>Pilotage et coordination des travaux</li>
                 <li>Suivi financier et qualité de réalisation</li>
               </ul>
+              
+              <h3 className="text-xl font-semibold mt-8 mb-4">Types de projets réalisés</h3>
+              <ul className="list-disc pl-6 mb-6 space-y-2">
+                <li>
+                  <strong>Immeubles R+1 à R+3</strong>
+                  <p className="text-sm text-gray-600 mt-1">Immeubles de taille humaine parfaitement intégrés au tissu urbain existant</p>
+                </li>
+                <li>
+                  <strong>Résidences de standing</strong>
+                  <p className="text-sm text-gray-600 mt-1">Petits collectifs haut de gamme avec prestations soignées</p>
+                </li>
+                <li>
+                  <strong>Réhabilitations d'immeubles</strong>
+                  <p className="text-sm text-gray-600 mt-1">Transformation de bâtiments existants en petits collectifs</p>
+                </li>
+                <li>
+                  <strong>Résidences services</strong>
+                  <p className="text-sm text-gray-600 mt-1">Petits collectifs adaptés à des publics spécifiques</p>
+                </li>
+              </ul>
             </div>
             <div>
               <h2 className="text-xl font-semibold mb-4">Nos engagements pour votre projet collectif</h2>
@@ -55,6 +81,20 @@ const PetitCollectif = () => {
                 <li>Proposer des logements adaptés aux besoins actuels</li>
                 <li>Optimiser les coûts d'exploitation</li>
               </ul>
+              
+              <h3 className="text-xl font-semibold mt-8 mb-4">Un interlocuteur unique pour votre projet</h3>
+              <p className="mb-4">
+                En tant que maître d'œuvre spécialisé, nous assumons la responsabilité complète du projet,
+                de sa conception à sa livraison. Cela vous permet de :
+              </p>
+              <ul className="list-disc pl-6 mb-6 space-y-2">
+                <li>Simplifier la chaîne de décision</li>
+                <li>Gagner en réactivité</li>
+                <li>Bénéficier d'une vision globale et cohérente</li>
+                <li>Optimiser les coûts à chaque étape</li>
+                <li>Garantir la qualité d'exécution</li>
+              </ul>
+              
               <p className="font-medium">
                 Contactez Progineer pour étudier votre projet de petit collectif résidentiel dans la région PACA, 
                 de l'étude de faisabilité à la livraison clé en main.
@@ -63,6 +103,17 @@ const PetitCollectif = () => {
           </div>
         </Container>
       </section>
+      
+      <SEOFooter 
+        text="Construction de petits collectifs résidentiels en PACA par Progineer, maître d'œuvre expert en promotion immobilière à taille humaine. De la conception à la réalisation, nous vous accompagnons dans tous vos projets immobiliers à Marseille, Nice, Toulon et dans toute la région PACA."
+        additionalKeywords={[
+          "immeubles résidentiels PACA", 
+          "petit collectif Marseille", 
+          "construction R+2 Nice", 
+          "promotion immobilière Toulon", 
+          "résidence petit collectif"
+        ]}
+      />
     </>
   );
 };
