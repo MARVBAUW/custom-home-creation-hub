@@ -31,10 +31,11 @@ const Hero = () => {
               Maître d'œuvre à Marseille
             </div>
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
+            {/* Use h2 here since h1 is already in Index.tsx */}
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide text-white leading-tight mb-6 text-left">
               Votre maître d'œuvre expert à <br className="hidden md:block" />
               <span className="text-progineer-gold">Marseille et en PACA</span>
-            </h1>
+            </h2>
             
             <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl text-left">
               Coordination des corps de métier, respect des délais et expertise technique pour vos projets de construction et rénovation. Un accompagnement sur mesure par votre maître d'ouvrage à Marseille.

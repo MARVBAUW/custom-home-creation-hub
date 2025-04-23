@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
+import { InternalLinkText } from '@/utils/internalLinking';
 
 const RenovationHero = () => {
   return (
@@ -11,10 +12,13 @@ const RenovationHero = () => {
             Nos prestations
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-            Rénovation complète
+            Rénovation complète à Marseille et PACA
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-            Des <strong>rénovations sur mesure</strong> pour transformer votre habitat existant. Nous vous accompagnons pour redonner vie à votre maison ou appartement.
+            <InternalLinkText 
+              text="Des rénovations sur mesure pour transformer votre habitat existant. Nous vous accompagnons pour redonner vie à votre maison ou appartement."
+              maxOccurrences={2}
+            />
           </p>
         </div>
       </Container>

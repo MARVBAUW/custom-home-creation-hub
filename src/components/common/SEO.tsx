@@ -1,32 +1,47 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import { useLocation } from 'react-router-dom';
+import { getPageKeyFromRoute, getPageSEO } from '@/utils/seoUtils';
 
 interface SEOProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   keywords?: string;
   canonicalUrl?: string;
   ogType?: string;
   ogImage?: string;
   structuredData?: object;
   children?: React.ReactNode;
+  forcedPageKey?: string;
 }
 
 const SEO: React.FC<SEOProps> = ({
-  title,
-  description,
+  title: propTitle,
+  description: propDescription,
   keywords,
-  canonicalUrl = 'https://progineer.fr',
+  canonicalUrl: propCanonicalUrl,
   ogType = 'website',
   ogImage = 'https://progineer.fr/images/progineer-social-card.jpg', 
   structuredData,
   children,
+  forcedPageKey,
 }) => {
-  // Make sure title is not too long (Google typically displays the first 50-60 characters)
-  const formattedTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
+  const location = useLocation();
+  const pageKey = forcedPageKey || getPageKeyFromRoute(location.pathname);
+  const pageSEO = getPageSEO(pageKey);
   
-  // Make sure description is not too long (Google typically displays ~155-160 characters)
+  // Use prop values if provided, otherwise use the values from pageSEO
+  const title = propTitle || pageSEO.title;
+  const description = propDescription || pageSEO.description;
+  
+  // Make sure canonical URL is absolute
+  const baseUrl = 'https://progineer.fr';
+  const path = location.pathname === '/' ? '' : location.pathname;
+  const canonicalUrl = propCanonicalUrl || `${baseUrl}${path}`;
+  
+  // Make sure title and description are not too long
+  const formattedTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
   const formattedDescription = description.length > 160 ? description.substring(0, 160) + '...' : description;
 
   // Default structured data if none is provided
@@ -34,8 +49,8 @@ const SEO: React.FC<SEOProps> = ({
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     "name": "Progineer - Maître d'œuvre en PACA",
-    "description": "Entreprise d'architecture et de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA.",
-    "url": "https://progineer.fr",
+    "description": formattedDescription,
+    "url": canonicalUrl,
     "logo": "https://progineer.fr/images/progineer-logo.png",
     "image": "https://progineer.fr/images/progineer-social-card.jpg",
     "telephone": "+33783762156",
@@ -199,7 +214,7 @@ const SEO: React.FC<SEOProps> = ({
             {
               "@type": "ListItem",
               "position": 2,
-              "name": title,
+              "name": formattedTitle,
               "item": canonicalUrl
             }
           ]

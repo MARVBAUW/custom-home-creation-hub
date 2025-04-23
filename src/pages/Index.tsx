@@ -18,15 +18,16 @@ const Index = () => {
   return (
     <>
       <SEO 
-        title="Maître d'œuvre Marseille | Construction & Rénovation | Progineer PACA"
-        description="Maître d'œuvre à Marseille expert en construction, rénovation et extension de maisons. Coordination des corps de métier, respect des délais et expertise technique pour vos projets en PACA."
-        keywords="maître d'œuvre marseille, maîtrise d'œuvre, coordination chantier, corps de métier, expertise technique, respect des délais, projet de rénovation, maître d'ouvrage, maîtres d'œuvre"
-        canonicalUrl="https://progineer.fr/"
+        forcedPageKey="home"
         structuredData={getBusinessStructuredData()}
       />
       
       <main className="pt-16">
-        <h1 className="sr-only">Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
+        {/* h1 is now visible rather than using sr-only */}
+        <h1 className="text-center px-4 py-6 bg-khaki-50 text-3xl md:text-4xl font-semibold text-gray-900">
+          Maître d'œuvre à Marseille - Progineer Construction & Rénovation
+        </h1>
+        
         <Hero />
         <ExpertiseSection />
         <Services />
@@ -127,6 +128,58 @@ const Index = () => {
                     Plan du site
                   </Link></li>
                 </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Additional SEO content to increase word count */}
+        <section className="py-12 px-4">
+          <div className="container mx-auto">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-2xl font-semibold mb-6">Notre expertise en maîtrise d'œuvre à Marseille</h2>
+              <div className="prose max-w-none text-gray-700">
+                <p>
+                  Progineer est votre <strong>maître d'œuvre à Marseille</strong> et en région PACA, spécialisé dans la 
+                  <strong>construction de maisons individuelles</strong>, la <strong>rénovation d'appartements</strong> et
+                  l'<strong>extension de bâtiments</strong>. Notre équipe d'experts vous accompagne à chaque étape de votre projet, 
+                  de la conception initiale à la livraison finale, en passant par toutes les phases intermédiaires essentielles.
+                </p>
+                
+                <p className="mt-4">
+                  En tant que <strong>maître d'œuvre professionnel</strong>, nous assurons une <strong>coordination efficace des corps de métier</strong> 
+                  impliqués dans votre chantier. Cette expertise garantit une harmonie parfaite entre les différents artisans et entreprises, 
+                  pour un résultat final à la hauteur de vos attentes. Notre engagement pour le <strong>respect des délais</strong> est 
+                  primordial dans notre démarche, vous permettant de planifier sereinement votre projet immobilier.
+                </p>
+                
+                <p className="mt-4">
+                  L'<strong>expertise technique</strong> est au cœur de notre métier. Nos ingénieurs et architectes possèdent une connaissance 
+                  approfondie des normes de construction et des innovations du secteur, vous garantissant des solutions durables et 
+                  parfaitement adaptées à votre projet en <strong>Provence-Alpes-Côte d'Azur</strong>.
+                </p>
+                
+                <h3 className="text-xl font-medium mt-8 mb-4">Construction neuve en PACA</h3>
+                <p>
+                  Pour votre <strong>construction de maison neuve</strong>, nous vous proposons un accompagnement global : études préliminaires, 
+                  conception architecturale personnalisée, plans détaillés, permis de construire, et suivi rigoureux du chantier. 
+                  Notre objectif est de concrétiser la maison de vos rêves, en respectant votre budget et vos exigences spécifiques.
+                </p>
+                
+                <h3 className="text-xl font-medium mt-8 mb-4">Rénovation d'intérieur à Marseille</h3>
+                <p>
+                  La <strong>rénovation d'appartement ou de maison</strong> nécessite une expertise particulière pour transformer votre 
+                  espace existant tout en préservant son caractère. À Marseille et dans toute la région PACA, nos services de rénovation 
+                  incluent le diagnostic complet, les recommandations d'optimisation, et la mise en œuvre de solutions adaptées à votre 
+                  habitat et à vos besoins.
+                </p>
+                
+                <h3 className="text-xl font-medium mt-8 mb-4">Extension et agrandissement</h3>
+                <p>
+                  L'<strong>extension de maison</strong> représente une excellente solution pour gagner de l'espace sans déménager. 
+                  Notre équipe conçoit des extensions parfaitement intégrées à votre bâti existant, en harmonie architecturale et 
+                  fonctionnelle. Nous gérons l'ensemble du processus, des démarches administratives à la livraison de votre nouvel espace.
+                </p>
               </div>
             </div>
           </div>
