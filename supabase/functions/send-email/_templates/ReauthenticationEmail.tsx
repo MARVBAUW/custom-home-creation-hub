@@ -7,39 +7,37 @@ import {
 import * as React from 'npm:react@18.3.1'
 import { EmailLayout } from './EmailLayout.tsx'
 
-interface ConfirmationEmailProps {
-  confirmationUrl: string;
+interface ReauthenticationEmailProps {
+  reauthUrl: string;
   userName?: string;
 }
 
-export const ConfirmationEmail = ({
-  confirmationUrl,
+export const ReauthenticationEmail = ({
+  reauthUrl,
   userName,
-}: ConfirmationEmailProps) => (
+}: ReauthenticationEmailProps) => (
   <EmailLayout
-    title="Confirmation d'inscription - Progineer"
-    preview="Confirmez votre inscription à Progineer"
+    title="Confirmation de connexion - Progineer"
+    preview="Confirmez votre connexion à Progineer"
   >
     <Text style={paragraph}>
       {userName ? `Bonjour ${userName},` : 'Bonjour,'}
     </Text>
     
     <Text style={paragraph}>
-      Merci de vous être inscrit sur Progineer. Pour finaliser votre inscription et activer votre compte, 
-      cliquez sur le bouton ci-dessous :
+      Pour des raisons de sécurité, nous avons besoin de confirmer votre identité. 
+      Cliquez sur le bouton ci-dessous pour vous reconnecter :
     </Text>
 
     <Section style={buttonContainer}>
-      <Button
-        href={confirmationUrl}
-        style={button}
-      >
-        Confirmer mon adresse email
+      <Button href={reauthUrl} style={button}>
+        Confirmer ma connexion
       </Button>
     </Section>
 
     <Text style={expireText}>
       Ce lien est valable pendant une durée limitée.
+      Si vous n'avez pas tenté de vous connecter, vous pouvez ignorer cet email.
     </Text>
   </EmailLayout>
 )

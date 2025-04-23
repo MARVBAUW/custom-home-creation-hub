@@ -7,39 +7,35 @@ import {
 import * as React from 'npm:react@18.3.1'
 import { EmailLayout } from './EmailLayout.tsx'
 
-interface ConfirmationEmailProps {
-  confirmationUrl: string;
+interface MagicLinkEmailProps {
+  magicLink: string;
   userName?: string;
 }
 
-export const ConfirmationEmail = ({
-  confirmationUrl,
+export const MagicLinkEmail = ({
+  magicLink,
   userName,
-}: ConfirmationEmailProps) => (
+}: MagicLinkEmailProps) => (
   <EmailLayout
-    title="Confirmation d'inscription - Progineer"
-    preview="Confirmez votre inscription à Progineer"
+    title="Connexion à Progineer"
+    preview="Votre lien de connexion à Progineer"
   >
     <Text style={paragraph}>
       {userName ? `Bonjour ${userName},` : 'Bonjour,'}
     </Text>
     
     <Text style={paragraph}>
-      Merci de vous être inscrit sur Progineer. Pour finaliser votre inscription et activer votre compte, 
-      cliquez sur le bouton ci-dessous :
+      Voici votre lien de connexion à Progineer. Cliquez sur le bouton ci-dessous pour vous connecter :
     </Text>
 
     <Section style={buttonContainer}>
-      <Button
-        href={confirmationUrl}
-        style={button}
-      >
-        Confirmer mon adresse email
+      <Button href={magicLink} style={button}>
+        Se connecter
       </Button>
     </Section>
 
     <Text style={expireText}>
-      Ce lien est valable pendant une durée limitée.
+      Ce lien est valable pendant une durée limitée et ne peut être utilisé qu'une seule fois.
     </Text>
   </EmailLayout>
 )

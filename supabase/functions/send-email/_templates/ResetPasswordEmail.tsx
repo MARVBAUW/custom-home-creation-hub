@@ -7,39 +7,37 @@ import {
 import * as React from 'npm:react@18.3.1'
 import { EmailLayout } from './EmailLayout.tsx'
 
-interface ConfirmationEmailProps {
-  confirmationUrl: string;
+interface ResetPasswordEmailProps {
+  resetUrl: string;
   userName?: string;
 }
 
-export const ConfirmationEmail = ({
-  confirmationUrl,
+export const ResetPasswordEmail = ({
+  resetUrl,
   userName,
-}: ConfirmationEmailProps) => (
+}: ResetPasswordEmailProps) => (
   <EmailLayout
-    title="Confirmation d'inscription - Progineer"
-    preview="Confirmez votre inscription à Progineer"
+    title="Réinitialisation de mot de passe - Progineer"
+    preview="Réinitialisez votre mot de passe Progineer"
   >
     <Text style={paragraph}>
       {userName ? `Bonjour ${userName},` : 'Bonjour,'}
     </Text>
     
     <Text style={paragraph}>
-      Merci de vous être inscrit sur Progineer. Pour finaliser votre inscription et activer votre compte, 
-      cliquez sur le bouton ci-dessous :
+      Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le bouton ci-dessous 
+      pour choisir un nouveau mot de passe :
     </Text>
 
     <Section style={buttonContainer}>
-      <Button
-        href={confirmationUrl}
-        style={button}
-      >
-        Confirmer mon adresse email
+      <Button href={resetUrl} style={button}>
+        Réinitialiser mon mot de passe
       </Button>
     </Section>
 
     <Text style={expireText}>
       Ce lien est valable pendant une durée limitée.
+      Si vous n'avez pas demandé cette réinitialisation, vous pouvez ignorer cet email.
     </Text>
   </EmailLayout>
 )

@@ -7,39 +7,36 @@ import {
 import * as React from 'npm:react@18.3.1'
 import { EmailLayout } from './EmailLayout.tsx'
 
-interface ConfirmationEmailProps {
-  confirmationUrl: string;
-  userName?: string;
+interface InvitationEmailProps {
+  inviteUrl: string;
+  invitedBy?: string;
 }
 
-export const ConfirmationEmail = ({
-  confirmationUrl,
-  userName,
-}: ConfirmationEmailProps) => (
+export const InvitationEmail = ({
+  inviteUrl,
+  invitedBy,
+}: InvitationEmailProps) => (
   <EmailLayout
-    title="Confirmation d'inscription - Progineer"
-    preview="Confirmez votre inscription à Progineer"
+    title="Invitation à rejoindre Progineer"
+    preview="Vous avez été invité à rejoindre Progineer"
   >
-    <Text style={paragraph}>
-      {userName ? `Bonjour ${userName},` : 'Bonjour,'}
-    </Text>
+    <Text style={paragraph}>Bonjour,</Text>
     
     <Text style={paragraph}>
-      Merci de vous être inscrit sur Progineer. Pour finaliser votre inscription et activer votre compte, 
-      cliquez sur le bouton ci-dessous :
+      {invitedBy 
+        ? `Vous avez été invité par ${invitedBy} à rejoindre Progineer.`
+        : "Vous avez été invité à rejoindre Progineer."
+      } Pour créer votre compte, cliquez sur le bouton ci-dessous :
     </Text>
 
     <Section style={buttonContainer}>
-      <Button
-        href={confirmationUrl}
-        style={button}
-      >
-        Confirmer mon adresse email
+      <Button href={inviteUrl} style={button}>
+        Créer mon compte
       </Button>
     </Section>
 
     <Text style={expireText}>
-      Ce lien est valable pendant une durée limitée.
+      Cette invitation est valable pendant une durée limitée.
     </Text>
   </EmailLayout>
 )
