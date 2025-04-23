@@ -1,94 +1,18 @@
 
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { publicRoutes } from '../routes/publicRoutes';
 
 const SitemapXML: React.FC = () => {
   const location = useLocation();
-  const currentPath = location.pathname;
   
-  // Redirection for URL with trailing slash
-  if (currentPath === '/sitemap.xml/') {
-    return <Navigate to="/sitemap.xml" replace />;
-  }
-
   useEffect(() => {
-    // Only generate and serve XML if we're on the exact /sitemap.xml route
-    if (currentPath === '/sitemap.xml') {
-      const currentDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
-      const baseUrl = 'https://progineer.fr';
-      
-      // Generate XML content with proper namespaces
-      let content = '<?xml version="1.0" encoding="UTF-8"?>\n';
-      content += '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n';
-      content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ';
-      content += 'xmlns:xhtml="http://www.w3.org/1999/xhtml" ';
-      content += 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" ';
-      content += 'xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">\n';
-
-      // Add home page with priority 1.0
-      content += '  <url>\n';
-      content += `    <loc>${baseUrl}/</loc>\n`;
-      content += `    <lastmod>${currentDate}</lastmod>\n`;
-      content += '    <changefreq>monthly</changefreq>\n';
-      content += '    <priority>1.0</priority>\n';
-      content += `    <xhtml:link rel="alternate" hreflang="fr" href="${baseUrl}/"/>\n`;
-      content += `    <xhtml:link rel="canonical" href="${baseUrl}/"/>\n`;
-      content += '  </url>\n';
-
-      // Add each route with appropriate indentation
-      publicRoutes
-        .filter(route => route.path && route.path !== '*' && !route.path.includes('*'))
-        .forEach(route => {
-          const path = route.path.replace(/\/$/, '');
-          const fullUrl = `${baseUrl}${path}`;
-          
-          // Skip the home page (already added)
-          if (path !== '') {
-            content += '  <url>\n';
-            content += `    <loc>${fullUrl}</loc>\n`;
-            content += `    <lastmod>${currentDate}</lastmod>\n`;
-            
-            // Adjust priority based on route
-            const priority = path === '/a-propos' || path === '/estimation' || path === '/contact' ? '0.9' : 
-                             path.startsWith('/prestations-maitre-oeuvre') ? '0.7' : '0.8';
-            
-            content += '    <changefreq>monthly</changefreq>\n';
-            content += `    <priority>${priority}</priority>\n`;
-            
-            // Add hreflang and canonical tags
-            content += `    <xhtml:link rel="alternate" hreflang="fr" href="${fullUrl}"/>\n`;
-            content += `    <xhtml:link rel="canonical" href="${fullUrl}"/>\n`;
-            
-            content += '  </url>\n';
-          }
-        });
-      
-      content += '</urlset>';
-      
-      // Attempt to set content type headers
-      if (typeof window !== 'undefined') {
-        // Create a blob with the XML content and correct MIME type
-        const blob = new Blob([content], { type: 'application/xml;charset=UTF-8' });
-        
-        // We won't try to set document.contentType directly since it's read-only
-        // Instead, we'll write the content with the correct content type when opening the document
-        
-        // First clear the document
-        document.open();
-        // Write our XML content
-        document.write(content);
-        // Add a content-type meta tag (this is the best we can do client-side)
-        document.write('<meta http-equiv="Content-Type" content="application/xml; charset=utf-8">');
-        document.close();
-        
-        // Set the document title to reflect it's an XML document
-        document.title = "Sitemap XML";
-      }
+    // Redirect to the static sitemap.xml file in the public folder
+    if (location.pathname === '/sitemap.xml') {
+      window.location.href = '/sitemap.xml';
     }
-  }, [currentPath]);
+  }, [location.pathname]);
 
-  // Initial React render content (not shown to users as it will be replaced by XML)
+  // This component doesn't render anything as it just redirects
   return null;
 };
 
