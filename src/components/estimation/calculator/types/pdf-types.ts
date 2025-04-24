@@ -1,4 +1,3 @@
-
 export interface PDFGenerationOptions {
   includeBreakdown?: boolean;
   includeContactInfo?: boolean;
@@ -6,10 +5,14 @@ export interface PDFGenerationOptions {
   includeBankReport?: boolean;
   includeHeader?: boolean;
   includeFooter?: boolean;
+  includeDetails?: boolean;
+  includeLogo?: boolean;
+  includeTerrainPrice?: boolean;
   logo?: string;
   companyName?: string;
   companyAddress?: string;
   companyContact?: string;
+  fileName?: string;
 }
 
 export interface PDFReportData {

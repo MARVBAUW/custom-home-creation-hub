@@ -1,4 +1,3 @@
-
 /**
  * Ensures a value is a number
  * If the value is already a number, it's returned as is
@@ -33,6 +32,31 @@ export const ensureBoolean = (value: any): boolean => {
     return value.toLowerCase() === 'true';
   }
   return Boolean(value);
+};
+
+/**
+ * Ensures a value is a string
+ */
+export const ensureString = (value: any): string => {
+  if (typeof value === 'string') return value;
+  if (value === null || value === undefined) return '';
+  return String(value);
+};
+
+/**
+ * Converts a value to a form-compatible value
+ */
+export const toFormValue = (value: any): string => {
+  if (value === null || value === undefined) return '';
+  return String(value);
+};
+
+/**
+ * Safely renders a value as a string
+ */
+export const safeRenderValue = (value: any): string => {
+  if (value === null || value === undefined) return '-';
+  return String(value);
 };
 
 /**
