@@ -2,7 +2,6 @@
 // Re-export specific types from formTypes
 export type { 
   FormData,
-  BaseFormProps,
   StepRendererProps,
   ConversationState,
   Message 
@@ -20,5 +19,5 @@ export type {
   EstimatedCost
 } from './estimationTypes';
 
-// Re-export the BaseFormProps type
+// Export BaseFormProps uniquement depuis le fichier dédié
 export type { BaseFormProps } from './baseFormProps';
