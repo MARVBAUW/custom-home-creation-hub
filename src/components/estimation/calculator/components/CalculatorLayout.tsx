@@ -1,87 +1,79 @@
-
 import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import StepIndicator from './StepIndicator';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons'
 import StepRenderer from './StepRenderer';
-import FormNavigation from './FormNavigation';
-import { FormData } from '../types/formTypes';
+import { StepRendererProps } from '../types';
 
 interface CalculatorLayoutProps {
-  step: number;
+  steps: any[];
   currentStep: number;
-  totalSteps: number;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: any;
+  updateFormData: (data: any) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  goToStep: (step: number) => void;
   isSubmitting: boolean;
-  isComplete: boolean;
+  goToStep: (step: number) => void;
   onComplete: () => void;
 }
 
 const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
-  step,
-  currentStep,
-  totalSteps,
+  steps,
+  currentStep: step,
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  goToStep,
   isSubmitting,
-  isComplete,
+  goToStep,
   onComplete
 }) => {
-  // Calculate progress percentage
-  const progress = ((step + 1) / totalSteps) * 100;
-  
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      {/* Progress bar */}
-      <div className="w-full h-2 bg-gray-200 rounded-full mb-8">
-        <div 
-          className="h-2 rounded-full bg-blue-600 transition-all duration-500 ease-in-out"
-          style={{ width: `${progress}%` }}
-        />
+    <div className="flex flex-col h-full">
+      {/* Step content */}
+      <div className="flex-grow">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '-100%' }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="h-full"
+          >
+            {/* Render the current step using StepRenderer */}
+            <StepRenderer 
+              step={step} 
+              formData={formData} 
+              updateFormData={updateFormData}
+              animationDirection="forward"
+              goToNextStep={goToNextStep}
+              goToPreviousStep={goToPreviousStep}
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
-      
-      {/* Step indicator */}
-      <StepIndicator 
-        currentStep={step} 
-        totalSteps={totalSteps} 
-      />
-      
-      {/* Main content */}
-      <Card className="mt-4 border-0 shadow-none">
-        <CardContent className="p-0">
-          <StepRenderer
-            step={step}
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection="forward"
-            isSubmitting={isSubmitting}
-            goToStep={goToStep}
-            onComplete={onComplete}
-          />
-        </CardContent>
-      </Card>
-      
+
       {/* Navigation buttons */}
-      <FormNavigation 
-        step={step} 
-        totalSteps={totalSteps} 
-        onPreviousClick={goToPreviousStep} 
-        onNextClick={goToNextStep}
-        currentStep={currentStep}
-        onPrevStep={goToPreviousStep}
-        onNextStep={goToNextStep}
-        isSubmitting={isSubmitting}
-        isComplete={isComplete}
-        onComplete={onComplete}
-      />
+      <div className="flex justify-between items-center p-4">
+        <Button
+          variant="outline"
+          onClick={goToPreviousStep}
+          disabled={step === 0 || isSubmitting}
+          className="w-auto"
+        >
+          <ArrowLeftIcon className="mr-2 h-4 w-4" />
+          Précédent
+        </Button>
+        <Button
+          onClick={goToNextStep}
+          disabled={step === steps.length - 1 || isSubmitting}
+          className="w-auto"
+        >
+          Suivant
+          <ArrowRightIcon className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };

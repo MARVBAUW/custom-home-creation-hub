@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
-import { BaseFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types/baseFormProps';
 import { toFormValue, ensureNumber } from '../utils/typeConversions';
 
 const ConstructionDetailsForm: React.FC<BaseFormProps> = ({

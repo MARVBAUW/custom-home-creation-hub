@@ -11,7 +11,9 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   step,
   formData,
   updateFormData,
-  animationDirection
+  animationDirection,
+  goToNextStep,
+  goToPreviousStep
 }) => {
   const variants = {
     enter: (direction: string) => ({
@@ -32,7 +34,9 @@ const StepRenderer: React.FC<StepRendererProps> = ({
     const commonProps = {
       formData,
       updateFormData,
-      animationDirection
+      animationDirection,
+      goToNextStep: goToNextStep!,
+      goToPreviousStep: goToPreviousStep!
     };
 
     switch (step) {

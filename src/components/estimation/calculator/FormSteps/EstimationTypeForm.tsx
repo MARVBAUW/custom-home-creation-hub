@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BaseFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types/baseFormProps';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

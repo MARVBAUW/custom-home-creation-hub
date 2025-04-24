@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BaseFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types/baseFormProps';
 import ContactDetailsStep from '../steps/ContactDetailsStep';
 
 interface ContactFormProps extends BaseFormProps {

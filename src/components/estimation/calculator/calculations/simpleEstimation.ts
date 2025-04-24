@@ -1,79 +1,57 @@
 import { FormData } from '../types';
 
-/**
- * Calculate a simple estimation based on the provided form data
- * @param data The form data
- * @returns The estimated amount
- */
-export const calculateSimpleEstimation = (data: FormData): number => {
-  let total = 50000; // Base amount
+export const simpleEstimation = (formData: FormData): number => {
+  let basePrice = 500; // Base price per square meter
+  let totalPrice = 0;
 
-  // Project type
-  if (data.projectType === 'renovation') {
-    total += 20000;
-  } else if (data.projectType === 'extension') {
-    total += 30000;
+  // Adjust base price based on project type
+  if (formData.projectType === 'renovation') {
+    basePrice = 700; // Higher base price for renovation
+  } else if (formData.projectType === 'extension') {
+    basePrice = 600; // Different base price for extension
   }
 
-  // Surface area
-  if (typeof data.surface === 'number') {
-    total += data.surface * 500;
-  } else if (typeof data.surface === 'string') {
-    const surface = parseFloat(data.surface);
-    if (!isNaN(surface)) {
-      total += surface * 500;
-    }
+  // Get surface area
+  const surface = formData.surface || 0;
+
+  // Calculate initial total price
+  totalPrice = basePrice * surface;
+
+  // Adjustments based on other form data
+  if (formData.bedrooms) {
+    totalPrice += formData.bedrooms * 5000; // Additional cost per bedroom
+  }
+  if (formData.bathrooms) {
+    totalPrice += formData.bathrooms * 7000; // Additional cost per bathroom
   }
 
-  // Complexity
-  if (data.complexity === 'complex') {
-    total *= 1.3;
-  } else if (data.complexity === 'moderate') {
-    total *= 1.15;
+  // Example adjustments based on construction type and terrain type
+  if (formData.constructionType === 'high_end') {
+    totalPrice *= 1.2; // Increase price by 20% for high-end construction
+  }
+  if (formData.terrainType === 'sloping') {
+    totalPrice *= 1.1; // Increase price by 10% for sloping terrain
   }
 
-  // Quality standard
-  if (data.qualityStandard === 'high') {
-    total *= 1.2;
-  } else if (data.qualityStandard === 'premium') {
-    total *= 1.35;
+  // Add land price if land is included
+  if (formData.landIncluded && formData.landPrice) {
+    totalPrice += formData.landPrice;
   }
 
-  // Number of bedrooms and bathrooms
-  if (typeof data.bedrooms === 'number') {
-    total += data.bedrooms * 10000;
-  } else if (typeof data.bedrooms === 'string') {
-    const bedrooms = parseInt(data.bedrooms, 10);
-    if (!isNaN(bedrooms)) {
-      total += bedrooms * 10000;
-    }
+  // Further adjustments can be added based on other criteria
+  // For example, city, specific materials, etc.
+
+  // Ensure the projectType is defined before calling toLowerCase()
+  const lowerCaseProjectType = formData.projectType ? formData.projectType.toLowerCase() : '';
+
+  // Apply different logic based on the project type
+  if (lowerCaseProjectType === 'renovation') {
+    // Renovation-specific adjustments
+    totalPrice *= 1.15; // Increase price by 15% for renovation projects
+  } else if (lowerCaseProjectType === 'extension') {
+    // Extension-specific adjustments
+    totalPrice *= 1.20; // Increase price by 20% for extension projects
   }
 
-  if (typeof data.bathrooms === 'number') {
-    total += data.bathrooms * 15000;
-  } else if (typeof data.bathrooms === 'string') {
-    const bathrooms = parseInt(data.bathrooms, 10);
-    if (!isNaN(bathrooms)) {
-      total += bathrooms * 15000;
-    }
-  }
-
-  // Check if land is included (convert string 'true'/'false' to boolean if needed)
-  const landIncludedValue = 
-    typeof data.landIncluded === 'string' 
-      ? data.landIncluded.toLowerCase() === 'true'
-      : !!data.landIncluded;
-  
-  // If land is included and there's a land price, add it to the total
-  if (landIncludedValue && data.landPrice) {
-    const landPrice = typeof data.landPrice === 'string' 
-      ? parseFloat(data.landPrice) 
-      : data.landPrice;
-    
-    if (!isNaN(landPrice)) {
-      total += landPrice;
-    }
-  }
-  
-  return total;
+  return totalPrice;
 };
