@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const SitemapXML: React.FC = () => {
   const location = useLocation();

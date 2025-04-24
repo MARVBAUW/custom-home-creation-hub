@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  className?: string;
 }
 
 const Container = ({ children, size = 'md', className, ...props }: ContainerProps) => {
