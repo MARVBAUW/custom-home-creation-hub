@@ -1,12 +1,13 @@
-
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FileSpreadsheet, Download, X, Maximize2, Minimize2 } from 'lucide-react';
 import Button from '@/components/common/Button';
+import { handleFileDownload } from '@/utils/downloadUtils';
 import FilePreviewTable from './FilePreviewTable';
 import FileProperties from './FileProperties';
 import FileMacroWarning from './FileMacroWarning';
 import { generateSampleData, getMacroNote } from './fileViewerUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface FileViewerProps {
   file: {
@@ -14,12 +15,14 @@ interface FileViewerProps {
     filename: string;
     version: string;
     lastUpdate: string;
+    url?: string;
   } | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
 const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
+  const { toast } = useToast();
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState('aperçu');
 
@@ -31,6 +34,33 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
 
   const sampleData = generateSampleData(file);
   const macroNote = getMacroNote(file);
+
+  const handleDownloadClick = async () => {
+    if (!file?.url) {
+      toast({
+        title: "Erreur",
+        description: "URL du fichier non disponible",
+        variant: 'destructive'
+      });
+      return;
+    }
+
+    const success = await handleFileDownload(file.url, file.title);
+    
+    if (success) {
+      toast({
+        title: "Téléchargement réussi",
+        description: `Le fichier "${file.title}" a été téléchargé avec succès.`
+      });
+      onClose();
+    } else {
+      toast({
+        title: "Erreur de téléchargement",
+        description: "Une erreur est survenue lors du téléchargement. Veuillez réessayer.",
+        variant: 'destructive'
+      });
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -96,7 +126,7 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
             <span className="mx-2">•</span>
             <span>Mise à jour: {file.lastUpdate}</span>
           </div>
-          <Button onClick={onClose} className="bg-khaki-600 hover:bg-khaki-700">
+          <Button onClick={handleDownloadClick} className="bg-khaki-600 hover:bg-khaki-700">
             <Download className="h-4 w-4 mr-2" />
             Télécharger
           </Button>

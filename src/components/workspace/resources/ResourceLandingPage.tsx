@@ -1,11 +1,11 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Download, Eye, FileText, Calendar, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import ResourceSEOHead from './ResourceSEOHead';
-import { formatFileSize, checkFileExists, trackResourceDownload } from '@/utils/resourceUtils';
+import { formatFileSize, checkFileExists } from '@/utils/resourceUtils';
+import { handleFileDownload, previewFile } from '@/utils/downloadUtils';
 import { Link } from 'react-router-dom';
 
 interface ResourceLandingPageProps {
@@ -27,12 +27,14 @@ interface ResourceLandingPageProps {
   };
 }
 
-const ResourceLandingPage: React.FC<ResourceLandingPageProps> = ({ resource }) => {
+const ResourceLandingPage: React.FC<ResourceLandingPageProps> = ({
+  resource
+}) => {
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
   const [fileExists, setFileExists] = useState(true);
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Check if the file actually exists
     const verifyFile = async () => {
       const exists = await checkFileExists(resource.fileUrl);
@@ -42,7 +44,7 @@ const ResourceLandingPage: React.FC<ResourceLandingPageProps> = ({ resource }) =
     verifyFile();
   }, [resource.fileUrl]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!fileExists) {
       toast({
         title: "Fichier temporairement indisponible",
@@ -54,33 +56,24 @@ const ResourceLandingPage: React.FC<ResourceLandingPageProps> = ({ resource }) =
     
     setIsDownloading(true);
     
-    // Track the download
-    trackResourceDownload({
-      title: resource.title,
-      description: resource.description,
-      fileUrl: resource.fileUrl,
-      fileType: resource.fileType,
-      category: resource.category,
-      keywords: resource.keywords
-    });
+    const success = await handleFileDownload(resource.fileUrl, resource.title);
     
-    // Simulate download delay (this would normally happen naturally)
-    setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = resource.fileUrl;
-      link.download = resource.title.replace(/\s+/g, '-').toLowerCase();
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      setIsDownloading(false);
-      
+    if (success) {
       toast({
-        title: "Téléchargement démarré",
-        description: `Le document "${resource.title}" commence à se télécharger.`,
+        title: "Téléchargement réussi",
+        description: `Le document "${resource.title}" a été téléchargé avec succès.`,
         duration: 3000
       });
-    }, 800);
+    } else {
+      toast({
+        title: "Erreur de téléchargement",
+        description: "Une erreur est survenue lors du téléchargement. Veuillez réessayer.",
+        variant: 'destructive',
+        duration: 3000
+      });
+    }
+    
+    setIsDownloading(false);
   };
 
   const handlePreview = () => {
@@ -93,8 +86,7 @@ const ResourceLandingPage: React.FC<ResourceLandingPageProps> = ({ resource }) =
       return;
     }
     
-    // Open preview in new tab
-    window.open(resource.fileUrl, '_blank');
+    previewFile(resource.fileUrl);
   };
 
   return (
