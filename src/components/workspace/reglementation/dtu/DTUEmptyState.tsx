@@ -9,11 +9,9 @@ interface DTUEmptyStateProps {
   description?: string;
 }
 
-export const DTUEmptyState: React.FC<DTUEmptyStateProps> = ({ 
-  type = 'empty',
-  message,
-  description 
-}) => {
+export const DTUEmptyState: React.FC<DTUEmptyStateProps> = (props) => {
+  const { type = 'empty' } = props;
+
   // Default messages based on type
   const defaultMessages = {
     empty: {
@@ -34,8 +32,8 @@ export const DTUEmptyState: React.FC<DTUEmptyStateProps> = ({
   };
 
   const currentMessage = defaultMessages[type];
-  const displayTitle = message || currentMessage.title;
-  const displayDescription = description || currentMessage.description;
+  const displayTitle = props.message || currentMessage.title;
+  const displayDescription = props.description || currentMessage.description;
 
   return (
     <div className="text-center py-10 bg-gray-50 rounded-lg border border-gray-200">
@@ -47,3 +45,4 @@ export const DTUEmptyState: React.FC<DTUEmptyStateProps> = ({
     </div>
   );
 };
+
