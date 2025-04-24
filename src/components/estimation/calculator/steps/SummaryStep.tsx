@@ -3,11 +3,9 @@ import React from 'react';
 import { BaseFormProps } from '../types/baseFormProps';
 import { Button } from "@/components/ui/button";
 
-const SummaryStep: React.FC<BaseFormProps> = ({
-  formData,
-  goToPreviousStep,
-  onComplete
-}) => {
+const SummaryStep: React.FC<BaseFormProps> = (props) => {
+  const { formData, goToPreviousStep, onComplete } = props;
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onComplete) onComplete();
