@@ -13,6 +13,10 @@ const SummaryStep: React.FC<BaseFormProps> = ({
     if (onComplete) onComplete();
   };
 
+  const handlePrevious = () => {
+    if (goToPreviousStep) goToPreviousStep();
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Récapitulatif de votre projet</h3>
@@ -47,7 +51,7 @@ const SummaryStep: React.FC<BaseFormProps> = ({
         )}
       </div>
       <div className="flex justify-between">
-        <Button type="button" variant="outline" onClick={goToPreviousStep}>
+        <Button type="button" variant="outline" onClick={handlePrevious}>
           Retour
         </Button>
         <Button onClick={handleSubmit}>
