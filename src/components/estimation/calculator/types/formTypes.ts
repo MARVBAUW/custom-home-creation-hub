@@ -1,4 +1,3 @@
-
 export interface FormData {
   clientType?: 'individual' | 'professional';
   projectType?: string;
@@ -17,7 +16,7 @@ export interface FormData {
 
 // Re-export BaseFormProps from baseFormProps.ts to maintain backward compatibility
 // with existing imports without having to change all files
-export { BaseFormProps } from './baseFormProps';
+export type { BaseFormProps } from './baseFormProps';
 
 export interface StepRendererProps {
   step: number;
