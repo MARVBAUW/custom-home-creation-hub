@@ -1,5 +1,6 @@
+
 import { EstimationFormData, FormData } from '../types/formTypes';
-import { EstimationResponseData } from '../types/estimationTypes';
+import { EstimationResponseData, ProjectDetails, EstimatedCost, CategoryCost } from '../types/estimationTypes';
 import { calculateConstructionBaseCost, calculateKitchenCost, calculateBathroomCost, calculateWindowsCost, calculateEcoOptionsCost } from '../calculations/estimationCalculator';
 import { ensureNumber } from './typeConversions';
 
@@ -43,7 +44,7 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
   const officialFees = baseCost * 0.02;
   const inspectionFees = baseCost * 0.01;
   const technicalStudies = baseCost * 0.015;
-  const permits = baseCost * 0.025;
+  const permitsAndApprovals = baseCost * 0.025;
   const insurance = baseCost * 0.01;
   const contingency = baseCost * 0.03;
   const taxes = baseCost * 0.02;
@@ -57,7 +58,7 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
 
   // Calculate total costs
   const constructionCostsTotal = structuralWork + finishingWork + technicalLots + externalWorks;
-  const feesTotal = architectFees + engineeringFees + projectManagement + officialFees + inspectionFees + technicalStudies + permits + insurance + contingency + taxes + other;
+  const feesTotal = architectFees + engineeringFees + projectManagement + officialFees + inspectionFees + technicalStudies + permitsAndApprovals + insurance + contingency + taxes + other;
   const otherCostsTotal = land + demolition + siteDevelopment + insurance + contingency + taxes + miscellaneous;
   const totalAmount = constructionCostsTotal + feesTotal + otherCostsTotal + kitchenCost + bathroomCost + windowsCost + ecoOptionsCost;
 
@@ -68,22 +69,23 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
   const totalMonths = design + permits + construction;
 
   // Define categories
-  const categories = [
-    { name: 'Structure', cost: structuralWork, percentage: (structuralWork / totalAmount) * 100 },
-    { name: 'Finishing', cost: finishingWork, percentage: (finishingWork / totalAmount) * 100 },
-    { name: 'Technical', cost: technicalLots, percentage: (technicalLots / totalAmount) * 100 },
-    { name: 'External Works', cost: externalWorks, percentage: (externalWorks / totalAmount) * 100 },
-    { name: 'Fees', cost: feesTotal, percentage: (feesTotal / totalAmount) * 100 },
-    { name: 'Kitchen', cost: kitchenCost, percentage: (kitchenCost / totalAmount) * 100 },
-    { name: 'Bathrooms', cost: bathroomCost, percentage: (bathroomCost / totalAmount) * 100 },
-    { name: 'Windows', cost: windowsCost, percentage: (windowsCost / totalAmount) * 100 },
-    { name: 'Eco Options', cost: ecoOptionsCost, percentage: (ecoOptionsCost / totalAmount) * 100 }
+  const categories: CategoryCost[] = [
+    { name: 'Structure', cost: structuralWork, percentage: (structuralWork / totalAmount) * 100, amount: structuralWork },
+    { name: 'Finishing', cost: finishingWork, percentage: (finishingWork / totalAmount) * 100, amount: finishingWork },
+    { name: 'Technical', cost: technicalLots, percentage: (technicalLots / totalAmount) * 100, amount: technicalLots },
+    { name: 'External Works', cost: externalWorks, percentage: (externalWorks / totalAmount) * 100, amount: externalWorks },
+    { name: 'Fees', cost: feesTotal, percentage: (feesTotal / totalAmount) * 100, amount: feesTotal },
+    { name: 'Kitchen', cost: kitchenCost, percentage: (kitchenCost / totalAmount) * 100, amount: kitchenCost },
+    { name: 'Bathrooms', cost: bathroomCost, percentage: (bathroomCost / totalAmount) * 100, amount: bathroomCost },
+    { name: 'Windows', cost: windowsCost, percentage: (windowsCost / totalAmount) * 100, amount: windowsCost },
+    { name: 'Eco Options', cost: ecoOptionsCost, percentage: (ecoOptionsCost / totalAmount) * 100, amount: ecoOptionsCost }
   ];
 
   // Adapt the form data to the estimation response data structure
   const estimationResponseData: EstimationResponseData = {
     projectType: projectType || 'construction',
     projectDetails: {
+      projectType: projectType || 'construction',
       surface: ensureNumber(surface),
       location: location || '',
       constructionType: constructionType || '',
@@ -93,7 +95,12 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
     },
     estimatedCost: {
       total: totalAmount,
-      perSquareMeter: surface ? totalAmount / surface : 0
+      perSquareMeter: surface ? totalAmount / surface : 0,
+      breakdown: {
+        materials: totalAmount * 0.6,
+        labor: totalAmount * 0.3,
+        fees: totalAmount * 0.1
+      }
     },
     constructionCosts: {
       structuralWork: structuralWork,
@@ -110,7 +117,7 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
       officialFees: officialFees,
       inspectionFees: inspectionFees,
       technicalStudies: technicalStudies,
-      permits: permits,
+      permits: permitsAndApprovals,
       insurance: insurance,
       contingency: contingency,
       taxes: taxes,
@@ -133,7 +140,9 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
     timeline: {
       design: design,
       permits: permits,
+      bidding: 1,
       construction: construction,
+      total: totalMonths,
       totalMonths: totalMonths
     },
     categories: categories
@@ -141,6 +150,9 @@ export const adaptToEstimationResponseData = (formData: EstimationFormData | For
 
   return estimationResponseData;
 };
+
+// Add the alias function for useUnifiedFormData
+export const adaptToEstimationData = adaptToEstimationResponseData;
 
 // Utility function to adapt form data types
 export const createTypeAdaptingUpdater = (updateFunction: (data: Partial<EstimationFormData>) => void) => {

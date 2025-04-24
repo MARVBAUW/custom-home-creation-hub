@@ -47,7 +47,7 @@ const SummaryStep: React.FC<BaseFormProps> = ({
         )}
       </div>
       <div className="flex justify-between">
-        <Button type="button" variant="outline" onClick={goToPreviousStep ? goToPreviousStep : () => {}}>
+        <Button type="button" variant="outline" onClick={goToPreviousStep}>
           Retour
         </Button>
         <Button onClick={handleSubmit}>
