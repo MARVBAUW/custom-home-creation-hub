@@ -6,7 +6,9 @@ import {
   Ruler, 
   PiggyBank, 
   Scale,
-  Building
+  Building,
+  Thermometer,
+  Volume
 } from 'lucide-react';
 
 // Import calculator components
@@ -16,6 +18,9 @@ import RentabilityCalculator from './rentability/RentabilityCalculator';
 import FraisNotaireCalculator from './immobilier/FraisNotaireCalculator';
 import SurfaceHabitableCalculator from './immobilier/SurfaceHabitableCalculator';
 import SimulationManager from '../calculateurs/simulation/SimulationManager';
+import CapaciteEmpruntCalculator from './financier/CapaciteEmpruntCalculator';
+import DpeCalculator from './thermal/DpeCalculator';
+import AcousticCalculator from './acoustic/AcousticCalculator';
 
 // Create a central registry of all calculators
 const CalculatorsRegistry = {
@@ -36,11 +41,7 @@ const CalculatorsRegistry = {
   financier: [
     {
       title: "Capacité d'emprunt",
-      component: () => (
-        <div className="p-4 bg-blue-50 rounded-md">
-          <p className="text-blue-800">Calculateur de capacité d'emprunt sera disponible prochainement.</p>
-        </div>
-      ),
+      component: CapaciteEmpruntCalculator,
       description: "Calculez votre capacité d'emprunt selon vos revenus",
       type: "capacite-emprunt"
     },
@@ -49,6 +50,20 @@ const CalculatorsRegistry = {
       component: RentabilityCalculator,
       description: "Calculez la rentabilité d'un investissement immobilier locatif",
       type: "rentability"
+    }
+  ],
+  technique: [
+    {
+      title: "Acoustique",
+      component: AcousticCalculator,
+      description: "Calcul du temps de réverbération d'une pièce",
+      type: "acoustic"
+    },
+    {
+      title: "Performance énergétique",
+      component: DpeCalculator,
+      description: "Estimation du DPE et de l'étiquette énergétique",
+      type: "dpe"
     }
   ]
 };
@@ -116,6 +131,13 @@ const WorkspaceCalculators = () => {
 
         {/* Technique Tab */}
         <TabsContent value="technique">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            {CalculatorsRegistry.technique.map((calc) => (
+              <div key={calc.title} className="min-h-[400px]">
+                <calc.component />
+              </div>
+            ))}
+          </div>
           <EurocodeCalculators />
         </TabsContent>
 

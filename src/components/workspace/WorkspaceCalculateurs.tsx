@@ -1,15 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler } from 'lucide-react';
+import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler, Thermometer, Volume } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Import workspace components
 import FraisNotaireCalculator from '@/components/workspace/calculators/immobilier/FraisNotaireCalculator';
 import RentabiliteLocativeCalculator from '@/components/workspace/calculators/rentability/RentabilityCalculator';
 import SurfaceHabitableCalculator from '@/components/workspace/calculators/immobilier/SurfaceHabitableCalculator';
-import AcousticCalculator from '@/components/workspace/calculators/AcousticCalculator';
-import DpeCalculator from '@/components/workspace/calculators/DpeCalculator';
+import AcousticCalculator from '@/components/workspace/calculators/acoustic/AcousticCalculator';
+import DpeCalculator from '@/components/workspace/calculators/thermal/DpeCalculator';
+import CapaciteEmpruntCalculator from '@/components/workspace/calculators/financier/CapaciteEmpruntCalculator';
 import EurocodesCalculator from '@/components/workspace/calculators/eurocode/EurocodeCalculators';
 import SimulationManager from './calculateurs/simulation/SimulationManager';
 import CalculatorDirectory from './CalculatorDirectory';
@@ -138,10 +139,7 @@ const WorkspaceCalculateurs = () => {
                 <CardTitle className="text-lg">Capacité d'emprunt</CardTitle>
               </CardHeader>
               <CardContent>
-                {/* Temporarily use a placeholder until we fix the calculator */}
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-sm text-blue-800">Calculateur de capacité d'emprunt sera disponible prochainement.</p>
-                </div>
+                <CapaciteEmpruntCalculator />
               </CardContent>
             </Card>
             <Card>
@@ -183,6 +181,30 @@ const WorkspaceCalculateurs = () => {
         
         {/* Onglet Technique */}
         <TabsContent value="technique">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Volume className="h-4 w-4" />
+                  Acoustique
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AcousticCalculator />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Thermometer className="h-4 w-4" />
+                  DPE
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DpeCalculator />
+              </CardContent>
+            </Card>
+          </div>
           <EurocodesCalculator />
         </TabsContent>
 
