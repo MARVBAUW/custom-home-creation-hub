@@ -31,6 +31,9 @@ export interface EstimationFormData {
   [key: string]: any;
 }
 
+// FormData alias for backward compatibility
+export type FormData = EstimationFormData;
+
 // Re-export BaseFormProps from baseFormProps.ts to maintain backward compatibility
 export type { BaseFormProps } from './baseFormProps';
 

@@ -1,12 +1,12 @@
 
 import { useCallback } from 'react';
-import { FormData } from '../../types/formTypes';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 import { calculateFacadeRenovCost, percentageToNumber } from '../../utils/montantUtils';
 import { ensureNumber } from '../../utils/typeConversions';
 
 export const useEnvelopeSubmissions = (
-  formData: FormData,
-  updateFormData: (data: Partial<FormData>) => void
+  formData: EstimationFormData | FormData,
+  updateFormData: (data: Partial<EstimationFormData | FormData>) => void
 ) => {
   // Handle submission for facade step
   const handleFacadeSubmit = useCallback((data: {

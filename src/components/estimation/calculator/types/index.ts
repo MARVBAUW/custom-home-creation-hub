@@ -1,6 +1,7 @@
 
 // Re-export specific types from formTypes
 export type { 
+  EstimationFormData,
   FormData,
   StepRendererProps,
   ConversationState,

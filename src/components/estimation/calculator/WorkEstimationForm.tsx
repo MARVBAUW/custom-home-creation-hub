@@ -1,10 +1,11 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
 import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
 import FormNavigation from './FormNavigation';
-import { FormData } from './types/formTypes';
+import { EstimationFormData, FormData } from './types/formTypes';
 import { createTypeAdaptingUpdater } from './utils/dataAdapter';
 import { calculateEstimationAmount, validateStep } from './utils/navigationPathUtils';
 import { useToast } from '@/hooks/use-toast';

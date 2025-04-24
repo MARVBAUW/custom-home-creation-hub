@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { StepRendererProps } from '../types/formTypes';
+import { StepRendererProps, EstimationFormData, FormData } from '../types/formTypes';
 import ClientTypeStep from '../steps/ClientTypeStep';
 import ProjectDetailsStep from '../steps/ProjectDetailsStep';
 import TerrainDetailsStep from '../steps/TerrainDetailsStep';

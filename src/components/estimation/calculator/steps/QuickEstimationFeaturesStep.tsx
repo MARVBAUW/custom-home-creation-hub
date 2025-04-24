@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { FormData } from '../types/formTypes';
+import { EstimationFormData, FormData } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon, CheckCircle } from 'lucide-react';
 import { Label } from "@/components/ui/label";
@@ -9,8 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 
 interface QuickEstimationFeaturesStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData | FormData;
+  updateFormData: (data: Partial<EstimationFormData | FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';

@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { StepComponentRegistry, DefaultStepProps } from './StepComponents';
-import { FormData } from '../../types';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 
 interface ClientTypeProps extends DefaultStepProps {
   animationDirection: 'forward' | 'backward';
@@ -18,11 +17,11 @@ interface EstimationTypeProps extends DefaultStepProps {
 }
 
 export const createClientStepRegistry = (
-  formData: FormData,
-  onClientTypeSubmit: (data: Partial<FormData>) => void,
-  onProfessionalProjectSubmit: (data: Partial<FormData>) => void,
-  onIndividualProjectSubmit: (data: Partial<FormData>) => void,
-  onEstimationTypeSubmit: (data: Partial<FormData>) => void,
+  formData: EstimationFormData | FormData,
+  onClientTypeSubmit: (data: Partial<EstimationFormData | FormData>) => void,
+  onProfessionalProjectSubmit: (data: Partial<EstimationFormData | FormData>) => void,
+  onIndividualProjectSubmit: (data: Partial<EstimationFormData | FormData>) => void,
+  onEstimationTypeSubmit: (data: Partial<EstimationFormData | FormData>) => void,
   goBack: () => void
 ): StepComponentRegistry => {
   return {

@@ -1,12 +1,12 @@
 
-import { FormData } from './formTypes';
+import { EstimationFormData, FormData } from './formTypes';
 
 /**
  * Base form props interface used by all form components
  */
 export interface BaseFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData | FormData;
+  updateFormData: (data: Partial<EstimationFormData | FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';

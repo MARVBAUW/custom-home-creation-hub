@@ -3,12 +3,12 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Download, Mail, Share2 } from 'lucide-react';
-import { FormData } from '../types/formTypes';
+import { EstimationFormData, FormData } from '../types/formTypes';
 
 interface ResultsSummaryProps {
   showSummary: boolean;
   estimationResult: any;
-  formData: FormData;
+  formData: EstimationFormData | FormData;
   onBackClick: () => void;
 }
 

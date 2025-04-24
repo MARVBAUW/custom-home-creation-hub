@@ -1,5 +1,5 @@
 
-import { FormData } from '../types/formTypes';
+import { EstimationFormData, FormData } from '../types/formTypes';
 import { ensureNumber } from './typeConversions';
 
 /**

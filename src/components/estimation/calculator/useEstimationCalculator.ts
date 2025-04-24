@@ -1,13 +1,13 @@
 
 import { useState, useCallback, useEffect } from 'react';
-import { FormData } from './types/formTypes';
+import { EstimationFormData, FormData } from './types/formTypes';
 import { adaptToEstimationResponseData } from './utils/dataAdapter';
 import { ensureNumber } from './utils/typeConversions';
 import { EstimationResponseData } from './types/estimationTypes';
 import { determineNextStep, determinePreviousStep } from './utils/navigationPathUtils';
 
 // Move the function outside the hook
-export function generateEstimationResult(formData: FormData): EstimationResponseData {
+export function generateEstimationResult(formData: EstimationFormData | FormData): EstimationResponseData {
   return adaptToEstimationResponseData(formData);
 }
 
@@ -15,7 +15,7 @@ export const useEstimationCalculator = () => {
   // State management for steps and form data
   const [step, setStep] = useState(0);
   const [totalSteps, setTotalSteps] = useState(20);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<EstimationFormData | FormData>({
     surface: 0,
     city: '',
     // Initialize with default values

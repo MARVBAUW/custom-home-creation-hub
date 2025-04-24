@@ -2,11 +2,11 @@
 import React from 'react';
 import { StepComponentRegistry, FormStepProps } from './StepComponents';
 import ContactForm from '../../FormSteps/ContactForm';
-import { FormData } from '../../types/formTypes';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 
 // Registry for contact steps (step 40)
 export const createContactStepRegistry = (
-  formData: FormData,
+  formData: EstimationFormData | FormData,
   onContactSubmit: (data: any) => void,
   goToPreviousStep: () => void
 ): StepComponentRegistry => {

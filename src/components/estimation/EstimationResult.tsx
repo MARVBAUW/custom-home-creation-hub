@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,13 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, Mail, Share2, Printer } from 'lucide-react';
 import { EstimationResponseData } from './calculator/types/estimationTypes';
 import { formatCurrency } from './calculator/utils/typeConversions';
-import { FormData } from './calculator/types/formTypes';
+import { EstimationFormData, FormData } from './calculator/types/formTypes';
 import PDFGenerator from './calculator/components/PDFGenerator';
 import { sendEstimationByEmail } from './calculator/services/emailService';
 import { useToast } from '@/hooks/use-toast';
 
 interface EstimationResultProps {
-  formData: FormData;
+  formData: EstimationFormData | FormData;
   estimationResult: EstimationResponseData;
   onBack: () => void;
 }

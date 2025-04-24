@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormData } from '../../types';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 import ConstructionDetailsForm from '../../FormSteps/ConstructionDetailsForm';
 import TerrainForm from '../../FormSteps/TerrainForm';
 import GrosOeuvreForm from '../../FormSteps/GrosOeuvreForm';
@@ -8,7 +8,7 @@ import CharpenteForm from '../../FormSteps/CharpenteForm';
 import ComblesForm from '../../FormSteps/ComblesForm';
 
 export const createConstructionStepRegistry = (
-  formData: FormData,
+  formData: EstimationFormData | FormData,
   onConstructionDetailsSubmit: (data: any) => void,
   onTerrainSubmit: (data: any) => void,
   onGrosOeuvreSubmit: (data: any) => void,

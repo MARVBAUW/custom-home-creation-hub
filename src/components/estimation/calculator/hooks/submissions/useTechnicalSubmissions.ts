@@ -1,5 +1,4 @@
-
-import { FormData } from '../../types/formTypes';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 import { ensureNumber } from '../../utils/typeConversions';
 import { 
   calculateElectricalCost, 
@@ -10,7 +9,7 @@ import {
 
 export const useTechnicalSubmissions = () => {
   // Function to handle electricity submission
-  const handleElectriciteSubmit = (data: any, formData: FormData) => {
+  const handleElectriciteSubmit = (data: any, formData: EstimationFormData | FormData) => {
     const surface = ensureNumber(formData.surface, 0);
     const additionalCost = calculateElectricalCost(
       surface,
@@ -25,7 +24,7 @@ export const useTechnicalSubmissions = () => {
   };
 
   // Function to handle plumbing submission
-  const handlePlomberieSubmit = (data: any, formData: FormData) => {
+  const handlePlomberieSubmit = (data: any, formData: EstimationFormData | FormData) => {
     const surface = ensureNumber(formData.surface, 0);
     const additionalCost = calculatePlumbingCost(
       surface,
@@ -39,7 +38,7 @@ export const useTechnicalSubmissions = () => {
   };
 
   // Function to handle heating submission
-  const handleChauffageSubmit = (data: any, formData: FormData) => {
+  const handleChauffageSubmit = (data: any, formData: EstimationFormData | FormData) => {
     // Use doorCount if available, otherwise default to 0
     const doorCount = formData.doorCount ? ensureNumber(formData.doorCount, 0) : 0;
     const surface = ensureNumber(formData.surface, 0);

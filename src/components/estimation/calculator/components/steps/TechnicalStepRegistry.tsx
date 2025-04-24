@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { FormData } from '../../types';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 import ElectriciteForm from '../../FormSteps/ElectriciteForm';
 import PlomberieForm from '../../FormSteps/PlomberieForm';
 import { StepComponentRegistry } from './StepComponents';
 
 export const createTechnicalStepRegistry = (
-  formData: FormData,
-  updateFormData: (data: Partial<FormData>) => void,
+  formData: EstimationFormData | FormData,
+  updateFormData: (data: Partial<EstimationFormData | FormData>) => void,
   goToPreviousStep: () => void,
   goToNextStep: () => void
 ): StepComponentRegistry => {

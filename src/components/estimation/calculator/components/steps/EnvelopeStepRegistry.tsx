@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { FormData } from '../../types';
+import { EstimationFormData, FormData } from '../../types/formTypes';
 import CouvertureForm from '../../FormSteps/CouvertureForm';
 import IsolationForm from '../../FormSteps/IsolationForm';
 import FacadeForm from '../../FormSteps/FacadeForm';
@@ -8,7 +8,7 @@ import MenuiseriesExtForm from '../../FormSteps/MenuiseriesExtForm';
 import { StepComponentRegistry } from './StepComponents';
 
 export const createEnvelopeStepRegistry = (
-  formData: FormData,
+  formData: EstimationFormData | FormData,
   onCouvertureSubmit: (data: { roofingType: string }) => void,
   onIsolationSubmit: (data: { insulationType: string }) => void,
   onFacadeSubmit: (data: any) => void,
@@ -52,13 +52,13 @@ export const createEnvelopeStepRegistry = (
         {...props}
         formData={formData}
         updateFormData={(data) => {
-          const formData: Partial<FormData> = {
+          const formFields: Partial<EstimationFormData> = {
             windowType: data.windowType,
             windowRenovationArea: data.windowRenovationArea,
             windowNewArea: data.windowNewArea,
             montantT: data.montantT
           };
-          props.updateFormData(formData);
+          props.updateFormData(formFields);
           props.goToNextStep();
         }}
       />

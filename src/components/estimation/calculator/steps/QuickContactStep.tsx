@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { FormData } from '../types/formTypes';
+import { EstimationFormData, FormData } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, Send } from 'lucide-react';
 import { Label } from "@/components/ui/label";
@@ -9,8 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 
 interface QuickContactStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData | FormData;
+  updateFormData: (data: Partial<EstimationFormData | FormData>) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';

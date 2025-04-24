@@ -1,8 +1,7 @@
-
-import { FormData } from '../types/formTypes';
+import { EstimationFormData, FormData } from '../types/formTypes';
 
 // Base cost calculation per square meter based on construction type
-export const calculateConstructionBaseCost = (formData: FormData): number => {
+export const calculateConstructionBaseCost = (formData: EstimationFormData | FormData): number => {
   const { projectType, constructionType, surface } = formData;
   let baseCost = 0;
   

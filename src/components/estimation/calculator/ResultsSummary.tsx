@@ -2,11 +2,12 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import EstimationReport from './EstimationReport';
+import { EstimationFormData, FormData } from './types/formTypes';
 
 interface ResultsSummaryProps {
   showSummary: boolean;
   estimationResult: number;
-  formData: any;
+  formData: EstimationFormData | FormData;
   onBackClick: () => void;
 }
 
