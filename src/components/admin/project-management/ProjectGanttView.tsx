@@ -41,17 +41,29 @@ const ProjectGanttView: React.FC<ProjectGanttViewProps> = ({ project }) => {
   
   // Add design phase if available
   if (project.dates.design) {
-    phasesToDisplay.push({ name: 'Conception', dates: project.dates.design, color: 'bg-blue-400' });
+    phasesToDisplay.push({ 
+      name: 'Conception', 
+      dates: project.dates.design as DateRange, 
+      color: 'bg-blue-400' 
+    });
   }
   
   // Add permits phase if available
   if (project.dates.permits) {
-    phasesToDisplay.push({ name: 'Autorisations', dates: project.dates.permits, color: 'bg-yellow-400' });
+    phasesToDisplay.push({ 
+      name: 'Autorisations', 
+      dates: project.dates.permits as DateRange, 
+      color: 'bg-yellow-400' 
+    });
   }
   
   // Add construction phase if available
   if (project.dates.construction) {
-    phasesToDisplay.push({ name: 'Construction', dates: project.dates.construction, color: 'bg-green-400' });
+    phasesToDisplay.push({ 
+      name: 'Construction', 
+      dates: project.dates.construction as DateRange, 
+      color: 'bg-green-400' 
+    });
   }
   
   // Add specific phases if available
@@ -74,11 +86,12 @@ const ProjectGanttView: React.FC<ProjectGanttViewProps> = ({ project }) => {
         key === 'reception' ? 'Réception' :
         key === 'delivery' ? 'Livraison' : key;
       
+      const typedDates = dates as DateRange;
       phasesToDisplay.push({ 
         name: phaseName, 
         dates: {
-          startDate: dates.startDate,
-          endDate: dates.endDate
+          startDate: typedDates.startDate,
+          endDate: typedDates.endDate
         }, 
         color: phaseColors[key] || 'bg-gray-400' 
       });

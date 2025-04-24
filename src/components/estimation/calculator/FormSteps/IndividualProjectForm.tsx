@@ -14,7 +14,9 @@ const IndividualProjectForm: React.FC<BaseFormProps> = ({
   defaultValues = {}
 }) => {
   const [projectType, setProjectType] = React.useState<string>(
-    defaultValues.projectType || formData.projectType || 'construction'
+    (defaultValues?.projectType as string) || 
+    (formData.projectType as string) || 
+    'construction'
   );
 
   const handleSubmit = () => {

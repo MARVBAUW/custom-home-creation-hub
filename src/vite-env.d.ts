@@ -21,9 +21,10 @@ declare namespace React {
   }
   
   // Add ElementType definition that's compatible with our component structure
-  type ElementType<P = any, T extends keyof JSX.IntrinsicElements = keyof JSX.IntrinsicElements> = 
-    | { [K in T]: P extends JSX.IntrinsicElements[K] ? K : never }[T]
-    | React.ComponentType<P>;
+  type ElementType<P = any> = 
+    | string
+    | React.ComponentType<P>
+    | React.ForwardRefExoticComponent<P>;
     
   // Add RefAttributes for forwardRef components
   interface RefAttributes<T> extends React.Attributes {

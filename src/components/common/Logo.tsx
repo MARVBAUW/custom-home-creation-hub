@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { LogoProps, getSizeClasses } from './logos/LogoConstants';
+import { LogoProps, LogoSize, LogoVariant, getSizeClasses } from './logos/LogoConstants';
 import LogoRenderer from './logos/LogoRenderer';
 
 const Logo: React.FC<LogoProps> = ({
@@ -11,6 +11,10 @@ const Logo: React.FC<LogoProps> = ({
   className,
   withTagline = false
 }) => {
+  // Use the defined types for variant and size
+  const logoVariant = variant as LogoVariant;
+  const logoSize = size as LogoSize;
+  
   return (
     <Link 
       to="/" 
@@ -19,17 +23,17 @@ const Logo: React.FC<LogoProps> = ({
     >
       <div className={cn(
         "transition-all duration-300 hover:scale-105", 
-        getSizeClasses(size, variant), 
-        variant === 'icon' ? 'logo-icon' : 'logo', 
+        getSizeClasses(logoSize, logoVariant), 
+        logoVariant === 'icon' ? 'logo-icon' : 'logo', 
         'object-contain'
       )}>
-        <LogoRenderer variant={variant} size={size} />
+        <LogoRenderer variant={logoVariant} size={logoSize} />
       </div>
       {withTagline && (
         <span className={cn(
           "text-xs mt-1 font-medium tracking-wider", 
-          variant === 'white' ? 'text-white/90' : 
-          variant === 'metallic' || variant === 'metallic-full' ? 'text-progineer-gold dark:text-progineer-gold/90' : 
+          logoVariant === 'white' ? 'text-white/90' : 
+          logoVariant === 'metallic' || logoVariant === 'metallic-full' ? 'text-progineer-gold dark:text-progineer-gold/90' : 
           'text-progineer-gold dark:text-progineer-gold/90'
         )}>
           MAITRISE D'OEUVRE
