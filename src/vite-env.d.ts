@@ -41,22 +41,22 @@ declare module '*.xml' {
   export default content;
 }
 
-// Add proper DTUEmptyStateProps interface definition
+// Update DTUEmptyStateProps interface definition
 interface DTUEmptyStateProps {
-  type?: string;
-  message?: any;
-  description?: any;
+  type?: 'empty' | 'error' | 'noResults';
+  message?: string;
+  description?: string;
 }
 
 // Improve Radix UI type definitions to match the actual component structure
 declare module '@radix-ui/react-accordion' {
   import * as React from 'react';
   
-  const Root: React.FC<React.ComponentProps<'div'>>;
-  const Item: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  const Root: React.FC<React.ComponentProps<'div'> & { type?: string; collapsible?: boolean }>;
+  const Item: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'> & { value: string }>;
   const Header: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'h3'>>;
   const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
-  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'> & { value: string }>;
   
   export {
     Root,
