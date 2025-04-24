@@ -8,6 +8,7 @@ const EstimationCalculator: React.FC = () => {
     <Card className="shadow-sm border-0">
       <CardContent className="p-0 sm:p-2">
         <div className="relative">
+          <h1 className="sr-only">Calculateur d'estimation pour votre projet immobilier</h1>
           <StructuredEstimator />
         </div>
       </CardContent>

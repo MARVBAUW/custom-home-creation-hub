@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet';
 import Container from '@/components/common/Container';
 import Button from '@/components/common/Button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilePlus2, FileSpreadsheet, FileText, FileCode, FileCheck } from 'lucide-react';
+import SEOHeader from '@/components/common/SEOHeader';
 
 // Import workspace components
 import WorkspaceGuides from '@/components/workspace/WorkspaceGuides';
@@ -29,15 +29,39 @@ const Workspace = () => {
     alert('Merci pour votre inscription ! Vous serez informé du lancement de nos nouvelles fonctionnalités.');
   };
 
+  // Structured data for the workspace page
+  const workspaceStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Workspace Progineer - Ressources et outils pour vos projets",
+    "description": "Explorez nos guides, modèles, fichiers Excel de rentabilité, veille réglementaire et outils de gestion de projet.",
+    "url": "https://progineer.fr/workspace",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Progineer",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://progineer.fr/images/progineer-logo.png"
+      }
+    },
+    "isPartOf": {
+      "@type": "WebSite",
+      "url": "https://progineer.fr",
+      "name": "Progineer - Maître d'œuvre en PACA"
+    }
+  };
+
   return (
     <>
-      <Helmet>
-        <title>Workspace | Progineer - Architecte & Maître d'œuvre en PACA</title>
-        <meta name="description" content="Workspace Progineer - Ressources et outils pour vos projets de construction, rénovation et extension en région PACA." />
-        <meta name="keywords" content="ressources construction, guides rénovation, outils maître d'œuvre, documentation architecture" />
-      </Helmet>
+      <SEOHeader
+        title="Workspace - Ressources et outils pour vos projets"
+        description="Explorez nos guides pratiques, calculateurs, informations réglementaires et ressources documentaires pour vos projets de construction et rénovation en PACA."
+        keywords="ressources construction, guides rénovation, outils maître d'œuvre, documentation architecture, calculateurs chantier, réglementation immobilière"
+        canonicalUrl="https://progineer.fr/workspace"
+        structuredData={workspaceStructuredData}
+      />
 
-      {/* Hero section */}
+      {/* Hero section with proper H1 */}
       <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
         <Container size="md">
           <div className="text-center">
@@ -45,7 +69,7 @@ const Workspace = () => {
               Workspace
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Espace ressources
+              Espace ressources Progineer
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               Explorez nos guides, modèles, fichiers Excel de rentabilité, 
@@ -150,8 +174,6 @@ const Workspace = () => {
           </div>
         </Container>
       </section>
-      
-      {/* Le footer a été supprimé d'ici car il est déjà présent dans le layout principal */}
     </>
   );
 };

@@ -1,14 +1,14 @@
 
 import React from 'react';
-import SEO from '@/components/common/SEO';
+import SEOHeader from '@/components/common/SEOHeader';
 import { articles } from '../data/reglementationArticles';
 
 export const ReglementationHeader: React.FC = () => {
   return (
     <>
-      {/* SEO Enhancement */}
-      <SEO 
-        title="Veille réglementaire construction et immobilier | PACA | Progineer"
+      {/* SEO Enhancement with our new component */}
+      <SEOHeader 
+        title="Veille réglementaire construction et immobilier"
         description="Actualités et veille juridique pour les professionnels de la construction, architectes et maîtres d'œuvre. Nouvelles lois, règlements et normes du secteur de l'immobilier en PACA."
         keywords="veille réglementaire construction, actualité immobilier, nouvelles normes bâtiment, réglementation architecte, RE2020, loi climat résilience, DPE, PACA, Marseille"
         structuredData={{
@@ -39,9 +39,11 @@ export const ReglementationHeader: React.FC = () => {
       />
 
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold mb-2">Veille réglementaire</h1>
+        <h1 className="text-2xl font-semibold mb-2">Veille réglementaire construction et immobilier</h1>
         <p className="text-gray-600">L'actualité juridique et réglementaire du secteur de la construction et de l'immobilier, mise à jour régulièrement par notre intelligence artificielle spécialisée.</p>
       </div>
     </>
   );
 };
+
+export default ReglementationHeader;
