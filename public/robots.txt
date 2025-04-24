@@ -1,6 +1,5 @@
-
 # Robots.txt for progineer.fr
-# Last updated: 2025-04-23
+# Last updated: 2025-04-24
 
 # Allow all web crawlers access
 User-agent: *
@@ -25,6 +24,7 @@ Crawl-delay: 1
 Sitemap: https://progineer.fr/sitemap.xml
 
 # Important pages to prioritize
+Allow: /workspace
 Allow: /estimation
 Allow: /contact
 Allow: /prestations-maitre-oeuvre
@@ -34,15 +34,12 @@ Allow: /a-propos
 Allow: /faq
 
 # Services pages
+Allow: /prestations-maitre-oeuvre/construction-ecologique
 Allow: /prestations-maitre-oeuvre/renovation
 Allow: /prestations-maitre-oeuvre/construction-neuve
 Allow: /prestations-maitre-oeuvre/extension
 Allow: /prestations-maitre-oeuvre/design-interieur
 Allow: /prestations-maitre-oeuvre/optimisation-espace
-Allow: /prestations-maitre-oeuvre/montage-administratif
-Allow: /prestations-maitre-oeuvre/petit-collectif
-Allow: /prestations-maitre-oeuvre/rehabilitation
-Allow: /prestations-maitre-oeuvre/construction-ecologique
 
 # Additional pages
 Allow: /parrainage
