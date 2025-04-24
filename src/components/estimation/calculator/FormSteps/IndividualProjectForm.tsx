@@ -13,10 +13,11 @@ const IndividualProjectForm: React.FC<BaseFormProps> = ({
   animationDirection,
   defaultValues = {}
 }) => {
+  const defaultProjectType = 'construction';
   const [projectType, setProjectType] = React.useState<string>(
-    (defaultValues.projectType as string) || 
-    (formData.projectType as string) || 
-    'construction'
+    (defaultValues && 'projectType' in defaultValues && defaultValues.projectType as string) || 
+    (formData && 'projectType' in formData && formData.projectType as string) || 
+    defaultProjectType
   );
 
   const handleSubmit = () => {

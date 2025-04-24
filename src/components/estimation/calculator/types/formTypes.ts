@@ -42,14 +42,19 @@ export interface BaseFormProps {
 }
 
 export interface ConversationState {
-  messages: Array<{
-    role: 'user' | 'assistant';
-    content: string;
-  }>;
-  currentQuestion: string;
-  expectedAnswer: string;
-  contextData: Record<string, any>;
   currentStep: string;
-  completedSteps: string[];
-  formData: FormData;
+  askedQuestions?: string[];
+  completedFields?: string[];
+  formProgress?: number;
+  messages: Array<{
+    role?: 'user' | 'assistant';
+    type?: string;
+    content: string;
+    timestamp?: string;
+  }>;
+  currentQuestion?: string;
+  expectedAnswer?: string;
+  contextData?: Record<string, any>;
+  completedSteps?: string[];
+  formData?: FormData;
 }

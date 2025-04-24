@@ -128,18 +128,21 @@ const EstimationReport: React.FC<EstimationReportProps> = ({
           <h3 className="text-lg font-medium mb-4 border-b pb-2">Détail par corps d'état</h3>
           
           <div className="space-y-4">
-            {Object.entries(estimation.corpsEtat).map(([nom, corps]) => (
-              <div key={nom} className="border rounded-lg p-4">
-                <div className="flex justify-between mb-2">
-                  <span className="font-medium">{nom}</span>
-                  <span className="font-medium">{formatCurrency(corps.montantHT)}</span>
+            {Object.entries(estimation.corpsEtat).map(([nom, corps]) => {
+              const typedCorps = corps as CorpsEtatDetails;
+              return (
+                <div key={nom} className="border rounded-lg p-4">
+                  <div className="flex justify-between mb-2">
+                    <span className="font-medium">{nom}</span>
+                    <span className="font-medium">{formatCurrency(typedCorps.montantHT)}</span>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <span>Comprend: </span>
+                    {typedCorps.details.join(', ')}
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">
-                  <span>Comprend: </span>
-                  {corps.details.join(', ')}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </CardContent>
       </Card>

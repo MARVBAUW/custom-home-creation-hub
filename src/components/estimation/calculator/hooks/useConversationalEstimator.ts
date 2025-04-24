@@ -1,7 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { FormData } from '../types/formTypes';
-import { ConversationState } from '../types/formTypes';
+import { FormData, ConversationState } from '../types/formTypes';
 
 interface UseConversationalEstimatorProps {
   formData: FormData;

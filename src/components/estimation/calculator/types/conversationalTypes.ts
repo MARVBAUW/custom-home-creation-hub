@@ -1,9 +1,10 @@
 
 export interface Message {
   id: string;
-  type: 'user' | 'system' | 'assistant';
+  type: 'user' | 'system' | 'assistant' | 'bot';
   content: string;
   time?: string;
+  timestamp?: string;
   options?: string[];
   isUser?: boolean; // For compatibility with older code
 }
