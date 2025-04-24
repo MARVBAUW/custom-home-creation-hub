@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -22,7 +23,8 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     fs: {
       allow: ['..']
-    }
+    },
+    allowedHosts: ["91ebbb69-1cec-4b94-987f-8a34d9dae720.lovableproject.com"], // Ajout de l'hôte autorisé
   },
   resolve: {
     alias: {
