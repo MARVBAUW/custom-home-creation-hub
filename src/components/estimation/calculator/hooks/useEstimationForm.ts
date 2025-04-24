@@ -1,6 +1,5 @@
-
 import { useState, useCallback } from 'react';
-import { FormData, EstimationResponseData } from '../types';
+import { FormData } from '../types';
 import { calculateEstimationAmount } from '../utils/navigationPathUtils';
 import { useToast } from '@/hooks/use-toast';
 

@@ -1,9 +1,6 @@
-
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
-import { FormProvider } from 'react-hook-form';
-import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
 import FormNavigation from './FormNavigation';
@@ -17,7 +14,6 @@ const WorkEstimationForm: React.FC = () => {
   const [showSummary, setShowSummary] = useState(false);
   const { toast } = useToast();
   
-  // Use the updated hook that includes all required properties
   const {
     step,
     totalSteps,
@@ -31,27 +27,9 @@ const WorkEstimationForm: React.FC = () => {
     isSubmitting,
     finalizeEstimation
   } = useEstimationCalculator();
-  
-  // Create a type-adapting updater function to handle type conversions
+
   const adaptedUpdateFormData = createTypeAdaptingUpdater(updateFormData);
   
-  const { methods } = useEstimationForm();
-
-  // Scroll management during step transitions
-  useEffect(() => {
-    if (formWrapper.current) {
-      const scrollPosition = window.scrollY;
-      
-      // Keep same scroll position after step update
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: 'auto'
-        });
-      }, 10);
-    }
-  }, [step]);
-
   // Function to handle client type submission from conversational estimator
   const onClientTypeSubmit = (data: { clientType: string }) => {
     if (data && typeof data === 'object' && 'clientType' in data) {
@@ -92,11 +70,11 @@ const WorkEstimationForm: React.FC = () => {
     if (!estimationResult) return 0;
     return typeof estimationResult === 'number' 
       ? estimationResult 
-      : estimationResult.totalAmount;
+      : (estimationResult as any).totalAmount;
   };
 
   // Handle form navigation with validation
-  const handleNextStep = () => {
+  const handleNextClick = () => {
     // Validate current step
     const { isValid, errors } = validateStep(step, formData);
     
@@ -121,42 +99,39 @@ const WorkEstimationForm: React.FC = () => {
   };
 
   return (
-    <FormProvider {...methods}>
-      <div className="w-full" ref={formWrapper}>
-        <Card className="border-0 shadow-none">
-          <div className="overflow-hidden">
-            <ConversationalEstimator 
-              onUserInput={processUserInput}
-              formData={formData}
-              updateFormData={adaptedUpdateFormData}
-              onClientTypeSubmit={onClientTypeSubmit}
-              goToStep={setStep}
-            />
-          </div>
-        </Card>
+    <div className="w-full" ref={formWrapper}>
+      <Card className="border-0 shadow-none">
+        <div className="overflow-hidden">
+          <ConversationalEstimator 
+            onUserInput={processUserInput}
+            formData={formData}
+            updateFormData={adaptedUpdateFormData}
+            onClientTypeSubmit={onClientTypeSubmit}
+            goToStep={setStep}
+          />
+        </div>
+      </Card>
 
-        {/* Display estimation result or navigation buttons */}
-        <ResultsSummary 
-          showSummary={showSummary} 
-          estimationResult={getNumericEstimation()} 
-          formData={formData} 
-          onBackClick={() => setShowSummary(false)} 
-        />
-        
-        <FormNavigation 
-          step={step}
-          totalSteps={totalSteps}
-          estimationResult={getNumericEstimation()}
-          showSummary={showSummary}
-          onPreviousClick={goToPreviousStep}
-          onNextClick={handleNextStep}
-          onShowSummaryClick={() => setShowSummary(true)}
-          formData={formData}
-          isSubmitting={isSubmitting}
-          onComplete={finalizeEstimation}
-        />
-      </div>
-    </FormProvider>
+      <ResultsSummary 
+        showSummary={showSummary} 
+        estimationResult={getNumericEstimation()} 
+        formData={formData} 
+        onBackClick={() => setShowSummary(false)} 
+      />
+      
+      <FormNavigation 
+        step={step}
+        totalSteps={totalSteps}
+        estimationResult={getNumericEstimation()}
+        showSummary={showSummary}
+        onPreviousClick={goToPreviousStep}
+        onNextClick={handleNextClick}
+        onShowSummaryClick={() => setShowSummary(true)}
+        formData={formData}
+        isSubmitting={isSubmitting}
+        onComplete={finalizeEstimation}
+      />
+    </div>
   );
 };
 

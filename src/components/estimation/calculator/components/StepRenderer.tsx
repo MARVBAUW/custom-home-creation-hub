@@ -1,18 +1,11 @@
 
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FormData } from '../types';
+import { StepRendererProps } from '../types/formTypes';
 import ClientTypeStep from '../steps/ClientTypeStep';
 import ProjectDetailsStep from '../steps/ProjectDetailsStep';
 import TerrainDetailsStep from '../steps/TerrainDetailsStep';
 import ConstructionDetailsStep from '../steps/ConstructionDetailsStep';
-
-interface StepRendererProps {
-  step: number;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  animationDirection: 'forward' | 'backward';
-}
 
 const StepRenderer: React.FC<StepRendererProps> = ({
   step,
@@ -36,36 +29,21 @@ const StepRenderer: React.FC<StepRendererProps> = ({
   };
 
   const renderStepContent = () => {
+    const commonProps = {
+      formData,
+      updateFormData,
+      animationDirection
+    };
+
     switch (step) {
       case 0:
-        return (
-          <ClientTypeStep
-            formData={formData}
-            updateFormData={updateFormData}
-          />
-        );
+        return <ClientTypeStep {...commonProps} />;
       case 1:
-        return (
-          <ProjectDetailsStep
-            formData={formData}
-            updateFormData={updateFormData}
-          />
-        );
+        return <ProjectDetailsStep {...commonProps} />;
       case 2:
-        return (
-          <TerrainDetailsStep
-            formData={formData}
-            updateFormData={updateFormData}
-          />
-        );
+        return <TerrainDetailsStep {...commonProps} />;
       case 3:
-        return (
-          <ConstructionDetailsStep
-            formData={formData}
-            updateFormData={updateFormData}
-          />
-        );
-      // Additional cases for other steps...
+        return <ConstructionDetailsStep {...commonProps} />;
       default:
         return <div>Étape non implémentée</div>;
     }
