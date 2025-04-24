@@ -9,17 +9,17 @@ interface SEOFooterProps {
 
 const SEOFooter = ({ text, additionalKeywords = [] }: SEOFooterProps) => {
   return (
-    <section className="py-8 bg-stone-50/50 border-t border-stone-100">
+    <section className="py-12 bg-stone-100 border-t border-stone-200">
       <Container>
         <div className="max-w-4xl mx-auto">
-          <div className="text-sm text-stone-600/70 leading-relaxed">
+          <div className="text-sm text-stone-700/80 leading-relaxed">
             <p className="mb-4">
               {text}
             </p>
             
             {additionalKeywords.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-stone-200/50">
-                <p className="text-xs text-stone-500/60">
+              <div className="mt-6 pt-4 border-t border-stone-200">
+                <p className="text-xs text-stone-600/70">
                   {additionalKeywords.join(' • ')}
                 </p>
               </div>
