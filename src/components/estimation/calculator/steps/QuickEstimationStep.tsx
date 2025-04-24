@@ -1,138 +1,117 @@
 
 import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { FormData } from '../types';
+import { BaseFormProps } from '../types';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ensureNumber } from '../utils/typeConversions';
 
-interface QuickEstimationStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: string;
-}
-
-const QuickEstimationStep: React.FC<QuickEstimationStepProps> = ({ 
-  formData, 
-  updateFormData, 
+const QuickEstimationStep: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection
 }) => {
-  // State for quick estimation fields
-  const [quality, setQuality] = React.useState<string>(formData.qualityStandard || 'standard');
-  const [complexity, setComplexity] = React.useState<string>(formData.complexity || 'medium');
+  const [renovationPercentage, setRenovationPercentage] = React.useState<string>(
+    formData.renovationPercentage ? String(formData.renovationPercentage) : ''
+  );
+  const [quality, setQuality] = React.useState<string>(formData.quality || 'standard');
   
   const handleSubmit = () => {
-    // Calculate a basic estimation based on surface and quality/complexity
-    const surface = typeof formData.surface === 'string' ? parseFloat(formData.surface) : (formData.surface || 0);
+    // Calculate quick estimation
+    const surface = ensureNumber(formData.surface, 0);
+    const percentage = ensureNumber(renovationPercentage, 0) / 100;
     
-    // Base price per m² depending on quality
-    let basePrice = 0;
-    switch(quality) {
-      case 'basic':
-        basePrice = 800;
+    let baseCost = 0;
+    
+    // Base cost per m² depending on project type
+    switch (formData.projectType) {
+      case 'renovation':
+        baseCost = 900;
+        break;
+      case 'division':
+        baseCost = 1100;
+        break;
+      default:
+        baseCost = 900;
+    }
+    
+    // Quality multiplier
+    let qualityMultiplier = 1;
+    switch (quality) {
+      case 'economic':
+        qualityMultiplier = 0.8;
         break;
       case 'standard':
-        basePrice = 1200;
+        qualityMultiplier = 1;
         break;
       case 'premium':
-        basePrice = 1800;
-        break;
-      case 'luxury':
-        basePrice = 2500;
+        qualityMultiplier = 1.3;
         break;
       default:
-        basePrice = 1200;
+        qualityMultiplier = 1;
     }
     
-    // Complexity multiplier
-    let complexityMultiplier = 1;
-    switch(complexity) {
-      case 'simple':
-        complexityMultiplier = 0.9;
-        break;
-      case 'medium':
-        complexityMultiplier = 1;
-        break;
-      case 'complex':
-        complexityMultiplier = 1.2;
-        break;
-      case 'very_complex':
-        complexityMultiplier = 1.5;
-        break;
-      default:
-        complexityMultiplier = 1;
-    }
+    // Calculate total estimation
+    const totalCost = surface * baseCost * percentage * qualityMultiplier;
     
-    // Calculate total amount
-    const estimatedAmount = surface * basePrice * complexityMultiplier;
-    
-    // Update form data with quick estimation
     updateFormData({
-      qualityStandard: quality,
-      complexity,
-      montantT: estimatedAmount
+      renovationPercentage: ensureNumber(renovationPercentage),
+      quality,
+      montantT: totalCost
     });
     
-    // Proceed to next step
     goToNextStep();
   };
-
+  
   return (
     <div className={`space-y-6 transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
     }`}>
-      <h2 className="text-xl font-semibold mb-6">Estimation rapide</h2>
+      <h2 className="text-xl font-semibold mb-2">Estimation rapide</h2>
+      <p className="text-gray-600 mb-6">Quelques questions simples pour estimer votre projet de rénovation</p>
       
       <div className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="quality" className="text-base font-medium">
-            Niveau de qualité souhaité <span className="text-red-500">*</span>
+          <Label htmlFor="renovation-percentage" className="text-base font-medium">
+            Quel pourcentage du bien est concerné par la rénovation ? <span className="text-red-500">*</span>
           </Label>
-          <Select 
-            value={quality} 
-            onValueChange={setQuality}
-          >
-            <SelectTrigger id="quality">
-              <SelectValue placeholder="Sélectionnez le niveau de qualité" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="basic">Basique (entrée de gamme)</SelectItem>
-              <SelectItem value="standard">Standard (milieu de gamme)</SelectItem>
-              <SelectItem value="premium">Premium (haut de gamme)</SelectItem>
-              <SelectItem value="luxury">Luxe (très haut de gamme)</SelectItem>
-            </SelectContent>
-          </Select>
+          <p className="text-sm text-gray-600">Indiquez quelle proportion du bien doit être rénovée (%).</p>
+          <Input
+            id="renovation-percentage"
+            type="number"
+            value={renovationPercentage}
+            onChange={(e) => setRenovationPercentage(e.target.value)}
+            placeholder="Pourcentage (ex: 50)"
+            className="max-w-xs"
+            min="1"
+            max="100"
+          />
         </div>
         
         <div className="space-y-2">
-          <Label htmlFor="complexity" className="text-base font-medium">
-            Complexité du projet <span className="text-red-500">*</span>
+          <Label htmlFor="quality" className="text-base font-medium">
+            Quel niveau de finition souhaitez-vous ? <span className="text-red-500">*</span>
           </Label>
-          <Select 
-            value={complexity} 
-            onValueChange={setComplexity}
+          <Select
+            value={quality}
+            onValueChange={setQuality}
           >
-            <SelectTrigger id="complexity">
-              <SelectValue placeholder="Sélectionnez la complexité" />
+            <SelectTrigger id="quality" className="w-full max-w-xs">
+              <SelectValue placeholder="Choisir un niveau de finition" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="simple">Simple (peu de contraintes)</SelectItem>
-              <SelectItem value="medium">Moyenne (contraintes standard)</SelectItem>
-              <SelectItem value="complex">Complexe (nombreuses contraintes)</SelectItem>
-              <SelectItem value="very_complex">Très complexe (contraintes exceptionnelles)</SelectItem>
+              <SelectItem value="economic">Économique ($)</SelectItem>
+              <SelectItem value="standard">Standard ($$)</SelectItem>
+              <SelectItem value="premium">Premium ($$$)</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      </div>
-      
-      <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-        Total travaux : {formData.montantT ? formData.montantT.toLocaleString() : 0} €/HT
       </div>
       
       <div className="flex justify-between pt-6">
@@ -148,7 +127,7 @@ const QuickEstimationStep: React.FC<QuickEstimationStepProps> = ({
         
         <Button 
           onClick={handleSubmit}
-          disabled={!quality || !complexity}
+          disabled={!renovationPercentage || !quality}
           className="flex items-center gap-2"
         >
           Suivant

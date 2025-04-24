@@ -1,192 +1,159 @@
 
-import { FormData } from '../types/formTypes';
-import { 
-  EstimationResponseData, 
-  ProjectDetails,
-  ConstructionCosts,
-  FeeCosts,
-  OtherCosts,
-  EstimationTimeline,
-  CategoryCost
-} from '../types/estimationTypes';
-import { ensureNumber } from '../utils/typeConversions';
+/**
+ * This file contains utility functions for calculating estimation costs
+ */
 
-export const calculateEstimation = (formData: FormData): EstimationResponseData => {
-  // Extract basic project details
-  const projectType = formData.projectType || 'renovation';
-  const surface = ensureNumber(formData.surface);
-  const location = formData.location || '';
-  const constructionType = formData.constructionType || 'renovation';
-  const bedrooms = ensureNumber(formData.bedrooms);
-  const bathrooms = ensureNumber(formData.bathrooms);
-  const city = formData.city || '';
+import { FormData } from '../types';
+
+/**
+ * Calculate base costs for a construction project
+ */
+export const calculateConstructionBaseCost = (formData: FormData): number => {
+  const surface = typeof formData.surface === 'string' 
+    ? parseFloat(formData.surface) 
+    : (formData.surface || 0);
+    
+  // Base cost per m² depending on construction type
+  let baseCostPerM2 = 0;
   
-  // Create project details object
-  const projectDetails: ProjectDetails = {
-    projectType,
-    surface,
-    location,
-    constructionType,
-    bedrooms,
-    bathrooms,
-    city
-  };
-  
-  // Calculate base cost estimates
-  const baseRate = constructionType === 'neuf' ? 1500 : 1200;
-  let estimatedCost = surface * baseRate;
-  
-  // Adjust based on location
-  if (location === 'urban') {
-    estimatedCost *= 1.15; // 15% increase for urban areas
-  } else if (location === 'rural') {
-    estimatedCost *= 0.9; // 10% decrease for rural areas
+  switch (formData.constructionType) {
+    case 'traditional':
+      baseCostPerM2 = 1800;
+      break;
+    case 'sustainable':
+      baseCostPerM2 = 2100;
+      break;
+    case 'prefab':
+      baseCostPerM2 = 1500;
+      break;
+    default:
+      baseCostPerM2 = 1800; // Default to traditional
   }
   
-  // Adjust based on luxury features
-  if (formData.kitchenType === 'luxury') {
-    estimatedCost += 15000;
-  } else if (formData.kitchenType === 'premium') {
-    estimatedCost += 8000;
+  return surface * baseCostPerM2;
+};
+
+/**
+ * Calculate kitchen costs based on type and number of units
+ */
+export const calculateKitchenCost = (formData: FormData): number => {
+  if (!formData.kitchenType || formData.kitchenType === 'none') {
+    return 0;
   }
   
-  // Calculate construction costs
-  const structuralWork = estimatedCost * 0.4;
-  const finishingWork = estimatedCost * 0.3;
-  const technicalLots = estimatedCost * 0.2;
-  const externalWorks = estimatedCost * 0.1;
-  const constructionCosts: ConstructionCosts = {
-    structuralWork,
-    finishingWork,
-    technicalLots,
-    externalWorks,
-    total: structuralWork + finishingWork + technicalLots + externalWorks
-  };
+  const units = typeof formData.units === 'string' 
+    ? parseInt(formData.units) 
+    : (formData.units || 1);
   
-  // Calculate fees
-  const architectPercentage = 0.08;
-  const architectFees = estimatedCost * architectPercentage;
-  const engineeringFees = estimatedCost * 0.05;
-  const projectManagement = estimatedCost * 0.04;
-  const officialFees = estimatedCost * 0.02;
-  const inspectionFees = estimatedCost * 0.01;
-  const technicalStudies = estimatedCost * 0.015;
-  const permits = estimatedCost * 0.02;
-  const insurance = estimatedCost * 0.02;
-  const contingency = estimatedCost * 0.05;
-  const taxes = estimatedCost * 0.03;
-  const other = estimatedCost * 0.01;
-  const feesTotal = architectFees + engineeringFees + projectManagement + officialFees + 
-                  inspectionFees + technicalStudies + permits + insurance + 
-                  contingency + taxes + other;
-  const fees: FeeCosts = {
-    architect: architectFees,
-    architectFees,
-    engineeringFees,
-    projectManagement,
-    officialFees,
-    inspectionFees,
-    technicalStudies,
-    permits,
-    insurance,
-    contingency,
-    taxes,
-    other,
-    total: feesTotal
-  };
+  let costPerKitchen = 0;
   
-  // Calculate categories of costs
-  const categories: CategoryCost[] = [
-    {
-      name: "Gros œuvre",
-      cost: structuralWork,
-      percentage: (structuralWork / estimatedCost) * 100,
-      category: "construction",
-      amount: structuralWork
-    },
-    {
-      name: "Second œuvre",
-      cost: finishingWork,
-      percentage: (finishingWork / estimatedCost) * 100,
-      category: "construction",
-      amount: finishingWork
-    },
-    {
-      name: "Lots techniques",
-      cost: technicalLots,
-      percentage: (technicalLots / estimatedCost) * 100,
-      category: "construction",
-      amount: technicalLots
-    },
-    {
-      name: "Aménagements extérieurs",
-      cost: externalWorks,
-      percentage: (externalWorks / estimatedCost) * 100,
-      category: "construction",
-      amount: externalWorks
-    },
-    {
-      name: "Honoraires",
-      cost: feesTotal,
-      percentage: (feesTotal / estimatedCost) * 100,
-      category: "fees",
-      amount: feesTotal
-    }
-  ];
+  switch (formData.kitchenType) {
+    case 'kitchenette':
+      costPerKitchen = 3000;
+      break;
+    case 'basic':
+      costPerKitchen = 5000;
+      break;
+    case 'standard':
+      costPerKitchen = 8000;
+      break;
+    case 'premium':
+      costPerKitchen = 15000;
+      break;
+    default:
+      costPerKitchen = 0;
+  }
   
-  // Calculate other costs
-  const otherCosts: OtherCosts = {
-    land: ensureNumber(formData.landCost),
-    demolition: ensureNumber(formData.demolitionCost),
-    siteDevelopment: ensureNumber(formData.siteDevelopmentCost),
-    insurance: estimatedCost * 0.01,
-    contingency: estimatedCost * 0.03,
-    taxes: estimatedCost * 0.02,
-    miscellaneous: estimatedCost * 0.005,
-    total: ensureNumber(formData.landCost) + 
-           ensureNumber(formData.demolitionCost) + 
-           ensureNumber(formData.siteDevelopmentCost) + 
-           (estimatedCost * 0.065)
-  };
+  return costPerKitchen * units;
+};
+
+/**
+ * Calculate bathroom costs based on type, count and number of units
+ */
+export const calculateBathroomCost = (formData: FormData): number => {
+  if (!formData.bathroomType || formData.bathroomType === 'none') {
+    return 0;
+  }
   
-  // Calculate timeline
-  const designMonths = 2;
-  const permitsMonths = 3;
-  const biddingMonths = 1;
-  const constructionMonths = Math.max(6, Math.ceil(surface / 100));
-  const totalMonths = designMonths + permitsMonths + biddingMonths + constructionMonths;
-  const timeline: EstimationTimeline = {
-    design: designMonths,
-    permits: permitsMonths,
-    bidding: biddingMonths,
-    construction: constructionMonths,
-    total: totalMonths,
-    totalMonths
-  };
+  const units = typeof formData.units === 'string' 
+    ? parseInt(formData.units) 
+    : (formData.units || 1);
+    
+  const count = typeof formData.bathroomCount === 'string' 
+    ? parseInt(formData.bathroomCount) 
+    : (formData.bathroomCount || 1);
   
-  // Calculate total amount
-  const totalAmount = constructionCosts.total + fees.total + otherCosts.total;
+  let costPerBathroom = 0;
   
-  // Return the complete estimation data
-  return {
-    projectType,
-    projectDetails,
-    estimatedCost: {
-      total: estimatedCost,
-      perSquareMeter: estimatedCost / surface,
-      breakdown: {
-        materials: estimatedCost * 0.5,
-        labor: estimatedCost * 0.4,
-        fees: estimatedCost * 0.1
-      }
-    },
-    constructionCosts,
-    fees,
-    otherCosts,
-    totalAmount,
-    dateGenerated: new Date().toISOString(),
-    isComplete: true,
-    timeline,
-    categories
-  };
+  switch (formData.bathroomType) {
+    case 'standard':
+      costPerBathroom = 3500;
+      break;
+    case 'mid-range':
+      costPerBathroom = 5500;
+      break;
+    case 'premium':
+      costPerBathroom = 8500;
+      break;
+    default:
+      costPerBathroom = 3500; // Default to standard
+  }
+  
+  return costPerBathroom * count * units;
+};
+
+/**
+ * Calculate window costs based on type and area
+ */
+export const calculateWindowsCost = (windowType: string, area: number): number => {
+  let costPerM2 = 0;
+  
+  switch (windowType) {
+    case 'bois':
+      costPerM2 = 850;
+      break;
+    case 'pvc':
+      costPerM2 = 550;
+      break;
+    case 'alu':
+      costPerM2 = 750;
+      break;
+    case 'mixte':
+      costPerM2 = 900;
+      break;
+    case 'pvc_colore':
+      costPerM2 = 650;
+      break;
+    default:
+      costPerM2 = 0; // No cost if type is undefined or 'non_concerne'
+  }
+  
+  return area * costPerM2;
+};
+
+/**
+ * Calculate ecological options cost based on level and total amount
+ */
+export const calculateEcoOptionsCost = (formData: FormData, totalAmount: number): number => {
+  if (!formData.ecoLevel) {
+    return 0;
+  }
+  
+  let ecoCoefficient = 0;
+  
+  switch (formData.ecoLevel) {
+    case 'minimal':
+      ecoCoefficient = 0.018; // +1.8%
+      break;
+    case 'moderate':
+      ecoCoefficient = 0.038; // +3.8%
+      break;
+    case 'extensive':
+      ecoCoefficient = 0.057; // +5.7%
+      break;
+    default:
+      ecoCoefficient = 0;
+  }
+  
+  return totalAmount * ecoCoefficient;
 };

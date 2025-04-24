@@ -1,91 +1,46 @@
 
 /**
- * Ensures a value is a number
- * If the value is already a number, it's returned as is
- * If it's a string, it's converted to a number
- * If it's undefined or null, it returns 0 or the provided default value
- * 
- * @param value Value to ensure is a number
- * @param defaultValue Default value if conversion fails, defaults to 0
- * @returns The value as a number
+ * Utility functions for type conversions and validation
  */
-export const ensureNumber = (value: any, defaultValue = 0): number => {
-  if (typeof value === 'number') return value;
-  if (typeof value === 'string') {
-    // Remove non-numeric characters except decimal point
-    const cleanedValue = value.replace(/[^\d.-]/g, '');
-    return cleanedValue ? parseFloat(cleanedValue) : defaultValue;
+
+/**
+ * Ensures a value is converted to a number
+ * @param value The value to convert
+ * @param defaultValue Default value to use if conversion fails
+ * @returns A number
+ */
+export const ensureNumber = (value: string | number | undefined, defaultValue: number = 0): number => {
+  if (value === undefined || value === null) {
+    return defaultValue;
   }
-  return defaultValue;
-};
-
-/**
- * Ensures a value is a boolean
- * If the value is already a boolean, it's returned as is
- * If it's a string 'true' or 'false', it's converted to a boolean
- * If it's undefined or null, it returns false
- * 
- * @param value Value to ensure is a boolean
- * @returns The value as a boolean
- */
-export const ensureBoolean = (value: any): boolean => {
-  if (typeof value === 'boolean') return value;
-  if (typeof value === 'string') {
-    return value.toLowerCase() === 'true';
+  
+  if (typeof value === 'number') {
+    return isNaN(value) ? defaultValue : value;
   }
-  return Boolean(value);
+  
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? defaultValue : parsed;
 };
 
 /**
- * Ensures a value is a string
+ * Ensures a value is converted to a boolean
+ * @param value The value to convert
+ * @param defaultValue Default value to use if value is undefined
+ * @returns A boolean
  */
-export const ensureString = (value: any): string => {
-  if (typeof value === 'string') return value;
-  if (value === null || value === undefined) return '';
-  return String(value);
+export const ensureBoolean = (value: boolean | undefined, defaultValue: boolean = false): boolean => {
+  return value === undefined ? defaultValue : value;
 };
 
 /**
- * Converts a value to a form-compatible value
- */
-export const toFormValue = (value: any): string => {
-  if (value === null || value === undefined) return '';
-  return String(value);
-};
-
-/**
- * Safely renders a value as a string
- */
-export const safeRenderValue = (value: any): string => {
-  if (value === null || value === undefined) return '-';
-  return String(value);
-};
-
-/**
- * Format a number as currency (€)
- * 
- * @param value Number to format
+ * Format a number as currency (EUR)
+ * @param value The number to format
  * @returns Formatted currency string
  */
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR',
-    minimumFractionDigits: 0,
     maximumFractionDigits: 0
-  }).format(value);
-};
-
-/**
- * Format a number as percentage
- * 
- * @param value Number to format (0-1)
- * @returns Formatted percentage string
- */
-export const formatPercentage = (value: number): string => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'percent',
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1
   }).format(value);
 };

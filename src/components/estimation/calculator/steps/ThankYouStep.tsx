@@ -1,89 +1,110 @@
 
 import React from 'react';
-import { FormData } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Award, Download, Mail, ThumbsUp } from 'lucide-react';
-import { Card, CardContent } from "@/components/ui/card";
+import { FormData } from '../types';
+import { Download, Mail, FileCheck, ArrowLeft } from 'lucide-react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ensureNumber } from '../utils/typeConversions';
 
 interface ThankYouStepProps {
   formData: FormData;
-  animationDirection: 'forward' | 'backward';
+  animationDirection: string;
 }
 
 const ThankYouStep: React.FC<ThankYouStepProps> = ({ 
   formData,
   animationDirection
 }) => {
-  // Format the estimation amount
-  const formatAmount = (amount: number | undefined) => {
-    if (!amount) return "0";
-    return new Intl.NumberFormat('fr-FR').format(amount);
+  const formatCurrency = (value: number): string => {
+    return new Intl.NumberFormat('fr-FR', { 
+      style: 'currency', 
+      currency: 'EUR',
+      maximumFractionDigits: 0
+    }).format(value);
   };
-
-  // Get estimation amount from formData
-  const estimationAmount = ensureNumber(formData.montantT);
-
+  
+  const estimationAmount = ensureNumber(formData.montantT, 0);
+  
+  const handleDownloadPDF = () => {
+    alert('Téléchargement de l\'estimation en PDF - Fonctionnalité en cours de développement');
+  };
+  
+  const handleSendEmail = () => {
+    alert('Envoi de l\'estimation par email - Fonctionnalité en cours de développement');
+  };
+  
+  const handleNewEstimation = () => {
+    window.location.reload();
+  };
+  
   return (
-    <div className={`space-y-8 transform transition-all duration-300 ${
+    <div className={`space-y-6 transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
     }`}>
-      <div className="text-center">
-        <ThumbsUp className="h-16 w-16 mx-auto text-green-500 mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Merci pour votre demande d'estimation !</h2>
+      <div className="text-center space-y-4 mb-6">
+        <FileCheck className="h-16 w-16 text-green-600 mx-auto" />
+        <h2 className="text-2xl font-bold">Merci pour votre demande d'estimation</h2>
         <p className="text-gray-600">
-          Nous avons bien reçu vos informations et nous prendrons contact avec vous rapidement.
+          Un expert Progineer vous contactera prochainement pour discuter en détail de votre projet.
         </p>
       </div>
       
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="pt-6">
-          <h3 className="text-xl font-semibold text-center mb-4">L'estimation de votre projet est de :</h3>
-          
+      <Card className="border-green-100 shadow-md">
+        <CardHeader className="bg-green-50 border-b border-green-100">
+          <CardTitle className="text-center">Estimation de votre projet</CardTitle>
+        </CardHeader>
+        <CardContent className="py-6">
           <div className="text-center">
-            <span className="text-3xl md:text-4xl font-bold text-blue-700">
-              {formatAmount(estimationAmount)} €/HT*
-            </span>
-            
-            <p className="text-xs text-gray-500 mt-2">
-              (hors terrain, frais de notaire, étude géotechnique, honoraires de maîtrise d'œuvre, taxe d'aménagement, taxe archéologique, assurance dommage ouvrage)
+            <div className="text-3xl font-bold text-green-700 mb-2">
+              {formatCurrency(estimationAmount)}
+            </div>
+            <p className="text-sm text-gray-600">
+              {formData.projectType === 'renovation' ? 'Rénovation' : 
+               formData.projectType === 'construction' ? 'Construction' :
+               formData.projectType === 'extension' ? 'Extension' : 'Projet'} de {formData.surface} m²
+            </p>
+          </div>
+          
+          <div className="border-t border-gray-200 mt-4 pt-4">
+            <p className="text-sm text-gray-500">
+              Cette estimation ne comprend pas : le terrain, les frais de notaire, l'étude géotechnique, 
+              les honoraires de maîtrise d'œuvre, les assurances et les taxes.
             </p>
           </div>
         </CardContent>
+        <CardFooter className="flex flex-col space-y-3 bg-gray-50 border-t border-gray-100">
+          <Button 
+            variant="outline" 
+            className="w-full flex items-center justify-center gap-2"
+            onClick={handleDownloadPDF}
+          >
+            <Download className="h-4 w-4" />
+            Télécharger l'estimation en PDF
+          </Button>
+          
+          <Button 
+            variant="outline" 
+            className="w-full flex items-center justify-center gap-2"
+            onClick={handleSendEmail}
+          >
+            <Mail className="h-4 w-4" />
+            Recevoir l'estimation par email
+          </Button>
+          
+          <Button 
+            className="w-full flex items-center justify-center gap-2"
+            onClick={handleNewEstimation}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Nouvelle estimation
+          </Button>
+        </CardFooter>
       </Card>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardContent className="pt-6 flex flex-col items-center text-center h-full">
-            <Award className="h-10 w-10 text-blue-600 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Honoraires Progineer</h3>
-            <p className="text-sm text-gray-600 mb-4">Découvrez les honoraires de notre service de maîtrise d'œuvre pour ce projet.</p>
-            <Button className="mt-auto" variant="outline">
-              En savoir plus
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="pt-6 flex flex-col items-center text-center h-full">
-            <Download className="h-10 w-10 text-blue-600 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Télécharger l'estimation</h3>
-            <p className="text-sm text-gray-600 mb-4">Recevez une copie détaillée de cette estimation par email.</p>
-            <Button className="mt-auto">
-              Recevoir par email
-              <Mail className="ml-2 h-4 w-4" />
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-      
-      <div className="text-center text-sm text-gray-600">
-        <p>
-          Notre équipe analysera votre projet en détail et vous contactera sous 24h pour discuter des possibilités.
-        </p>
-        <p className="mt-1">
-          Pour toute question urgente, n'hésitez pas à nous contacter au <span className="font-medium">04 91 xx xx xx</span>.
+      <div className="text-center pt-4">
+        <p className="text-gray-600 text-sm">
+          Notre équipe a reçu votre demande d'estimation pour votre projet {formData.projectType}.
+          Nous vous contacterons dans les 24 heures pour affiner cette estimation.
         </p>
       </div>
     </div>

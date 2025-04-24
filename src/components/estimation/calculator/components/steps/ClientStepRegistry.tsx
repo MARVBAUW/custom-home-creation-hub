@@ -1,73 +1,88 @@
 
 import React from 'react';
-import { StepComponentRegistry, FormStepProps } from './StepComponents';
-import ClientTypeForm from '../../FormSteps/ClientTypeForm';
-import ProfessionalProjectForm from '../../FormSteps/ProfessionalProjectForm';
-import IndividualProjectForm from '../../FormSteps/IndividualProjectForm';
-import EstimationTypeForm from '../../FormSteps/EstimationTypeForm';
+import { StepComponentRegistry, DefaultStepProps } from './StepComponents';
 import { FormData } from '../../types';
 
-// Registry for client and project type steps (steps 1-4)
+interface ClientTypeProps extends DefaultStepProps {
+  animationDirection: string;
+}
+
+interface IndividualProjectProps extends DefaultStepProps {
+  animationDirection: string;
+  projectType: string;
+}
+
+interface EstimationTypeProps extends DefaultStepProps {
+  animationDirection: string;
+  estimationType: string;
+}
+
 export const createClientStepRegistry = (
   formData: FormData,
-  onClientTypeSubmit: (data: { clientType: string }) => void,
-  onProfessionalProjectSubmit: (data: any) => void,
-  onIndividualProjectSubmit: (data: { projectType: string }) => void,
-  onEstimationTypeSubmit: (data: any) => void,
-  goToPreviousStep: () => void
+  onClientTypeSubmit: (data: Partial<FormData>) => void,
+  onProfessionalProjectSubmit: (data: Partial<FormData>) => void,
+  onIndividualProjectSubmit: (data: Partial<FormData>) => void,
+  onEstimationTypeSubmit: (data: Partial<FormData>) => void,
+  goBack: () => void
 ): StepComponentRegistry => {
   return {
-    1: (props: FormStepProps) => (
-      <ClientTypeForm
-        formData={formData}
-        updateFormData={(data) => onClientTypeSubmit({ clientType: data.clientType || '' })}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-      />
-    ),
-    2: (props: FormStepProps) => (
-      <ProfessionalProjectForm
-        formData={formData}
-        updateFormData={onProfessionalProjectSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{
-          activity: formData.activity || '',
-          projectType: formData.projectType || '',
-          startDate: formData.startDate || '',
-          endDate: formData.endDate || '',
-        }}
-        onSubmit={onProfessionalProjectSubmit}
-      />
-    ),
-    3: (props: FormStepProps) => (
-      <IndividualProjectForm
-        formData={formData}
-        updateFormData={onIndividualProjectSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{
-          projectType: formData.projectType || '',
-        }}
-        onSubmit={onIndividualProjectSubmit}
-      />
-    ),
-    4: (props: FormStepProps) => (
-      <EstimationTypeForm
-        formData={formData}
-        updateFormData={onEstimationTypeSubmit}
-        goToNextStep={() => {}}
-        goToPreviousStep={goToPreviousStep}
-        animationDirection={props.animationDirection}
-        defaultValues={{
-          estimationType: formData.estimationType || '',
-          termsAccepted: formData.termsAccepted || false,
-        }}
-        onSubmit={onEstimationTypeSubmit}
-      />
-    ),
+    // Step 0: Client Type
+    0: (props: ClientTypeProps) => {
+      return (
+        <div>
+          <h2>Client Type Selection</h2>
+          <button onClick={() => onClientTypeSubmit({ clientType: 'individual' })}>Individual</button>
+          <button onClick={() => onClientTypeSubmit({ clientType: 'professional' })}>Professional</button>
+        </div>
+      );
+    },
+
+    // Step 1: Professional Project
+    1: (props: DefaultStepProps) => {
+      return (
+        <div>
+          <h2>Professional Project Details</h2>
+          <button onClick={() => onProfessionalProjectSubmit({ activity: 'business' })}>Continue</button>
+          <button onClick={goBack}>Back</button>
+        </div>
+      );
+    },
+
+    // Step 2: Individual Project Type
+    2: (props: IndividualProjectProps) => {
+      // Ensure projectType is a non-empty string before proceeding
+      const safeProjectType = props.projectType || 'construction';
+      
+      return (
+        <div>
+          <h2>Individual Project Type</h2>
+          <div>
+            <button onClick={() => onIndividualProjectSubmit({ projectType: 'construction' })}>Construction</button>
+            <button onClick={() => onIndividualProjectSubmit({ projectType: 'renovation' })}>Renovation</button>
+            <button onClick={() => onIndividualProjectSubmit({ projectType: 'extension' })}>Extension</button>
+            <button onClick={() => onIndividualProjectSubmit({ projectType: 'optimization' })}>Optimization</button>
+            <button onClick={() => onIndividualProjectSubmit({ projectType: 'division' })}>Division</button>
+          </div>
+          <button onClick={goBack}>Back</button>
+        </div>
+      );
+    },
+
+    // Step 3: Estimation Type
+    3: (props: EstimationTypeProps) => {
+      // Ensure estimationType is a non-empty string before proceeding
+      const safeEstimationType = props.estimationType || 'quick';
+      
+      return (
+        <div>
+          <h2>Estimation Type</h2>
+          <div>
+            <button onClick={() => onEstimationTypeSubmit({ estimationType: 'quick' })}>Quick</button>
+            <button onClick={() => onEstimationTypeSubmit({ estimationType: 'precise' })}>Precise</button>
+          </div>
+          <button onClick={goBack}>Back</button>
+        </div>
+      );
+    }
   };
 };
