@@ -1,7 +1,9 @@
 
+import { EstimationFormData } from './formTypes';
+
 export interface BaseFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   goToNextStep?: () => void;
   goToPreviousStep?: () => void;
   animationDirection?: 'forward' | 'backward';

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { StepComponentRegistry, FormStepProps } from './StepComponents';
 import PlatrerieForm from '../../FormSteps/PlatrerieForm';
@@ -6,11 +5,10 @@ import MenuiseriesIntForm from '../../FormSteps/MenuiseriesIntForm';
 import CarrelageForm from '../../FormSteps/CarrelageForm';
 import ParquetForm from '../../FormSteps/ParquetForm';
 import PeintureForm from '../../FormSteps/PeintureForm';
-import { FormData } from '../../types';
+import { EstimationFormData } from '../../types/formTypes';
 
-// Registry for interior finishings steps
 export const createInteriorStepRegistry = (
-  formData: FormData,
+  formData: EstimationFormData,
   onPlatrerieSubmit: (data: any) => void,
   onMenuiseriesIntSubmit: (data: any) => void,
   onCarrelageSubmit: (data: any) => void,

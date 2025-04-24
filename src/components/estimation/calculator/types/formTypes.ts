@@ -1,5 +1,7 @@
 
-export interface FormData {
+import { z } from 'zod';
+
+export interface EstimationFormData {
   clientType?: 'individual' | 'professional';
   projectType?: string;
   estimationType?: 'quick' | 'precise';
@@ -17,17 +19,25 @@ export interface FormData {
   progress?: number;
   budget?: number;
   additionalDetails?: string;
+  windowType?: string;
+  windowRenovationArea?: number;
+  windowNewArea?: number;
+  plasteringType?: string;
+  interiorFittings?: string;
+  doorType?: string;
+  interiorDoorsType?: string;
+  hasMoldings?: boolean;
+  hasCustomFurniture?: boolean;
   [key: string]: any;
 }
 
 // Re-export BaseFormProps from baseFormProps.ts to maintain backward compatibility
-// with existing imports without having to change all files
 export type { BaseFormProps } from './baseFormProps';
 
 export interface StepRendererProps {
   step: number;
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
+  formData: EstimationFormData;
+  updateFormData: (data: Partial<EstimationFormData>) => void;
   animationDirection: 'forward' | 'backward';
   goToNextStep?: () => void;
   goToPreviousStep?: () => void;
@@ -58,7 +68,7 @@ export interface Message {
 export interface EstimationState {
   step: number;
   totalSteps: number;
-  formData: FormData;
+  formData: EstimationFormData;
   estimationResult: any;
   isSubmitting: boolean;
   animationDirection: 'forward' | 'backward';
