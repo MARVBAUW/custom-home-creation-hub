@@ -26,32 +26,24 @@ const Index = () => {
       <main className="overflow-hidden">
         <h1 className="sr-only">Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
         
-        {/* Hero Section */}
         <Hero />
 
-        {/* Stats Section with modern grid */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <StatsGrid />
           </div>
         </section>
 
-        {/* Services Section with card grid */}
         <Services />
 
-        {/* Expertise Timeline Section */}
         <ExpertiseTimeline />
 
-        {/* Expertise Details Section */}
         <ExpertiseSection />
 
-        {/* Testimonials with modern design */}
         <Testimonials />
 
-        {/* Location Map */}
         <LocationMap />
 
-        {/* CTA Section */}
         <CTASection />
       </main>
       
