@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { FormData } from './types/formTypes';
+import { FormData } from './types';
 import { safeRenderValue } from './utils/typeConversions';
 
 interface CorpsEtatDetails {

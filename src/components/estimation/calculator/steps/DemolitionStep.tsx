@@ -1,94 +1,79 @@
 
-import React from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { FormData } from '../types';
+import React, { useState } from 'react';
+import { BaseFormProps } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
-import { ensureNumber, ensureBoolean } from '../utils/typeConversions';
+import { ensureNumber } from "../utils/typeConversions";
 
-interface DemolitionStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: string;
-}
-
-const DemolitionStep: React.FC<DemolitionStepProps> = ({ 
-  formData, 
-  updateFormData, 
+const DemolitionStep: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
   goToNextStep,
   goToPreviousStep,
   animationDirection
 }) => {
-  const [demolitionType, setDemolitionType] = React.useState<string>(formData.demolitionType || 'none');
-  const [existingSurface, setExistingSurface] = React.useState<string | number>(formData.existingSurface || '');
+  // Initialize state with formData or default values
+  const [demolitionPercent, setDemolitionPercent] = useState<string>(
+    formData.demolitionPercent ? String(formData.demolitionPercent) : '0'
+  );
   
-  // Calculate demolition costs
-  const calculateDemolitionCosts = (): number => {
-    if (demolitionType === 'none') {
-      return ensureNumber(formData.montantT, 0); // No change
+  const [demolitionSurface, setDemolitionSurface] = useState<string>(
+    formData.demolitionSurface ? String(formData.demolitionSurface) : '0'
+  );
+  
+  // State to track if demolition is needed
+  const [needsDemolition, setNeedsDemolition] = useState<string>(
+    formData.needsDemolition || 'no'
+  );
+  
+  // Calculate demolition surface when percentage changes
+  const handlePercentChange = (value: string) => {
+    setDemolitionPercent(value);
+    
+    if (formData.surface) {
+      const percent = parseFloat(value) || 0;
+      const calculatedSurface = (formData.surface * percent / 100).toFixed(1);
+      setDemolitionSurface(calculatedSurface);
     }
-    
-    const existingSurfaceValue = ensureNumber(existingSurface, 0);
-    let demolitionMultiplier = 0;
-    
-    // Set the multiplier based on the demolition type
-    switch (demolitionType) {
-      case '25':
-        demolitionMultiplier = 0.25;
-        break;
-      case '50':
-        demolitionMultiplier = 0.5;
-        break;
-      case '75':
-        demolitionMultiplier = 0.75;
-        break;
-      case '100':
-        demolitionMultiplier = 1;
-        break;
-      default:
-        demolitionMultiplier = 0;
-    }
-    
-    // Calculate the demolition area and cost
-    const demolitionArea = existingSurfaceValue * demolitionMultiplier;
-    const demolitionCost = demolitionArea * 185; // Price per m² for demolition
-    
-    // Add to the existing montantT or initialize it
-    const currentMontantT = ensureNumber(formData.montantT, 0);
-    return currentMontantT + demolitionCost;
   };
   
-  // Handle input change for existing surface
-  const handleExistingSurfaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExistingSurface(e.target.value);
+  // Update demolition surface directly
+  const handleSurfaceChange = (value: string) => {
+    setDemolitionSurface(value);
+    
+    if (formData.surface && formData.surface > 0) {
+      const surface = parseFloat(value) || 0;
+      const calculatedPercent = ((surface / formData.surface) * 100).toFixed(1);
+      setDemolitionPercent(calculatedPercent);
+    }
   };
   
   const handleSubmit = () => {
-    let dataToUpdate: Partial<FormData> = {
-      demolitionType
-    };
+    // Calculate demolition cost
+    let demolitionCost = 0;
     
-    // Only include existingSurface if demolition is required
-    if (demolitionType !== 'none') {
-      dataToUpdate.existingSurface = existingSurface;
+    if (needsDemolition === 'yes') {
+      // Cost calculation: demolition surface × rate per m²
+      const surface = ensureNumber(demolitionSurface);
+      const demolitionRate = 150; // 150€ per m² for demolition
+      demolitionCost = surface * demolitionRate;
     }
     
-    // Calculate and update montantT
-    const updatedMontantT = calculateDemolitionCosts();
-    dataToUpdate.montantT = updatedMontantT;
+    // Update form data
+    updateFormData({
+      needsDemolition,
+      demolitionPercent: ensureNumber(demolitionPercent),
+      demolitionSurface: ensureNumber(demolitionSurface),
+      demolitionCost: demolitionCost
+    });
     
-    // Update the form data
-    updateFormData(dataToUpdate);
-    
-    // Proceed to next step
     goToNextStep();
   };
-
+  
   return (
     <div className={`space-y-6 transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
@@ -97,89 +82,74 @@ const DemolitionStep: React.FC<DemolitionStepProps> = ({
       
       <div className="space-y-4">
         <Label className="text-base font-medium">
-          État de la démolition <span className="text-red-500">*</span>
+          Le projet nécessite-t-il une démolition ? <span className="text-red-500">*</span>
         </Label>
         
         <RadioGroup 
-          value={demolitionType} 
-          onValueChange={setDemolitionType}
-          className="grid grid-cols-1 gap-3 mt-2"
+          value={needsDemolition} 
+          onValueChange={setNeedsDemolition}
+          className="grid grid-cols-1 gap-4 mt-2"
         >
           <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${demolitionType === 'none' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setDemolitionType('none')}
+            className={`cursor-pointer transition-all hover:shadow-md ${needsDemolition === 'yes' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setNeedsDemolition('yes')}
           >
             <CardContent className="flex items-center p-4">
-              <RadioGroupItem value="none" id="demolition-none" className="mr-2" />
-              <Label htmlFor="demolition-none" className="cursor-pointer">Pas de démolition (terrain vierge)</Label>
+              <RadioGroupItem value="yes" id="demolition-yes" className="mr-2" />
+              <Label htmlFor="demolition-yes" className="cursor-pointer">Oui, démolition nécessaire</Label>
             </CardContent>
           </Card>
           
           <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${demolitionType === '25' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setDemolitionType('25')}
+            className={`cursor-pointer transition-all hover:shadow-md ${needsDemolition === 'no' ? 'border-blue-500 bg-blue-50' : ''}`}
+            onClick={() => setNeedsDemolition('no')}
           >
             <CardContent className="flex items-center p-4">
-              <RadioGroupItem value="25" id="demolition-25" className="mr-2" />
-              <Label htmlFor="demolition-25" className="cursor-pointer">Démolition des existants 25%</Label>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${demolitionType === '50' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setDemolitionType('50')}
-          >
-            <CardContent className="flex items-center p-4">
-              <RadioGroupItem value="50" id="demolition-50" className="mr-2" />
-              <Label htmlFor="demolition-50" className="cursor-pointer">Démolition des existants 50%</Label>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${demolitionType === '75' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setDemolitionType('75')}
-          >
-            <CardContent className="flex items-center p-4">
-              <RadioGroupItem value="75" id="demolition-75" className="mr-2" />
-              <Label htmlFor="demolition-75" className="cursor-pointer">Démolition des existants 75%</Label>
-            </CardContent>
-          </Card>
-          
-          <Card 
-            className={`cursor-pointer transition-all hover:shadow-md ${demolitionType === '100' ? 'border-blue-500 bg-blue-50' : ''}`}
-            onClick={() => setDemolitionType('100')}
-          >
-            <CardContent className="flex items-center p-4">
-              <RadioGroupItem value="100" id="demolition-100" className="mr-2" />
-              <Label htmlFor="demolition-100" className="cursor-pointer">Démolition des existants 100%</Label>
+              <RadioGroupItem value="no" id="demolition-no" className="mr-2" />
+              <Label htmlFor="demolition-no" className="cursor-pointer">Non, pas de démolition</Label>
             </CardContent>
           </Card>
         </RadioGroup>
         
-        {demolitionType !== 'none' && (
-          <div className="space-y-2 mt-4">
-            <Label htmlFor="existingSurface" className="text-base font-medium">
-              Surface de plancher des existants en m² <span className="text-red-500">*</span>
-            </Label>
-            <div className="flex items-center">
+        {needsDemolition === 'yes' && (
+          <div className="space-y-4 mt-4 p-4 border rounded-md bg-gray-50">
+            <div>
+              <Label htmlFor="demolition-percent" className="block mb-2">Pourcentage à démolir (%)</Label>
               <Input
-                id="existingSurface"
+                id="demolition-percent"
                 type="number"
-                value={existingSurface}
-                onChange={handleExistingSurfaceChange}
-                placeholder="Surface en m²"
-                className="flex-grow"
-                min="1"
-                required
+                value={demolitionPercent}
+                onChange={(e) => handlePercentChange(e.target.value)}
+                placeholder="Pourcentage (ex: 25)"
+                className="max-w-xs"
+                min="0"
+                max="100"
               />
-              <span className="ml-2 text-gray-600">m²</span>
+            </div>
+            
+            <div>
+              <Label htmlFor="demolition-surface" className="block mb-2">Surface à démolir (m²)</Label>
+              <Input
+                id="demolition-surface"
+                type="number"
+                value={demolitionSurface}
+                onChange={(e) => handleSurfaceChange(e.target.value)}
+                placeholder="Surface (ex: 25)"
+                className="max-w-xs"
+                min="0"
+              />
+            </div>
+            
+            <div className="bg-blue-50 p-3 rounded-md">
+              <p className="text-sm">
+                Coût de démolition estimé: {(ensureNumber(demolitionSurface) * 150).toFixed(0)}€ HT
+              </p>
+              <p className="text-xs text-gray-600 mt-1">
+                (Basé sur un tarif de 150€/m²)
+              </p>
             </div>
           </div>
         )}
-      </div>
-      
-      <div className="bg-gray-100 p-3 rounded-md text-center text-lg font-semibold">
-        Total travaux : {formData.montantT ? ensureNumber(formData.montantT, 0).toLocaleString() : 0} €/HT
       </div>
       
       <div className="flex justify-between pt-6">
@@ -195,7 +165,6 @@ const DemolitionStep: React.FC<DemolitionStepProps> = ({
         
         <Button 
           onClick={handleSubmit}
-          disabled={demolitionType !== 'none' && !existingSurface}
           className="flex items-center gap-2"
         >
           Suivant

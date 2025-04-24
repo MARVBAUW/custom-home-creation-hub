@@ -33,6 +33,20 @@ export const ensureBoolean = (value: boolean | undefined, defaultValue: boolean 
 };
 
 /**
+ * Ensures a value is converted to a string
+ * @param value The value to convert
+ * @param defaultValue Default value to use if value is undefined
+ * @returns A string
+ */
+export const ensureString = (value: string | number | undefined, defaultValue: string = ''): string => {
+  if (value === undefined || value === null) {
+    return defaultValue;
+  }
+  
+  return String(value);
+};
+
+/**
  * Format a number as currency (EUR)
  * @param value The number to format
  * @returns Formatted currency string
@@ -43,4 +57,38 @@ export const formatCurrency = (value: number): string => {
     currency: 'EUR',
     maximumFractionDigits: 0
   }).format(value);
+};
+
+/**
+ * Safely renders a value for display
+ * @param value The value to render
+ * @returns A string representation of the value
+ */
+export const safeRenderValue = (value: any): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  
+  if (typeof value === 'object') {
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return '[Object]';
+    }
+  }
+  
+  return String(value);
+};
+
+/**
+ * Convert a value to form-compatible format
+ * @param value The value to convert
+ * @returns Form-compatible value
+ */
+export const toFormValue = (value: any): string => {
+  if (value === undefined || value === null) {
+    return '';
+  }
+  
+  return String(value);
 };

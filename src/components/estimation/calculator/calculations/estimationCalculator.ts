@@ -157,3 +157,30 @@ export const calculateEcoOptionsCost = (formData: FormData, totalAmount: number)
   
   return totalAmount * ecoCoefficient;
 };
+
+/**
+ * Main estimation calculation function
+ */
+export const calculateEstimation = (formData: FormData): number => {
+  let totalCost = 0;
+  
+  // Add base construction costs
+  totalCost += calculateConstructionBaseCost(formData);
+  
+  // Add kitchen costs if applicable
+  if (formData.includeCuisine) {
+    totalCost += calculateKitchenCost(formData);
+  }
+  
+  // Add bathroom costs if applicable
+  if (formData.includeBathroom && formData.bathroomType && formData.bathroomType !== 'none') {
+    totalCost += calculateBathroomCost(formData);
+  }
+  
+  // Add eco options if selected
+  if (formData.includeEcoSolutions) {
+    totalCost += calculateEcoOptionsCost(formData, totalCost);
+  }
+  
+  return totalCost;
+};

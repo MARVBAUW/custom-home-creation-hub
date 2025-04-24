@@ -1,262 +1,194 @@
 
-import React, { useState } from 'react';
-import { FormData } from '../types/formTypes';
+import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon, Info } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { BaseFormProps } from '../types/formTypes';
+import { ArrowLeftIcon, ArrowRightIcon, UserIcon, AtSign, Phone } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ensureString } from '../utils/typeConversions';
 
-interface ProjectContactStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-  finalizeEstimation: () => any;
-}
-
-const ProjectContactStep: React.FC<ProjectContactStepProps> = ({
+const ProjectContactStep: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection,
-  finalizeEstimation
+  animationDirection
 }) => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [firstName, setFirstName] = React.useState<string>(formData.firstName || '');
+  const [lastName, setLastName] = React.useState<string>(formData.lastName || '');
+  const [email, setEmail] = React.useState<string>(formData.email || '');
+  const [phone, setPhone] = React.useState<string>(formData.phone || '');
+  const [consentGiven, setConsentGiven] = React.useState<boolean>(formData.consentGiven || false);
+  const [errors, setErrors] = React.useState<Record<string, string>>({});
   
-  // Create state for form fields
-  const [firstName, setFirstName] = useState(formData.firstName || '');
-  const [lastName, setLastName] = useState(formData.lastName || '');
-  const [email, setEmail] = useState(formData.email || '');
-  const [phone, setPhone] = useState(formData.phone || '');
-  const [city, setCity] = useState(formData.city || '');
-  const [projectDescription, setProjectDescription] = useState(formData.projectDescription || '');
-  const [projectType, setProjectType] = useState(formData.projectType || '');
-  const [projectPurpose, setProjectPurpose] = useState(formData.projectPurpose || '');
-  const [termsAccepted, setTermsAccepted] = useState<boolean>(formData.termsAccepted === true);
-  const [commercialAccepted, setCommercialAccepted] = useState<boolean>(formData.commercialAccepted === true);
-  
-  // Validation function
-  const isFormValid = () => {
-    return (
-      firstName && firstName.toString().trim() !== '' &&
-      lastName && lastName.toString().trim() !== '' &&
-      email && email.toString().trim() !== '' &&
-      phone && phone.toString().trim() !== '' &&
-      projectDescription && projectDescription.toString().trim() !== '' &&
-      termsAccepted
-    );
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    
+    if (!firstName.trim()) {
+      newErrors.firstName = 'Veuillez entrer votre prénom';
+    }
+    
+    if (!lastName.trim()) {
+      newErrors.lastName = 'Veuillez entrer votre nom';
+    }
+    
+    if (!email.trim()) {
+      newErrors.email = 'Veuillez entrer votre email';
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      newErrors.email = 'Veuillez entrer un email valide';
+    }
+    
+    if (!phone.trim()) {
+      newErrors.phone = 'Veuillez entrer votre numéro de téléphone';
+    }
+    
+    if (!consentGiven) {
+      newErrors.consent = 'Veuillez accepter les conditions';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
   
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!isFormValid()) {
-      toast({
-        title: "Champs obligatoires",
-        description: "Veuillez remplir tous les champs obligatoires et accepter les conditions générales.",
-        variant: "destructive"
+  const handleSubmit = () => {
+    if (validateForm()) {
+      updateFormData({
+        firstName: ensureString(firstName),
+        lastName: ensureString(lastName),
+        email: ensureString(email),
+        phone: ensureString(phone),
+        consentGiven
       });
-      return;
-    }
-    
-    setIsSubmitting(true);
-    
-    // Update form data with all fields
-    updateFormData({
-      firstName,
-      lastName,
-      email,
-      phone,
-      city,
-      projectDescription,
-      projectType,
-      projectPurpose,
-      termsAccepted,
-      commercialAccepted,
-      formCompleted: true
-    });
-    
-    // Calculate the estimation if needed
-    finalizeEstimation();
-    
-    // Simulate submission delay for better UX
-    setTimeout(() => {
-      setIsSubmitting(false);
-      // Proceed to next step
+      
       goToNextStep();
-    }, 1000);
-  };
-  
-  // Generate the appropriate title based on the project type
-  const getFormTitle = () => {
-    if (formData.projectType === 'design') {
-      return "Votre projet de design d'espace";
-    } else if (formData.projectType === 'optimization') {
-      return "Votre projet d'optimisation";
     }
-    return "Votre projet";
   };
   
   return (
-    <div className={`transform transition-all duration-300 ${
+    <div className={`space-y-6 transform transition-all duration-300 ${
       animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
     }`}>
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-xl font-semibold mb-2">{getFormTitle()}</h2>
-          <p className="text-sm text-gray-500 mb-6">
-            Veuillez nous fournir quelques informations pour que nous puissions vous contacter à propos de votre projet de {formData.projectType === 'design' ? "design d'espace" : "d'optimisation"}.
-          </p>
-          
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-            <div className="flex items-start">
-              <Info className="h-5 w-5 text-blue-500 mr-2 mt-0.5" />
-              <p className="text-sm text-blue-700">
-                {formData.projectType === 'design' 
-                  ? "Ce type de projet nécessite une étude personnalisée. Un de nos designers vous contactera sous 24h pour discuter des détails."
-                  : "Un conseiller spécialisé en optimisation d'espace vous contactera sous 24h pour discuter de votre projet."}
-              </p>
-            </div>
-          </div>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-xl font-semibold mb-2">Vos coordonnées</h2>
+      <p className="text-gray-600 mb-6">Pour recevoir votre estimation détaillée</p>
+      
+      <Card>
+        <CardContent className="p-6">
+          <form className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="firstName">Prénom <span className="text-red-500">*</span></Label>
+                <Label htmlFor="firstName" className="flex items-center">
+                  <UserIcon className="h-4 w-4 mr-1" />
+                  Prénom <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="firstName"
-                  value={ensureString(firstName)}
+                  value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  required
+                  placeholder="Votre prénom"
+                  className={errors.firstName ? "border-red-500" : ""}
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-xs">{errors.firstName}</p>
+                )}
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="lastName">Nom <span className="text-red-500">*</span></Label>
+                <Label htmlFor="lastName" className="flex items-center">
+                  <UserIcon className="h-4 w-4 mr-1" />
+                  Nom <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
                   id="lastName"
-                  value={ensureString(lastName)}
+                  value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  required
+                  placeholder="Votre nom"
+                  className={errors.lastName ? "border-red-500" : ""}
                 />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email <span className="text-red-500">*</span></Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={ensureString(email)}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="phone">Téléphone <span className="text-red-500">*</span></Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={ensureString(phone)}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
+                {errors.lastName && (
+                  <p className="text-red-500 text-xs">{errors.lastName}</p>
+                )}
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="city">Ville du projet</Label>
+              <Label htmlFor="email" className="flex items-center">
+                <AtSign className="h-4 w-4 mr-1" />
+                Email <span className="text-red-500 ml-1">*</span>
+              </Label>
               <Input
-                id="city"
-                value={ensureString(city)}
-                onChange={(e) => setCity(e.target.value)}
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="votre.email@exemple.com"
+                className={errors.email ? "border-red-500" : ""}
               />
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
+              )}
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="projectPurpose">Objectif principal du projet</Label>
-              <Select value={ensureString(projectPurpose)} onValueChange={setProjectPurpose}>
-                <SelectTrigger id="projectPurpose">
-                  <SelectValue placeholder="Sélectionnez l'objectif principal" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="esthétique">Amélioration esthétique</SelectItem>
-                  <SelectItem value="fonctionnel">Amélioration fonctionnelle</SelectItem>
-                  <SelectItem value="agrandissement">Optimisation de l'espace</SelectItem>
-                  <SelectItem value="rénovation">Rénovation complète</SelectItem>
-                  <SelectItem value="valorisation">Valorisation immobilière</SelectItem>
-                  <SelectItem value="autre">Autre</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="projectDescription">Description du projet <span className="text-red-500">*</span></Label>
-              <Textarea
-                id="projectDescription"
-                value={ensureString(projectDescription)}
-                onChange={(e) => setProjectDescription(e.target.value)}
-                rows={4}
-                placeholder={`Décrivez brièvement votre projet de ${formData.projectType === 'design' ? "design d'espace" : "d'optimisation"}...`}
-                required
+              <Label htmlFor="phone" className="flex items-center">
+                <Phone className="h-4 w-4 mr-1" />
+                Téléphone <span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Input
+                id="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="06 12 34 56 78"
+                className={errors.phone ? "border-red-500" : ""}
               />
+              {errors.phone && (
+                <p className="text-red-500 text-xs">{errors.phone}</p>
+              )}
             </div>
             
-            <div className="flex items-start space-x-2 pt-2">
+            <div className="flex items-center space-x-2 pt-2">
               <Checkbox 
-                id="terms" 
-                checked={termsAccepted} 
-                onCheckedChange={(checked) => setTermsAccepted(!!checked)}
+                id="consent" 
+                checked={consentGiven}
+                onCheckedChange={(checked) => setConsentGiven(checked === true)}
               />
-              <Label htmlFor="terms" className="text-sm cursor-pointer">
-                J'accepte les <a href="/cgu" target="_blank" className="text-blue-600 hover:underline">Conditions Générales d'Utilisation</a> <span className="text-red-500">*</span>
+              <Label htmlFor="consent" className="text-sm">
+                J'accepte de recevoir mon estimation et d'être contacté par un expert Progineer <span className="text-red-500">*</span>
               </Label>
             </div>
-            
-            <div className="flex items-start space-x-2">
-              <Checkbox 
-                id="commercial" 
-                checked={commercialAccepted} 
-                onCheckedChange={(checked) => setCommercialAccepted(!!checked)}
-              />
-              <Label htmlFor="commercial" className="text-sm cursor-pointer">
-                J'accepte de recevoir des informations commerciales de Progineer
-              </Label>
-            </div>
-            
-            <div className="flex justify-between pt-4">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={goToPreviousStep}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeftIcon className="h-4 w-4" />
-                Retour
-              </Button>
-              
-              <Button 
-                type="submit"
-                disabled={isSubmitting || !isFormValid()}
-                className="flex items-center gap-2"
-              >
-                {isSubmitting ? 'Envoi en cours...' : 'Valider et envoyer'}
-                {!isSubmitting && <ArrowRightIcon className="h-4 w-4" />}
-              </Button>
-            </div>
+            {errors.consent && (
+              <p className="text-red-500 text-xs">{errors.consent}</p>
+            )}
           </form>
-        </div>
+        </CardContent>
+      </Card>
+      
+      <div className="text-xs text-gray-500">
+        <p>
+          Les données collectées sont uniquement destinées à l'élaboration de votre estimation et à vous mettre en contact avec un expert Progineer. 
+          Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données.
+        </p>
+      </div>
+      
+      <div className="flex justify-between pt-6">
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={goToPreviousStep}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeftIcon className="h-4 w-4" />
+          Retour
+        </Button>
+        
+        <Button 
+          onClick={handleSubmit}
+          className="flex items-center gap-2"
+        >
+          Finaliser l'estimation
+          <ArrowRightIcon className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );

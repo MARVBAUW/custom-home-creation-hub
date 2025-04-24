@@ -1,7 +1,7 @@
 
 // Re-export types from sub-modules
-export type { FormData, BaseFormProps } from './formTypes';
-export type { EstimationResponseData, EstimationTimeline, CategoryCost } from './estimationTypes';
+export * from './formTypes';
+export * from './estimationTypes';
 
 // Define interfaces still needed in the codebase
 export interface FeeCosts {

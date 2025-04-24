@@ -1,4 +1,3 @@
-
 import { FormData } from '../types';
 
 /**
@@ -487,88 +486,65 @@ export const calculateEstimationAmount = (formData: FormData): number => {
 };
 
 /**
- * Validate a given step to ensure all required fields are filled
+ * Validate the current step data
  */
-export const validateStep = (step: number, formData: FormData): { isValid: boolean, errors: string[] } => {
+export const validateStep = (step: number, formData: FormData): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
   
-  // Client Type Selection (Page 1)
-  if (step === 0) {
-    if (!formData.clientType) {
-      errors.push("Veuillez sélectionner votre profil");
-    }
-  }
-  
-  // Professional Project Details (Page 2)
-  else if (step === 1) {
-    if (formData.clientType === 'professional') {
-      if (!formData.activity) {
-        errors.push("Veuillez sélectionner votre activité");
+  // Depending on the current step, validate different fields
+  switch (step) {
+    case 0: // Client Type
+      if (!formData.clientType) {
+        errors.push('Veuillez sélectionner un type de client');
       }
-      if (!formData.projectType) {
-        errors.push("Veuillez sélectionner le type de projet");
-      }
-    }
-  }
-  
-  // Individual Project Type (Page 3)
-  else if (step === 2) {
-    if (!formData.projectType) {
-      errors.push("Veuillez sélectionner le type de projet");
-    }
-  }
-  
-  // Estimation Type (Page 4)
-  else if (step === 3) {
-    if (!formData.estimationType) {
-      errors.push("Veuillez sélectionner le type d'estimation");
-    }
-    if (!formData.termsAccepted) {
-      errors.push("Veuillez accepter les conditions");
-    }
-  }
-  
-  // Construction Details (Page 5)
-  else if (step === 4) {
-    if (!formData.surface || formData.surface <= 0) {
-      errors.push("Veuillez saisir une surface valide");
-    }
-    if (!formData.levels || formData.levels <= 0) {
-      errors.push("Veuillez saisir un nombre de niveaux valide");
-    }
+      break;
     
-    // For renovation, check existingSurface
-    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
-      if (!formData.existingSurface || formData.existingSurface <= 0) {
-        errors.push("Veuillez saisir une surface existante valide");
+    case 1: // Professional Project Details
+      if (formData.clientType === 'professional' && !formData.projectType) {
+        errors.push('Veuillez sélectionner un type de projet professionnel');
       }
-    }
+      break;
     
-    // For division, check number of apartments
-    if (formData.projectType === 'division') {
-      if (!formData.apartments || formData.apartments <= 0) {
-        errors.push("Veuillez saisir un nombre de logements valide");
+    case 2: // Individual Project Type
+      if (formData.clientType === 'individual' && !formData.projectType) {
+        errors.push('Veuillez sélectionner un type de projet individuel');
       }
-    }
+      break;
+    
+    case 3: // Estimation Type
+      if (!formData.estimationType) {
+        errors.push('Veuillez sélectionner un type d\'estimation');
+      }
+      break;
+    
+    case 4: // Construction Details
+      if (typeof formData.surface === 'undefined' || Number(formData.surface) <= 0) {
+        errors.push('Veuillez entrer une surface valide');
+      }
+      break;
+    
+    case 45: // Contact Form
+      if (!formData.firstName) {
+        errors.push('Veuillez entrer votre prénom');
+      }
+      if (!formData.lastName) {
+        errors.push('Veuillez entrer votre nom');
+      }
+      if (!formData.email) {
+        errors.push('Veuillez entrer votre adresse email');
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        errors.push('Veuillez entrer une adresse email valide');
+      }
+      if (!formData.phone) {
+        errors.push('Veuillez entrer votre numéro de téléphone');
+      }
+      break;
+    
+    // Add validations for other steps as needed
   }
   
-  // Contact Form (Page 45)
-  else if (step === 45) {
-    if (!formData.firstName) {
-      errors.push("Veuillez saisir votre prénom");
-    }
-    if (!formData.lastName) {
-      errors.push("Veuillez saisir votre nom");
-    }
-    if (!formData.phone) {
-      errors.push("Veuillez saisir votre numéro de téléphone");
-    }
-    if (!formData.email) {
-      errors.push("Veuillez saisir votre email");
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.push("Veuillez saisir un email valide");
-    }
-  }
-  
-  return { isValid: errors.length === 0, errors };
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 };

@@ -4,16 +4,16 @@ import { StepComponentRegistry, DefaultStepProps } from './StepComponents';
 import { FormData } from '../../types';
 
 interface ClientTypeProps extends DefaultStepProps {
-  animationDirection: string;
+  animationDirection: 'forward' | 'backward';
 }
 
 interface IndividualProjectProps extends DefaultStepProps {
-  animationDirection: string;
+  animationDirection: 'forward' | 'backward';
   projectType: string;
 }
 
 interface EstimationTypeProps extends DefaultStepProps {
-  animationDirection: string;
+  animationDirection: 'forward' | 'backward';
   estimationType: string;
 }
 

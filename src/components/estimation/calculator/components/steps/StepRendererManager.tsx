@@ -19,28 +19,28 @@ export interface StepRendererManagerProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   // All submit handlers
-  onClientTypeSubmit: (data: { clientType: string }) => void;
-  onProfessionalProjectSubmit: (data: any) => void;
-  onIndividualProjectSubmit: (data: { projectType: string }) => void;
-  onEstimationTypeSubmit: (data: any) => void;
-  onConstructionDetailsSubmit: (data: any) => void;
-  onTerrainSubmit: (data: { terrainType: string }) => void;
-  onGrosOeuvreSubmit: (data: { wallType: string }) => void;
-  onCharpenteSubmit: (data: { roofType: string }) => void;
-  onComblesSubmit: (data: { atticType: string }) => void;
-  onCouvertureSubmit: (data: { roofingType: string }) => void;
-  onIsolationSubmit: (data: { insulationType: string }) => void;
-  onFacadeSubmit: (data: any) => void;
-  onMenuiseriesExtSubmit: (data: any) => void;
-  onElectriciteSubmit: (data: { electricalType: string }) => void;
-  onPlomberieSubmit: (data: { plumbingType: string }) => void;
-  onChauffageSubmit: (data: any) => void;
-  onPlatrerieSubmit: (data: { plasteringType: string }) => void;
-  onMenuiseriesIntSubmit: (data: any) => void;
-  onCarrelageSubmit: (data: any) => void;
-  onParquetSubmit: (data: any) => void;
-  onPeintureSubmit: (data: any) => void;
-  onContactSubmit: (data: any) => void;
+  onClientTypeSubmit: (data: Partial<FormData>) => void;
+  onProfessionalProjectSubmit: (data: Partial<FormData>) => void;
+  onIndividualProjectSubmit: (data: Partial<FormData>) => void;
+  onEstimationTypeSubmit: (data: Partial<FormData>) => void;
+  onConstructionDetailsSubmit: (data: Partial<FormData>) => void;
+  onTerrainSubmit: (data: Partial<FormData>) => void;
+  onGrosOeuvreSubmit: (data: Partial<FormData>) => void;
+  onCharpenteSubmit: (data: Partial<FormData>) => void;
+  onComblesSubmit: (data: Partial<FormData>) => void;
+  onCouvertureSubmit: (data: Partial<FormData>) => void;
+  onIsolationSubmit: (data: Partial<FormData>) => void;
+  onFacadeSubmit: (data: Partial<FormData>) => void;
+  onMenuiseriesExtSubmit: (data: Partial<FormData>) => void;
+  onElectriciteSubmit: (data: Partial<FormData>) => void;
+  onPlomberieSubmit: (data: Partial<FormData>) => void;
+  onChauffageSubmit: (data: Partial<FormData>) => void;
+  onPlatrerieSubmit: (data: Partial<FormData>) => void;
+  onMenuiseriesIntSubmit: (data: Partial<FormData>) => void;
+  onCarrelageSubmit: (data: Partial<FormData>) => void;
+  onParquetSubmit: (data: Partial<FormData>) => void;
+  onPeintureSubmit: (data: Partial<FormData>) => void;
+  onContactSubmit: (data: Partial<FormData>) => void;
 }
 
 export const useStepRendererManager = (props: StepRendererManagerProps) => {

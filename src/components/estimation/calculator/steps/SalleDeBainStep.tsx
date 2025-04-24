@@ -1,8 +1,7 @@
-
 import React from 'react';
-import { BaseFormProps } from '../types';
+import { BaseFormProps } from '../types/formTypes';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon, Shower } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, Bath } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -27,7 +26,7 @@ const SalleDeBainStep: React.FC<BaseFormProps> = ({
     const units = ensureNumber(formData.units, 1);
     const count = ensureNumber(bathroomCount, 1);
     
-    if (bathroomType !== 'none') {
+    if (bathroomType && bathroomType !== 'none') {
       switch (bathroomType) {
         case 'standard':
           bathroomCost = 3500 * count * units;
@@ -47,7 +46,7 @@ const SalleDeBainStep: React.FC<BaseFormProps> = ({
     const currentMontantT = ensureNumber(formData.montantT, 0);
     
     updateFormData({
-      bathroomType: bathroomType as 'standard' | 'mid-range' | 'premium',
+      bathroomType: bathroomType as 'standard' | 'mid-range' | 'premium' | 'none',
       bathroomCount: ensureNumber(bathroomCount),
       includeBathroom: bathroomType !== 'none',
       montantT: currentMontantT + bathroomCost
@@ -81,7 +80,7 @@ const SalleDeBainStep: React.FC<BaseFormProps> = ({
               <div className="flex items-center">
                 <RadioGroupItem value="standard" id="standard" className="mr-2" />
                 <Label htmlFor="standard" className="cursor-pointer flex items-center">
-                  <Shower className="h-5 w-5 text-blue-500 mr-2" />
+                  <Bath className="h-5 w-5 text-blue-500 mr-2" />
                   <div>
                     <span className="font-medium">Salle de bain standard</span>
                     <p className="text-sm text-gray-600 mt-1">Équipements et finitions de base</p>
@@ -99,7 +98,7 @@ const SalleDeBainStep: React.FC<BaseFormProps> = ({
               <div className="flex items-center">
                 <RadioGroupItem value="mid-range" id="mid-range" className="mr-2" />
                 <Label htmlFor="mid-range" className="cursor-pointer flex items-center">
-                  <Shower className="h-5 w-5 text-amber-500 mr-2" />
+                  <Bath className="h-5 w-5 text-amber-500 mr-2" />
                   <div>
                     <span className="font-medium">Salle de bain milieu de gamme</span>
                     <p className="text-sm text-gray-600 mt-1">Équipements et finitions de qualité moyenne</p>
@@ -117,7 +116,7 @@ const SalleDeBainStep: React.FC<BaseFormProps> = ({
               <div className="flex items-center">
                 <RadioGroupItem value="premium" id="premium" className="mr-2" />
                 <Label htmlFor="premium" className="cursor-pointer flex items-center">
-                  <Shower className="h-5 w-5 text-purple-500 mr-2" />
+                  <Bath className="h-5 w-5 text-purple-500 mr-2" />
                   <div>
                     <span className="font-medium">Salle de bain premium</span>
                     <p className="text-sm text-gray-600 mt-1">Équipements et finitions haut de gamme</p>
