@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Container from '@/components/common/Container';
 import { motion, useInView, useAnimation } from 'framer-motion';
-import { Shield, Award, HeartHandshake, CircularProgress } from 'lucide-react';
+import { Shield, Award, HeartHandshake, CircleCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
