@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Container from '@/components/common/Container';
 import { motion, useInView } from 'framer-motion';
+import { Shield, Award, HeartHandshake } from 'lucide-react';
 
 const StatsSection = () => {
   const ref = useRef(null);
@@ -9,29 +10,26 @@ const StatsSection = () => {
   
   const stats = [
     {
+      icon: Shield,
       value: 5,
       prefix: '+',
       label: "Années d'expérience",
       description: "Dans la conception et réalisation",
-      gradientFrom: "from-khaki-400",
-      gradientTo: "to-khaki-600"
     },
     {
+      icon: HeartHandshake,
       value: 2,
       prefix: '',
       label: "Régions couvertes",
       description: "PACA et Auvergne-Rhône-Alpes",
-      gradientFrom: "from-stone-400",
-      gradientTo: "to-stone-600"
     },
     {
+      icon: Award,
       value: 100,
       prefix: '',
       suffix: '%',
       label: "Satisfaction client",
       description: "Notre priorité absolue",
-      gradientFrom: "from-khaki-500",
-      gradientTo: "to-khaki-700"
     }
   ];
 
@@ -40,14 +38,12 @@ const StatsSection = () => {
   useEffect(() => {
     if (!isInView) return;
     
-    const counters = stats.map((stat, index) => {
-      return {
-        start: 0,
-        end: stat.value,
-        duration: 2000 + (index * 200),
-        startTime: null
-      };
-    });
+    const counters = stats.map((stat, index) => ({
+      start: 0,
+      end: stat.value,
+      duration: 2000 + (index * 200),
+      startTime: null
+    }));
     
     const updateCount = (timestamp) => {
       if (!isInView) return;
@@ -81,106 +77,66 @@ const StatsSection = () => {
     requestAnimationFrame(updateCount);
   }, [isInView]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
-      }
-    }
-  };
-
   return (
-    <section 
-      ref={ref} 
-      className="py-24 relative overflow-hidden bg-gradient-to-b from-white via-stone-50 to-white"
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-khaki-200/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-khaki-200/20 rounded-full blur-3xl"></div>
-      </div>
-      
+    <section ref={ref} className="py-24 relative overflow-hidden bg-gradient-to-br from-stone-50 via-white to-stone-50">
       <Container className="relative z-10">
-        <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="group relative"
-            >
-              <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-stone-100/80 transition-all duration-500 hover:shadow-xl hover:scale-[1.02]">
-                {/* Gradient background */}
-                <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  {/* Stat circle */}
-                  <div className="mb-6 relative mx-auto w-32 h-32">
-                    <svg className="w-full h-full transform -rotate-90">
-                      <circle
-                        cx="64"
-                        cy="64"
-                        r="60"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        className="text-stone-100"
-                      />
-                      <motion.circle
-                        cx="64"
-                        cy="64"
-                        r="60"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        strokeLinecap="round"
-                        className={`text-khaki-600`}
-                        initial={{ pathLength: 0 }}
-                        animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-                        transition={{ duration: 2, delay: index * 0.2 }}
-                      />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="text-4xl font-bold bg-gradient-to-br from-stone-700 to-stone-900 bg-clip-text text-transparent">
+        <div className="text-center mb-16">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl md:text-4xl font-semibold text-stone-800 mb-4"
+          >
+            Nos engagements
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-stone-600 max-w-2xl mx-auto"
+          >
+            Découvrez ce qui fait notre différence et notre engagement envers l'excellence
+          </motion.p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                className="group relative"
+              >
+                <div className="relative h-full bg-white rounded-2xl p-8 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                  <div className="absolute inset-0 bg-gradient-to-br from-khaki-50 to-stone-50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  <div className="relative z-10">
+                    <div className="mb-6 flex flex-col items-center">
+                      <div className="p-3 rounded-full bg-khaki-50 mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <Icon className="w-8 h-8 text-khaki-700" />
+                      </div>
+                      <div className="text-4xl font-bold bg-gradient-to-r from-stone-700 to-stone-900 bg-clip-text text-transparent">
                         {stat.prefix}{counts[index]}{stat.suffix}
-                      </span>
+                      </div>
+                    </div>
+                    
+                    <div className="text-center">
+                      <h3 className="text-xl font-semibold text-stone-800 mb-2 group-hover:text-khaki-700 transition-colors">
+                        {stat.label}
+                      </h3>
+                      <p className="text-stone-600 group-hover:text-stone-700 transition-colors">
+                        {stat.description}
+                      </p>
                     </div>
                   </div>
-                  
-                  {/* Text content */}
-                  <div className="text-center">
-                    <h3 className="text-xl font-semibold text-stone-800 mb-2">
-                      {stat.label}
-                    </h3>
-                    <p className="text-stone-600">
-                      {stat.description}
-                    </p>
-                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
       </Container>
     </section>
   );
