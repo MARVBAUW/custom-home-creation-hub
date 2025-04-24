@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { ArrowLeft, Calendar, FileText, Link2, Clock, Search, BookOpen, Share2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Calendar, FileText, Link2, Clock, Search, BookOpen, Share2, Download } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import Button from '@/components/common/Button';
 import { useToast } from "@/components/ui/use-toast";
@@ -16,6 +16,12 @@ interface ArticleDetailProps {
     source: string;
     readTime: string;
     keywords: string[];
+    resources?: {
+      name: string;
+      url: string;
+      type: string;
+      description?: string;
+    }[];
   } | null;
   isOpen: boolean;
   onClose: () => void;
@@ -23,6 +29,7 @@ interface ArticleDetailProps {
 
 const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps) => {
   const { toast } = useToast();
+  const [isDownloading, setIsDownloading] = useState<string | null>(null);
   
   if (!article) return null;
 
@@ -64,12 +71,41 @@ const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps
   };
   
   // Handle clicks on resource links
-  const handleResourceClick = (resourceName: string) => {
-    toast({
-      title: "Ressource disponible prochainement",
-      description: `La ressource "${resourceName}" sera disponible dans une prochaine mise à jour.`,
-      duration: 3000,
-    });
+  const handleResourceClick = (resource: { name: string; url: string; type: string; }) => {
+    if (!resource.url || resource.url === '#') {
+      toast({
+        title: "Ressource disponible prochainement",
+        description: `La ressource "${resource.name}" sera disponible dans une prochaine mise à jour.`,
+        duration: 3000,
+      });
+      return;
+    }
+    
+    setIsDownloading(resource.name);
+    
+    // For external links, open in new tab
+    if (resource.url.startsWith('http')) {
+      window.open(resource.url, '_blank', 'noopener,noreferrer');
+      setIsDownloading(null);
+      return;
+    }
+    
+    // For file downloads
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.href = resource.url;
+      link.download = resource.name.replace(/\s+/g, '-').toLowerCase() + '.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "Téléchargement réussi",
+        description: `Le document "${resource.name}" a été téléchargé avec succès.`,
+        duration: 3000,
+      });
+      setIsDownloading(null);
+    }, 1000); // Simulate download delay
   };
 
   // Parse and format markdown content into proper HTML
@@ -194,6 +230,28 @@ const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps
   const processedContent = addAnchorsToContent(article.content);
   const tableOfContents = generateTableOfContents(article.content);
 
+  // Default resources if none are provided
+  const resources = article.resources || [
+    {
+      name: "Guide complet sur la réglementation",
+      url: "/resources/guides/reglementation-complete-batiment.pdf",
+      type: "pdf",
+      description: "Un guide exhaustif sur les dernières réglementations du bâtiment"
+    },
+    {
+      name: "Webinaire explicatif (replay)",
+      url: "https://www.youtube.com/watch?v=example",
+      type: "video",
+      description: "Replay du webinaire explicatif sur les changements réglementaires"
+    },
+    {
+      name: "Texte intégral de la réglementation",
+      url: "/resources/documents/texte-integral-reglementation.pdf", 
+      type: "pdf",
+      description: "Le texte officiel complet de la nouvelle réglementation"
+    }
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -275,39 +333,34 @@ const WorkspaceArticleDetail = ({ article, isOpen, onClose }: ArticleDetailProps
             </div>
           </div>
 
-          {/* Resources section with improved visual hierarchy */}
+          {/* Resources section with improved visual hierarchy and download functionality */}
           <div className="mt-12 space-y-6">
             <h3 className="text-xl font-semibold text-gray-800">
               Ressources complémentaires
             </h3>
             <ul className="bg-gray-50/50 p-6 rounded-lg space-y-3 border border-gray-100">
-              <li className="flex items-center gap-2">
-                <Link2 className="h-4 w-4 text-khaki-600 flex-shrink-0" />
-                <button 
-                  onClick={() => handleResourceClick("Guide complet sur la réglementation")}
-                  className="text-khaki-600 hover:text-khaki-700 hover:underline text-left transition-colors"
-                >
-                  Guide complet sur la réglementation
-                </button>
-              </li>
-              <li className="flex items-center gap-2">
-                <Link2 className="h-4 w-4 text-khaki-600 flex-shrink-0" />
-                <button 
-                  onClick={() => handleResourceClick("Webinaire explicatif (replay)")}
-                  className="text-khaki-600 hover:text-khaki-700 hover:underline text-left transition-colors"
-                >
-                  Webinaire explicatif (replay)
-                </button>
-              </li>
-              <li className="flex items-center gap-2">
-                <Link2 className="h-4 w-4 text-khaki-600 flex-shrink-0" />
-                <button 
-                  onClick={() => handleResourceClick("Texte intégral de la réglementation")}
-                  className="text-khaki-600 hover:text-khaki-700 hover:underline text-left transition-colors"
-                >
-                  Texte intégral de la réglementation
-                </button>
-              </li>
+              {resources.map((resource, idx) => (
+                <li key={idx} className="flex items-center gap-2">
+                  <Link2 className="h-4 w-4 text-khaki-600 flex-shrink-0" />
+                  <button 
+                    onClick={() => handleResourceClick(resource)}
+                    className="text-khaki-600 hover:text-khaki-700 hover:underline text-left transition-colors flex-grow"
+                    disabled={isDownloading === resource.name}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{resource.name}</span>
+                      {isDownloading === resource.name ? (
+                        <span className="text-sm text-gray-500 animate-pulse">Téléchargement...</span>
+                      ) : (
+                        <Download className="h-4 w-4 opacity-70" />
+                      )}
+                    </div>
+                    {resource.description && (
+                      <p className="text-sm text-gray-500 mt-1">{resource.description}</p>
+                    )}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
