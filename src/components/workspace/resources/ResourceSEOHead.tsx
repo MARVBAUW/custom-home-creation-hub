@@ -32,8 +32,41 @@ const ResourceSEOHead: React.FC<ResourceSEOHeadProps> = ({
   pageCount,
   language = "fr"
 }) => {
+  // Define the type for our structured data to allow for additional properties
+  type StructuredDataType = {
+    "@context": string;
+    "@type": string;
+    name: string;
+    description: string;
+    encodingFormat: string;
+    url: string;
+    datePublished: string;
+    inLanguage: string;
+    author: {
+      "@type": string;
+      name: string;
+    };
+    publisher: {
+      "@type": string;
+      name: string;
+      logo: {
+        "@type": string;
+        url: string;
+      };
+    };
+    about: {
+      "@type": string;
+      name: string;
+    };
+    potentialAction: {
+      "@type": string;
+      target: string;
+    };
+    [key: string]: any; // This allows for additional properties
+  };
+
   // Generate structured data for the downloadable resource
-  const structuredData = {
+  const structuredData: StructuredDataType = {
     "@context": "https://schema.org",
     "@type": "DigitalDocument",
     "name": title,
