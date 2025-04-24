@@ -33,6 +33,10 @@ Allow: /realisations-architecte-maison
 Allow: /realisations-architecturales
 Allow: /a-propos
 Allow: /faq
+Allow: /workspace/calculateurs
+Allow: /workspace/guides
+Allow: /workspace/reglementation
+Allow: /workspace/client-area
 
 # Services pages
 Allow: /prestations-maitre-oeuvre/construction-ecologique
@@ -44,6 +48,18 @@ Allow: /prestations-maitre-oeuvre/optimisation-espace
 Allow: /prestations-maitre-oeuvre/rehabilitation
 Allow: /prestations-maitre-oeuvre/montage-administratif
 Allow: /prestations-maitre-oeuvre/petit-collectif
+
+# Workspace pages
+Allow: /workspace/calculateurs/eurocode
+Allow: /workspace/calculateurs/thermal
+Allow: /workspace/calculateurs/acoustic
+Allow: /workspace/calculateurs/fire
+Allow: /workspace/calculateurs/hygrometry
+Allow: /workspace/calculateurs/accessibility
+Allow: /workspace/guides/construction
+Allow: /workspace/guides/renovation
+Allow: /workspace/guides/reglementation
+Allow: /workspace/guides/technique
 
 # Additional pages
 Allow: /parrainage
@@ -64,3 +80,4 @@ Allow: /css/
 Allow: /js/
 Allow: /fonts/
 Allow: /assets/
+
