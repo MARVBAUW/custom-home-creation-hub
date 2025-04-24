@@ -15,6 +15,10 @@ export interface FormData {
   [key: string]: any;
 }
 
+// Re-export BaseFormProps from baseFormProps.ts to maintain backward compatibility
+// with existing imports without having to change all files
+export { BaseFormProps } from './baseFormProps';
+
 export interface StepRendererProps {
   step: number;
   formData: FormData;
