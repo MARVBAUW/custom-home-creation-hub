@@ -1,7 +1,8 @@
 
 import { Quote } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { RatingStars } from './RatingStars';
+import { RatingStars } from '@/components/common/ratings/RatingStars';
+import { GoogleBadge } from '@/components/common/badges/GoogleBadge';
 import type { Testimonial } from './testimonialData';
 
 interface TestimonialCardProps {
@@ -19,15 +20,14 @@ export const TestimonialCard = ({ testimonial, direction }: TestimonialCardProps
               <Quote className="w-20 h-20 text-white/30" />
             </div>
           </div>
-          <div className="absolute -bottom-4 -right-4 bg-white text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" className="w-4 h-4" />
-            Avis Google
+          <div className="absolute -bottom-4 -right-4">
+            <GoogleBadge />
           </div>
         </div>
       </div>
       
       <div className="md:w-2/3 bg-white/10 backdrop-blur-sm p-8 rounded-3xl border border-white/20 relative">
-        <RatingStars rating={testimonial.rating} />
+        <RatingStars rating={testimonial.rating} className="mb-4" />
         
         <p className="text-white text-lg md:text-xl mb-6 italic relative z-10">
           "{testimonial.quote}"

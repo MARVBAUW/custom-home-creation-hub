@@ -6,7 +6,6 @@ import Container from '@/components/common/Container';
 import { TestimonialCard } from './testimonials/TestimonialCard';
 import { TestimonialDots } from './testimonials/TestimonialDots';
 import { testimonials } from './testimonials/testimonialData';
-import './animations.css';
 
 const slideVariants = {
   enter: (direction: number) => ({
@@ -65,7 +64,9 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="relative py-28 text-white overflow-hidden" 
+    <section 
+      className="relative py-28 text-white overflow-hidden" 
+      aria-label="Témoignages clients"
       style={{ 
         background: `linear-gradient(to right, rgba(30,30,35,0.97), rgba(30,30,35,0.9)), url('https://images.unsplash.com/photo-1600660344085-d8bd05bfb8a5?q=80&w=2070&auto=format&fit=crop')`,
         backgroundPosition: 'center',
@@ -77,7 +78,7 @@ const Testimonials = () => {
         style={{ 
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}
-      ></div>
+      />
   
       <Container>
         <div className="text-center mb-12 max-w-2xl mx-auto relative">
@@ -135,7 +136,7 @@ const Testimonials = () => {
             <ChevronRight className="w-6 h-6" />
           </button>
           
-          <div className="overflow-hidden py-8">
+          <div className="overflow-hidden py-8" role="region" aria-label="Carrousel de témoignages">
             <AnimatePresence initial={false} mode="wait" custom={direction}>
               <motion.div
                 key={active}
