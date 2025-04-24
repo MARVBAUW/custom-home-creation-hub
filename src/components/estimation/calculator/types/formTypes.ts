@@ -38,15 +38,22 @@ export interface StepRendererProps {
 }
 
 export interface ConversationState {
+  currentStep?: string;
+  askedQuestions?: string[];
+  completedFields?: string[];
+  formProgress?: number;
   messages: Message[];
   isTyping: boolean;
+  isProcessing?: boolean;
 }
 
 export interface Message {
-  id: string;
-  text: string;
-  type: 'user' | 'assistant';
-  timestamp: number;
+  id?: string;
+  type: 'user' | 'assistant' | 'bot' | 'system';
+  content: string;
+  timestamp?: string;
+  text?: string;
+  options?: string[];
 }
 
 export interface EstimationResponseData {
@@ -58,4 +65,3 @@ export interface EstimationResponseData {
     [key: string]: number;
   };
 }
-

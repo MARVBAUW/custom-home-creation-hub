@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons'
+import { ArrowLeft as ArrowLeftIcon, ArrowRight as ArrowRightIcon } from 'lucide-react';
 import StepRenderer from './StepRenderer';
-import { StepRendererProps } from '../types';
+import { StepRendererProps } from '../types/formTypes';
 
 interface CalculatorLayoutProps {
   steps: any[];

@@ -1,6 +1,15 @@
 
 import { useState, useCallback } from 'react';
-import { FormData, ConversationState, Message } from '../types/formTypes';
+import { FormData, Message } from '../types/formTypes';
+
+interface ConversationState {
+  currentStep: string;
+  askedQuestions: string[];
+  completedFields: string[];
+  formProgress: number;
+  messages: Message[];
+  isProcessing: boolean;
+}
 
 interface UseConversationalEstimatorProps {
   formData: FormData;
@@ -43,6 +52,7 @@ export const useConversationalEstimator = ({
       messages: [
         ...prev.messages,
         {
+          id: Date.now().toString(),
           type: 'user',
           content: input,
           timestamp: new Date().toISOString()
@@ -73,6 +83,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: `J'ai noté une surface de ${surface} m². Quel type de projet envisagez-vous ? (construction, rénovation, extension)`,
               timestamp: new Date().toISOString()
@@ -96,6 +107,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: 'Super, pour votre projet de construction neuve, pouvez-vous m\'indiquer la surface souhaitée en m² ?',
               timestamp: new Date().toISOString()
@@ -118,6 +130,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: 'Pour votre projet de rénovation, quelle est la surface concernée en m² ?',
               timestamp: new Date().toISOString()
@@ -140,6 +153,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: 'Pour votre projet d\'extension, quelle surface additionnelle envisagez-vous en m² ?',
               timestamp: new Date().toISOString()
@@ -167,6 +181,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: 'Parfait ! En tant que particulier, quel type de projet envisagez-vous ? (construction, rénovation, extension)',
               timestamp: new Date().toISOString()
@@ -193,6 +208,7 @@ export const useConversationalEstimator = ({
           messages: [
             ...prev.messages,
             {
+              id: Date.now().toString(),
               type: 'bot',
               content: 'Bienvenue ! Pour votre projet professionnel, pouvez-vous préciser votre secteur d\'activité ?',
               timestamp: new Date().toISOString()
@@ -211,6 +227,7 @@ export const useConversationalEstimator = ({
         messages: [
           ...prev.messages,
           {
+            id: Date.now().toString(),
             type: 'bot',
             content: 'Merci pour cette information. Pouvez-vous me préciser si vous êtes un particulier ou un professionnel ?',
             timestamp: new Date().toISOString()
@@ -239,6 +256,7 @@ export const useConversationalEstimator = ({
         ...prev,
         messages: [
           {
+            id: Date.now().toString(),
             type: 'bot',
             content: 'Bonjour ! Je suis l\'assistant d\'estimation de Progineer. Comment puis-je vous aider avec votre projet ? Êtes-vous un particulier ou un professionnel ?',
             timestamp: new Date().toISOString()

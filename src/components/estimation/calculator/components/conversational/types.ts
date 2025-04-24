@@ -12,6 +12,8 @@ export interface Message {
   type: 'user' | 'assistant' | 'system' | 'bot';
   content: string;
   options?: string[];
+  timestamp?: string;
+  text?: string; // Added for compatibility
 }
 
 export interface ConversationalProps {

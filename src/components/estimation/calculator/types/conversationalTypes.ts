@@ -1,4 +1,3 @@
-
 export interface Message {
   id: string;
   type: 'user' | 'system' | 'assistant' | 'bot';
@@ -7,6 +6,7 @@ export interface Message {
   timestamp?: string;
   options?: string[];
   isUser?: boolean; // For compatibility with older code
+  text?: string; // Added for compatibility with other Message interfaces
 }
 
 export interface MessageDisplayProps {
@@ -14,7 +14,7 @@ export interface MessageDisplayProps {
   loading: boolean;
   onOptionClick: (option: string) => void;
   messagesEndRef: React.RefObject<HTMLDivElement>;
-  message: string; // Required property
+  message?: string; // Made optional for compatibility
 }
 
 export interface MessageProcessorProps {
@@ -38,6 +38,7 @@ export interface ConversationState {
   completedFields: string[];
   formProgress: number;
   messages: Message[];
+  isProcessing?: boolean;
 }
 
 export interface EstimationIntents {
