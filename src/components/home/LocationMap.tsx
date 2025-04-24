@@ -32,6 +32,94 @@ const LocationMap = () => {
     triggerOnce: true,
   });
 
+  React.useEffect(() => {
+    // Add the CSS for custom markers to the document head
+    const style = document.createElement('style');
+    style.textContent = `
+      .custom-div-icon {
+        background: transparent;
+        border: none;
+      }
+      
+      .marker-pin {
+        width: 30px;
+        height: 30px;
+        border-radius: 50% 50% 50% 0;
+        background: #c1a16a;
+        position: absolute;
+        transform: rotate(-45deg);
+        left: 50%;
+        top: 50%;
+        margin: -15px 0 0 -15px;
+      }
+
+      .marker-pin::after {
+        content: '';
+        width: 24px;
+        height: 24px;
+        margin: 3px 0 0 3px;
+        background: #fff;
+        position: absolute;
+        border-radius: 50%;
+      }
+
+      .marker-pulse {
+        background: rgba(193, 161, 106, 0.2);
+        border-radius: 50%;
+        height: 14px;
+        width: 14px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -7px 0 0 -7px;
+        transform: rotateX(55deg);
+        z-index: -2;
+      }
+
+      .marker-pulse:after {
+        content: "";
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        position: absolute;
+        margin: -13px 0 0 -13px;
+        animation: pulsate 1s ease-out;
+        animation-iteration-count: infinite;
+        opacity: 0;
+        box-shadow: 0 0 1px 2px #c1a16a;
+        animation: pulsate 1s ease-out;
+        animation-iteration-count: infinite;
+        opacity: 0;
+      }
+
+      @keyframes pulsate {
+        0% {
+          transform: scale(0.1, 0.1);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.2, 1.2);
+          opacity: 0;
+        }
+      }
+
+      .custom-popup .leaflet-popup-content-wrapper {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Clean up function to remove the style when component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <section className="py-16 bg-white" ref={ref}>
       <Container>
@@ -127,84 +215,6 @@ const LocationMap = () => {
             </motion.div>
           </div>
         </div>
-
-        <style jsx global>{`
-          .custom-div-icon {
-            background: transparent;
-            border: none;
-          }
-          
-          .marker-pin {
-            width: 30px;
-            height: 30px;
-            border-radius: 50% 50% 50% 0;
-            background: #c1a16a;
-            position: absolute;
-            transform: rotate(-45deg);
-            left: 50%;
-            top: 50%;
-            margin: -15px 0 0 -15px;
-          }
-
-          .marker-pin::after {
-            content: '';
-            width: 24px;
-            height: 24px;
-            margin: 3px 0 0 3px;
-            background: #fff;
-            position: absolute;
-            border-radius: 50%;
-          }
-
-          .marker-pulse {
-            background: rgba(193, 161, 106, 0.2);
-            border-radius: 50%;
-            height: 14px;
-            width: 14px;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            margin: -7px 0 0 -7px;
-            transform: rotateX(55deg);
-            z-index: -2;
-          }
-
-          .marker-pulse:after {
-            content: "";
-            border-radius: 50%;
-            height: 40px;
-            width: 40px;
-            position: absolute;
-            margin: -13px 0 0 -13px;
-            animation: pulsate 1s ease-out;
-            animation-iteration-count: infinite;
-            opacity: 0;
-            box-shadow: 0 0 1px 2px #c1a16a;
-            animation: pulsate 1s ease-out;
-            animation-iteration-count: infinite;
-            opacity: 0;
-          }
-
-          @keyframes pulsate {
-            0% {
-              transform: scale(0.1, 0.1);
-              opacity: 0;
-            }
-            50% {
-              opacity: 1;
-            }
-            100% {
-              transform: scale(1.2, 1.2);
-              opacity: 0;
-            }
-          }
-
-          .custom-popup .leaflet-popup-content-wrapper {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-          }
-        `}</style>
       </Container>
     </section>
   );
