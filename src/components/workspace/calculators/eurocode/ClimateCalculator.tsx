@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -93,12 +92,15 @@ const ClimateCalculator = () => {
     // Intensité de turbulence
     const Iv = 1 / (co * Math.log(Math.max(buildingHeight, 1) / z0));
     
-    // Pression dynamique de pointe
-    const qp = [1 + 7 * Iv] * 0.5 * rho * Math.pow(vm, 2) / 1000;
+    // Pression dynamique de pointe - FIX: Ensure numeric values for calculation
+    // Original line with error: const qp = [1 + 7 * Iv] * 0.5 * rho * Math.pow(vm, 2) / 1000;
+    // The issue is that [1 + 7 * Iv] creates an array instead of performing arithmetic
+    const qp = (1 + 7 * Iv) * 0.5 * rho * Math.pow(vm, 2) / 1000;
     
     setWindPressure(qp);
   };
 
+  
   return (
     <div className="space-y-6">
       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-6">
