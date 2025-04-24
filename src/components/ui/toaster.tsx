@@ -1,4 +1,7 @@
 
+// ✅ components/ui/toaster.tsx chargé
+console.log("✅ components/ui/toaster.tsx chargé");
+
 import * as React from "react"
 import { useToast } from "@/hooks/use-toast"
 import {

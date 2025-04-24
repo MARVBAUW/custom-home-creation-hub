@@ -1,3 +1,7 @@
+
+// ✅ hooks/use-toast.ts chargé
+console.log("✅ hooks/use-toast.ts chargé");
+
 import * as React from "react";
 import type {
   ToastActionElement,
