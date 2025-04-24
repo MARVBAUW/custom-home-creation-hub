@@ -45,7 +45,7 @@ const SimulationManager = () => {
     }
 
     try {
-      let parsedData = {};
+      let parsedData: any = {};
       try {
         parsedData = JSON.parse(newSimulationData);
       } catch (e) {

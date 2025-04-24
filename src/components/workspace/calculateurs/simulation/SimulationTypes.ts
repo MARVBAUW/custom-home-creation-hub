@@ -1,5 +1,4 @@
 
-// Types for simulations
 import { Json, isJson } from '@/components/estimation/calculator/types/json';
 
 export type SimulationType = 'calculator' | 'simulation' | 'note' | 'rentability' | 'surface' | 'frais-notaire' | 'capacite-emprunt' | 'acoustic' | 'dpe' | 'thermal';
@@ -7,6 +6,7 @@ export type SimulationType = 'calculator' | 'simulation' | 'note' | 'rentability
 export interface SimulationContent {
   data: any;
   results?: any;
+  [key: string]: any; // Add index signature for Json compatibility
 }
 
 export interface Simulation {
@@ -22,41 +22,36 @@ export interface Simulation {
 
 // Convert SimulationContent to Json for database storage
 export function simulationContentToJson(content: SimulationContent): Json {
+  if (typeof content === 'string') {
+    return content;
+  }
   return {
     data: content.data,
-    results: content.results
-  };
+    results: content.results,
+  } as Json;
 }
 
 // Convert Json to SimulationContent when retrieving from database
 export function jsonToSimulationContent(json: Json): SimulationContent {
   if (typeof json === 'string') {
     try {
-      // Try to parse string as JSON
-      return JSON.parse(json);
+      return JSON.parse(json) as SimulationContent;
     } catch (e) {
-      // If parsing fails, treat string as raw data
       return { data: json };
     }
   }
   
-  if (json === null || json === undefined) {
+  if (!json || typeof json !== 'object') {
     return { data: {} };
   }
   
-  // If json is already properly structured and has data/results properties
-  if (typeof json === 'object' && json !== null) {
-    if ('data' in json || 'results' in json) {
-      return { 
-        data: (json as any).data || {},
-        results: (json as any).results
-      };
-    }
-    // If it's an object but doesn't follow our structure
-    return { data: json };
+  if ('data' in json || 'results' in json) {
+    return {
+      data: (json as any).data || {},
+      results: (json as any).results
+    };
   }
   
-  // Default fallback
   return { data: json };
 }
 
@@ -64,40 +59,41 @@ export function jsonToSimulationContent(json: Json): SimulationContent {
 export function normalizeSimulationContent(content: any): SimulationContent {
   if (typeof content === 'string') {
     try {
-      // Try to parse string as JSON
       return { data: JSON.parse(content) };
     } catch (e) {
-      // If parsing fails, treat string as raw data
       return { data: content };
     }
   }
   
-  if (content === null || content === undefined) {
+  if (!content || typeof content !== 'object') {
     return { data: {} };
   }
   
-  // If content is already an object but doesn't follow our structure
-  if (typeof content === 'object' && !content.data && !content.results) {
+  if (!content.data && !content.results) {
     return { data: content };
   }
   
-  // If content is already properly structured
-  if (typeof content === 'object' && (content.data || content.results)) {
-    return content as SimulationContent;
-  }
-  
-  // Default fallback
-  return { data: content };
+  return content as SimulationContent;
 }
 
 export function validateSimulationType(type: string): SimulationType {
-  const validTypes: SimulationType[] = ['calculator', 'simulation', 'note', 'rentability', 'surface', 'frais-notaire', 'capacite-emprunt', 'acoustic', 'dpe', 'thermal'];
+  const validTypes: SimulationType[] = [
+    'calculator',
+    'simulation',
+    'note',
+    'rentability',
+    'surface',
+    'frais-notaire',
+    'capacite-emprunt',
+    'acoustic',
+    'dpe',
+    'thermal'
+  ];
   
   if (validTypes.includes(type as SimulationType)) {
     return type as SimulationType;
   }
   
-  // Default to calculator if not valid
   return 'calculator';
 }
 
