@@ -1,3 +1,4 @@
+
 export interface FormData {
   clientType?: 'individual' | 'professional';
   projectType?: string;
@@ -11,6 +12,9 @@ export interface FormData {
   montantT?: number;
   landIncluded?: boolean;
   landPrice?: number;
+  completed?: boolean;
+  currentStep?: number;
+  progress?: number;
   [key: string]: any;
 }
 
@@ -47,4 +51,14 @@ export interface Message {
   timestamp?: string;
   text?: string;
   options?: string[];
+}
+
+export interface EstimationState {
+  step: number;
+  totalSteps: number;
+  formData: FormData;
+  estimationResult: any;
+  isSubmitting: boolean;
+  animationDirection: 'forward' | 'backward';
+  isComplete: boolean;
 }

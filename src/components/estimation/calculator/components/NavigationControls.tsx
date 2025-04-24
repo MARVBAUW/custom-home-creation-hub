@@ -10,6 +10,7 @@ interface NavigationControlsProps {
   canGoBack: boolean;
   isLastStep: boolean;
   onComplete: () => void;
+  isSubmitting?: boolean;
 }
 
 const NavigationControls: React.FC<NavigationControlsProps> = ({
@@ -18,7 +19,8 @@ const NavigationControls: React.FC<NavigationControlsProps> = ({
   canGoNext,
   canGoBack,
   isLastStep,
-  onComplete
+  onComplete,
+  isSubmitting = false
 }) => {
   return (
     <div className="flex justify-between mt-6">
@@ -27,17 +29,21 @@ const NavigationControls: React.FC<NavigationControlsProps> = ({
           variant="outline"
           onClick={onPrevious}
           className="flex items-center"
+          disabled={isSubmitting}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Précédent
         </Button>
       )}
+      
+      {!canGoBack && <div />}
 
       <div className="ml-auto">
         {isLastStep ? (
           <Button
             onClick={onComplete}
             className="flex items-center bg-green-600 hover:bg-green-700"
+            disabled={isSubmitting}
           >
             <Check className="mr-2 h-4 w-4" />
             Terminer
@@ -45,7 +51,7 @@ const NavigationControls: React.FC<NavigationControlsProps> = ({
         ) : (
           <Button
             onClick={onNext}
-            disabled={!canGoNext}
+            disabled={!canGoNext || isSubmitting}
             className="flex items-center"
           >
             Suivant

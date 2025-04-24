@@ -1,89 +1,72 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { User, Building } from 'lucide-react';
-import { FormData } from '../types';
-import { Button } from "@/components/ui/button";
-import { ArrowRightIcon } from 'lucide-react';
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { User, Building2 } from 'lucide-react';
+import { BaseFormProps } from '../types/baseFormProps';
 
-interface ClientTypeStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  animationDirection: string;
-}
-
-const ClientTypeStep: React.FC<ClientTypeStepProps> = ({ 
-  formData, 
-  updateFormData, 
-  goToNextStep,
-  animationDirection
+const ClientTypeStep: React.FC<BaseFormProps> = ({
+  formData,
+  updateFormData,
+  goToNextStep
 }) => {
-  const [clientType, setClientType] = React.useState<string>(formData.clientType || '');
+  const [clientType, setClientType] = React.useState<string>(
+    formData.clientType || ''
+  );
 
-  const handleSelect = (type: string) => {
-    // Update the client type
-    updateFormData({ 
-      clientType: type as 'individual' | 'professional',
-      // Reset navigation flags to avoid routing issues
-      skipToContact: false
-    });
+  const handleContinue = () => {
+    updateFormData({ clientType: clientType as 'individual' | 'professional' });
+    if (goToNextStep) goToNextStep();
+  };
+
+  const handleChange = (value: string) => {
+    setClientType(value);
+    updateFormData({ clientType: value as 'individual' | 'professional' });
     
-    // After a short delay, move to the next step
+    // Automatically go to next step after selection
     setTimeout(() => {
-      goToNextStep();
-    }, 100);
+      if (goToNextStep) goToNextStep();
+    }, 500);
   };
 
   return (
-    <div className={`space-y-6 transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
-    }`}>
-      <h2 className="text-xl font-semibold mb-4">Votre profil</h2>
-      <p className="text-gray-600 mb-6">Vous êtes ?</p>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-center mb-6">Vous êtes...</h2>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <RadioGroup 
+        value={clientType} 
+        onValueChange={handleChange}
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
+      >
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'individual' ? 'border-blue-500 bg-blue-50' : ''}`}
-          onClick={() => handleSelect('individual')}
+          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'individual' ? 'border-blue-500 bg-blue-50' : ''}`}
+          onClick={() => handleChange('individual')}
         >
-          <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+          <CardContent className="pt-6 flex flex-col items-center text-center">
             <User className="h-12 w-12 text-blue-500 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Particulier</h3>
-            <p className="text-sm text-gray-600">
-              Je suis un particulier avec un projet personnel
+            <RadioGroupItem value="individual" id="client-individual" className="sr-only" />
+            <Label htmlFor="client-individual" className="text-lg font-medium">Un particulier</Label>
+            <p className="text-sm text-gray-500 mt-2">
+              Pour votre projet personnel de construction ou rénovation
             </p>
           </CardContent>
         </Card>
         
         <Card 
-          className={`cursor-pointer transition-all hover:shadow-md ${formData.clientType === 'professional' ? 'border-blue-500 bg-blue-50' : ''}`}
-          onClick={() => handleSelect('professional')}
+          className={`cursor-pointer transition-all hover:shadow-md ${clientType === 'professional' ? 'border-blue-500 bg-blue-50' : ''}`}
+          onClick={() => handleChange('professional')}
         >
-          <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
-            <Building className="h-12 w-12 text-blue-500 mb-4" />
-            <h3 className="text-lg font-medium mb-2">Professionnel</h3>
-            <p className="text-sm text-gray-600">
-              Je représente une entreprise ou une organisation
+          <CardContent className="pt-6 flex flex-col items-center text-center">
+            <Building2 className="h-12 w-12 text-blue-500 mb-4" />
+            <RadioGroupItem value="professional" id="client-professional" className="sr-only" />
+            <Label htmlFor="client-professional" className="text-lg font-medium">Un professionnel</Label>
+            <p className="text-sm text-gray-500 mt-2">
+              Pour un projet d'entreprise ou d'investissement immobilier
             </p>
           </CardContent>
         </Card>
-      </div>
-      
-      <div className="mt-8 flex justify-end">
-        <Button 
-          onClick={() => {
-            if (clientType) {
-              handleSelect(clientType);
-            }
-          }}
-          disabled={!clientType}
-          className="px-6"
-        >
-          Poursuivre
-          <ArrowRightIcon className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      </RadioGroup>
     </div>
   );
 };

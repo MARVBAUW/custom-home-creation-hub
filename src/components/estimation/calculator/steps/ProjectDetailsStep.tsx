@@ -1,145 +1,127 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Home, Building, ArrowRightIcon, ArrowLeftIcon } from 'lucide-react';
-import { FormData } from '../types';
+import { Card, CardContent } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Home, Hammer, ArrowRightLeft, Lightbulb, Scissors } from 'lucide-react';
+import { BaseFormProps } from '../types/baseFormProps';
 
-interface ProjectDetailsStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: string;
-}
-
-const ProjectDetailsStep: React.FC<ProjectDetailsStepProps> = ({
+const ProjectDetailsStep: React.FC<BaseFormProps> = ({
   formData,
   updateFormData,
-  goToNextStep,
-  goToPreviousStep,
-  animationDirection
+  goToNextStep
 }) => {
-  const [projectType, setProjectType] = React.useState<string>(formData.projectType || '');
-  const [surface, setSurface] = React.useState<string | number>(formData.surface || '');
-  const [city, setCity] = React.useState<string>(formData.city || '');
+  const [projectType, setProjectType] = React.useState<string>(
+    formData.projectType || ''
+  );
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleChange = (value: string) => {
+    setProjectType(value);
+    updateFormData({ projectType: value });
     
-    updateFormData({
-      projectType,
-      surface: typeof surface === 'string' ? parseFloat(surface) || 0 : surface,
-      city
-    });
-    
-    goToNextStep();
+    // Automatically go to next step after selection
+    setTimeout(() => {
+      if (goToNextStep) goToNextStep();
+    }, 500);
   };
 
+  // Different project types based on client type
+  const isIndividual = formData.clientType === 'individual';
+
   return (
-    <div className={`transform transition-all duration-300 ${
-      animationDirection === 'forward' ? 'translate-x-0 opacity-100' : '-translate-x-0 opacity-100'
-    }`}>
-      <h2 className="text-xl font-semibold mb-4">Détails du projet</h2>
+    <div className="space-y-6">
+      <h2 className="text-xl font-semibold text-center mb-6">
+        {isIndividual 
+          ? 'Quel type de projet souhaitez-vous réaliser ?' 
+          : 'Quel est le type de projet de votre entreprise ?'
+        }
+      </h2>
       
-      <form onSubmit={handleSubmit}>
-        <div className="space-y-6">
-          {/* Project Type */}
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Type de projet</Label>
-            <RadioGroup 
-              value={projectType} 
-              onValueChange={setProjectType}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="construction" id="construction" />
-                <Label htmlFor="construction" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Home className="h-4 w-4 text-blue-500" />
-                  <div>
-                    <p>Construction neuve</p>
-                    <p className="text-sm text-gray-500">Projet de construction nouvelle</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="renovation" id="renovation" />
-                <Label htmlFor="renovation" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Building className="h-4 w-4 text-amber-500" />
-                  <div>
-                    <p>Rénovation</p>
-                    <p className="text-sm text-gray-500">Rénovation d'un bien existant</p>
-                  </div>
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2 rounded-md border p-4">
-                <RadioGroupItem value="extension" id="extension" />
-                <Label htmlFor="extension" className="flex flex-1 items-center gap-2 cursor-pointer">
-                  <Home className="h-4 w-4 text-green-500" />
-                  <div>
-                    <p>Extension</p>
-                    <p className="text-sm text-gray-500">Agrandissement d'un bien existant</p>
-                  </div>
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-          
-          {/* Surface */}
-          <div className="space-y-2">
-            <Label htmlFor="surface" className="text-base font-medium">Surface du projet (m²)</Label>
-            <Input
-              id="surface"
-              type="number"
-              min="1"
-              value={surface}
-              onChange={(e) => setSurface(e.target.value)}
-              placeholder="Ex: 120"
-              className="w-full"
-            />
-          </div>
-          
-          {/* City */}
-          <div className="space-y-2">
-            <Label htmlFor="city" className="text-base font-medium">Ville du projet</Label>
-            <Input
-              id="city"
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="Ex: Marseille"
-              className="w-full"
-            />
-          </div>
-          
-          {/* Navigation buttons */}
-          <div className="flex justify-between pt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={goToPreviousStep}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeftIcon className="h-4 w-4" />
-              Précédent
-            </Button>
-            
-            <Button 
-              type="submit"
-              className="flex items-center gap-2"
-            >
-              Suivant
-              <ArrowRightIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </form>
+      <RadioGroup 
+        value={projectType} 
+        onValueChange={handleChange}
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        <ProjectTypeCard
+          value="construction"
+          icon={<Home className="h-10 w-10 text-blue-500" />}
+          title="Construction"
+          description="Construction neuve"
+          selected={projectType === 'construction'}
+          onClick={() => handleChange('construction')}
+        />
+        
+        <ProjectTypeCard
+          value="renovation"
+          icon={<Hammer className="h-10 w-10 text-blue-500" />}
+          title="Rénovation"
+          description="Rénovation d'un bien existant"
+          selected={projectType === 'renovation'}
+          onClick={() => handleChange('renovation')}
+        />
+        
+        <ProjectTypeCard
+          value="extension"
+          icon={<ArrowRightLeft className="h-10 w-10 text-blue-500" />}
+          title="Extension"
+          description="Agrandissement d'un bien existant"
+          selected={projectType === 'extension'}
+          onClick={() => handleChange('extension')}
+        />
+        
+        <ProjectTypeCard
+          value="optimization"
+          icon={<Lightbulb className="h-10 w-10 text-blue-500" />}
+          title="Optimisation"
+          description="Amélioration d'un projet existant"
+          selected={projectType === 'optimization'}
+          onClick={() => handleChange('optimization')}
+        />
+        
+        <ProjectTypeCard
+          value="division"
+          icon={<Scissors className="h-10 w-10 text-blue-500" />}
+          title="Division"
+          description="Division d'un bien en plusieurs lots"
+          selected={projectType === 'division'}
+          onClick={() => handleChange('division')}
+        />
+      </RadioGroup>
     </div>
+  );
+};
+
+interface ProjectTypeCardProps {
+  value: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  selected: boolean;
+  onClick: () => void;
+}
+
+const ProjectTypeCard: React.FC<ProjectTypeCardProps> = ({
+  value,
+  icon,
+  title,
+  description,
+  selected,
+  onClick
+}) => {
+  return (
+    <Card 
+      className={`cursor-pointer transition-all hover:shadow-md ${selected ? 'border-blue-500 bg-blue-50' : ''}`}
+      onClick={onClick}
+    >
+      <CardContent className="pt-6 pb-6 flex flex-col items-center text-center">
+        {icon}
+        <RadioGroupItem value={value} id={`project-${value}`} className="sr-only" />
+        <Label htmlFor={`project-${value}`} className="text-lg font-medium mt-4">{title}</Label>
+        <p className="text-sm text-gray-500 mt-2">
+          {description}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 
