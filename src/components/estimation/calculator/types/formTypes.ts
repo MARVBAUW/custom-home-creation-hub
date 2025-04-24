@@ -15,6 +15,8 @@ export interface FormData {
   completed?: boolean;
   currentStep?: number;
   progress?: number;
+  budget?: number;
+  additionalDetails?: string;
   [key: string]: any;
 }
 

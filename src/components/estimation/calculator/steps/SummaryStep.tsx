@@ -33,6 +33,18 @@ const SummaryStep: React.FC<BaseFormProps> = ({
             <p className="text-sm text-gray-600">{formData.surface} m²</p>
           </div>
         )}
+        {formData.city && (
+          <div>
+            <p className="text-sm font-medium">Ville</p>
+            <p className="text-sm text-gray-600">{formData.city}</p>
+          </div>
+        )}
+        {formData.budget && (
+          <div>
+            <p className="text-sm font-medium">Budget estimé</p>
+            <p className="text-sm text-gray-600">{formData.budget} €</p>
+          </div>
+        )}
       </div>
       <div className="flex justify-between">
         <Button type="button" variant="outline" onClick={goToPreviousStep}>
