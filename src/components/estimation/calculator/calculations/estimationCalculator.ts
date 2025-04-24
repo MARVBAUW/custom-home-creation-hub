@@ -1,162 +1,162 @@
-import { ensureNumber } from '../utils/typeConversions';
 
-/**
- * Calculates the base cost of construction based on project and construction type
- */
-export const calculateConstructionBaseCost = (formData: any): number => {
+import { FormData } from '../types/formTypes';
+
+// Base cost calculation per square meter based on construction type
+export const calculateConstructionBaseCost = (formData: FormData): number => {
   const { projectType, constructionType, surface } = formData;
   let baseCost = 0;
-
-  if (!surface) {
-    return 0; // No cost if no surface is defined
-  }
-
-  // Define base costs per square meter for different construction types
-  const constructionCosts: { [key: string]: number } = {
-    newConstruction: 1500, // Cost per m² for new construction
-    renovation: 800,       // Cost per m² for renovation
-    extension: 1200        // Cost per m² for extension
-  };
-
-  // Determine the construction type
-  let selectedConstructionType = 'renovation'; // Default value
-  if (projectType === 'construction') {
-    selectedConstructionType = 'newConstruction';
-  } else if (projectType === 'extension') {
-    selectedConstructionType = 'extension';
-  }
-
-  // Get the cost per square meter for the selected construction type
-  const costPerSqM = constructionCosts[selectedConstructionType] || constructionCosts['renovation'];
-
-  // Calculate the base cost
-  baseCost = surface * costPerSqM;
-
-  return baseCost;
-};
-
-/**
- * Calculates the cost of the kitchen based on the selected kitchen type
- */
-export const calculateKitchenCost = (formData: any): number => {
-  const { kitchenType, surface } = formData;
-  let kitchenCost = 0;
-
-  if (!surface) {
-    return 0; // No cost if no surface is defined
-  }
-
-  // Define kitchen costs per square meter for different kitchen types
-  const kitchenCosts: { [key: string]: number } = {
-    basic: 300,    // Cost per m² for a basic kitchen
-    standard: 500, // Cost per m² for a standard kitchen
-    premium: 800   // Cost per m² for a premium kitchen
-  };
-
-  // Get the cost per square meter for the selected kitchen type
-  const costPerSqM = kitchenCosts[kitchenType] || 0;
-
-  // Calculate the kitchen cost
-  kitchenCost = surface * costPerSqM;
-
-  return kitchenCost;
-};
-
-/**
- * Calculates the cost of the bathroom based on the selected bathroom type
- */
-export const calculateBathroomCost = (formData: any): number => {
-    const { bathroomType, bathrooms, surface } = formData;
-    let bathroomCost = 0;
-
-    if (!surface) {
-        return 0; // No cost if no surface is defined
-    }
-
-    // Define bathroom costs per square meter for different bathroom types
-    const bathroomCosts: { [key: string]: number } = {
-        standard: 400,  // Cost per m² for a standard bathroom
-        midRange: 700,  // Cost per m² for a mid-range bathroom
-        premium: 1200, // Cost per m² for a premium bathroom
-    };
-
-    // Get the cost per square meter for the selected bathroom type
-    let costPerSqM = 0;
-    if (bathroomType && bathroomType !== 'none') {
-        costPerSqM = bathroomCosts[bathroomType] || 0;
-    }
-
-    // Calculate the bathroom cost
-    bathroomCost = (bathrooms || 1) * surface * costPerSqM;
-
-    return bathroomCost;
-};
-
-/**
- * Calculates the cost of windows based on the number of windows
- */
-export const calculateWindowsCost = (formData: any): number => {
-  const { windows, surface } = formData;
-  let windowsCost = 0;
-
-  if (!surface) {
-    return 0; // No cost if no surface is defined
-  }
-
-  // Define window cost per window
-  const windowCostPerUnit = 300;
-
-  // Calculate the windows cost
-  windowsCost = (windows || 0) * windowCostPerUnit;
-
-  return windowsCost;
-};
-
-/**
- * Calculates the cost of eco options based on selected options
- */
-export const calculateEcoOptionsCost = (formData: any): number => {
-  const { ecoOptions, surface } = formData;
-  let ecoOptionsCost = 0;
-
-  if (!surface) {
-    return 0; // No cost if no surface is defined
-  }
-
-  // Define eco options costs per square meter for different eco options
-  const ecoOptionsCosts: { [key: string]: number } = {
-    solarPanels: 500,       // Cost per m² for solar panels
-    insulation: 200,        // Cost per m² for insulation
-    rainwaterHarvesting: 300 // Cost per m² for rainwater harvesting
-  };
-
-  // Calculate the eco options cost
-  if (ecoOptions) {
-    Object.keys(ecoOptions).forEach(option => {
-      ecoOptionsCost += surface * (ecoOptionsCosts[option] || 0);
-    });
-  }
-
-  return ecoOptionsCost;
-};
-
-/**
- * Main estimation calculator function that combines all calculations
- */
-export const calculateEstimation = (formData: any): number => {
-  // Base cost calculation based on construction type
-  const baseCost = calculateConstructionBaseCost(formData);
   
-  // Add costs for specific room types
-  const kitchenCost = calculateKitchenCost(formData);
-  const bathroomCost = calculateBathroomCost(formData);
+  if (!surface || surface <= 0) {
+    return 0;
+  }
   
-  // Add costs for windows
-  const windowsCost = calculateWindowsCost(formData);
+  // Default costs per m² based on project and construction type
+  switch (projectType) {
+    case 'construction':
+      switch (constructionType) {
+        case 'traditional':
+          baseCost = 1600;
+          break;
+        case 'wooden':
+          baseCost = 1800;
+          break;
+        case 'eco':
+          baseCost = 2000;
+          break;
+        default:
+          baseCost = 1700; // Default for construction
+      }
+      break;
+    case 'renovation':
+      switch (constructionType) {
+        case 'light':
+          baseCost = 700;
+          break;
+        case 'medium':
+          baseCost = 1100;
+          break;
+        case 'heavy':
+          baseCost = 1500;
+          break;
+        default:
+          baseCost = 1000; // Default for renovation
+      }
+      break;
+    case 'extension':
+      switch (constructionType) {
+        case 'traditional':
+          baseCost = 1700;
+          break;
+        case 'wooden':
+          baseCost = 1900;
+          break;
+        default:
+          baseCost = 1800; // Default for extension
+      }
+      break;
+    default:
+      baseCost = 1500; // General default
+  }
   
-  // Add costs for eco options if selected
-  const ecoOptionsCost = formData.includeEcoSolutions ? calculateEcoOptionsCost(formData) : 0;
+  // Adjust for surface area (economies of scale)
+  if (surface > 200) {
+    baseCost *= 0.9; // 10% discount for large areas
+  } else if (surface < 50) {
+    baseCost *= 1.15; // 15% increase for small areas
+  }
   
-  // Calculate total
-  return baseCost + kitchenCost + bathroomCost + windowsCost + ecoOptionsCost;
+  return baseCost * surface;
+};
+
+// Calculate kitchen cost based on selected type
+export const calculateKitchenCost = (formData: FormData): number => {
+  const { kitchenType } = formData;
+  
+  switch (kitchenType) {
+    case 'basic':
+      return 5000;
+    case 'standard':
+      return 10000;
+    case 'premium':
+      return 20000;
+    default:
+      return 0; // No kitchen
+  }
+};
+
+// Calculate bathroom cost based on type and count
+export const calculateBathroomCost = (formData: FormData): number => {
+  const { bathroomType, bathroomCount } = formData;
+  let baseCost = 0;
+  
+  if (bathroomType === 'none' || !bathroomCount) {
+    return 0;
+  }
+  
+  switch (bathroomType) {
+    case 'standard':
+      baseCost = 3500;
+      break;
+    case 'mid-range':
+      baseCost = 6000;
+      break;
+    case 'premium':
+      baseCost = 12000;
+      break;
+    default:
+      baseCost = 0;
+  }
+  
+  return baseCost * bathroomCount;
+};
+
+// Calculate windows cost
+export const calculateWindowsCost = (formData: FormData): number => {
+  const { surface, menuiseriesExtType } = formData;
+  
+  if (!surface) return 0;
+  
+  // Estimate window area as 15% of total surface
+  const estimatedWindowArea = surface * 0.15;
+  
+  // Cost per m² based on material
+  let costPerSqm = 0;
+  switch (menuiseriesExtType) {
+    case 'pvc':
+      costPerSqm = 400;
+      break;
+    case 'aluminum':
+      costPerSqm = 700;
+      break;
+    case 'wood':
+      costPerSqm = 800;
+      break;
+    case 'wood_aluminum':
+      costPerSqm = 1000;
+      break;
+    default:
+      costPerSqm = 500; // Default
+  }
+  
+  return estimatedWindowArea * costPerSqm;
+};
+
+// Calculate eco-friendly options cost
+export const calculateEcoOptionsCost = (formData: FormData): number => {
+  let totalCost = 0;
+  const { includeRenewableEnergy, includeEcoSolutions, surface } = formData;
+  
+  if (!surface) return 0;
+  
+  if (includeRenewableEnergy) {
+    // Solar panels, heat pumps, etc.
+    totalCost += 15000 + (surface * 50);
+  }
+  
+  if (includeEcoSolutions) {
+    // Rainwater harvesting, extra insulation, etc.
+    totalCost += 8000 + (surface * 30);
+  }
+  
+  return totalCost;
 };

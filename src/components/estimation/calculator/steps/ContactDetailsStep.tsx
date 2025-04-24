@@ -13,6 +13,7 @@ interface ContactDetailsStepProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: string;
+  onSubmit?: (data: any) => void;
 }
 
 const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({
@@ -20,7 +21,8 @@ const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({
   updateFormData,
   goToNextStep,
   goToPreviousStep,
-  animationDirection
+  animationDirection,
+  onSubmit
 }) => {
   const [firstName, setFirstName] = React.useState<string>(formData.firstName || '');
   const [lastName, setLastName] = React.useState<string>(formData.lastName || '');
@@ -31,13 +33,19 @@ const ContactDetailsStep: React.FC<ContactDetailsStepProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    updateFormData({
+    const contactData = {
       firstName,
       lastName,
       email,
       phone,
       termsAccepted
-    });
+    };
+    
+    updateFormData(contactData);
+    
+    if (onSubmit) {
+      onSubmit(contactData);
+    }
     
     goToNextStep();
   };

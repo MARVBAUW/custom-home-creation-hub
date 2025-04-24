@@ -1,6 +1,6 @@
 
 import { useState, useCallback } from 'react';
-import { FormData, ConversationState } from '../types/formTypes';
+import { FormData, ConversationState, Message } from '../types/formTypes';
 
 interface UseConversationalEstimatorProps {
   formData: FormData;
@@ -27,7 +27,8 @@ export const useConversationalEstimator = ({
     askedQuestions: [],
     completedFields: [],
     formProgress: 0,
-    messages: []
+    messages: [],
+    isProcessing: false
   });
   
   // Process user input
@@ -228,7 +229,8 @@ export const useConversationalEstimator = ({
       askedQuestions: [],
       completedFields: [],
       formProgress: 0,
-      messages: []
+      messages: [],
+      isProcessing: false
     });
     
     // Add initial greeting

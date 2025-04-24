@@ -7,8 +7,7 @@ export {
   calculateKitchenCost, 
   calculateBathroomCost, 
   calculateWindowsCost, 
-  calculateEcoOptionsCost,
-  calculateEstimation 
+  calculateEcoOptionsCost
 } from './estimationCalculator';
 export * from './externalCosts';
 export * from './feeCosts';

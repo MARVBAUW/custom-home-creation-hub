@@ -1,12 +1,10 @@
 
 import React from 'react';
-import { BaseFormProps } from '../types';
+import { BaseFormProps } from '../types/formTypes';
 import ContactDetailsStep from '../steps/ContactDetailsStep';
-import { FormData } from '../types';
 
 interface ContactFormProps extends BaseFormProps {
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
+  // Inherits all props from BaseFormProps
 }
 
 const ContactForm: React.FC<ContactFormProps> = (props) => {

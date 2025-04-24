@@ -2,7 +2,7 @@
 import React from 'react';
 import { StepComponentRegistry, FormStepProps } from './StepComponents';
 import ContactForm from '../../FormSteps/ContactForm';
-import { FormData } from '../../types';
+import { FormData } from '../../types/formTypes';
 
 // Registry for contact steps (step 40)
 export const createContactStepRegistry = (
@@ -18,7 +18,6 @@ export const createContactStepRegistry = (
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        // Remove defaultValues prop since it's not in the ContactFormProps interface
         onSubmit={onContactSubmit}
       />
     ),

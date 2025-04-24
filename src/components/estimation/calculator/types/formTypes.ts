@@ -44,6 +44,11 @@ export interface FormData {
   carportType?: string;
   activity?: string;
   ecoLevel?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  termsAccepted?: boolean;
   [key: string]: any; // Allow additional properties
 }
 
@@ -53,14 +58,24 @@ export interface BaseFormProps {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
+export interface Message {
+  id?: string;
+  type: 'user' | 'bot' | 'system' | 'assistant';
+  content: string;
+  options?: string[];
+  timestamp?: string;
 }
 
 export interface ConversationState {
-  messages: Array<{
-    role: 'user' | 'assistant';
-    content: string;
-  }>;
-  isProcessing: boolean;
-  currentStep: number;
-  formData: FormData;
+  currentStep: string | number;
+  askedQuestions: string[];
+  completedFields: string[];
+  formProgress: number;
+  messages: Message[];
+  isProcessing?: boolean;
+  formData?: FormData;
 }
