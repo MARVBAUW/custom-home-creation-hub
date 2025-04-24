@@ -1,88 +1,55 @@
 
 import React, { useEffect } from 'react';
-import { MessageProcessorProps } from '../../types/conversationalTypes';
+import { MessageProcessorProps } from './types';
 
-/**
- * Analyzes user intent from message content
- */
-export function analyzeUserIntent(content: string) {
-  // Simple intent analysis logic
-  const intents = {
-    projectType: null,
-    surface: null,
-    budget: null,
-    location: null
-  };
-  
-  // Check for project type mentions
-  if (content.toLowerCase().includes('construction') || 
-      content.toLowerCase().includes('maison neuve')) {
-    intents.projectType = 'construction';
-  } else if (content.toLowerCase().includes('renovation') || 
-             content.toLowerCase().includes('rénov')) {
-    intents.projectType = 'renovation';
-  } else if (content.toLowerCase().includes('extension')) {
-    intents.projectType = 'extension';
-  }
-  
-  // Extract surface information
-  const surfaceMatch = content.match(/(\d+)\s*m²/);
-  if (surfaceMatch && surfaceMatch[1]) {
-    intents.surface = parseInt(surfaceMatch[1], 10);
-  }
-  
-  // Extract budget information
-  const budgetMatch = content.match(/(\d+[\d\s]*)\s*€/);
-  if (budgetMatch && budgetMatch[1]) {
-    intents.budget = parseInt(budgetMatch[1].replace(/\s/g, ''), 10);
-  }
-  
-  // Extract location information
-  // This would require a more sophisticated NLP approach for accurate extraction
-  
-  return intents;
-}
-
-/**
- * Extracts form data from a message
- */
-export function extractFormDataFromMessage(content: string) {
-  const intents = analyzeUserIntent(content);
-  const formData: Record<string, any> = {};
-  
-  if (intents.projectType) formData.projectType = intents.projectType;
-  if (intents.surface) formData.surface = intents.surface;
-  if (intents.budget) formData.budget = intents.budget;
-  if (intents.location) formData.location = intents.location;
-  
-  return formData;
-}
-
-/**
- * Component that processes user messages and extracts relevant information
- */
-const MessageProcessor: React.FC<MessageProcessorProps> = ({ 
-  content, 
-  onProcessed,
-  updateFormData
+const MessageProcessor: React.FC<MessageProcessorProps> = ({
+  onUserInput,
+  formData,
+  updateFormData,
+  content,
+  onProcessed
 }) => {
   useEffect(() => {
-    if (!content) return;
+    // Process the message content here
+    // For example, extract project details, surfaces, etc.
     
-    // Extract form data from the message
-    const extractedData = extractFormDataFromMessage(content);
-    
-    // Update form data with extracted information
-    if (Object.keys(extractedData).length > 0) {
-      updateFormData(extractedData);
+    // Simple example of processing: if the message contains a number, it might be a surface
+    const numbers = content.match(/\d+/g);
+    if (numbers && numbers.length > 0) {
+      const potentialSurface = parseInt(numbers[0], 10);
+      if (!isNaN(potentialSurface) && potentialSurface > 0) {
+        // If this appears to be a surface measurement
+        if (content.toLowerCase().includes('surface') || content.toLowerCase().includes('m²')) {
+          updateFormData({ surface: potentialSurface });
+        }
+      }
     }
     
-    // Signal that processing is complete
+    // Check for location information
+    const locationKeywords = ['situé', 'situe', 'location', 'ville', 'region'];
+    if (locationKeywords.some(keyword => content.toLowerCase().includes(keyword))) {
+      // Extract potential location information
+      // This is a simplified example
+      const words = content.split(' ');
+      const locationIndex = words.findIndex(word => 
+        locationKeywords.some(keyword => word.toLowerCase().includes(keyword))
+      );
+      
+      if (locationIndex >= 0 && locationIndex < words.length - 1) {
+        const potentialLocation = words[locationIndex + 1].replace(/[.,!?]/g, '');
+        updateFormData({ location: potentialLocation });
+      }
+    }
+    
+    // This is a simplified processing example
+    // A real implementation would use NLP or more sophisticated text processing
+    
+    // Notify that processing is complete
     onProcessed(content);
-  }, [content, updateFormData, onProcessed]);
-  
-  // This component doesn't render anything
-  return null;
+    
+  }, [content, onProcessed, updateFormData]);
+
+  return null; // This is a logic component, it doesn't render anything
 };
 
 export default MessageProcessor;

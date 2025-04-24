@@ -4,6 +4,7 @@ export interface MessageDisplayProps {
   loading: boolean;
   onOptionClick: (option: string) => void;
   messagesEndRef: React.RefObject<HTMLDivElement>;
+  message?: string; // Making this optional
 }
 
 export interface Message {
@@ -26,4 +27,12 @@ export interface InputAreaProps {
   setUserInput: (input: string) => void;
   handleSendMessage: () => void;
   handleKeyPress: (e: React.KeyboardEvent) => void;
+}
+
+export interface MessageProcessorProps {
+  onUserInput: (input: string) => void;
+  formData: any;
+  updateFormData: (data: any) => void;
+  content: string;
+  onProcessed: (content: string) => void;
 }

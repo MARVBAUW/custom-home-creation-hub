@@ -3,13 +3,14 @@ import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { MessageDisplayProps } from '../../types/conversationalTypes';
+import { MessageDisplayProps } from './types';
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
   messages,
   loading,
   onOptionClick,
-  messagesEndRef
+  messagesEndRef,
+  message
 }) => {
   return (
     <div className="space-y-4">

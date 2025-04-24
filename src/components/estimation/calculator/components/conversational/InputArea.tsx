@@ -1,9 +1,9 @@
 
 import React from 'react';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Send, Loader2 } from 'lucide-react';
 import { InputAreaProps } from './types';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Send } from 'lucide-react';
 
 const InputArea: React.FC<InputAreaProps> = ({
   userInput,
@@ -12,25 +12,24 @@ const InputArea: React.FC<InputAreaProps> = ({
   handleKeyPress
 }) => {
   return (
-    <div className="p-4 border-t bg-white">
-      <div className="flex space-x-2">
+    <div className="bg-gray-100 p-4">
+      <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="relative">
         <Input
+          type="text"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="Décrivez votre projet de construction ou rénovation..."
-          className="flex-grow border-gray-300"
+          placeholder="Entrez votre message..."
+          className="pr-12"
+          onKeyDown={handleKeyPress}
         />
-        <Button 
-          onClick={handleSendMessage}
-          className="bg-khaki-600 hover:bg-khaki-700"
+        <Button
+          type="submit"
+          className="absolute right-1.5 top-1.5 rounded-full"
+          aria-label="Envoyer"
         >
           <Send className="h-4 w-4" />
         </Button>
-      </div>
-      <p className="text-xs text-gray-500 mt-2">
-        Exemple: "Je souhaite construire une maison de 120m² sur 2 niveaux à Marseille"
-      </p>
+      </form>
     </div>
   );
 };
