@@ -9,7 +9,7 @@ interface ClientHeaderProps {
   };
 }
 
-const ClientHeader = ({ client }: ClientHeaderProps) => {
+const ClientHeader: React.FC<ClientHeaderProps> = ({ client }) => {
   return (
     <div>
       <h2 className="text-2xl font-semibold text-gray-900">{client.name}</h2>

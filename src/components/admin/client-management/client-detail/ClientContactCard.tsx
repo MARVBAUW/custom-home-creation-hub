@@ -17,7 +17,7 @@ interface ClientContactCardProps {
   };
 }
 
-const ClientContactCard = ({ client }: ClientContactCardProps) => {
+const ClientContactCard: React.FC<ClientContactCardProps> = ({ client }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('fr-FR', {

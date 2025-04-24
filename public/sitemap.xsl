@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" 
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -7,8 +8,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
-  
-  <!-- Match the root element -->
+
   <xsl:template match="/">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -75,7 +75,7 @@
               <th>Fréquence</th>
               <th>Priorité</th>
             </tr>
-            <xsl:for-each select="//sitemap:url">
+            <xsl:for-each select="sitemap:urlset/sitemap:url">
               <tr>
                 <td class="url"><a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a></td>
                 <td><xsl:value-of select="sitemap:lastmod"/></td>

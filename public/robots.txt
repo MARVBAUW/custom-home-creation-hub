@@ -1,7 +1,65 @@
 
+# Robots.txt for progineer.fr
+# Last updated: 2025-04-23
+
+# Allow all web crawlers access
 User-agent: *
 Allow: /
-Disallow: /workspace/
-Disallow: /sign-in/
-Disallow: /sign-up/
+
+# Semrush crawler specific allowances
+User-agent: SemrushBot
+Allow: /
+Crawl-delay: 2
+
+# Googlebot specific directives
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bingbot specific directives
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://progineer.fr/sitemap.xml
+
+# Important pages to prioritize
+Allow: /estimation
+Allow: /contact
+Allow: /prestations-maitre-oeuvre
+Allow: /realisations-architecte-maison
+Allow: /realisations-architecturales
+Allow: /a-propos
+Allow: /faq
+
+# Services pages
+Allow: /prestations-maitre-oeuvre/renovation
+Allow: /prestations-maitre-oeuvre/construction-neuve
+Allow: /prestations-maitre-oeuvre/extension
+Allow: /prestations-maitre-oeuvre/design-interieur
+Allow: /prestations-maitre-oeuvre/optimisation-espace
+Allow: /prestations-maitre-oeuvre/montage-administratif
+Allow: /prestations-maitre-oeuvre/petit-collectif
+Allow: /prestations-maitre-oeuvre/rehabilitation
+Allow: /prestations-maitre-oeuvre/construction-ecologique
+
+# Additional pages
+Allow: /parrainage
+Allow: /devenir-partenaire
+Allow: /equipe-maitrise-oeuvre
+
+# Legal pages
+Allow: /cgu
+Allow: /cgv
+Allow: /privacy-policy
+Allow: /mentions-legales
+Allow: /sitemap
+Allow: /sitemap.xml
+
+# No restrictions on resources
+Allow: /images/
+Allow: /css/
+Allow: /js/
+Allow: /fonts/
+Allow: /assets/
