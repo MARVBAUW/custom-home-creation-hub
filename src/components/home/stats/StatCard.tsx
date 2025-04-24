@@ -28,8 +28,8 @@ const icons = {
 };
 
 const StatCard: React.FC<StatCardProps> = ({
-  prefix = '',
-  suffix = '',
+  prefix,
+  suffix,
   label,
   description,
   color,
