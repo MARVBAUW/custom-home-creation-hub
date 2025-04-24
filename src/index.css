@@ -100,6 +100,83 @@
   }
 }
 
+/* Article content specific styles */
+.article-content h1 {
+  @apply text-3xl font-bold mt-8 mb-4 text-gray-900;
+}
+
+.article-content h2 {
+  @apply text-2xl font-bold mt-6 mb-3 text-gray-800;
+}
+
+.article-content h3 {
+  @apply text-xl font-semibold mt-5 mb-2 text-gray-800;
+}
+
+.article-content h4 {
+  @apply text-lg font-semibold mt-4 mb-2 text-gray-700;
+}
+
+.article-content h5 {
+  @apply text-base font-semibold mt-3 mb-2 text-gray-700;
+}
+
+.article-content h6 {
+  @apply text-sm font-semibold mt-3 mb-2 text-gray-700;
+}
+
+.article-content p {
+  @apply my-3 leading-relaxed text-gray-700;
+}
+
+.article-content ul {
+  @apply my-4 ml-5 list-disc;
+}
+
+.article-content ol {
+  @apply my-4 ml-5 list-decimal;
+}
+
+.article-content li {
+  @apply py-1;
+}
+
+.article-content a {
+  @apply text-khaki-600 hover:underline;
+}
+
+.article-content blockquote {
+  @apply pl-4 border-l-4 border-khaki-300 italic my-4 text-gray-700;
+}
+
+.article-content pre {
+  @apply bg-gray-100 p-4 rounded my-4 overflow-x-auto;
+}
+
+.article-content code {
+  @apply bg-gray-100 px-1 py-0.5 rounded text-sm;
+}
+
+.article-content table {
+  @apply min-w-full border-collapse my-4;
+}
+
+.article-content th {
+  @apply bg-gray-100 px-4 py-2 border border-gray-300 font-medium;
+}
+
+.article-content td {
+  @apply px-4 py-2 border border-gray-300;
+}
+
+.article-content img {
+  @apply max-w-full h-auto my-4 rounded;
+}
+
+.article-content hr {
+  @apply my-6 border-t border-gray-200;
+}
+
 /* Styles spécifiques pour le composant Gantt */
 .gantt-container {
   overflow-x: auto;
