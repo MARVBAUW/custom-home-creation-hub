@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { useEstimationState } from './hooks/useEstimationState';
@@ -23,8 +22,7 @@ const EstimationWizard: React.FC = () => {
   
   const [activeTab, setActiveTab] = useState<string>("structured");
   const [showResults, setShowResults] = useState(false);
-  
-  // Handle form completion
+
   const handleComplete = () => {
     const result = finalizeEstimation();
     if (result) {
@@ -32,7 +30,6 @@ const EstimationWizard: React.FC = () => {
     }
   };
   
-  // Process user input from conversational estimator
   const processUserInput = (input: string) => {
     // Extract data from conversational input 
     if (input.toLowerCase().includes('maison') || input.toLowerCase().includes('construction')) {
@@ -41,16 +38,14 @@ const EstimationWizard: React.FC = () => {
       updateFormData({ projectType: 'renovation' });
     }
     
-    // Extract surface if mentioned
     const surfaceMatch = input.match(/(\d+)\s*m²/);
     if (surfaceMatch && surfaceMatch[1]) {
       updateFormData({ surface: parseInt(surfaceMatch[1]) });
     }
   };
 
-  // Type safe client type update function
-  const updateClientType = (type: 'individual' | 'professional') => {
-    updateFormData({ clientType: type });
+  const handleClientTypeSubmit = (data: { clientType: 'individual' | 'professional' }) => {
+    updateFormData({ clientType: data.clientType });
   };
 
   return (
@@ -83,16 +78,6 @@ const EstimationWizard: React.FC = () => {
                   isSubmitting={state.isSubmitting}
                   onComplete={handleComplete}
                 />
-                
-                <NavigationControls
-                  onNext={goToNextStep}
-                  onPrevious={goToPreviousStep}
-                  canGoNext={true}
-                  canGoBack={state.step > 0}
-                  isLastStep={state.step === state.totalSteps - 1}
-                  onComplete={handleComplete}
-                  isSubmitting={state.isSubmitting}
-                />
               </TabsContent>
               
               <TabsContent value="conversational" className="pt-2">
@@ -100,13 +85,7 @@ const EstimationWizard: React.FC = () => {
                   formData={state.formData}
                   updateFormData={updateFormData}
                   onUserInput={processUserInput}
-                  onClientTypeSubmit={(data: Partial<FormData>) => {
-                    if (data.clientType === 'individual' || data.clientType === 'professional') {
-                      updateClientType(data.clientType);
-                      setActiveTab("structured");
-                      goToNextStep();
-                    }
-                  }}
+                  onClientTypeSubmit={handleClientTypeSubmit}
                   goToStep={goToStep}
                 />
               </TabsContent>
