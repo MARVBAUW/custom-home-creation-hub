@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
@@ -7,6 +6,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import DesignInterieurHero from '@/components/prestations/design-interieur/DesignInterieurHero';
 import DesignInterieurSidebar from '@/components/prestations/design-interieur/DesignInterieurSidebar';
 import DesignInterieurContent from '@/components/prestations/design-interieur/DesignInterieurContent';
+import DesignInterieurSEOContent from '@/components/prestations/design-interieur/DesignInterieurSEOContent';
 
 const DesignInterieur = () => {
   return (
@@ -33,6 +33,8 @@ const DesignInterieur = () => {
           </div>
         </Container>
       </section>
+
+      <DesignInterieurSEOContent />
 
       <SEOFooter 
         text="Design d'intérieur à Marseille et en PACA par Progineer, maître d'œuvre spécialisé en conception d'espaces. Nos experts vous accompagnent dans tous vos projets de design intérieur à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour créer des espaces qui vous ressemblent."

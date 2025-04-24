@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
@@ -7,6 +6,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import RenovationHero from '@/components/prestations/renovation/RenovationHero';
 import RenovationSidebar from '@/components/prestations/renovation/RenovationSidebar';
 import RenovationContent from '@/components/prestations/renovation/RenovationContent';
+import RenovationSEOContent from '@/components/prestations/renovation/RenovationSEOContent';
 
 const Renovation = () => {
   return (
@@ -33,6 +33,8 @@ const Renovation = () => {
           </div>
         </Container>
       </section>
+
+      <RenovationSEOContent />
 
       <SEOFooter 
         text="Rénovation de maisons et d'appartements en PACA par Progineer, maître d'œuvre spécialisé en transformation d'habitat. Nos experts vous accompagnent dans tous vos projets de rénovation à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour améliorer votre confort et valoriser votre patrimoine."

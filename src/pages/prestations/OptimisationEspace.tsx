@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import SEO from '@/components/common/SEO';
@@ -7,6 +6,7 @@ import PrestationsSubNav from '@/components/prestations/PrestationsSubNav';
 import OptimisationEspaceHero from '@/components/prestations/optimisation-espace/OptimisationEspaceHero';
 import OptimisationEspaceSidebar from '@/components/prestations/optimisation-espace/OptimisationEspaceSidebar';
 import OptimisationEspaceContent from '@/components/prestations/optimisation-espace/OptimisationEspaceContent';
+import OptimisationEspaceSEOContent from '@/components/prestations/optimisation-espace/OptimisationEspaceSEOContent';
 
 const OptimisationEspace = () => {
   return (
@@ -33,6 +33,8 @@ const OptimisationEspace = () => {
           </div>
         </Container>
       </section>
+
+      <OptimisationEspaceSEOContent />
 
       <SEOFooter 
         text="Optimisation d'espace à Marseille et en PACA par Progineer, maître d'œuvre spécialisé en aménagement intérieur. Nos experts vous accompagnent dans tous vos projets d'optimisation d'espace à Marseille, Nice, Toulon et dans toute la région Provence-Alpes-Côte d'Azur pour maximiser le potentiel de vos surfaces."
