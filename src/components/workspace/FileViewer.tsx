@@ -71,12 +71,19 @@ const FileViewer: React.FC<FileViewerProps> = ({ fileUrl, fileName, fileType }) 
           </div>
         ) : (
           <>
-            <iframe
-              src={fileUrl}
-              className="w-full h-full border-0"
+            <object
+              data={fileUrl}
+              type="application/pdf"
+              className="w-full h-full min-h-[500px]"
               onError={handleLoadError}
-              title={fileName}
-            />
+            >
+              <iframe
+                src={`${fileUrl}#toolbar=0`}
+                className="w-full h-full border-0"
+                onError={handleLoadError}
+                title={fileName}
+              />
+            </object>
             <div className="absolute bottom-4 right-4">
               <Button onClick={handleDownload} variant="outline" className="flex items-center gap-2">
                 <Download className="h-4 w-4" />
@@ -89,7 +96,7 @@ const FileViewer: React.FC<FileViewerProps> = ({ fileUrl, fileName, fileType }) 
     );
   }
 
-  // Handle other file types...
+  // Handle other file types
   return (
     <div className="p-6 text-center">
       <p className="text-gray-600">

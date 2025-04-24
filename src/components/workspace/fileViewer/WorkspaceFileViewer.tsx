@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { FileSpreadsheet, Download, X, Maximize2, Minimize2 } from 'lucide-react';
+import { FileSpreadsheet, X, Maximize2, Minimize2 } from 'lucide-react';
 import Button from '@/components/common/Button';
-import { handleFileDownload } from '@/utils/downloadUtils';
+import FileViewer from '@/components/workspace/FileViewer';
 import FilePreviewTable from './FilePreviewTable';
 import FileProperties from './FileProperties';
 import FileMacroWarning from './FileMacroWarning';
@@ -37,66 +37,9 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
   const sampleData = generateSampleData(file);
   const macroNote = getMacroNote(file);
 
-  const handleDownloadClick = async () => {
-    if (!file?.url) {
-      toast({
-        title: "Erreur",
-        description: "URL du fichier non disponible",
-        variant: 'destructive'
-      });
-      return;
-    }
-
-    setIsDownloading(true);
-    
-    try {
-      const result = await handleFileDownload(file.url, file.title, {
-        showToast: true,
-        fileName: file.filename,
-        contentType: determineContentType(file.filename)
-      });
-      
-      if (result.success) {
-        toast({
-          title: "Téléchargement réussi",
-          description: `Le fichier "${file.title}" a été téléchargé avec succès.`
-        });
-        onClose();
-      } else {
-        toast({
-          title: "Erreur de téléchargement",
-          description: result.error || "Une erreur est survenue lors du téléchargement. Veuillez réessayer.",
-          variant: 'destructive'
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Erreur de téléchargement",
-        description: "Une erreur inattendue est survenue. Veuillez réessayer ultérieurement.",
-        variant: 'destructive'
-      });
-    } finally {
-      setIsDownloading(false);
-    }
-  };
-  
-  // Helper to determine content type based on filename
-  const determineContentType = (filename: string): string => {
-    if (!filename) return 'application/pdf';
-    
-    const extension = filename.split('.').pop()?.toLowerCase();
-    
-    switch (extension) {
-      case 'pdf': return 'application/pdf';
-      case 'docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-      case 'pptx': return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
-      case 'jpg':
-      case 'jpeg': return 'image/jpeg';
-      case 'png': return 'image/png';
-      case 'txt': return 'text/plain';
-      default: return 'application/octet-stream';
-    }
+  const getFileType = (filename: string = ''): string => {
+    const extension = filename.split('.').pop()?.toLowerCase() || '';
+    return extension;
   };
 
   return (
@@ -143,34 +86,27 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
         </div>
         
         <div className="p-4 overflow-auto" style={{ maxHeight: isFullscreen ? 'calc(100vh - 8rem)' : '70vh' }}>
-          {currentTab === 'aperçu' ? (
+          {currentTab === 'aperçu' && (
             <div className="overflow-x-auto">
-              <div className="bg-white border rounded-md shadow-sm">
-                <div className="overflow-x-auto">
-                  <FilePreviewTable sampleData={sampleData} />
+              {file.url ? (
+                <FileViewer
+                  fileUrl={file.url}
+                  fileName={file.filename}
+                  fileType={getFileType(file.filename)}
+                />
+              ) : (
+                <div className="bg-white border rounded-md shadow-sm">
+                  <div className="overflow-x-auto">
+                    <FilePreviewTable sampleData={sampleData} />
+                  </div>
+                  <FileMacroWarning macroNote={macroNote} />
                 </div>
-                <FileMacroWarning macroNote={macroNote} />
-              </div>
+              )}
             </div>
-          ) : (
+          )}
+          {currentTab === 'propriétés' && (
             <FileProperties file={file} />
           )}
-        </div>
-        
-        <div className="bg-gray-50 px-4 py-3 flex justify-between items-center border-t">
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">{file.version}</span>
-            <span className="mx-2">•</span>
-            <span>Mise à jour: {file.lastUpdate}</span>
-          </div>
-          <Button 
-            onClick={handleDownloadClick} 
-            className="bg-khaki-600 hover:bg-khaki-700"
-            disabled={isDownloading}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            {isDownloading ? 'Téléchargement...' : 'Télécharger'}
-          </Button>
         </div>
       </DialogContent>
     </Dialog>
