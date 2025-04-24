@@ -1,7 +1,9 @@
+
 import { useState, useCallback } from 'react';
 import { FormData } from '../types';
 import { calculateEstimationAmount } from '../utils/navigationPathUtils';
 import { useToast } from '@/hooks/use-toast';
+import { EstimationResponseData } from '../types/estimationTypes';
 
 export const useEstimationForm = () => {
   const [step, setStep] = useState(0);
