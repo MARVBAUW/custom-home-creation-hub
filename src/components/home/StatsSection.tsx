@@ -9,37 +9,37 @@ import { cn } from '@/lib/utils';
 const StatsSection = () => {
   const engagements = [
     {
-      icon: Users,
+      icon: "Users",
       title: "Coordination des corps de métier",
       description: "Gestion experte de tous les intervenants pour une exécution harmonieuse de votre projet",
       gradient: "from-amber-500/80 to-orange-600/80"
     },
     {
-      icon: Clock,
+      icon: "Clock",
       title: "Respect des délais garantis",
       description: "Planification rigoureuse et suivi constant pour livrer votre projet dans les temps",
       gradient: "from-emerald-500/80 to-teal-600/80"
     },
     {
-      icon: Shield,
+      icon: "Shield",
       title: "Expertise technique",
       description: "Solutions innovantes et conformes aux normes pour des résultats durables",
       gradient: "from-sky-500/80 to-blue-600/80"
     },
     {
-      icon: Award,
+      icon: "Award",
       title: "Maîtrise d'œuvre complète",
       description: "Accompagnement global de la conception à la réalisation de votre projet",
       gradient: "from-violet-500/80 to-purple-600/80"
     },
     {
-      icon: Wrench,
+      icon: "Wrench",
       title: "Sélection des matériaux",
       description: "Choix minutieux des matériaux pour une qualité et une durabilité optimales",
       gradient: "from-rose-500/80 to-pink-600/80"
     },
     {
-      icon: Leaf,
+      icon: "Leaf",
       title: "Innovation durable",
       description: "Solutions éco-responsables pour des projets respectueux de l'environnement",
       gradient: "from-lime-500/80 to-green-600/80"
