@@ -9,18 +9,34 @@ import ClientTypeStep from './steps/ClientTypeStep';
 import ProjectDetailsForm from './FormSteps/ProjectDetailsForm';
 import RoomsDetailsForm from './FormSteps/RoomsDetailsForm';
 import EstimationTypeForm from './FormSteps/EstimationTypeForm';
+import IndividualProjectForm from './FormSteps/IndividualProjectForm';
 import StepIndicator from './components/StepIndicator';
+import { determineNextStep, determinePreviousStep } from './utils/navigationPathUtils';
+import { getVisibleSteps } from './steps/stepUtils';
 
 const StructuredEstimator: React.FC = () => {
   const {
     step,
+    setStep,
     totalSteps,
     formData,
     animationDirection,
     updateFormData,
-    goToNextStep,
-    goToPreviousStep,
   } = useEstimationCalculator();
+
+  // Calculate visible steps based on current form data
+  const visibleSteps = getVisibleSteps(formData);
+
+  // Navigation functions with conditional logic
+  const goToNextStep = () => {
+    const nextStep = determineNextStep(step, formData);
+    setStep(nextStep);
+  };
+
+  const goToPreviousStep = () => {
+    const prevStep = determinePreviousStep(step, formData);
+    setStep(prevStep);
+  };
 
   // Animation variants
   const variants = {
@@ -50,6 +66,7 @@ const StructuredEstimator: React.FC = () => {
           />
         );
       case 1:
+        // Professional project details
         return (
           <ProjectDetailsForm 
             formData={formData}
@@ -60,8 +77,9 @@ const StructuredEstimator: React.FC = () => {
           />
         );
       case 2:
+        // Individual project type selection
         return (
-          <RoomsDetailsForm 
+          <IndividualProjectForm 
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -70,6 +88,7 @@ const StructuredEstimator: React.FC = () => {
           />
         );
       case 3:
+        // Estimation type form (shown for both professional and individual)
         return (
           <EstimationTypeForm 
             formData={formData}
@@ -79,8 +98,28 @@ const StructuredEstimator: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
+      case 4:
+        // Rooms details form
+        return (
+          <RoomsDetailsForm 
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      // Add additional cases for all the other steps...
       default:
-        return null;
+        // For steps we haven't explicitly handled yet, show a placeholder
+        return (
+          <div className="p-4">
+            <h3 className="text-lg font-medium mb-4">Étape {step + 1}</h3>
+            <p>Cette étape est en cours d'implémentation.</p>
+            <p className="text-sm text-gray-500 mt-2">Type de client: {formData.clientType}</p>
+            <p className="text-sm text-gray-500">Type de projet: {formData.projectType}</p>
+          </div>
+        );
     }
   };
 
@@ -88,7 +127,7 @@ const StructuredEstimator: React.FC = () => {
     <div className="max-w-2xl mx-auto">
       <StepIndicator 
         currentStep={step} 
-        totalSteps={totalSteps} 
+        totalSteps={visibleSteps.length || totalSteps} 
       />
       
       <Card className="mt-6">
@@ -107,24 +146,27 @@ const StructuredEstimator: React.FC = () => {
           </motion.div>
         </AnimatePresence>
 
-        <div className="flex justify-between p-6 pt-0">
-          <Button
-            variant="outline"
-            onClick={goToPreviousStep}
-            disabled={step === 0}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Précédent
-          </Button>
+        {/* Only show navigation buttons if they're not handled by the form component itself */}
+        {step > 4 && (
+          <div className="flex justify-between p-6 pt-0">
+            <Button
+              variant="outline"
+              onClick={goToPreviousStep}
+              disabled={step === 0}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Précédent
+            </Button>
 
-          <Button
-            onClick={goToNextStep}
-            disabled={step === totalSteps - 1}
-          >
-            Suivant
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+            <Button
+              onClick={goToNextStep}
+              disabled={step === totalSteps - 1}
+            >
+              Suivant
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </Card>
     </div>
   );
