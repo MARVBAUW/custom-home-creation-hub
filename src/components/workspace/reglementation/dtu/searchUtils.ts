@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Utility to highlight search terms in text for better user experience
  */
@@ -11,7 +13,10 @@ export const highlightSearchTerm = (text: string, searchTerm: string): React.Rea
   
   return parts.map((part, index) => {
     if (part.toLowerCase() === searchTerm.toLowerCase()) {
-      return <span key={index} className="bg-yellow-200 text-gray-900 rounded px-1 font-medium">{part}</span>;
+      return React.createElement("span", {
+        key: index,
+        className: "bg-yellow-200 text-gray-900 rounded px-1 font-medium"
+      }, part);
     }
     return part;
   });
