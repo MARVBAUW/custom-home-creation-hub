@@ -9,6 +9,7 @@ import ResultsSummary from './components/ResultsSummary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calculator, MessageSquare } from 'lucide-react';
 import ConversationalEstimator from './ConversationalEstimator';
+import { FormData } from './types/formTypes';
 
 const EstimationWizard: React.FC = () => {
   const {
@@ -45,6 +46,11 @@ const EstimationWizard: React.FC = () => {
     if (surfaceMatch && surfaceMatch[1]) {
       updateFormData({ surface: parseInt(surfaceMatch[1]) });
     }
+  };
+
+  // Type safe client type update function
+  const updateClientType = (type: 'individual' | 'professional') => {
+    updateFormData({ clientType: type });
   };
 
   return (
@@ -94,10 +100,12 @@ const EstimationWizard: React.FC = () => {
                   formData={state.formData}
                   updateFormData={updateFormData}
                   onUserInput={processUserInput}
-                  onClientTypeSubmit={(data) => {
-                    updateFormData(data);
-                    setActiveTab("structured");
-                    goToNextStep();
+                  onClientTypeSubmit={(data: Partial<FormData>) => {
+                    if (data.clientType === 'individual' || data.clientType === 'professional') {
+                      updateClientType(data.clientType);
+                      setActiveTab("structured");
+                      goToNextStep();
+                    }
                   }}
                   goToStep={goToStep}
                 />

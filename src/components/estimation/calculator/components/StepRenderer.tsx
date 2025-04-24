@@ -7,12 +7,66 @@ import ProjectDetailsStep from '../steps/ProjectDetailsStep';
 import TerrainDetailsStep from '../steps/TerrainDetailsStep';
 import ConstructionDetailsStep from '../steps/ConstructionDetailsStep';
 import RoomsDetailsStep from '../steps/RoomsDetailsStep';
-import LocationStep from '../steps/LocationStep';
-import PriceRangeStep from '../steps/PriceRangeStep';
-import FinalDetailsStep from '../steps/FinalDetailsStep';
-import ContactInfoStep from '../steps/ContactInfoStep';
-import SummaryStep from '../steps/SummaryStep';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from "@/components/ui/button";
+
+// We'll create a simple placeholder component for steps that are not yet implemented
+const PlaceholderStep: React.FC<any> = ({ 
+  title, 
+  formData, 
+  goToNextStep, 
+  goToPreviousStep, 
+  isSubmitting 
+}) => {
+  return (
+    <div className="py-8 text-center">
+      <h3 className="text-lg font-medium mb-4">{title || "Étape en développement"}</h3>
+      <p className="text-muted-foreground">
+        Cette étape est en cours d'implémentation. Nous travaillons à améliorer votre expérience.
+      </p>
+      <div className="mt-4 flex justify-center gap-4">
+        {goToPreviousStep && (
+          <Button
+            onClick={goToPreviousStep}
+            variant="outline"
+            disabled={isSubmitting}
+          >
+            Retour
+          </Button>
+        )}
+        {goToNextStep && (
+          <Button
+            onClick={goToNextStep}
+            disabled={isSubmitting}
+          >
+            Continuer
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Define missing step components as placeholders
+const LocationStep: React.FC<any> = (props) => (
+  <PlaceholderStep title="Localisation" {...props} />
+);
+
+const PriceRangeStep: React.FC<any> = (props) => (
+  <PlaceholderStep title="Gamme de prix" {...props} />
+);
+
+const FinalDetailsStep: React.FC<any> = (props) => (
+  <PlaceholderStep title="Détails finaux" {...props} />
+);
+
+const ContactInfoStep: React.FC<any> = (props) => (
+  <PlaceholderStep title="Coordonnées" {...props} />
+);
+
+const SummaryStep: React.FC<any> = (props) => (
+  <PlaceholderStep title="Récapitulatif" {...props} />
+);
 
 const StepRenderer: React.FC<StepRendererProps> = ({
   step,
@@ -79,34 +133,7 @@ const StepRenderer: React.FC<StepRendererProps> = ({
       case 9:
         return <SummaryStep {...commonProps} />;
       default:
-        // For steps not yet implemented
-        return (
-          <div className="py-8 text-center">
-            <h3 className="text-lg font-medium mb-4">Étape {step + 1}</h3>
-            <p className="text-muted-foreground">
-              Cette étape est en cours d'implémentation. Nous travaillons à améliorer votre expérience.
-            </p>
-            <div className="mt-4 flex justify-center gap-4">
-              {goToPreviousStep && (
-                <Button
-                  onClick={goToPreviousStep}
-                  variant="outline"
-                  disabled={isSubmitting}
-                >
-                  Retour
-                </Button>
-              )}
-              {goToNextStep && (
-                <Button
-                  onClick={goToNextStep}
-                  disabled={isSubmitting}
-                >
-                  Continuer
-                </Button>
-              )}
-            </div>
-          </div>
-        );
+        return <PlaceholderStep {...commonProps} title={`Étape ${step + 1}`} />;
     }
   };
 
@@ -128,30 +155,3 @@ const StepRenderer: React.FC<StepRendererProps> = ({
 };
 
 export default StepRenderer;
-
-// Helper button component for the not-yet-implemented steps
-const Button = ({ 
-  children, 
-  onClick, 
-  variant = 'default',
-  disabled = false 
-}: { 
-  children: React.ReactNode; 
-  onClick: () => void;
-  variant?: 'default' | 'outline';
-  disabled?: boolean;
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`px-4 py-2 rounded-md ${
-        variant === 'outline' 
-          ? 'border border-gray-300 text-gray-700 hover:bg-gray-50' 
-          : 'bg-blue-600 text-white hover:bg-blue-700'
-      } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-    >
-      {children}
-    </button>
-  );
-};

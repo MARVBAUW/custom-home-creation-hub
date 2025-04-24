@@ -30,18 +30,24 @@ const EstimationForm: React.FC<EstimationFormProps> = ({
   animationDirection,
   currentStep = 0
 }) => {
+  // Special case for first step that doesn't need goToPreviousStep
+  const renderFirstStep = () => {
+    return (
+      <ClientTypeStep
+        formData={formData}
+        updateFormData={updateFormData}
+        goToNextStep={goToNextStep}
+        goToPreviousStep={goToPreviousStep}
+        animationDirection={animationDirection}
+      />
+    );
+  };
+
   // Render the appropriate step based on currentStep value
   const renderStep = () => {
     switch (currentStep) {
       case 0:
-        return (
-          <ClientTypeStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            animationDirection={animationDirection}
-          />
-        );
+        return renderFirstStep();
       case 1:
         return (
           <ProjectDetailsStep
@@ -123,14 +129,7 @@ const EstimationForm: React.FC<EstimationFormProps> = ({
           />
         );
       default:
-        return (
-          <ClientTypeStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            animationDirection={animationDirection}
-          />
-        );
+        return renderFirstStep();
     }
   };
 

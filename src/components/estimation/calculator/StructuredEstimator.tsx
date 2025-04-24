@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useEstimationCalculator } from './useEstimationCalculator';
 import { Card } from "@/components/ui/card";
@@ -62,6 +61,7 @@ const StructuredEstimator: React.FC = () => {
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
             animationDirection={animationDirection}
           />
         );
@@ -109,7 +109,6 @@ const StructuredEstimator: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      // Add additional cases for all the other steps...
       default:
         // For steps we haven't explicitly handled yet, show a placeholder
         return (
