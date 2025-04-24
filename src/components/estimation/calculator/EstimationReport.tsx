@@ -4,12 +4,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FormData } from './types/formTypes';
 import { safeRenderValue } from './utils/typeConversions';
 
+interface CorpsEtatDetails {
+  montantHT: number;
+  details: string[];
+}
+
 export interface EstimationReportProps {
   estimation: {
     totalHT: number;
     totalTTC: number;
     vat: number;
-    corpsEtat: Record<string, { montantHT: number, details: string[] }>;
+    corpsEtat: Record<string, CorpsEtatDetails>;
     honorairesHT: number;
     coutGlobalHT: number;
     coutGlobalTTC: number;

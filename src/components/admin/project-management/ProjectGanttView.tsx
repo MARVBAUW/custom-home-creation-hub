@@ -76,7 +76,10 @@ const ProjectGanttView: React.FC<ProjectGanttViewProps> = ({ project }) => {
       
       phasesToDisplay.push({ 
         name: phaseName, 
-        dates, 
+        dates: {
+          startDate: dates.startDate,
+          endDate: dates.endDate
+        }, 
         color: phaseColors[key] || 'bg-gray-400' 
       });
     }
