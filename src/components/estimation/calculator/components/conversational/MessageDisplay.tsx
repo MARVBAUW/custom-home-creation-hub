@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { MessageDisplayProps } from '../../types/conversationalTypes';
-import { Message } from '../../types/conversationalTypes';
 
 const MessageDisplay: React.FC<MessageDisplayProps> = ({
   messages,
@@ -14,7 +13,7 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      {messages.map((message: Message) => (
+      {messages.map((message) => (
         <div
           key={message.id}
           className={`flex ${
@@ -72,7 +71,6 @@ const MessageDisplay: React.FC<MessageDisplayProps> = ({
         </div>
       )}
       
-      {/* This div is used to scroll to the bottom of the chat */}
       <div ref={messagesEndRef} />
     </div>
   );

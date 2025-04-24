@@ -1,3 +1,4 @@
+
 export interface PDFGenerationOptions {
   includeBreakdown?: boolean;
   includeContactInfo?: boolean;
@@ -8,6 +9,8 @@ export interface PDFGenerationOptions {
   includeDetails?: boolean;
   includeLogo?: boolean;
   includeTerrainPrice?: boolean;
+  clientInfo?: boolean;
+  companyLogo?: boolean;
   logo?: string;
   companyName?: string;
   companyAddress?: string;

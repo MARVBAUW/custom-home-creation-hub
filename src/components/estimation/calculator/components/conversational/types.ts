@@ -1,4 +1,5 @@
 
+
 export interface MessageDisplayProps {
   messages: Message[];
   loading: boolean;
@@ -19,4 +20,10 @@ export interface ConversationalProps {
   updateFormData: (data: any) => void;
   onClientTypeSubmit: (data: { clientType: string }) => void;
   goToStep: (step: number) => void;
+}
+
+export interface InputAreaProps {
+  onSubmit: (message: string) => void;
+  loading: boolean;
+  placeholder?: string;
 }

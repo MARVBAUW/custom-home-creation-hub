@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -180,7 +181,7 @@ const EstimationResult: React.FC<EstimationResultProps> = ({
             Retour à l'estimation
           </Button>
           <Button 
-            variant="primary" 
+            variant="default" 
             onClick={() => window.location.href = '/contact'}
             className="bg-khaki-700 hover:bg-khaki-800"
           >

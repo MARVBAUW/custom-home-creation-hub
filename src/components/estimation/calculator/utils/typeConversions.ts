@@ -1,20 +1,22 @@
+
 /**
  * Ensures a value is a number
  * If the value is already a number, it's returned as is
  * If it's a string, it's converted to a number
- * If it's undefined or null, it returns 0
+ * If it's undefined or null, it returns 0 or the provided default value
  * 
  * @param value Value to ensure is a number
+ * @param defaultValue Default value if conversion fails, defaults to 0
  * @returns The value as a number
  */
-export const ensureNumber = (value: any): number => {
+export const ensureNumber = (value: any, defaultValue = 0): number => {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     // Remove non-numeric characters except decimal point
     const cleanedValue = value.replace(/[^\d.-]/g, '');
-    return cleanedValue ? parseFloat(cleanedValue) : 0;
+    return cleanedValue ? parseFloat(cleanedValue) : defaultValue;
   }
-  return 0;
+  return defaultValue;
 };
 
 /**

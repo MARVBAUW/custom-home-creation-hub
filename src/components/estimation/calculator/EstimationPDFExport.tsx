@@ -16,14 +16,12 @@ interface EstimationPDFExportProps {
 
 const EstimationPDFExport: React.FC<EstimationPDFExportProps> = ({ formData, estimation }) => {
   const [options, setOptions] = useState<PDFGenerationOptions>({
-    includeDetails: true,
+    includeBreakdown: true,
     includeLogo: true,
     includeContactInfo: true,
-    includeBreakdown: true,
+    includeDetails: true,
     includeTerrainPrice: !!formData.landPrice,
     includeTimeline: true,
-    clientInfo: true,
-    companyLogo: true,
     fileName: `Estimation_${formData.clientType}_${formData.projectType}_${new Date().toISOString().split('T')[0]}`
   });
 
