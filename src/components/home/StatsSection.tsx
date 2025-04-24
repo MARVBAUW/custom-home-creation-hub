@@ -1,179 +1,110 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import Container from '@/components/common/Container';
-import { motion, useInView } from 'framer-motion';
-import './animations.css';
+import { Award, Clock, Wrench, Users, Shield, Leaf } from 'lucide-react';
+import EngagementCard from './engagement/EngagementCard';
+import { cn } from '@/lib/utils';
 
 const StatsSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  
-  const stats = [
+  const engagements = [
     {
-      value: 5,
-      prefix: '+',
-      label: "Années d'expérience",
-      description: "Dans la conception et réalisation",
-      color: "from-amber-500 to-orange-500"
+      icon: Users,
+      title: "Coordination des corps de métier",
+      description: "Gestion experte de tous les intervenants pour une exécution harmonieuse de votre projet",
+      gradient: "from-amber-500/80 to-orange-600/80"
     },
     {
-      value: 2,
-      prefix: '',
-      label: "Régions couvertes",
-      description: "PACA et Auvergne-Rhône-Alpes",
-      color: "from-emerald-500 to-teal-500"
+      icon: Clock,
+      title: "Respect des délais garantis",
+      description: "Planification rigoureuse et suivi constant pour livrer votre projet dans les temps",
+      gradient: "from-emerald-500/80 to-teal-600/80"
     },
     {
-      value: 100,
-      prefix: '',
-      suffix: '%',
-      label: "Satisfaction client",
-      description: "Notre priorité absolue",
-      color: "from-sky-500 to-blue-500"
+      icon: Shield,
+      title: "Expertise technique",
+      description: "Solutions innovantes et conformes aux normes pour des résultats durables",
+      gradient: "from-sky-500/80 to-blue-600/80"
+    },
+    {
+      icon: Award,
+      title: "Maîtrise d'œuvre complète",
+      description: "Accompagnement global de la conception à la réalisation de votre projet",
+      gradient: "from-violet-500/80 to-purple-600/80"
+    },
+    {
+      icon: Wrench,
+      title: "Sélection des matériaux",
+      description: "Choix minutieux des matériaux pour une qualité et une durabilité optimales",
+      gradient: "from-rose-500/80 to-pink-600/80"
+    },
+    {
+      icon: Leaf,
+      title: "Innovation durable",
+      description: "Solutions éco-responsables pour des projets respectueux de l'environnement",
+      gradient: "from-lime-500/80 to-green-600/80"
     }
   ];
-
-  const [counts, setCounts] = useState(stats.map(() => 0));
-  
-  useEffect(() => {
-    if (!isInView) return;
-    
-    const counters = stats.map((stat, index) => {
-      return {
-        start: 0,
-        end: stat.value,
-        duration: 2000 + (index * 200),
-        startTime: null
-      };
-    });
-    
-    const updateCount = (timestamp) => {
-      if (!isInView) return;
-      
-      const newCounts = [...counts];
-      let stillCounting = false;
-      
-      counters.forEach((counter, index) => {
-        if (counter.startTime === null) {
-          counter.startTime = timestamp;
-        }
-        
-        const elapsed = timestamp - counter.startTime;
-        const progress = Math.min(elapsed / counter.duration, 1);
-        
-        if (progress < 1) {
-          stillCounting = true;
-          newCounts[index] = Math.floor(counter.start + (counter.end - counter.start) * progress);
-        } else {
-          newCounts[index] = counter.end;
-        }
-      });
-      
-      setCounts(newCounts);
-      
-      if (stillCounting) {
-        requestAnimationFrame(updateCount);
-      }
-    };
-    
-    requestAnimationFrame(updateCount);
-  }, [isInView]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
+        staggerChildren: 0.2
       }
     }
   };
 
   return (
-    <section ref={ref} className="py-24 bg-gradient-to-b from-white to-stone-50 relative overflow-hidden">
-      {/* Éléments décoratifs */}
-      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-stone-100/50 to-transparent"></div>
-      <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-progineer-gold/5 blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-progineer-gold/5 blur-3xl"></div>
+    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-stone-900 to-stone-950">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-progineer-gold/20 via-transparent to-transparent opacity-60"></div>
+      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-stone-800/50 to-transparent"></div>
       
       <Container>
-        <motion.div
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12"
-        >
-          {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              className="flex flex-col items-center p-8 rounded-xl text-center relative"
-            >
-              <div className="mb-6 relative">
-                <svg className="w-32 h-32" viewBox="0 0 100 100">
-                  {/* Cercle de fond */}
-                  <circle 
-                    cx="50" 
-                    cy="50" 
-                    r="40" 
-                    stroke="#E5E5E5" 
-                    strokeWidth="8" 
-                    fill="none"
-                  />
-                  
-                  {/* Cercle de progression animé */}
-                  <motion.circle 
-                    cx="50" 
-                    cy="50" 
-                    r="40"
-                    stroke={`url(#gradient-${index})`}
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-                    transition={{ duration: 1.5, delay: index * 0.2 }}
-                    style={{ transformOrigin: "center", transform: "rotate(-90deg)" }}
-                  />
-                  
-                  {/* Définition des dégradés */}
-                  <defs>
-                    <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor={`var(--${stat.color.split(' ')[0]})`} />
-                      <stop offset="100%" stopColor={`var(--${stat.color.split(' ')[1]})`} />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                
-                {/* Valeur au centre */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br via-gray-800 to-gray-600 from-gray-900">
-                      {stat.prefix}{counts[index]}{stat.suffix}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{stat.label}</h3>
-              <p className="text-gray-600">{stat.description}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+        <div className="relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <span className="inline-block px-4 py-1 rounded-full bg-progineer-gold/20 text-progineer-gold text-sm font-medium mb-4">
+              Notre expertise
+            </span>
+            <h2 className="text-3xl md:text-4xl font-rare tracking-wide mb-4 text-white">
+              Nos engagements pour votre projet
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Une approche professionnelle et rigoureuse pour garantir la réussite de vos projets de construction et rénovation
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+          >
+            {engagements.map((engagement, index) => (
+              <EngagementCard
+                key={index}
+                icon={engagement.icon}
+                title={engagement.title}
+                description={engagement.description}
+                gradient={engagement.gradient}
+                index={index}
+              />
+            ))}
+          </motion.div>
+        </div>
       </Container>
+
+      {/* Bottom transition to next section */}
+      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent"></div>
     </section>
   );
 };
