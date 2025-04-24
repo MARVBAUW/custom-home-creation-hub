@@ -1,3 +1,4 @@
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -5,6 +6,17 @@ import tailwindcss from 'tailwindcss';
 import autoprefixer from 'autoprefixer';
 import { componentTagger } from "lovable-tagger";
 import { compression } from 'vite-plugin-compression2';
+import { exec } from 'child_process';
+
+// Update browserslist database before build
+if (process.env.NODE_ENV === 'production') {
+  try {
+    exec('npx update-browserslist-db@latest');
+    console.log('Browserslist database updated successfully!');
+  } catch (error) {
+    console.warn('Failed to update browserslist database:', error);
+  }
+}
 
 export default defineConfig(({ mode }) => ({
   plugins: [
