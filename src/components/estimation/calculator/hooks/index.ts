@@ -5,5 +5,5 @@ export { useEstimationResult } from './useEstimationResult';
 export { useEstimationSteps } from './useEstimationSteps';
 export { useFormSubmissions } from './useFormSubmissions';
 
-// Re-export types from types directory
-export { FormData, StepRendererProps, BaseStepProps } from '../types/formTypes';
+// Re-export types from types directory using 'export type'
+export type { FormData, StepRendererProps, BaseFormProps } from '../types/formTypes';

@@ -1,8 +1,8 @@
 
-// Re-export all types from the various type files
-export * from './formTypes';
-export * from './estimationTypes';
-export { BaseFormProps } from './baseFormProps';
+// Re-export all types using 'export type'
+export type * from './formTypes';
+export type * from './estimationTypes';
+export type { BaseFormProps } from './baseFormProps';
 
 // Define interfaces still needed in the codebase
 export interface FeeCosts {

@@ -15,6 +15,16 @@ export interface FormData {
   [key: string]: any;
 }
 
+export interface BaseFormProps {
+  formData: FormData;
+  updateFormData: (data: Partial<FormData>) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+  animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
+}
+
 export interface StepRendererProps {
   step: number;
   formData: FormData;
@@ -27,12 +37,25 @@ export interface StepRendererProps {
   onComplete?: () => void;
 }
 
-export interface BaseStepProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
-  defaultValues?: any;
-  onSubmit?: (data: any) => void;
+export interface ConversationState {
+  messages: Message[];
+  isTyping: boolean;
 }
+
+export interface Message {
+  id: string;
+  text: string;
+  type: 'user' | 'assistant';
+  timestamp: number;
+}
+
+export interface EstimationResponseData {
+  estimatedCost: number;
+  breakdown: {
+    [key: string]: number;
+  };
+  timeline: {
+    [key: string]: number;
+  };
+}
+
