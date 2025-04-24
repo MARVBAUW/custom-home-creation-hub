@@ -1,5 +1,4 @@
 
-
 export interface MessageDisplayProps {
   messages: Message[];
   loading: boolean;
@@ -23,7 +22,8 @@ export interface ConversationalProps {
 }
 
 export interface InputAreaProps {
-  onSubmit: (message: string) => void;
-  loading: boolean;
-  placeholder?: string;
+  userInput: string;
+  setUserInput: (input: string) => void;
+  handleSendMessage: () => void;
+  handleKeyPress: (e: React.KeyboardEvent) => void;
 }
