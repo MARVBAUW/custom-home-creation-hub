@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -65,7 +66,7 @@ const FraisNotaireCalculator: React.FC = () => {
 
   const results = calculateFees();
   
-  const { saveSimulation, generatePDF, saving } = useSimulationExport({
+  const { saveSimulation, generatePDF, downloadPDF, saving } = useSimulationExport({
     type: 'frais-notaire',
     title: projectName || 'Calcul des frais de notaire',
     data: {

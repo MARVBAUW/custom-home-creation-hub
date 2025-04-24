@@ -1,5 +1,7 @@
 
 // Types for simulations
+import { Json, isJson } from '@/components/estimation/calculator/types/json';
+
 export type SimulationType = 'calculator' | 'simulation' | 'note' | 'rentability' | 'surface' | 'frais-notaire' | 'capacite-emprunt' | 'acoustic' | 'dpe' | 'thermal';
 
 export interface SimulationContent {
@@ -16,6 +18,46 @@ export interface Simulation {
   updated_at?: string;
   created_at?: string;
   user_id?: string;
+}
+
+// Convert SimulationContent to Json for database storage
+export function simulationContentToJson(content: SimulationContent): Json {
+  return {
+    data: content.data,
+    results: content.results
+  };
+}
+
+// Convert Json to SimulationContent when retrieving from database
+export function jsonToSimulationContent(json: Json): SimulationContent {
+  if (typeof json === 'string') {
+    try {
+      // Try to parse string as JSON
+      return JSON.parse(json);
+    } catch (e) {
+      // If parsing fails, treat string as raw data
+      return { data: json };
+    }
+  }
+  
+  if (json === null || json === undefined) {
+    return { data: {} };
+  }
+  
+  // If json is already properly structured and has data/results properties
+  if (typeof json === 'object' && json !== null) {
+    if ('data' in json || 'results' in json) {
+      return { 
+        data: (json as any).data || {},
+        results: (json as any).results
+      };
+    }
+    // If it's an object but doesn't follow our structure
+    return { data: json };
+  }
+  
+  // Default fallback
+  return { data: json };
 }
 
 // Helper function to validate and ensure proper content structure

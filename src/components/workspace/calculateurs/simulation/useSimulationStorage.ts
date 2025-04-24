@@ -1,34 +1,23 @@
 
 import { useState, useEffect } from 'react';
-import { Simulation, SimulationStorage, validateSimulationType, normalizeSimulationContent } from './SimulationTypes';
-import { supabase } from '@/integrations/supabase/client';
+import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { useSupabase } from '@/hooks/useSupabase';
+import { Simulation, SimulationType, validateSimulationType, normalizeSimulationContent, simulationContentToJson, jsonToSimulationContent } from './SimulationTypes';
 
-export const useSimulationStorage = (): SimulationStorage & { 
-  loading: boolean;
-  simulations: Simulation[];
-} => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [simulations, setSimulations] = useState<Simulation[]>([]);
+export const useSimulationStorage = () => {
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const { supabase } = useSupabase();
 
-  // Load simulations on component mount
-  useEffect(() => {
-    loadSimulations();
-  }, [user]);
-
-  // Load simulations for the current user
+  // Load simulations from local storage or Supabase
   const loadSimulations = async (): Promise<Simulation[]> => {
     setLoading(true);
     try {
-      let loadedSimulations: Simulation[] = [];
-      
       if (user) {
-        // If user is logged in, load from Supabase
+        // Load from Supabase
         const { data, error } = await supabase
-          .from('user_simulations')
+          .from('simulations')
           .select('*')
           .eq('user_id', user.id)
           .order('updated_at', { ascending: false });
@@ -37,210 +26,245 @@ export const useSimulationStorage = (): SimulationStorage & {
           throw error;
         }
         
-        loadedSimulations = data?.map(item => ({
-          ...item,
+        // Convert database records to Simulation objects
+        const simulations: Simulation[] = data.map(item => ({
+          id: item.id,
+          title: item.title,
           type: validateSimulationType(item.type),
-          content: normalizeSimulationContent(item.content)
-        })) || [];
+          content: jsonToSimulationContent(item.content),
+          is_temporary: false,
+          created_at: item.created_at,
+          updated_at: item.updated_at,
+          user_id: item.user_id
+        }));
+        
+        return simulations;
       } else {
-        // If user is not logged in, try to load from localStorage
-        const savedSimulations = localStorage.getItem('temporarySimulations');
-        if (savedSimulations) {
+        // Load from local storage
+        const localStorageKey = 'progineer-simulations';
+        const storedSimulations = localStorage.getItem(localStorageKey);
+        
+        if (storedSimulations) {
           try {
-            const parsed = JSON.parse(savedSimulations);
-            loadedSimulations = parsed.map((sim: any) => ({
+            const parsedSimulations = JSON.parse(storedSimulations);
+            return parsedSimulations.map((sim: any) => ({
               ...sim,
               type: validateSimulationType(sim.type),
               content: normalizeSimulationContent(sim.content)
             }));
           } catch (e) {
-            console.error('Error parsing simulations from localStorage:', e);
-            loadedSimulations = [];
+            console.error('Failed to parse simulations from localStorage', e);
+            return [];
           }
         }
+        return [];
       }
-      
-      setSimulations(loadedSimulations);
-      return loadedSimulations;
     } catch (error) {
       console.error('Error loading simulations:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de charger vos simulations.',
-        variant: 'destructive',
-      });
       return [];
     } finally {
       setLoading(false);
     }
   };
 
-  // Save a simulation
+  // Save simulation to local storage or Supabase
   const saveSimulation = async (simulation: Simulation): Promise<Simulation> => {
+    setLoading(true);
+    
+    // Ensure we have a normalized content
+    simulation.content = normalizeSimulationContent(simulation.content);
+    
     try {
-      const simulationToSave = {
-        ...simulation,
-        updated_at: new Date().toISOString()
-      };
-      
       if (user) {
-        // If user is logged in, save to Supabase
-        if (simulation.id && !simulation.id.toString().startsWith('temp-')) {
-          // Update existing simulation
-          const { error } = await supabase
-            .from('user_simulations')
-            .update({
-              title: simulationToSave.title,
-              content: simulationToSave.content,
-              is_temporary: simulationToSave.is_temporary,
-              updated_at: simulationToSave.updated_at,
-              type: simulationToSave.type
-            })
-            .eq('id', simulation.id);
-          
-          if (error) throw error;
-        } else {
-          // Create new simulation
-          const { data, error } = await supabase
-            .from('user_simulations')
-            .insert({
-              title: simulationToSave.title,
-              type: simulationToSave.type,
-              content: simulationToSave.content,
-              user_id: user.id,
-              is_temporary: simulationToSave.is_temporary
-            })
-            .select();
-          
-          if (error) throw error;
-          
-          if (data && data.length > 0) {
-            simulationToSave.id = data[0].id;
-          }
-        }
-      } else {
-        // If user is not logged in, save to localStorage
-        const tempId = simulation.id || `temp-${Date.now()}`;
-        simulationToSave.id = tempId;
+        // Save to Supabase
+        const now = new Date().toISOString();
+        const simulationToSave = {
+          id: simulation.id || uuidv4(),
+          title: simulation.title,
+          type: simulation.type,
+          content: simulationContentToJson(simulation.content),
+          is_temporary: simulation.is_temporary || false,
+          updated_at: now,
+          created_at: simulation.created_at || now,
+          user_id: user.id
+        };
         
-        let localSimulations: Simulation[] = [];
-        const savedSimulations = localStorage.getItem('temporarySimulations');
-        
-        if (savedSimulations) {
-          localSimulations = JSON.parse(savedSimulations);
-          
-          // Update or add simulation
-          const index = localSimulations.findIndex(s => s.id === tempId);
-          if (index >= 0) {
-            localSimulations[index] = simulationToSave;
-          } else {
-            localSimulations.push(simulationToSave);
-          }
-        } else {
-          localSimulations = [simulationToSave];
-        }
-        
-        localStorage.setItem('temporarySimulations', JSON.stringify(localSimulations));
-      }
-      
-      // Reload simulations to update the state
-      await loadSimulations();
-      
-      return simulationToSave;
-    } catch (error) {
-      console.error('Error saving simulation:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de sauvegarder votre simulation.',
-        variant: 'destructive',
-      });
-      throw error;
-    }
-  };
-
-  // Delete a simulation
-  const deleteSimulation = async (id: string): Promise<void> => {
-    try {
-      if (user && !id.toString().startsWith('temp-')) {
-        // If user is logged in and it's not a temporary simulation, delete from Supabase
-        const { error } = await supabase
-          .from('user_simulations')
-          .delete()
-          .eq('id', id);
-        
-        if (error) throw error;
-      } else {
-        // If user is not logged in or it's a temporary simulation, delete from localStorage
-        const savedSimulations = localStorage.getItem('temporarySimulations');
-        if (savedSimulations) {
-          const localSimulations = JSON.parse(savedSimulations);
-          const filteredSimulations = localSimulations.filter((s: Simulation) => s.id !== id);
-          localStorage.setItem('temporarySimulations', JSON.stringify(filteredSimulations));
-        }
-      }
-      
-      // Update state
-      setSimulations(prev => prev.filter(s => s.id !== id));
-    } catch (error) {
-      console.error('Error deleting simulation:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de supprimer cette simulation.',
-        variant: 'destructive',
-      });
-      throw error;
-    }
-  };
-
-  // Get a specific simulation
-  const getSimulation = async (id: string): Promise<Simulation | null> => {
-    try {
-      if (user && !id.toString().startsWith('temp-')) {
-        // If user is logged in and it's not a temporary simulation, get from Supabase
         const { data, error } = await supabase
-          .from('user_simulations')
-          .select('*')
-          .eq('id', id)
+          .from('simulations')
+          .upsert(simulationToSave)
+          .select()
           .single();
         
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
         
-        if (data) {
-          return {
-            ...data,
-            type: validateSimulationType(data.type),
-            content: normalizeSimulationContent(data.content)
-          };
+        return {
+          id: data.id,
+          title: data.title,
+          type: validateSimulationType(data.type),
+          content: jsonToSimulationContent(data.content),
+          is_temporary: data.is_temporary,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+          user_id: data.user_id
+        };
+      } else {
+        // Save to local storage
+        const localStorageKey = 'progineer-simulations';
+        const now = new Date().toISOString();
+        
+        // Generate id if it doesn't exist
+        if (!simulation.id) {
+          simulation.id = uuidv4();
+        }
+        
+        // Set timestamps
+        simulation.updated_at = now;
+        simulation.created_at = simulation.created_at || now;
+        
+        // Get existing simulations
+        let simulations = [];
+        const storedSimulations = localStorage.getItem(localStorageKey);
+        
+        if (storedSimulations) {
+          try {
+            simulations = JSON.parse(storedSimulations);
+          } catch (e) {
+            console.error('Failed to parse simulations from localStorage', e);
+          }
+        }
+        
+        // Find and update existing simulation or add new one
+        const index = simulations.findIndex((s: any) => s.id === simulation.id);
+        
+        if (index !== -1) {
+          simulations[index] = simulation;
+        } else {
+          simulations.push(simulation);
+        }
+        
+        // Save back to localStorage
+        localStorage.setItem(localStorageKey, JSON.stringify(simulations));
+        
+        return simulation;
+      }
+    } catch (error) {
+      console.error('Error saving simulation:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete simulation from local storage or Supabase
+  const deleteSimulation = async (id: string): Promise<void> => {
+    setLoading(true);
+    
+    try {
+      if (user) {
+        // Delete from Supabase
+        const { error } = await supabase
+          .from('simulations')
+          .delete()
+          .eq('id', id)
+          .eq('user_id', user.id);
+        
+        if (error) {
+          throw error;
         }
       } else {
-        // If user is not logged in or it's a temporary simulation, get from localStorage
-        const savedSimulations = localStorage.getItem('temporarySimulations');
-        if (savedSimulations) {
-          const localSimulations = JSON.parse(savedSimulations);
-          const simulation = localSimulations.find((s: any) => s.id === id);
-          if (simulation) {
-            return {
-              ...simulation,
-              type: validateSimulationType(simulation.type),
-              content: normalizeSimulationContent(simulation.content)
-            };
+        // Delete from localStorage
+        const localStorageKey = 'progineer-simulations';
+        const storedSimulations = localStorage.getItem(localStorageKey);
+        
+        if (storedSimulations) {
+          try {
+            let simulations = JSON.parse(storedSimulations);
+            simulations = simulations.filter((s: any) => s.id !== id);
+            localStorage.setItem(localStorageKey, JSON.stringify(simulations));
+          } catch (e) {
+            console.error('Failed to parse simulations from localStorage', e);
           }
         }
       }
-      
-      return null;
+    } catch (error) {
+      console.error('Error deleting simulation:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Get a specific simulation by ID
+  const getSimulation = async (id: string): Promise<Simulation | null> => {
+    setLoading(true);
+    
+    try {
+      if (user) {
+        // Get from Supabase
+        const { data, error } = await supabase
+          .from('simulations')
+          .select('*')
+          .eq('id', id)
+          .eq('user_id', user.id)
+          .single();
+        
+        if (error) {
+          throw error;
+        }
+        
+        if (!data) {
+          return null;
+        }
+        
+        return {
+          id: data.id,
+          title: data.title,
+          type: validateSimulationType(data.type),
+          content: jsonToSimulationContent(data.content),
+          is_temporary: data.is_temporary,
+          created_at: data.created_at,
+          updated_at: data.updated_at,
+          user_id: data.user_id
+        };
+      } else {
+        // Get from localStorage
+        const localStorageKey = 'progineer-simulations';
+        const storedSimulations = localStorage.getItem(localStorageKey);
+        
+        if (storedSimulations) {
+          try {
+            const simulations = JSON.parse(storedSimulations);
+            const simulation = simulations.find((s: any) => s.id === id);
+            
+            if (simulation) {
+              return {
+                ...simulation,
+                type: validateSimulationType(simulation.type),
+                content: normalizeSimulationContent(simulation.content)
+              };
+            }
+          } catch (e) {
+            console.error('Failed to parse simulations from localStorage', e);
+          }
+        }
+        
+        return null;
+      }
     } catch (error) {
       console.error('Error getting simulation:', error);
       return null;
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
+    loading,
     saveSimulation,
     loadSimulations,
     deleteSimulation,
-    getSimulation,
-    loading,
-    simulations
+    getSimulation
   };
 };

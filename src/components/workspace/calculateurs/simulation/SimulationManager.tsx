@@ -1,395 +1,334 @@
+
 import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Calculator, FileText } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import { Plus, Download, Save, Trash, FileText } from 'lucide-react';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { useSimulationStorage } from './useSimulationStorage';
+import { Simulation, SimulationType, simulationContentToJson, normalizeSimulationContent } from './SimulationTypes';
+import { generateStandardPDF } from '@/utils/pdfUtils';
 
-import SimulationList from './SimulationList';
-import SimulationDetail from './SimulationDetail';
-import { Simulation, validateSimulationType, normalizeSimulationContent } from './SimulationTypes';
-
-const SimulationManager: React.FC = () => {
-  const { user } = useAuth();
+const SimulationManager = () => {
   const { toast } = useToast();
+  const { loading, loadSimulations, saveSimulation, deleteSimulation } = useSimulationStorage();
+  const [activeTab, setActiveTab] = useState("all");
   const [simulations, setSimulations] = useState<Simulation[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [currentSimulation, setCurrentSimulation] = useState<Simulation>({
-    title: 'Nouvelle simulation',
-    type: 'calculator',
-    content: { data: {} },
-    is_temporary: true
-  });
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [newSimulationTitle, setNewSimulationTitle] = useState("");
+  const [newSimulationType, setNewSimulationType] = useState<SimulationType>("calculator");
+  const [newSimulationData, setNewSimulationData] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Charger les simulations de l'utilisateur
   useEffect(() => {
-    if (user) {
-      loadSimulations();
-    } else {
-      // Si pas d'utilisateur, charger depuis localStorage
-      const savedSimulations = localStorage.getItem('temporarySimulations');
-      if (savedSimulations) {
-        try {
-          const parsed = JSON.parse(savedSimulations);
-          const normalized = parsed.map((item: any) => ({
-            ...item,
-            type: validateSimulationType(item.type),
-            content: normalizeSimulationContent(item.content)
-          }));
-          setSimulations(normalized);
-        } catch (e) {
-          console.error('Error parsing simulations from localStorage:', e);
-        }
-      }
-    }
-  }, [user]);
+    const fetchSimulations = async () => {
+      const loadedSimulations = await loadSimulations();
+      setSimulations(loadedSimulations);
+    };
 
-  const loadSimulations = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('user_simulations')
-        .select('*')
-        .order('updated_at', { ascending: false });
-      
-      if (error) {
-        throw error;
-      }
-      
-      // Validation des types pour assurer la compatibilité
-      const validatedData: Simulation[] = data?.map(item => ({
-        ...item,
-        type: validateSimulationType(item.type),
-        content: normalizeSimulationContent(item.content)
-      })) || [];
-      
-      setSimulations(validatedData);
-      
-      // S'il y a des simulations, définir la première comme courante
-      if (validatedData.length > 0) {
-        setCurrentSimulation(validatedData[0]);
-      }
-    } catch (error) {
-      console.error('Erreur lors du chargement des simulations:', error);
+    fetchSimulations();
+  }, []);
+
+  const handleSaveSimulation = async () => {
+    if (!newSimulationTitle.trim()) {
       toast({
         title: 'Erreur',
-        description: 'Impossible de charger vos simulations.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const saveSimulation = async () => {
-    setSaving(true);
-    try {
-      // Assurer que le type est valide avant sauvegarde
-      const simulationToSave = {
-        ...currentSimulation,
-        // Valider le type pour être sûr qu'il est conforme
-        type: validateSimulationType(currentSimulation.type),
-        updated_at: new Date().toISOString()
-      };
-      
-      if (user) {
-        // Si connecté, sauvegarder dans Supabase
-        if (currentSimulation.id) {
-          // Mise à jour
-          const { error } = await supabase
-            .from('user_simulations')
-            .update({
-              title: simulationToSave.title,
-              content: simulationToSave.content,
-              is_temporary: simulationToSave.is_temporary,
-              updated_at: simulationToSave.updated_at,
-              type: simulationToSave.type
-            })
-            .eq('id', currentSimulation.id);
-          
-          if (error) throw error;
-          
-          // Mettre à jour la liste locale
-          setSimulations(simulations.map(sim => 
-            sim.id === currentSimulation.id ? simulationToSave : sim
-          ));
-        } else {
-          // Nouvelle simulation
-          const { data, error } = await supabase
-            .from('user_simulations')
-            .insert({
-              title: simulationToSave.title,
-              type: simulationToSave.type,
-              content: simulationToSave.content,
-              user_id: user.id,
-              is_temporary: simulationToSave.is_temporary
-            })
-            .select();
-          
-          if (error) throw error;
-          
-          // Ajouter à la liste locale avec l'ID généré
-          if (data && data.length > 0) {
-            const newSim: Simulation = {
-              ...data[0],
-              type: validateSimulationType(data[0].type),
-              content: normalizeSimulationContent(data[0].content)
-            };
-            
-            setCurrentSimulation(newSim);
-            setSimulations([newSim, ...simulations]);
-          }
-        }
-      } else {
-        // Si non connecté, sauvegarder dans localStorage
-        const tempId = currentSimulation.id || `temp-${Date.now()}`;
-        const newSim = { ...simulationToSave, id: tempId };
-        
-        // Mettre à jour la simulation actuelle
-        setCurrentSimulation(newSim);
-        
-        // Mettre à jour la liste
-        const updatedSimulations = currentSimulation.id 
-          ? simulations.map(sim => sim.id === currentSimulation.id ? newSim : sim)
-          : [newSim, ...simulations];
-        
-        setSimulations(updatedSimulations);
-        localStorage.setItem('temporarySimulations', JSON.stringify(updatedSimulations));
-      }
-      
-      toast({
-        title: 'Sauvegarde réussie',
-        description: 'Votre simulation a été enregistrée avec succès.'
-      });
-    } catch (error) {
-      console.error('Erreur lors de la sauvegarde:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de sauvegarder votre simulation.',
-        variant: 'destructive',
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const createNewSimulation = (type: 'calculator' | 'simulation' | 'note') => {
-    setCurrentSimulation({
-      title: `Nouveau ${type === 'calculator' ? 'calculateur' : type === 'simulation' ? 'simulation' : 'note'}`,
-      type,
-      content: { data: {} },
-      is_temporary: true
-    });
-  };
-
-  const selectSimulation = (sim: Simulation) => {
-    setCurrentSimulation(sim);
-  };
-
-  const deleteSimulation = async (id: string) => {
-    try {
-      if (user && id.toString().indexOf('temp-') !== 0) {
-        // Supprimer de Supabase
-        const { error } = await supabase
-          .from('user_simulations')
-          .delete()
-          .eq('id', id);
-        
-        if (error) throw error;
-      }
-      
-      // Supprimer localement
-      const updatedSimulations = simulations.filter(sim => sim.id !== id);
-      setSimulations(updatedSimulations);
-      
-      // Mettre à jour localStorage si nécessaire
-      if (!user) {
-        localStorage.setItem('temporarySimulations', JSON.stringify(updatedSimulations));
-      }
-      
-      // Si c'était la simulation courante, en définir une nouvelle
-      if (currentSimulation.id === id) {
-        if (updatedSimulations.length > 0) {
-          setCurrentSimulation(updatedSimulations[0]);
-        } else {
-          createNewSimulation('calculator');
-        }
-      }
-      
-      toast({
-        title: 'Suppression réussie',
-        description: 'La simulation a été supprimée.'
-      });
-    } catch (error) {
-      console.error('Erreur lors de la suppression:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible de supprimer cette simulation.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const exportToPDF = () => {
-    try {
-      const doc = new jsPDF();
-      
-      // Titre
-      doc.setFontSize(20);
-      doc.text('Progineer - Simulation', 105, 15, { align: 'center' });
-      
-      // Infos de la simulation
-      doc.setFontSize(14);
-      doc.text(`Titre: ${currentSimulation.title}`, 14, 30);
-      doc.text(`Type: ${
-        currentSimulation.type === 'calculator' ? 'Calculateur' : 
-        currentSimulation.type === 'simulation' ? 'Simulation' : 'Note'
-      }`, 14, 40);
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 50);
-      
-      // Contenu
-      doc.setFontSize(12);
-      doc.text('Détails:', 14, 65);
-      
-      // Tableau de données
-      const content = currentSimulation.content;
-      if (content && typeof content === 'object') {
-        const tableData = [];
-        
-        // Convertir l'objet en tableau pour jspdf-autotable
-        for (const [key, value] of Object.entries(content.data || {})) {
-          tableData.push([key, value]);
-        }
-        
-        if (tableData.length > 0) {
-          doc.autoTable({
-            startY: 70,
-            head: [['Paramètre', 'Valeur']],
-            body: tableData,
-          });
-        } else {
-          doc.text('Aucune donnée disponible.', 14, 75);
-        }
-      }
-      
-      // Pied de page
-      const pageCount = doc.getNumberOfPages();
-      for (let i = 1; i <= pageCount; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.text('Progineer - www.progineer.fr', 105, 285, { align: 'center' });
-        doc.text(`Page ${i} / ${pageCount}`, 195, 285, { align: 'right' });
-      }
-      
-      // Sauvegarder le PDF
-      doc.save(`progineer-${currentSimulation.title.replace(/\s+/g, '-').toLowerCase()}.pdf`);
-      
-      toast({
-        title: 'Export réussi',
-        description: 'Votre simulation a été exportée en PDF.'
-      });
-    } catch (error) {
-      console.error('Erreur lors de l\'export en PDF:', error);
-      toast({
-        title: 'Erreur',
-        description: 'Impossible d\'exporter en PDF.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const toggleTemporary = async () => {
-    if (!user) {
-      toast({
-        title: 'Connexion requise',
-        description: 'Vous devez vous connecter pour enregistrer définitivement une simulation.',
+        description: 'Veuillez entrer un titre pour cette simulation',
         variant: 'destructive',
       });
       return;
     }
-    
-    // Basculer entre temporaire et permanent
-    const updatedSim = {
-      ...currentSimulation,
-      is_temporary: !currentSimulation.is_temporary
+
+    try {
+      let parsedData = {};
+      try {
+        parsedData = JSON.parse(newSimulationData);
+      } catch (e) {
+        parsedData = newSimulationData;
+      }
+
+      const newSimulation: Simulation = {
+        title: newSimulationTitle,
+        type: newSimulationType,
+        content: normalizeSimulationContent(parsedData),
+        is_temporary: false
+      };
+
+      const savedSimulation = await saveSimulation(newSimulation);
+      setSimulations([savedSimulation, ...simulations]);
+      setShowSaveDialog(false);
+      setNewSimulationTitle("");
+      setNewSimulationData("");
+
+      toast({
+        title: 'Simulation enregistrée',
+        description: 'Votre simulation a été sauvegardée avec succès',
+      });
+    } catch (error) {
+      console.error('Error saving simulation:', error);
+      toast({
+        title: 'Erreur',
+        description: 'Une erreur est survenue lors de la sauvegarde',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleDeleteSimulation = async (id: string) => {
+    try {
+      await deleteSimulation(id);
+      setSimulations(simulations.filter(sim => sim.id !== id));
+      toast({
+        title: 'Simulation supprimée',
+        description: 'Votre simulation a été supprimée avec succès',
+      });
+    } catch (error) {
+      toast({
+        title: 'Erreur',
+        description: 'Une erreur est survenue lors de la suppression',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleExportPDF = (simulation: Simulation) => {
+    try {
+      const { data, results } = simulation.content;
+      
+      const pdf = generateStandardPDF(
+        simulation.title,
+        data || {},
+        results || {},
+        {
+          includeDetails: true,
+          includeBreakdown: true,
+          includeLogo: true,
+          includeContactInfo: true
+        }
+      );
+
+      // Save the PDF with a meaningful name derived from the simulation title
+      const fileName = `simulation-${simulation.title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+      pdf.save(fileName);
+
+      toast({
+        title: 'Export réussi',
+        description: `Votre simulation a été exportée au format PDF`,
+      });
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      toast({
+        title: 'Erreur d\'export',
+        description: 'Une erreur est survenue lors de l\'export PDF',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const getSimulationTypeLabel = (type: SimulationType) => {
+    const typeLabels: Record<SimulationType, string> = {
+      calculator: 'Calculateur',
+      simulation: 'Simulation',
+      note: 'Note',
+      rentability: 'Rentabilité',
+      surface: 'Surface',
+      'frais-notaire': 'Frais de notaire',
+      'capacite-emprunt': 'Capacité d\'emprunt',
+      acoustic: 'Acoustique',
+      dpe: 'DPE',
+      thermal: 'Thermique'
     };
     
-    setCurrentSimulation(updatedSim);
-    
-    // Sauvegarder immédiatement
-    await saveSimulation();
+    return typeLabels[type] || type;
   };
 
-  const handleTitleChange = (title: string) => {
-    setCurrentSimulation({
-      ...currentSimulation,
-      title
-    });
-  };
-
-  const handleContentChange = (newContent: any) => {
-    setCurrentSimulation({
-      ...currentSimulation,
-      content: {
-        ...currentSimulation.content,
-        data: newContent
-      }
-    });
-  };
+  const filteredSimulations = simulations.filter(sim => {
+    const matchesSearch = searchTerm === '' || sim.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesType = activeTab === 'all' || sim.type === activeTab;
+    return matchesSearch && matchesType;
+  });
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold">Mes calculs et simulations</h2>
-        <div className="flex gap-2">
-          <Button 
-            onClick={() => createNewSimulation('calculator')} 
-            variant="outline" 
-            size="sm"
-          >
-            <Calculator className="h-4 w-4 mr-2" />
-            Nouveau calcul
-          </Button>
-          <Button 
-            onClick={() => createNewSimulation('note')}
-            variant="outline" 
-            size="sm"
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Nouvelle note
-          </Button>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="space-y-1">
+          <h3 className="text-lg font-medium flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Mes simulations sauvegardées
+          </h3>
+          <p className="text-sm text-gray-500">
+            Retrouvez et gérez vos simulations et calculs précédemment effectués
+          </p>
         </div>
+        <Button onClick={() => setShowSaveDialog(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nouvelle simulation
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Liste des simulations */}
-        <div className="lg:col-span-1">
-          <SimulationList 
-            simulations={simulations}
-            loading={loading}
-            currentSimulationId={currentSimulation.id}
-            onSimulationSelect={selectSimulation}
-            onSimulationDelete={deleteSimulation}
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="relative flex-grow">
+          <Input
+            placeholder="Rechercher une simulation..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <svg
+            className="absolute left-3 top-3 h-4 w-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
         </div>
-
-        {/* Détails de la simulation */}
-        <div className="lg:col-span-2">
-          <SimulationDetail 
-            simulation={currentSimulation}
-            saving={saving}
-            isUserLoggedIn={!!user}
-            onTitleChange={handleTitleChange}
-            onContentChange={handleContentChange}
-            onSave={saveSimulation}
-            onExportPDF={exportToPDF}
-            onToggleTemporary={toggleTemporary}
-          />
-        </div>
+        
+        <Tabs 
+          value={activeTab} 
+          onValueChange={setActiveTab} 
+          className="w-full md:w-auto"
+        >
+          <TabsList className="grid grid-cols-3 sm:grid-cols-6 w-full">
+            <TabsTrigger value="all">Tous</TabsTrigger>
+            <TabsTrigger value="frais-notaire">Notaire</TabsTrigger>
+            <TabsTrigger value="surface">Surface</TabsTrigger>
+            <TabsTrigger value="capacite-emprunt">Emprunt</TabsTrigger>
+            <TabsTrigger value="rentability">Rentabilité</TabsTrigger>
+            <TabsTrigger value="dpe">DPE</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
+
+      {loading ? (
+        <div className="flex justify-center my-12">
+          <div className="animate-spin h-8 w-8 rounded-full border-t-2 border-khaki-600"></div>
+        </div>
+      ) : filteredSimulations.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredSimulations.map((simulation) => (
+            <Card key={simulation.id} className="overflow-hidden">
+              <CardHeader className="pb-3">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-md truncate pr-4">{simulation.title}</CardTitle>
+                  <div className="bg-slate-100 text-slate-700 text-xs px-2 py-1 rounded-full">
+                    {getSimulationTypeLabel(simulation.type)}
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500">
+                  {simulation.updated_at && formatDistanceToNow(new Date(simulation.updated_at), {
+                    addSuffix: true,
+                    locale: fr
+                  })}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-end gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleExportPDF(simulation)}
+                  >
+                    <Download className="h-4 w-4 mr-1" />
+                    PDF
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm"
+                    onClick={() => handleDeleteSimulation(simulation.id!)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12 bg-slate-50 rounded-lg border border-dashed border-slate-200">
+          <FileText className="h-12 w-12 mx-auto text-slate-300 mb-3" />
+          <h3 className="text-lg font-medium mb-1">Aucune simulation</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            {searchTerm ? 
+              "Aucune simulation ne correspond à votre recherche." : 
+              "Vous n'avez pas encore de simulations sauvegardées."}
+          </p>
+          <Button onClick={() => setShowSaveDialog(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Ajouter une simulation
+          </Button>
+        </div>
+      )}
+
+      <Dialog open={showSaveDialog} onOpenChange={setShowSaveDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nouvelle simulation</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Titre</Label>
+              <Input 
+                id="title" 
+                value={newSimulationTitle} 
+                onChange={(e) => setNewSimulationTitle(e.target.value)} 
+                placeholder="Titre de la simulation"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="type">Type</Label>
+              <select 
+                id="type"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+                value={newSimulationType}
+                onChange={(e) => setNewSimulationType(e.target.value as SimulationType)}
+              >
+                <option value="calculator">Calculateur</option>
+                <option value="simulation">Simulation</option>
+                <option value="note">Note</option>
+                <option value="rentability">Rentabilité</option>
+                <option value="surface">Surface</option>
+                <option value="frais-notaire">Frais de notaire</option>
+                <option value="capacite-emprunt">Capacité d'emprunt</option>
+                <option value="acoustic">Acoustique</option>
+                <option value="dpe">DPE</option>
+                <option value="thermal">Thermique</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="data">Données (JSON)</Label>
+              <textarea 
+                id="data"
+                value={newSimulationData}
+                onChange={(e) => setNewSimulationData(e.target.value)}
+                rows={5}
+                placeholder="{ ... }"
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSaveDialog(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleSaveSimulation}>
+              <Save className="h-4 w-4 mr-2" />
+              Sauvegarder
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
