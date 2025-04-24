@@ -1,10 +1,10 @@
 
 %PDF-1.4
 1 0 obj
-<< /Title (Texte intégral de la réglementation)
+<< /Title (Texte intégral de la réglementation du bâtiment)
 /Author (Progineer)
-/Subject (Texte officiel de la réglementation du bâtiment)
-/Keywords (législation, construction, normes, officiel, texte intégral)
+/Subject (Textes législatifs et réglementaires de la construction)
+/Keywords (législation, réglementation, normes, bâtiment, construction, PACA, Provence-Alpes-Côte d'Azur)
 /Creator (Progineer)
 /Producer (Progineer PDF Creator)
 /CreationDate (D:20230510143025+02'00')
@@ -17,8 +17,8 @@ endobj
 endobj
 3 0 obj
 << /Type /Pages
-/Kids [4 0 R]
-/Count 1
+/Kids [4 0 R 8 0 R 12 0 R]
+/Count 3
 >>
 endobj
 4 0 obj
@@ -26,47 +26,84 @@ endobj
 /Parent 3 0 R
 /MediaBox [0 0 595 842]
 /Contents 5 0 R
-/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+/Resources << /Font << /F1 6 0 R /F2 7 0 R >>
 >>
 >>
 endobj
 5 0 obj
-<< /Length 1200 >>
+<< /Length 3000 >>
 stream
 BT
-/F1 22 Tf
-50 780 Td
-(Texte intégral de la réglementation) Tj
-/F2 14 Tf
+/F1 16 Tf
+50 800 Td
+(TEXTE INTÉGRAL DE LA RÉGLEMENTATION DU BÂTIMENT) Tj
+/F1 12 Tf
+0 -25 Td
+(Recueil des textes législatifs et réglementaires en vigueur) Tj
+0 -15 Td
+(Édition 2023) Tj
+/F1 10 Tf
 0 -30 Td
-(Relatif aux normes de construction et d'urbanisme) Tj
-/F3 10 Tf
-0 -20 Td
-(Document officiel - Version consolidée au 01/05/2023) Tj
-/F2 12 Tf
+(Document compilé par Progineer - Maître d'œuvre en PACA) Tj
 0 -50 Td
-(Préambule) Tj
-/F3 10 Tf
+(PRÉAMBULE) Tj
+/F2 10 Tf
 0 -20 Td
-(Le présent document constitue la version intégrale et consolidée des textes réglementaires) Tj
+(Ce document constitue une compilation des textes législatifs et réglementaires applicables au secteur du) Tj
 0 -15 Td
-(relatifs aux normes de construction et d'urbanisme applicables en France métropolitaine.) Tj
-/F2 12 Tf
+(bâtiment en France, avec une attention particulière portée aux spécificités de la région Provence-Alpes-) Tj
+0 -15 Td
+(Côte d'Azur. Il est destiné aux professionnels du bâtiment, maîtres d'ouvrage et maîtres d'œuvre.) Tj
+0 -20 Td
+(Les textes sont présentés dans leur version en vigueur à la date de publication de ce document \(mai 2023\).) Tj
+0 -15 Td
+(Toutefois, la réglementation évoluant constamment, il est recommandé de vérifier si des modifications) Tj
+0 -15 Td
+(ultérieures ont été apportées aux textes cités, notamment en consultant le site Légifrance.) Tj
 0 -30 Td
-(Article 1 - Champ d'application) Tj
-/F3 10 Tf
+(SOMMAIRE) Tj
+/F1 10 Tf
 0 -20 Td
-(Les présentes dispositions s'appliquent à toutes les constructions neuves et aux travaux) Tj
-0 -15 Td
-(de rénovation, extension ou modification de bâtiments existants sur le territoire national.) Tj
-/F2 12 Tf
-0 -30 Td
-(Article 2 - Dispositions générales) Tj
-/F3 10 Tf
+(PARTIE I : CODE DE LA CONSTRUCTION ET DE L'HABITATION) Tj
+/F2 10 Tf
+20 -15 Td
+(Titre I : Règles générales applicables à la construction d'immeubles) Tj
+20 -15 Td
+(Titre II : Sécurité et protection des immeubles) Tj
+20 -15 Td
+(Titre III : Accessibilité des personnes handicapées) Tj
+/F1 10 Tf
 0 -20 Td
-(Les maîtres d'ouvrage, maîtres d'œuvre, constructeurs et installateurs sont tenus,) Tj
-0 -15 Td
-(chacun en ce qui le concerne, de satisfaire aux exigences définies par les textes...) Tj
+(PARTIE II : RÉGLEMENTATION THERMIQUE) Tj
+/F2 10 Tf
+20 -15 Td
+(Titre I : Principes généraux de la RE2020) Tj
+20 -15 Td
+(Titre II : Exigences de performance énergétique) Tj
+/F1 10 Tf
+0 -20 Td
+(PARTIE III : URBANISME) Tj
+/F2 10 Tf
+20 -15 Td
+(Titre I : Règles d'urbanisme applicables aux constructions) Tj
+20 -15 Td
+(Titre II : Procédures d'autorisations d'urbanisme) Tj
+/F1 10 Tf
+0 -20 Td
+(PARTIE IV : SÉCURITÉ INCENDIE) Tj
+/F2 10 Tf
+20 -15 Td
+(Titre I : Classement des bâtiments) Tj
+20 -15 Td
+(Titre II : Dispositions applicables selon le type de bâtiment) Tj
+/F1 10 Tf
+0 -20 Td
+(PARTIE V : NORMES PARASISMIQUES) Tj
+/F2 10 Tf
+20 -15 Td
+(Titre I : Zonage sismique) Tj
+20 -15 Td
+(Titre II : Règles de construction parasismique) Tj
 ET
 endstream
 endobj
@@ -83,27 +120,198 @@ endobj
 >>
 endobj
 8 0 obj
-<< /Type /Font
-/Subtype /Type1
-/BaseFont /Helvetica-Oblique
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 9 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R >>
+>>
 >>
 endobj
+9 0 obj
+<< /Length 4500 >>
+stream
+BT
+/F1 12 Tf
+50 800 Td
+(PARTIE I : CODE DE LA CONSTRUCTION ET DE L'HABITATION) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait de l'article L111-1) Tj
+/F2 10 Tf
+0 -20 Td
+(Les principes fondamentaux s'imposant aux opérations de construction sont énoncés par le présent titre,) Tj
+0 -15 Td
+(qui s'applique à l'édification des bâtiments nouveaux ainsi qu'aux travaux exécutés sur les bâtiments) Tj
+0 -15 Td
+(existants et aux changements de destination de ces bâtiments.) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait de l'article L111-9) Tj
+/F2 10 Tf
+0 -20 Td
+(Un décret en Conseil d'État détermine les conditions dans lesquelles des caractéristiques énergétiques et) Tj
+0 -15 Td
+(environnementales sont prises en compte dans les exigences applicables aux constructions nouvelles, en) Tj
+0 -15 Td
+(fonction des différentes catégories de bâtiments.) Tj
+0 -20 Td
+(Il précise les conditions dans lesquelles le maître d'ouvrage atteste de la réalisation de l'étude de faisabilité) Tj
+0 -15 Td
+(relative aux approvisionnements en énergie ainsi que de la prise en compte de la réglementation) Tj
+0 -15 Td
+(thermique, acoustique et d'aération au moment du dépôt du dossier de demande de permis de construire.) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait de l'article L111-10) Tj
+/F2 10 Tf
+0 -20 Td
+(Un décret en Conseil d'État détermine les caractéristiques énergétiques et environnementales et la) Tj
+0 -15 Td
+(performance énergétique et environnementale des bâtiments ou parties de bâtiments existants qui font) Tj
+0 -15 Td
+(l'objet de travaux de rénovation importants.) Tj
+/F1 12 Tf
+0 -30 Td
+(PARTIE II : RÉGLEMENTATION THERMIQUE) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait du décret n° 2021-1004 du 29 juillet 2021 relatif aux exigences de performance) Tj
+0 -15 Td
+(énergétique et environnementale des constructions de bâtiments en France métropolitaine) Tj
+/F2 10 Tf
+0 -20 Td
+(Art. R. 172-1.-I.-La limitation de la consommation d'énergie primaire, la limitation de l'impact sur le) Tj
+0 -15 Td
+(changement climatique associé à ces consommations, la limitation de l'impact des composants du bâtiment) Tj
+0 -15 Td
+(sur le changement climatique et les exigences de confort en été des constructions soumises à autorisation) Tj
+0 -15 Td
+(de construire sont fixées par le présent chapitre.) Tj
+0 -20 Td
+(Art. R. 172-2.-I.-Les dispositions du présent chapitre s'appliquent à la construction de bâtiments ou parties) Tj
+0 -15 Td
+(de bâtiment à usage d'habitation, de bureau, ou d'enseignement primaire ou secondaire, situés en France) Tj
+0 -15 Td
+(métropolitaine.) Tj
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 13 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R >>
+>>
+>>
+endobj
+13 0 obj
+<< /Length 4200 >>
+stream
+BT
+/F1 12 Tf
+50 800 Td
+(PARTIE III : URBANISME) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait du Code de l'urbanisme - Article R421-1) Tj
+/F2 10 Tf
+0 -20 Td
+(Les constructions nouvelles doivent être précédées de la délivrance d'un permis de construire, à l'exception :) Tj
+0 -15 Td
+(a\) Des constructions mentionnées aux articles R. 421-2 à R. 421-8-2 qui sont dispensées de toute formalité) Tj
+0 -15 Td
+(au titre du code de l'urbanisme ;) Tj
+0 -15 Td
+(b\) Des constructions mentionnées aux articles R. 421-9 à R. 421-12 qui doivent faire l'objet d'une) Tj
+0 -15 Td
+(déclaration préalable.) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait du Code de l'urbanisme - Article L421-3) Tj
+/F2 10 Tf
+0 -20 Td
+(Les démolitions de constructions existantes doivent être précédées de la délivrance d'un permis de) Tj
+0 -15 Td
+(démolir lorsque la construction relève d'une protection particulière définie par décret en Conseil d'Etat ou) Tj
+0 -15 Td
+(est située dans une commune ou partie de commune où le conseil municipal a décidé d'instaurer le permis) Tj
+0 -15 Td
+(de démolir.) Tj
+/F1 12 Tf
+0 -30 Td
+(PARTIE IV : SÉCURITÉ INCENDIE) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait de l'arrêté du 25 juin 1980 portant approbation des dispositions générales du règlement) Tj
+0 -15 Td
+(de sécurité contre les risques d'incendie et de panique dans les établissements recevant du public) Tj
+/F2 10 Tf
+0 -20 Td
+(Article GN 1 - Champ d'application :) Tj
+0 -20 Td
+(§ 1. Les dispositions du présent règlement s'appliquent à tous les établissements recevant du public définis) Tj
+0 -15 Td
+(à l'article R. 123-2 du Code de la construction et de l'habitation.) Tj
+0 -20 Td
+(Article GN 8 - Applications des dispositions réglementaires :) Tj
+0 -20 Td
+(§ 1. Les dispositions des chapitres Ier et II du titre II relatives aux risques d'incendie et de panique) Tj
+0 -15 Td
+(s'appliquent aux établissements à construire ou à modifier.) Tj
+/F1 12 Tf
+0 -30 Td
+(PARTIE V : NORMES PARASISMIQUES) Tj
+/F1 10 Tf
+0 -30 Td
+(Extrait du décret n° 2010-1254 du 22 octobre 2010 relatif à la prévention du risque sismique) Tj
+/F2 10 Tf
+0 -20 Td
+(Article 4 :) Tj
+0 -20 Td
+(I. - Pour l'application des mesures de prévention du risque sismique aux bâtiments, est considéré comme) Tj
+0 -15 Td
+(constituant une modification importante de la structure d'un bâtiment existant l'une au moins des) Tj
+0 -15 Td
+(opérations suivantes :) Tj
+0 -15 Td
+(1° La surélévation du bâtiment ;) Tj
+0 -15 Td
+(2° L'ajout d'un équipement lourd en toiture ou la modification du report de charges existant ;) Tj
+0 -15 Td
+(3° La création d'un plancher supplémentaire dans le volume existant.) Tj
+/F2 8 Tf
+0 -50 Td
+(Note : Ce document constitue un extrait des textes réglementaires. Pour toute application, il est recommandé de) Tj
+0 -12 Td
+(consulter les textes intégraux officiels sur le site www.legifrance.gouv.fr) Tj
+0 -24 Td
+(© Progineer 2023 - Tous droits réservés - www.progineer.fr) Tj
+ET
+endstream
+endobj
 xref
-0 9
+0 14
 0000000000 65535 f
 0000000009 00000 n
-0000000310 00000 n
-0000000359 00000 n
-0000000418 00000 n
-0000000556 00000 n
-0000001809 00000 n
-0000001881 00000 n
-0000001948 00000 n
+0000000353 00000 n
+0000000402 00000 n
+0000000470 00000 n
+0000000606 00000 n
+0000003657 00000 n
+0000003729 00000 n
+0000003796 00000 n
+0000003931 00000 n
+0000008482 00000 n
+0000008482 00000 n
+0000008482 00000 n
+0000008619 00000 n
 trailer
-<< /Size 9
+<< /Size 14
 /Root 2 0 R
 /Info 1 0 R
 >>
 startxref
-2020
+12871
 %%EOF

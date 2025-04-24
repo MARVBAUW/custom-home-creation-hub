@@ -4,7 +4,7 @@
 << /Title (Guide complet sur la réglementation du bâtiment)
 /Author (Progineer)
 /Subject (Réglementation de la construction)
-/Keywords (construction, réglementation, normes, bâtiment, PACA)
+/Keywords (construction, réglementation, normes, bâtiment, PACA, RT2020, accessibilité, sécurité incendie)
 /Creator (Progineer)
 /Producer (Progineer PDF Creator)
 /CreationDate (D:20230515091523+02'00')
@@ -17,8 +17,8 @@ endobj
 endobj
 3 0 obj
 << /Type /Pages
-/Kids [4 0 R]
-/Count 1
+/Kids [4 0 R 10 0 R 14 0 R 18 0 R 22 0 R 26 0 R]
+/Count 6
 >>
 endobj
 4 0 obj
@@ -31,7 +31,7 @@ endobj
 >>
 endobj
 5 0 obj
-<< /Length 1000 >>
+<< /Length 2000 >>
 stream
 BT
 /F1 24 Tf
@@ -44,7 +44,7 @@ BT
 0 -20 Td
 (Document préparé par Progineer - Maître d'œuvre en PACA) Tj
 /F2 14 Tf
-0 -40 Td
+0 -50 Td
 (Table des matières) Tj
 /F3 11 Tf
 20 -25 Td
@@ -59,12 +59,32 @@ BT
 (5. Sécurité incendie) Tj
 20 -15 Td
 (6. Évolutions réglementaires récentes) Tj
+20 -15 Td
+(7. DTUs applicables) Tj
+20 -15 Td
+(8. Respect des codes de l'urbanisme) Tj
+20 -15 Td
+(9. Législation environnementale) Tj
+20 -15 Td
+(10. Processus d'obtention des permis) Tj
 /F2 14 Tf
 -40 -40 Td
 (1. Introduction aux normes de construction) Tj
 /F3 11 Tf
 0 -20 Td
-(Ce document présente une synthèse détaillée des réglementations actuelles du bâtiment en France...) Tj
+(Ce document présente une synthèse détaillée des réglementations actuelles du bâtiment en France,) Tj
+0 -15 Td
+(avec un focus particulier sur les spécificités de la région PACA. La construction d'un bâtiment) Tj
+0 -15 Td
+(requiert le respect de nombreuses normes techniques et réglementaires qui visent à garantir la) Tj
+0 -15 Td
+(sécurité, la santé, le confort des occupants et la préservation de l'environnement.) Tj
+0 -25 Td
+(Ces normes sont regroupées dans plusieurs codes \(Code de la construction et de l'habitation,) Tj
+0 -15 Td
+(Code de l'urbanisme, Code de l'environnement\) et dans des textes techniques comme les DTU) Tj
+0 -15 Td
+(\(Documents Techniques Unifiés\) qui précisent les règles de l'art pour chaque corps de métier.) Tj
 ET
 endstream
 endobj
@@ -86,22 +106,377 @@ endobj
 /BaseFont /Helvetica-Oblique
 >>
 endobj
+10 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 11 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+>>
+>>
+endobj
+11 0 obj
+<< /Length 2500 >>
+stream
+BT
+/F2 14 Tf
+50 750 Td
+(2. Réglementation thermique RT2020) Tj
+/F3 11 Tf
+0 -25 Td
+(La RT2020 \(Réglementation Thermique 2020\), aussi appelée RE2020 \(Réglementation) Tj
+0 -15 Td
+(Environnementale 2020\), est entrée en vigueur le 1er janvier 2022 pour les bâtiments neufs à) Tj
+0 -15 Td
+(usage d'habitation. Cette nouvelle réglementation remplace la RT2012 et poursuit trois objectifs) Tj
+0 -15 Td
+(majeurs :) Tj
+0 -25 Td
+(   • Diminuer l'impact carbone des bâtiments neufs) Tj
+0 -15 Td
+(   • Poursuivre l'amélioration de la performance énergétique) Tj
+0 -15 Td
+(   • Garantir le confort des habitants pendant les épisodes de canicule) Tj
+0 -25 Td
+(Les exigences principales de la RT2020 sont :) Tj
+0 -25 Td
+(   • Un besoin bioclimatique \(Bbio\) inférieur à un seuil maximal) Tj
+0 -15 Td
+(   • Une consommation d'énergie primaire \(Cep\) plafonnée) Tj
+0 -15 Td
+(   • Un niveau d'émissions de gaz à effet de serre \(Icénergie et Icconstruction\) limité) Tj
+0 -15 Td
+(   • Un indicateur de confort d'été \(DH\) pour limiter l'inconfort des occupants en période estivale) Tj
+0 -25 Td
+(En région PACA, particulièrement exposée aux fortes chaleurs, une attention spéciale doit être) Tj
+0 -15 Td
+(portée au confort d'été avec des solutions d'ombrage, de ventilation naturelle et d'inertie thermique.) Tj
+/F2 14 Tf
+0 -40 Td
+(3. Accessibilité des bâtiments) Tj
+/F3 11 Tf
+0 -25 Td
+(Les règles d'accessibilité visent à permettre à toute personne, quel que soit son handicap,) Tj
+0 -15 Td
+(d'accéder aux bâtiments, d'y circuler et de recevoir les informations diffusées.) Tj
+0 -25 Td
+(Pour les logements neufs, les principales exigences sont :) Tj
+0 -25 Td
+(   • Cheminement extérieur accessible depuis l'entrée du terrain jusqu'à la porte d'entrée) Tj
+0 -15 Td
+(   • Largeur minimale des portes : 0,90 m) Tj
+0 -15 Td
+(   • Salle d'eau adaptable aux personnes en fauteuil roulant) Tj
+0 -15 Td
+(   • Seuils de portes n'excédant pas 2 cm) Tj
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 15 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+>>
+>>
+endobj
+15 0 obj
+<< /Length 2300 >>
+stream
+BT
+/F2 14 Tf
+50 750 Td
+(4. Normes parasismiques) Tj
+/F3 11 Tf
+0 -25 Td
+(En PACA, région particulièrement concernée par le risque sismique, les constructions doivent) Tj
+0 -15 Td
+(respecter des règles parasismiques définies par l'Eurocode 8 et l'arrêté du 22 octobre 2010.) Tj
+0 -25 Td
+(Le territoire est divisé en 5 zones de sismicité croissante :) Tj
+0 -25 Td
+(   • Zone 1 : sismicité très faible) Tj
+0 -15 Td
+(   • Zone 2 : sismicité faible) Tj
+0 -15 Td
+(   • Zone 3 : sismicité modérée) Tj
+0 -15 Td
+(   • Zone 4 : sismicité moyenne) Tj
+0 -15 Td
+(   • Zone 5 : sismicité forte \(concerne uniquement les Antilles\)) Tj
+0 -25 Td
+(La région PACA comporte principalement des zones de sismicité 3 et 4 \(notamment les) Tj
+0 -15 Td
+(Alpes-Maritimes\). Pour ces zones, les règles constructives imposent :) Tj
+0 -25 Td
+(   • Fondations adaptées) Tj
+0 -15 Td
+(   • Structure contreventée) Tj
+0 -15 Td
+(   • Chaînages horizontaux et verticaux) Tj
+0 -15 Td
+(   • Liaisons efficaces entre éléments de la construction) Tj
+/F2 14 Tf
+0 -40 Td
+(5. Sécurité incendie) Tj
+/F3 11 Tf
+0 -25 Td
+(La réglementation incendie vise à :) Tj
+0 -15 Td
+(   • Permettre l'évacuation rapide et en bon ordre des occupants) Tj
+0 -15 Td
+(   • Empêcher la propagation du feu) Tj
+0 -15 Td
+(   • Faciliter l'intervention des secours) Tj
+0 -25 Td
+(Les principales exigences pour les habitations concernent :) Tj
+0 -25 Td
+(   • La résistance au feu des structures \(stabilité de la structure pendant une durée déterminée\)) Tj
+0 -15 Td
+(   • La réaction au feu des matériaux \(classement de M0 à M4 ou Euroclasses\)) Tj
+0 -15 Td
+(   • Les dégagements et issues de secours) Tj
+0 -15 Td
+(   • Le désenfumage) Tj
+0 -15 Td
+(   • L'installation de détecteurs de fumée \(DAAF\) obligatoires dans les logements) Tj
+ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 19 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+>>
+>>
+endobj
+19 0 obj
+<< /Length 2200 >>
+stream
+BT
+/F2 14 Tf
+50 750 Td
+(6. Évolutions réglementaires récentes) Tj
+/F3 11 Tf
+0 -25 Td
+(Plusieurs évolutions majeures ont récemment impacté la réglementation du bâtiment :) Tj
+0 -25 Td
+(   • Entrée en vigueur de la RE2020) Tj
+0 -15 Td
+(   • Renforcement des règles d'accessibilité avec la notion de logement évolutif) Tj
+0 -15 Td
+(   • Promotion des matériaux biosourcés) Tj
+0 -15 Td
+(   • Dispositifs de lutte contre le réchauffement climatique et pour la résilience) Tj
+0 -25 Td
+(La loi ELAN \(Évolution du Logement, de l'Aménagement et du Numérique\) a notamment modifié :) Tj
+0 -25 Td
+(   • Les règles d'accessibilité avec l'introduction du concept de logements évolutifs) Tj
+0 -15 Td
+(   • Les procédures d'autorisation d'urbanisme) Tj
+0 -15 Td
+(   • La lutte contre l'habitat indigne) Tj
+/F2 14 Tf
+0 -40 Td
+(7. DTUs applicables) Tj
+/F3 11 Tf
+0 -25 Td
+(Les DTU \(Documents Techniques Unifiés\) définissent les règles de l'art pour chaque corps de) Tj
+0 -15 Td
+(métier. Parmi les principaux DTU :) Tj
+0 -25 Td
+(   • DTU 13.3 : Dallages - Conception, calcul et exécution) Tj
+0 -15 Td
+(   • DTU 20.1 : Ouvrages en maçonnerie de petits éléments - Parois et murs) Tj
+0 -15 Td
+(   • DTU 31.2 : Construction de maisons et bâtiments à ossature en bois) Tj
+0 -15 Td
+(   • DTU 40 : Couverture) Tj
+0 -15 Td
+(   • DTU 60.11 : Plomberie sanitaire pour bâtiments) Tj
+0 -25 Td
+(Il est essentiel de se référer aux DTU en vigueur pour chaque projet, car ils constituent) Tj
+0 -15 Td
+(le référentiel technique opposable en cas de litige sur la qualité d'exécution des travaux.) Tj
+ET
+endstream
+endobj
+22 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 23 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+>>
+>>
+endobj
+23 0 obj
+<< /Length 2100 >>
+stream
+BT
+/F2 14 Tf
+50 750 Td
+(8. Respect des codes de l'urbanisme) Tj
+/F3 11 Tf
+0 -25 Td
+(Toute construction doit respecter le Plan Local d'Urbanisme \(PLU\) de la commune, qui définit :) Tj
+0 -25 Td
+(   • Les zones constructibles) Tj
+0 -15 Td
+(   • La densité de construction autorisée) Tj
+0 -15 Td
+(   • Les règles d'implantation des bâtiments) Tj
+0 -15 Td
+(   • Les hauteurs maximales) Tj
+0 -15 Td
+(   • Les aspects extérieurs) Tj
+0 -25 Td
+(Les autorisations d'urbanisme nécessaires avant de construire sont :) Tj
+0 -25 Td
+(   • Le certificat d'urbanisme \(informatif ou opérationnel\)) Tj
+0 -15 Td
+(   • La déclaration préalable \(pour les petits travaux\)) Tj
+0 -15 Td
+(   • Le permis de construire) Tj
+0 -15 Td
+(   • Le permis d'aménager) Tj
+0 -15 Td
+(   • Le permis de démolir) Tj
+/F2 14 Tf
+0 -40 Td
+(9. Législation environnementale) Tj
+/F3 11 Tf
+0 -25 Td
+(Les préoccupations environnementales sont de plus en plus présentes dans la réglementation :) Tj
+0 -25 Td
+(   • Étude d'impact environnemental pour certains projets) Tj
+0 -15 Td
+(   • Gestion des eaux pluviales) Tj
+0 -15 Td
+(   • Protection des zones naturelles sensibles) Tj
+0 -15 Td
+(   • Prise en compte de la biodiversité) Tj
+0 -15 Td
+(   • Préservation des ressources en eau) Tj
+0 -25 Td
+(En PACA, région soumise à des risques spécifiques \(incendies, inondations, mouvements de) Tj
+0 -15 Td
+(terrain\), des Plans de Prévention des Risques \(PPR\) peuvent imposer des contraintes) Tj
+0 -15 Td
+(supplémentaires aux constructions.) Tj
+ET
+endstream
+endobj
+26 0 obj
+<< /Type /Page
+/Parent 3 0 R
+/MediaBox [0 0 595 842]
+/Contents 27 0 R
+/Resources << /Font << /F1 6 0 R /F2 7 0 R /F3 8 0 R >>
+>>
+>>
+endobj
+27 0 obj
+<< /Length 2000 >>
+stream
+BT
+/F2 14 Tf
+50 750 Td
+(10. Processus d'obtention des permis) Tj
+/F3 11 Tf
+0 -25 Td
+(L'obtention d'un permis de construire suit plusieurs étapes :) Tj
+0 -25 Td
+(   • Constitution du dossier par un architecte \(obligatoire au-delà de 150m²\)) Tj
+0 -15 Td
+(   • Dépôt en mairie) Tj
+0 -15 Td
+(   • Instruction \(délai de base : 2 mois pour une maison individuelle, 3 mois pour les autres cas\)) Tj
+0 -15 Td
+(   • Décision de la collectivité) Tj
+0 -15 Td
+(   • Affichage sur le terrain) Tj
+0 -15 Td
+(   • Délai de recours des tiers \(2 mois après affichage\)) Tj
+0 -25 Td
+(Les pièces principales d'un dossier de permis de construire sont :) Tj
+0 -25 Td
+(   • Le formulaire CERFA) Tj
+0 -15 Td
+(   • Le plan de situation) Tj
+0 -15 Td
+(   • Le plan de masse) Tj
+0 -15 Td
+(   • Le plan de coupe) Tj
+0 -15 Td
+(   • Les façades et toitures) Tj
+0 -15 Td
+(   • Document graphique d'insertion) Tj
+0 -15 Td
+(   • Photographies de près et de loin) Tj
+0 -15 Td
+(   • Attestation RT2020) Tj
+/F2 14 Tf
+0 -40 Td
+(Conclusion) Tj
+/F3 11 Tf
+0 -25 Td
+(La réglementation du bâtiment est complexe et en constante évolution. Pour tout projet de) Tj
+0 -15 Td
+(construction ou de rénovation, il est recommandé de s'entourer de professionnels compétents) Tj
+0 -15 Td
+(\(architecte, maître d'œuvre, bureau d'études\) qui sauront prendre en compte l'ensemble des) Tj
+0 -15 Td
+(exigences réglementaires.) Tj
+0 -25 Td
+(Ce guide n'étant pas exhaustif, il est conseillé de se référer aux textes officiels en vigueur et de) Tj
+0 -15 Td
+(consulter les services d'urbanisme de votre commune pour toute question spécifique à votre projet.) Tj
+0 -35 Td
+(© 2023 Progineer - Tous droits réservés) Tj
+0 -15 Td
+(www.progineer.fr) Tj
+ET
+endstream
+endobj
 xref
-0 9
+0 30
 0000000000 65535 f
 0000000009 00000 n
-0000000266 00000 n
-0000000315 00000 n
-0000000374 00000 n
-0000000512 00000 n
-0000001564 00000 n
-0000001636 00000 n
-0000001703 00000 n
+0000000345 00000 n
+0000000394 00000 n
+0000000477 00000 n
+0000000615 00000 n
+0000002666 00000 n
+0000002738 00000 n
+0000002805 00000 n
+0000002877 00000 n
+0000002877 00000 n
+0000003017 00000 n
+0000005569 00000 n
+0000005569 00000 n
+0000005569 00000 n
+0000005709 00000 n
+0000008061 00000 n
+0000008061 00000 n
+0000008061 00000 n
+0000008201 00000 n
+0000010453 00000 n
+0000010453 00000 n
+0000010453 00000 n
+0000010593 00000 n
+0000012745 00000 n
+0000012745 00000 n
+0000012745 00000 n
+0000012885 00000 n
 trailer
-<< /Size 9
+<< /Size 30
 /Root 2 0 R
 /Info 1 0 R
 >>
 startxref
-1775
+14937
 %%EOF

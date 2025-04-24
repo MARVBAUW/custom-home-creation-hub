@@ -5,4 +5,7 @@ Allow: /resources/
 Allow: /resources/guides/
 Allow: /resources/documents/
 
+# Explicitly allow PDF indexing
+Allow: /*.pdf$
+
 Sitemap: https://progineer.fr/sitemap.xml

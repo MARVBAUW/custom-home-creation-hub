@@ -11,10 +11,13 @@ interface ResourceSEOHeadProps {
   datePublished?: string;
   author?: string;
   category?: string;
+  fileSize?: number;
+  pageCount?: number;
+  language?: string;
 }
 
 /**
- * Component for adding SEO metadata for downloadable resources
+ * Enhanced component for adding SEO metadata for downloadable resources
  */
 const ResourceSEOHead: React.FC<ResourceSEOHeadProps> = ({
   title,
@@ -24,7 +27,10 @@ const ResourceSEOHead: React.FC<ResourceSEOHeadProps> = ({
   keywords = "",
   datePublished = new Date().toISOString(),
   author = "Progineer",
-  category = "Ressource"
+  category = "Ressource",
+  fileSize,
+  pageCount,
+  language = "fr"
 }) => {
   // Generate structured data for the downloadable resource
   const structuredData = {
@@ -35,6 +41,7 @@ const ResourceSEOHead: React.FC<ResourceSEOHeadProps> = ({
     "encodingFormat": fileType,
     "url": fileUrl,
     "datePublished": datePublished,
+    "inLanguage": language,
     "author": {
       "@type": "Organization",
       "name": author
@@ -57,14 +64,56 @@ const ResourceSEOHead: React.FC<ResourceSEOHeadProps> = ({
     }
   };
 
+  // Add optional properties if provided
+  if (fileSize) {
+    structuredData.contentSize = `${fileSize} KB`;
+  }
+
+  if (pageCount) {
+    structuredData.numberOfPages = pageCount;
+  }
+
+  // Add file-specific schema for PDF documents
+  const fileSpecificSchema = fileType.toLowerCase() === 'pdf' ? {
+    "@context": "https://schema.org",
+    "@type": "PresentationDigitalDocument",
+    "url": fileUrl,
+    "name": title,
+    "description": description,
+    "datePublished": datePublished,
+    "publisher": {
+      "@type": "Organization",
+      "name": "Progineer"
+    }
+  } : null;
+
   return (
-    <SEO
-      title={`${title} | Ressource téléchargeable | Progineer`}
-      description={`Téléchargez ${title} - ${description}`}
-      keywords={`téléchargement, ressource, ${keywords}`}
-      canonicalUrl={fileUrl}
-      structuredData={structuredData}
-    />
+    <>
+      <SEO
+        title={`${title} | Ressource téléchargeable | Progineer`}
+        description={`Téléchargez ${title} - ${description}`}
+        keywords={`téléchargement, ressource, ${keywords}`}
+        canonicalUrl={fileUrl}
+        structuredData={structuredData}
+      />
+      
+      {/* Additional schema for PDF files */}
+      {fileSpecificSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(fileSpecificSchema)}
+        </script>
+      )}
+      
+      {/* Allow search engines to index PDF content */}
+      <meta name="googlebot" content="index, follow" />
+      <meta name="robots" content="index, follow" />
+      
+      {/* Open Graph tags specific to downloadable files */}
+      <meta property="og:type" content="article" />
+      <meta property="article:published_time" content={datePublished} />
+      <meta property="article:section" content={category} />
+      <meta property="article:tag" content={keywords} />
+    </>
   );
 };
 
