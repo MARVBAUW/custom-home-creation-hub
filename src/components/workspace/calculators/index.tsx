@@ -2,109 +2,128 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  SquareDot, 
   Calculator, 
   Ruler, 
   PiggyBank, 
-  Thermometer, 
-  Volume2, 
-  Droplets,
-  Flame,
-  Accessibility,
-  Building,
-  Scale
+  Scale,
+  Building
 } from 'lucide-react';
 
-// Import calculateurs
+// Import calculator components
 import RegulatoryCalculators from './RegulatoryCalculators';
 import EurocodeCalculators from './eurocode/EurocodeCalculators';
-import FireCalculator from './fire/FireCalculator';
-import HygrometryCalculator from './hygrometry/HygrometryCalculator';
-import ThermalResistanceCalculator from './thermal/ThermalResistanceCalculator';
-import AcousticInsulationCalculator from './acoustic/AcousticInsulationCalculator';
-import AccessibilityRampCalculator from './accessibility/AccessibilityRampCalculator';
+import RentabilityCalculator from './rentability/RentabilityCalculator';
+import FraisNotaireCalculator from './immobilier/FraisNotaireCalculator';
+import SurfaceHabitableCalculator from './immobilier/SurfaceHabitableCalculator';
+import CapaciteEmpruntCalculator from './financier/CapaciteEmpruntCalculator';
+import SimulationManager from '../calculateurs/simulation/SimulationManager';
+
+// Create a central registry of all calculators
+const CalculatorsRegistry = {
+  immobilier: [
+    {
+      title: "Surface habitable",
+      component: SurfaceHabitableCalculator,
+      description: "Calculateur de surface habitable et SHON/SHOB",
+      type: "surface"
+    },
+    {
+      title: "Frais de notaire",
+      component: FraisNotaireCalculator,
+      description: "Estimation des frais de notaire pour une acquisition immobilière",
+      type: "frais-notaire"
+    }
+  ],
+  financier: [
+    {
+      title: "Capacité d'emprunt",
+      component: CapaciteEmpruntCalculator,
+      description: "Calculez votre capacité d'emprunt selon vos revenus",
+      type: "capacite-emprunt"
+    },
+    {
+      title: "Rentabilité locative",
+      component: RentabilityCalculator,
+      description: "Calculez la rentabilité d'un investissement immobilier locatif",
+      type: "rentability"
+    }
+  ]
+};
 
 const WorkspaceCalculators = () => {
-  const [activeTab, setActiveTab] = useState("reglementaire");
+  const [activeTab, setActiveTab] = useState("immobilier");
 
   return (
     <div className="space-y-6">
       <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 mb-6">
         <h3 className="text-zinc-800 font-medium flex items-center gap-2 mb-2">
           <Calculator className="h-5 w-5" />
-          Calculateurs Techniques et Réglementaires
+          Tous les Calculateurs
         </h3>
         <p className="text-zinc-700 text-sm">
-          Accédez à nos outils de calcul spécialisés pour la conception et la vérification de conformité aux réglementations.
-          Ces calculateurs vous aideront à dimensionner correctement vos projets.
+          Accédez à l'ensemble de nos outils de calcul spécialisés pour vos projets de construction et d'investissement.
         </p>
       </div>
 
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="bg-zinc-100 p-1 flex flex-wrap">
-          <TabsTrigger value="reglementaire" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            <span>Réglementaire</span>
+          <TabsTrigger value="immobilier" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Building className="h-4 w-4" />
+            <span>Immobilier</span>
+          </TabsTrigger>
+          <TabsTrigger value="financier" className="data-[state=active]:bg-white flex items-center gap-2">
+            <PiggyBank className="h-4 w-4" />
+            <span>Financier</span>
           </TabsTrigger>
           <TabsTrigger value="technique" className="data-[state=active]:bg-white flex items-center gap-2">
             <Ruler className="h-4 w-4" />
             <span>Technique</span>
           </TabsTrigger>
-          <TabsTrigger value="thermique" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Thermometer className="h-4 w-4" />
-            <span>Thermique</span>
+          <TabsTrigger value="reglementaire" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Scale className="h-4 w-4" />
+            <span>Réglementaire</span>
           </TabsTrigger>
-          <TabsTrigger value="acoustique" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Volume2 className="h-4 w-4" />
-            <span>Acoustique</span>
-          </TabsTrigger>
-          <TabsTrigger value="hygrometrie" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Droplets className="h-4 w-4" />
-            <span>Hygrométrie</span>
-          </TabsTrigger>
-          <TabsTrigger value="incendie" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Flame className="h-4 w-4" />
-            <span>Incendie</span>
-          </TabsTrigger>
-          <TabsTrigger value="accessibilite" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Accessibility className="h-4 w-4" />
-            <span>Accessibilité</span>
+          <TabsTrigger value="simulations" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Calculator className="h-4 w-4" />
+            <span>Mes simulations</span>
           </TabsTrigger>
         </TabsList>
 
-        {/* Onglet Réglementaire */}
-        <TabsContent value="reglementaire">
-          <RegulatoryCalculators />
+        {/* Immobilier Tab */}
+        <TabsContent value="immobilier">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {CalculatorsRegistry.immobilier.map((calc) => (
+              <div key={calc.title} className="min-h-[400px]">
+                <calc.component />
+              </div>
+            ))}
+          </div>
         </TabsContent>
 
-        {/* Onglet Technique */}
+        {/* Financier Tab */}
+        <TabsContent value="financier">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {CalculatorsRegistry.financier.map((calc) => (
+              <div key={calc.title} className="min-h-[400px]">
+                <calc.component />
+              </div>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* Technique Tab */}
         <TabsContent value="technique">
           <EurocodeCalculators />
         </TabsContent>
 
-        {/* Onglet Thermique */}
-        <TabsContent value="thermique">
-          <ThermalResistanceCalculator />
+        {/* Réglementaire Tab */}
+        <TabsContent value="reglementaire">
+          <RegulatoryCalculators />
         </TabsContent>
 
-        {/* Onglet Acoustique */}
-        <TabsContent value="acoustique">
-          <AcousticInsulationCalculator />
-        </TabsContent>
-
-        {/* Onglet Hygrométrie */}
-        <TabsContent value="hygrometrie">
-          <HygrometryCalculator />
-        </TabsContent>
-
-        {/* Onglet Incendie */}
-        <TabsContent value="incendie">
-          <FireCalculator />
-        </TabsContent>
-
-        {/* Onglet Accessibilité */}
-        <TabsContent value="accessibilite">
-          <AccessibilityRampCalculator />
+        {/* Mes simulations Tab */}
+        <TabsContent value="simulations">
+          <SimulationManager />
         </TabsContent>
       </Tabs>
     </div>

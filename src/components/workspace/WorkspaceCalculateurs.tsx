@@ -1,23 +1,33 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler, Volume2, Thermometer, Droplets, Hammer, Briefcase } from 'lucide-react';
+import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler } from 'lucide-react';
 
-// Import workspace components with correct import syntax (using default imports)
-import FraisNotaireCalculator from '@/components/workspace/calculators/FraisNotaireCalculator';
-import RentabiliteLocativeCalculator from '@/components/workspace/calculators/RentabiliteLocativeCalculator';
-import CapaciteEmpruntCalculator from '@/components/workspace/calculators/CapaciteEmpruntCalculator';
-import SurfaceHabitableCalculator from '@/components/workspace/calculators/SurfaceHabitableCalculator';
+// Import workspace components
+import FraisNotaireCalculator from '@/components/workspace/calculators/immobilier/FraisNotaireCalculator';
+import RentabiliteLocativeCalculator from '@/components/workspace/calculators/rentability/RentabilityCalculator';
+import CapaciteEmpruntCalculator from '@/components/workspace/calculators/financier/CapaciteEmpruntCalculator';
+import SurfaceHabitableCalculator from '@/components/workspace/calculators/immobilier/SurfaceHabitableCalculator';
 import AcousticCalculator from '@/components/workspace/calculators/AcousticCalculator';
 import DpeCalculator from '@/components/workspace/calculators/DpeCalculator';
-import EurocodesCalculator from '@/components/workspace/calculators/EurocodesCalculator';
+import EurocodesCalculator from '@/components/workspace/calculators/eurocode/EurocodeCalculators';
 import SimulationManager from './calculateurs/simulation/SimulationManager';
+import CalculatorDirectory from './CalculatorDirectory';
 import { useToast } from '@/hooks/use-toast';
+import { useSearchParams } from 'next/navigation';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("immobilier");
+  const searchParams = useSearchParams();
+  const tabParam = searchParams?.get('tab');
+  const [activeTab, setActiveTab] = useState(tabParam || "immobilier");
+
+  // Update active tab based on URL parameters
+  useEffect(() => {
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
 
   return (
     <div className="space-y-6">
@@ -34,6 +44,10 @@ const WorkspaceCalculateurs = () => {
 
       <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="bg-zinc-100 p-1 flex flex-wrap">
+          <TabsTrigger value="directory" className="data-[state=active]:bg-white flex items-center gap-2">
+            <Calculator className="h-4 w-4" />
+            <span>Répertoire</span>
+          </TabsTrigger>
           <TabsTrigger value="immobilier" className="data-[state=active]:bg-white flex items-center gap-2">
             <HomeIcon className="h-4 w-4" />
             <span>Immobilier</span>
@@ -51,14 +65,19 @@ const WorkspaceCalculateurs = () => {
             <span>Réglementaire</span>
           </TabsTrigger>
           <TabsTrigger value="technique" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Hammer className="h-4 w-4" />
+            <Ruler className="h-4 w-4" />
             <span>Technique</span>
           </TabsTrigger>
           <TabsTrigger value="simulations" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Briefcase className="h-4 w-4" />
+            <Calculator className="h-4 w-4" />
             <span>Mes simulations</span>
           </TabsTrigger>
         </TabsList>
+
+        {/* Répertoire complet des calculateurs */}
+        <TabsContent value="directory">
+          <CalculatorDirectory />
+        </TabsContent>
 
         {/* Onglet Immobilier */}
         <TabsContent value="immobilier">
@@ -159,31 +178,10 @@ const WorkspaceCalculateurs = () => {
             </Card>
           </div>
         </TabsContent>
-
+        
         {/* Onglet Technique */}
         <TabsContent value="technique">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Dimensionnement rampe</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Calcul descente de charge</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          <EurocodesCalculator />
         </TabsContent>
 
         {/* Onglet Mes simulations */}

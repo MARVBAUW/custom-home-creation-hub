@@ -1,20 +1,35 @@
 
-// Type definitions for simulation components
+// Types for simulations
+export type SimulationType = 'calculator' | 'simulation' | 'note' | 'rentability' | 'surface' | 'frais-notaire' | 'capacite-emprunt' | 'acoustic' | 'dpe' | 'thermal';
+
 export interface Simulation {
   id?: string;
   title: string;
-  type: 'calculator' | 'simulation' | 'note' | string; // Allowing string for compatibility
-  content: any;
-  created_at?: string;
-  updated_at?: string;
+  type: SimulationType;
+  content: {
+    data: any;
+    results?: any;
+  };
   is_temporary: boolean;
+  updated_at?: string;
+  created_at?: string;
+  user_id?: string;
 }
 
-// Function to validate and convert the type
-export const validateSimulationType = (type: string): 'calculator' | 'simulation' | 'note' => {
-  if (type === 'calculator' || type === 'simulation' || type === 'note') {
-    return type as 'calculator' | 'simulation' | 'note';
+export function validateSimulationType(type: string): SimulationType {
+  const validTypes: SimulationType[] = ['calculator', 'simulation', 'note', 'rentability', 'surface', 'frais-notaire', 'capacite-emprunt', 'acoustic', 'dpe', 'thermal'];
+  
+  if (validTypes.includes(type as SimulationType)) {
+    return type as SimulationType;
   }
-  // Default value if the type isn't recognized
+  
+  // Default to calculator if not valid
   return 'calculator';
-};
+}
+
+export interface SimulationStorage {
+  saveSimulation: (simulation: Simulation) => Promise<Simulation>;
+  loadSimulations: () => Promise<Simulation[]>;
+  deleteSimulation: (id: string) => Promise<void>;
+  getSimulation: (id: string) => Promise<Simulation | null>;
+}
