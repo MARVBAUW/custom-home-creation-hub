@@ -5,34 +5,15 @@ import { Link } from 'react-router-dom';
 
 const SEOFooter = () => {
   return (
-    <section className="py-8 bg-stone-50 border-t border-stone-200">
+    <section className="py-8 bg-stone-50/50 border-t border-stone-100">
       <Container>
-        <div className="text-sm text-stone-500">
+        <div className="text-sm text-stone-600/70 leading-relaxed">
           <p className="mb-4">
-            <Link to="/" className="text-progineer-gold hover:underline">Progineer</Link>, ingénieur et maître d'œuvre à Marseille et en PACA – Spécialiste en <Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold hover:underline">construction de maisons sur mesure</Link>, <Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold hover:underline">rénovation</Link> et <Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold hover:underline">extension</Link>. Rejoignez notre réseau de partenaires artisans et professionnels du bâtiment pour collaborer sur des projets de qualité dans la région Provence-Alpes-Côte d'Azur.
+            <Link to="/" className="text-progineer-gold/80 hover:underline">Progineer</Link>, ingénieur et maître d'œuvre à Marseille et en PACA – Spécialiste en <Link to="/prestations-maitre-oeuvre/construction-neuve" className="text-progineer-gold/80 hover:underline">construction de maisons sur mesure</Link>, <Link to="/prestations-maitre-oeuvre/renovation" className="text-progineer-gold/80 hover:underline">rénovation</Link> et <Link to="/prestations-maitre-oeuvre/extension" className="text-progineer-gold/80 hover:underline">extension</Link>. Rejoignez notre réseau de partenaires artisans et professionnels du bâtiment pour collaborer sur des projets de qualité dans la région Provence-Alpes-Côte d'Azur.
           </p>
           
-          {/* Add explicit backlink here for better crawler visibility */}
-          <p className="mb-4">
-            Pour trouver d'autres professionnels du secteur, consultez <a href="https://www.maitredoeuvre.com/" className="text-progineer-gold hover:underline" rel="noopener">Trouver un maitre d'oeuvre</a> - annuaire des maîtres d'œuvre en France.
-          </p>
-          
-          <div className="flex flex-wrap gap-3 mt-4">
-            <Link to="/prestations-maitre-oeuvre" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
-              Nos prestations
-            </Link>
-            <Link to="/contact" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
-              Nous contacter
-            </Link>
-            <Link to="/realisations-architecte-maison" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
-              Nos réalisations
-            </Link>
-            <Link to="/equipe-maitrise-oeuvre" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
-              Notre équipe
-            </Link>
-            <Link to="/sitemap" className="text-xs bg-stone-200 px-2 py-1 rounded hover:bg-progineer-gold hover:text-white transition-colors">
-              Plan du site
-            </Link>
+          <div className="text-xs text-stone-500/60">
+            Pour trouver d'autres professionnels du secteur, consultez <a href="https://www.maitredoeuvre.com/" className="text-progineer-gold/80 hover:underline" rel="noopener">Trouver un maitre d'œuvre</a> - annuaire des maîtres d'œuvre en France.
           </div>
         </div>
       </Container>

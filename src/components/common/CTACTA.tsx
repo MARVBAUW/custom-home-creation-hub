@@ -15,14 +15,6 @@ const CTACTA = () => {
     });
   };
 
-  const handleContactClick = () => {
-    toast({
-      title: "Redirection vers la page de contact",
-      description: "Vous êtes redirigé vers notre formulaire de contact.",
-      duration: 3000,
-    });
-  };
-
   return (
     <section className="py-16 bg-khaki-600 text-white">
       <Container>
@@ -34,23 +26,13 @@ const CTACTA = () => {
             Contactez-nous dès aujourd'hui pour discuter de votre vision et découvrir comment 
             notre expertise peut vous aider à la réaliser.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              href="/estimation" 
-              onClick={handleEstimationClick}
-              className="bg-[#787346] text-white hover:bg-[#787346]/90 !text-white"
-            >
-              Estimer mon projet
-            </Button>
-            <Button 
-              href="/contact" 
-              onClick={handleContactClick}
-              variant="outline" 
-              className="border-white/30 bg-transparent hover:bg-white/10 !text-white"
-            >
-              Nous contacter
-            </Button>
-          </div>
+          <Button 
+            href="/estimation" 
+            onClick={handleEstimationClick}
+            className="bg-[#787346] text-white hover:bg-[#787346]/90 !text-white"
+          >
+            Estimer mon projet
+          </Button>
         </div>
       </Container>
     </section>
