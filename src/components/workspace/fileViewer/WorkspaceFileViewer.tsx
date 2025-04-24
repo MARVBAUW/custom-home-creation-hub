@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { FileSpreadsheet, Download, X, Maximize2, Minimize2 } from 'lucide-react';
@@ -25,6 +26,7 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
   const { toast } = useToast();
   const [isFullscreen, setIsFullscreen] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState('aperçu');
+  const [isDownloading, setIsDownloading] = React.useState(false);
 
   if (!file) return null;
 
@@ -45,23 +47,55 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
       return;
     }
 
-    const success = await handleFileDownload(file.url, file.title, {
-      showToast: true,
-      fileName: file.filename
-    });
+    setIsDownloading(true);
     
-    if (success) {
-      toast({
-        title: "Téléchargement réussi",
-        description: `Le fichier "${file.title}" a été téléchargé avec succès.`
+    try {
+      const result = await handleFileDownload(file.url, file.title, {
+        showToast: true,
+        fileName: file.filename,
+        contentType: determineContentType(file.filename)
       });
-      onClose();
-    } else {
+      
+      if (result.success) {
+        toast({
+          title: "Téléchargement réussi",
+          description: `Le fichier "${file.title}" a été téléchargé avec succès.`
+        });
+        onClose();
+      } else {
+        toast({
+          title: "Erreur de téléchargement",
+          description: result.error || "Une erreur est survenue lors du téléchargement. Veuillez réessayer.",
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
       toast({
         title: "Erreur de téléchargement",
-        description: "Une erreur est survenue lors du téléchargement. Veuillez réessayer.",
+        description: "Une erreur inattendue est survenue. Veuillez réessayer ultérieurement.",
         variant: 'destructive'
       });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+  
+  // Helper to determine content type based on filename
+  const determineContentType = (filename: string): string => {
+    if (!filename) return 'application/pdf';
+    
+    const extension = filename.split('.').pop()?.toLowerCase();
+    
+    switch (extension) {
+      case 'pdf': return 'application/pdf';
+      case 'docx': return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      case 'xlsx': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      case 'pptx': return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+      case 'jpg':
+      case 'jpeg': return 'image/jpeg';
+      case 'png': return 'image/png';
+      case 'txt': return 'text/plain';
+      default: return 'application/octet-stream';
     }
   };
 
@@ -129,9 +163,13 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
             <span className="mx-2">•</span>
             <span>Mise à jour: {file.lastUpdate}</span>
           </div>
-          <Button onClick={handleDownloadClick} className="bg-khaki-600 hover:bg-khaki-700">
+          <Button 
+            onClick={handleDownloadClick} 
+            className="bg-khaki-600 hover:bg-khaki-700"
+            disabled={isDownloading}
+          >
             <Download className="h-4 w-4 mr-2" />
-            Télécharger
+            {isDownloading ? 'Téléchargement...' : 'Télécharger'}
           </Button>
         </div>
       </DialogContent>

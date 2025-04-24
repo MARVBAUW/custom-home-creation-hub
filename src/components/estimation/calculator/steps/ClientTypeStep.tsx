@@ -22,14 +22,14 @@ const ClientTypeStep: React.FC<ClientTypeStepProps> = ({
   const [clientType, setClientType] = React.useState<string>(formData.clientType || '');
 
   const handleSelect = (type: string) => {
-    // Mettre à jour le type de client
+    // Update the client type
     updateFormData({ 
-      clientType: type,
-      // Réinitialiser les champs de navigation pour éviter des problèmes de routage
+      clientType: type as 'individual' | 'professional',
+      // Reset navigation flags to avoid routing issues
       skipToContact: false
     });
     
-    // Passer à l'étape suivante après un court délai
+    // After a short delay, move to the next step
     setTimeout(() => {
       goToNextStep();
     }, 100);

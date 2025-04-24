@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEstimationCalculator } from './useEstimationCalculator';
 import EstimationResult from './EstimationResult';
 import { Card } from '@/components/ui/card';
+import FormNavigation from './FormNavigation';
 
 // Import all step components
 import ClientTypeStep from './steps/ClientTypeStep';
@@ -20,17 +22,24 @@ import CouvertureStep from './steps/CouvertureStep';
 import RenovationSpecificStep from './steps/RenovationSpecificStep';
 import IsolationStep from './steps/IsolationStep';
 import FacadeStep from './steps/FacadeStep';
-import FinishDetailsStep from './steps/FinishDetailsStep';
-import RoomsDetailsStep from './steps/RoomsDetailsStep';
-import ExteriorFeaturesStep from './steps/ExteriorFeaturesStep';
-import SpecialFeaturesStep from './steps/SpecialFeaturesStep';
+import MenuiseriesExtStep from './steps/MenuiseriesExtStep';
+import ElectriciteStep from './steps/ElectriciteStep';
+import PlomberieStep from './steps/PlomberieStep';
+import ChauffageStep from './steps/ChauffageStep';
+import PlatrerieStep from './steps/PlatrerieStep';
+import MenuiseriesIntStep from './steps/MenuiseriesIntStep';
+import CarrelageStep from './steps/CarrelageStep';
+import ParquetStep from './steps/ParquetStep';
+import PeintureStep from './steps/PeintureStep';
+import EnergiesRenouvelablesStep from './steps/EnergiesRenouvelablesStep';
+import SolutionsEnvironnementalesStep from './steps/SolutionsEnvironnementalesStep';
+import AmenagementExterieursStep from './steps/AmenagementExterieursStep';
+import AmenagementExterieursDetailsStep from './steps/AmenagementExterieursDetailsStep';
+import CuisineStep from './steps/CuisineStep';
+import SalleDeBainStep from './steps/SalleDeBainStep';
 import ContactDetailsStep from './steps/ContactDetailsStep';
 import QuickEstimationStep from './steps/QuickEstimationStep';
-import QuickEstimationFeaturesStep from './steps/QuickEstimationFeaturesStep';
-import QuickContactStep from './steps/QuickContactStep';
 import ThankYouStep from './steps/ThankYouStep';
-import ProfessionalContactStep from './steps/ProfessionalContactStep';
-import ProjectContactStep from './steps/ProjectContactStep';
 
 // Animation variants for page transitions
 const pageVariants = {
@@ -71,7 +80,8 @@ const EstimationWizard: React.FC = () => {
     goToNextStep,
     goToPreviousStep,
     calculateEstimationResult,
-    finalizeEstimation
+    finalizeEstimation,
+    isSubmitting
   } = useEstimationCalculator();
   
   // Switch to results tab when estimation is calculated
@@ -81,25 +91,12 @@ const EstimationWizard: React.FC = () => {
     }
   }, [estimationResult]);
 
-  // Function to determine if the current step should show a contact form based on the selected path
-  const shouldShowContactForm = () => {
-    if (formData.clientType === 'professional') {
-      return true; // Pour les professionnels, toujours montrer un formulaire de contact adapté
-    }
-    
-    if (formData.projectType === 'design' || formData.projectType === 'optimization') {
-      return true; // Pour les projets de design ou d'optimisation, montrer un formulaire de contact
-    }
-    
-    return false;
-  };
-
   // Function to render the current step component
   const renderCurrentStep = () => {
     console.log("Rendering step:", step, "Project Type:", formData.projectType, "Client Type:", formData.clientType);
     
     switch (step) {
-      case 0: // Type de client (première étape)
+      case 0: // Client Type Selection (Page 1)
         return (
           <ClientTypeStep
             formData={formData}
@@ -108,10 +105,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 1: // Professionnel - Infos projet (deuxième étape pour pro)
-        // Pour les professionnels, utiliser le formulaire de contact professionnel
+      case 1: // Professional Project Details (Page 2)
         return (
-          <ProfessionalContactStep
+          <ProfessionalProjectDetailsStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -119,7 +115,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 2: // Individual Project Type (troisième étape pour particulier)
+      case 2: // Individual Project Type (Page 3)
         return (
           <IndividualProjectTypeStep
             formData={formData}
@@ -129,7 +125,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 3: // Estimation Type (rapide/précise)
+      case 3: // Estimation Type (Page 4)
         return (
           <EstimationTypeStep
             formData={formData}
@@ -139,7 +135,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 4: // Construction Details
+      case 4: // Construction Details (Page 5)
         return (
           <ConstructionDetailsStep
             formData={formData}
@@ -149,7 +145,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 5: // Terrain Details
+      case 5: // Terrain (Page 6)
         return (
           <TerrainStep
             formData={formData}
@@ -159,7 +155,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 6: // Demolition
+      case 6: // Demolition (Page 7)
         return (
           <DemolitionStep
             formData={formData}
@@ -169,7 +165,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 7: // Gros Oeuvre
+      case 7: // Gros Oeuvre (Page 8)
         return (
           <GrosOeuvreStep
             formData={formData}
@@ -179,7 +175,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 8: // Charpente
+      case 8: // Charpente (Page 9)
         return (
           <CharpenteStep
             formData={formData}
@@ -189,7 +185,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 9: // Combles
+      case 9: // Combles (Page 10)
         return (
           <ComblesStep
             formData={formData}
@@ -199,7 +195,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 10: // Couverture
+      case 10: // Couverture (Page 11)
         return (
           <CouvertureStep
             formData={formData}
@@ -209,17 +205,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 11: // Renovation Specific (for renovation projects)
-        return (
-          <RenovationSpecificStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
-      case 12: // Isolation
+      case 11: // Isolation (Page 12)
         return (
           <IsolationStep
             formData={formData}
@@ -229,7 +215,7 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 13: // Facade
+      case 12: // Facade (Page 13)
         return (
           <FacadeStep
             formData={formData}
@@ -239,9 +225,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 14: // Rooms Details
+      case 13: // Menuiseries exterieures (Page 14)
         return (
-          <RoomsDetailsStep
+          <MenuiseriesExtStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -249,9 +235,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 15: // Finish Details
+      case 14: // Électricité (Page 15)
         return (
-          <FinishDetailsStep
+          <ElectriciteStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -259,9 +245,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 16: // Exterior Features
+      case 15: // Plomberie (Page 16)
         return (
-          <ExteriorFeaturesStep
+          <PlomberieStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -269,9 +255,9 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 17: // Special Features
+      case 16: // Chauffage (Page 17)
         return (
-          <SpecialFeaturesStep
+          <ChauffageStep
             formData={formData}
             updateFormData={updateFormData}
             goToNextStep={goToNextStep}
@@ -279,7 +265,127 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 18: // Contact Details
+      case 17: // Plâtrerie (Page 18)
+        return (
+          <PlatrerieStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 18: // Menuiseries intérieures (Page 19)
+        return (
+          <MenuiseriesIntStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 19: // Carrelage (Page 20)
+        return (
+          <CarrelageStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 20: // Parquet (Page 21)
+        return (
+          <ParquetStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 21: // Peinture (Page 22)
+        return (
+          <PeintureStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 22: // Energies renouvelables (Page 23)
+        return (
+          <EnergiesRenouvelablesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 23: // Solutions environnementales (Page 24)
+        return (
+          <SolutionsEnvironnementalesStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 24: // Aménagements extérieurs (Page 25)
+        return (
+          <AmenagementExterieursStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 25: // Aménagements extérieurs details (Page 26)
+        return (
+          <AmenagementExterieursDetailsStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 26: // Cuisine (Page 27)
+        return (
+          <CuisineStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 27: // Salle de bain (Page 28)
+        return (
+          <SalleDeBainStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 44: // Quick Estimation (Page 44)
+        return (
+          <QuickEstimationStep
+            formData={formData}
+            updateFormData={updateFormData}
+            goToNextStep={goToNextStep}
+            goToPreviousStep={goToPreviousStep}
+            animationDirection={animationDirection}
+          />
+        );
+      case 45: // Contact Details (Page 45)
         return (
           <ContactDetailsStep
             formData={formData}
@@ -289,52 +395,15 @@ const EstimationWizard: React.FC = () => {
             animationDirection={animationDirection}
           />
         );
-      case 44: // Quick Estimation Features selection
-        return (
-          <QuickEstimationFeaturesStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-          />
-        );
-      case 45: // Contact Form
-        // Si c'est un projet professionnel ou design/optimisation, utiliser le formulaire de contact projet
-        if (formData.projectType === 'design' || formData.projectType === 'optimization') {
-          return (
-            <ProjectContactStep
-              formData={formData}
-              updateFormData={updateFormData}
-              goToNextStep={goToNextStep}
-              goToPreviousStep={goToPreviousStep}
-              animationDirection={animationDirection}
-              finalizeEstimation={finalizeEstimation}
-            />
-          );
-        }
-        
-        // Sinon utiliser le formulaire de contact standard
-        return (
-          <QuickContactStep
-            formData={formData}
-            updateFormData={updateFormData}
-            goToNextStep={goToNextStep}
-            goToPreviousStep={goToPreviousStep}
-            animationDirection={animationDirection}
-            finalizeEstimation={finalizeEstimation}
-          />
-        );
-        
-      case 46: // Thank You Page
+      case 46: // Thank You Step (Page 46)
         return (
           <ThankYouStep
             formData={formData}
             animationDirection={animationDirection}
           />
         );
-        
       default:
+        // For any other step number, default back to Client Type
         return (
           <ClientTypeStep
             formData={formData}
@@ -345,6 +414,9 @@ const EstimationWizard: React.FC = () => {
         );
     }
   };
+  
+  // Calculate progress percentage
+  const progress = Math.round((step / totalSteps) * 100);
   
   return (
     <div className="w-full">
@@ -359,6 +431,15 @@ const EstimationWizard: React.FC = () => {
         </TabsList>
         
         <TabsContent value="form" className="py-4">
+          {/* Progress bar */}
+          <div className="w-full h-2 bg-gray-200 rounded-full mb-4">
+            <div 
+              className="h-2 rounded-full bg-khaki-600 transition-all duration-500 ease-in-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-xs text-gray-500 mb-6 text-right">Étape {step + 1} sur {totalSteps}</p>
+          
           <AnimatePresence mode="wait" custom={animationDirection}>
             <motion.div
               key={step}
@@ -371,6 +452,16 @@ const EstimationWizard: React.FC = () => {
             >
               <Card className="w-full shadow-md border p-6">
                 {renderCurrentStep()}
+                
+                {/* Navigation buttons */}
+                <FormNavigation 
+                  step={step}
+                  totalSteps={totalSteps}
+                  onPreviousClick={goToPreviousStep}
+                  onNextClick={goToNextStep}
+                  isSubmitting={isSubmitting}
+                  formData={formData}
+                />
               </Card>
             </motion.div>
           </AnimatePresence>

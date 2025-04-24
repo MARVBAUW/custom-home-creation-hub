@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card } from "@/components/ui/card";
 import { useEstimationCalculator } from './useEstimationCalculator';
@@ -5,13 +6,16 @@ import { FormProvider } from 'react-hook-form';
 import { useEstimationForm } from './hooks/useEstimationForm';
 import ConversationalEstimator from './ConversationalEstimator';
 import ResultsSummary from './components/ResultsSummary';
-import FormNavigation from './components/FormNavigation';
+import FormNavigation from './FormNavigation';
 import { FormData } from './types/formTypes';
 import { createTypeAdaptingUpdater } from './utils/dataAdapter';
+import { calculateEstimationAmount, validateStep } from './utils/navigationPathUtils';
+import { useToast } from '@/hooks/use-toast';
 
 const WorkEstimationForm: React.FC = () => {
   const formWrapper = useRef<HTMLDivElement>(null);
   const [showSummary, setShowSummary] = useState(false);
+  const { toast } = useToast();
   
   // Use the updated hook that includes all required properties
   const {
@@ -23,7 +27,9 @@ const WorkEstimationForm: React.FC = () => {
     goToNextStep,
     goToPreviousStep,
     updateFormData,
-    setStep
+    setStep,
+    isSubmitting,
+    finalizeEstimation
   } = useEstimationCalculator();
   
   // Create a type-adapting updater function to handle type conversions
@@ -31,7 +37,7 @@ const WorkEstimationForm: React.FC = () => {
   
   const { methods } = useEstimationForm();
 
-  // Prevent page jumping during step transitions
+  // Scroll management during step transitions
   useEffect(() => {
     if (formWrapper.current) {
       const scrollPosition = window.scrollY;
@@ -46,31 +52,39 @@ const WorkEstimationForm: React.FC = () => {
     }
   }, [step]);
 
-  const handleFormChange = (newStep: number) => {
-    // Save current scroll position
-    if (formWrapper.current) {
-      const scrollPosition = window.scrollY;
-      
-      // Stay at the same position after step update
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: 'auto'
-        });
-      }, 10);
-    }
-  };
-
   // Function to handle client type submission from conversational estimator
   const onClientTypeSubmit = (data: { clientType: string }) => {
     if (data && typeof data === 'object' && 'clientType' in data) {
-      adaptedUpdateFormData({ clientType: data.clientType });
+      adaptedUpdateFormData({ clientType: data.clientType as 'individual' | 'professional' });
+      
+      // Automatically move to next step when client type is selected
+      setTimeout(() => {
+        goToNextStep();
+      }, 300);
     }
   };
 
   // Process user input from conversational estimator
   const processUserInput = (input: string) => {
     console.log('Input processed:', input);
+    
+    // Here we can add logic to extract data from conversational input
+    // For example, detecting surface area, project type, etc.
+    
+    // Sample implementation to detect project type from conversation
+    if (input.toLowerCase().includes('construction') || input.toLowerCase().includes('construire')) {
+      adaptedUpdateFormData({ projectType: 'construction' });
+    } else if (input.toLowerCase().includes('rénovation') || input.toLowerCase().includes('rénover')) {
+      adaptedUpdateFormData({ projectType: 'renovation' });
+    } else if (input.toLowerCase().includes('extension') || input.toLowerCase().includes('agrandir')) {
+      adaptedUpdateFormData({ projectType: 'extension' });
+    }
+    
+    // Detect surface information
+    const surfaceMatch = input.match(/(\d+)\s*m²/);
+    if (surfaceMatch && surfaceMatch[1]) {
+      adaptedUpdateFormData({ surface: parseInt(surfaceMatch[1]) });
+    }
   };
 
   // Extract numeric value from estimation result for FormNavigation
@@ -79,6 +93,31 @@ const WorkEstimationForm: React.FC = () => {
     return typeof estimationResult === 'number' 
       ? estimationResult 
       : estimationResult.totalAmount;
+  };
+
+  // Handle form navigation with validation
+  const handleNextStep = () => {
+    // Validate current step
+    const { isValid, errors } = validateStep(step, formData);
+    
+    if (!isValid) {
+      // Show validation errors
+      toast({
+        title: "Formulaire incomplet",
+        description: errors.join('. '),
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // If validation passes, continue to next step
+    goToNextStep();
+    
+    // If this was the last regular step, calculate the estimation
+    if (step === totalSteps - 2) {
+      const calculatedAmount = calculateEstimationAmount(formData);
+      adaptedUpdateFormData({ montantT: calculatedAmount });
+    }
   };
 
   return (
@@ -110,8 +149,11 @@ const WorkEstimationForm: React.FC = () => {
           estimationResult={getNumericEstimation()}
           showSummary={showSummary}
           onPreviousClick={goToPreviousStep}
-          onNextClick={goToNextStep}
+          onNextClick={handleNextStep}
           onShowSummaryClick={() => setShowSummary(true)}
+          formData={formData}
+          isSubmitting={isSubmitting}
+          onComplete={finalizeEstimation}
         />
       </div>
     </FormProvider>

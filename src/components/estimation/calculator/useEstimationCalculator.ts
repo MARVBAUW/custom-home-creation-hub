@@ -1,9 +1,10 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { FormData } from './types/formTypes';
 import { adaptToEstimationResponseData } from './utils/dataAdapter';
 import { ensureNumber } from './utils/typeConversions';
 import { EstimationResponseData } from './types/estimationTypes';
+import { determineNextStep, determinePreviousStep } from './utils/navigationPathUtils';
 
 // Move the function outside the hook
 export function generateEstimationResult(formData: FormData): EstimationResponseData {
@@ -11,8 +12,9 @@ export function generateEstimationResult(formData: FormData): EstimationResponse
 }
 
 export const useEstimationCalculator = () => {
+  // State management for steps and form data
   const [step, setStep] = useState(0);
-  const totalSteps = 20;
+  const [totalSteps, setTotalSteps] = useState(20);
   const [formData, setFormData] = useState<FormData>({
     surface: 0,
     city: '',
@@ -21,6 +23,37 @@ export const useEstimationCalculator = () => {
   const [estimationResult, setEstimationResult] = useState<EstimationResponseData | null>(null);
   const [animationDirection, setAnimationDirection] = useState<'forward' | 'backward'>('forward');
   const [showResultDialog, setShowResultDialog] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Calculate total steps based on project type and estimation type
+  useEffect(() => {
+    let stepsCount = 20; // Default number of steps
+    
+    // Adjust based on client type
+    if (formData.clientType === 'professional') {
+      stepsCount = 20; // Professional has specific steps
+    } else if (formData.clientType === 'individual') {
+      stepsCount = 19; // Individual has different steps
+    }
+    
+    // Adjust based on project type
+    if (formData.projectType === 'renovation' || formData.projectType === 'division') {
+      stepsCount += 9; // Additional steps for renovation/division
+    } else if (formData.projectType === 'construction' || formData.projectType === 'extension') {
+      stepsCount += 7; // Additional steps for construction/extension
+    }
+    
+    // Adjust based on options selected
+    if (formData.includeEcoSolutions) stepsCount += 1;
+    if (formData.includeRenewableEnergy) stepsCount += 1;
+    if (formData.includeLandscaping) stepsCount += 1;
+    if (formData.includeOptions) stepsCount += 1;
+    if (formData.includeCuisine) stepsCount += 1;
+    if (formData.includeBathroom) stepsCount += 1;
+    
+    // Set the calculated total steps
+    setTotalSteps(stepsCount);
+  }, [formData]);
 
   // Update form data with partial data
   const updateFormData = useCallback((data: Partial<FormData>) => {
@@ -41,22 +74,60 @@ export const useEstimationCalculator = () => {
       if (data.budget !== undefined) {
         updatedData.budget = ensureNumber(data.budget);
       }
+      if (data.montantT !== undefined) {
+        updatedData.montantT = ensureNumber(data.montantT);
+      }
+      
+      // Handle percentages to ensure they don't exceed 100%
+      const percentageFields = [
+        'floorTilePercentage',
+        'wallTilePercentage',
+        'basicPaintPercentage',
+        'decorativePaintPercentage',
+        'wallpaperPercentage'
+      ];
+      
+      let totalPercentage = 0;
+      percentageFields.forEach(field => {
+        if (updatedData[field]) {
+          totalPercentage += ensureNumber(updatedData[field]);
+        }
+      });
+      
+      // Warn if percentages exceed 100%
+      if (totalPercentage > 100) {
+        console.warn('Total percentage exceeds 100%', totalPercentage);
+      }
       
       return updatedData;
     });
   }, []);
 
-  // Navigate to next step
+  // Navigate to next step with conditional logic
   const goToNextStep = useCallback(() => {
     setAnimationDirection('forward');
-    setStep(prev => Math.min(prev + 1, totalSteps - 1));
-  }, [totalSteps]);
+    setIsSubmitting(true);
+    
+    // Use our navigation utility to determine the next step based on form data
+    const nextStep = determineNextStep(step, formData);
+    
+    setTimeout(() => {
+      setStep(nextStep);
+      setIsSubmitting(false);
+    }, 300);
+  }, [step, formData]);
 
-  // Navigate to previous step
+  // Navigate to previous step with conditional logic
   const goToPreviousStep = useCallback(() => {
     setAnimationDirection('backward');
-    setStep(prev => Math.max(prev - 1, 0));
-  }, []);
+    
+    // Use our navigation utility to determine the previous step based on form data
+    const previousStep = determinePreviousStep(step, formData);
+    
+    setTimeout(() => {
+      setStep(previousStep);
+    }, 300);
+  }, [step, formData]);
 
   // Go to specific step
   const goToStep = useCallback((stepIndex: number) => {
@@ -70,7 +141,8 @@ export const useEstimationCalculator = () => {
 
   // Calculate estimation result
   const calculateEstimationResult = useCallback(() => {
-    // Generate result based on form data
+    // We need to recalculate the Montant T€ based on all selections
+    // This will be implemented in detail later
     const result = generateEstimationResult(formData);
     setEstimationResult(result);
     return result;
@@ -78,6 +150,9 @@ export const useEstimationCalculator = () => {
 
   // Finalize estimation
   const finalizeEstimation = useCallback(() => {
+    setIsSubmitting(true);
+    
+    // Generate final estimation result
     const result = calculateEstimationResult();
     
     // Complete result is already created in generateEstimationResult
@@ -86,6 +161,8 @@ export const useEstimationCalculator = () => {
     
     // Move to the results step
     goToNextStep();
+    
+    setIsSubmitting(false);
     
     return result;
   }, [calculateEstimationResult, goToNextStep]);
@@ -104,6 +181,7 @@ export const useEstimationCalculator = () => {
     goToPreviousStep,
     goToStep,
     calculateEstimationResult,
-    finalizeEstimation
+    finalizeEstimation,
+    isSubmitting
   };
 };
