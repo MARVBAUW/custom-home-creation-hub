@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Container from '@/components/common/Container';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -7,39 +6,31 @@ import './animations.css';
 
 const testimonials = [
   {
-    quote: "Progineer a su transformer notre vision en réalité. Leur équipe a été à l'écoute de nos besoins et a créé une maison qui correspond parfaitement à notre style de vie.",
-    author: "Marie et Pierre",
+    quote: "Entreprise à l'écoute, réactive et sérieuse. Une équipe disponible et franche : du bon travail.",
+    author: "Marine Lenhard",
+    date: "il y a 2 mois",
     location: "Marseille",
-    project: "Construction maison 180m²",
-    rating: 5
-  }, 
-  {
-    quote: "Un accompagnement sans faille de la conception à la livraison. Les équipes de Progineer ont su gérer les imprévus avec professionnalisme.",
-    author: "Laurent M.",
-    location: "Toulon",
-    project: "Rénovation complète",
-    rating: 5
-  }, 
-  {
-    quote: "Excellente communication tout au long du projet. Le résultat final a dépassé nos attentes et le budget a été respecté à la lettre.",
-    author: "Sophie D.",
-    location: "Saint-Tropez",
-    project: "Extension 45m²",
-    rating: 5
+    project: "Visité en janvier",
+    rating: 5,
+    source: "Google"
   },
   {
-    quote: "Une expertise rare dans le domaine de la construction écologique. Progineer nous a guidés vers des solutions innovantes et durables.",
-    author: "Jean-Philippe R.",
-    location: "Nice",
-    project: "Villa bioclimatique",
-    rating: 5
+    quote: "Marvin et Maël sont vraiment à l'écoute de votre projet et font tout pour y répondre.",
+    author: "Mael Le Coz",
+    date: "il y a un jour",
+    location: "Marseille",
+    project: "Visité en avril",
+    rating: 5,
+    source: "Google"
   },
   {
-    quote: "Service exceptionnel et résultats à la hauteur de nos attentes. Nous recommandons Progineer sans hésitation pour tout projet d'envergure.",
-    author: "Caroline et Thomas",
-    location: "Cannes",
-    project: "Rénovation appartement",
-    rating: 5
+    quote: "Entrepreneurs sérieux et très réactifs.",
+    author: "lenhard Valérie",
+    date: "il y a un jour",
+    location: "Marseille",
+    project: "Visité en avril",
+    rating: 5,
+    source: "Google"
   }
 ];
 
@@ -189,9 +180,10 @@ const Testimonials = () => {
                         <Quote className="w-20 h-20 text-white/30" />
                       </div>
                     </div>
-                    {/* Badges de projet */}
-                    <div className="absolute -bottom-4 -right-4 bg-progineer-gold text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                      {testimonials[active].location}
+                    {/* Google Review Badge */}
+                    <div className="absolute -bottom-4 -right-4 bg-white text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg flex items-center gap-2">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" className="w-4 h-4" />
+                      Avis Google
                     </div>
                   </div>
                 </div>
@@ -213,12 +205,13 @@ const Testimonials = () => {
                   
                   <div>
                     <div className="font-semibold text-white text-lg">{testimonials[active].author}</div>
-                    <div className="text-sm text-white/70 mt-1">
-                      {testimonials[active].project}
+                    <div className="text-sm text-white/70 mt-1 flex items-center gap-2">
+                      <span>{testimonials[active].date}</span>
+                      <span className="text-white/40">•</span>
+                      <span>{testimonials[active].project}</span>
                     </div>
                   </div>
                   
-                  {/* Decoration */}
                   <div className="absolute top-6 right-6 text-white/10">
                     <Quote className="h-16 w-16" />
                   </div>
