@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Shield, FileText, Calendar, MessageSquare, User, Bell, Download, Info } from 'lucide-react';
@@ -157,7 +158,7 @@ const ClientDocumentation = () => {
                       <AccordionTrigger className="px-4 hover:no-underline">
                         <span className="text-lg font-medium">Types de documents</span>
                       </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4 pt-2">
+                      <AccordionContent value="types" className="px-4 pb-4 pt-2">
                         <div className="space-y-4">
                           <div className="bg-gray-50 p-4 rounded-md border border-gray-100">
                             <h3 className="font-medium mb-2">Administratifs</h3>
@@ -198,7 +199,7 @@ const ClientDocumentation = () => {
                       <AccordionTrigger className="px-4 hover:no-underline">
                         <span className="text-lg font-medium">Actions possibles</span>
                       </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4 pt-2">
+                      <AccordionContent value="actions" className="px-4 pb-4 pt-2">
                         <div className="space-y-4">
                           <div className="bg-gray-50 p-4 rounded-md border border-gray-100">
                             <h3 className="font-medium mb-2 flex items-center">
@@ -229,7 +230,7 @@ const ClientDocumentation = () => {
                       <AccordionTrigger className="px-4 hover:no-underline">
                         <span className="text-lg font-medium">Statuts des documents</span>
                       </AccordionTrigger>
-                      <AccordionContent className="px-4 pb-4 pt-2">
+                      <AccordionContent value="statuts" className="px-4 pb-4 pt-2">
                         <div className="space-y-4">
                           <div className="bg-gray-50 p-4 rounded-md border border-gray-100">
                             <p className="text-gray-600">

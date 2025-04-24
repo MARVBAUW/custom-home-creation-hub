@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Indicator } from "@/components/ui/checkbox"; // Updated from CheckboxIndicator
+import { Checkbox } from "@/components/ui/checkbox"; // Utiliser directement Checkbox
 
 const TechnicalAuditCalculator: React.FC = () => {
   return (
