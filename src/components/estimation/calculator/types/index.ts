@@ -1,22 +1,24 @@
 
-// Re-export all types using 'export type'
-export type * from './formTypes';
-export type * from './estimationTypes';
-export type { BaseFormProps } from './baseFormProps';
+// Re-export specific types from formTypes
+export type { 
+  FormData,
+  BaseFormProps,
+  StepRendererProps,
+  ConversationState,
+  Message 
+} from './formTypes';
 
-// Define interfaces still needed in the codebase
-export interface FeeCosts {
-  architect: number;
-  engineeringFees: number;
-  architectFees: number;
-  projectManagement: number;
-  officialFees: number;
-  inspectionFees: number;
-  technicalStudies: number;
-  permits: number;
-  insurance: number;
-  contingency: number;
-  taxes: number;
-  other: number;
-  total: number;
-}
+// Re-export types from estimationTypes
+export type { 
+  EstimationResponseData,
+  ProjectDetails,
+  ConstructionCosts,
+  FeeCosts,
+  OtherCosts,
+  EstimationTimeline,
+  CategoryCost,
+  EstimatedCost
+} from './estimationTypes';
+
+// Re-export the BaseFormProps type
+export type { BaseFormProps } from './baseFormProps';

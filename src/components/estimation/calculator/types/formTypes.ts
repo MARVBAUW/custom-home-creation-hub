@@ -1,4 +1,3 @@
-
 export interface FormData {
   clientType?: 'individual' | 'professional';
   projectType?: string;
@@ -54,14 +53,4 @@ export interface Message {
   timestamp?: string;
   text?: string;
   options?: string[];
-}
-
-export interface EstimationResponseData {
-  estimatedCost: number;
-  breakdown: {
-    [key: string]: number;
-  };
-  timeline: {
-    [key: string]: number;
-  };
 }
