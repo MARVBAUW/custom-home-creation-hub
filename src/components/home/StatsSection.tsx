@@ -1,110 +1,114 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
 import Container from '@/components/common/Container';
-import { Award, Clock, Wrench, Users, Shield, Leaf } from 'lucide-react';
-import EngagementCard from './engagement/EngagementCard';
-import { cn } from '@/lib/utils';
+import { motion, useInView } from 'framer-motion';
+import StatCard from './stats/StatCard';
+import StatBackground from './stats/StatBackground';
+import { statsData } from './stats/StatsData';
+import './animations.css';
 
 const StatsSection = () => {
-  const engagements = [
-    {
-      icon: "Users",
-      title: "Coordination des corps de métier",
-      description: "Gestion experte de tous les intervenants pour une exécution harmonieuse de votre projet",
-      gradient: "from-amber-500/80 to-orange-600/80"
-    },
-    {
-      icon: "Clock",
-      title: "Respect des délais garantis",
-      description: "Planification rigoureuse et suivi constant pour livrer votre projet dans les temps",
-      gradient: "from-emerald-500/80 to-teal-600/80"
-    },
-    {
-      icon: "Shield",
-      title: "Expertise technique",
-      description: "Solutions innovantes et conformes aux normes pour des résultats durables",
-      gradient: "from-sky-500/80 to-blue-600/80"
-    },
-    {
-      icon: "Award",
-      title: "Maîtrise d'œuvre complète",
-      description: "Accompagnement global de la conception à la réalisation de votre projet",
-      gradient: "from-violet-500/80 to-purple-600/80"
-    },
-    {
-      icon: "Wrench",
-      title: "Sélection des matériaux",
-      description: "Choix minutieux des matériaux pour une qualité et une durabilité optimales",
-      gradient: "from-rose-500/80 to-pink-600/80"
-    },
-    {
-      icon: "Leaf",
-      title: "Innovation durable",
-      description: "Solutions éco-responsables pour des projets respectueux de l'environnement",
-      gradient: "from-lime-500/80 to-green-600/80"
-    }
-  ];
-
-  const containerVariants = {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [counts, setCounts] = useState(statsData.map(() => 0));
+  
+  // Handle animation of counts
+  useEffect(() => {
+    if (!isInView) return;
+    
+    const counters = statsData.map((stat, index) => {
+      return {
+        start: 0,
+        end: stat.value,
+        duration: 2000 + (index * 200),
+        startTime: null
+      };
+    });
+    
+    const updateCount = (timestamp) => {
+      if (!isInView) return;
+      
+      const newCounts = [...counts];
+      let stillCounting = false;
+      
+      counters.forEach((counter, index) => {
+        if (counter.startTime === null) {
+          counter.startTime = timestamp;
+        }
+        
+        const elapsed = timestamp - counter.startTime;
+        const progress = Math.min(elapsed / counter.duration, 1);
+        
+        if (progress < 1) {
+          stillCounting = true;
+          newCounts[index] = Math.floor(counter.start + (counter.end - counter.start) * progress);
+        } else {
+          newCounts[index] = counter.end;
+        }
+      });
+      
+      setCounts(newCounts);
+      
+      if (stillCounting) {
+        requestAnimationFrame(updateCount);
+      }
+    };
+    
+    requestAnimationFrame(updateCount);
+  }, [isInView]);
+  
+  const sectionVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
+        staggerChildren: 0.3,
       }
     }
   };
 
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-stone-900 to-stone-950">
-      {/* Decorative elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-progineer-gold/20 via-transparent to-transparent opacity-60"></div>
-      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-stone-800/50 to-transparent"></div>
+    <section 
+      ref={ref} 
+      className="py-24 bg-gradient-to-b from-white to-stone-50 relative overflow-hidden"
+    >
+      {/* Background elements */}
+      <StatBackground />
       
       <Container>
-        <div className="relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <span className="inline-block px-4 py-1 rounded-full bg-progineer-gold/20 text-progineer-gold text-sm font-medium mb-4">
-              Notre expertise
-            </span>
-            <h2 className="text-3xl md:text-4xl font-rare tracking-wide mb-4 text-white">
-              Nos engagements pour votre projet
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto">
-              Une approche professionnelle et rigoureuse pour garantir la réussite de vos projets de construction et rénovation
-            </p>
-          </motion.div>
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-gray-800">
+            Nos engagements
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mb-6 rounded-full"></div>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Notre expertise et notre dévouement au service de votre projet de construction ou rénovation en PACA.
+          </p>
+        </motion.div>
 
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
-          >
-            {engagements.map((engagement, index) => (
-              <EngagementCard
-                key={index}
-                icon={engagement.icon}
-                title={engagement.title}
-                description={engagement.description}
-                gradient={engagement.gradient}
-                index={index}
-              />
-            ))}
-          </motion.div>
-        </div>
+        {/* Stats cards */}
+        <motion.div
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={sectionVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
+        >
+          {statsData.map((stat, index) => (
+            <StatCard
+              key={index}
+              {...stat}
+              index={index}
+              animatedValue={counts[index]}
+            />
+          ))}
+        </motion.div>
       </Container>
-
-      {/* Bottom transition to next section */}
-      <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-stone-50 to-transparent"></div>
     </section>
   );
 };
