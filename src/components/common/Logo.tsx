@@ -8,10 +8,10 @@ import LogoRenderer from './logos/LogoRenderer';
 const Logo: React.FC<LogoProps> = ({
   variant = 'default',
   size = 'md',
-  className,
+  className = '',
   withTagline = false
 }) => {
-  // Use the defined types for variant and size
+  // Cast to the defined types for variant and size
   const logoVariant = variant as LogoVariant;
   const logoSize = size as LogoSize;
   

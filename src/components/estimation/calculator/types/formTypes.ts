@@ -18,6 +18,16 @@ export interface FormData {
   floorTilePercentage?: number;
   wallTileType?: string;
   montantT?: number;
+  atticType?: string;
+  levels?: number;
+  createWalls?: string;
+  createFloors?: string;
+  wallArea?: number;
+  floorArea?: number;
+  floorType?: string;
+  quality?: string;
+  structuralFeatures?: string[];
+  structuralFeatureValues?: Record<string, string>;
   [key: string]: any;
 }
 
@@ -29,4 +39,17 @@ export interface BaseFormProps {
   animationDirection: 'forward' | 'backward';
   defaultValues?: Partial<FormData>;
   onSubmit?: (data: any) => void;
+}
+
+export interface ConversationState {
+  messages: Array<{
+    role: 'user' | 'assistant';
+    content: string;
+  }>;
+  currentQuestion: string;
+  expectedAnswer: string;
+  contextData: Record<string, any>;
+  currentStep: string;
+  completedSteps: string[];
+  formData: FormData;
 }

@@ -19,11 +19,13 @@ export const safeRenderValue = (value: any): string => {
 };
 
 /**
- * Ensures a value is a number, or returns 0 if it cannot be converted
+ * Ensures a value is a number, or returns default value if it cannot be converted
+ * @param value - The value to convert to a number
+ * @param defaultValue - Optional default value to return if conversion fails (defaults to 0)
  */
-export const ensureNumber = (value: unknown): number => {
+export const ensureNumber = (value: unknown, defaultValue: number = 0): number => {
   if (value === null || value === undefined) {
-    return 0;
+    return defaultValue;
   }
   
   if (typeof value === 'number') {
@@ -31,7 +33,7 @@ export const ensureNumber = (value: unknown): number => {
   }
   
   const parsed = Number(value);
-  return isNaN(parsed) ? 0 : parsed;
+  return isNaN(parsed) ? defaultValue : parsed;
 };
 
 /**

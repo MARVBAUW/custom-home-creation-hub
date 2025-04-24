@@ -14,7 +14,7 @@ const IndividualProjectForm: React.FC<BaseFormProps> = ({
   defaultValues = {}
 }) => {
   const [projectType, setProjectType] = React.useState<string>(
-    (defaultValues?.projectType as string) || 
+    (defaultValues.projectType as string) || 
     (formData.projectType as string) || 
     'construction'
   );
