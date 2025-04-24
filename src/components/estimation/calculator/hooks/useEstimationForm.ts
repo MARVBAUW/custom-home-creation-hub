@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { FormData } from '../types';
 import { calculateEstimationAmount } from '../utils/navigationPathUtils';
@@ -38,6 +37,7 @@ export const useEstimationForm = () => {
         constructionType: formData.constructionType || '',
         bedrooms: formData.bedrooms || 0,
         bathrooms: formData.bathrooms || 0,
+        projectType: formData.projectType || '',
       },
       estimatedCost: {
         total: amount,
