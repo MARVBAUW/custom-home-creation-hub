@@ -14,19 +14,11 @@ export const createContactStepRegistry = (
     40: (props: FormStepProps) => (
       <ContactForm
         formData={formData}
-        updateFormData={(data) => onContactSubmit(data)}
+        updateFormData={onContactSubmit}
         goToNextStep={() => {}}
         goToPreviousStep={goToPreviousStep}
         animationDirection={props.animationDirection}
-        defaultValues={{
-          firstName: formData.firstName || '',
-          lastName: formData.lastName || '',
-          email: formData.email || '',
-          phone: formData.phone || '',
-          message: formData.message || '',
-          city: formData.city || '',
-          termsAccepted: formData.termsAccepted || false
-        }}
+        // Remove defaultValues prop since it's not in the ContactFormProps interface
         onSubmit={onContactSubmit}
       />
     ),

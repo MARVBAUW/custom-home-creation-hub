@@ -1,15 +1,12 @@
 
 import React from 'react';
-import { BaseFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types';
 import ContactDetailsStep from '../steps/ContactDetailsStep';
 import { FormData } from '../types';
 
 interface ContactFormProps extends BaseFormProps {
-  formData: FormData;
-  updateFormData: (data: Partial<FormData>) => void;
-  goToNextStep: () => void;
-  goToPreviousStep: () => void;
-  animationDirection: 'forward' | 'backward';
+  defaultValues?: any;
+  onSubmit?: (data: any) => void;
 }
 
 const ContactForm: React.FC<ContactFormProps> = (props) => {
@@ -20,6 +17,7 @@ const ContactForm: React.FC<ContactFormProps> = (props) => {
     goToNextStep={props.goToNextStep} 
     goToPreviousStep={props.goToPreviousStep}
     animationDirection={props.animationDirection}
+    onSubmit={props.onSubmit}
   />;
 };
 

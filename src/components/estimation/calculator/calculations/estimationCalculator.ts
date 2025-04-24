@@ -1,186 +1,162 @@
+import { ensureNumber } from '../utils/typeConversions';
 
 /**
- * This file contains utility functions for calculating estimation costs
+ * Calculates the base cost of construction based on project and construction type
  */
+export const calculateConstructionBaseCost = (formData: any): number => {
+  const { projectType, constructionType, surface } = formData;
+  let baseCost = 0;
 
-import { FormData } from '../types';
-
-/**
- * Calculate base costs for a construction project
- */
-export const calculateConstructionBaseCost = (formData: FormData): number => {
-  const surface = typeof formData.surface === 'string' 
-    ? parseFloat(formData.surface) 
-    : (formData.surface || 0);
-    
-  // Base cost per m² depending on construction type
-  let baseCostPerM2 = 0;
-  
-  switch (formData.constructionType) {
-    case 'traditional':
-      baseCostPerM2 = 1800;
-      break;
-    case 'sustainable':
-      baseCostPerM2 = 2100;
-      break;
-    case 'prefab':
-      baseCostPerM2 = 1500;
-      break;
-    default:
-      baseCostPerM2 = 1800; // Default to traditional
+  if (!surface) {
+    return 0; // No cost if no surface is defined
   }
-  
-  return surface * baseCostPerM2;
+
+  // Define base costs per square meter for different construction types
+  const constructionCosts: { [key: string]: number } = {
+    newConstruction: 1500, // Cost per m² for new construction
+    renovation: 800,       // Cost per m² for renovation
+    extension: 1200        // Cost per m² for extension
+  };
+
+  // Determine the construction type
+  let selectedConstructionType = 'renovation'; // Default value
+  if (projectType === 'construction') {
+    selectedConstructionType = 'newConstruction';
+  } else if (projectType === 'extension') {
+    selectedConstructionType = 'extension';
+  }
+
+  // Get the cost per square meter for the selected construction type
+  const costPerSqM = constructionCosts[selectedConstructionType] || constructionCosts['renovation'];
+
+  // Calculate the base cost
+  baseCost = surface * costPerSqM;
+
+  return baseCost;
 };
 
 /**
- * Calculate kitchen costs based on type and number of units
+ * Calculates the cost of the kitchen based on the selected kitchen type
  */
-export const calculateKitchenCost = (formData: FormData): number => {
-  if (!formData.kitchenType || formData.kitchenType === 'none') {
-    return 0;
+export const calculateKitchenCost = (formData: any): number => {
+  const { kitchenType, surface } = formData;
+  let kitchenCost = 0;
+
+  if (!surface) {
+    return 0; // No cost if no surface is defined
   }
-  
-  const units = typeof formData.units === 'string' 
-    ? parseInt(formData.units) 
-    : (formData.units || 1);
-  
-  let costPerKitchen = 0;
-  
-  switch (formData.kitchenType) {
-    case 'kitchenette':
-      costPerKitchen = 3000;
-      break;
-    case 'basic':
-      costPerKitchen = 5000;
-      break;
-    case 'standard':
-      costPerKitchen = 8000;
-      break;
-    case 'premium':
-      costPerKitchen = 15000;
-      break;
-    default:
-      costPerKitchen = 0;
-  }
-  
-  return costPerKitchen * units;
+
+  // Define kitchen costs per square meter for different kitchen types
+  const kitchenCosts: { [key: string]: number } = {
+    basic: 300,    // Cost per m² for a basic kitchen
+    standard: 500, // Cost per m² for a standard kitchen
+    premium: 800   // Cost per m² for a premium kitchen
+  };
+
+  // Get the cost per square meter for the selected kitchen type
+  const costPerSqM = kitchenCosts[kitchenType] || 0;
+
+  // Calculate the kitchen cost
+  kitchenCost = surface * costPerSqM;
+
+  return kitchenCost;
 };
 
 /**
- * Calculate bathroom costs based on type, count and number of units
+ * Calculates the cost of the bathroom based on the selected bathroom type
  */
-export const calculateBathroomCost = (formData: FormData): number => {
-  if (!formData.bathroomType || formData.bathroomType === 'none') {
-    return 0;
-  }
-  
-  const units = typeof formData.units === 'string' 
-    ? parseInt(formData.units) 
-    : (formData.units || 1);
-    
-  const count = typeof formData.bathroomCount === 'string' 
-    ? parseInt(formData.bathroomCount) 
-    : (formData.bathroomCount || 1);
-  
-  let costPerBathroom = 0;
-  
-  switch (formData.bathroomType) {
-    case 'standard':
-      costPerBathroom = 3500;
-      break;
-    case 'mid-range':
-      costPerBathroom = 5500;
-      break;
-    case 'premium':
-      costPerBathroom = 8500;
-      break;
-    default:
-      costPerBathroom = 3500; // Default to standard
-  }
-  
-  return costPerBathroom * count * units;
+export const calculateBathroomCost = (formData: any): number => {
+    const { bathroomType, bathrooms, surface } = formData;
+    let bathroomCost = 0;
+
+    if (!surface) {
+        return 0; // No cost if no surface is defined
+    }
+
+    // Define bathroom costs per square meter for different bathroom types
+    const bathroomCosts: { [key: string]: number } = {
+        standard: 400,  // Cost per m² for a standard bathroom
+        midRange: 700,  // Cost per m² for a mid-range bathroom
+        premium: 1200, // Cost per m² for a premium bathroom
+    };
+
+    // Get the cost per square meter for the selected bathroom type
+    let costPerSqM = 0;
+    if (bathroomType && bathroomType !== 'none') {
+        costPerSqM = bathroomCosts[bathroomType] || 0;
+    }
+
+    // Calculate the bathroom cost
+    bathroomCost = (bathrooms || 1) * surface * costPerSqM;
+
+    return bathroomCost;
 };
 
 /**
- * Calculate window costs based on type and area
+ * Calculates the cost of windows based on the number of windows
  */
-export const calculateWindowsCost = (windowType: string, area: number): number => {
-  let costPerM2 = 0;
-  
-  switch (windowType) {
-    case 'bois':
-      costPerM2 = 850;
-      break;
-    case 'pvc':
-      costPerM2 = 550;
-      break;
-    case 'alu':
-      costPerM2 = 750;
-      break;
-    case 'mixte':
-      costPerM2 = 900;
-      break;
-    case 'pvc_colore':
-      costPerM2 = 650;
-      break;
-    default:
-      costPerM2 = 0; // No cost if type is undefined or 'non_concerne'
+export const calculateWindowsCost = (formData: any): number => {
+  const { windows, surface } = formData;
+  let windowsCost = 0;
+
+  if (!surface) {
+    return 0; // No cost if no surface is defined
   }
-  
-  return area * costPerM2;
+
+  // Define window cost per window
+  const windowCostPerUnit = 300;
+
+  // Calculate the windows cost
+  windowsCost = (windows || 0) * windowCostPerUnit;
+
+  return windowsCost;
 };
 
 /**
- * Calculate ecological options cost based on level and total amount
+ * Calculates the cost of eco options based on selected options
  */
-export const calculateEcoOptionsCost = (formData: FormData, totalAmount: number): number => {
-  if (!formData.ecoLevel) {
-    return 0;
+export const calculateEcoOptionsCost = (formData: any): number => {
+  const { ecoOptions, surface } = formData;
+  let ecoOptionsCost = 0;
+
+  if (!surface) {
+    return 0; // No cost if no surface is defined
   }
-  
-  let ecoCoefficient = 0;
-  
-  switch (formData.ecoLevel) {
-    case 'minimal':
-      ecoCoefficient = 0.018; // +1.8%
-      break;
-    case 'moderate':
-      ecoCoefficient = 0.038; // +3.8%
-      break;
-    case 'extensive':
-      ecoCoefficient = 0.057; // +5.7%
-      break;
-    default:
-      ecoCoefficient = 0;
+
+  // Define eco options costs per square meter for different eco options
+  const ecoOptionsCosts: { [key: string]: number } = {
+    solarPanels: 500,       // Cost per m² for solar panels
+    insulation: 200,        // Cost per m² for insulation
+    rainwaterHarvesting: 300 // Cost per m² for rainwater harvesting
+  };
+
+  // Calculate the eco options cost
+  if (ecoOptions) {
+    Object.keys(ecoOptions).forEach(option => {
+      ecoOptionsCost += surface * (ecoOptionsCosts[option] || 0);
+    });
   }
-  
-  return totalAmount * ecoCoefficient;
+
+  return ecoOptionsCost;
 };
 
 /**
- * Main estimation calculation function
+ * Main estimation calculator function that combines all calculations
  */
-export const calculateEstimation = (formData: FormData): number => {
-  let totalCost = 0;
+export const calculateEstimation = (formData: any): number => {
+  // Base cost calculation based on construction type
+  const baseCost = calculateConstructionBaseCost(formData);
   
-  // Add base construction costs
-  totalCost += calculateConstructionBaseCost(formData);
+  // Add costs for specific room types
+  const kitchenCost = calculateKitchenCost(formData);
+  const bathroomCost = calculateBathroomCost(formData);
   
-  // Add kitchen costs if applicable
-  if (formData.includeCuisine) {
-    totalCost += calculateKitchenCost(formData);
-  }
+  // Add costs for windows
+  const windowsCost = calculateWindowsCost(formData);
   
-  // Add bathroom costs if applicable
-  if (formData.includeBathroom && formData.bathroomType && formData.bathroomType !== 'none') {
-    totalCost += calculateBathroomCost(formData);
-  }
+  // Add costs for eco options if selected
+  const ecoOptionsCost = formData.includeEcoSolutions ? calculateEcoOptionsCost(formData) : 0;
   
-  // Add eco options if selected
-  if (formData.includeEcoSolutions) {
-    totalCost += calculateEcoOptionsCost(formData, totalCost);
-  }
-  
-  return totalCost;
+  // Calculate total
+  return baseCost + kitchenCost + bathroomCost + windowsCost + ecoOptionsCost;
 };

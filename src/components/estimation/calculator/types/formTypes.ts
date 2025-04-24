@@ -54,3 +54,13 @@ export interface BaseFormProps {
   goToPreviousStep: () => void;
   animationDirection: 'forward' | 'backward';
 }
+
+export interface ConversationState {
+  messages: Array<{
+    role: 'user' | 'assistant';
+    content: string;
+  }>;
+  isProcessing: boolean;
+  currentStep: number;
+  formData: FormData;
+}

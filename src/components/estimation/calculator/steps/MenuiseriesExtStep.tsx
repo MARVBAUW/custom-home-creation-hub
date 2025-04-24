@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { BaseFormProps } from '../types/formTypes';
+import { BaseFormProps } from '../types';
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, ArrowRightIcon, WindowIcon } from 'lucide-react';
+import { ArrowLeftIcon, ArrowRightIcon, Window } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";

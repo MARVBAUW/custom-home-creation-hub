@@ -2,7 +2,14 @@
 // Export all calculation functions
 export * from './costBreakdown';
 export * from './detailedEstimation';
-export { calculateConstructionBaseCost, calculateKitchenCost, calculateBathroomCost, calculateWindowsCost, calculateEcoOptionsCost, calculateEstimation } from './estimationCalculator';
+export { 
+  calculateConstructionBaseCost, 
+  calculateKitchenCost, 
+  calculateBathroomCost, 
+  calculateWindowsCost, 
+  calculateEcoOptionsCost,
+  calculateEstimation 
+} from './estimationCalculator';
 export * from './externalCosts';
 export * from './feeCosts';
 export * from './finishingCosts';
