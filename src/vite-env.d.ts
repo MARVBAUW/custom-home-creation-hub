@@ -38,86 +38,61 @@ declare module '*.xml' {
   export default content;
 }
 
-// Add proper types for Radix UI components
+// Improve Radix UI type definitions
 declare module '@radix-ui/react-accordion' {
-  export interface AccordionItemProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
+  const Root: React.FC<React.ComponentPropsWithoutRef<'div'>>;
+  const Item: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
+  const Header: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'h3'>>;
+  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
   
-  export interface AccordionTriggerProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AccordionContentProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
+  export {
+    Root,
+    Item,
+    Header,
+    Trigger,
+    Content
   }
 }
 
 declare module '@radix-ui/react-alert-dialog' {
-  export interface AlertDialogOverlayProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
+  const Root: React.FC<React.ComponentPropsWithoutRef<'div'>>;
+  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
+  const Portal: React.FC<React.ComponentPropsWithoutRef<'div'>>;
+  const Overlay: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
+  const Title: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'h2'>>;
+  const Description: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'p'>>;
+  const Action: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
+  const Cancel: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
   
-  export interface AlertDialogContentProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AlertDialogTitleProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AlertDialogDescriptionProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AlertDialogActionProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AlertDialogCancelProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
+  export {
+    Root,
+    Trigger,
+    Portal,
+    Overlay,
+    Content,
+    Title,
+    Description,
+    Action,
+    Cancel
   }
 }
 
 declare module '@radix-ui/react-avatar' {
-  export interface AvatarProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
-  }
+  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
+  const Image: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'img'>>;
+  const Fallback: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
   
-  export interface AvatarImageProps {
-    className?: string;
-    [key: string]: any;
-  }
-  
-  export interface AvatarFallbackProps {
-    children?: React.ReactNode;
-    className?: string;
-    [key: string]: any;
+  export {
+    Root,
+    Image,
+    Fallback
   }
 }
 
 declare module '@radix-ui/react-checkbox' {
-  export interface CheckboxProps {
+  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'> & {
     checked?: boolean;
     defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean | 'indeterminate') => void;
@@ -126,7 +101,20 @@ declare module '@radix-ui/react-checkbox' {
     name?: string;
     value?: string;
     id?: string;
-    className?: string;
-    [key: string]: any;
+  }>;
+  const Indicator: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
+  const CheckboxIndicator: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
+  
+  export {
+    Root,
+    Indicator,
+    CheckboxIndicator
   }
+}
+
+// Fix DTUEmptyStateProps interface
+interface DTUEmptyStateProps {
+  type?: string;
+  message?: any;
+  description?: any;
 }
