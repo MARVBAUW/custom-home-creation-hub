@@ -30,6 +30,9 @@ declare namespace React {
   interface RefAttributes<T> extends React.Attributes {
     ref?: React.Ref<T>;
   }
+  
+  // Add ElementRef type for Radix UI components
+  type ElementRef<T extends React.ElementType> = React.ComponentPropsWithRef<T>["ref"] extends React.Ref<infer R> ? R : never;
 }
 
 // Ensure the sitemap.xml file is properly handled
@@ -38,13 +41,22 @@ declare module '*.xml' {
   export default content;
 }
 
-// Improve Radix UI type definitions
+// Add proper DTUEmptyStateProps interface definition
+interface DTUEmptyStateProps {
+  type?: string;
+  message?: any;
+  description?: any;
+}
+
+// Improve Radix UI type definitions to match the actual component structure
 declare module '@radix-ui/react-accordion' {
-  const Root: React.FC<React.ComponentPropsWithoutRef<'div'>>;
-  const Item: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
-  const Header: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'h3'>>;
-  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
-  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
+  import * as React from 'react';
+  
+  const Root: React.FC<React.ComponentProps<'div'>>;
+  const Item: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  const Header: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'h3'>>;
+  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
   
   export {
     Root,
@@ -52,19 +64,21 @@ declare module '@radix-ui/react-accordion' {
     Header,
     Trigger,
     Content
-  }
+  };
 }
 
 declare module '@radix-ui/react-alert-dialog' {
-  const Root: React.FC<React.ComponentPropsWithoutRef<'div'>>;
-  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
-  const Portal: React.FC<React.ComponentPropsWithoutRef<'div'>>;
-  const Overlay: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
-  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'div'>>;
-  const Title: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'h2'>>;
-  const Description: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'p'>>;
-  const Action: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
-  const Cancel: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'>>;
+  import * as React from 'react';
+  
+  const Root: React.FC<React.ComponentProps<'div'>>;
+  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
+  const Portal: React.FC<React.ComponentProps<'div'>>;
+  const Overlay: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  const Title: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'h2'>>;
+  const Description: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'p'>>;
+  const Action: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
+  const Cancel: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
   
   export {
     Root,
@@ -76,23 +90,27 @@ declare module '@radix-ui/react-alert-dialog' {
     Description,
     Action,
     Cancel
-  }
+  };
 }
 
 declare module '@radix-ui/react-avatar' {
-  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
-  const Image: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'img'>>;
-  const Fallback: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
+  import * as React from 'react';
+  
+  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'span'>>;
+  const Image: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'img'>>;
+  const Fallback: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'span'>>;
   
   export {
     Root,
     Image,
     Fallback
-  }
+  };
 }
 
 declare module '@radix-ui/react-checkbox' {
-  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'button'> & {
+  import * as React from 'react';
+  
+  const Root: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'> & {
     checked?: boolean;
     defaultChecked?: boolean;
     onCheckedChange?: (checked: boolean | 'indeterminate') => void;
@@ -102,19 +120,31 @@ declare module '@radix-ui/react-checkbox' {
     value?: string;
     id?: string;
   }>;
-  const Indicator: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
-  const CheckboxIndicator: React.ForwardRefExoticComponent<React.ComponentPropsWithoutRef<'span'>>;
+  
+  const Indicator: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'span'>>;
   
   export {
     Root,
-    Indicator,
-    CheckboxIndicator
-  }
+    Indicator
+  };
 }
 
-// Fix DTUEmptyStateProps interface
-interface DTUEmptyStateProps {
-  type?: string;
-  message?: any;
-  description?: any;
+declare module '@radix-ui/react-collapsible' {
+  import * as React from 'react';
+  
+  const Root: React.FC<React.ComponentProps<'div'> & {
+    open?: boolean;
+    defaultOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    disabled?: boolean;
+  }>;
+  
+  const Trigger: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'button'>>;
+  const Content: React.ForwardRefExoticComponent<React.ComponentPropsWithRef<'div'>>;
+  
+  export {
+    Root,
+    Trigger,
+    Content
+  };
 }
