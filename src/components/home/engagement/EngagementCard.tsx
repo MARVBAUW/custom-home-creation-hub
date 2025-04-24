@@ -1,18 +1,31 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
+import { Award, Clock, Leaf, Shield, Users, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface EngagementCardProps {
-  icon: LucideIcon;
+  icon: string;
   title: string;
   description: string;
   gradient: string;
   index: number;
 }
 
-const EngagementCard = ({ icon: Icon, title, description, gradient, index }: EngagementCardProps) => {
+const EngagementCard = ({ icon, title, description, gradient, index }: EngagementCardProps) => {
+  // Map string icon names to Lucide icon components
+  const IconComponent = () => {
+    switch (icon) {
+      case 'Users': return <Users className="w-6 h-6 text-progineer-gold" />;
+      case 'Clock': return <Clock className="w-6 h-6 text-progineer-gold" />;
+      case 'Shield': return <Shield className="w-6 h-6 text-progineer-gold" />;
+      case 'Award': return <Award className="w-6 h-6 text-progineer-gold" />;
+      case 'Wrench': return <Wrench className="w-6 h-6 text-progineer-gold" />;
+      case 'Leaf': return <Leaf className="w-6 h-6 text-progineer-gold" />;
+      default: return <Award className="w-6 h-6 text-progineer-gold" />; // Default icon as fallback
+    }
+  };
+
   return (
     <motion.div
       variants={{
@@ -28,6 +41,9 @@ const EngagementCard = ({ icon: Icon, title, description, gradient, index }: Eng
           }
         }
       }}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
       whileHover={{ 
         scale: 1.02,
         transition: { duration: 0.2 }
@@ -36,10 +52,10 @@ const EngagementCard = ({ icon: Icon, title, description, gradient, index }: Eng
     >
       <div className={cn(
         "relative h-full p-6 rounded-xl overflow-hidden backdrop-blur-sm",
-        "bg-white/5 hover:bg-white/10",
-        "border border-white/10 hover:border-white/20",
+        "bg-black/40 hover:bg-black/50",
+        "border border-white/10 hover:border-progineer-gold/20",
         "transition-all duration-500 ease-out",
-        "shadow-[0_8px_16px_rgba(0,0,0,0.2)]",
+        "shadow-[0_8px_16px_rgba(0,0,0,0.3)]",
       )}>
         {/* Background gradient */}
         <div className={cn(
@@ -51,10 +67,11 @@ const EngagementCard = ({ icon: Icon, title, description, gradient, index }: Eng
           <div className="mb-4">
             <div className={cn(
               "inline-flex items-center justify-center w-12 h-12 rounded-lg",
-              "bg-gradient-to-br from-white/10 to-white/5",
+              "bg-white/5",
+              "border border-white/10 group-hover:border-progineer-gold/20",
               "group-hover:scale-110 transition-transform duration-500"
             )}>
-              <Icon className="w-6 h-6 text-progineer-gold" />
+              <IconComponent />
             </div>
           </div>
 
