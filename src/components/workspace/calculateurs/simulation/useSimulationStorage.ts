@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Simulation, SimulationStorage } from './SimulationTypes';
+import { Simulation, SimulationStorage, validateSimulationType, normalizeSimulationContent } from './SimulationTypes';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
@@ -37,12 +37,26 @@ export const useSimulationStorage = (): SimulationStorage & {
           throw error;
         }
         
-        loadedSimulations = data || [];
+        loadedSimulations = data?.map(item => ({
+          ...item,
+          type: validateSimulationType(item.type),
+          content: normalizeSimulationContent(item.content)
+        })) || [];
       } else {
         // If user is not logged in, try to load from localStorage
         const savedSimulations = localStorage.getItem('temporarySimulations');
         if (savedSimulations) {
-          loadedSimulations = JSON.parse(savedSimulations);
+          try {
+            const parsed = JSON.parse(savedSimulations);
+            loadedSimulations = parsed.map((sim: any) => ({
+              ...sim,
+              type: validateSimulationType(sim.type),
+              content: normalizeSimulationContent(sim.content)
+            }));
+          } catch (e) {
+            console.error('Error parsing simulations from localStorage:', e);
+            loadedSimulations = [];
+          }
         }
       }
       
@@ -190,13 +204,27 @@ export const useSimulationStorage = (): SimulationStorage & {
           .single();
         
         if (error) throw error;
-        return data;
+        
+        if (data) {
+          return {
+            ...data,
+            type: validateSimulationType(data.type),
+            content: normalizeSimulationContent(data.content)
+          };
+        }
       } else {
         // If user is not logged in or it's a temporary simulation, get from localStorage
         const savedSimulations = localStorage.getItem('temporarySimulations');
         if (savedSimulations) {
           const localSimulations = JSON.parse(savedSimulations);
-          return localSimulations.find((s: Simulation) => s.id === id) || null;
+          const simulation = localSimulations.find((s: any) => s.id === id);
+          if (simulation) {
+            return {
+              ...simulation,
+              type: validateSimulationType(simulation.type),
+              content: normalizeSimulationContent(simulation.content)
+            };
+          }
         }
       }
       

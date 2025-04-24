@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Plus, Calculator, FileText } from 'lucide-react';
@@ -10,7 +9,7 @@ import 'jspdf-autotable';
 
 import SimulationList from './SimulationList';
 import SimulationDetail from './SimulationDetail';
-import { Simulation, validateSimulationType } from './SimulationTypes';
+import { Simulation, validateSimulationType, normalizeSimulationContent } from './SimulationTypes';
 
 const SimulationManager: React.FC = () => {
   const { user } = useAuth();
@@ -33,7 +32,17 @@ const SimulationManager: React.FC = () => {
       // Si pas d'utilisateur, charger depuis localStorage
       const savedSimulations = localStorage.getItem('temporarySimulations');
       if (savedSimulations) {
-        setSimulations(JSON.parse(savedSimulations));
+        try {
+          const parsed = JSON.parse(savedSimulations);
+          const normalized = parsed.map((item: any) => ({
+            ...item,
+            type: validateSimulationType(item.type),
+            content: normalizeSimulationContent(item.content)
+          }));
+          setSimulations(normalized);
+        } catch (e) {
+          console.error('Error parsing simulations from localStorage:', e);
+        }
       }
     }
   }, [user]);
@@ -53,7 +62,8 @@ const SimulationManager: React.FC = () => {
       // Validation des types pour assurer la compatibilité
       const validatedData: Simulation[] = data?.map(item => ({
         ...item,
-        type: validateSimulationType(item.type)
+        type: validateSimulationType(item.type),
+        content: normalizeSimulationContent(item.content)
       })) || [];
       
       setSimulations(validatedData);
@@ -123,9 +133,10 @@ const SimulationManager: React.FC = () => {
           
           // Ajouter à la liste locale avec l'ID généré
           if (data && data.length > 0) {
-            const newSim = {
+            const newSim: Simulation = {
               ...data[0],
-              type: validateSimulationType(data[0].type)
+              type: validateSimulationType(data[0].type),
+              content: normalizeSimulationContent(data[0].content)
             };
             
             setCurrentSimulation(newSim);

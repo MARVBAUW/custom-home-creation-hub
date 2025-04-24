@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -195,7 +194,7 @@ const FraisNotaireCalculator: React.FC = () => {
             title={projectName || 'Calcul des frais de notaire'}
             generatePDF={generatePDF}
             onSaveSimulation={saveSimulation}
-            defaultFileName={`frais-notaire-${propertyName.toLowerCase().replace(/\s+/g, '-')}`}
+            defaultFileName={`frais-notaire-${projectName.toLowerCase().replace(/\s+/g, '-')}`}
           />
         </div>
       )}
