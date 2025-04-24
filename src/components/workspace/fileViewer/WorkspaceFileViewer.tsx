@@ -45,7 +45,10 @@ const WorkspaceFileViewer = ({ file, isOpen, onClose }: FileViewerProps) => {
       return;
     }
 
-    const success = await handleFileDownload(file.url, file.title);
+    const success = await handleFileDownload(file.url, file.title, {
+      showToast: true,
+      fileName: file.filename
+    });
     
     if (success) {
       toast({
