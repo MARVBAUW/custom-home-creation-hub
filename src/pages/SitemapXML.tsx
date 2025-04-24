@@ -1,10 +1,16 @@
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
 const SitemapXML: React.FC = () => {
-  // Redirect to the static sitemap.xml file
-  return <Navigate to="/sitemap.xml" replace />;
+  useEffect(() => {
+    // Direct browser to the XML file
+    window.location.href = '/sitemap.xml';
+  }, []);
+
+  return (
+    // This is just a fallback that should never be visible
+    <div className="hidden">Redirection vers sitemap.xml...</div>
+  );
 };
 
 export default SitemapXML;
