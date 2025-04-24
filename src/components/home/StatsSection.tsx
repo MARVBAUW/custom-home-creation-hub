@@ -1,44 +1,22 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Container from '@/components/common/Container';
 import { motion, useInView } from 'framer-motion';
+import StatCard from './stats/StatCard';
+import StatBackground from './stats/StatBackground';
+import { statsData } from './stats/StatsData';
 import './animations.css';
 
 const StatsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [counts, setCounts] = useState(statsData.map(() => 0));
   
-  const stats = [
-    {
-      value: 5,
-      prefix: '+',
-      label: "Années d'expérience",
-      description: "Dans la conception et réalisation",
-      color: "from-amber-500 to-orange-500"
-    },
-    {
-      value: 2,
-      prefix: '',
-      label: "Régions couvertes",
-      description: "PACA et Auvergne-Rhône-Alpes",
-      color: "from-emerald-500 to-teal-500"
-    },
-    {
-      value: 100,
-      prefix: '',
-      suffix: '%',
-      label: "Satisfaction client",
-      description: "Notre priorité absolue",
-      color: "from-sky-500 to-blue-500"
-    }
-  ];
-
-  const [counts, setCounts] = useState(stats.map(() => 0));
-  
+  // Handle animation of counts
   useEffect(() => {
     if (!isInView) return;
     
-    const counters = stats.map((stat, index) => {
+    const counters = statsData.map((stat, index) => {
       return {
         start: 0,
         end: stat.value,
@@ -78,8 +56,8 @@ const StatsSection = () => {
     
     requestAnimationFrame(updateCount);
   }, [isInView]);
-
-  const containerVariants = {
+  
+  const sectionVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -89,88 +67,45 @@ const StatsSection = () => {
     }
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
-      }
-    }
-  };
-
   return (
-    <section ref={ref} className="py-24 bg-gradient-to-b from-white to-stone-50 relative overflow-hidden">
-      {/* Éléments décoratifs */}
-      <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-stone-100/50 to-transparent"></div>
-      <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-progineer-gold/5 blur-3xl"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-progineer-gold/5 blur-3xl"></div>
+    <section 
+      ref={ref} 
+      className="py-24 bg-gradient-to-b from-white to-stone-50 relative overflow-hidden"
+    >
+      {/* Background elements */}
+      <StatBackground />
       
       <Container>
+        {/* Section header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-semibold mb-4 text-gray-800">
+            Nos engagements
+          </h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mb-6 rounded-full"></div>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Notre expertise et notre dévouement au service de votre projet de construction ou rénovation en PACA.
+          </p>
+        </motion.div>
+
+        {/* Stats cards */}
         <motion.div
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12"
+          variants={sectionVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
         >
-          {stats.map((stat, index) => (
-            <motion.div
+          {statsData.map((stat, index) => (
+            <StatCard
               key={index}
-              variants={itemVariants}
-              className="flex flex-col items-center p-8 rounded-xl text-center relative"
-            >
-              <div className="mb-6 relative">
-                <svg className="w-32 h-32" viewBox="0 0 100 100">
-                  {/* Cercle de fond */}
-                  <circle 
-                    cx="50" 
-                    cy="50" 
-                    r="40" 
-                    stroke="#E5E5E5" 
-                    strokeWidth="8" 
-                    fill="none"
-                  />
-                  
-                  {/* Cercle de progression animé */}
-                  <motion.circle 
-                    cx="50" 
-                    cy="50" 
-                    r="40"
-                    stroke={`url(#gradient-${index})`}
-                    strokeWidth="8"
-                    fill="none"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0 }}
-                    animate={isInView ? { pathLength: 1 } : { pathLength: 0 }}
-                    transition={{ duration: 1.5, delay: index * 0.2 }}
-                    style={{ transformOrigin: "center", transform: "rotate(-90deg)" }}
-                  />
-                  
-                  {/* Définition des dégradés */}
-                  <defs>
-                    <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor={`var(--${stat.color.split(' ')[0]})`} />
-                      <stop offset="100%" stopColor={`var(--${stat.color.split(' ')[1]})`} />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                
-                {/* Valeur au centre */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center">
-                    <span className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-br via-gray-800 to-gray-600 from-gray-900">
-                      {stat.prefix}{counts[index]}{stat.suffix}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">{stat.label}</h3>
-              <p className="text-gray-600">{stat.description}</p>
-            </motion.div>
+              {...stat}
+              index={index}
+              animatedValue={counts[index]}
+            />
           ))}
         </motion.div>
       </Container>
