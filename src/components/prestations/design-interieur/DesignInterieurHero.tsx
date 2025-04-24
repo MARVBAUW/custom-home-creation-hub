@@ -2,14 +2,8 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import { InternalLinkText } from '@/utils/internalLinking';
-import { formatCityName } from '@/utils/localSEOUtils';
 
-interface DesignInterieurHeroProps {
-  customH1?: string;
-  customCity?: string;
-}
-
-const DesignInterieurHero: React.FC<DesignInterieurHeroProps> = ({ customH1, customCity }) => {
+const DesignInterieurHero = () => {
   return (
     <section className="pt-32 pb-16 bg-gradient-to-b from-khaki-50 to-white">
       <Container size="md">
@@ -18,14 +12,11 @@ const DesignInterieurHero: React.FC<DesignInterieurHeroProps> = ({ customH1, cus
             Design d'intérieur
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-            {customH1 || `Design d'intérieur à Marseille et PACA`}
+            Design d'intérieur à Marseille et PACA
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
             <InternalLinkText 
-              text={customCity ? 
-                `Créez des intérieurs esthétiques et fonctionnels à ${formatCityName(customCity)} avec Progineer. Notre équipe de designers transforme vos espaces en lieux uniques adaptés à votre mode de vie.` :
-                `Créez des intérieurs esthétiques et fonctionnels qui reflètent votre personnalité et votre mode de vie. Notre équipe de designers transforme vos espaces en lieux uniques.`
-              }
+              text="Créez des intérieurs esthétiques et fonctionnels qui reflètent votre personnalité et votre mode de vie. Notre équipe de designers transforme vos espaces en lieux uniques."
               maxOccurrences={2}
             />
           </p>

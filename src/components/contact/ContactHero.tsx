@@ -4,22 +4,18 @@ import Container from '@/components/common/Container';
 
 const ContactHero = () => {
   return (
-    <section className="pt-32 pb-16 relative">
-      {/* Background Image Container */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ 
-          backgroundImage: `url('https://images.unsplash.com/photo-1492321936769-b49830bc1d1e')`,
-          opacity: 0.4,
-          zIndex: -1,
-        }}
-      />
-      
-      {/* Gradient Overlay */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-b from-black/30 to-white"
-        style={{ zIndex: -1 }}
-      />
+    <section className="pt-32 pb-16 bg-gradient-to-b from-progineer-light to-white relative">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0 opacity-15">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-white z-10"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ 
+            backgroundImage: `url('https://images.unsplash.com/photo-1461749280684-dccba630e2f6?q=80&w=2070&auto=format&fit=crop')`,
+            backgroundPosition: 'center',
+          }}
+        ></div>
+      </div>
       
       <Container size="md" className="relative z-10">
         <div className="text-center">

@@ -1,97 +1,62 @@
 
 import React from 'react';
+import { Phone, Mail, Calculator, Calendar } from 'lucide-react';
 import Button from '@/components/common/Button';
-import { formatCityName } from '@/utils/localSEOUtils';
+import { InternalLinkText } from '@/utils/internalLinking';
 
-interface DesignInterieurSidebarProps {
-  city?: string;
-}
-
-const DesignInterieurSidebar: React.FC<DesignInterieurSidebarProps> = ({ city }) => {
-  const cityDisplay = city ? formatCityName(city) : '';
-  
+const DesignInterieurSidebar = () => {
   return (
     <div className="space-y-8">
-      <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">Nos services de design{cityDisplay ? ` à ${cityDisplay}` : ''}</h3>
-        <ul className="space-y-3">
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Conception d'intérieur</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Aménagement d'espace</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Décoration intérieure</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Home staging</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Conseils en aménagement</span>
-          </li>
-          <li className="flex items-start">
-            <span className="text-khaki-600 mr-2">✓</span>
-            <span>Sélection de mobilier</span>
-          </li>
-        </ul>
-      </div>
-      
-      <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-xl font-semibold mb-4">Pourquoi nous choisir{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
-        <ul className="space-y-4">
-          <li className="flex items-start">
-            <div className="flex-shrink-0 h-6 w-6 rounded-full bg-khaki-100 flex items-center justify-center mr-3">
-              <span className="text-khaki-700 text-sm">1</span>
-            </div>
-            <div>
-              <h4 className="font-medium">Créativité</h4>
-              <p className="text-sm text-gray-600">Concepts innovants et personnalisés</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <div className="flex-shrink-0 h-6 w-6 rounded-full bg-khaki-100 flex items-center justify-center mr-3">
-              <span className="text-khaki-700 text-sm">2</span>
-            </div>
-            <div>
-              <h4 className="font-medium">Expertise technique</h4>
-              <p className="text-sm text-gray-600">Connaissance des matériaux et tendances</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <div className="flex-shrink-0 h-6 w-6 rounded-full bg-khaki-100 flex items-center justify-center mr-3">
-              <span className="text-khaki-700 text-sm">3</span>
-            </div>
-            <div>
-              <h4 className="font-medium">Vision globale</h4>
-              <p className="text-sm text-gray-600">Entre esthétique et fonctionnalité</p>
-            </div>
-          </li>
-          <li className="flex items-start">
-            <div className="flex-shrink-0 h-6 w-6 rounded-full bg-khaki-100 flex items-center justify-center mr-3">
-              <span className="text-khaki-700 text-sm">4</span>
-            </div>
-            <div>
-              <h4 className="font-medium">Engagement qualité</h4>
-              <p className="text-sm text-gray-600">Suivi rigoureux des projets</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-      
-      <div className="bg-gray-50 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">Besoin d'un devis{cityDisplay ? ` à ${cityDisplay}` : ''} ?</h3>
-        <p className="text-gray-600 mb-4">
-          Contactez-nous pour discuter de votre projet de design intérieur{cityDisplay ? ` à ${cityDisplay}` : ''} et obtenir un devis personnalisé.
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 className="text-xl font-semibold mb-4">Besoin d'un devis ?</h3>
+        <p className="text-gray-600 mb-6">
+          <InternalLinkText
+            text="Contactez-nous pour échanger sur votre projet de design d'intérieur et obtenir un devis personnalisé avec un maître d'œuvre à Marseille ou en région PACA."
+            maxOccurrences={2}
+          />
         </p>
-        <Button href="/contact" className="w-full bg-khaki-700 hover:bg-khaki-800 text-white">
-          Demander un devis gratuit
-        </Button>
+        <div className="space-y-4">
+          <Button href="/contact" className="w-full justify-center">
+            <Phone className="mr-2 h-4 w-4" /> Nous appeler
+          </Button>
+          <Button href="/contact" variant="outline" className="w-full justify-center">
+            <Mail className="mr-2 h-4 w-4" /> Nous écrire
+          </Button>
+        </div>
+      </div>
+      
+      <div className="bg-khaki-50 p-6 rounded-xl border border-khaki-100">
+        <h3 className="text-xl font-semibold mb-4">Nos services design</h3>
+        <ul className="space-y-2">
+          <li className="flex items-start">
+            <span className="text-khaki-600 mr-2">•</span>
+            <InternalLinkText text="Conception d'espaces résidentiels" />
+          </li>
+          <li className="flex items-start">
+            <span className="text-khaki-600 mr-2">•</span>
+            <InternalLinkText text="Aménagement de locaux professionnels" />
+          </li>
+          <li className="flex items-start">
+            <span className="text-khaki-600 mr-2">•</span>
+            <InternalLinkText text="Home staging pour valorisation" />
+          </li>
+          <li className="flex items-start">
+            <span className="text-khaki-600 mr-2">•</span>
+            <InternalLinkText text="Sélection de mobilier et décoration" />
+          </li>
+          <li className="flex items-start">
+            <span className="text-khaki-600 mr-2">•</span>
+            <InternalLinkText text="Visualisation 3D et moodboards" />
+          </li>
+        </ul>
+        <div className="mt-6 space-y-4">
+          <Button href="/estimation" variant="outline" className="w-full justify-center bg-white hover:bg-gray-50">
+            <Calculator className="mr-2 h-4 w-4" /> Estimer mon projet
+          </Button>
+          <Button href="/contact" variant="outline" className="w-full justify-center bg-white hover:bg-gray-50">
+            <Calendar className="mr-2 h-4 w-4" /> Prendre rendez-vous
+          </Button>
+        </div>
       </div>
     </div>
   );

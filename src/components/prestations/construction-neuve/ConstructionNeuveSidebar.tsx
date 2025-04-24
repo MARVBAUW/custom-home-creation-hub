@@ -1,107 +1,64 @@
 
 import React from 'react';
+import { Phone, Mail, Calculator, Calendar } from 'lucide-react';
 import Button from '@/components/common/Button';
 import { InternalLinkText } from '@/utils/internalLinking';
-import { formatCityName } from '@/utils/localSEOUtils';
 
-interface ConstructionNeuveSidebarProps {
-  city?: string;
-}
-
-const ConstructionNeuveSidebar: React.FC<ConstructionNeuveSidebarProps> = ({ city }) => {
-  const cityName = city ? formatCityName(city) : '';
-
+const ConstructionNeuveSidebar = () => {
   return (
-    <div className="space-y-6">
-      <div className="bg-khaki-50 p-6 rounded-xl">
-        <h3 className="text-xl font-semibold mb-4">
-          {cityName ? `Services de construction à ${cityName}` : 'Nos services de construction'}
-        </h3>
-        <ul className="space-y-3">
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Étude de faisabilité et conception architecturale" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Dépôt de permis de construire" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Consultation et sélection des entreprises" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Coordination des travaux" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Suivi de chantier hebdomadaire" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">→</span>
-            <span><InternalLinkText text="Réception des travaux et livraison" /></span>
-          </li>
-        </ul>
-        <div className="mt-6">
+    <div className="space-y-8">
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 className="text-xl font-semibold mb-4">Besoin d'un devis ?</h3>
+        <p className="text-gray-600 mb-6">
+          <InternalLinkText
+            text="Contactez-nous pour échanger sur votre projet de construction neuve et obtenir un devis personnalisé. Notre équipe de maître d'œuvre à Marseille et en PACA est à votre écoute."
+            maxOccurrences={2}
+          />
+        </p>
+        <div className="space-y-4">
           <Button href="/contact" className="w-full justify-center">
-            Discuter de votre projet
+            <Phone className="mr-2 h-4 w-4" /> Nous appeler
+          </Button>
+          <Button href="/contact" variant="outline" className="w-full justify-center">
+            <Mail className="mr-2 h-4 w-4" /> Nous écrire
           </Button>
         </div>
       </div>
 
-      <div className="bg-gray-100 p-6 rounded-xl">
-        <h3 className="text-xl font-semibold mb-4">
-          {cityName ? `Construction à ${cityName}` : 'Typologies de construction'}
-        </h3>
-        <ul className="space-y-3">
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">•</span>
-            <span><InternalLinkText text={`Maisons contemporaines${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">•</span>
-            <span><InternalLinkText text={`Villas méditerranéennes${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">•</span>
-            <span><InternalLinkText text={`Maisons à étage${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">•</span>
-            <span><InternalLinkText text={`Constructions écologiques${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-khaki-600 font-bold">•</span>
-            <span><InternalLinkText text={`Maisons de plain-pied${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-        </ul>
+      <div className="bg-khaki-50 p-6 rounded-xl border border-khaki-100">
+        <h3 className="text-xl font-semibold mb-4">Outils pratiques</h3>
+        <div className="space-y-4">
+          <Button href="/estimation" variant="outline" className="w-full justify-center bg-white hover:bg-gray-50">
+            <Calculator className="mr-2 h-4 w-4" /> Estimer mon projet
+          </Button>
+          <Button href="/contact" variant="outline" className="w-full justify-center bg-white hover:bg-gray-50">
+            <Calendar className="mr-2 h-4 w-4" /> Prendre rendez-vous
+          </Button>
+        </div>
       </div>
 
-      <div className="bg-green-50 p-6 rounded-xl">
-        <h3 className="text-xl font-semibold mb-4">Pourquoi nous choisir ?</h3>
-        <ul className="space-y-3">
-          <li className="flex items-start">
-            <span className="mr-2 text-green-600 font-bold">✓</span>
-            <span><InternalLinkText text={`Plus de 15 ans d'expérience${cityName ? ` à ${cityName} et en PACA` : ' en PACA'}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-green-600 font-bold">✓</span>
-            <span><InternalLinkText text="Projets livrés dans les délais" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-green-600 font-bold">✓</span>
-            <span><InternalLinkText text="Garantie décennale" /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-green-600 font-bold">✓</span>
-            <span><InternalLinkText text={`Connaissance du marché local${cityName ? ` à ${cityName}` : ''}`} /></span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2 text-green-600 font-bold">✓</span>
-            <span><InternalLinkText text="Suivi personnalisé de votre projet" /></span>
-          </li>
-        </ul>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <h3 className="text-xl font-semibold mb-4">Ils nous font confiance</h3>
+        <div className="flex flex-col space-y-4">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="italic text-gray-600 text-sm mb-3">
+              <InternalLinkText 
+                text="Progineer a su mener notre projet de construction de A à Z avec professionnalisme et rigueur. Nous sommes enchantés du résultat." 
+                maxOccurrences={1}
+              />
+            </p>
+            <p className="text-sm font-semibold">Famille Martin, Marseille</p>
+          </div>
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <p className="italic text-gray-600 text-sm mb-3">
+              <InternalLinkText 
+                text="Une équipe à l'écoute qui a su transformer notre vision en réalité tout en respectant notre budget."
+                maxOccurrences={1}
+              />
+            </p>
+            <p className="text-sm font-semibold">M. Dupont, Aix-en-Provence</p>
+          </div>
+        </div>
       </div>
     </div>
   );

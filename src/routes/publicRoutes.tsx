@@ -22,7 +22,6 @@ import SitemapXML from '../pages/SitemapXML';
 import Parrainage from '../pages/Parrainage';
 import DevenirPartenaire from '../pages/DevenirPartenaire';
 import NotFound from '../pages/NotFound';
-import LocalSEOPage from '../pages/LocalSEOPage';
 
 export const publicRoutes = [
   {
@@ -112,16 +111,6 @@ export const publicRoutes = [
   {
     path: "/devenir-partenaire",
     element: <DevenirPartenaire />,
-  },
-  // Nouvelle route pour gérer les URLs SEO localisées
-  {
-    path: "/:profession-:ville",
-    element: <LocalSEOPage />,
-  },
-  // Route générique pour les URLs SEO dynamiques avec chemin quelconque
-  {
-    path: "*",
-    element: <LocalSEOPage />,
   },
   {
     path: "*",

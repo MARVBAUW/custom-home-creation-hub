@@ -46,27 +46,8 @@ const services = [
 
 const Services = () => {
   return (
-    <section className="py-24 relative">
-      {/* Background image with overlay */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Image first, then overlay on top */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-30 z-0"
-          style={{ 
-            backgroundImage: `url('/lovable-uploads/8a0d3971-7296-41b2-a4eb-1d500001185d.png')`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            width: '100%',
-            height: '100%',
-            transform: 'scale(1.05)'
-          }}
-        ></div>
-        {/* Overlay on top of image */}
-        <div className="absolute inset-0 bg-stone-50/80 z-1"></div>
-      </div>
-
-      <Container className="relative z-10">
+    <section className="py-24 bg-stone-50">
+      <Container>
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <div className="inline-block px-3 py-1 mb-4 rounded-full bg-khaki-100 text-khaki-800 text-sm font-medium">
             Nos prestations

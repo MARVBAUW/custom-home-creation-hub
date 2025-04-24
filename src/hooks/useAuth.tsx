@@ -1,18 +1,18 @@
 
-import { createContext, useContext, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
 import { AuthProvider } from './auth/AuthProvider';
-import { AuthContext as InternalAuthContext } from './auth/AuthContext';
+import { useAuthContext } from './auth/AuthContext';
 
-// Réexporter le contexte et le provider pour une utilisation simplifiée
-export const AuthContext = InternalAuthContext;
 export { AuthProvider };
-
-// Hook personnalisé pour accéder au contexte d'authentification
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth doit être utilisé à l'intérieur d\'un AuthProvider');
-  }
-  return context;
+  const context = useAuthContext();
+  
+  return {
+    ...context,
+    signInWithGoogle: context.signInWithGoogle || (async () => {
+      console.error('Google Sign-In method not implemented');
+    }),
+    signUpWithGoogle: context.signUpWithGoogle || (async () => {
+      console.error('Google Sign-Up method not implemented');
+    })
+  };
 };
