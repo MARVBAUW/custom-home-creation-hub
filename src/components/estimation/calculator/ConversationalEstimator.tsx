@@ -1,20 +1,9 @@
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { cn } from "@/lib/utils";
 import { Send, Loader2 } from 'lucide-react';
 import { MessageDisplay } from './components/conversational';
-import { Message } from './types/conversationalTypes';
-
-interface ConversationalProps {
-  onUserInput: (input: string) => void;
-  formData: any;
-  updateFormData: (data: any) => void;
-  onClientTypeSubmit: (data: { clientType: string }) => void;
-  goToStep: (step: number) => void;
-}
+import { Message, ConversationalProps } from './components/conversational/types';
 
 const ConversationalEstimator: React.FC<ConversationalProps> = ({
   onUserInput,
@@ -124,6 +113,7 @@ const ConversationalEstimator: React.FC<ConversationalProps> = ({
           loading={loading}
           onOptionClick={handleOptionClick}
           messagesEndRef={messagesEndRef}
+          message=""
         />
       </div>
 

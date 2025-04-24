@@ -9,7 +9,7 @@ export interface MessageDisplayProps {
 
 export interface Message {
   id: string;
-  type: 'user' | 'assistant' | 'system';
+  type: 'user' | 'assistant' | 'system' | 'bot';
   content: string;
   options?: string[];
 }

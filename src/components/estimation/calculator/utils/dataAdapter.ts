@@ -77,6 +77,7 @@ export const adaptToEstimationResponseData = (formData: FormData): EstimationRes
       constructionType: formData.constructionType || 'traditional',
       bedrooms: ensureNumberValue(formData.bedrooms),
       bathrooms: ensureNumberValue(formData.bathrooms),
+      projectType: formData.projectType || 'construction'  // Added this line
     },
     categories: generateCategories(formData),
     timeline: calculateTimeline(formData),
