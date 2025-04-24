@@ -1,4 +1,6 @@
 
+// Detailed types for estimation calculations
+
 export interface ProjectDetails {
   projectType: string;
   surface: number;
@@ -6,7 +8,8 @@ export interface ProjectDetails {
   constructionType: string;
   bedrooms: number;
   bathrooms: number;
-  city: string;
+  city?: string;
+  [key: string]: any;
 }
 
 export interface ConstructionCosts {
@@ -31,9 +34,6 @@ export interface FeeCosts {
   taxes: number;
   other: number;
   total: number;
-  masterBuilderFees?: number;
-  safetyCoordination?: number;
-  technicalControl?: number;
 }
 
 export interface OtherCosts {
@@ -50,32 +50,34 @@ export interface OtherCosts {
 export interface EstimationTimeline {
   design: number;
   permits: number;
-  bidding: number;
+  bidding?: number;
   construction: number;
   total: number;
   totalMonths: number;
 }
 
 export interface CategoryCost {
-  name?: string;
-  cost?: number;
-  percentage?: number;
-  category: string;
+  name: string;
+  cost: number;
+  percentage: number;
+  category?: string;
   amount: number;
+}
+
+export interface EstimatedCost {
+  total: number;
+  perSquareMeter: number;
+  breakdown: {
+    materials: number;
+    labor: number;
+    fees: number;
+  };
 }
 
 export interface EstimationResponseData {
   projectType: string;
   projectDetails: ProjectDetails;
-  estimatedCost: number | { 
-    total: number; 
-    perSquareMeter: number; 
-    breakdown: { 
-      materials: number; 
-      labor: number; 
-      fees: number; 
-    } 
-  };
+  estimatedCost: EstimatedCost;
   constructionCosts: ConstructionCosts;
   fees: FeeCosts;
   otherCosts: OtherCosts;
@@ -86,102 +88,26 @@ export interface EstimationResponseData {
   categories: CategoryCost[];
 }
 
-export interface ConversationState {
-  currentStep: string;
-  askedQuestions: any[];
-  completedFields: any[];
-  formProgress: number;
-  messages: any[]; // Array of message objects
+export interface EstimationSummary {
+  id?: string;
+  title: string;
+  projectType: string;
+  surface: number;
+  location: string;
+  totalAmount: number;
+  dateGenerated: string;
+  contact?: {
+    name: string;
+    email: string;
+    phone?: string;
+  };
 }
 
-// Expanding the FormData interface to include all necessary fields
-export interface FormData {
-  clientType?: string;
-  projectType?: string;
-  surface?: number;
-  facadeSurface?: number;
-  city?: string;
-  location?: string;
-  constructionType?: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  budget?: number;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
-  projectDescription?: string;
-  projectPurpose?: string;
-  message?: string;
-  termsAccepted?: boolean;
-  commercialAccepted?: boolean;
-  formCompleted?: boolean;
-  
-  // Additional fields for estimation calculations
-  heatingType?: string;
-  hasAirConditioning?: boolean;
-  insulationType?: string;
-  demolitionNeeded?: boolean;
-  renovationType?: string;
-  
-  // Fields for AmenagementExtForm
-  includeLandscaping?: boolean;
-  pool?: boolean;
-  terrace?: boolean;
-  outdoorKitchen?: boolean;
-  
-  // Fields for AmenagementPaysagersForm
-  landscapingType?: string | string[];
-  landscapingArea?: number;
-  fencingLength?: number;
-  gateLength?: number;
-  terraceArea?: number;
-  
-  // Fields for CarrelageForm
-  floorTileType?: string;
-  floorTilePercentage?: number;
-  wallTileType?: string;
-  
-  // Fields for ChauffageForm
-  heatingSystemType?: string;
-  montantT?: number;
-  
-  // Fields for CombleForm
-  atticType?: string;
-  
-  // Fields for ConstructionDetailsForm
-  doorCount?: number;
-  
-  // Fields for CouvertureForm and CharpenteForm
-  roofType?: string;
-  roofArea?: number;
-  
-  // Fields for DemolitionForm
-  demolitionTypes?: string[];
-  demolitionPercentages?: Record<string, number>;
-  demolitionTotalArea?: number;
-  demolitionCost?: number;
-  demolitionDetailedCosts?: Record<string, number>;
-  
-  // Additional fields that may be referenced
-  foundationType?: string;
-  windowType?: string;
-  insulationLevel?: string;
-  electricalUpgrade?: boolean;
-  plumbingUpgrade?: boolean;
-  kitchenType?: string;
-  bathroomCount?: number;
-  hasBasement?: boolean;
-  specialFeatures?: string[];
-  exteriorFinishType?: string;
-  landArea?: number;
-  
-  // Fields for ElectriciteForm
-  electricalType?: string;
-  
-  // Fields for EnergiesRenouvelablesForm
-  renewableEnergyType?: string;
-  
-  // Any other fields that might be used in calculations
-  [key: string]: any;
+export interface PDFGenerationOptions {
+  includeBreakdown?: boolean;
+  includeContactInfo?: boolean;
+  includeTimeline?: boolean;
+  includeBankReport?: boolean;
+  includeHeader?: boolean;
+  includeFooter?: boolean;
 }

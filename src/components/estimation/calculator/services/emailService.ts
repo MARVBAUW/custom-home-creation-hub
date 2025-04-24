@@ -1,5 +1,6 @@
 
 import { FormData, EstimationResponseData } from '../types';
+import { supabase } from '@/lib/supabase';
 
 // Result interface for email sending operations
 export interface EmailResult {
@@ -21,23 +22,28 @@ export const sendEstimationByEmail = async (
   estimationResult: EstimationResponseData | number
 ): Promise<EmailResult> => {
   try {
-    // For demo purposes, we're just returning a success message
-    // In a real application, this would make an API call to a backend service
-    
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
     // Convert estimation to the right format if needed
     const estimation = typeof estimationResult === 'number' 
       ? { totalAmount: estimationResult } 
       : estimationResult;
     
-    // Log for debugging
-    console.log('Sending email with estimation:', {
-      to: email,
-      formData,
-      estimation
+    // Call the Supabase edge function to send the email
+    const { data, error } = await supabase.functions.invoke('send-estimation', {
+      body: {
+        email,
+        formData,
+        estimationResult: estimation,
+        includeFullReport: true
+      }
     });
+    
+    if (error) {
+      console.error('Error calling send-estimation function:', error);
+      throw error;
+    }
+    
+    // Log for debugging
+    console.log('Email sent successfully:', data);
     
     // Return success result
     return {

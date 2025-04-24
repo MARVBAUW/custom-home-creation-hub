@@ -1,119 +1,81 @@
+
 import { FormData } from '../types/formTypes';
 import { EstimationResponseData } from '../types/estimationTypes';
-import { ensureNumber, ensureString, ensureBoolean } from './typeConversions';
-import { calculateEstimationData } from '../calculationUtils';
+import { calculateEstimation } from '../calculations/estimationCalculator';
+import { ensureNumber } from './typeConversions';
 
 /**
- * Convert form data to the format needed for estimation calculations
- * @param formData Raw form data
- * @returns Data in the format needed for estimation
- */
-export const adaptToEstimationData = (formData: FormData): any => {
-  return {
-    projectType: formData.projectType || 'renovation',
-    surface: ensureNumber(formData.surface, 0),
-    location: formData.location || '',
-    constructionType: formData.constructionType || 'standard',
-    bedrooms: ensureNumber(formData.bedrooms, 0),
-    bathrooms: ensureNumber(formData.bathrooms, 0),
-    city: formData.city || '',
-    // Add other necessary fields
-    montantT: ensureNumber(formData.montantT, 0)
-  };
-};
-
-/**
- * Convert form data to EstimationFormData format
- * @param formData Form data to convert
- * @returns Estimation form data
- */
-export const adaptToEstimationFormData = (formData: Partial<FormData>): Partial<FormData> => {
-  // Create a copy to avoid mutation
-  const adaptedData: Partial<FormData> = { ...formData };
-  
-  // Ensure number values are properly converted
-  if (formData.surface !== undefined) {
-    adaptedData.surface = ensureNumber(formData.surface);
-  }
-  
-  if (formData.montantT !== undefined) {
-    adaptedData.montantT = ensureNumber(formData.montantT);
-  }
-  
-  // Return the adapted data
-  return adaptedData;
-};
-
-/**
- * Convert EstimationFormData to FormData format
- * @param formData Estimation form data to convert
- * @returns Standard form data
- */
-export const adaptToFormData = (formData: Partial<FormData>): Partial<FormData> => {
-  // Create a copy to avoid mutation
-  const adaptedData: Partial<FormData> = { ...formData };
-  
-  // Add any necessary conversions here
-  
-  // Return the adapted data
-  return adaptedData;
-};
-
-/**
- * Convert estimation form data to full estimation response
- * @param formData Form data to convert
- * @returns Complete estimation response data
+ * Adapts the form data to the estimation response data format
  */
 export const adaptToEstimationResponseData = (formData: FormData): EstimationResponseData => {
-  const adaptedData = adaptToEstimationData(formData);
-  return calculateEstimationData(adaptedData);
+  return calculateEstimation(formData);
 };
 
 /**
- * Create a function that handles type conversion when updating form data
- * @param updateFn Original update function
- * @returns New update function with type adaptation
+ * Creates a function that updates form data while adapting types
  */
-export const createTypeAdaptingUpdater = (updateFn: (data: Partial<FormData>) => void) => {
-  return (data: Partial<FormData>) => {
-    // Adapt types as needed
-    const adaptedData: Partial<FormData> = { ...data };
+export const createTypeAdaptingUpdater = (updateFn: (data: any) => void) => {
+  return (data: any) => {
+    const adaptedData = { ...data };
     
-    // Handle specific conversions
-    if (data.surface !== undefined) {
-      adaptedData.surface = ensureNumber(data.surface);
+    // Convert numeric strings to numbers
+    if (adaptedData.surface) {
+      adaptedData.surface = ensureNumber(adaptedData.surface);
     }
     
-    if (data.montantT !== undefined) {
-      adaptedData.montantT = ensureNumber(data.montantT);
+    if (adaptedData.bedrooms) {
+      adaptedData.bedrooms = ensureNumber(adaptedData.bedrooms);
     }
     
-    if (data.bedrooms !== undefined) {
-      adaptedData.bedrooms = ensureNumber(data.bedrooms);
+    if (adaptedData.bathrooms) {
+      adaptedData.bathrooms = ensureNumber(adaptedData.bathrooms);
     }
     
-    if (data.bathrooms !== undefined) {
-      adaptedData.bathrooms = ensureNumber(data.bathrooms);
+    if (adaptedData.budget) {
+      adaptedData.budget = ensureNumber(adaptedData.budget);
     }
     
-    // Call the original update function with adapted data
+    // Convert boolean strings to actual booleans
+    if (adaptedData.hasPool === 'true') adaptedData.hasPool = true;
+    if (adaptedData.hasPool === 'false') adaptedData.hasPool = false;
+    
+    if (adaptedData.hasTerrace === 'true') adaptedData.hasTerrace = true;
+    if (adaptedData.hasTerrace === 'false') adaptedData.hasTerrace = false;
+    
+    // Call the original update function with the adapted data
     updateFn(adaptedData);
   };
 };
 
 /**
- * Initialize a FormData object with default values
- * @returns Default FormData object
+ * Calculates a price coefficient based on location
  */
-export const createDefaultFormData = (): FormData => {
+export const getLocationCoefficient = (location: string): number => {
+  const locationCoefficients: Record<string, number> = {
+    'Marseille': 1.15,
+    'Nice': 1.25,
+    'Toulon': 1.10,
+    'Aix-en-Provence': 1.2,
+    'Cannes': 1.3,
+    'Antibes': 1.2,
+    'Monaco': 1.5,
+    // Default regions
+    'PACA': 1.15,
+    'Île-de-France': 1.35,
+    'Rhône-Alpes': 1.10,
+    'default': 1.0
+  };
+  
+  return locationCoefficients[location] || locationCoefficients['default'];
+};
+
+/**
+ * Generates a detailed estimation for bank or insurance purposes
+ */
+export const generateBankReport = (estimationData: EstimationResponseData): EstimationResponseData => {
+  // Add additional details for bank reports
   return {
-    projectType: 'renovation',
-    surface: 0,
-    constructionType: 'standard',
-    bedrooms: 0,
-    bathrooms: 0,
-    location: '',
-    city: '',
-    montantT: 0
+    ...estimationData,
+    isComplete: true
   };
 };

@@ -1,86 +1,65 @@
 
 /**
- * Safely renders a value as a string, handling null/undefined and objects
+ * Ensures a value is a number
+ * If the value is already a number, it's returned as is
+ * If it's a string, it's converted to a number
+ * If it's undefined or null, it returns 0
+ * 
+ * @param value Value to ensure is a number
+ * @returns The value as a number
  */
-export const safeRenderValue = (value: any): string => {
-  if (value === null || value === undefined) {
-    return '';
+export const ensureNumber = (value: any): number => {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    // Remove non-numeric characters except decimal point
+    const cleanedValue = value.replace(/[^\d.-]/g, '');
+    return cleanedValue ? parseFloat(cleanedValue) : 0;
   }
-  
-  if (typeof value === 'object') {
-    try {
-      return JSON.stringify(value);
-    } catch (error) {
-      return String(value);
-    }
-  }
-  
-  return String(value);
-};
-
-/**
- * Ensures a value is a number, or returns default value if it cannot be converted
- * @param value - The value to convert to a number
- * @param defaultValue - Optional default value to return if conversion fails (defaults to 0)
- */
-export const ensureNumber = (value: unknown, defaultValue: number = 0): number => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'number') {
-    return value;
-  }
-  
-  const parsed = Number(value);
-  return isNaN(parsed) ? defaultValue : parsed;
+  return 0;
 };
 
 /**
  * Ensures a value is a boolean
+ * If the value is already a boolean, it's returned as is
+ * If it's a string 'true' or 'false', it's converted to a boolean
+ * If it's undefined or null, it returns false
+ * 
+ * @param value Value to ensure is a boolean
+ * @returns The value as a boolean
  */
-export const ensureBoolean = (value: unknown): boolean => {
-  if (typeof value === 'boolean') {
-    return value;
-  }
-  
+export const ensureBoolean = (value: any): boolean => {
+  if (typeof value === 'boolean') return value;
   if (typeof value === 'string') {
     return value.toLowerCase() === 'true';
   }
-  
   return Boolean(value);
 };
 
 /**
- * Ensures a value is a string
+ * Format a number as currency (€)
+ * 
+ * @param value Number to format
+ * @returns Formatted currency string
  */
-export const ensureString = (value: unknown): string => {
-  if (value === null || value === undefined) {
-    return '';
-  }
-  
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  return String(value);
+export const formatCurrency = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
 };
 
 /**
- * Converts a value for form use, ensuring it matches form field expectations
+ * Format a number as percentage
+ * 
+ * @param value Number to format (0-1)
+ * @returns Formatted percentage string
  */
-export const toFormValue = (value: unknown, defaultValue: string = ''): string => {
-  if (value === null || value === undefined) {
-    return defaultValue;
-  }
-  
-  if (typeof value === 'string') {
-    return value;
-  }
-  
-  if (typeof value === 'number' || typeof value === 'boolean') {
-    return String(value);
-  }
-  
-  return defaultValue;
+export const formatPercentage = (value: number): string => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'percent',
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  }).format(value);
 };

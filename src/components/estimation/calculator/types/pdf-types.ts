@@ -1,44 +1,49 @@
 
-import { jsPDF } from 'jspdf';
-
-// Define a type for the internal property that's compatible with both uses
-interface PDFInternal {
-  events: any;
-  scaleFactor: number;
-  pageSize: {
-    width: number;
-    getWidth: () => number;
-    height: number;
-    getHeight: () => number;
-  };
-  pages: number[];
-  getEncryptor(objectId: number): (data: string) => string;
-  getNumberOfPages?: () => number;
-}
-
-// Extended jsPDF with additional methods used in our application
-export interface EnhancedJsPDF extends Omit<jsPDF, "setTextColor" | "addImage"> {
-  autoTable: (options: any) => any;
-  internal: PDFInternal;
-  setTextColor: (r: number, g: number, b: number) => any;
-  setFontSize: (size: number) => any;
-  text: (text: string, x: number, y: number, options?: any) => any;
-  setPage: (pageNumber: number) => any;
-  line: (x1: number, y1: number, x2: number, y2: number) => any;
-  rect: (x: number, y: number, w: number, h: number, style: string) => any;
-  addImage: (imageData: any, format: string, x: number, y: number, width: number, height: number) => any;
-}
-
-// Options for PDF Generation
 export interface PDFGenerationOptions {
-  includeDetails?: boolean;
-  includeLogo?: boolean;
-  includeContactInfo?: boolean;
   includeBreakdown?: boolean;
-  includeTerrainPrice?: boolean;
+  includeContactInfo?: boolean;
   includeTimeline?: boolean;
-  includeDetailedBreakdown?: boolean;
-  clientInfo?: boolean;
-  companyLogo?: boolean;
-  fileName?: string;
+  includeBankReport?: boolean;
+  includeHeader?: boolean;
+  includeFooter?: boolean;
+  logo?: string;
+  companyName?: string;
+  companyAddress?: string;
+  companyContact?: string;
+}
+
+export interface PDFReportData {
+  title: string;
+  subtitle?: string;
+  date: string;
+  reference?: string;
+  client?: {
+    name: string;
+    email: string;
+    phone?: string;
+    address?: string;
+  };
+  project: {
+    type: string;
+    location: string;
+    surface: number;
+    constructionType: string;
+    description?: string;
+  };
+  costs: {
+    category: string;
+    name: string;
+    amount: number;
+    percentage?: number;
+  }[];
+  summary: {
+    subtotal: number;
+    taxes: number;
+    total: number;
+  };
+  options?: {
+    includeVAT: boolean;
+    showDetails: boolean;
+    currency: string;
+  };
 }
