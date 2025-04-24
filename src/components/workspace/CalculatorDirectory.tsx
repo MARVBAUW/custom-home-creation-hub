@@ -14,8 +14,6 @@ import {
   Flame,
   Search
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 interface CalculatorInfo {
   id: string;
@@ -120,7 +118,6 @@ const calculators: CalculatorInfo[] = [
 
 const CalculatorDirectory: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const router = useRouter();
   
   const filteredCalculators = searchQuery 
     ? calculators.filter(calc => 
@@ -131,6 +128,10 @@ const CalculatorDirectory: React.FC = () => {
     : calculators;
     
   const categories = [...new Set(calculators.map(calc => calc.category))];
+
+  const navigateToCalculator = (path: string) => {
+    window.location.href = path;
+  };
 
   return (
     <div className="space-y-6">
@@ -168,12 +169,15 @@ const CalculatorDirectory: React.FC = () => {
                     <CardDescription className="mb-4">
                       {calc.description}
                     </CardDescription>
-                    <Link href={calc.path} passHref>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <Calculator className="h-3.5 w-3.5 mr-2" />
-                        Accéder
-                      </Button>
-                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => navigateToCalculator(calc.path)}
+                    >
+                      <Calculator className="h-3.5 w-3.5 mr-2" />
+                      Accéder
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -198,12 +202,15 @@ const CalculatorDirectory: React.FC = () => {
                         <CardDescription className="mb-4">
                           {calc.description}
                         </CardDescription>
-                        <Link href={calc.path} passHref>
-                          <Button variant="outline" size="sm" className="w-full">
-                            <Calculator className="h-3.5 w-3.5 mr-2" />
-                            Accéder
-                          </Button>
-                        </Link>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="w-full"
+                          onClick={() => navigateToCalculator(calc.path)}
+                        >
+                          <Calculator className="h-3.5 w-3.5 mr-2" />
+                          Accéder
+                        </Button>
                       </CardContent>
                     </Card>
                   ))}

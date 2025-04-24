@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Import workspace components
 import FraisNotaireCalculator from '@/components/workspace/calculators/immobilier/FraisNotaireCalculator';
 import RentabiliteLocativeCalculator from '@/components/workspace/calculators/rentability/RentabilityCalculator';
-import CapaciteEmpruntCalculator from '@/components/workspace/calculators/financier/CapaciteEmpruntCalculator';
 import SurfaceHabitableCalculator from '@/components/workspace/calculators/immobilier/SurfaceHabitableCalculator';
 import AcousticCalculator from '@/components/workspace/calculators/AcousticCalculator';
 import DpeCalculator from '@/components/workspace/calculators/DpeCalculator';
@@ -14,20 +14,19 @@ import EurocodesCalculator from '@/components/workspace/calculators/eurocode/Eur
 import SimulationManager from './calculateurs/simulation/SimulationManager';
 import CalculatorDirectory from './CalculatorDirectory';
 import { useToast } from '@/hooks/use-toast';
-import { useSearchParams } from 'next/navigation';
 
 const WorkspaceCalculateurs = () => {
   const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const tabParam = searchParams?.get('tab');
-  const [activeTab, setActiveTab] = useState(tabParam || "immobilier");
-
-  // Update active tab based on URL parameters
+  const [activeTab, setActiveTab] = useState("immobilier");
+  
+  // Extract the tab parameter from URL if available
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
     if (tabParam) {
       setActiveTab(tabParam);
     }
-  }, [tabParam]);
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -139,7 +138,10 @@ const WorkspaceCalculateurs = () => {
                 <CardTitle className="text-lg">Capacité d'emprunt</CardTitle>
               </CardHeader>
               <CardContent>
-                <CapaciteEmpruntCalculator />
+                {/* Temporarily use a placeholder until we fix the calculator */}
+                <div className="bg-blue-50 p-4 rounded-md">
+                  <p className="text-sm text-blue-800">Calculateur de capacité d'emprunt sera disponible prochainement.</p>
+                </div>
               </CardContent>
             </Card>
             <Card>

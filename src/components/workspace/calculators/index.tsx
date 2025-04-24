@@ -15,7 +15,6 @@ import EurocodeCalculators from './eurocode/EurocodeCalculators';
 import RentabilityCalculator from './rentability/RentabilityCalculator';
 import FraisNotaireCalculator from './immobilier/FraisNotaireCalculator';
 import SurfaceHabitableCalculator from './immobilier/SurfaceHabitableCalculator';
-import CapaciteEmpruntCalculator from './financier/CapaciteEmpruntCalculator';
 import SimulationManager from '../calculateurs/simulation/SimulationManager';
 
 // Create a central registry of all calculators
@@ -37,7 +36,11 @@ const CalculatorsRegistry = {
   financier: [
     {
       title: "Capacité d'emprunt",
-      component: CapaciteEmpruntCalculator,
+      component: () => (
+        <div className="p-4 bg-blue-50 rounded-md">
+          <p className="text-blue-800">Calculateur de capacité d'emprunt sera disponible prochainement.</p>
+        </div>
+      ),
       description: "Calculez votre capacité d'emprunt selon vos revenus",
       type: "capacite-emprunt"
     },
