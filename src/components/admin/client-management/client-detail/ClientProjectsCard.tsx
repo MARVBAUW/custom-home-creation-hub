@@ -18,7 +18,7 @@ interface ClientProjectsCardProps {
   };
 }
 
-const ClientProjectsCard: React.FC<ClientProjectsCardProps> = ({ client }) => {
+const ClientProjectsCard = ({ client }: ClientProjectsCardProps) => {
   return (
     <Card className="border-gray-200">
       <CardHeader className="pb-3 border-b border-gray-100">

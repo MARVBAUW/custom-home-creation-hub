@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { useRoutes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from "./components/theme/ThemeProvider";
@@ -28,9 +28,9 @@ const App = () => {
         <HelmetProvider>
           <AuthProvider>
             <UserRegistrationNotificationsContainer />
-            <Suspense fallback={<LoadingFallback />}>
+            <React.Suspense fallback={<LoadingFallback />}>
               {routeElements}
-            </Suspense>
+            </React.Suspense>
             <Toaster />
           </AuthProvider>
         </HelmetProvider>
