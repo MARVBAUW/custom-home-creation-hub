@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { BaseFormProps } from '../types';
+import { BaseFormProps } from '../types/baseFormProps';
 import { Button } from "@/components/ui/button";
 import { ArrowLeftIcon, ArrowRightIcon, Sun, Wind, Droplets } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
