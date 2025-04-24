@@ -5,9 +5,6 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// 👇 Trace de debug temporaire
-console.log("✅ Toast component loaded from toast.tsx")
-
 const ToastProvider = ToastPrimitives.Provider
 
 const ToastViewport = React.forwardRef<
