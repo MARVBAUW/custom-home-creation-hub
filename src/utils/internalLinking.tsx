@@ -2,57 +2,57 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Structure defining keywords and their target URLs
+// Structure defining keywords and their target URLs with optional anchors
 export const keywordMap: Record<string, string> = {
-  // Pages principales
+  // Pages principales avec ancres
   "maître d'œuvre": "/",
   "maître d'œuvre marseille": "/",
   "maître d'œuvre paca": "/",
   "maîtrise d'œuvre": "/",
-  "construction sur mesure": "/prestations-maitre-oeuvre/construction-neuve",
-  "construction maison": "/prestations-maitre-oeuvre/construction-neuve",
-  "maison sur mesure": "/prestations-maitre-oeuvre/construction-neuve",
-  "rénovation": "/prestations-maitre-oeuvre/renovation",
-  "rénovation énergétique": "/prestations-maitre-oeuvre/renovation",
-  "extension": "/prestations-maitre-oeuvre/extension",
-  "extension maison": "/prestations-maitre-oeuvre/extension",
-  "optimisation d'espace": "/prestations-maitre-oeuvre/optimisation-espace",
-  "design d'intérieur": "/prestations-maitre-oeuvre/design-interieur",
-  "design d'espace": "/prestations-maitre-oeuvre/design-interieur",
-  "aménagement intérieur": "/prestations-maitre-oeuvre/design-interieur",
-  "réalisations": "/realisations-architecte-maison",
-  "portfolio": "/realisations-architecturales",
-  "réalisations architecturales": "/realisations-architecturales",
-  "projets": "/realisations-architecte-maison",
-  "devis": "/contact",
-  "estimation": "/estimation",
-  "contact": "/contact",
+  "construction sur mesure": "/prestations-maitre-oeuvre/construction-neuve#services",
+  "construction maison": "/prestations-maitre-oeuvre/construction-neuve#process",
+  "maison sur mesure": "/prestations-maitre-oeuvre/construction-neuve#options",
+  "rénovation": "/prestations-maitre-oeuvre/renovation#overview",
+  "rénovation énergétique": "/prestations-maitre-oeuvre/renovation#energy",
+  "extension": "/prestations-maitre-oeuvre/extension#overview",
+  "extension maison": "/prestations-maitre-oeuvre/extension#services",
+  "optimisation d'espace": "/prestations-maitre-oeuvre/optimisation-espace#services",
+  "design d'intérieur": "/prestations-maitre-oeuvre/design-interieur#overview",
+  "design d'espace": "/prestations-maitre-oeuvre/design-interieur#services",
+  "aménagement intérieur": "/prestations-maitre-oeuvre/design-interieur#amenagement",
+  "réalisations": "/realisations-architecte-maison#gallery",
+  "portfolio": "/realisations-architecturales#projects",
+  "réalisations architecturales": "/realisations-architecturales#featured",
+  "projets": "/realisations-architecte-maison#recent",
+  "devis": "/contact#form",
+  "estimation": "/estimation#calculator",
+  "contact": "/contact#form",
 
   // Ajouts pour maillage interne spécifique
-  "montage administratif": "/prestations-maitre-oeuvre/montage-administratif",
-  "petit collectif résidentiel": "/prestations-maitre-oeuvre/petit-collectif",
-  "petit collectif": "/prestations-maitre-oeuvre/petit-collectif",
-  "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation",
-  "réhabilitation bâtiment": "/prestations-maitre-oeuvre/rehabilitation",
-  "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique",
-  "maison écologique": "/prestations-maitre-oeuvre/construction-ecologique",
-  "construction bois": "/prestations-maitre-oeuvre/construction-ecologique",
-  "ossature bois": "/prestations-maitre-oeuvre/construction-ecologique",
-  "permis de construire": "/prestations-maitre-oeuvre/montage-administratif",
-  "déclaration préalable": "/prestations-maitre-oeuvre/montage-administratif",
+  "montage administratif": "/prestations-maitre-oeuvre/montage-administratif#process",
+  "petit collectif résidentiel": "/prestations-maitre-oeuvre/petit-collectif#overview",
+  "petit collectif": "/prestations-maitre-oeuvre/petit-collectif#services",
+  "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation#overview",
+  "réhabilitation bâtiment": "/prestations-maitre-oeuvre/rehabilitation#services",
+  "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique#principles",
+  "maison écologique": "/prestations-maitre-oeuvre/construction-ecologique#materials",
+  "construction bois": "/prestations-maitre-oeuvre/construction-ecologique#wood",
+  "ossature bois": "/prestations-maitre-oeuvre/construction-ecologique#structure",
+  "permis de construire": "/prestations-maitre-oeuvre/montage-administratif#permits",
+  "déclaration préalable": "/prestations-maitre-oeuvre/montage-administratif#declarations",
 
-  // Villes PACA
-  "marseille": "/",
-  "aix-en-provence": "/",
-  "toulon": "/",
-  "nice": "/",
-  "cannes": "/",
-  "saint-tropez": "/",
-  "fréjus": "/",
-  "hyères": "/",
+  // Villes PACA avec ancres spécifiques
+  "marseille": "/#marseille",
+  "aix-en-provence": "/#aix",
+  "toulon": "/#toulon",
+  "nice": "/#nice",
+  "cannes": "/#cannes",
+  "saint-tropez": "/#saint-tropez",
+  "fréjus": "/#frejus",
+  "hyères": "/#hyeres",
 };
 
-// Find keywords in text and replace them with links
+// Fonction améliorée pour gérer les liens avec ancres
 export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNode[] => {
   if (!text) return [text];
   
@@ -63,12 +63,10 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
   const result: React.ReactNode[] = [];
   const occurrenceCount: Record<string, number> = {};
   
-  // Initialize the occurrence counter for each keyword
   sortedKeywords.forEach(keyword => {
     occurrenceCount[keyword] = 0;
   });
   
-  // Convert text to lowercase for case-insensitive matching
   const lowerText = text.toLowerCase();
   
   // Function to check if we're inside an HTML tag
@@ -78,62 +76,69 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
     return openTagBefore > closeTagBefore;
   };
   
-  // Find all occurrences of all keywords
   const matches: Array<{keyword: string, index: number}> = [];
   
   sortedKeywords.forEach(keyword => {
     let keywordIndex = lowerText.indexOf(keyword.toLowerCase());
     
     while (keywordIndex !== -1) {
-      // Check if this occurrence is inside an HTML tag
       if (!isInsideHtmlTag(keywordIndex)) {
         matches.push({
           keyword,
           index: keywordIndex
         });
       }
-      
       keywordIndex = lowerText.indexOf(keyword.toLowerCase(), keywordIndex + 1);
     }
   });
   
-  // Sort matches by their index in the text
   matches.sort((a, b) => a.index - b.index);
   
-  // Process non-overlapping matches
   let lastProcessedIndex = 0;
   
   for (const match of matches) {
-    // Skip if we've already processed this part of text
     if (match.index < lastProcessedIndex) continue;
-    
-    // Skip if we've reached the max occurrences for this keyword
     if (occurrenceCount[match.keyword] >= maxOccurrences) continue;
     
-    // Add text before the match
     if (match.index > lastIndex) {
       result.push(text.substring(lastIndex, match.index));
     }
     
-    // Add the keyword as a link
     const originalKeyword = text.substring(match.index, match.index + match.keyword.length);
+    const targetUrl = keywordMap[match.keyword];
+    
+    // Diviser l'URL et l'ancre
+    const [baseUrl, anchor] = targetUrl.split('#');
+    
     result.push(
       <Link 
         key={`keyword-${match.index}`} 
-        to={keywordMap[match.keyword]} 
+        to={targetUrl}
         className="text-khaki-600 hover:text-khaki-800 hover:underline"
+        onClick={(e) => {
+          if (anchor) {
+            e.preventDefault();
+            const element = document.getElementById(anchor);
+            if (element) {
+              element.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+              // Mise à jour de l'URL sans rechargement
+              window.history.pushState({}, '', targetUrl);
+            }
+          }
+        }}
       >
         {originalKeyword}
       </Link>
     );
     
-    // Update trackers
     occurrenceCount[match.keyword]++;
     lastIndex = match.index + match.keyword.length;
     lastProcessedIndex = lastIndex;
   }
   
-  // Add any remaining text
   if (lastIndex < text.length) {
     result.push(text.substring(lastIndex));
   }
