@@ -25,7 +25,7 @@ const ContactHero = () => {
           <h1 className="text-4xl md:text-5xl font-rare tracking-wide mb-6 text-progineer-dark">
             Parlons de votre projet
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable" id="form">
             Notre équipe est à votre disposition pour répondre à toutes vos questions
             et vous accompagner dans la réalisation de votre projet.
           </p>

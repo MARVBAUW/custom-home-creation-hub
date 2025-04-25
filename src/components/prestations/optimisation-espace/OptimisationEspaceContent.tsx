@@ -1,158 +1,202 @@
 
 import React from 'react';
-import Button from '@/components/common/Button';
-import { InternalLinkText } from '@/utils/internalLinking';
 
 const OptimisationEspaceContent = () => {
   return (
     <>
-      <h2 className="text-3xl font-semibold mb-6">Optimisez votre espace de vie</h2>
-      <p className="mb-8 text-gray-700">
-        Chez Progineer, nous transformons vos espaces pour <strong>exploiter pleinement chaque mètre carré</strong> tout en créant des intérieurs fonctionnels et esthétiques. Notre expertise en optimisation d'espace vous permet de redécouvrir le potentiel caché de votre logement ou local professionnel.
-      </p>
-
-      <div className="mb-12">
-        <img 
-          src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?q=80&w=2070&auto=format&fit=crop" 
-          alt="Exemple d'optimisation d'espace réalisée par Progineer"
-          className="w-full h-auto rounded-xl mb-4"
-        />
-        <p className="text-sm text-gray-500 text-center">Optimisation d'un appartement à Marseille</p>
-      </div>
-
-      <h3 className="text-2xl font-medium mb-4">Nos solutions d'optimisation</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Réorganisation des espaces</h4>
-          <p className="text-gray-600">
-            <InternalLinkText 
-              text="Redéfinition des cloisonnements et des circulations pour créer un agencement plus fonctionnel et adapté à votre mode de vie."
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Rangements intégrés</h4>
-          <p className="text-gray-600">
-            <InternalLinkText 
-              text="Conception de solutions de rangement sur mesure qui s'intègrent parfaitement à votre intérieur et exploitent les moindres recoins."
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Aménagements multifonctions</h4>
-          <p className="text-gray-600">
-            <InternalLinkText 
-              text="Création d'espaces modulables qui s'adaptent à différents usages selon vos besoins quotidiens ou occasionnels."
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-        
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="text-xl font-medium mb-3">Mezzanines et surfaces verticales</h4>
-          <p className="text-gray-600">
-            <InternalLinkText 
-              text="Exploitation de la hauteur sous plafond pour créer des surfaces supplémentaires et optimiser le volume disponible."
-              maxOccurrences={1}
-            />
-          </p>
-        </div>
-      </div>
-
-      <h3 className="text-2xl font-medium mb-4">Notre méthode d'optimisation</h3>
-      <div className="bg-gray-50 p-6 rounded-lg mb-10">
-        <ol className="space-y-4">
-          <li className="flex">
-            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">1</span>
-            <div>
-              <h4 className="font-medium">Analyse des besoins et du mode de vie</h4>
-              <p className="text-gray-600 text-sm">
-                <InternalLinkText 
-                  text="Nous étudions vos habitudes, vos contraintes et vos aspirations pour comprendre comment vous utilisez votre espace au quotidien."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </li>
-          <li className="flex">
-            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">2</span>
-            <div>
-              <h4 className="font-medium">Diagnostic spatial et ergonomique</h4>
-              <p className="text-gray-600 text-sm">
-                <InternalLinkText 
-                  text="Nous identifions les points forts et les points faibles de votre espace actuel ainsi que son potentiel d'optimisation."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </li>
-          <li className="flex">
-            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">3</span>
-            <div>
-              <h4 className="font-medium">Proposition d'aménagement</h4>
-              <p className="text-gray-600 text-sm">
-                <InternalLinkText 
-                  text="Nous élaborons des solutions d'optimisation sur mesure, illustrées par des plans et des visuels 3D pour vous projeter dans votre futur espace."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </li>
-          <li className="flex">
-            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-khaki-100 text-khaki-700 flex items-center justify-center font-semibold mr-4">4</span>
-            <div>
-              <h4 className="font-medium">Réalisation et aménagement</h4>
-              <p className="text-gray-600 text-sm">
-                <InternalLinkText 
-                  text="Nous coordonnons la mise en œuvre des travaux et l'installation des aménagements pour concrétiser votre projet d'optimisation."
-                  maxOccurrences={1}
-                />
-              </p>
-            </div>
-          </li>
-        </ol>
-      </div>
-
-      <h3 className="text-2xl font-medium mb-4">Exemples de réalisations</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="font-medium mb-2">Studio 25m² à Marseille</h4>
-          <p className="text-gray-600 text-sm">Création d'une mezzanine, rangements intégrés et mobilier multifonction</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="font-medium mb-2">Appartement familial à Aix</h4>
-          <p className="text-gray-600 text-sm">Réorganisation des cloisons et optimisation des espaces de vie</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="font-medium mb-2">Bureaux professionnels à Toulon</h4>
-          <p className="text-gray-600 text-sm">Aménagement d'espaces de travail flexibles et ergonomiques</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-          <h4 className="font-medium mb-2">Local commercial à Nice</h4>
-          <p className="text-gray-600 text-sm">Optimisation de l'espace de vente et des zones de stockage</p>
-        </div>
-      </div>
-
-      <div className="bg-khaki-50 p-6 rounded-lg">
-        <h3 className="text-2xl font-medium mb-4">Vous avez un projet d'optimisation ?</h3>
-        <p className="mb-6">
-          <InternalLinkText 
-            text="Contactez-nous pour un premier échange sans engagement. Nous serons ravis d'étudier votre espace et de vous proposer des solutions adaptées à vos besoins et à votre budget."
-            maxOccurrences={1}
-          />
+      <div id="overview">
+        <h2 className="text-3xl font-semibold mb-6">Optimisez chaque mètre carré de votre espace</h2>
+        <p className="mb-8 text-gray-700">
+          Vous souhaitez tirer le meilleur parti de votre surface habitable ? Notre bureau d'études en <strong>maîtrise d'œuvre</strong> vous propose des solutions ingénieuses pour optimiser l'espace de votre logement en région PACA. De la conception à la réalisation, nous mettons notre expertise au service de votre confort quotidien.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button href="/estimation" className="bg-khaki-700 hover:bg-khaki-800 text-white">
-            Estimer mon projet
-          </Button>
-          <Button href="/contact" variant="outline" className="border-khaki-300 hover:bg-khaki-50">
-            Prendre rendez-vous
-          </Button>
+
+        <div className="mb-12">
+          <img 
+            src="/lovable-uploads/PROGINEER (9).png" 
+            alt="Exemple d'optimisation d'espace réalisée par Progineer en PACA"
+            className="w-full h-auto rounded-xl mb-4"
+          />
+          <p className="text-sm text-gray-500 text-center">Optimisation d'un appartement à Marseille</p>
         </div>
+      </div>
+
+      <div id="services">
+        <h3 className="text-2xl font-medium mb-4">Nos services d'optimisation d'espace</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Réaménagement complet</h4>
+            <p className="text-gray-600">Restructuration totale de votre intérieur pour créer des espaces plus fonctionnels et optimisés selon vos besoins spécifiques.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Mobilier sur mesure</h4>
+            <p className="text-gray-600">Création de solutions de rangement personnalisées et adaptées à votre espace pour maximiser chaque recoin.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Aménagement de combles</h4>
+            <p className="text-gray-600">Transformation de vos combles en espace habitable fonctionnel : chambre, bureau, salle de jeux ou espace de stockage.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Création de mezzanines</h4>
+            <p className="text-gray-600">Conception et installation de mezzanines pour exploiter la hauteur sous plafond et créer un niveau supplémentaire.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Solutions pour petits espaces</h4>
+            <p className="text-gray-600">Astuces et aménagements spécifiques pour les studios et petits appartements afin de les rendre plus spacieux et fonctionnels.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Valorisation des espaces perdus</h4>
+            <p className="text-gray-600">Transformation des espaces sous-exploités (sous-escaliers, recoins, niches) en zones utiles et esthétiques.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="techniques">
+        <h3 className="text-2xl font-medium mb-4">Techniques d'optimisation d'espace</h3>
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-10">
+          <ul className="space-y-4">
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Décloisonnement</strong>
+                <p className="text-gray-600 mt-1">Création d'espaces ouverts et multifonctionnels pour gagner en fluidité et en lumière naturelle.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Mobilier modulable</strong>
+                <p className="text-gray-600 mt-1">Utilisation de meubles transformables et multifonctions pour s'adapter aux différents moments de la journée.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Rangements intégrés</strong>
+                <p className="text-gray-600 mt-1">Intégration de solutions de rangement dans les murs, sous les escaliers ou dans les combles pour libérer l'espace au sol.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Jeux de miroirs</strong>
+                <p className="text-gray-600 mt-1">Utilisation stratégique des miroirs pour créer une sensation d'espace et multiplier la lumière naturelle.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Exploitation de la hauteur</strong>
+                <p className="text-gray-600 mt-1">Création de mezzanines, d'étagères en hauteur ou de lits surélevés pour optimiser l'espace vertical.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Portes coulissantes</strong>
+                <p className="text-gray-600 mt-1">Remplacement des portes battantes par des portes coulissantes pour économiser l'espace perdu lors de l'ouverture.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="process">
+        <h3 className="text-2xl font-medium mb-4">Notre méthode d'optimisation</h3>
+        <div className="relative pb-12">
+          {/* Timeline vertical line */}
+          <div className="absolute left-6 top-2 bottom-0 w-1 bg-khaki-200"></div>
+          
+          {/* Timeline items */}
+          <div className="relative pl-16 mb-8">
+            <div className="absolute left-0 rounded-full bg-khaki-600 text-white w-12 h-12 flex items-center justify-center font-medium">01</div>
+            <h4 className="text-lg font-medium mb-2">Analyse de vos besoins</h4>
+            <p className="text-gray-600">Nous prenons le temps de comprendre votre mode de vie, vos contraintes et vos attentes pour définir un programme adapté à vos besoins spécifiques.</p>
+          </div>
+          
+          <div className="relative pl-16 mb-8">
+            <div className="absolute left-0 rounded-full bg-khaki-600 text-white w-12 h-12 flex items-center justify-center font-medium">02</div>
+            <h4 className="text-lg font-medium mb-2">Diagnostic de l'existant</h4>
+            <p className="text-gray-600">Étude approfondie de votre logement pour identifier ses contraintes, ses atouts et les opportunités d'optimisation.</p>
+          </div>
+          
+          <div className="relative pl-16 mb-8">
+            <div className="absolute left-0 rounded-full bg-khaki-600 text-white w-12 h-12 flex items-center justify-center font-medium">03</div>
+            <h4 className="text-lg font-medium mb-2">Proposition de solutions</h4>
+            <p className="text-gray-600">Élaboration de plusieurs scénarios d'aménagement avec plans 2D, vues 3D et échantillons de matériaux pour vous aider à visualiser les transformations.</p>
+          </div>
+          
+          <div className="relative pl-16 mb-8">
+            <div className="absolute left-0 rounded-full bg-khaki-600 text-white w-12 h-12 flex items-center justify-center font-medium">04</div>
+            <h4 className="text-lg font-medium mb-2">Planification détaillée</h4>
+            <p className="text-gray-600">Organisation du chantier, coordination des différents corps de métier et établissement d'un calendrier précis des travaux.</p>
+          </div>
+          
+          <div className="relative pl-16">
+            <div className="absolute left-0 rounded-full bg-khaki-600 text-white w-12 h-12 flex items-center justify-center font-medium">05</div>
+            <h4 className="text-lg font-medium mb-2">Suivi et réalisation</h4>
+            <p className="text-gray-600">Supervision de toutes les étapes du chantier pour garantir la qualité des finitions et le respect des délais.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Sections pour les villes */}
+      <div id="marseille" className="mt-8">
+        <h3 className="text-2xl font-medium mb-4">Optimisation d'espace à Marseille</h3>
+        <p className="text-gray-700">
+          À Marseille, nous intervenons sur tous types de biens, des appartements haussmanniens du centre-ville aux villas des quartiers résidentiels. Notre expertise locale nous permet de proposer des solutions adaptées aux spécificités architecturales marseillaises.
+        </p>
+      </div>
+
+      <div id="aix" className="mt-6">
+        <h3 className="text-2xl font-medium mb-4">Optimisation d'espace à Aix-en-Provence</h3>
+        <p className="text-gray-700">
+          Pour vos projets à Aix-en-Provence, nous proposons des solutions d'optimisation qui respectent le caractère patrimonial des bâtiments anciens tout en apportant un confort moderne et fonctionnel à votre intérieur.
+        </p>
+      </div>
+
+      <div id="toulon" className="mt-6">
+        <h3 className="text-2xl font-medium mb-4">Optimisation d'espace à Toulon</h3>
+        <p className="text-gray-700">
+          Dans la région toulonnaise, nous transformons vos intérieurs pour les rendre plus fonctionnels et adaptés à votre mode de vie, qu'il s'agisse d'appartements en centre-ville ou de maisons individuelles.
+        </p>
+      </div>
+
+      <div id="nice" className="mt-6">
+        <h3 className="text-2xl font-medium mb-4">Optimisation d'espace à Nice</h3>
+        <p className="text-gray-700">
+          À Nice, nous proposons des solutions ingénieuses pour optimiser les petites surfaces, très répandues sur ce marché immobilier tendu, et créer des espaces de vie agréables et fonctionnels.
+        </p>
+      </div>
+
+      <div id="cannes" className="mt-6">
+        <h3 className="text-2xl font-medium mb-4">Optimisation d'espace à Cannes</h3>
+        <p className="text-gray-700">
+          Pour vos projets à Cannes, nous concevons des aménagements qui allient esthétique et fonctionnalité, parfaits pour valoriser votre bien immobilier dans cette ville prisée de la Côte d'Azur.
+        </p>
       </div>
     </>
   );

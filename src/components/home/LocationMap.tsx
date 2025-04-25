@@ -40,7 +40,8 @@ const locations = [
     color: '#E57373', 
     radius: 30000,
     projects: 42,
-    highlight: true
+    highlight: true,
+    id: 'marseille'
   },
   { 
     name: 'Saint-Tropez', 
@@ -48,7 +49,8 @@ const locations = [
     lng: 6.6407, 
     color: '#FFB74D', 
     radius: 15000, 
-    projects: 18
+    projects: 18,
+    id: 'saint-tropez'
   },
   { 
     name: 'Toulon', 
@@ -56,7 +58,8 @@ const locations = [
     lng: 5.9279, 
     color: '#4FC3F7', 
     radius: 25000, 
-    projects: 35
+    projects: 35,
+    id: 'toulon'
   },
   { 
     name: 'Nice', 
@@ -64,7 +67,8 @@ const locations = [
     lng: 7.2620, 
     color: '#AED581', 
     radius: 20000, 
-    projects: 27
+    projects: 27,
+    id: 'nice'
   },
   { 
     name: 'Cannes', 
@@ -72,7 +76,8 @@ const locations = [
     lng: 7.0174, 
     color: '#FF8A65', 
     radius: 18000, 
-    projects: 22
+    projects: 22,
+    id: 'cannes'
   },
   { 
     name: 'Fréjus', 
@@ -80,7 +85,62 @@ const locations = [
     lng: 6.7370, 
     color: '#9575CD', 
     radius: 15000, 
-    projects: 15
+    projects: 15,
+    id: 'frejus'
+  },
+  { 
+    name: 'Hyères', 
+    lat: 43.1211, 
+    lng: 6.1292, 
+    color: '#4DB6AC', 
+    radius: 15000, 
+    projects: 13,
+    id: 'hyeres'
+  },
+  { 
+    name: 'Aix-en-Provence', 
+    lat: 43.5297, 
+    lng: 5.4474, 
+    color: '#7986CB', 
+    radius: 20000, 
+    projects: 31,
+    id: 'aix'
+  },
+  { 
+    name: 'Antibes', 
+    lat: 43.5804, 
+    lng: 7.1283, 
+    color: '#BA68C8', 
+    radius: 15000, 
+    projects: 16,
+    id: 'antibes'
+  },
+  { 
+    name: 'La Ciotat', 
+    lat: 43.1740, 
+    lng: 5.6101, 
+    color: '#4DD0E1', 
+    radius: 12000, 
+    projects: 11,
+    id: 'la-ciotat'
+  },
+  { 
+    name: 'Cassis', 
+    lat: 43.2140, 
+    lng: 5.5377, 
+    color: '#FFF176', 
+    radius: 10000, 
+    projects: 8,
+    id: 'cassis'
+  },
+  { 
+    name: 'Bandol', 
+    lat: 43.1367, 
+    lng: 5.7528, 
+    color: '#A1887F', 
+    radius: 10000, 
+    projects: 9,
+    id: 'bandol'
   }
 ];
 
@@ -209,7 +269,7 @@ const LocationMap = () => {
   );
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-stone-100 relative overflow-hidden">
+    <section className="py-24 bg-gradient-to-b from-white to-stone-100 relative overflow-hidden" id="paca">
       {/* Éléments décoratifs */}
       <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-stone-50 to-transparent"></div>
       <div className="absolute -top-20 right-1/4 w-72 h-72 rounded-full bg-khaki-100/30 blur-3xl"></div>
@@ -300,6 +360,7 @@ const LocationMap = () => {
                 <div 
                   key={index}
                   className="flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-stone-100"
+                  id={location.id}
                 >
                   <div 
                     className="w-3 h-3 rounded-full mr-2"

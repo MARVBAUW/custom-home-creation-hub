@@ -26,46 +26,51 @@ const services = [
     icon: HomeIcon,
     title: 'Construction sur mesure',
     description: 'Maisons individuelles et petits collectifs adaptés à vos besoins et à votre terrain.',
-    link: '/prestations-maitre-oeuvre#construction',
+    link: '/prestations-maitre-oeuvre/construction-neuve#services',
     bgColor: 'bg-gradient-to-br from-blue-50 to-indigo-50',
     iconColor: 'text-indigo-500',
-    borderColor: 'border-indigo-100'
+    borderColor: 'border-indigo-100',
+    id: 'construction'
   },
   {
     icon: Gauge,
     title: 'Rénovation énergétique',
     description: 'Optimisation de votre habitat selon les normes RE2020, audits et travaux d\'amélioration.',
-    link: '/prestations-maitre-oeuvre#renovation',
+    link: '/prestations-maitre-oeuvre/renovation#energy',
     bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50',
     iconColor: 'text-emerald-500',
-    borderColor: 'border-emerald-100'
+    borderColor: 'border-emerald-100',
+    id: 'renovation'
   },
   {
     icon: Maximize,
     title: 'Extension & agrandissement',
     description: 'Créez de nouveaux espaces de vie avec une extension parfaitement intégrée à votre habitation.',
-    link: '/prestations-maitre-oeuvre#extension',
+    link: '/prestations-maitre-oeuvre/extension#services',
     bgColor: 'bg-gradient-to-br from-amber-50 to-yellow-50',
     iconColor: 'text-amber-500',
-    borderColor: 'border-amber-100'
+    borderColor: 'border-amber-100',
+    id: 'extension'
   },
   {
     icon: Ruler,
     title: 'Optimisation d\'espace',
     description: 'Réaménagement intelligent pour valoriser chaque mètre carré de votre bien immobilier.',
-    link: '/prestations-maitre-oeuvre#optimisation',
+    link: '/prestations-maitre-oeuvre/optimisation-espace#services',
     bgColor: 'bg-gradient-to-br from-purple-50 to-violet-50',
     iconColor: 'text-violet-500',
-    borderColor: 'border-violet-100'
+    borderColor: 'border-violet-100',
+    id: 'optimisation'
   },
   {
     icon: Paintbrush,
     title: 'Design d\'espace',
     description: 'Conception d\'intérieurs fonctionnels et esthétiques pour particuliers et professionnels.',
-    link: '/prestations-maitre-oeuvre#design',
+    link: '/prestations-maitre-oeuvre/design-interieur#services',
     bgColor: 'bg-gradient-to-br from-rose-50 to-pink-50',
     iconColor: 'text-rose-500',
-    borderColor: 'border-rose-100'
+    borderColor: 'border-rose-100',
+    id: 'design'
   }
 ];
 
@@ -91,7 +96,7 @@ const Services = () => {
   };
 
   return (
-    <section className="py-28 bg-gradient-to-br from-stone-50 to-stone-100/50 relative overflow-hidden">
+    <section id="services-section" className="py-28 bg-gradient-to-br from-stone-50 to-stone-100/50 relative overflow-hidden">
       {/* Éléments décoratifs */}
       <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-white to-transparent"></div>
       <div className="absolute top-20 right-10 w-72 h-72 rounded-full bg-khaki-200/20 blur-3xl"></div>
@@ -144,6 +149,7 @@ const Services = () => {
                   key={service.title}
                   variants={itemVariants}
                   className={`${colSpan} perspective-700`}
+                  id={service.id}
                 >
                   <div className="transform-style-3d h-full w-full">
                     <div 
