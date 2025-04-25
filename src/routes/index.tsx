@@ -7,6 +7,7 @@ import { workspaceRoutes } from './workspaceRoutes';
 import Footer from '../components/layout/Footer';
 import Navbar from '../components/layout/Navbar';
 import { Outlet } from 'react-router-dom';
+import SEOValidator from '../components/seo/SEOValidator';
 
 // Lazily loaded components for authentication routes
 const SignIn = React.lazy(() => import('../pages/client/SignIn'));
@@ -28,6 +29,8 @@ const MainLayout = () => (
       <Outlet />
     </main>
     <Footer />
+    {/* Ajout du validateur SEO qui n'apparaîtra qu'en mode développement */}
+    <SEOValidator />
   </>
 );
 

@@ -11,46 +11,75 @@ interface SEOHeaderProps {
   canonicalUrl?: string;
   structuredData?: object;
   includeLocationSuffix?: boolean;
+  ogType?: string;
+  ogImage?: string;
+  additionalTags?: React.ReactNode;
 }
 
+/**
+ * Composant SEO amélioré pour gérer tous les aspects du référencement d'une page
+ */
 const SEOHeader: React.FC<SEOHeaderProps> = ({
   title,
   description,
   keywords,
   canonicalUrl,
   structuredData,
-  includeLocationSuffix = true
+  includeLocationSuffix = true,
+  ogType = 'website',
+  ogImage,
+  additionalTags
 }) => {
   const location = useLocation();
   
-  // In a production app, we'd use this to validate, but for now it's a placeholder
+  // Valider l'unicité des titres et descriptions (pour le développement)
   const isUniqueTitle = validateUniqueTitle(title);
   const isUniqueDescription = validateUniqueDescription(description);
   
-  // Warning for duplicate titles/descriptions during development
+  // Avertissements pour les doublons en développement
   if (process.env.NODE_ENV === 'development') {
     if (!isUniqueTitle) {
-      console.warn(`Warning: Potentially duplicate title detected: "${title}"`);
+      console.warn(`[SEO Warning] Duplicate title detected: "${title}"`);
     }
     
     if (!isUniqueDescription) {
-      console.warn(`Warning: Potentially duplicate description detected: "${description}"`);
+      console.warn(`[SEO Warning] Duplicate description detected: "${description.substring(0, 50)}..."`);
     }
   }
 
-  // Format the title with location suffix if needed
+  // Format du titre avec suffixe de localisation si nécessaire
   const fullTitle = includeLocationSuffix 
     ? formatPageTitle(title, 'en PACA | Progineer')
     : formatPageTitle(title);
+
+  // Générer l'URL canonique par défaut si non fournie
+  const generatedCanonicalUrl = canonicalUrl || `https://progineer.fr${location.pathname}`;
 
   return (
     <SEO
       title={fullTitle}
       description={description}
       keywords={keywords}
-      canonicalUrl={canonicalUrl || `https://progineer.fr${location.pathname}`}
+      canonicalUrl={generatedCanonicalUrl}
       structuredData={structuredData}
-    />
+      ogType={ogType}
+      ogImage={ogImage}
+    >
+      {/* Tags supplémentaires si fournis */}
+      {additionalTags}
+      
+      {/* Ajouter le préchargement des ressources critiques */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      
+      {/* Balises spécifiques aux réseaux sociaux français */}
+      <meta property="og:locale" content="fr_FR" />
+      <meta property="og:site_name" content="Progineer | Maître d'œuvre en PACA" />
+      
+      {/* Pour le référencement local */}
+      <meta name="geo.region" content="FR-PAC" />
+      <meta name="geo.placename" content="Marseille" />
+    </SEO>
   );
 };
 
