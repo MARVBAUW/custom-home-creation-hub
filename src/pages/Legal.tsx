@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import LegalHero from '@/components/legal/LegalHero';

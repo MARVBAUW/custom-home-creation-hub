@@ -1,7 +1,6 @@
-
-/**
- * Utilities for managing SEO across the site
- */
+// Set of existing titles to track uniqueness
+const existingTitles = new Set<string>();
+const existingDescriptions = new Set<string>();
 
 /**
  * Validates if a title is unique by checking against existing titles
@@ -9,8 +8,11 @@
  * @returns boolean indicating if title is unique
  */
 export const validateUniqueTitle = (title: string): boolean => {
-  // This would typically check against a database or config file of existing titles
-  // For now, this is a placeholder
+  const normalizedTitle = title.toLowerCase().trim();
+  if (existingTitles.has(normalizedTitle)) {
+    return false;
+  }
+  existingTitles.add(normalizedTitle);
   return true;
 }
 
@@ -20,8 +22,11 @@ export const validateUniqueTitle = (title: string): boolean => {
  * @returns boolean indicating if description is unique
  */
 export const validateUniqueDescription = (description: string): boolean => {
-  // This would typically check against a database or config file
-  // For now, this is a placeholder
+  const normalizedDesc = description.toLowerCase().trim();
+  if (existingDescriptions.has(normalizedDesc)) {
+    return false;
+  }
+  existingDescriptions.add(normalizedDesc);
   return true;
 }
 
@@ -32,7 +37,9 @@ export const validateUniqueDescription = (description: string): boolean => {
  * @returns Formatted title string
  */
 export const formatPageTitle = (pageTitle: string, suffix = "Progineer"): string => {
-  return `${pageTitle} | ${suffix}`;
+  // Remove any existing suffix pattern if present
+  let cleanTitle = pageTitle.replace(/\s*\|\s*Progineer.*$/, '').trim();
+  return `${cleanTitle} | ${suffix}`;
 }
 
 /**

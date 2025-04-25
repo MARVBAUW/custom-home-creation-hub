@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import { getContactStructuredData } from '@/components/contact/ContactPageData';

@@ -2,6 +2,7 @@
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import { validateUniqueTitle, validateUniqueDescription, formatPageTitle } from '@/utils/seoUtils';
+import { useLocation } from 'react-router-dom';
 
 interface SEOHeaderProps {
   title: string;
@@ -12,9 +13,6 @@ interface SEOHeaderProps {
   includeLocationSuffix?: boolean;
 }
 
-/**
- * Enhanced SEO component that validates uniqueness of title and description
- */
 const SEOHeader: React.FC<SEOHeaderProps> = ({
   title,
   description,
@@ -23,6 +21,8 @@ const SEOHeader: React.FC<SEOHeaderProps> = ({
   structuredData,
   includeLocationSuffix = true
 }) => {
+  const location = useLocation();
+  
   // In a production app, we'd use this to validate, but for now it's a placeholder
   const isUniqueTitle = validateUniqueTitle(title);
   const isUniqueDescription = validateUniqueDescription(description);
@@ -40,7 +40,7 @@ const SEOHeader: React.FC<SEOHeaderProps> = ({
 
   // Format the title with location suffix if needed
   const fullTitle = includeLocationSuffix 
-    ? `${title} en PACA | Progineer` 
+    ? formatPageTitle(title, 'en PACA | Progineer')
     : formatPageTitle(title);
 
   return (
@@ -48,7 +48,7 @@ const SEOHeader: React.FC<SEOHeaderProps> = ({
       title={fullTitle}
       description={description}
       keywords={keywords}
-      canonicalUrl={canonicalUrl}
+      canonicalUrl={canonicalUrl || `https://progineer.fr${location.pathname}`}
       structuredData={structuredData}
     />
   );
