@@ -5,7 +5,31 @@ Allow: /resources/
 Allow: /resources/guides/
 Allow: /resources/documents/
 
-# Explicitly allow PDF indexing
+# Règles spécifiques pour Googlebot
+User-agent: Googlebot
+Allow: /
+
+# Règles spécifiques pour Googlebot-Image
+User-agent: Googlebot-Image
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+
+# Règles spécifiques pour Bingbot
+User-agent: Bingbot
+Allow: /
+
+# Explicitement autoriser l'indexation des PDF
 Allow: /*.pdf$
 
+# Ne pas indexer les pages administratives, de débogage ou temporaires
+Disallow: /admin/
+Disallow: /debug/
+Disallow: /temp/
+Disallow: /workspace/sign-in
+Disallow: /workspace/sign-up
+
+# Sitemap
 Sitemap: https://progineer.fr/sitemap.xml
+
