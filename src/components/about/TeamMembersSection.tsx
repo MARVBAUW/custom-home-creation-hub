@@ -1,8 +1,7 @@
 
 import React from "react";
 import Container from "@/components/common/Container";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
+import TeamMemberCard from "./TeamMemberCard";
 
 interface TeamMember {
   id: number;
@@ -18,49 +17,32 @@ interface TeamMembersSectionProps {
 }
 
 const TeamMembersSection: React.FC<TeamMembersSectionProps> = ({ members }) => (
-  <section className="py-16 bg-gray-900">
+  <section className="relative py-24 bg-gradient-to-b from-gray-900 to-gray-950 overflow-hidden">
+    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23787346\" fill-opacity=\"0.05\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-20" />
+    
     <Container>
-      <h2 className="text-3xl font-semibold mb-12 text-center text-white">Notre équipe pluridisciplinaire</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-        {members.map((member) => (
-          <div 
-            key={member.id}
-            className="bg-gray-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-white/10 p-6"
-          >
-            <div className="flex flex-col items-center">
-              <div className="w-48 h-48 relative mb-6 flex-shrink-0">
-                <Avatar className="w-full h-full">
-                  <AvatarImage 
-                    src={member.image} 
-                    alt={member.name}
-                    className="object-cover bg-white rounded-xl"
-                  />
-                  <AvatarFallback className="text-4xl bg-khaki-700 text-white">
-                    {getInitials(member.name)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="text-center">
-                <h3 className="text-2xl font-semibold text-white mb-1">{member.name}</h3>
-                <p className="text-khaki-400 mb-4 font-medium">{member.role}</p>
-                <p className="text-white/90 text-sm mb-6 max-w-lg">{member.bio}</p>
-                <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2 text-khaki-400">Compétences :</h4>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {member.skills.map((skill, idx) => (
-                      <span 
-                        key={idx}
-                        className="px-2 py-1 bg-white/10 text-white rounded text-xs border border-white/20"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div className="relative">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-khaki-700 rounded-full blur-[120px] opacity-20" />
+        
+        <div className="relative">
+          <div className="text-center mb-16">
+            <h2 className="inline-block text-3xl md:text-4xl font-semibold text-white mb-4 relative">
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 text-xs font-normal text-khaki-400 uppercase tracking-wider">
+                Notre expertise à votre service
+              </span>
+              Notre équipe pluridisciplinaire
+            </h2>
+            <p className="text-white/70 max-w-2xl mx-auto text-lg">
+              Une équipe expérimentée de maîtres d'œuvre et d'ingénieurs spécialisés pour donner vie à vos projets de construction et rénovation en PACA.
+            </p>
           </div>
-        ))}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+            {members.map((member) => (
+              <TeamMemberCard key={member.id} member={member} />
+            ))}
+          </div>
+        </div>
       </div>
     </Container>
   </section>
