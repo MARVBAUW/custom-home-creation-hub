@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import AboutHero from '@/components/about/AboutHero';
@@ -19,7 +20,9 @@ const About = () => {
       />
 
       <main>
-        <h1 className="sr-only">À propos de Progineer - Maître d'œuvre expert en PACA</h1>
+        <div className="text-3xl md:text-4xl font-semibold mb-8 text-center pt-32">
+          <h1>À propos de Progineer - Maître d'œuvre expert en PACA</h1>
+        </div>
         <AboutHero />
         <AboutStory />
         <AboutValues />

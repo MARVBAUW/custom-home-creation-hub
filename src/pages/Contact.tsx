@@ -1,3 +1,4 @@
+
 import React from 'react';
 import SEO from '@/components/common/SEO';
 import { getContactStructuredData } from '@/components/contact/ContactPageData';
@@ -22,7 +23,9 @@ const Contact = () => {
       />
       
       <main>
-        <h1 className="sr-only">Contact - Progineer Maître d'œuvre à Marseille et en PACA</h1>
+        <div className="text-3xl md:text-4xl font-semibold mb-8 text-center pt-32">
+          <h1>Contact - Progineer Maître d'œuvre à Marseille et en PACA</h1>
+        </div>
         <ContactHero />
 
         {/* Contact content */}

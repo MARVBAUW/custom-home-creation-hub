@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useLocation } from 'react-router-dom';
@@ -216,7 +215,7 @@ const Prestations = () => {
               Nos prestations
             </div>
             <h1 className="text-4xl md:text-5xl font-semibold mb-6">
-              Services de maîtrise d'œuvre
+              Services de maîtrise d'œuvre en PACA
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               <InternalLinkText 

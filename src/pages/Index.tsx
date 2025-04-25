@@ -50,7 +50,9 @@ const Index = () => {
       />
       
       <main className="overflow-hidden">
-        <h1 className="sr-only">Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
+        <div className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide mb-6 text-center pt-32">
+          <h1>Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
+        </div>
         <Hero />
         <ExpertiseSection />
         <Services />
