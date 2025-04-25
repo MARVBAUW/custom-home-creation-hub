@@ -11,9 +11,9 @@ const About = () => {
   return (
     <>
       <SEO 
-        title="À propos | Maître d'œuvre Progineer à Marseille et en PACA"
-        description="Découvrez Progineer, entreprise de maîtrise d'œuvre spécialisée dans la construction, rénovation et extension de maisons sur mesure en région PACA depuis 2018."
-        keywords="histoire maître d'œuvre, valeurs Progineer, expertise construction PACA, entreprise rénovation Marseille, vision entreprise bâtiment"
+        title="À propos | Maître d'œuvre expert en construction PACA - Progineer"
+        description="Découvrez l'expertise et les valeurs de Progineer, votre maître d'œuvre en PACA. Une équipe passionnée qui concrétise vos projets de construction et rénovation depuis 2018."
+        keywords="histoire maître d'œuvre, valeurs Progineer, expertise construction PACA, entreprise rénovation Marseille"
         ogType="website"
         canonicalUrl="https://progineer.fr/a-propos"
       />

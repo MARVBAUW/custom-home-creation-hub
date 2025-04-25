@@ -43,8 +43,8 @@ const Index = () => {
     <>
       <SEO 
         title="Maître d'œuvre Marseille | Construction & Rénovation | Progineer PACA"
-        description="Maître d'œuvre à Marseille expert en construction, rénovation et extension de maisons. Coordination des corps de métier, respect des délais et expertise technique pour vos projets en PACA."
-        keywords="maître d'œuvre marseille, maîtrise d'œuvre, coordination chantier, corps de métier, expertise technique, respect des délais, projet de rénovation, maître d'ouvrage, maîtres d'œuvre"
+        description="Expert en maîtrise d'œuvre à Marseille spécialisé dans la construction, rénovation et extension de maisons. Une approche personnalisée et un accompagnement sur mesure pour vos projets en PACA."
+        keywords="maître d'œuvre marseille, construction maison PACA, rénovation Marseille, extension maison, coordination travaux"
         canonicalUrl="https://progineer.fr/"
         structuredData={getBusinessStructuredData()}
       />

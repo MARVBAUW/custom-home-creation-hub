@@ -15,20 +15,12 @@ const Contact = () => {
     <>
       <SEO 
         title="Contact | Maître d'œuvre Progineer à Marseille et en PACA"
-        description="Contactez Progineer, votre maître d'œuvre pour vos projets de construction, rénovation et extension en PACA. Devis gratuit, rendez-vous et conseils personnalisés."
-        keywords="contact maître d'œuvre PACA, devis travaux Marseille, rendez-vous construction, téléphone Progineer, adresse entreprise bâtiment"
+        description="Contactez Progineer pour vos projets de construction et rénovation en PACA. Notre équipe de maîtres d'œuvre vous accompagne dans la réalisation de vos projets immobiliers sur mesure."
+        keywords="contact maître d'œuvre PACA, devis construction Marseille, rendez-vous travaux, coordonnées Progineer"
         canonicalUrl="https://progineer.fr/contact"
         structuredData={structuredData}
-        ogType="website"
-        ogImage="https://progineer.fr/images/progineer-contact.jpg"
-      >
-        {/* Additional meta tags for better indexing */}
-        <meta name="robots" content="index, follow" />
-        <meta name="geo.region" content="FR-PAC" />
-        <meta name="geo.placename" content="Provence-Alpes-Côte d'Azur" />
-        <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/contact" />
-      </SEO>
-
+      />
+      
       <main>
         <h1 className="sr-only">Contact - Progineer Maître d'œuvre à Marseille et en PACA</h1>
         <ContactHero />

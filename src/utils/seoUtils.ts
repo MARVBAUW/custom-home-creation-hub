@@ -32,7 +32,7 @@ export const validateUniqueDescription = (description: string): boolean => {
 
 /**
  * Get a properly formatted page title
- * @param pageTitle The main part of the title
+ * @param pageTitle The main part of the title 
  * @param suffix Optional suffix, defaults to "Progineer"
  * @returns Formatted title string
  */
