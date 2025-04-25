@@ -18,7 +18,7 @@ interface TeamMembersSectionProps {
 
 const TeamMembersSection: React.FC<TeamMembersSectionProps> = ({ members }) => (
   <section className="relative py-24 bg-gradient-to-b from-gray-900 to-gray-950 overflow-hidden">
-    <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23787346\" fill-opacity=\"0.05\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-20" />
+    <div className="absolute inset-0 bg-[url('/lovable-uploads/aa0d9792-6c78-477d-9203-0c92cc4c6035.png')] opacity-5" />
     
     <Container>
       <div className="relative">
