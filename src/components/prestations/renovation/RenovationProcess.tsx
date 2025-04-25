@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const RenovationProcess = () => {
+export const RenovationProcess = () => {
   return (
     <>
       <h3 className="text-2xl font-medium mb-4">Notre processus de rénovation</h3>

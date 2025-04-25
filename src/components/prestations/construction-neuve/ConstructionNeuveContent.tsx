@@ -1,9 +1,6 @@
 
 import React from 'react';
-import ProcessSection from './sections/ProcessSection';
-import ServicesSection from './sections/ServicesSection';
-import OptionsSection from './sections/OptionsSection';
-import MaterialsSection from './sections/MaterialsSection';
+import { RenovationProcess } from '@/components/prestations/renovation/RenovationProcess';
 
 const ConstructionNeuveContent = () => {
   return (
@@ -26,22 +23,88 @@ const ConstructionNeuveContent = () => {
 
       <div id="services">
         <h3 className="text-2xl font-medium mb-4">Nos services de construction</h3>
-        <ServicesSection />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Conception architecturale</h4>
+            <p className="text-gray-600">Plans personnalisés adaptés à vos besoins, votre terrain et vos contraintes budgétaires.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Dépôt du permis de construire</h4>
+            <p className="text-gray-600">Préparation et suivi de votre dossier auprès des services d'urbanisme.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Coordination des travaux</h4>
+            <p className="text-gray-600">Gestion et suivi du chantier pour garantir qualité et respect des délais.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Assistance à la réception</h4>
+            <p className="text-gray-600">Contrôle final de la construction et accompagnement pour la levée des réserves.</p>
+          </div>
+        </div>
       </div>
 
       <div id="process">
         <h3 className="text-2xl font-medium mb-4">Notre processus de construction</h3>
-        <ProcessSection />
+        <RenovationProcess />
       </div>
 
       <div id="options">
         <h3 className="text-2xl font-medium mb-4">Options et personnalisation</h3>
-        <OptionsSection />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Domotique</h4>
+            <p className="text-gray-600">Systèmes intelligents pour contrôler éclairage, chauffage et sécurité de votre maison.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Énergies renouvelables</h4>
+            <p className="text-gray-600">Solutions écologiques pour réduire votre empreinte carbone et vos factures.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Piscine & spa</h4>
+            <p className="text-gray-600">Conception et intégration d'espaces de détente et de bien-être dans votre projet.</p>
+          </div>
+        </div>
       </div>
 
       <div id="materials">
         <h3 className="text-2xl font-medium mb-4">Matériaux et finitions</h3>
-        <MaterialsSection />
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+          <ul className="space-y-4">
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Matériaux durables</strong>
+                <p className="text-gray-600 mt-1">Sélection rigoureuse de matériaux respectueux de l'environnement et adaptés au climat méditerranéen.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Isolation performante</strong>
+                <p className="text-gray-600 mt-1">Solutions thermiques adaptées pour garantir confort été comme hiver et économies d'énergie.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Finitions personnalisées</strong>
+                <p className="text-gray-600 mt-1">Large choix de revêtements, menuiseries et équipements pour personnaliser votre intérieur selon vos goûts.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Sections pour les villes */}

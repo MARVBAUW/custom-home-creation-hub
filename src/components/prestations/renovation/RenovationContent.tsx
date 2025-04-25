@@ -1,9 +1,6 @@
 
 import React from 'react';
-import ProcessSection from './sections/ProcessSection';
-import ServicesSection from './sections/ServicesSection';
-import EnergySection from './sections/EnergySection';
-import MaterialsSection from './sections/MaterialsSection';
+import { RenovationProcess } from '@/components/prestations/renovation/RenovationProcess';
 
 const RenovationContent = () => {
   return (
@@ -26,22 +23,87 @@ const RenovationContent = () => {
 
       <div id="services">
         <h3 className="text-2xl font-medium mb-4">Nos services de rénovation</h3>
-        <ServicesSection />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Rénovation complète</h4>
+            <p className="text-gray-600">Transformation intégrale de votre bien immobilier, de la structure aux finitions.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Rénovation partielle</h4>
+            <p className="text-gray-600">Modernisation ciblée de certaines pièces ou éléments de votre habitat.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Rénovation énergétique</h4>
+            <p className="text-gray-600">Amélioration de l'isolation et des systèmes techniques pour réduire votre consommation.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Rénovation patrimoniale</h4>
+            <p className="text-gray-600">Restauration respectueuse de biens anciens ou à caractère historique.</p>
+          </div>
+        </div>
       </div>
 
       <div id="process">
-        <h3 className="text-2xl font-medium mb-4">Notre processus de rénovation</h3>
-        <ProcessSection />
+        <RenovationProcess />
       </div>
 
       <div id="energy">
         <h3 className="text-2xl font-medium mb-4">Rénovation énergétique</h3>
-        <EnergySection />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Isolation thermique</h4>
+            <p className="text-gray-600">Solutions performantes pour murs, toiture et planchers adaptées au climat méditerranéen.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Menuiseries isolantes</h4>
+            <p className="text-gray-600">Remplacement des fenêtres et portes pour une meilleure étanchéité et isolation.</p>
+          </div>
+          <div className="bg-white p-5 rounded-lg border border-gray-100 shadow-sm">
+            <h4 className="font-medium text-lg mb-2">Chauffage efficient</h4>
+            <p className="text-gray-600">Installation de systèmes modernes et économes : pompe à chaleur, climatisation réversible, etc.</p>
+          </div>
+        </div>
       </div>
 
       <div id="materials">
         <h3 className="text-2xl font-medium mb-4">Matériaux et finitions</h3>
-        <MaterialsSection />
+        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+          <ul className="space-y-4">
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Matériaux écologiques</strong>
+                <p className="text-gray-600 mt-1">Large choix de matériaux naturels et durables : chaux, terre cuite, bois local, etc.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Finitions personnalisées</strong>
+                <p className="text-gray-600 mt-1">Peintures, revêtements et menuiseries adaptés à vos goûts et au style de votre bien.</p>
+              </div>
+            </li>
+            <li className="flex gap-3">
+              <div className="flex-shrink-0 text-khaki-700">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div>
+                <strong className="font-medium">Solutions innovantes</strong>
+                <p className="text-gray-600 mt-1">Intégration de matériaux techniques pour répondre aux enjeux d'isolation, d'acoustique et de durabilité.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
 
       {/* Sections pour les villes */}
