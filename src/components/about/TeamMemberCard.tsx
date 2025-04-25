@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Award, Building2, GraduationCap } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
@@ -17,6 +16,14 @@ interface TeamMemberCardProps {
 }
 
 const TeamMemberCard = ({ member }: TeamMemberCardProps) => {
+  useEffect(() => {
+    console.log('Image URL:', member.image);
+    const img = new Image();
+    img.onload = () => console.log('Image loaded successfully');
+    img.onerror = () => console.error('Image failed to load');
+    img.src = member.image;
+  }, [member.image]);
+
   return (
     <div className="relative group">
       <div className="absolute inset-0 bg-gradient-to-r from-khaki-700/20 to-khaki-800/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100" />
@@ -32,7 +39,12 @@ const TeamMemberCard = ({ member }: TeamMemberCardProps) => {
                 <AvatarImage 
                   src={member.image} 
                   alt={member.name}
-                  className="object-cover"
+                  className="object-cover w-full h-full"
+                  // Ajout d'un attribut onError pour le débogage
+                  onError={(e) => {
+                    console.error('Image load error:', e);
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               )}
               <AvatarFallback className="text-4xl bg-khaki-700 text-white">
