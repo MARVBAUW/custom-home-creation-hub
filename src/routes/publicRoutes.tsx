@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
+import Redirect from '../components/common/Redirect';
 import Index from '../pages/Index';
 import Contact from '../pages/Contact';
 import Estimation from '../pages/Estimation';
@@ -34,6 +35,21 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/",
     element: <Index />
+  },
+  // Redirections 301 avec messages
+  {
+    path: "/old-feature",
+    element: <Redirect 
+      to="/prestations-maitre-oeuvre" 
+      message="Cette page a été déplacée vers nos prestations."
+    />
+  },
+  {
+    path: "/deprecated-page",
+    element: <Redirect 
+      to="/" 
+      message="Cette page n'existe plus. Vous avez été redirigé vers l'accueil."
+    />
   },
   {
     path: "/contact",
