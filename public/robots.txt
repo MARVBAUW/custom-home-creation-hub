@@ -29,6 +29,9 @@ Disallow: /debug/
 Disallow: /temp/
 Disallow: /workspace/sign-in
 Disallow: /workspace/sign-up
+Disallow: /admin-panel
+Disallow: /api/
+Disallow: /workspace/client-area/admin
 
 # Sitemap
 Sitemap: https://progineer.fr/sitemap.xml

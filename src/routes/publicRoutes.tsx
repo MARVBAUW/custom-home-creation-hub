@@ -52,6 +52,20 @@ export const publicRoutes: RouteObject[] = [
     />
   },
   {
+    path: "/admin-panel",
+    element: <Redirect 
+      to="/workspace/client-area/admin" 
+      message="L'interface d'administration a été déplacée. Redirection vers le nouveau tableau de bord."
+    />
+  },
+  {
+    path: "/api/secret-endpoint",
+    element: <Redirect 
+      to="/" 
+      message="Cette ressource n'est plus accessible publiquement."
+    />
+  },
+  {
     path: "/contact",
     element: <Contact />
   },

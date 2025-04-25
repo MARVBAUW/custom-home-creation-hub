@@ -1,8 +1,8 @@
-
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from '@/hooks/use-toast';
+import { Helmet } from 'react-helmet';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -66,7 +66,14 @@ const ProtectedRoute = ({
     return <Navigate to="/workspace/client-area/admin" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Helmet>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
+      {children}
+    </>
+  );
 };
 
 export default ProtectedRoute;
