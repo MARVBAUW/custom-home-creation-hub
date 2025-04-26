@@ -2,7 +2,7 @@
 import React from 'react';
 import Container from '@/components/common/Container';
 import Logo from '@/components/common/Logo';
-import EstimationForm from './EstimationForm';
+import TallyEstimationForm from './TallyEstimationForm';
 
 const EstimationHero = () => {
   return (
@@ -24,8 +24,8 @@ const EstimationHero = () => {
             Notre outil d'estimation vous donne une idée précise du budget nécessaire pour votre projet 
             de construction, rénovation ou extension en région PACA. Recevez un devis détaillé en 24h.
           </p>
-          
-          <EstimationForm />
+
+          <TallyEstimationForm />
         </div>
       </Container>
     </section>
