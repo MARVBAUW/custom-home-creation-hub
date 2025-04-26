@@ -4,8 +4,8 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogTrigger } 
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { useMediaQuery } from '@/hooks/use-media-query';
 import Button from '@/components/common/Button';
-import EstimationCalculator from './EstimationCalculator';
 import { Construction } from 'lucide-react';
+import TallyEstimationForm from './TallyEstimationForm';
 
 const EstimationForm = () => {
   const [open, setOpen] = useState(false);
@@ -25,7 +25,7 @@ const EstimationForm = () => {
           <DialogDescription className="text-muted-foreground">
             Estimez le coût de votre projet de construction ou rénovation en quelques étapes simples.
           </DialogDescription>
-          <EstimationCalculator />
+          <TallyEstimationForm />
         </DialogContent>
       </Dialog>
     );
@@ -45,7 +45,7 @@ const EstimationForm = () => {
           <p className="text-muted-foreground text-center mb-6">
             Estimez le coût de votre projet de construction ou rénovation en quelques étapes simples.
           </p>
-          <EstimationCalculator />
+          <TallyEstimationForm />
         </div>
       </DrawerContent>
     </Drawer>
