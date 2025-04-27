@@ -63,12 +63,15 @@ const Estimation = () => {
         structuredData={structuredData}
         ogType="website"
         ogImage="https://progineer.fr/images/progineer-estimation.jpg"
-      >
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-        <meta name="geo.region" content="FR-PAC" />
-        <meta name="geo.placename" content="Provence-Alpes-Côte d'Azur" />
-        <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/estimation" />
-      </SEOHeader>
+        additionalTags={
+          <>
+            <meta name="robots" content="index, follow, max-image-preview:large" />
+            <meta name="geo.region" content="FR-PAC" />
+            <meta name="geo.placename" content="Provence-Alpes-Côte d'Azur" />
+            <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/estimation" />
+          </>
+        }
+      />
 
       <main>
         <motion.div
