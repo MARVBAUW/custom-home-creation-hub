@@ -1,8 +1,11 @@
+
 import React from 'react';
 import Container from '@/components/common/Container';
-import EstimationForm from './EstimationForm';
+import TallyEstimationForm from './TallyEstimationForm';
+
 const EstimationTrustMetrics = () => {
-  return <section className="py-16 bg-progineer-light/70">
+  return (
+    <section className="py-16 bg-progineer-light/70">
       <Container size="md">
         <h2 className="text-2xl md:text-3xl font-rare tracking-wide mb-6 text-center text-progineer-gold">
           Notre expertise en chiffres
@@ -34,9 +37,11 @@ const EstimationTrustMetrics = () => {
           <p className="mb-6 text-progineer-dark/80 max-w-2xl mx-auto">
             Faites confiance à notre équipe d'experts pour vous accompagner dans votre projet de construction ou de rénovation en région PACA.
           </p>
-          <EstimationForm />
+          <TallyEstimationForm />
         </div>
       </Container>
-    </section>;
+    </section>
+  );
 };
+
 export default EstimationTrustMetrics;

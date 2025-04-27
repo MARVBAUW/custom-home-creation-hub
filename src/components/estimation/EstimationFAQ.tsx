@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
-import EstimationForm from './EstimationForm';
+import TallyEstimationForm from './TallyEstimationForm';
 
 const EstimationFAQ = () => {
   return (
@@ -34,7 +34,7 @@ const EstimationFAQ = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <EstimationForm />
+          <TallyEstimationForm />
         </div>
       </Container>
     </section>
