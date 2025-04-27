@@ -1,9 +1,27 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Construction } from 'lucide-react';
 
 const TallyEstimationForm = () => {
+  // Make sure Tally is loaded and embedded properly
+  useEffect(() => {
+    // Check if Tally is already defined
+    if (typeof window !== 'undefined') {
+      if (window.Tally && typeof window.Tally.loadEmbeds === 'function') {
+        window.Tally.loadEmbeds();
+      } else {
+        // Force reload iframe
+        const iframes = document.querySelectorAll('iframe[data-tally-src]:not([src])');
+        iframes.forEach((iframe: HTMLIFrameElement) => {
+          if (iframe.dataset.tallySrc) {
+            iframe.src = iframe.dataset.tallySrc;
+          }
+        });
+      }
+    }
+  }, []);
+
   return (
     <Card className="shadow-md bg-white/95">
       <CardHeader className="space-y-1">

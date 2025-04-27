@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Container from '@/components/common/Container';
 import Logo from '@/components/common/Logo';
@@ -15,8 +16,8 @@ const EstimationHero = () => {
           </div>
           
           <h1 className="text-4xl md:text-5xl font-rare tracking-wide mb-6 text-progineer-dark">
-            Estimez gratuitement votre projet<br className="hidden md:block" /> 
-            <span className="text-progineer-gold">de construction en PACA</span>
+            Estimez gratuitement votre projet de construction en PACA
+            <span className="text-progineer-gold block mt-2">Obtenez le coût exact de vos travaux</span>
           </h1>
           
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 speakable">
@@ -24,7 +25,7 @@ const EstimationHero = () => {
             de construction, rénovation ou extension en région PACA. Recevez un devis détaillé en 24h.
           </p>
 
-          <div id="estimation-form">
+          <div id="estimation-form" className="max-w-2xl mx-auto">
             <TallyEstimationForm />
           </div>
         </div>
