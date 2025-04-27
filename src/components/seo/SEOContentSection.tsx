@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { InternalLinkText } from '@/utils/internalLinking';
+import { Helmet } from 'react-helmet-async';
 
 interface FAQItem {
   question: string;
@@ -54,17 +55,14 @@ const SEOContentSection = ({
 
   return (
     <div className="py-12 bg-stone-50">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Injection des schemas */}
-        <script type="application/ld+json">
-          {JSON.stringify(articleSchema)}
-        </script>
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(articleSchema)}</script>
         {faqSchema && (
-          <script type="application/ld+json">
-            {JSON.stringify(faqSchema)}
-          </script>
+          <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
         )}
+      </Helmet>
 
+      <div className="max-w-4xl mx-auto px-4">
         {/* Contenu principal */}
         <h2 className="text-3xl font-semibold mb-8 text-gray-900">{title}</h2>
         

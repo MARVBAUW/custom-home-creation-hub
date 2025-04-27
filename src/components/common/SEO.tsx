@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 interface SEOProps {
   title: string;
@@ -134,6 +134,27 @@ const SEO: React.FC<SEOProps> = ({
     }
   };
 
+  // Serialize structured data safely
+  const structuredDataString = JSON.stringify(structuredData || defaultStructuredData);
+  const breadcrumbDataString = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Accueil",
+        "item": "https://progineer.fr"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": title,
+        "item": canonicalUrl
+      }
+    ]
+  });
+
   return (
     <Helmet>
       {/* Basic Meta Tags */}
@@ -171,9 +192,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="theme-color" content="#787346" />
 
       {/* Structured Data (JSON-LD) for Rich Results */}
-      <script type="application/ld+json">
-        {JSON.stringify(structuredData || defaultStructuredData)}
-      </script>
+      <script type="application/ld+json">{structuredDataString}</script>
 
       {/* Additional meta tags */}
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -185,26 +204,7 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="article:publisher" content="https://www.facebook.com/progineer" />
       
       {/* Additional structured data for breadcrumbs */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Accueil",
-              "item": "https://progineer.fr"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": title,
-              "item": canonicalUrl
-            }
-          ]
-        })}
-      </script>
+      <script type="application/ld+json">{breadcrumbDataString}</script>
 
       {/* Add link to sitemap */}
       <link rel="sitemap" type="application/xml" href="https://progineer.fr/sitemap.xml" />
