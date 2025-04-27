@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SEOHeader from '@/components/common/SEOHeader';
 import { getEstimationStructuredData } from '@/components/estimation/EstimationPageData';
@@ -10,6 +9,7 @@ import { motion } from 'framer-motion';
 import SEOFooter from '@/components/common/SEOFooter';
 import EstimationHero from '@/components/estimation/EstimationHero';
 import SEOContentSection from '@/components/seo/SEOContentSection';
+import SEO from '@/components/common/SEO';
 
 const Estimation = () => {
   const structuredData = getEstimationStructuredData();
@@ -55,22 +55,15 @@ const Estimation = () => {
 
   return (
     <>
-      <SEOHeader 
-        title="Estimation Gratuite de Coût de Construction et Rénovation | Prix au m²"
+      <SEO 
+        title="Estimation de Coût de Construction et Rénovation"
         description="Calculez gratuitement le coût de vos travaux de construction ou rénovation en PACA. Obtenez une estimation précise du prix au m² et un devis détaillé en 24h."
         keywords="estimation travaux, estimer coût construction, prix rénovation maison PACA, coût travaux au m², simulateur prix construction, devis travaux Marseille"
         canonicalUrl="https://progineer.fr/estimation"
         structuredData={structuredData}
         ogType="website"
         ogImage="https://progineer.fr/images/progineer-estimation.jpg"
-        additionalTags={
-          <>
-            <meta name="robots" content="index, follow, max-image-preview:large" />
-            <meta name="geo.region" content="FR-PAC" />
-            <meta name="geo.placename" content="Provence-Alpes-Côte d'Azur" />
-            <link rel="alternate" hrefLang="fr-fr" href="https://progineer.fr/estimation" />
-          </>
-        }
+        pageType="service"
       />
 
       <main>

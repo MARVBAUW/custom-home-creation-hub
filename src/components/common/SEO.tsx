@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { generatePageTitle } from '@/utils/titleGenerator';
 
 interface SEOProps {
   title: string;
@@ -11,6 +12,8 @@ interface SEOProps {
   ogImage?: string;
   structuredData?: object;
   children?: React.ReactNode;
+  pageType?: string;
+  location?: 'marseille' | 'aix-en-provence' | 'toulon' | 'nice' | 'cannes' | 'frejus';
 }
 
 const SEO: React.FC<SEOProps> = ({
@@ -19,12 +22,14 @@ const SEO: React.FC<SEOProps> = ({
   keywords,
   canonicalUrl = 'https://progineer.fr',
   ogType = 'website',
-  ogImage = 'https://progineer.fr/images/progineer-social-card.jpg', 
+  ogImage = 'https://progineer.fr/images/progineer-social-card.jpg',
   structuredData,
   children,
+  pageType,
+  location,
 }) => {
-  // Make sure title is not too long (Google typically displays the first 50-60 characters)
-  const formattedTitle = title.length > 60 ? title.substring(0, 60) + '...' : title;
+  // Generate optimized title
+  const formattedTitle = generatePageTitle(title, pageType, location);
   
   // Make sure description is not too long (Google typically displays ~155-160 characters)
   const formattedDescription = description.length > 160 ? description.substring(0, 160) + '...' : description;
