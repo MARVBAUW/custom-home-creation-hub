@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Container from '@/components/common/Container';
 import Logo from '@/components/common/Logo';
@@ -25,7 +24,9 @@ const EstimationHero = () => {
             de construction, rénovation ou extension en région PACA. Recevez un devis détaillé en 24h.
           </p>
 
-          <TallyEstimationForm />
+          <div id="estimation-form">
+            <TallyEstimationForm />
+          </div>
         </div>
       </Container>
     </section>

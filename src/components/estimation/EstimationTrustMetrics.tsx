@@ -1,7 +1,8 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
-import TallyEstimationForm from './TallyEstimationForm';
+import { Button } from "@/components/ui/button";
+import { scrollToForm } from './utils/scrollToForm';
 
 const EstimationTrustMetrics = () => {
   return (
@@ -37,7 +38,12 @@ const EstimationTrustMetrics = () => {
           <p className="mb-6 text-progineer-dark/80 max-w-2xl mx-auto">
             Faites confiance à notre équipe d'experts pour vous accompagner dans votre projet de construction ou de rénovation en région PACA.
           </p>
-          <TallyEstimationForm />
+          <Button 
+            onClick={scrollToForm}
+            className="bg-progineer-gold hover:bg-progineer-gold/90 text-white"
+          >
+            Demander une estimation
+          </Button>
         </div>
       </Container>
     </section>

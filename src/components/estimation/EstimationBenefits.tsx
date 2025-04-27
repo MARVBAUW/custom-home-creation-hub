@@ -1,7 +1,8 @@
 
 import React from 'react';
 import Container from '@/components/common/Container';
-import TallyEstimationForm from './TallyEstimationForm';
+import { Button } from "@/components/ui/button";
+import { scrollToForm } from './utils/scrollToForm';
 
 const EstimationBenefits = () => {
   return (
@@ -29,7 +30,12 @@ const EstimationBenefits = () => {
         </div>
         
         <div className="mt-12 text-center">
-          <TallyEstimationForm />
+          <Button 
+            onClick={scrollToForm}
+            className="bg-progineer-gold hover:bg-progineer-gold/90 text-white"
+          >
+            Estimer mon projet
+          </Button>
         </div>
       </Container>
     </section>
