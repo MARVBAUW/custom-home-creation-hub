@@ -1,6 +1,6 @@
 
 {
-  "name": "Progineer - Maîtrise d'oeuvre",
+  "name": "Progineer",
   "short_name": "Progineer",
   "icons": [
     {
@@ -15,6 +15,6 @@
     }
   ],
   "theme_color": "#787346",
-  "background_color": "#f5f2e7",
+  "background_color": "#ffffff",
   "display": "standalone"
 }
