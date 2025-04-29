@@ -1,91 +1,74 @@
 
 import React from 'react';
+import { LockKeyhole, User, LogIn, UserPlus } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
-import { Check, BookOpen } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ClientFeaturesOverview from './client/ClientFeaturesOverview';
-import ClientServiceCards from './client/ClientServiceCards';
-import ClientLoginCard from './client/ClientLoginCard';
-import SecurityAlert from './client/SecurityAlert';
-import { useAuth } from '@/hooks/useAuth';
 
 const WorkspaceEspaceClient = () => {
-  const { user, loading } = useAuth();
-  
   return (
-    <div className="space-y-6">
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-2 flex items-center">
-          Espace client
-          <Badge variant="outline" className="ml-3 bg-green-50 text-green-700 border-green-200">
-            <Check className="h-3 w-3 mr-1" /> Disponible
-          </Badge>
-        </h2>
-        <p className="text-gray-600">Accédez à votre espace personnel pour suivre votre projet et consulter vos documents.</p>
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-medium mb-2">Espace client</h2>
+        <p className="text-gray-600 mb-6">
+          Accédez à votre espace personnel pour suivre vos projets et échanger avec notre équipe.
+        </p>
         
-        {user && (
-          <div className="mt-4">
-            <Link to="/workspace/client-area">
-              <Button className="bg-khaki-600 hover:bg-khaki-700 text-white">
-                Accéder à mon espace client
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
-          <ClientFeaturesOverview />
-          <ClientServiceCards />
-          
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 text-blue-800">
-            <div className="flex items-start">
-              <BookOpen className="h-6 w-6 mt-1 mr-4 flex-shrink-0 text-blue-600" />
-              <div>
-                <h3 className="font-semibold text-lg mb-2">Documentation complète</h3>
-                <p className="mb-4">
-                  Découvrez toutes les fonctionnalités disponibles dans votre espace client et apprenez à les utiliser efficacement.
-                </p>
-                <Link to="/workspace/client-documentation">
-                  <Button variant="outline" className="bg-white border-blue-200 text-blue-700 hover:bg-blue-100 hover:text-blue-800">
-                    Consulter la documentation
-                  </Button>
-                </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <Card className="bg-gradient-to-br from-khaki-50 to-stone-100 border-2 border-khaki-100">
+            <CardContent className="p-8">
+              <div className="flex items-start justify-between">
+                <div className="bg-khaki-100 p-3 rounded-full text-khaki-600">
+                  <User className="h-6 w-6" />
+                </div>
               </div>
-            </div>
-          </div>
+              <h3 className="text-xl font-medium mt-4 mb-3">Clients existants</h3>
+              <p className="text-gray-600 mb-8">
+                Si vous êtes déjà client, connectez-vous pour accéder à votre espace personnel et suivre l'avancement de votre projet.
+              </p>
+              <Button asChild size="lg" className="w-full">
+                <Link to="/workspace/sign-in">
+                  <LogIn className="mr-2 h-5 w-5" />
+                  Se connecter
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-stone-50 to-gray-50 border-2 border-dashed border-stone-200">
+            <CardContent className="p-8">
+              <div className="flex items-start justify-between">
+                <div className="bg-stone-100 p-3 rounded-full text-gray-500">
+                  <UserPlus className="h-6 w-6" />
+                </div>
+              </div>
+              <h3 className="text-xl font-medium mt-4 mb-3">Nouveaux clients</h3>
+              <p className="text-gray-600 mb-8">
+                Vous n'avez pas encore de compte ? Créez votre profil pour accéder à nos services exclusifs et préparer votre projet.
+              </p>
+              <Button asChild size="lg" variant="outline" className="w-full">
+                <Link to="/workspace/sign-up">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  Créer un compte
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
         
-        <div>
-          {loading ? (
-            <div className="flex flex-col justify-center items-center py-16 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-khaki-600 mb-3"></div>
-              <p className="text-gray-600">Vérification de l'authentification...</p>
-              <p className="text-xs text-gray-500 mt-2">Patientez un instant...</p>
+        <div className="bg-stone-50 p-6 rounded-lg border border-stone-200">
+          <div className="flex items-start gap-4">
+            <div className="bg-stone-100 p-3 rounded-full text-stone-600 shrink-0">
+              <LockKeyhole className="h-5 w-5" />
             </div>
-          ) : user ? (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-6 text-green-800">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Check className="h-6 w-6 text-green-600" />
-                </div>
-                <h3 className="font-semibold text-lg mb-2">Vous êtes connecté</h3>
-                <p className="mb-4">
-                  Vous pouvez accéder à votre espace client pour consulter vos projets et documents.
-                </p>
-                <Link to="/workspace/client-area">
-                  <Button className="bg-green-600 hover:bg-green-700 text-white">
-                    Accéder à mon espace
-                  </Button>
-                </Link>
-              </div>
+            <div>
+              <h3 className="font-medium mb-2">Confidentialité et sécurité</h3>
+              <p className="text-sm text-gray-600">
+                Votre espace client est sécurisé et vos informations sont traitées selon notre politique de confidentialité.
+                Nous utilisons le chiffrement SSL pour protéger vos données et garantir la confidentialité de vos échanges avec notre équipe.
+              </p>
             </div>
-          ) : (
-            <ClientLoginCard />
-          )}
-          <SecurityAlert />
+          </div>
         </div>
       </div>
     </div>

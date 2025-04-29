@@ -1,158 +1,126 @@
 
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Calculator, 
-  Ruler, 
-  PiggyBank, 
-  Scale,
-  Building,
-  Thermometer,
-  Volume
-} from 'lucide-react';
+import React from 'react';
+import { ArrowRight, Calculator } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
-// Import calculator components
-import RegulatoryCalculators from './RegulatoryCalculators';
-import EurocodeCalculators from './eurocode/EurocodeCalculators';
-import RentabilityCalculator from './rentability/RentabilityCalculator';
-import FraisNotaireCalculator from './immobilier/FraisNotaireCalculator';
-import SurfaceHabitableCalculator from './immobilier/SurfaceHabitableCalculator';
-import SimulationManager from '../calculateurs/simulation/SimulationManager';
-import CapaciteEmpruntCalculator from './financier/CapaciteEmpruntCalculator';
-import DpeCalculator from './thermal/DpeCalculator';
-import AcousticCalculator from './acoustic/AcousticCalculator';
+interface CalculatorCard {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  path: string;
+  isNew?: boolean;
+  comingSoon?: boolean;
+}
 
-// Create a central registry of all calculators
-const CalculatorsRegistry = {
-  immobilier: [
+const WorkspaceCalculateurs = () => {
+  const calculators: CalculatorCard[] = [
     {
-      title: "Surface habitable",
-      component: SurfaceHabitableCalculator,
-      description: "Calculateur de surface habitable et SHON/SHOB",
-      type: "surface"
+      id: 'surface-habitable',
+      title: 'Calculateur de surface habitable',
+      description: 'Calculez la surface habitable conforme à la loi Carrez',
+      icon: <Calculator className="h-6 w-6" />,
+      path: '/workspace/calculateurs/surface-habitable',
+      isNew: true,
     },
     {
-      title: "Frais de notaire",
-      component: FraisNotaireCalculator,
-      description: "Estimation des frais de notaire pour une acquisition immobilière",
-      type: "frais-notaire"
-    }
-  ],
-  financier: [
-    {
-      title: "Capacité d'emprunt",
-      component: CapaciteEmpruntCalculator,
-      description: "Calculez votre capacité d'emprunt selon vos revenus",
-      type: "capacite-emprunt"
+      id: 'rentabilite-projet',
+      title: 'Rentabilité d\'un projet immobilier',
+      description: 'Analysez la rentabilité potentielle d\'un investissement immobilier',
+      icon: <Calculator className="h-6 w-6" />,
+      path: '/workspace/calculateurs/rentabilite',
+      comingSoon: true,
     },
     {
-      title: "Rentabilité locative",
-      component: RentabilityCalculator,
-      description: "Calculez la rentabilité d'un investissement immobilier locatif",
-      type: "rentability"
-    }
-  ],
-  technique: [
-    {
-      title: "Acoustique",
-      component: AcousticCalculator,
-      description: "Calcul du temps de réverbération d'une pièce",
-      type: "acoustic"
+      id: 'isolation-thermique',
+      title: 'Performance isolation thermique',
+      description: 'Calculez les performances thermiques d\'une paroi ou d\'une isolation',
+      icon: <Calculator className="h-6 w-6" />,
+      path: '/workspace/calculateurs/isolation-thermique',
+      comingSoon: true,
     },
     {
-      title: "Performance énergétique",
-      component: DpeCalculator,
-      description: "Estimation du DPE et de l'étiquette énergétique",
-      type: "dpe"
+      id: 'cout-travaux',
+      title: 'Budget travaux estimatif',
+      description: 'Estimation budgétaire de vos travaux de construction ou rénovation',
+      icon: <Calculator className="h-6 w-6" />,
+      path: '/workspace/calculateurs/cout-travaux',
+      comingSoon: true,
     }
-  ]
-};
-
-const WorkspaceCalculators = () => {
-  const [activeTab, setActiveTab] = useState("immobilier");
+  ];
 
   return (
-    <div className="space-y-6">
-      <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 mb-6">
-        <h3 className="text-zinc-800 font-medium flex items-center gap-2 mb-2">
-          <Calculator className="h-5 w-5" />
-          Tous les Calculateurs
-        </h3>
-        <p className="text-zinc-700 text-sm">
-          Accédez à l'ensemble de nos outils de calcul spécialisés pour vos projets de construction et d'investissement.
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-medium mb-2">Calculateurs et outils</h2>
+        <p className="text-gray-600 mb-6">
+          Utilisez nos outils de calcul pour faciliter vos projets de construction et rénovation.
         </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {calculators.map((calculator) => (
+            <Card 
+              key={calculator.id} 
+              className="hover:shadow-md transition-shadow"
+            >
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between">
+                  <div className="bg-stone-100 p-3 rounded-lg text-khaki-600">
+                    {calculator.icon}
+                  </div>
+                  <div className="space-x-2">
+                    {calculator.isNew && (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-100">
+                        Nouveau
+                      </Badge>
+                    )}
+                    {calculator.comingSoon && (
+                      <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-100">
+                        Bientôt disponible
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+                
+                <h3 className="font-medium text-lg mt-4 mb-2">{calculator.title}</h3>
+                <p className="text-gray-600 text-sm mb-6">{calculator.description}</p>
+                
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-center gap-2"
+                  disabled={calculator.comingSoon}
+                  asChild={!calculator.comingSoon}
+                >
+                  {!calculator.comingSoon ? (
+                    <a href={calculator.path}>
+                      Accéder <ArrowRight className="h-4 w-4" />
+                    </a>
+                  ) : (
+                    <span>
+                      Bientôt disponible <ArrowRight className="h-4 w-4" />
+                    </span>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="mt-12 p-6 bg-khaki-50 rounded-lg">
+          <h3 className="text-lg font-medium mb-3">Besoin d'un calculateur personnalisé ?</h3>
+          <p className="text-gray-600 mb-4">
+            Nous pouvons développer des outils spécifiques adaptés à vos projets et besoins particuliers.
+            Contactez-nous pour en discuter.
+          </p>
+          <Button asChild>
+            <a href="/contact">Nous contacter</a>
+          </Button>
+        </div>
       </div>
-
-      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-zinc-100 p-1 flex flex-wrap">
-          <TabsTrigger value="immobilier" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Building className="h-4 w-4" />
-            <span>Immobilier</span>
-          </TabsTrigger>
-          <TabsTrigger value="financier" className="data-[state=active]:bg-white flex items-center gap-2">
-            <PiggyBank className="h-4 w-4" />
-            <span>Financier</span>
-          </TabsTrigger>
-          <TabsTrigger value="technique" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Ruler className="h-4 w-4" />
-            <span>Technique</span>
-          </TabsTrigger>
-          <TabsTrigger value="reglementaire" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            <span>Réglementaire</span>
-          </TabsTrigger>
-          <TabsTrigger value="simulations" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Calculator className="h-4 w-4" />
-            <span>Mes simulations</span>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Immobilier Tab */}
-        <TabsContent value="immobilier">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {CalculatorsRegistry.immobilier.map((calc) => (
-              <div key={calc.title} className="min-h-[400px]">
-                <calc.component />
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Financier Tab */}
-        <TabsContent value="financier">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {CalculatorsRegistry.financier.map((calc) => (
-              <div key={calc.title} className="min-h-[400px]">
-                <calc.component />
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        {/* Technique Tab */}
-        <TabsContent value="technique">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            {CalculatorsRegistry.technique.map((calc) => (
-              <div key={calc.title} className="min-h-[400px]">
-                <calc.component />
-              </div>
-            ))}
-          </div>
-          <EurocodeCalculators />
-        </TabsContent>
-
-        {/* Réglementaire Tab */}
-        <TabsContent value="reglementaire">
-          <RegulatoryCalculators />
-        </TabsContent>
-
-        {/* Mes simulations Tab */}
-        <TabsContent value="simulations">
-          <SimulationManager />
-        </TabsContent>
-      </Tabs>
     </div>
   );
 };
 
-export default WorkspaceCalculators;
+export default WorkspaceCalculateurs;

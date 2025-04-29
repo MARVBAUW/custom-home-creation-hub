@@ -1,149 +1,72 @@
 
-import { useToast } from '@/hooks/use-toast';
+/**
+ * Utilities for handling file downloads
+ */
+import { ResourceMetadata, trackResourceDownload } from './resourceUtils';
 
-export interface DownloadOptions {
-  showToast?: boolean;
-  fileName?: string;
-  responseType?: 'blob' | 'arraybuffer' | 'json' | 'text';
-  contentType?: string;
-  onProgress?: (progress: number) => void;
-}
-
-export const handleFileDownload = async (
-  url: string, 
-  title: string,
-  options: DownloadOptions = {}
-) => {
+/**
+ * Handle file download with error tracking
+ * @param fileUrl URL of the file to download
+ * @param title Title of the document (for tracking)
+ * @returns Promise resolving to true if successful
+ */
+export const handleFileDownload = async (fileUrl: string, title: string): Promise<boolean> => {
   try {
-    // For direct file URLs
-    if (url.startsWith('http') || url.startsWith('/')) {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': options.contentType || 'application/pdf,application/octet-stream,application/vnd.openxmlformats-officedocument.*'
-        }
-      });
-      
-      if (!response.ok) {
-        const errorText = `HTTP error! status: ${response.status}`;
-        console.error(errorText);
-        return { success: false, error: errorText };
-      }
-      
-      // Get the content type from the response
-      const contentType = response.headers.get('content-type');
-      
-      // Check if we received an expected file type
-      if (!contentType) {
-        console.warn('No content type received from server');
-      } else if (!contentType.includes('application/pdf') && 
-                !contentType.includes('octet-stream') && 
-                !contentType.includes('application/vnd.openxmlformats')) {
-        console.warn('Unexpected content type:', contentType);
-      }
-      
-      try {
-        // Try the modern way first
-        const blob = await response.blob();
-        const blobUrl = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = options.fileName || title.replace(/\s+/g, '-').toLowerCase() + determineExtension(contentType);
-        
-        // Append link to body
-        document.body.appendChild(link);
-        
-        // Trigger download
-        link.click();
-        
-        // Cleanup
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(blobUrl);
-        
-        return { success: true };
-      } catch (blobError) {
-        console.warn('Blob download failed, trying alternative method:', blobError);
-        
-        // Fallback to direct download for browsers that don't support blob
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = options.fileName || title.replace(/\s+/g, '-').toLowerCase() + '.pdf';
-        link.target = '_blank';
-        
-        // Trigger download
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        return { success: true };
-      }
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      throw new Error('Download failed');
     }
     
-    // URL not supported
-    console.error('Unsupported URL format');
-    return { success: false, error: 'Unsupported URL format' };
+    // Create filename from title or extract from URL
+    const filename = fileUrl.split('/').pop() || `${title.toLowerCase().replace(/[^a-z0-9]/g, '-')}.pdf`;
     
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    
+    // Track the download
+    trackResourceDownload({
+      title,
+      description: 'Document téléchargé depuis l\'espace ressources',
+      fileUrl,
+      fileType: fileUrl.split('.').pop() || 'unknown'
+    });
+    
+    return true;
   } catch (error) {
-    console.error('Download error:', error);
-    return { success: false, error: String(error) };
+    console.error('Error downloading file:', error);
+    return false;
   }
 };
 
-// Helper function to determine file extension from content type
-const determineExtension = (contentType: string | null): string => {
-  if (!contentType) return '.pdf';
-  
-  if (contentType.includes('application/pdf')) {
-    return '.pdf';
-  } else if (contentType.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-    return '.docx';
-  } else if (contentType.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-    return '.xlsx';
-  } else if (contentType.includes('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-    return '.pptx';
-  } else if (contentType.includes('image/jpeg')) {
-    return '.jpg';
-  } else if (contentType.includes('image/png')) {
-    return '.png';
-  } else if (contentType.includes('text/plain')) {
-    return '.txt';
-  }
-  
-  return '.pdf'; // Default extension
+/**
+ * Open a file preview in a new tab or window
+ * @param fileUrl URL of the file to preview
+ */
+export const previewFile = (fileUrl: string): void => {
+  window.open(fileUrl, '_blank');
 };
 
-export const previewFile = (url: string): void => {
-  if (!url) {
-    console.error('No URL provided for preview');
-    return;
-  }
+/**
+ * Format file size for display
+ * @param bytes File size in bytes
+ * @returns Formatted string (e.g., "1.2 MB")
+ */
+export const formatFileSize = (bytes?: number): string => {
+  if (!bytes) return 'Taille inconnue';
   
-  // For PDF files, open in new tab with proper headers
-  if (url.toLowerCase().endsWith('.pdf') || url.toLowerCase().includes('pdf')) {
-    try {
-      // Create a temporary link with specific attributes for PDF viewing
-      const link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      
-      // Set specific headers to ensure proper PDF handling
-      if (url.startsWith('/')) {
-        link.setAttribute('type', 'application/pdf');
-      }
-      
-      // Trigger click
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error('Error previewing PDF:', error);
-      // Fallback - try to download instead
-      handleFileDownload(url, 'preview');
-    }
-    return;
-  }
+  const kb = bytes / 1024;
   
-  // For other file types, try to download
-  handleFileDownload(url, 'preview');
+  if (kb < 1024) {
+    return `${kb.toFixed(1)} Ko`;
+  } else {
+    const mb = kb / 1024;
+    return `${mb.toFixed(1)} Mo`;
+  }
 };

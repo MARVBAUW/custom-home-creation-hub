@@ -1,23 +1,20 @@
 
-import { LucideIcon } from 'lucide-react';
-
-export interface GuideCategory {
-  id: string;
-  name: string;
-  icon: LucideIcon;
-}
-
 export interface GuideDocument {
   id: string;
   title: string;
   description: string;
-  type: 'pdf' | 'video' | 'text';
-  fileSize?: string;
-  duration?: string;
-  lastUpdated: string;
+  type: string; // 'pdf', 'video', 'text', etc.
   url: string;
   categoryId: string;
-  featured?: boolean;
+  lastUpdated: string;
+  fileSize?: string;
+  duration?: string; // For videos
   isNew?: boolean;
-  content?: string;
+  isFeatured?: boolean;
+  content?: string; // For text content (markdown)
+}
+
+export interface GuideCategory {
+  id: string;
+  name: string;
 }
