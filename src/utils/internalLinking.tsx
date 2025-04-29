@@ -4,125 +4,43 @@ import { Link } from 'react-router-dom';
 
 // Structure defining keywords and their target URLs with optional anchors
 export const keywordMap: Record<string, string> = {
-  // Pages principales avec ancres
+  // Pages principales 
   "maître d'œuvre": "/",
-  "maître d'œuvre marseille": "/#marseille",
-  "maître d'œuvre paca": "/#paca",
-  "maîtrise d'œuvre": "/",
+  "maîtrise d'œuvre": "/prestations-maitre-oeuvre",
   
-  // Services principaux
-  "construction sur mesure": "/prestations-maitre-oeuvre/construction-neuve#services",
-  "construction maison": "/prestations-maitre-oeuvre/construction-neuve#process",
-  "maison sur mesure": "/prestations-maitre-oeuvre/construction-neuve#options",
-  "rénovation": "/prestations-maitre-oeuvre/renovation#overview",
-  "rénovation énergétique": "/prestations-maitre-oeuvre/renovation#energy",
-  "extension": "/prestations-maitre-oeuvre/extension#overview",
-  "extension maison": "/prestations-maitre-oeuvre/extension#services",
-  "optimisation d'espace": "/prestations-maitre-oeuvre/optimisation-espace#services",
-  "design d'intérieur": "/prestations-maitre-oeuvre/design-interieur#overview",
-  "design d'espace": "/prestations-maitre-oeuvre/design-interieur#services",
-  "aménagement intérieur": "/prestations-maitre-oeuvre/design-interieur#amenagement",
+  // Services principaux - limités aux termes les plus pertinents
+  "construction sur mesure": "/prestations-maitre-oeuvre/construction-neuve",
+  "rénovation": "/prestations-maitre-oeuvre/renovation",
+  "extension maison": "/prestations-maitre-oeuvre/extension",
+  "optimisation d'espace": "/prestations-maitre-oeuvre/optimisation-espace",
+  "design d'intérieur": "/prestations-maitre-oeuvre/design-interieur",
   
-  // Pages portfolio et contact
-  "réalisations": "/realisations-architecte-maison#gallery",
-  "portfolio": "/realisations-architecturales#projects",
-  "réalisations architecturales": "/realisations-architecturales#featured",
-  "projets": "/realisations-architecte-maison#recent",
-  "devis": "/contact#form",
-  "estimation": "/estimation#calculator",
+  // Pages portfolio et contact avec ancres spécifiques
+  "réalisations": "/realisations-architecte-maison",
   "contact": "/contact#form",
-
-  // Prestations spécifiques
-  "montage administratif": "/prestations-maitre-oeuvre/montage-administratif#process",
-  "petit collectif résidentiel": "/prestations-maitre-oeuvre/petit-collectif#overview",
-  "petit collectif": "/prestations-maitre-oeuvre/petit-collectif#services",
-  "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation#overview",
-  "réhabilitation bâtiment": "/prestations-maitre-oeuvre/rehabilitation#services",
-  "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique#principles",
-  "maison écologique": "/prestations-maitre-oeuvre/construction-ecologique#materials",
-  "construction bois": "/prestations-maitre-oeuvre/construction-ecologique#wood",
-  "ossature bois": "/prestations-maitre-oeuvre/construction-ecologique#structure",
+  "estimation": "/estimation#calculator",
+  
+  // Prestations spécifiques sans duplication
+  "montage administratif": "/prestations-maitre-oeuvre/montage-administratif",
+  "petit collectif": "/prestations-maitre-oeuvre/petit-collectif",
+  "réhabilitation": "/prestations-maitre-oeuvre/rehabilitation",
+  "construction écologique": "/prestations-maitre-oeuvre/construction-ecologique",
   "permis de construire": "/prestations-maitre-oeuvre/montage-administratif#permits",
-  "déclaration préalable": "/prestations-maitre-oeuvre/montage-administratif#declarations",
-
-  // Villes PACA principales
+  
+  // Principales villes PACA - réduites aux plus importantes
   "marseille": "/#marseille",
   "aix-en-provence": "/#aix",
   "toulon": "/#toulon",
   "nice": "/#nice",
   "cannes": "/#cannes",
-  "saint-tropez": "/#saint-tropez",
-  "fréjus": "/#frejus",
-  "hyères": "/#hyeres",
   
-  // Quartiers de Marseille
-  "marseille centre": "/#marseille-centre",
-  "vieux port": "/#vieux-port",
-  "prado": "/#prado",
-  "castellane": "/#castellane",
-  "joliette": "/#joliette",
-  "saint-charles": "/#saint-charles",
-  
-  // Villes PACA additionnelles
-  "antibes": "/#antibes",
-  "cagnes-sur-mer": "/#cagnes-sur-mer",
-  "draguignan": "/#draguignan",
-  "la ciotat": "/#la-ciotat",
-  "menton": "/#menton",
-  "aubagne": "/#aubagne",
-  "salon-de-provence": "/#salon",
-  "istres": "/#istres",
-  "mandelieu": "/#mandelieu",
-  "cassis": "/#cassis",
-  "bandol": "/#bandol",
-  "six-fours": "/#six-fours",
-  "la seyne sur mer": "/#la-seyne-sur-mer",
-  "martigues": "/#martigues",
-  
-  // Combinaisons métier + ville
+  // Combinaisons métier + ville limitées aux plus pertinentes
   "construction maison marseille": "/prestations-maitre-oeuvre/construction-neuve#marseille",
   "rénovation marseille": "/prestations-maitre-oeuvre/renovation#marseille",
   "extension maison marseille": "/prestations-maitre-oeuvre/extension#marseille",
-  "rénovation appartement marseille": "/prestations-maitre-oeuvre/renovation#marseille-appartement",
-  "design intérieur marseille": "/prestations-maitre-oeuvre/design-interieur#marseille",
-  
-  "construction maison aix": "/prestations-maitre-oeuvre/construction-neuve#aix",
-  "rénovation aix": "/prestations-maitre-oeuvre/renovation#aix",
-  "extension maison aix": "/prestations-maitre-oeuvre/extension#aix",
-  "rénovation appartement aix": "/prestations-maitre-oeuvre/renovation#aix-appartement",
-  
-  "construction maison toulon": "/prestations-maitre-oeuvre/construction-neuve#toulon",
-  "rénovation toulon": "/prestations-maitre-oeuvre/renovation#toulon",
-  "extension maison toulon": "/prestations-maitre-oeuvre/extension#toulon",
-  
-  "construction maison nice": "/prestations-maitre-oeuvre/construction-neuve#nice",
-  "rénovation nice": "/prestations-maitre-oeuvre/renovation#nice",
-  "extension maison nice": "/prestations-maitre-oeuvre/extension#nice",
-  
-  "construction maison cannes": "/prestations-maitre-oeuvre/construction-neuve#cannes",
-  "rénovation cannes": "/prestations-maitre-oeuvre/renovation#cannes",
-  "extension maison cannes": "/prestations-maitre-oeuvre/extension#cannes",
-  
-  // Types de bâtiments
-  "maison individuelle": "/prestations-maitre-oeuvre/construction-neuve#maison-individuelle",
-  "appartement": "/prestations-maitre-oeuvre/renovation#appartement",
-  "villa": "/prestations-maitre-oeuvre/construction-neuve#villa",
-  "loft": "/prestations-maitre-oeuvre/design-interieur#loft",
-  "local commercial": "/prestations-maitre-oeuvre/rehabilitation#commercial",
-  "bureau": "/prestations-maitre-oeuvre/rehabilitation#bureau",
-  
-  // Termes techniques du bâtiment
-  "isolation thermique": "/prestations-maitre-oeuvre/renovation#isolation",
-  "pompe à chaleur": "/prestations-maitre-oeuvre/renovation#chauffage",
-  "domotique": "/prestations-maitre-oeuvre/design-interieur#domotique",
-  "panneaux solaires": "/prestations-maitre-oeuvre/construction-ecologique#solaire",
-  "véranda": "/prestations-maitre-oeuvre/extension#veranda",
-  "pergola": "/prestations-maitre-oeuvre/extension#pergola",
-  "terrasse": "/prestations-maitre-oeuvre/extension#terrasse",
-  "piscine": "/prestations-maitre-oeuvre/extension#piscine",
 };
 
-// Fonction améliorée pour gérer les liens avec ancres
+// Amélioré pour être plus sélectif et éviter la suroptimisation
 export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNode[] => {
   if (!text) return [text];
   
@@ -133,6 +51,7 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
   const result: React.ReactNode[] = [];
   const occurrenceCount: Record<string, number> = {};
   
+  // Initialize occurrence counter
   sortedKeywords.forEach(keyword => {
     occurrenceCount[keyword] = 0;
   });
@@ -155,32 +74,56 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
     return openLinkBefore > closeLinkBefore;
   };
   
+  // Function to check if the keyword is a standalone word
+  // This helps prevent linking parts of longer words
+  const isStandaloneWord = (position: number, keywordLength: number): boolean => {
+    const prevChar = position > 0 ? lowerText[position - 1] : ' ';
+    const nextChar = position + keywordLength < lowerText.length ? lowerText[position + keywordLength] : ' ';
+    
+    const wordBoundaryChars = [' ', '.', ',', ';', ':', '!', '?', '\n', '\r', '\t', '(', ')', '[', ']', '{', '}'];
+    
+    return wordBoundaryChars.includes(prevChar) && wordBoundaryChars.includes(nextChar);
+  };
+
+  // Collect all valid matches first to avoid overlapping links
   const matches: Array<{keyword: string, index: number}> = [];
   
   sortedKeywords.forEach(keyword => {
-    let keywordIndex = lowerText.indexOf(keyword.toLowerCase());
+    const keywordLower = keyword.toLowerCase();
+    let keywordIndex = lowerText.indexOf(keywordLower);
     
-    while (keywordIndex !== -1) {
-      if (!isInsideHtmlTag(keywordIndex) && !isInsideLink(keywordIndex)) {
-        matches.push({
-          keyword,
-          index: keywordIndex
-        });
+    while (keywordIndex !== -1 && occurrenceCount[keyword] < maxOccurrences) {
+      if (!isInsideHtmlTag(keywordIndex) && 
+          !isInsideLink(keywordIndex) && 
+          isStandaloneWord(keywordIndex, keywordLower.length)) {
+        
+        // Check if this keyword overlaps with any existing matches
+        const overlaps = matches.some(match => 
+          (keywordIndex >= match.index && keywordIndex < match.index + match.keyword.length) ||
+          (match.index >= keywordIndex && match.index < keywordIndex + keywordLower.length)
+        );
+        
+        if (!overlaps) {
+          matches.push({
+            keyword,
+            index: keywordIndex
+          });
+          occurrenceCount[keyword]++;
+        }
       }
-      keywordIndex = lowerText.indexOf(keyword.toLowerCase(), keywordIndex + 1);
+      keywordIndex = lowerText.indexOf(keywordLower, keywordIndex + 1);
     }
   });
   
+  // Sort matches by index to process them in order
   matches.sort((a, b) => a.index - b.index);
   
+  // Process matches to build result
   let lastProcessedIndex = 0;
   
   for (const match of matches) {
-    if (match.index < lastProcessedIndex) continue;
-    if (occurrenceCount[match.keyword] >= maxOccurrences) continue;
-    
-    if (match.index > lastIndex) {
-      result.push(text.substring(lastIndex, match.index));
+    if (match.index > lastProcessedIndex) {
+      result.push(text.substring(lastProcessedIndex, match.index));
     }
     
     const originalKeyword = text.substring(match.index, match.index + match.keyword.length);
@@ -197,7 +140,6 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
         onClick={(e) => {
           if (anchor) {
             e.preventDefault();
-            // Laissons un peu de temps au composant pour se charger si nécessaire
             setTimeout(() => {
               const element = document.getElementById(anchor);
               if (element) {
@@ -205,11 +147,8 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
                   behavior: 'smooth',
                   block: 'start'
                 });
-                // Mise à jour de l'URL sans rechargement
                 window.history.pushState({}, '', targetUrl);
               } else {
-                console.warn(`L'ancre #${anchor} n'existe pas dans la page ${baseUrl}`);
-                // Naviguons quand même vers la page de base
                 window.location.href = targetUrl;
               }
             }, 100);
@@ -220,31 +159,35 @@ export const addKeywordLinks = (text: string, maxOccurrences = 1): React.ReactNo
       </Link>
     );
     
-    occurrenceCount[match.keyword]++;
-    lastIndex = match.index + match.keyword.length;
-    lastProcessedIndex = lastIndex;
+    lastProcessedIndex = match.index + match.keyword.length;
   }
   
-  if (lastIndex < text.length) {
-    result.push(text.substring(lastIndex));
+  if (lastProcessedIndex < text.length) {
+    result.push(text.substring(lastProcessedIndex));
   }
   
   return result;
 };
 
-// Component that applies internal linking to a block of text
+// Component that applies internal linking to a block of text with improved density control
 interface InternalLinkTextProps {
   text: string;
   className?: string;
   maxOccurrences?: number;
+  density?: 'low' | 'medium' | 'high';
 }
 
 export const InternalLinkText: React.FC<InternalLinkTextProps> = ({ 
   text, 
   className = "",
-  maxOccurrences = 1
+  maxOccurrences = 1,
+  density = 'medium'
 }) => {
-  const linkedContent = addKeywordLinks(text, maxOccurrences);
+  // Adjust maxOccurrences based on density preference
+  const actualMaxOccurrences = density === 'low' ? 1 : (density === 'medium' ? 2 : 3);
+  const finalMaxOccurrences = Math.min(maxOccurrences, actualMaxOccurrences);
+  
+  const linkedContent = addKeywordLinks(text, finalMaxOccurrences);
   
   return (
     <span className={className}>
