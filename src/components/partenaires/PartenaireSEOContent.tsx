@@ -24,7 +24,6 @@ const PartenaireSEOContent = () => {
     },
     faq: [
       {
-        question: "Quels sont les critères pour devenir partenaire ?",
         question: "Quelles sont les conditions pour rejoindre le réseau Progineer ?",
         answer: "Nous sélectionnons nos partenaires selon plusieurs critères essentiels : qualifications professionnelles, expérience démontrée dans votre domaine, assurances à jour, références vérifiables et engagement à respecter nos standards de qualité et nos délais."
       },
