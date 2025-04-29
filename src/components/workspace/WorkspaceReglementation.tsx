@@ -16,6 +16,7 @@ interface RegulationDocument {
   category: string;
   lastUpdate: string;
   url: string;
+  version: string; // Added the required version property
   isNew?: boolean;
 }
 
@@ -35,6 +36,7 @@ const WorkspaceReglementation = () => {
       category: 'Réglementation technique',
       lastUpdate: '2023-09-15',
       url: '/resources/guides/normes-parasismiques.pdf',
+      version: '2023',
       isNew: true
     },
     {
@@ -45,7 +47,8 @@ const WorkspaceReglementation = () => {
       type: 'pdf',
       category: 'Normes et DTU',
       lastUpdate: '2023-06-08',
-      url: '/resources/documents/liste-dtu-batiment.pdf'
+      url: '/resources/documents/liste-dtu-batiment.pdf',
+      version: '2023'
     },
     {
       id: 'texte-reglementation',
@@ -55,7 +58,8 @@ const WorkspaceReglementation = () => {
       type: 'pdf',
       category: 'Textes officiels',
       lastUpdate: '2023-05-10',
-      url: '/resources/documents/texte-integral-reglementation.pdf'
+      url: '/resources/documents/texte-integral-reglementation.pdf',
+      version: '2023'
     },
     {
       id: 'guide-renovation-energetique',
@@ -65,7 +69,8 @@ const WorkspaceReglementation = () => {
       type: 'pdf',
       category: 'Énergie',
       lastUpdate: '2023-07-22',
-      url: '/resources/guides/guide-renovation-energetique.pdf'
+      url: '/resources/guides/guide-renovation-energetique.pdf',
+      version: '2023'
     }
   ];
 

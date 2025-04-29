@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { GuideDocument } from './types';
-import { guideDocuments, guideCategories } from './guidesData';
+import { guides as guideDocuments, guideCategories } from './guidesData';
 
 export const useGuides = () => {
   const { toast } = useToast();
@@ -13,7 +13,7 @@ export const useGuides = () => {
   const [selectedDocument, setSelectedDocument] = useState<GuideDocument | null>(null);
 
   // Featured guides
-  const featuredGuides = guideDocuments.filter(guide => guide.featured);
+  const featuredGuides = guideDocuments.filter(guide => guide.isFeatured);
 
   // Filter guides based on active category and search query
   const filteredGuides = guideDocuments.filter(guide => {

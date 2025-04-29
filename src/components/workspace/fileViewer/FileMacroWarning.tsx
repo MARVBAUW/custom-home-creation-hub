@@ -12,7 +12,7 @@ const FileMacroWarning: React.FC<FileMacroWarningProps> = ({ macroNote }) => {
   
   return (
     <div className="p-4 border-t border-gray-200">
-      <Alert variant="warning" className="bg-amber-50 border-amber-200">
+      <Alert className="bg-amber-50 border-amber-200">
         <AlertCircle className="h-4 w-4 text-amber-600" />
         <AlertDescription className="text-amber-700 text-sm">
           {macroNote}
