@@ -1,6 +1,9 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
+import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 interface PartnershipFormData {
   name: string;
@@ -13,9 +16,6 @@ interface PartnershipFormData {
 }
 
 serve(async (req) => {
-  // Cette fonction est pour la simulation puisque nous n'avons pas d'API d'email configurée
-  // Dans une implémentation réelle, on utiliserait Resend, SendGrid, etc.
-  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -28,33 +28,40 @@ serve(async (req) => {
       
       console.log("Partnership form submission received:", { name, email, phone, company, partnerType, experience, message });
       
-      // Simulate sending email to admin
-      console.log("Simulating email to admin (progineer.moe@gmail.com)");
-      console.log(`Subject: Nouvelle demande de partenariat de ${name} - ${company}`);
-      console.log(`Content: 
-        Nom: ${name}
-        Email: ${email}
-        Téléphone: ${phone || 'Non fourni'}
-        Entreprise: ${company}
-        Type de partenariat: ${partnerType}
-        Expérience: ${experience}
-        Message: ${message}
-      `);
+      // Send email to admin
+      const adminEmailResponse = await resend.emails.send({
+        from: "Progineer Partenariat <noreply@progineer.fr>",
+        to: ["progineer.moe@gmail.com"],
+        subject: `Nouvelle demande de partenariat de ${name} - ${company}`,
+        html: `
+          <h2>Nouvelle demande de partenariat</h2>
+          <p><strong>Nom:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Téléphone:</strong> ${phone || 'Non fourni'}</p>
+          <p><strong>Entreprise:</strong> ${company}</p>
+          <p><strong>Type de partenariat:</strong> ${partnerType}</p>
+          <p><strong>Expérience:</strong> ${experience}</p>
+          <h3>Message:</h3>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `
+      });
       
-      // Simulate sending confirmation email to user
-      console.log("Simulating confirmation email to user:", email);
-      console.log(`Subject: Confirmation de votre demande de partenariat - Progineer`);
-      console.log(`Content: 
-        Bonjour ${name},
-        
-        Nous avons bien reçu votre demande de partenariat et nous vous en remercions.
-        Un membre de notre équipe examinera votre demande et vous contactera dans les plus brefs délais.
-        
-        Cordialement,
-        L'équipe Progineer
-      `);
+      console.log("Admin email sent:", adminEmailResponse);
       
-      // In a real implementation, we would send actual emails here
+      // Send confirmation email to user
+      const userEmailResponse = await resend.emails.send({
+        from: "Progineer <noreply@progineer.fr>",
+        to: [email],
+        subject: "Confirmation de votre demande de partenariat - Progineer",
+        html: `
+          <h2>Bonjour ${name},</h2>
+          <p>Nous avons bien reçu votre demande de partenariat et nous vous en remercions.</p>
+          <p>Un membre de notre équipe examinera votre demande et vous contactera dans les plus brefs délais.</p>
+          <p>Cordialement,<br>L'équipe Progineer</p>
+        `
+      });
+      
+      console.log("User confirmation email sent:", userEmailResponse);
       
       return new Response(
         JSON.stringify({

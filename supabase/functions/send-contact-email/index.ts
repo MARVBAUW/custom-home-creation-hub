@@ -1,6 +1,9 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
+import { Resend } from "npm:resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 interface ContactFormData {
   name: string;
@@ -8,13 +11,9 @@ interface ContactFormData {
   phone?: string;
   message: string;
   subject?: string;
-  projectType?: string;
 }
 
 serve(async (req) => {
-  // Cette fonction est pour la simulation puisque nous n'avons pas d'API d'email configurée
-  // Dans une implémentation réelle, on utiliserait Resend, SendGrid, etc.
-  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -23,36 +22,42 @@ serve(async (req) => {
   // Handle actual request
   if (req.method === 'POST') {
     try {
-      const { name, email, phone, message, subject, projectType } = await req.json() as ContactFormData;
+      const { name, email, phone, message, subject } = await req.json() as ContactFormData;
       
-      console.log("Contact form submission received:", { name, email, phone, message, subject, projectType });
+      console.log("Contact form submission received:", { name, email, phone, message, subject });
       
-      // Simulate sending email to admin
-      console.log("Simulating email to admin (progineer.moe@gmail.com)");
-      console.log(`Subject: Nouveau message de contact de ${name}`);
-      console.log(`Content: 
-        Nom: ${name}
-        Email: ${email}
-        Téléphone: ${phone || 'Non fourni'}
-        Sujet: ${subject || 'Contact général'}
-        Type de projet: ${projectType || 'Non spécifié'}
-        Message: ${message}
-      `);
+      // Send email to admin
+      const adminEmailResponse = await resend.emails.send({
+        from: "Progineer Contact <noreply@progineer.fr>",
+        to: ["progineer.moe@gmail.com"],
+        subject: `Nouveau message de contact de ${name}`,
+        html: `
+          <h2>Nouveau message de contact</h2>
+          <p><strong>Nom:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Téléphone:</strong> ${phone || 'Non fourni'}</p>
+          <p><strong>Sujet:</strong> ${subject || 'Contact général'}</p>
+          <h3>Message:</h3>
+          <p>${message.replace(/\n/g, '<br>')}</p>
+        `
+      });
       
-      // Simulate sending confirmation email to user
-      console.log("Simulating confirmation email to user:", email);
-      console.log(`Subject: Confirmation de votre message - Progineer`);
-      console.log(`Content: 
-        Bonjour ${name},
-        
-        Nous avons bien reçu votre message et nous vous en remercions.
-        Un membre de notre équipe vous contactera dans les plus brefs délais.
-        
-        Cordialement,
-        L'équipe Progineer
-      `);
+      console.log("Admin email sent:", adminEmailResponse);
       
-      // In a real implementation, we would send actual emails here
+      // Send confirmation email to user
+      const userEmailResponse = await resend.emails.send({
+        from: "Progineer <noreply@progineer.fr>",
+        to: [email],
+        subject: "Confirmation de votre message - Progineer",
+        html: `
+          <h2>Bonjour ${name},</h2>
+          <p>Nous avons bien reçu votre message et nous vous en remercions.</p>
+          <p>Un membre de notre équipe vous contactera dans les plus brefs délais.</p>
+          <p>Cordialement,<br>L'équipe Progineer</p>
+        `
+      });
+      
+      console.log("User confirmation email sent:", userEmailResponse);
       
       return new Response(
         JSON.stringify({

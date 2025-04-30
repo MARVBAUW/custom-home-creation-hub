@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Send, Users, Wrench, Briefcase, FileText } from 'lucide-react';
+import { CheckCircle, Send, Users, Wrench, Briefcase, FileText, Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { supabase } from '@/integrations/supabase/client';
@@ -86,7 +86,7 @@ const PartnersSection = () => {
   };
   
   return (
-    <div className="py-12">
+    <div className="py-12" id="partner-form">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">Qui peut devenir partenaire ?</h2>
         <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -320,7 +320,7 @@ const PartnersSection = () => {
                 <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
-                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Envoi en cours...
                     </>
                   ) : (
