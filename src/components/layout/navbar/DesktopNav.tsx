@@ -2,14 +2,15 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { NavItem } from './types';
+import { NavLink } from './types';
 
 interface DesktopNavProps {
-  navItems: NavItem[];
-  toggleDrawer?: () => void;
+  navItems: NavLink[];
+  openDropdown?: string | null;
+  toggleDropdown?: (name: string) => void;
 }
 
-const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
+const DesktopNav: React.FC<DesktopNavProps> = ({ navItems, openDropdown, toggleDropdown }) => {
   const location = useLocation();
   
   // Add Blog to nav items if not already there

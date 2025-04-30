@@ -95,6 +95,39 @@ export type Database = {
         }
         Relationships: []
       }
+      article_generation_logs: {
+        Row: {
+          article_slug: string | null
+          article_title: string | null
+          category: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          status: string
+          topic: string | null
+        }
+        Insert: {
+          article_slug?: string | null
+          article_title?: string | null
+          category?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status: string
+          topic?: string | null
+        }
+        Update: {
+          article_slug?: string | null
+          article_title?: string | null
+          category?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          topic?: string | null
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           author: string | null

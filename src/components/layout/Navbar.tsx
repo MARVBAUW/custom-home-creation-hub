@@ -60,9 +60,9 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <DesktopNav 
-              navLinks={navLinks} 
-              openDropdown={openDropdown} 
-              toggleDropdown={toggleDropdown} 
+              navItems={navLinks}
+              openDropdown={openDropdown}
+              toggleDropdown={toggleDropdown}
             />
 
             {/* Theme Toggle */}
@@ -84,10 +84,9 @@ const Navbar = () => {
 
       {/* Mobile Navigation - Now positioned outside the header */}
       <MobileNav 
-        isOpen={isOpen} 
-        navLinks={navLinks} 
-        openDropdown={openDropdown} 
-        toggleDropdown={toggleDropdown} 
+        open={isOpen}
+        setOpen={setIsOpen}
+        navItems={navLinks}
       />
     </>
   );

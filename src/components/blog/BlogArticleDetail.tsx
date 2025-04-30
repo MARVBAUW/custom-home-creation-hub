@@ -1,228 +1,190 @@
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { useParams, Link } from 'react-router-dom';
-import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { CalendarIcon, Clock, ChevronLeft, Share2 } from 'lucide-react';
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { Badge } from '@/components/ui/badge';
+import { AlertCircle, ArrowLeft, Calendar, Clock, User } from 'lucide-react';
 import SEO from '@/components/common/SEO';
-import BlogArticleCard from './BlogArticleCard';
+import Container from '@/components/common/Container';
+
+interface Article {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  meta_description?: string;
+  description?: string;
+  keywords?: string[];
+  category?: string;
+  author?: string;
+  updated_at?: string;
+}
 
 const BlogArticleDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [article, setArticle] = useState<any | null>(null);
-  const [relatedArticles, setRelatedArticles] = useState<any[]>([]);
+  const navigate = useNavigate();
+  const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Fetch article data
+
   useEffect(() => {
     const fetchArticle = async () => {
-      setLoading(true);
-      setError(null);
-      
       try {
+        setLoading(true);
+        
+        if (!slug) {
+          setError('Article non trouvé');
+          return;
+        }
+
         const { data, error } = await supabase
           .from('articles')
           .select('*')
           .eq('slug', slug)
           .eq('status', 'published')
           .single();
-        
+
         if (error) {
-          throw new Error("Article non trouvé ou inaccessible");
+          console.error('Error fetching article:', error);
+          setError('Article non trouvé');
+          return;
         }
-        
+
         setArticle(data);
-        
-        // Fetch related articles after article is loaded
-        if (data) {
-          fetchRelatedArticles(data.category, data.id);
-        }
-        
       } catch (err) {
-        console.error("Error fetching article:", err);
-        setError(err.message);
+        console.error('Error in fetchArticle:', err);
+        setError('Une erreur est survenue lors du chargement de l\'article');
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchArticle();
   }, [slug]);
 
-  // Fetch related articles
-  const fetchRelatedArticles = async (category: string, currentArticleId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('articles')
-        .select('*')
-        .eq('status', 'published')
-        .eq('category', category)
-        .neq('id', currentArticleId)
-        .order('created_at', { ascending: false })
-        .limit(3);
-        
-      if (error) {
-        throw error;
-      }
-      
-      setRelatedArticles(data || []);
-    } catch (err) {
-      console.error("Error fetching related articles:", err);
-    }
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
   };
-
-  // Handle share button
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.description,
-        url: window.location.href,
-      }).catch((err) => {
-        console.error("Error sharing:", err);
-      });
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
-      alert("Lien copié dans le presse-papier");
-    }
-  };
-
-  // Calculate reading time (rough estimate)
-  const calculateReadingTime = (content: string) => {
-    const wordsPerMinute = 200;
-    const textLength = content ? content.split(/\s+/).length : 0;
-    const readingTime = Math.ceil(textLength / wordsPerMinute);
-    return readingTime > 0 ? readingTime : 1;
+  
+  // Calculate estimated reading time (average 225 words per minute)
+  const getReadingTime = (content: string) => {
+    const words = content.split(/\s+/).length;
+    const minutes = Math.ceil(words / 225);
+    return `${minutes} min de lecture`;
   };
 
   if (loading) {
     return (
-      <div className="container max-w-4xl mx-auto px-4 py-12">
-        <div className="animate-pulse">
-          <div className="h-8 w-3/4 bg-gray-200 rounded mb-6"></div>
-          <div className="h-4 w-1/4 bg-gray-200 rounded mb-12"></div>
-          <div className="h-64 w-full bg-gray-200 rounded-lg mb-8"></div>
+      <Container>
+        <div className="max-w-3xl mx-auto py-10 px-4">
+          <Skeleton className="h-10 w-3/4 mb-4" />
+          <div className="flex gap-4 mb-8">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-6 w-40" />
+          </div>
+          <Skeleton className="h-64 w-full mb-8" />
           <div className="space-y-4">
-            <div className="h-4 bg-gray-200 rounded w-full"></div>
-            <div className="h-4 bg-gray-200 rounded w-full"></div>
-            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-6 w-3/4" />
           </div>
         </div>
-      </div>
+      </Container>
     );
   }
 
   if (error || !article) {
     return (
-      <div className="container max-w-4xl mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-          {error || "Article non trouvé"}
-        </h1>
-        <p className="text-gray-600 mb-6">
-          L'article que vous recherchez n'existe pas ou n'est pas disponible.
-        </p>
-        <Button asChild>
-          <Link to="/blog">
-            <ChevronLeft className="h-4 w-4 mr-2" />
+      <Container>
+        <div className="max-w-3xl mx-auto py-10 px-4">
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {error || 'Article non trouvé'}
+            </AlertDescription>
+          </Alert>
+          <Button onClick={() => navigate('/blog')}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Retour au blog
-          </Link>
-        </Button>
-      </div>
+          </Button>
+        </div>
+      </Container>
     );
   }
-
+  
   return (
     <>
-      <SEO 
+      <SEO
         title={`${article.title} | Progineer Blog`}
-        description={article.meta_description || article.description || `${article.title} - Blog Progineer, expert en maîtrise d'œuvre dans la région PACA.`}
-        keywords={article.keywords ? article.keywords.join(', ') : "maître d'œuvre, PACA, construction"}
-        canonicalUrl={`https://progineer.fr/blog/${article.slug}`}
+        description={article.meta_description || article.description || `Découvrez notre article sur ${article.title}`}
+        keywords={article.keywords?.join(', ') || 'maître d\'œuvre, PACA, construction, blog'}
+        canonicalUrl={`https://progineer.fr/blog/${slug}`}
       />
       
-      <div className="bg-gray-50 py-12">
-        <div className="container max-w-4xl mx-auto px-4">
+      <Container>
+        <article className="max-w-3xl mx-auto py-10 px-4">
           <div className="mb-6">
-            <Link 
-              to="/blog"
-              className="inline-flex items-center text-khaki-700 hover:text-khaki-900 transition-colors"
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
+            <Button variant="ghost" onClick={() => navigate('/blog')} className="mb-4 -ml-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200">
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Retour au blog
-            </Link>
-          </div>
-          
-          <div className="mb-8">
+            </Button>
+            
             {article.category && (
-              <Badge className="mb-4 bg-khaki-600">
-                {article.category}
-              </Badge>
+              <Badge className="mb-4">{article.category}</Badge>
             )}
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              {article.title}
-            </h1>
-            <div className="flex flex-wrap items-center text-gray-600 gap-4">
-              <div className="flex items-center">
-                <CalendarIcon className="h-4 w-4 mr-2" />
-                <span>
-                  {format(new Date(article.created_at), 'dd MMMM yyyy', { locale: fr })}
-                </span>
+            
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">{article.title}</h1>
+            
+            <div className="flex flex-wrap items-center text-sm text-gray-600 dark:text-gray-400 mb-6">
+              {article.author && (
+                <div className="flex items-center mr-4 mb-2">
+                  <User className="h-4 w-4 mr-1" />
+                  <span>{article.author}</span>
+                </div>
+              )}
+              <div className="flex items-center mr-4 mb-2">
+                <Calendar className="h-4 w-4 mr-1" />
+                <span>{formatDate(article.created_at)}</span>
               </div>
-              <div className="flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
-                <span>
-                  {calculateReadingTime(article.content)} min de lecture
-                </span>
+              <div className="flex items-center mb-2">
+                <Clock className="h-4 w-4 mr-1" />
+                <span>{getReadingTime(article.content)}</span>
               </div>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="ml-auto"
-                onClick={handleShare}
-              >
-                <Share2 className="h-4 w-4 mr-2" />
-                Partager
-              </Button>
             </div>
+            
+            {article.description && (
+              <div className="text-lg text-gray-700 dark:text-gray-300 mb-8 italic border-l-4 pl-4 border-khaki-500 bg-khaki-50 dark:bg-gray-800 p-4 rounded-r-md">
+                {article.description}
+              </div>
+            )}
           </div>
           
-          {article.image && (
-            <div className="relative aspect-video rounded-lg overflow-hidden mb-8">
-              <img 
-                src={article.image}
-                alt={article.title}
-                className="object-cover w-full h-full"
-              />
+          <div 
+            className="prose prose-lg max-w-none dark:prose-invert prose-headings:text-khaki-900 dark:prose-headings:text-khaki-100 prose-a:text-khaki-600 dark:prose-a:text-khaki-400 prose-strong:text-khaki-700 dark:prose-strong:text-khaki-300"
+            dangerouslySetInnerHTML={{ __html: article.content }}
+          />
+          
+          {article.keywords && article.keywords.length > 0 && (
+            <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap gap-2">
+                {article.keywords.map((keyword, index) => (
+                  <Badge key={index} variant="outline" className="text-gray-600 dark:text-gray-400">
+                    {keyword}
+                  </Badge>
+                ))}
+              </div>
             </div>
           )}
-          
-          <article className="prose prose-khaki max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: article.content }} />
-          </article>
-        </div>
-      </div>
-      
-      {/* Related articles section */}
-      {relatedArticles.length > 0 && (
-        <div className="container max-w-6xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-8">
-            Articles similaires
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedArticles.map((relatedArticle) => (
-              <BlogArticleCard 
-                key={relatedArticle.id} 
-                article={relatedArticle} 
-              />
-            ))}
-          </div>
-        </div>
-      )}
+        </article>
+      </Container>
     </>
   );
 };

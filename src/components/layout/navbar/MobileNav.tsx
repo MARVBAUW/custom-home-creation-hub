@@ -4,12 +4,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { NavItem } from './types';
+import { motion } from 'framer-motion';
+import { NavLink } from './types';
 import IconLogo from '@/components/common/logos/IconLogo';
 
 interface MobileNavProps {
-  navItems: NavItem[];
+  navItems: NavLink[];
   open: boolean;
   setOpen: (open: boolean) => void;
 }
@@ -42,7 +42,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
       <SheetContent side="right" className="w-[300px] max-w-full">
         <SheetHeader>
           <SheetTitle className="flex items-center justify-center mt-4">
-            <IconLogo width={40} height={40} />
+            <IconLogo />
             <span className="ml-2 text-xl font-bold">Progineer</span>
           </SheetTitle>
         </SheetHeader>

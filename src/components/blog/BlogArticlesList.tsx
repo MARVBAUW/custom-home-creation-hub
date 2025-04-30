@@ -1,257 +1,303 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import BlogArticleCard from './BlogArticleCard';
-import { Button } from '@/components/ui/button';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { ChevronDown, Search } from 'lucide-react';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from '@/components/ui/badge';
+import BlogArticleCard from './BlogArticleCard';
+
+interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  created_at: string;
+  meta_description?: string;
+  description?: string;
+  category?: string;
+  keywords?: string[];
+  image?: string;
+  author?: string;
+}
 
 interface BlogArticlesListProps {
-  category?: string;
-  featured?: boolean;
-  limit?: number;
   showPagination?: boolean;
   showFilters?: boolean;
+  limit?: number;
+  category?: string;
+  featured?: boolean;
 }
 
 const BlogArticlesList: React.FC<BlogArticlesListProps> = ({ 
+  showPagination = false, 
+  showFilters = false, 
+  limit = 10,
   category,
-  featured = false,
-  limit = 9,
-  showPagination = true,
-  showFilters = true
+  featured = false
 }) => {
-  const [articles, setArticles] = useState<any[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(category || 'all');
+  const [totalCount, setTotalCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const itemsPerPage = limit;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(category || null);
+  const [uniqueCategories, setUniqueCategories] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('all');
 
-  // Fetch articles with pagination
+  const articlesPerPage = limit;
+
+  // Fetch articles from Supabase
   useEffect(() => {
     const fetchArticles = async () => {
       setLoading(true);
       
+      // Calculate offset for pagination
+      const offset = (currentPage - 1) * articlesPerPage;
+      
       try {
-        // Build query
+        // First get the count
+        const countQuery = supabase
+          .from('articles')
+          .select('id', { count: 'exact' })
+          .eq('status', 'published');
+          
+        if (selectedCategory) {
+          countQuery.eq('category', selectedCategory);
+        }
+        
+        if (searchQuery) {
+          countQuery.or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`);
+        }
+
+        const { count, error: countError } = await countQuery;
+        
+        if (countError) throw countError;
+        setTotalCount(count || 0);
+        
+        // Then get the actual articles
         let query = supabase
           .from('articles')
           .select('*')
           .eq('status', 'published')
-          .order('created_at', { ascending: false });
-        
-        // Apply category filter if specified
-        if (selectedCategory && selectedCategory !== 'all') {
+          .order('created_at', { ascending: false })
+          .range(offset, offset + articlesPerPage - 1);
+          
+        if (selectedCategory) {
           query = query.eq('category', selectedCategory);
         }
         
-        // Apply search filter if specified
         if (searchQuery) {
           query = query.or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`);
         }
+
+        const { data, error } = await query;
         
-        // Get total count for pagination
-        const { count, error: countError } = await query.count();
-        
-        if (countError) {
-          throw countError;
-        }
-        
-        setTotalPages(Math.ceil((count || 0) / itemsPerPage));
-        
-        // Get paginated results
-        const from = (currentPage - 1) * itemsPerPage;
-        const to = from + itemsPerPage - 1;
-        
-        const { data, error } = await query
-          .range(from, to);
-        
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
         
         setArticles(data || []);
       } catch (error) {
-        console.error("Error fetching articles:", error);
-        setArticles([]);
+        console.error('Error fetching articles:', error);
       } finally {
         setLoading(false);
       }
     };
-    
-    fetchArticles();
-  }, [currentPage, selectedCategory, searchQuery, itemsPerPage, featured]);
 
-  // Fetch available categories for filter
+    fetchArticles();
+  }, [currentPage, articlesPerPage, selectedCategory, searchQuery]);
+
+  // Fetch unique categories for filter
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const { data, error } = await supabase
           .from('articles')
           .select('category')
+          .not('category', 'is', null)
           .eq('status', 'published');
           
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
         
         // Extract unique categories
-        const uniqueCategories = [...new Set(data.map(article => article.category).filter(Boolean))];
-        setCategories(uniqueCategories);
+        const categories = [...new Set(data.map(item => item.category))];
+        setUniqueCategories(categories as string[]);
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error('Error fetching categories:', error);
       }
     };
-    
+
     if (showFilters) {
       fetchCategories();
     }
   }, [showFilters]);
 
-  // Handle category change
-  const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
-    setCurrentPage(1); // Reset to first page when changing category
+  const totalPages = Math.ceil(totalCount / articlesPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0);
   };
 
-  // Handle search submit
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category || null);
+    setCurrentPage(1);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentPage(1); // Reset to first page when searching
+    setCurrentPage(1);
   };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    
+    if (value === 'all') {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(value);
+    }
+    
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        {[...Array(3)].map((_, i) => (
+          <Card key={i} className="p-4">
+            <div className="space-y-3">
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-20 w-full" />
+              <div className="flex gap-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (articles.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+          Aucun article disponible pour le moment
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          Revenez prochainement pour découvrir nos nouveaux contenus.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
-      {/* Filters */}
       {showFilters && (
-        <div className="flex flex-col md:flex-row gap-4 items-end">
-          <div className="w-full md:w-1/3">
-            <Label htmlFor="category-filter">Catégorie</Label>
-            <Select
-              value={selectedCategory}
-              onValueChange={handleCategoryChange}
-            >
-              <SelectTrigger id="category-filter">
-                <SelectValue placeholder="Toutes les catégories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes les catégories</SelectItem>
-                {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <form onSubmit={handleSearch} className="w-full md:w-2/3 flex gap-2">
-            <div className="flex-grow">
-              <Label htmlFor="search">Rechercher</Label>
+        <div className="space-y-6">
+          {/* Search bar */}
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                id="search"
+                type="search"
                 placeholder="Rechercher un article..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
               />
             </div>
-            <Button type="submit" className="self-end">
-              Rechercher
-            </Button>
+            <Button type="submit">Rechercher</Button>
           </form>
+
+          {/* Category tabs */}
+          {uniqueCategories.length > 0 && (
+            <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+              <div className="border-b mb-4">
+                <TabsList className="h-auto p-0 bg-transparent">
+                  <TabsTrigger 
+                    value="all" 
+                    className={`px-4 py-2 rounded-t-md data-[state=active]:border-b-2 data-[state=active]:border-khaki-600 data-[state=active]:text-khaki-800 data-[state=active]:shadow-none data-[state=active]:bg-transparent`}
+                  >
+                    Tous
+                  </TabsTrigger>
+                  {uniqueCategories.map((cat, index) => (
+                    <TabsTrigger 
+                      key={index} 
+                      value={cat}
+                      className={`px-4 py-2 rounded-t-md data-[state=active]:border-b-2 data-[state=active]:border-khaki-600 data-[state=active]:text-khaki-800 data-[state=active]:shadow-none data-[state=active]:bg-transparent`}
+                    >
+                      {cat}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+              </div>
+            </Tabs>
+          )}
         </div>
       )}
       
-      {/* Articles Grid */}
-      {loading ? (
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-khaki-700" />
-        </div>
-      ) : articles.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <h3 className="text-lg font-medium text-gray-700">Aucun article trouvé</h3>
-          <p className="text-gray-500 mt-2">
-            {searchQuery 
-              ? `Aucun résultat pour "${searchQuery}"` 
-              : "Aucun article disponible pour le moment"}
-          </p>
-          {(searchQuery || selectedCategory !== 'all') && (
-            <Button 
-              variant="outline" 
-              className="mt-4"
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCategory('all');
-              }}
-            >
-              Réinitialiser les filtres
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map((article) => (
-            <BlogArticleCard key={article.id} article={article} />
-          ))}
-        </div>
-      )}
+      {/* Articles grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {articles.map((article) => (
+          <BlogArticleCard key={article.id} article={article} />
+        ))}
+      </div>
       
       {/* Pagination */}
       {showPagination && totalPages > 1 && (
         <Pagination className="mt-8">
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              <PaginationPrevious 
+                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                className={currentPage <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>
             
-            {/* Generate page numbers */}
-            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
-              let pageNum;
-              
-              // Logic for showing relevant page numbers
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-                if (i === 4) pageNum = totalPages;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-                if (i === 0) pageNum = 1;
-                if (i === 4) pageNum = totalPages;
+            {[...Array(totalPages)].map((_, i) => {
+              const page = i + 1;
+              // Show first 2 pages, current page, and last 2 pages
+              if (
+                page <= 2 ||
+                page > totalPages - 2 ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(page)}
+                      isActive={page === currentPage}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
               }
               
-              return (
-                <PaginationItem key={i}>
-                  {(i === 1 && pageNum > 2) || (i === 3 && pageNum < totalPages - 1) ? (
-                    <PaginationLink>...</PaginationLink>
-                  ) : (
-                    <PaginationLink
-                      isActive={currentPage === pageNum}
-                      onClick={() => setCurrentPage(pageNum)}
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              );
+              // Show ellipsis for skipped pages
+              if (page === 3 && currentPage > 4) {
+                return <PaginationItem key="ellipsis-1">...</PaginationItem>;
+              }
+              
+              if (page === totalPages - 2 && currentPage < totalPages - 3) {
+                return <PaginationItem key="ellipsis-2">...</PaginationItem>;
+              }
+              
+              return null;
             })}
             
             <PaginationItem>
               <PaginationNext
-                onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                className={currentPage >= totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>
           </PaginationContent>

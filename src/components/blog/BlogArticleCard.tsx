@@ -1,75 +1,97 @@
 
 import React from 'react';
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Badge } from '@/components/ui/badge';
-import { CalendarIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock } from 'lucide-react';
+
+interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  created_at: string;
+  meta_description?: string;
+  description?: string;
+  category?: string;
+  keywords?: string[];
+  image?: string;
+  author?: string;
+}
 
 interface BlogArticleCardProps {
-  article: {
-    id: string;
-    title: string;
-    slug: string;
-    description?: string;
-    category?: string;
-    created_at: string;
-    image?: string;
-    is_ai_generated?: boolean;
-  };
+  article: Article;
 }
 
 const BlogArticleCard: React.FC<BlogArticleCardProps> = ({ article }) => {
-  const publishDate = new Date(article.created_at);
-  const timeAgo = formatDistanceToNow(publishDate, { addSuffix: true, locale: fr });
+  // Format the date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
   
-  // Default image if none provided
-  const imageUrl = article.image || '/images/default-article-image.jpg';
+  // Calculate estimated reading time (average 225 words per minute)
+  const getReadingTime = (content: string) => {
+    const words = content.split(/\s+/).length;
+    const minutes = Math.ceil(words / 225);
+    return `${minutes} min`;
+  };
   
+  // Extract plain text from HTML content
+  const getTextFromHtml = (html: string) => {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    return tempDiv.textContent || tempDiv.innerText || '';
+  };
+  
+  // Create a brief excerpt of the article content
+  const getExcerpt = (content: string, maxLength = 100) => {
+    const text = getTextFromHtml(content);
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
-      <div className="relative h-48 overflow-hidden">
-        <img 
-          src={imageUrl} 
-          alt={article.title} 
-          className="object-cover w-full h-full transition-transform hover:scale-105 duration-300"
-        />
-        {article.category && (
-          <Badge className="absolute top-4 right-4 bg-khaki-600">
-            {article.category}
-          </Badge>
+    <Card className="h-full flex flex-col hover:shadow-md transition-shadow">
+      <Link to={`/blog/${article.slug}`} className="flex-1">
+        {article.image && (
+          <div className="relative w-full pt-[56.25%] overflow-hidden">
+            <img 
+              src={article.image} 
+              alt={article.title} 
+              className="absolute top-0 left-0 w-full h-full object-cover rounded-t-lg"
+            />
+          </div>
         )}
-      </div>
-      
-      <CardHeader className="pb-2">
-        <Link to={`/blog/${article.slug}`} className="group">
-          <h3 className="text-xl font-semibold group-hover:text-khaki-700 transition-colors line-clamp-2">
+        
+        <CardContent className={`flex-1 ${article.image ? 'pt-5' : 'pt-5'}`}>
+          {article.category && (
+            <Badge className="mb-2">{article.category}</Badge>
+          )}
+          
+          <h2 className="text-xl font-semibold mb-2 hover:text-khaki-600 transition-colors line-clamp-2">
             {article.title}
-          </h3>
-        </Link>
-      </CardHeader>
+          </h2>
+          
+          <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
+            {article.description || getExcerpt(article.content)}
+          </p>
+        </CardContent>
+      </Link>
       
-      <CardContent className="flex-grow">
-        <p className="text-gray-600 line-clamp-3 mb-4">
-          {article.description || "Découvrez cet article complet sur la maîtrise d'œuvre et la construction en région PACA."}
-        </p>
-        <div className="flex items-center text-sm text-gray-500">
-          <CalendarIcon className="h-4 w-4 mr-2" />
-          <span>{timeAgo}</span>
+      <CardFooter className="border-t pt-4 text-sm text-gray-500 flex justify-between">
+        <div className="flex items-center">
+          <Calendar className="h-4 w-4 mr-1" />
+          <span>{formatDate(article.created_at)}</span>
         </div>
-      </CardContent>
-      
-      <CardFooter className="pt-0">
-        <Link 
-          to={`/blog/${article.slug}`}
-          className="text-khaki-700 font-medium hover:text-khaki-900 transition-colors flex items-center"
-        >
-          Lire l'article
-          <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </Link>
+        <div className="flex items-center">
+          <Clock className="h-4 w-4 mr-1" />
+          <span>{getReadingTime(article.content)}</span>
+        </div>
       </CardFooter>
     </Card>
   );

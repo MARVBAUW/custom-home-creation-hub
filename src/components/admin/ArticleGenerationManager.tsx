@@ -65,8 +65,8 @@ const ArticleGenerationManager = () => {
         // Call the edge function to set up the cron job
         const response = await supabase.functions.invoke('schedule-article-generation');
         
-        if (!response.data.success) {
-          throw new Error(response.data.error || "Failed to schedule article generation");
+        if (!response.data?.success) {
+          throw new Error(response.data?.error || "Failed to schedule article generation");
         }
         
         toast({
@@ -80,7 +80,7 @@ const ArticleGenerationManager = () => {
           description: "La génération hebdomadaire d'articles a été suspendue",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error toggling auto generation:", error);
       toast({
         variant: "destructive",
@@ -112,7 +112,7 @@ const ArticleGenerationManager = () => {
         }
       });
       
-      if (error || !data.success) {
+      if (error || !data?.success) {
         throw new Error(error?.message || data?.error || "Article generation failed");
       }
       
@@ -123,7 +123,7 @@ const ArticleGenerationManager = () => {
         description: "Vous pouvez maintenant l'enregistrer dans la base de données",
       });
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating article:", error);
       toast({
         variant: "destructive",
@@ -185,7 +185,7 @@ const ArticleGenerationManager = () => {
       // Refresh the generation logs
       fetchGenerationLogs();
       
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving article:", error);
       toast({
         variant: "destructive",
