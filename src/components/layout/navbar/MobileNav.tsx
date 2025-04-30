@@ -1,153 +1,83 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { Phone, Mail } from 'lucide-react';
-import Button from '@/components/common/Button';
-import Container from '@/components/common/Container';
-import { NavLink } from './types';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useAuth } from '@/hooks/useAuth';
-import LogoutButton from '@/components/auth/LogoutButton';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { NavItem } from './types';
+import IconLogo from '@/components/common/logos/IconLogo';
 
 interface MobileNavProps {
-  isOpen: boolean;
-  navLinks: NavLink[];
-  openDropdown: string | null;
-  toggleDropdown: (name: string | null) => void;
+  navItems: NavItem[];
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
-const MobileNav = ({
-  isOpen,
-  navLinks,
-  openDropdown,
-  toggleDropdown
-}: MobileNavProps) => {
-  const isMobile = useIsMobile();
-  const { user } = useAuth();
-
-  // Nouvelle logique d'ouverture/réduction
-  // - Si rien n'est sélectionné, tout est déroulé
-  // - Quand on clique sur une section principale: on affiche seulement sa sous-section
-  // - Si openDropdown est null => tout est visible
-  // - Si openDropdown est défini => une seule section déployée
-
-  if (!isOpen) return null;
-
+const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
+  const location = useLocation();
+  
+  // Add Blog to nav items if not already there
+  const updatedNavItems = [...navItems];
+  if (!updatedNavItems.some(item => item.href === '/blog')) {
+    // Find the index of the "Équipe" item or fallback to before the last item
+    const equipIndex = updatedNavItems.findIndex(item => item.href === '/equipe-maitrise-oeuvre');
+    const insertIndex = equipIndex !== -1 ? equipIndex + 1 : updatedNavItems.length - 1;
+    
+    // Insert the Blog item at the appropriate position
+    updatedNavItems.splice(insertIndex, 0, {
+      label: 'Blog',
+      href: '/blog'
+    });
+  }
+  
   return (
-    // Positionnement absolu par rapport au viewport, indépendant du header
-    <div className="fixed inset-0 top-20 z-40 bg-white dark:bg-gray-900 shadow-lg overflow-y-auto">
-      <Container className="flex flex-col py-6 space-y-4 min-h-screen">
-        {/* Changement ici : flex-grow simplement pour que le contenu remplisse l'espace */}
-        <ul className="flex-grow">
-          {navLinks.map(item => {
-            // Doit-on afficher la section déployée ?
-            const isOpened = openDropdown === null || openDropdown === item.name;
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild className="lg:hidden">
+        <Button variant="ghost" size="icon" className="text-white">
+          <Menu className="h-6 w-6" />
+          <span className="sr-only">Menu</span>
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="right" className="w-[300px] max-w-full">
+        <SheetHeader>
+          <SheetTitle className="flex items-center justify-center mt-4">
+            <IconLogo width={40} height={40} />
+            <span className="ml-2 text-xl font-bold">Progineer</span>
+          </SheetTitle>
+        </SheetHeader>
+        <div className="mt-8 flex flex-col space-y-3">
+          {updatedNavItems.map((item, index) => {
+            const isActive = location.pathname === item.href;
+            
             return (
-              <React.Fragment key={item.name}>
-                <li className="border-b border-stone-200 dark:border-gray-700">
-                  {item.subLinks ? (
-                    <button
-                      onClick={() => {
-                        // Si déjà ouvert, cliquer réduit tout; sinon, ouvre seulement celui-ci
-                        toggleDropdown(openDropdown === item.name ? null : item.name);
-                      }}
-                      className={cn(
-                        "flex items-center justify-between w-full text-base font-medium text-stone-800 dark:text-gray-200 hover:text-khaki-800 dark:hover:text-khaki-400 py-3 px-2",
-                        openDropdown === item.name && "bg-stone-100 dark:bg-gray-800"
-                      )}
-                      aria-expanded={isOpened}
-                      aria-controls={`mobile-nav-section-${item.name}`}
-                    >
-                      <span>{item.name}</span>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className={`transition-transform ${isOpened ? "rotate-180" : ""}`}
-                      >
-                        <path d="m6 9 6 6 6-6"/>
-                      </svg>
-                    </button>
-                  ) : (
-                    <Link
-                      to={item.path}
-                      className="block text-base font-medium text-stone-800 dark:text-gray-200 hover:text-khaki-800 dark:hover:text-khaki-400 py-3 px-2"
-                    >
-                      {item.name}
-                    </Link>
+              <Link
+                key={index}
+                to={item.href}
+                className="relative"
+                onClick={() => setOpen(false)}
+              >
+                <div
+                  className={`px-4 py-2 rounded-md text-base font-medium ${
+                    isActive
+                      ? 'text-khaki-700 bg-khaki-50'
+                      : 'text-gray-700 hover:text-khaki-700 hover:bg-khaki-50'
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.div
+                      className="absolute left-0 top-0 bottom-0 w-1 bg-khaki-700 rounded-full"
+                      layoutId="navbar-mobile-indicator"
+                    />
                   )}
-                </li>
-                {/* Toujours afficher les sous-sections s'il y en a,
-                    sauf si openDropdown est défini et ce n'est pas le bon item */}
-                {item.subLinks && isOpened && (
-                  <li
-                    className="pl-3 mb-3 bg-gray-50 dark:bg-gray-800 rounded-md"
-                    id={`mobile-nav-section-${item.name}`}
-                  >
-                    <ul className="space-y-1 border-l border-stone-200 dark:border-gray-700 pl-3 py-3">
-                      {item.subLinks.map(subLink => (
-                        <li key={subLink.name}>
-                          <Link
-                            to={subLink.path}
-                            className="block py-2 px-3 text-sm text-stone-600 dark:text-gray-300 hover:text-khaki-800 dark:hover:text-khaki-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md"
-                          >
-                            {subLink.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </li>
-                )}
-              </React.Fragment>
+                </div>
+              </Link>
             );
           })}
-        </ul>
-
-        <div className="mt-auto space-y-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex flex-col space-y-2">
-            <a href="tel:+33783762156" className="flex items-center py-2 text-stone-700 dark:text-gray-300">
-              <Phone className="h-4 w-4 mr-2 text-khaki-600 dark:text-khaki-400" />
-              <span className="text-sm">+33 7 83 76 21 56</span>
-            </a>
-            <a href="mailto:progineer.moe@gmail.com" className="flex items-center py-2 text-stone-700 dark:text-gray-300">
-              <Mail className="h-4 w-4 mr-2 text-khaki-600 dark:text-khaki-400" />
-              <span className="text-sm">progineer.moe@gmail.com</span>
-            </a>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {user ? (
-              <>
-                <Button href="/workspace/client-area" className="w-full justify-center py-2 text-sm">
-                  Mon espace
-                </Button>
-                <LogoutButton
-                  variant="outline"
-                  size="sm"
-                  className="w-full justify-center py-2 text-sm border-red-200 text-red-600"
-                />
-              </>
-            ) : (
-              <>
-                <Button href="/contact" className="w-full justify-center py-2 text-sm">
-                  Contact
-                </Button>
-                <Button href="/estimation" variant="outline" className="w-full justify-center py-2 text-sm bg-khaki-600 hover:bg-khaki-700 text-white !text-white">
-                  Estimation
-                </Button>
-              </>
-            )}
-          </div>
         </div>
-      </Container>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

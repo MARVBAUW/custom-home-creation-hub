@@ -95,6 +95,57 @@ export type Database = {
         }
         Relationships: []
       }
+      articles: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          created_at: string
+          description: string | null
+          id: string
+          image: string | null
+          is_ai_generated: boolean | null
+          keywords: string[] | null
+          meta_description: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_ai_generated?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_ai_generated?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       backlinks_logs: {
         Row: {
           backlinks_generated: number | null

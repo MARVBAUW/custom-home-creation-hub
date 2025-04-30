@@ -1,77 +1,58 @@
 
 import React from 'react';
-import { Phone } from 'lucide-react';
-import Button from '@/components/common/Button';
-import NavItem from './NavItem';
-import { NavLink } from './types';
-import { useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import LogoutButton from '@/components/auth/LogoutButton';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { NavItem } from './types';
 
 interface DesktopNavProps {
-  navLinks: NavLink[];
-  openDropdown: string | null;
-  toggleDropdown: (name: string) => void;
+  navItems: NavItem[];
+  toggleDrawer?: () => void;
 }
 
-const DesktopNav = ({ navLinks, openDropdown, toggleDropdown }: DesktopNavProps) => {
+const DesktopNav: React.FC<DesktopNavProps> = ({ navItems }) => {
   const location = useLocation();
-  const { user } = useAuth();
-
-  const isActive = (item: NavLink) => {
-    if (location.pathname === item.path) return true;
+  
+  // Add Blog to nav items if not already there
+  const updatedNavItems = [...navItems];
+  if (!updatedNavItems.some(item => item.href === '/blog')) {
+    // Find the index of the "Équipe" item or fallback to before the last item
+    const equipIndex = updatedNavItems.findIndex(item => item.href === '/equipe-maitrise-oeuvre');
+    const insertIndex = equipIndex !== -1 ? equipIndex + 1 : updatedNavItems.length - 1;
     
-    if (item.subLinks) {
-      // Pour les éléments avec sous-liens, vérifier si un sous-lien correspond à la location actuelle
-      return item.subLinks.some(subLink => {
-        const [path, hash] = subLink.path.split('#');
-        return location.pathname === path && (!hash || location.hash === `#${hash}`);
-      });
-    }
-    
-    return false;
-  };
-
+    // Insert the Blog item at the appropriate position
+    updatedNavItems.splice(insertIndex, 0, {
+      label: 'Blog',
+      href: '/blog'
+    });
+  }
+  
   return (
-    <div className="hidden md:flex items-center justify-between w-full px-1">
-      <ul className="flex items-center space-x-1 flex-shrink-0">
-        {navLinks.map((item) => (
-          <NavItem 
-            key={item.name} 
-            item={item}
-            isActive={isActive(item)}
-            openDropdown={openDropdown}
-            toggleDropdown={toggleDropdown}
-          />
-        ))}
-      </ul>
-
-      {/* Contact Info & CTAs - Desktop */}
-      <div className="flex items-center space-x-2 flex-shrink-0">
-        <a href="tel:+33783762156" className="flex items-center text-xs text-stone-600 hover:text-khaki-800 whitespace-nowrap">
-          <Phone className="h-3 w-3 mr-1 flex-shrink-0" />
-          <span>+33 7 83 76 21 56</span>
-        </a>
+    <nav className="hidden lg:flex items-center space-x-1">
+      {updatedNavItems.map((item, index) => {
+        const isActive = location.pathname === item.href;
         
-        {user ? (
-          <div className="flex items-center space-x-2">
-            <Button href="/workspace/client-area" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white !text-white whitespace-nowrap">
-              Mon espace
-            </Button>
-            <LogoutButton variant="outline" size="sm" className="border-red-200 hover:bg-red-50 text-red-600" />
+        return (
+          <div key={index} className="relative">
+            <Link 
+              to={item.href}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors relative ${
+                isActive 
+                  ? 'text-white' 
+                  : 'text-gray-100 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {item.label}
+              {isActive && (
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                  layoutId="navbar-indicator"
+                />
+              )}
+            </Link>
           </div>
-        ) : (
-          <>
-            <Button href="/estimation" size="sm" className="bg-khaki-600 hover:bg-khaki-700 text-white !text-white whitespace-nowrap">
-              Estimer mon projet
-            </Button>
-            <Button href="/contact" size="sm" variant="outline" className="border-khaki-200 hover:bg-khaki-50 text-stone-700 whitespace-nowrap">
-              Contact
-            </Button>
-          </>
-        )}
-      </div>
-    </div>
+        );
+      })}
+    </nav>
   );
 };
 
