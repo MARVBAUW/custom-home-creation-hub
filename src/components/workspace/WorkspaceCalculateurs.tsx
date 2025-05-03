@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, Calculator, Thermometer, Ruler, Scales, Clock, ArrowRight } from 'lucide-react';
+import { Search, Calculator, Thermometer, Ruler, Scale, Clock, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Calculator data
@@ -41,7 +41,7 @@ const calculators = [
     title: 'Convertisseur d\'unités de construction',
     description: 'Convertissez facilement entre différentes unités utilisées dans la construction.',
     category: 'Outils',
-    icon: <Scales className="h-6 w-6" />,
+    icon: <Scale className="h-6 w-6" />,
     url: '/workspace/calculateurs/convertisseur',
     complexity: 'simple'
   },
