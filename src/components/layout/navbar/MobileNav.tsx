@@ -7,6 +7,7 @@ import { Menu } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { NavLink } from './types';
 import IconLogo from '@/components/common/logos/IconLogo';
+import { LogoSize, getSizeClasses } from '@/components/common/logos/LogoConstants';
 
 interface MobileNavProps {
   navItems: NavLink[];
@@ -42,7 +43,10 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
       <SheetContent side="right" className="w-[300px] max-w-full">
         <SheetHeader>
           <SheetTitle className="flex items-center justify-center mt-4">
-            <IconLogo />
+            <IconLogo 
+              size="md" 
+              getSizeClasses={() => getSizeClasses('md', 'icon')} 
+            />
             <span className="ml-2 text-xl font-bold">Progineer</span>
           </SheetTitle>
         </SheetHeader>
