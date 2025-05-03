@@ -3,6 +3,14 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { NavLink } from './types';
+import { Button } from "@/components/ui/button";
+import { FileText, Phone, ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 
 interface DesktopNavProps {
   navItems: NavLink[];
@@ -13,47 +21,84 @@ interface DesktopNavProps {
 const DesktopNav: React.FC<DesktopNavProps> = ({ navItems, openDropdown, toggleDropdown }) => {
   const location = useLocation();
   
-  // Add Blog to nav items if not already there
-  const updatedNavItems = [...navItems];
-  if (!updatedNavItems.some(item => item.href === '/blog')) {
-    // Find the index of the "Équipe" item or fallback to before the last item
-    const equipIndex = updatedNavItems.findIndex(item => item.href === '/equipe-maitrise-oeuvre');
-    const insertIndex = equipIndex !== -1 ? equipIndex + 1 : updatedNavItems.length - 1;
-    
-    // Insert the Blog item at the appropriate position
-    updatedNavItems.splice(insertIndex, 0, {
-      label: 'Blog',
-      href: '/blog'
-    });
-  }
-  
   return (
-    <nav className="hidden lg:flex items-center space-x-1">
-      {updatedNavItems.map((item, index) => {
-        const isActive = location.pathname === item.href;
-        
-        return (
-          <div key={index} className="relative">
-            <Link 
-              to={item.href}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors relative ${
-                isActive 
-                  ? 'text-white' 
-                  : 'text-gray-100 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              {item.label}
-              {isActive && (
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
-                  layoutId="navbar-indicator"
-                />
-              )}
-            </Link>
-          </div>
-        );
-      })}
-    </nav>
+    <div className="hidden lg:flex items-center justify-between w-full">
+      {/* Main Navigation */}
+      <nav className="flex items-center space-x-1">
+        {navItems.map((item, index) => {
+          const isActive = location.pathname === item.href;
+          
+          if (item.subLinks && item.subLinks.length > 0) {
+            return (
+              <div key={index} className="relative">
+                <DropdownMenu open={openDropdown === item.label} onOpenChange={() => toggleDropdown && toggleDropdown(item.label)}>
+                  <DropdownMenuTrigger className={`px-4 py-2 rounded-md text-sm font-medium transition-colors relative flex items-center ${
+                    isActive 
+                      ? 'text-white' 
+                      : 'text-gray-100 hover:text-white hover:bg-white/10'
+                  }`}>
+                    {item.label}
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                    {isActive && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                        layoutId="navbar-indicator"
+                      />
+                    )}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="bg-white rounded-md shadow-lg">
+                    {item.subLinks.map((subLink, subIndex) => (
+                      <DropdownMenuItem key={subIndex} asChild>
+                        <Link to={subLink.href} className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          {subLink.label}
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            );
+          }
+          
+          return (
+            <div key={index} className="relative">
+              <Link 
+                to={item.href}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors relative ${
+                  isActive 
+                    ? 'text-white' 
+                    : 'text-gray-100 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                {item.label}
+                {isActive && (
+                  <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                    layoutId="navbar-indicator"
+                  />
+                )}
+              </Link>
+            </div>
+          );
+        })}
+      </nav>
+      
+      {/* CTA Buttons */}
+      <div className="flex items-center gap-2">
+        <Link to="/estimation">
+          <Button variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white">
+            <FileText className="mr-2 h-4 w-4" />
+            Demander un devis
+          </Button>
+        </Link>
+        <Link to="/contact">
+          <Button className="bg-khaki-500 hover:bg-khaki-600 text-white">
+            <Phone className="mr-2 h-4 w-4" />
+            Nous contacter
+          </Button>
+        </Link>
+      </div>
+    </div>
   );
 };
 

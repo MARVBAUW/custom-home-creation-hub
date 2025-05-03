@@ -3,74 +3,89 @@ import { DTU } from '../../dtu/types';
 
 export const ratingClassificationsDTUs: DTU[] = [
   {
-    id: "rating-upec",
-    title: "Classement UPEC",
-    category: "Classifications",
-    description: "Système d'évaluation de la résistance des revêtements de sol selon quatre critères : Usure, Poinçonnement, Eau, produits Chimiques.",
-    lastUpdate: "2022-01-15",
+    id: 'rat-001',
+    title: 'Classement UPEC des revêtements de sol',
+    category: 'Classifications',
+    description: 'Système de classification des revêtements de sol selon leur résistance à l\'usage, le poinçonnement, l\'eau et les produits chimiques.',
+    lastUpdate: '10/12/2022',
     rules: [
       {
-        title: "Critère U (Usure)",
-        content: "Évalue la résistance à l'usure par frottement, notée de 2 à 4.",
-        type: "standard"
+        title: 'Indice U - Usure',
+        content: 'Caractérise la résistance à l\'usure par abrasion, avec 4 niveaux de U1 (faible) à U4 (très élevé).',
+        type: 'standard'
       },
       {
-        title: "Critère P (Poinçonnement)",
-        content: "Mesure la résistance aux enfoncements et aux déformations, notée de 2 à 4.",
-        type: "standard"
+        title: 'Indice P - Poinçonnement',
+        content: 'Évalue la résistance aux charges statiques et dynamiques, de P1 (faible) à P4 (très élevé).',
+        type: 'standard'
       },
       {
-        title: "Critère E (Eau)",
-        content: "Indique la tenue à l'eau et à l'humidité, notée de 1 à 3.",
-        type: "warning"
+        title: 'Indice E - Eau',
+        content: 'Définit le comportement à l\'eau et à l\'humidité, de E1 (présence occasionnelle) à E3 (présence fréquente).',
+        type: 'warning'
       },
       {
-        title: "Critère C (Chimie)",
-        content: "Définit la résistance aux produits chimiques et taches, notée de 0 à 3.",
-        type: "standard"
+        title: 'Indice C - Chimie',
+        content: 'Caractérise la tenue aux agents chimiques et taches, de C0 (aucune exigence) à C3 (résistance élevée).',
+        type: 'standard'
+      }
+    ],
+    sections: [
+      {
+        title: 'Choix selon la destination',
+        content: 'Le choix du revêtement doit correspondre à la classification UPEC du local. Par exemple, une cuisine nécessite au minimum U3P2E2C1.'
+      },
+      {
+        title: 'Certifications',
+        content: 'Le classement UPEC est délivré par le CSTB après des essais normalisés et peut faire l\'objet d\'un certificat.'
       }
     ]
   },
   {
-    id: "rating-aev",
-    title: "Classement AEV",
-    category: "Classifications",
-    description: "Classification des performances des fenêtres selon leur perméabilité à l'Air, leur Étanchéité à l'eau et leur résistance au Vent.",
-    lastUpdate: "2021-11-20",
+    id: 'rat-002',
+    title: 'Classement des menuiseries extérieures',
+    category: 'Classifications',
+    description: 'Système de classification AEV des menuiseries extérieures selon leur résistance à l\'air, à l\'eau et au vent.',
+    lastUpdate: '14/02/2023',
     rules: [
       {
-        title: "Critère A (Air)",
-        content: "Perméabilité à l'air, classée de A1 (faible) à A4 (excellente).",
-        type: "standard"
+        title: 'Indice A - Perméabilité à l\'air',
+        content: 'Classé de A1 (faible) à A4 (très bonne étanchéité), selon la perméabilité à l\'air sous pression.',
+        type: 'standard'
       },
       {
-        title: "Critère E (Eau)",
-        content: "Étanchéité à l'eau, classée de E1 (faible) à E9 (excellente).",
-        type: "warning"
+        title: 'Indice E - Étanchéité à l\'eau',
+        content: 'Classé de E1 à E9 selon la résistance à l\'infiltration d\'eau sous pression et aspersion.',
+        type: 'warning'
       },
       {
-        title: "Critère V (Vent)",
-        content: "Résistance au vent, classée de V1 (faible) à V4 (excellente).",
-        type: "standard"
+        title: 'Indice V - Résistance au vent',
+        content: 'Classé de V1 à V5 selon la résistance à la pression/dépression et aux déformations sous charges.',
+        type: 'standard'
       }
     ]
   },
   {
-    id: "rating-revetir",
-    title: "Classement REVETIR",
-    category: "Classifications",
-    description: "Évaluation des performances des revêtements muraux selon 7 critères.",
-    lastUpdate: "2022-03-10",
+    id: 'rat-003',
+    title: 'Euroclasses et réaction au feu',
+    category: 'Classifications',
+    description: 'Classification européenne de réaction au feu des produits de construction et d\'aménagement.',
+    lastUpdate: '08/04/2023',
     rules: [
       {
-        title: "Critères d'évaluation",
-        content: "R (Réaction au feu), E (Entretien), V (Vieillissement), E (Eau), T (Tenue aux chocs), I (Insectes), R (Rayures).",
-        type: "standard"
+        title: 'Classes principales',
+        content: 'Les euroclasses vont de A1 (incombustible) à F (non classé), avec les classes A1, A2, B, C, D, E, F.',
+        type: 'standard'
       },
       {
-        title: "Applications",
-        content: "Utilisé principalement pour les revêtements muraux dans les ERP et les logements collectifs.",
-        type: "tip"
+        title: 'Classements complémentaires',
+        content: 'Le s1, s2, s3 évalue la production de fumées et le d0, d1, d2 les gouttelettes enflammées.',
+        type: 'warning'
+      },
+      {
+        title: 'Exigences réglementaires',
+        content: 'Les exigences minimales varient selon le type de bâtiment et l\'emplacement du matériau.',
+        type: 'alert'
       }
     ]
   }

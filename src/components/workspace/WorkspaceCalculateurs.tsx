@@ -1,218 +1,154 @@
 
-import React, { useState, useEffect } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Calculator, HomeIcon, Building2, Scale, PiggyBank, Ruler, Thermometer, Volume } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState } from 'react';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, Calculator, Thermometer, Ruler, Scales, Clock, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-// Import workspace components
-import FraisNotaireCalculator from '@/components/workspace/calculators/immobilier/FraisNotaireCalculator';
-import RentabiliteLocativeCalculator from '@/components/workspace/calculators/rentability/RentabilityCalculator';
-import SurfaceHabitableCalculator from '@/components/workspace/calculators/immobilier/SurfaceHabitableCalculator';
-import AcousticCalculator from '@/components/workspace/calculators/acoustic/AcousticCalculator';
-import DpeCalculator from '@/components/workspace/calculators/thermal/DpeCalculator';
-import CapaciteEmpruntCalculator from '@/components/workspace/calculators/financier/CapaciteEmpruntCalculator';
-import EurocodesCalculator from '@/components/workspace/calculators/eurocode/EurocodeCalculators';
-import SimulationManager from './calculateurs/simulation/SimulationManager';
-import CalculatorDirectory from './CalculatorDirectory';
-import { useToast } from '@/hooks/use-toast';
+// Calculator data
+const calculators = [
+  {
+    id: 'calc-1',
+    title: 'Calculateur de surface habitable',
+    description: 'Calculez rapidement la surface habitable d\'un logement selon les normes en vigueur.',
+    category: 'Dimension',
+    icon: <Ruler className="h-6 w-6" />,
+    url: '/workspace/calculateurs/surface',
+    complexity: 'simple'
+  },
+  {
+    id: 'calc-2',
+    title: 'Estimateur de coût de construction',
+    description: 'Obtenez une estimation du coût de construction de votre projet en fonction de sa typologie et superficie.',
+    category: 'Budget',
+    icon: <Calculator className="h-6 w-6" />,
+    url: '/estimation',
+    complexity: 'avancé'
+  },
+  {
+    id: 'calc-3',
+    title: 'Calculateur de bilan thermique',
+    description: 'Évaluez les déperditions thermiques d\'un bâtiment et identifiez les améliorations possibles.',
+    category: 'Thermique',
+    icon: <Thermometer className="h-6 w-6" />,
+    url: '/workspace/calculateurs/bilan-thermique',
+    complexity: 'avancé'
+  },
+  {
+    id: 'calc-4',
+    title: 'Convertisseur d\'unités de construction',
+    description: 'Convertissez facilement entre différentes unités utilisées dans la construction.',
+    category: 'Outils',
+    icon: <Scales className="h-6 w-6" />,
+    url: '/workspace/calculateurs/convertisseur',
+    complexity: 'simple'
+  },
+  {
+    id: 'calc-5',
+    title: 'Planificateur de chantier',
+    description: 'Estimez la durée des différentes phases de votre chantier et créez un planning prévisionnel.',
+    category: 'Planification',
+    icon: <Clock className="h-6 w-6" />,
+    url: '/workspace/calculateurs/planning',
+    complexity: 'avancé'
+  },
+  {
+    id: 'calc-6',
+    title: 'Calculateur de matériaux',
+    description: 'Estimez les quantités de matériaux nécessaires pour votre projet (béton, brique, etc.).',
+    category: 'Matériaux',
+    icon: <Calculator className="h-6 w-6" />,
+    url: '/workspace/calculateurs/materiaux',
+    complexity: 'intermédiaire'
+  }
+];
 
-const WorkspaceCalculateurs = () => {
-  const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("immobilier");
+// Categories for filtering
+const categories = ['Tous', 'Dimension', 'Budget', 'Thermique', 'Outils', 'Planification', 'Matériaux'];
+
+const WorkspaceCalculateurs: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('Tous');
   
-  // Extract the tab parameter from URL if available
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get('tab');
-    if (tabParam) {
-      setActiveTab(tabParam);
-    }
-  }, []);
-
+  const filteredCalculators = calculators.filter(calc => {
+    const matchesSearch = calc.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          calc.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeTab === 'Tous' || calc.category === activeTab;
+    return matchesSearch && matchesCategory;
+  });
+  
   return (
-    <div className="space-y-6">
-      <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 mb-6">
-        <h3 className="text-zinc-800 font-medium flex items-center gap-2 mb-2">
-          <Calculator className="h-5 w-5" />
-          Calculateurs et Simulations
-        </h3>
-        <p className="text-zinc-700 text-sm">
-          Accédez à nos outils de calcul spécialisés pour différents aspects de vos projets.
-          Ces calculateurs vous aideront à estimer les coûts, dimensionner vos espaces et vérifier la conformité réglementaire.
-        </p>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-2xl font-semibold mb-2">Calculateurs et outils</h1>
+        <p className="text-gray-600">Utilisez nos outils en ligne pour simplifier vos calculs et estimations.</p>
       </div>
-
-      <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="bg-zinc-100 p-1 flex flex-wrap">
-          <TabsTrigger value="directory" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Calculator className="h-4 w-4" />
-            <span>Répertoire</span>
-          </TabsTrigger>
-          <TabsTrigger value="immobilier" className="data-[state=active]:bg-white flex items-center gap-2">
-            <HomeIcon className="h-4 w-4" />
-            <span>Immobilier</span>
-          </TabsTrigger>
-          <TabsTrigger value="projet" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Building2 className="h-4 w-4" />
-            <span>Projet</span>
-          </TabsTrigger>
-          <TabsTrigger value="financier" className="data-[state=active]:bg-white flex items-center gap-2">
-            <PiggyBank className="h-4 w-4" />
-            <span>Financier</span>
-          </TabsTrigger>
-          <TabsTrigger value="reglementaire" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Scale className="h-4 w-4" />
-            <span>Réglementaire</span>
-          </TabsTrigger>
-          <TabsTrigger value="technique" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Ruler className="h-4 w-4" />
-            <span>Technique</span>
-          </TabsTrigger>
-          <TabsTrigger value="simulations" className="data-[state=active]:bg-white flex items-center gap-2">
-            <Calculator className="h-4 w-4" />
-            <span>Mes simulations</span>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Répertoire complet des calculateurs */}
-        <TabsContent value="directory">
-          <CalculatorDirectory />
-        </TabsContent>
-
-        {/* Onglet Immobilier */}
-        <TabsContent value="immobilier">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Surface habitable</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SurfaceHabitableCalculator />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Frais de notaire</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FraisNotaireCalculator />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Onglet Projet */}
-        <TabsContent value="projet">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">DPE prévisionnel</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DpeCalculator />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Eurocodes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <EurocodesCalculator />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Acoustique</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <AcousticCalculator />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Onglet Financier */}
-        <TabsContent value="financier">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Capacité d'emprunt</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CapaciteEmpruntCalculator />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Rentabilité locative</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <RentabiliteLocativeCalculator />
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Onglet Réglementaire */}
-        <TabsContent value="reglementaire">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Vérification accessibilité</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Tableau de classification ERP</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-blue-50 p-4 rounded-md">
-                  <p className="text-sm text-blue-800">Ce calculateur sera disponible prochainement.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
+      
+      {/* Search and filters */}
+      <div className="flex flex-col sm:flex-row justify-between gap-4">
+        <div className="relative w-full sm:w-96">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          <Input
+            className="pl-10"
+            placeholder="Rechercher un outil..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         
-        {/* Onglet Technique */}
-        <TabsContent value="technique">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Volume className="h-4 w-4" />
-                  Acoustique
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <AcousticCalculator />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Thermometer className="h-4 w-4" />
-                  DPE
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DpeCalculator />
-              </CardContent>
-            </Card>
-          </div>
-          <EurocodesCalculator />
-        </TabsContent>
-
-        {/* Onglet Mes simulations */}
-        <TabsContent value="simulations">
-          <SimulationManager />
-        </TabsContent>
-      </Tabs>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-3 sm:grid-cols-7">
+            {categories.map((cat) => (
+              <TabsTrigger key={cat} value={cat} className="text-xs sm:text-sm px-2">
+                {cat}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
+      
+      {/* Calculators grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredCalculators.map((calc) => (
+          <Card key={calc.id} className="flex flex-col h-full hover:shadow-md transition-shadow">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center mb-4">
+                <div className="p-3 rounded-md bg-khaki-50">
+                  {calc.icon}
+                </div>
+                <span className={`
+                  ${calc.complexity === 'simple' ? 'bg-green-100 text-green-800' : 
+                    calc.complexity === 'intermédiaire' ? 'bg-blue-100 text-blue-800' :
+                    'bg-amber-100 text-amber-800'}
+                  text-xs px-2 py-1 rounded-full
+                `}>
+                  {calc.complexity.charAt(0).toUpperCase() + calc.complexity.slice(1)}
+                </span>
+              </div>
+              <CardTitle className="text-lg">{calc.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <p className="text-gray-600 dark:text-gray-300 text-sm">{calc.description}</p>
+            </CardContent>
+            <CardFooter>
+              <Link to={calc.url} className="w-full">
+                <Button variant="outline" className="w-full justify-between group">
+                  <span>Accéder à l'outil</span>
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+      
+      {filteredCalculators.length === 0 && (
+        <div className="text-center p-8 border border-dashed rounded-md">
+          <p className="text-gray-500">Aucun calculateur ne correspond à votre recherche.</p>
+        </div>
+      )}
     </div>
   );
 };

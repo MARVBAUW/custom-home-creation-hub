@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
+import { Menu, Phone, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { NavLink } from './types';
 import IconLogo from '@/components/common/logos/IconLogo';
@@ -17,20 +17,6 @@ interface MobileNavProps {
 
 const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
   const location = useLocation();
-  
-  // Add Blog to nav items if not already there
-  const updatedNavItems = [...navItems];
-  if (!updatedNavItems.some(item => item.href === '/blog')) {
-    // Find the index of the "Équipe" item or fallback to before the last item
-    const equipIndex = updatedNavItems.findIndex(item => item.href === '/equipe-maitrise-oeuvre');
-    const insertIndex = equipIndex !== -1 ? equipIndex + 1 : updatedNavItems.length - 1;
-    
-    // Insert the Blog item at the appropriate position
-    updatedNavItems.splice(insertIndex, 0, {
-      label: 'Blog',
-      href: '/blog'
-    });
-  }
   
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -51,7 +37,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
           </SheetTitle>
         </SheetHeader>
         <div className="mt-8 flex flex-col space-y-3">
-          {updatedNavItems.map((item, index) => {
+          {navItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             
             return (
@@ -79,6 +65,25 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
               </Link>
             );
           })}
+
+          {/* CTA Buttons */}
+          <div className="pt-4 mt-4 border-t border-gray-200">
+            <h3 className="px-4 text-sm font-medium text-gray-500 mb-2">Contact</h3>
+            <div className="space-y-2">
+              <Link to="/estimation" onClick={() => setOpen(false)}>
+                <Button variant="outline" className="w-full justify-start">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Demander un devis
+                </Button>
+              </Link>
+              <Link to="/contact" onClick={() => setOpen(false)}>
+                <Button className="w-full justify-start bg-khaki-600 hover:bg-khaki-700 text-white">
+                  <Phone className="mr-2 h-4 w-4" />
+                  Nous contacter
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </SheetContent>
     </Sheet>

@@ -65,8 +65,7 @@ const Navbar = () => {
               toggleDropdown={toggleDropdown}
             />
 
-            {/* Theme Toggle */}
-            <div className="flex items-center gap-4 relative z-50">
+            <div className="flex items-center gap-4 relative z-50 lg:hidden">
               <ThemeToggle />
               
               {/* Mobile Menu Button */}
@@ -82,7 +81,7 @@ const Navbar = () => {
         </Container>
       </header>
 
-      {/* Mobile Navigation - Now positioned outside the header */}
+      {/* Mobile Navigation */}
       <MobileNav 
         open={isOpen}
         setOpen={setIsOpen}
