@@ -63,6 +63,13 @@ const EnhancedSEO: React.FC<SEOProps> = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:site_name" content="Progineer | Maître d'œuvre en PACA" />
+      
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={ogImage} />
       
       {/* Structured Data (JSON-LD) */}
       {structuredData && (
@@ -77,6 +84,39 @@ const EnhancedSEO: React.FC<SEOProps> = ({
           {JSON.stringify(breadcrumbSchema)}
         </script>
       )}
+      
+      {/* Local Business schema */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          "name": "Progineer",
+          "image": "https://progineer.fr/images/progineer-logo.png",
+          "url": "https://progineer.fr",
+          "telephone": "0783762156",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "",
+            "addressLocality": "Marseille",
+            "postalCode": "13000",
+            "addressRegion": "PACA",
+            "addressCountry": "FR"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 43.296482,
+            "longitude": 5.36978
+          },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              "opens": "09:00",
+              "closes": "18:00"
+            }
+          ]
+        })}
+      </script>
       
       {/* Additional meta tags can be passed as children */}
       {children}

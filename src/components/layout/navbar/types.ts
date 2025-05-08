@@ -20,6 +20,5 @@ export const navLinks: NavLink[] = [
   },
   { label: 'Nos réalisations', href: '/realisations-architecte-maison' },
   { label: 'Notre équipe', href: '/equipe-maitrise-oeuvre' },
-  { label: 'Blog', href: '/blog' },
   { label: 'Workspace', href: '/workspace' },
 ];

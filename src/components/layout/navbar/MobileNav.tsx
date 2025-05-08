@@ -37,6 +37,12 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
           </SheetTitle>
         </SheetHeader>
         <div className="mt-8 flex flex-col space-y-3">
+          {/* Phone number */}
+          <a href="tel:0783762156" className="flex items-center justify-center py-2 mb-2 text-khaki-700">
+            <Phone className="h-4 w-4 mr-2" />
+            <span className="font-medium">07 83 76 21 56</span>
+          </a>
+          
           {navItems.map((item, index) => {
             const isActive = location.pathname === item.href;
             
@@ -73,7 +79,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ navItems, open, setOpen }) => {
               <Link to="/estimation" onClick={() => setOpen(false)}>
                 <Button variant="outline" className="w-full justify-start">
                   <FileText className="mr-2 h-4 w-4" />
-                  Demander un devis
+                  Estimer mon projet
                 </Button>
               </Link>
               <Link to="/contact" onClick={() => setOpen(false)}>

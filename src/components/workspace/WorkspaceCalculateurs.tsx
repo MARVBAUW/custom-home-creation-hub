@@ -24,7 +24,7 @@ const calculators = [
     description: 'Obtenez une estimation du coût de construction de votre projet en fonction de sa typologie et superficie.',
     category: 'Budget',
     icon: <Calculator className="h-6 w-6" />,
-    url: '/estimation',
+    url: '/workspace/calculateurs/estimation-cout',
     complexity: 'avancé'
   },
   {
@@ -98,8 +98,8 @@ const WorkspaceCalculateurs: React.FC = () => {
           />
         </div>
         
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-3 sm:grid-cols-7">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+          <TabsList className="grid grid-cols-3 sm:grid-cols-7 w-full">
             {categories.map((cat) => (
               <TabsTrigger key={cat} value={cat} className="text-xs sm:text-sm px-2">
                 {cat}

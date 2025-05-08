@@ -15,7 +15,7 @@ const Hero = () => {
   };
 
   return (
-    <section id="paca" className="relative min-h-[100vh] flex items-center py-24 overflow-hidden">
+    <section id="paca" className="relative min-h-[100vh] flex items-center py-24 overflow-hidden border-x-8 border-white/10">
       <HeroParticles />
       <HeroBackground />
       

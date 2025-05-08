@@ -52,7 +52,7 @@ const HeroContent = () => {
           </Button>
         </div>
         
-        {/* Tags SEO */}
+        {/* Tags SEO - invisible but important for SEO */}
         <div className="sr-only">
           <h2>Construction et rénovation de maisons en PACA</h2>
           <p>

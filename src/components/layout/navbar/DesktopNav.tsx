@@ -83,18 +83,23 @@ const DesktopNav: React.FC<DesktopNavProps> = ({ navItems, openDropdown, toggleD
         })}
       </nav>
       
-      {/* CTA Buttons */}
-      <div className="flex items-center gap-2">
+      {/* Téléphone et CTA Buttons */}
+      <div className="flex items-center gap-3">
+        <a href="tel:0783762156" className="flex items-center text-white hover:text-khaki-200 transition-colors">
+          <Phone className="h-4 w-4 mr-1" />
+          <span className="font-medium">07 83 76 21 56</span>
+        </a>
+        
         <Link to="/estimation">
           <Button variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white">
             <FileText className="mr-2 h-4 w-4" />
-            Demander un devis
+            Estimer mon projet
           </Button>
         </Link>
         <Link to="/contact">
           <Button className="bg-khaki-500 hover:bg-khaki-600 text-white">
             <Phone className="mr-2 h-4 w-4" />
-            Nous contacter
+            Contact
           </Button>
         </Link>
       </div>
