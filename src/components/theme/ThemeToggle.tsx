@@ -8,7 +8,7 @@ interface ThemeToggleProps {
   className?: string;
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -25,4 +25,5 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
   );
 };
 
+// Default export for backward compatibility
 export default ThemeToggle;
