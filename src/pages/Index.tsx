@@ -9,8 +9,9 @@ import StatsSection from '../components/home/StatsSection';
 import LocationMap from '../components/home/LocationMap';
 import InnovationHub from '../components/home/InnovationHub';
 import { getBusinessStructuredData } from '../utils/googleBusiness';
-import SEO from '../components/common/SEO';
+import EnhancedSEO from '../components/seo/EnhancedSEO';
 import SEOFooter from '@/components/common/SEOFooter';
+import { Helmet } from 'react-helmet-async';
 
 // Importation des feuilles de style pour les animations
 import '../components/home/animations.css';
@@ -39,17 +40,84 @@ const Index = () => {
     };
   }, []);
 
+  // Données structurées LocalBusiness améliorées pour Google
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Progineer - Maître d'œuvre en PACA",
+    "alternateName": "Progineer Construction & Rénovation",
+    "description": "Expert en maîtrise d'œuvre à Marseille spécialisé dans la construction, rénovation et extension de maisons en PACA.",
+    "url": "https://progineer.fr/",
+    "logo": "https://progineer.fr/images/progineer-logo.png",
+    "image": "https://progineer.fr/images/progineer-social-card.jpg",
+    "telephone": "+33783762156",
+    "email": "progineer.moe@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "27 Boulevard Charles Moretti",
+      "addressLocality": "Marseille",
+      "addressRegion": "PACA",
+      "postalCode": "13014",
+      "addressCountry": "FR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "43.3356733",
+      "longitude": "5.3884308"
+    },
+    "areaServed": [
+      {
+        "@type": "City",
+        "name": "Marseille"
+      },
+      {
+        "@type": "City",
+        "name": "Aix-en-Provence"
+      },
+      {
+        "@type": "City",
+        "name": "Toulon"
+      },
+      {
+        "@type": "AdministrativeArea",
+        "name": "PACA"
+      }
+    ],
+    "priceRange": "€€€",
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "18:00"
+      }
+    ],
+    "sameAs": [
+      "https://www.facebook.com/progineer",
+      "https://www.instagram.com/progineer.moe/",
+      "https://www.linkedin.com/company/progineer"
+    ]
+  };
+
   return (
     <>
-      <SEO 
-        title="Maître d'œuvre Marseille | Construction & Rénovation | Progineer PACA"
-        description="Expert en maîtrise d'œuvre à Marseille spécialisé dans la construction, rénovation et extension de maisons. Une approche personnalisée et un accompagnement sur mesure pour vos projets en PACA."
+      <EnhancedSEO 
+        title="Maître d'œuvre à Marseille | Construction & Rénovation | Progineer PACA"
+        description="Expert en maîtrise d'œuvre à Marseille spécialisé dans la construction, rénovation et extension de maisons. Un accompagnement sur mesure pour vos projets en PACA."
         keywords="maître d'œuvre marseille, construction maison PACA, rénovation Marseille, extension maison, coordination travaux"
         canonicalUrl="https://progineer.fr/"
-        structuredData={getBusinessStructuredData()}
-      />
+        structuredData={localBusinessSchema}
+      >
+        {/* Balises meta supplémentaires spécifiques à la page d'accueil */}
+        <meta property="og:site_name" content="Progineer - Maître d'œuvre PACA" />
+        <meta name="geo.region" content="FR-PAC" />
+        <meta name="geo.placename" content="Marseille" />
+        <meta name="geo.position" content="43.3356733;5.3884308" />
+        <meta name="ICBM" content="43.3356733, 5.3884308" />
+      </EnhancedSEO>
       
       <main className="overflow-hidden">
+        <div className="sr-only" role="heading" aria-level="1">Maître d'œuvre à Marseille - Progineer Construction & Rénovation</div>
         <div className="text-4xl md:text-5xl lg:text-6xl font-rare tracking-wide mb-6 text-center pt-32">
           <h1>Maître d'œuvre à Marseille - Progineer Construction & Rénovation</h1>
         </div>
@@ -76,17 +144,6 @@ const Index = () => {
           "maîtrise d'œuvre"
         ]}
       />
-
-      {/* Discreet backlink section */}
-      <div className="sr-only">
-        <a 
-          href="https://www.maitredoeuvre.com/" 
-          rel="nofollow" 
-          target="_blank"
-        >
-          Annuaire de maitres d'oeuvre
-        </a>
-      </div>
     </>
   );
 };

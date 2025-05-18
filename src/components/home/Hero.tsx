@@ -5,6 +5,7 @@ import HeroParticles from './hero/HeroParticles';
 import HeroBackground from './hero/HeroBackground';
 import HeroContent from './hero/HeroContent';
 import ScrollIndicator from './hero/ScrollIndicator';
+import { Helmet } from 'react-helmet-async';
 
 const Hero = () => {
   const scrollToNextSection = () => {
@@ -15,16 +16,24 @@ const Hero = () => {
   };
 
   return (
-    <section id="paca" className="relative min-h-[100vh] flex items-center py-24 overflow-hidden">
-      <HeroParticles />
-      <HeroBackground />
+    <>
+      {/* Préchargement des ressources critiques */}
+      <Helmet>
+        <link rel="preload" href="/images/hero-background.webp" as="image" />
+        <link rel="preload" href="/fonts/rare-font.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      </Helmet>
       
-      <Container className="relative z-20 mt-16">
-        <HeroContent />
-      </Container>
+      <section id="hero" className="relative min-h-[100vh] flex items-center py-24 overflow-hidden">
+        <HeroParticles />
+        <HeroBackground />
+        
+        <Container className="relative z-20 mt-16">
+          <HeroContent />
+        </Container>
 
-      <ScrollIndicator onClick={scrollToNextSection} />
-    </section>
+        <ScrollIndicator onClick={scrollToNextSection} />
+      </section>
+    </>
   );
 };
 

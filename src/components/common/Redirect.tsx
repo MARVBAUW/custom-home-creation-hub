@@ -1,16 +1,17 @@
 
 import React, { useEffect } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { toast } from "@/components/ui/use-toast";
+import { Navigate } from 'react-router-dom';
+import { toast } from '@/components/ui/use-toast';
 
 interface RedirectProps {
   to: string;
   message?: string;
 }
 
-const Redirect = ({ to, message }: RedirectProps) => {
-  const location = useLocation();
-  
+/**
+ * Composant pour gérer les redirections 301 avec message utilisateur
+ */
+const Redirect: React.FC<RedirectProps> = ({ to, message }) => {
   useEffect(() => {
     if (message) {
       toast({
@@ -20,9 +21,9 @@ const Redirect = ({ to, message }: RedirectProps) => {
       });
     }
     
-    // Log la redirection pour le suivi
-    console.log(`Redirection 301 from ${location.pathname} to ${to}`);
-  }, [to, message, location]);
+    // Log pour le suivi des redirections
+    console.log(`Redirection 301: ${window.location.pathname} -> ${to}`);
+  }, [to, message]);
 
   return <Navigate to={to} replace />;
 };

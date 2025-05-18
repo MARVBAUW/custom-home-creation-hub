@@ -95,6 +95,90 @@ export type Database = {
         }
         Relationships: []
       }
+      article_generation_logs: {
+        Row: {
+          article_slug: string | null
+          article_title: string | null
+          category: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          status: string
+          topic: string | null
+        }
+        Insert: {
+          article_slug?: string | null
+          article_title?: string | null
+          category?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status: string
+          topic?: string | null
+        }
+        Update: {
+          article_slug?: string | null
+          article_title?: string | null
+          category?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          status?: string
+          topic?: string | null
+        }
+        Relationships: []
+      }
+      articles: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          created_at: string
+          description: string | null
+          id: string
+          image: string | null
+          is_ai_generated: boolean | null
+          keywords: string[] | null
+          meta_description: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_ai_generated?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string | null
+          is_ai_generated?: boolean | null
+          keywords?: string[] | null
+          meta_description?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       backlinks_logs: {
         Row: {
           backlinks_generated: number | null

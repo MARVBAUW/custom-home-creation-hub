@@ -1,77 +1,59 @@
 
-import React, { useEffect, useState } from 'react';
-import { validatePageSEO, SEOValidationResult } from '@/utils/seoValidator';
+import React, { useState, useEffect } from 'react';
+import { validatePageSEO } from '@/utils/seoValidator';
 
 /**
- * Composant pour valider et afficher les problèmes SEO d'une page
- * Visible uniquement en mode développement
+ * Composant pour valider les éléments SEO d'une page en temps réel
+ * Ce composant ne s'affiche qu'en mode développement
  */
 const SEOValidator: React.FC = () => {
-  const [validationResult, setValidationResult] = useState<SEOValidationResult>({
-    isValid: true,
-    issues: []
-  });
-  
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [seoIssues, setSeoIssues] = useState<string[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
-    // Attendre que le DOM soit complètement chargé
+    // Ne s'exécute qu'en environnement de développement
+    if (process.env.NODE_ENV !== 'development') {
+      return;
+    }
+    
+    // Délai pour laisser la page se charger complètement
     const timer = setTimeout(() => {
-      const result = validatePageSEO();
-      setValidationResult(result);
-    }, 1000);
+      const { issues } = validatePageSEO();
+      setSeoIssues(issues);
+    }, 1500);
     
     return () => clearTimeout(timer);
   }, []);
   
-  // Ne rien afficher en production
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
-  
-  // Ne rien afficher si tout est valide
-  if (validationResult.isValid) {
+  // Ne rien afficher en production ou si aucun problème
+  if (process.env.NODE_ENV !== 'development' || seoIssues.length === 0) {
     return null;
   }
   
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-md">
-      <div className="bg-amber-50 border-l-4 border-amber-500 rounded shadow-lg">
-        <div 
-          className="p-4 flex justify-between items-center cursor-pointer"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          <div className="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
-            <span className="font-medium text-amber-700">
-              Problèmes SEO détectés ({validationResult.issues.length})
-            </span>
-          </div>
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className={`h-5 w-5 text-amber-700 transition-transform ${isExpanded ? 'transform rotate-180' : ''}`}
-            viewBox="0 0 20 20" 
-            fill="currentColor"
-          >
-            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
+    <div className="fixed bottom-4 right-4 z-50">
+      <button 
+        onClick={() => setIsVisible(!isVisible)}
+        className="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-md shadow-md flex items-center"
+      >
+        <span className="mr-1">SEO</span>
+        <span className="inline-flex items-center justify-center w-5 h-5 bg-white text-amber-500 rounded-full text-xs font-bold">
+          {seoIssues.length}
+        </span>
+      </button>
+      
+      {isVisible && (
+        <div className="absolute bottom-12 right-0 w-80 bg-white border border-gray-200 rounded-lg shadow-lg p-4 mt-2 max-h-96 overflow-y-auto">
+          <h4 className="font-semibold text-gray-800 mb-2">Problèmes SEO détectés</h4>
+          <ul className="text-sm text-gray-600">
+            {seoIssues.map((issue, index) => (
+              <li key={index} className="mb-1 pb-1 border-b border-gray-100 last:border-0">
+                • {issue}
+              </li>
+            ))}
+          </ul>
         </div>
-        
-        {isExpanded && (
-          <div className="border-t border-amber-200 p-4">
-            <ul className="list-disc pl-5 space-y-2 text-amber-700 text-sm">
-              {validationResult.issues.map((issue, index) => (
-                <li key={index}>{issue}</li>
-              ))}
-            </ul>
-            <div className="mt-4 text-xs text-gray-500">
-              Note: Ce message n'apparaît qu'en mode développement
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 };
