@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react';
 
 interface SearchAndFilterBarProps {
   searchTerm: string;
@@ -20,29 +20,38 @@ export const SearchAndFilterBar: React.FC<SearchAndFilterBarProps> = ({
   categories
 }) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
-      <div className="relative w-full sm:w-96">
-        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-        <Input
-          className="pl-10"
-          placeholder="Rechercher un DTU..."
+    <div className="flex flex-col md:flex-row gap-4 mb-6">
+      {/* Barre de recherche */}
+      <div className="flex-1 relative">
+        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+        <Input 
+          placeholder="Rechercher un DTU, une règle ou un contenu spécifique..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="pl-10"
         />
+        {searchTerm && (
+          <div className="mt-1 text-xs text-gray-500">
+            Recherche dans les titres, descriptions, règles et sections des DTUs
+          </div>
+        )}
       </div>
       
-      <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-        <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder="Catégorie" />
-        </SelectTrigger>
-        <SelectContent>
-          {categories.map((category) => (
-            <SelectItem key={category} value={category}>
-              {category === 'all' ? 'Toutes les catégories' : category}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {/* Filtre par catégorie */}
+      <div className="w-full md:w-1/3">
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrer par catégorie" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((category) => (
+              <SelectItem key={category} value={category}>
+                {category === 'tous' ? 'Toutes les catégories' : category}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 };

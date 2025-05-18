@@ -1,24 +1,24 @@
 
 export interface NavLink {
-  label: string;
-  href: string;
-  subLinks?: { label: string; href: string }[];
+  name: string;
+  path: string;
+  subLinks?: { name: string; path: string }[];
 }
 
 export const navLinks: NavLink[] = [
-  { label: 'Accueil', href: '/' },
+  { name: 'Accueil', path: '/' },
   { 
-    label: 'Nos prestations', 
-    href: '/prestations-maitre-oeuvre',
+    name: 'Nos prestations', 
+    path: '/prestations-maitre-oeuvre',
     subLinks: [
-      { label: 'Construction sur mesure', href: '/prestations-maitre-oeuvre#construction' },
-      { label: 'Rénovation énergétique', href: '/prestations-maitre-oeuvre#renovation' },
-      { label: 'Extension & agrandissement', href: '/prestations-maitre-oeuvre#extension' },
-      { label: 'Optimisation d\'espace', href: '/prestations-maitre-oeuvre#optimisation' },
-      { label: 'Design d\'espace', href: '/prestations-maitre-oeuvre#design' },
+      { name: 'Construction sur mesure', path: '/prestations-maitre-oeuvre#construction' },
+      { name: 'Rénovation énergétique', path: '/prestations-maitre-oeuvre#renovation' },
+      { name: 'Extension & agrandissement', path: '/prestations-maitre-oeuvre#extension' },
+      { name: 'Optimisation d\'espace', path: '/prestations-maitre-oeuvre#optimisation' },
+      { name: 'Design d\'espace', path: '/prestations-maitre-oeuvre#design' },
     ]
   },
-  { label: 'Nos réalisations', href: '/realisations-architecte-maison' },
-  { label: 'Notre équipe', href: '/equipe-maitrise-oeuvre' },
-  { label: 'Workspace', href: '/workspace' },
+  { name: 'Nos réalisations', path: '/realisations-architecte-maison' },
+  { name: 'Notre équipe', path: '/equipe-maitrise-oeuvre' },
+  { name: 'Workspace', path: '/workspace' },
 ];

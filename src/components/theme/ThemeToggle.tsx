@@ -1,29 +1,62 @@
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/hooks/use-theme";
+import { useToast } from "@/hooks/use-toast";
 
-interface ThemeToggleProps {
-  className?: string;
-}
+type ThemeType = "light" | "dark";
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
-  const { theme, setTheme } = useTheme();
+export function ThemeToggle() {
+  const [theme, setTheme] = useState<ThemeType>("light");
+  const { toast } = useToast();
+  const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
+
+  useEffect(() => {
+    // Check for theme in localStorage or use system preference
+    const storedTheme = localStorage.getItem("theme") as ThemeType | null;
+    
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
+    } else if (prefersDark) {
+      setTheme("dark");
+      document.documentElement.classList.add("dark");
+    }
+  }, [prefersDark]);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    
+    // Notify user about theme change
+    toast({
+      title: newTheme === "light" ? "Mode clair activé" : "Mode sombre activé",
+      description: "Les préférences d'affichage ont été mises à jour.",
+      duration: 2000,
+    });
+  };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className={className}
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+    <Button 
+      variant="outline" 
+      size="icon" 
+      onClick={toggleTheme}
+      className="rounded-full transition-colors hover:bg-stone-200 dark:hover:bg-gray-700"
+      aria-label={theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-white" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-white" />
+      {theme === "light" ? (
+        <Moon className="h-[1.2rem] w-[1.2rem] text-gray-700 dark:text-gray-200" />
+      ) : (
+        <Sun className="h-[1.2rem] w-[1.2rem] text-yellow-400" />
+      )}
+      <span className="sr-only">
+        {theme === "light" ? "Activer le mode sombre" : "Activer le mode clair"}
+      </span>
     </Button>
   );
-};
+}
 
-// Default export for backward compatibility
 export default ThemeToggle;

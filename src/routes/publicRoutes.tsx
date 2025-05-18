@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import Redirect from '../components/common/Redirect';
@@ -18,10 +17,6 @@ import Sitemap from '../pages/Sitemap';
 import SitemapXML from '../pages/SitemapXML';
 import PrivacyPolicy from '../pages/PrivacyPolicy';
 import CGU from '../pages/CGU';
-
-// Blog pages
-import Blog from '../pages/Blog';
-import BlogArticle from '../pages/BlogArticle';
 
 // Pages dédiées aux prestations
 import ConstructionNeuve from '../pages/prestations/ConstructionNeuve';
@@ -166,15 +161,6 @@ export const publicRoutes: RouteObject[] = [
   {
     path: "/realisations-architecturales",
     element: <RealisationsArchitecturales />
-  },
-  // Blog routes
-  {
-    path: "/blog",
-    element: <Blog />
-  },
-  {
-    path: "/blog/:slug",
-    element: <BlogArticle />
   },
   {
     path: "*",

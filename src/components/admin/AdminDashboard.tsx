@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { Building2, Users, FileText, BarChart3, CalendarRange, FileCheck, AlertTriangle, CheckCheck, Newspaper } from 'lucide-react';
+import { Building2, Users, FileText, BarChart3, CalendarRange, FileCheck, AlertTriangle, CheckCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import ProjectsGanttView from './ProjectsGanttView';
@@ -14,7 +14,6 @@ import AdminDocuments from './AdminDocuments';
 import AdminClients from './AdminClients';
 import AdminProjects from './AdminProjects';
 import AdminTasks from './AdminTasks';
-import ArticleGenerationManager from './ArticleGenerationManager';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
@@ -23,8 +22,7 @@ const AdminDashboard = () => {
     clients: 0,
     projects: 0,
     pendingTasks: 0,
-    documents: 0,
-    articles: 0
+    documents: 0
   });
   
   // Fetch statistics
@@ -32,20 +30,12 @@ const AdminDashboard = () => {
     const fetchStatistics = async () => {
       try {
         // In a real implementation, this would fetch data from Supabase
-        // For now, we'll use simulated data with the addition of articles count
-        const { data: articlesData, error: articlesError } = await supabase
-          .from('articles')
-          .select('count')
-          .single();
-          
-        const articlesCount = articlesData?.count || 0;
-        
+        // For now, we'll use simulated data
         setStatistics({
           clients: 8,
           projects: 12,
           pendingTasks: 5,
-          documents: 24,
-          articles: articlesCount
+          documents: 24
         });
       } catch (error) {
         console.error("Error fetching statistics:", error);
@@ -116,7 +106,7 @@ const AdminDashboard = () => {
       </div>
       
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
         <Card className="bg-white">
           <CardContent className="pt-6">
             <div className="flex justify-between items-center">
@@ -172,25 +162,11 @@ const AdminDashboard = () => {
             </div>
           </CardContent>
         </Card>
-        
-        <Card className="bg-white">
-          <CardContent className="pt-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm font-medium text-gray-500">Articles</p>
-                <p className="text-2xl font-semibold mt-1">{statistics.articles}</p>
-              </div>
-              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
-                <Newspaper className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       
       {/* Main Dashboard Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-7 gap-2">
+        <TabsList className="grid grid-cols-2 md:grid-cols-6 gap-2">
           <TabsTrigger value="overview" className="flex items-center">
             <BarChart3 className="mr-2 h-4 w-4" />
             <span>Vue d'ensemble</span>
@@ -214,10 +190,6 @@ const AdminDashboard = () => {
           <TabsTrigger value="documents" className="flex items-center">
             <FileText className="mr-2 h-4 w-4" />
             <span>Documents</span>
-          </TabsTrigger>
-          <TabsTrigger value="articles" className="flex items-center">
-            <Newspaper className="mr-2 h-4 w-4" />
-            <span>Articles SEO</span>
           </TabsTrigger>
         </TabsList>
         
@@ -392,10 +364,6 @@ const AdminDashboard = () => {
         
         <TabsContent value="documents" className="mt-6">
           <AdminDocuments />
-        </TabsContent>
-        
-        <TabsContent value="articles" className="mt-6">
-          <ArticleGenerationManager />
         </TabsContent>
       </Tabs>
     </div>

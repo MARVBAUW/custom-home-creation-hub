@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Container from '@/components/common/Container';
 import DesktopNav from './navbar/DesktopNav';
 import MobileNav from './navbar/MobileNav';
@@ -60,12 +60,13 @@ const Navbar = () => {
 
             {/* Desktop Navigation */}
             <DesktopNav 
-              navItems={navLinks}
-              openDropdown={openDropdown}
-              toggleDropdown={toggleDropdown}
+              navLinks={navLinks} 
+              openDropdown={openDropdown} 
+              toggleDropdown={toggleDropdown} 
             />
 
-            <div className="flex items-center gap-4 relative z-50 lg:hidden">
+            {/* Theme Toggle */}
+            <div className="flex items-center gap-4 relative z-50">
               <ThemeToggle />
               
               {/* Mobile Menu Button */}
@@ -74,18 +75,19 @@ const Navbar = () => {
                 className="md:hidden p-2 rounded-md text-stone-600 dark:text-gray-300 hover:text-stone-800 dark:hover:text-white hover:bg-stone-100/50 dark:hover:bg-gray-800/50"
                 aria-label={isOpen ? "Fermer le menu" : "Ouvrir le menu"}
               >
-                <Menu className="h-6 w-6" />
+                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </nav>
         </Container>
       </header>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Now positioned outside the header */}
       <MobileNav 
-        open={isOpen}
-        setOpen={setIsOpen}
-        navItems={navLinks}
+        isOpen={isOpen} 
+        navLinks={navLinks} 
+        openDropdown={openDropdown} 
+        toggleDropdown={toggleDropdown} 
       />
     </>
   );
